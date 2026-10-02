@@ -5,6 +5,12 @@ Start with [home setup](REPRODUCE.md) and the measured
 radar models, I/Q generation, Python AirSim adapter, tests and benchmarks.
 ProjectAirSim and Sionna RT are pinned external dependencies downloaded by setup.
 
+For a ready-made CPU test environment, see [the container guide](CONTAINER.md):
+
+```bash
+docker run --rm --network none ghcr.io/wa200508/airsim-rf:latest
+```
+
 ```bash
 git clone https://github.com/wa200508/airsim-rf.git
 cd airsim-rf

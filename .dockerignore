@@ -1,0 +1,11 @@
+.git
+.github
+.deps
+.venv
+.pytest_cache
+**/__pycache__
+**/*.egg-info
+*.npz
+*.png
+benchmarks/results
+research

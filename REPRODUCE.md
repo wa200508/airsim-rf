@@ -1,5 +1,8 @@
 # Reproduce airsim-rf at home
 
+To use Docker instead of installing Python dependencies, follow
+[the pull-and-test container guide](CONTAINER.md).
+
 This standalone repository contains the RF models, I/Q generation, Python
 AirSim adapter, tests and benchmarks. `sources.json` pins the external
 ProjectAirSim and Sionna RT source commits. Setup downloads them into ignored
