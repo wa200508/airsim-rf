@@ -1,0 +1,14 @@
+{
+  "projectairsim": {
+    "url": "https://github.com/iamaisim/ProjectAirSim.git",
+    "commit": "cfb865f29f255b15ef28ec8fdcfaa01a6b66497f",
+    "nearest_tag": "v1.1.0",
+    "python_client": "1.1.0"
+  },
+  "sionna_rt": {
+    "url": "https://github.com/NVlabs/sionna-rt.git",
+    "commit": "15b5ee036917a4c2a9b6420e05570b77717e2fcc",
+    "package_version": "2.2.0"
+  },
+  "tested_python": "3.12"
+}
