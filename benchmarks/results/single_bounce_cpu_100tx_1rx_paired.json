@@ -1,0 +1,721 @@
+{
+  "scope": "One-way moving TX/RX; synchronized propagation plus one-epoch CIR/Doppler export",
+  "excludes": [
+    "IQ synthesis",
+    "AirSim",
+    "transport",
+    "moving mesh/BVH updates"
+  ],
+  "arguments": {
+    "backend": "cpu",
+    "tx": 100,
+    "rx": 1,
+    "rays": 10000,
+    "path_cap": 1000,
+    "iterations": 30,
+    "warmup": 5,
+    "threads": 2,
+    "pulse_hz": 200,
+    "output": "benchmarks/results/single_bounce_cpu_100tx_1rx_paired.json"
+  },
+  "versions": {
+    "sionna_rt": "2.2.0",
+    "mitsuba": "3.9.1",
+    "drjit": "1.5.0",
+    "backend": "llvm_ad_mono_polarized",
+    "python": "3.12.14"
+  },
+  "host": {
+    "cpu_count": 3,
+    "cpu_quota": "200000 100000",
+    "drjit_threads": 2,
+    "memory_limit": "8589934592",
+    "cpu_model": "AMD EPYC 9V74 80-Core Processor",
+    "peak_host_rss_mib": 1003.6640625
+  },
+  "scene_triangles": 74,
+  "reflection_planes": 20,
+  "cold": {
+    "native": {
+      "total_ms": 215.62099100265186,
+      "pose_ms": 0.09141500049736351,
+      "solve_ms": 215.23749500192935,
+      "cir_numpy_ms": 0.2920810002251528,
+      "valid_paths": 144
+    },
+    "single-bounce": {
+      "total_ms": 499.84860199765535,
+      "pose_ms": 0.10549499711487442,
+      "solve_ms": 499.56697699963115,
+      "cir_numpy_ms": 0.17613000090932474,
+      "valid_paths": 144
+    }
+  },
+  "summary": {
+    "native": {
+      "p50_ms": 149.75441950082313,
+      "p95_ms": 192.54963595049045,
+      "max_ms": 204.41185399977257,
+      "deadline_misses_5ms": 30,
+      "deadline_misses_120hz": 30,
+      "deadline_misses_pulse_budget": 30,
+      "valid_paths_min": 144,
+      "valid_paths_max": 144
+    },
+    "single-bounce": {
+      "p50_ms": 17.322166000667494,
+      "p95_ms": 23.072270654665765,
+      "max_ms": 27.351153999916278,
+      "deadline_misses_5ms": 30,
+      "deadline_misses_120hz": 30,
+      "deadline_misses_pulse_budget": 30,
+      "valid_paths_min": 144,
+      "valid_paths_max": 144
+    }
+  },
+  "channel_comparison": {
+    "links_checked": 3000,
+    "max_delay_error_s": 7.105427357601002e-15,
+    "max_relative_magnitude_error": 2.7846353987115435e-05,
+    "max_phase_error_rad": 0.0019531220896169543,
+    "max_doppler_error_hz": 0.000579833984375
+  },
+  "median_speedup": 8.645247915015506,
+  "samples": [
+    {
+      "epoch_s": 0.03,
+      "order": [
+        "native",
+        "single-bounce"
+      ],
+      "native": {
+        "total_ms": 194.99855799949728,
+        "pose_ms": 0.10098899656441063,
+        "solve_ms": 194.67858600546606,
+        "cir_numpy_ms": 0.21898299746681005,
+        "valid_paths": 144
+      },
+      "single-bounce": {
+        "total_ms": 16.739642996981274,
+        "pose_ms": 0.1626899975235574,
+        "solve_ms": 16.422624998085666,
+        "cir_numpy_ms": 0.1543280013720505,
+        "valid_paths": 144
+      }
+    },
+    {
+      "epoch_s": 0.035,
+      "order": [
+        "single-bounce",
+        "native"
+      ],
+      "single-bounce": {
+        "total_ms": 21.978407006827183,
+        "pose_ms": 0.1515240001026541,
+        "solve_ms": 21.673928000382148,
+        "cir_numpy_ms": 0.15295500634238124,
+        "valid_paths": 144
+      },
+      "native": {
+        "total_ms": 149.54061200114666,
+        "pose_ms": 0.13962599769001827,
+        "solve_ms": 149.22257300349884,
+        "cir_numpy_ms": 0.1784129999577999,
+        "valid_paths": 144
+      }
+    },
+    {
+      "epoch_s": 0.04,
+      "order": [
+        "native",
+        "single-bounce"
+      ],
+      "native": {
+        "total_ms": 145.6982550007524,
+        "pose_ms": 0.11272599658695981,
+        "solve_ms": 145.43096099805553,
+        "cir_numpy_ms": 0.15456800610991195,
+        "valid_paths": 144
+      },
+      "single-bounce": {
+        "total_ms": 12.297743000090122,
+        "pose_ms": 0.11441900278441608,
+        "solve_ms": 12.074824000592344,
+        "cir_numpy_ms": 0.10849999671336263,
+        "valid_paths": 144
+      }
+    },
+    {
+      "epoch_s": 0.045,
+      "order": [
+        "single-bounce",
+        "native"
+      ],
+      "single-bounce": {
+        "total_ms": 16.314004999003373,
+        "pose_ms": 0.09391899948241189,
+        "solve_ms": 16.095432998554315,
+        "cir_numpy_ms": 0.12465300096664578,
+        "valid_paths": 144
+      },
+      "native": {
+        "total_ms": 154.9338289987645,
+        "pose_ms": 0.10153000039281324,
+        "solve_ms": 154.68091599905165,
+        "cir_numpy_ms": 0.15138299932004884,
+        "valid_paths": 144
+      }
+    },
+    {
+      "epoch_s": 0.05,
+      "order": [
+        "native",
+        "single-bounce"
+      ],
+      "native": {
+        "total_ms": 144.36921100423206,
+        "pose_ms": 0.1168630042229779,
+        "solve_ms": 144.07666899933247,
+        "cir_numpy_ms": 0.17567900067660958,
+        "valid_paths": 144
+      },
+      "single-bounce": {
+        "total_ms": 11.762834001274314,
+        "pose_ms": 0.11117399844806641,
+        "solve_ms": 11.542139000084717,
+        "cir_numpy_ms": 0.10952100274153054,
+        "valid_paths": 144
+      }
+    },
+    {
+      "epoch_s": 0.055,
+      "order": [
+        "single-bounce",
+        "native"
+      ],
+      "single-bounce": {
+        "total_ms": 17.163918004371226,
+        "pose_ms": 0.09679300274001434,
+        "solve_ms": 16.93921600235626,
+        "cir_numpy_ms": 0.12790899927495047,
+        "valid_paths": 144
+      },
+      "native": {
+        "total_ms": 148.90470799582545,
+        "pose_ms": 0.12498500291258097,
+        "solve_ms": 148.62701799575007,
+        "cir_numpy_ms": 0.15270499716280028,
+        "valid_paths": 144
+      }
+    },
+    {
+      "epoch_s": 0.06,
+      "order": [
+        "native",
+        "single-bounce"
+      ],
+      "native": {
+        "total_ms": 189.5565090017044,
+        "pose_ms": 0.12543499906314537,
+        "solve_ms": 189.24171500111697,
+        "cir_numpy_ms": 0.18935900152428076,
+        "valid_paths": 144
+      },
+      "single-bounce": {
+        "total_ms": 17.618437996134162,
+        "pose_ms": 0.15159399481490254,
+        "solve_ms": 17.28042000468122,
+        "cir_numpy_ms": 0.186423996638041,
+        "valid_paths": 144
+      }
+    },
+    {
+      "epoch_s": 0.065,
+      "order": [
+        "single-bounce",
+        "native"
+      ],
+      "single-bounce": {
+        "total_ms": 23.967250002897345,
+        "pose_ms": 0.17391700384905562,
+        "solve_ms": 23.6004479957046,
+        "cir_numpy_ms": 0.1928850033436902,
+        "valid_paths": 144
+      },
+      "native": {
+        "total_ms": 176.2797129995306,
+        "pose_ms": 0.15632100257789716,
+        "solve_ms": 175.8765080012381,
+        "cir_numpy_ms": 0.2468839957145974,
+        "valid_paths": 144
+      }
+    },
+    {
+      "epoch_s": 0.07,
+      "order": [
+        "native",
+        "single-bounce"
+      ],
+      "native": {
+        "total_ms": 176.7956139956368,
+        "pose_ms": 0.27238199982093647,
+        "solve_ms": 176.34634099522373,
+        "cir_numpy_ms": 0.1768910005921498,
+        "valid_paths": 144
+      },
+      "single-bounce": {
+        "total_ms": 12.369739000860136,
+        "pose_ms": 0.11310699483146891,
+        "solve_ms": 12.147491004725453,
+        "cir_numpy_ms": 0.10914100130321458,
+        "valid_paths": 144
+      }
+    },
+    {
+      "epoch_s": 0.075,
+      "order": [
+        "single-bounce",
+        "native"
+      ],
+      "single-bounce": {
+        "total_ms": 17.801928996050265,
+        "pose_ms": 0.09878499986371025,
+        "solve_ms": 17.548254996654578,
+        "cir_numpy_ms": 0.15488899953197688,
+        "valid_paths": 144
+      },
+      "native": {
+        "total_ms": 165.66512200370198,
+        "pose_ms": 0.10155000200029463,
+        "solve_ms": 165.35947100055637,
+        "cir_numpy_ms": 0.20410100114531815,
+        "valid_paths": 144
+      }
+    },
+    {
+      "epoch_s": 0.08,
+      "order": [
+        "native",
+        "single-bounce"
+      ],
+      "native": {
+        "total_ms": 187.98091600183398,
+        "pose_ms": 0.16381100431317464,
+        "solve_ms": 187.65661799989175,
+        "cir_numpy_ms": 0.16048699762905017,
+        "valid_paths": 144
+      },
+      "single-bounce": {
+        "total_ms": 12.842285999795422,
+        "pose_ms": 0.1142879991675727,
+        "solve_ms": 12.552609005069826,
+        "cir_numpy_ms": 0.17538899555802345,
+        "valid_paths": 144
+      }
+    },
+    {
+      "epoch_s": 0.085,
+      "order": [
+        "single-bounce",
+        "native"
+      ],
+      "single-bounce": {
+        "total_ms": 18.042504001641646,
+        "pose_ms": 0.11076400551246479,
+        "solve_ms": 17.743942997185513,
+        "cir_numpy_ms": 0.18779699894366786,
+        "valid_paths": 144
+      },
+      "native": {
+        "total_ms": 138.14292100141756,
+        "pose_ms": 0.11498999811010435,
+        "solve_ms": 137.8723710004124,
+        "cir_numpy_ms": 0.1555600028950721,
+        "valid_paths": 144
+      }
+    },
+    {
+      "epoch_s": 0.09,
+      "order": [
+        "native",
+        "single-bounce"
+      ],
+      "native": {
+        "total_ms": 145.53902500483673,
+        "pose_ms": 0.12591600534506142,
+        "solve_ms": 145.25567699456587,
+        "cir_numpy_ms": 0.1574320049257949,
+        "valid_paths": 144
+      },
+      "single-bounce": {
+        "total_ms": 12.867283003288321,
+        "pose_ms": 0.14965100126573816,
+        "solve_ms": 12.58373400196433,
+        "cir_numpy_ms": 0.13389800005825236,
+        "valid_paths": 144
+      }
+    },
+    {
+      "epoch_s": 0.095,
+      "order": [
+        "single-bounce",
+        "native"
+      ],
+      "single-bounce": {
+        "total_ms": 17.92211599968141,
+        "pose_ms": 0.10485499660717323,
+        "solve_ms": 17.671847002930008,
+        "cir_numpy_ms": 0.14541400014422834,
+        "valid_paths": 144
+      },
+      "native": {
+        "total_ms": 138.8306949957041,
+        "pose_ms": 0.11260599421802908,
+        "solve_ms": 138.5619080028846,
+        "cir_numpy_ms": 0.15618099860148504,
+        "valid_paths": 144
+      }
+    },
+    {
+      "epoch_s": 0.1,
+      "order": [
+        "native",
+        "single-bounce"
+      ],
+      "native": {
+        "total_ms": 154.68758499628166,
+        "pose_ms": 0.12129899550927803,
+        "solve_ms": 154.37607600324554,
+        "cir_numpy_ms": 0.19020999752683565,
+        "valid_paths": 144
+      },
+      "single-bounce": {
+        "total_ms": 12.949955002113711,
+        "pose_ms": 0.17998599651036784,
+        "solve_ms": 12.61581099970499,
+        "cir_numpy_ms": 0.1541580058983527,
+        "valid_paths": 144
+      }
+    },
+    {
+      "epoch_s": 0.105,
+      "order": [
+        "single-bounce",
+        "native"
+      ],
+      "single-bounce": {
+        "total_ms": 20.73654600098962,
+        "pose_ms": 0.11216599523322657,
+        "solve_ms": 20.463954002480023,
+        "cir_numpy_ms": 0.16042600327637047,
+        "valid_paths": 144
+      },
+      "native": {
+        "total_ms": 147.48401399992872,
+        "pose_ms": 0.11255499703111127,
+        "solve_ms": 147.21616000315407,
+        "cir_numpy_ms": 0.15529899974353611,
+        "valid_paths": 144
+      }
+    },
+    {
+      "epoch_s": 0.11,
+      "order": [
+        "native",
+        "single-bounce"
+      ],
+      "native": {
+        "total_ms": 149.9682270004996,
+        "pose_ms": 0.11589100176934153,
+        "solve_ms": 149.69116899737855,
+        "cir_numpy_ms": 0.16116700135171413,
+        "valid_paths": 144
+      },
+      "single-bounce": {
+        "total_ms": 13.995125002111308,
+        "pose_ms": 0.11346700193826109,
+        "solve_ms": 13.719638998736627,
+        "cir_numpy_ms": 0.16201900143641979,
+        "valid_paths": 144
+      }
+    },
+    {
+      "epoch_s": 0.115,
+      "order": [
+        "single-bounce",
+        "native"
+      ],
+      "single-bounce": {
+        "total_ms": 17.51733000128297,
+        "pose_ms": 0.12031799997203052,
+        "solve_ms": 17.228253003850114,
+        "cir_numpy_ms": 0.16875899746082723,
+        "valid_paths": 144
+      },
+      "native": {
+        "total_ms": 141.22253099776572,
+        "pose_ms": 0.10307200136594474,
+        "solve_ms": 140.95559699489968,
+        "cir_numpy_ms": 0.16386200150009245,
+        "valid_paths": 144
+      }
+    },
+    {
+      "epoch_s": 0.12,
+      "order": [
+        "native",
+        "single-bounce"
+      ],
+      "native": {
+        "total_ms": 146.5863100020215,
+        "pose_ms": 0.11589100176934153,
+        "solve_ms": 146.31090399780078,
+        "cir_numpy_ms": 0.1595150024513714,
+        "valid_paths": 144
+      },
+      "single-bounce": {
+        "total_ms": 13.78038900293177,
+        "pose_ms": 0.1122960020438768,
+        "solve_ms": 13.512263001757674,
+        "cir_numpy_ms": 0.15582999913021922,
+        "valid_paths": 144
+      }
+    },
+    {
+      "epoch_s": 0.125,
+      "order": [
+        "single-bounce",
+        "native"
+      ],
+      "single-bounce": {
+        "total_ms": 17.867444999865256,
+        "pose_ms": 0.10846999794011936,
+        "solve_ms": 17.613700998481363,
+        "cir_numpy_ms": 0.14527400344377384,
+        "valid_paths": 144
+      },
+      "native": {
+        "total_ms": 148.06617100111907,
+        "pose_ms": 0.1080189977074042,
+        "solve_ms": 147.80206200521206,
+        "cir_numpy_ms": 0.15608999819960445,
+        "valid_paths": 144
+      }
+    },
+    {
+      "epoch_s": 0.13,
+      "order": [
+        "native",
+        "single-bounce"
+      ],
+      "native": {
+        "total_ms": 149.41147599893156,
+        "pose_ms": 0.1225300002261065,
+        "solve_ms": 149.12996099883458,
+        "cir_numpy_ms": 0.15898499987088144,
+        "valid_paths": 144
+      },
+      "single-bounce": {
+        "total_ms": 13.262284999655094,
+        "pose_ms": 0.11288699897704646,
+        "solve_ms": 12.854403001256287,
+        "cir_numpy_ms": 0.29499499942176044,
+        "valid_paths": 144
+      }
+    },
+    {
+      "epoch_s": 0.135,
+      "order": [
+        "single-bounce",
+        "native"
+      ],
+      "single-bounce": {
+        "total_ms": 17.680479999398813,
+        "pose_ms": 0.11385799734853208,
+        "solve_ms": 17.408489002264105,
+        "cir_numpy_ms": 0.1581329997861758,
+        "valid_paths": 144
+      },
+      "native": {
+        "total_ms": 145.9398169972701,
+        "pose_ms": 0.11292599810985848,
+        "solve_ms": 145.6604859995423,
+        "cir_numpy_ms": 0.16640499961795285,
+        "valid_paths": 144
+      }
+    },
+    {
+      "epoch_s": 0.14,
+      "order": [
+        "native",
+        "single-bounce"
+      ],
+      "native": {
+        "total_ms": 157.99472099752165,
+        "pose_ms": 0.12629599950741976,
+        "solve_ms": 157.70581499964464,
+        "cir_numpy_ms": 0.16260999836958945,
+        "valid_paths": 144
+      },
+      "single-bounce": {
+        "total_ms": 13.88772799691651,
+        "pose_ms": 0.1238229961018078,
+        "solve_ms": 13.608234999992419,
+        "cir_numpy_ms": 0.15567000082228333,
+        "valid_paths": 144
+      }
+    },
+    {
+      "epoch_s": 0.145,
+      "order": [
+        "single-bounce",
+        "native"
+      ],
+      "single-bounce": {
+        "total_ms": 17.941905003681313,
+        "pose_ms": 0.12372300261631608,
+        "solve_ms": 17.666678999376018,
+        "cir_numpy_ms": 0.15150300168897957,
+        "valid_paths": 144
+      },
+      "native": {
+        "total_ms": 153.86800200212747,
+        "pose_ms": 0.11874500341946259,
+        "solve_ms": 153.58385299623478,
+        "cir_numpy_ms": 0.16540400247322395,
+        "valid_paths": 144
+      }
+    },
+    {
+      "epoch_s": 0.15,
+      "order": [
+        "native",
+        "single-bounce"
+      ],
+      "native": {
+        "total_ms": 156.50487400125712,
+        "pose_ms": 0.19110100402031094,
+        "solve_ms": 156.14483399986057,
+        "cir_numpy_ms": 0.16893899737624452,
+        "valid_paths": 144
+      },
+      "single-bounce": {
+        "total_ms": 21.477447997312993,
+        "pose_ms": 0.1333859981968999,
+        "solve_ms": 21.178858005441725,
+        "cir_numpy_ms": 0.16520399367436767,
+        "valid_paths": 144
+      }
+    },
+    {
+      "epoch_s": 0.155,
+      "order": [
+        "single-bounce",
+        "native"
+      ],
+      "single-bounce": {
+        "total_ms": 27.351153999916278,
+        "pose_ms": 0.14155800454318523,
+        "solve_ms": 26.987728997482918,
+        "cir_numpy_ms": 0.2218669978901744,
+        "valid_paths": 144
+      },
+      "native": {
+        "total_ms": 204.41185399977257,
+        "pose_ms": 0.1628300014999695,
+        "solve_ms": 204.0560790046584,
+        "cir_numpy_ms": 0.19294499361421913,
+        "valid_paths": 144
+      }
+    },
+    {
+      "epoch_s": 0.16,
+      "order": [
+        "native",
+        "single-bounce"
+      ],
+      "native": {
+        "total_ms": 142.45278499583947,
+        "pose_ms": 0.14830900181550533,
+        "solve_ms": 142.14665399777004,
+        "cir_numpy_ms": 0.15782199625391513,
+        "valid_paths": 144
+      },
+      "single-bounce": {
+        "total_ms": 12.276030996872578,
+        "pose_ms": 0.14035699859960005,
+        "solve_ms": 11.992031999398023,
+        "cir_numpy_ms": 0.14364199887495488,
+        "valid_paths": 144
+      }
+    },
+    {
+      "epoch_s": 0.165,
+      "order": [
+        "single-bounce",
+        "native"
+      ],
+      "single-bounce": {
+        "total_ms": 17.48041399696376,
+        "pose_ms": 0.12652599980356172,
+        "solve_ms": 17.19836900156224,
+        "cir_numpy_ms": 0.15551899559795856,
+        "valid_paths": 144
+      },
+      "native": {
+        "total_ms": 139.5336409987067,
+        "pose_ms": 0.15660099597880617,
+        "solve_ms": 139.16499799961457,
+        "cir_numpy_ms": 0.21204200311331078,
+        "valid_paths": 144
+      }
+    },
+    {
+      "epoch_s": 0.17,
+      "order": [
+        "native",
+        "single-bounce"
+      ],
+      "native": {
+        "total_ms": 150.81414399901405,
+        "pose_ms": 0.13208499876782298,
+        "solve_ms": 150.51750700513367,
+        "cir_numpy_ms": 0.1645519951125607,
+        "valid_paths": 144
+      },
+      "single-bounce": {
+        "total_ms": 14.425569999730214,
+        "pose_ms": 0.12237999908393249,
+        "solve_ms": 14.15189700492192,
+        "cir_numpy_ms": 0.1512929957243614,
+        "valid_paths": 144
+      }
+    },
+    {
+      "epoch_s": 0.175,
+      "order": [
+        "single-bounce",
+        "native"
+      ],
+      "single-bounce": {
+        "total_ms": 18.730698997387663,
+        "pose_ms": 0.11720299517037347,
+        "solve_ms": 18.452989002980758,
+        "cir_numpy_ms": 0.16050699923653156,
+        "valid_paths": 144
+      },
+      "native": {
+        "total_ms": 177.51657599728787,
+        "pose_ms": 0.11846399866044521,
+        "solve_ms": 177.21996900218073,
+        "cir_numpy_ms": 0.17814299644669518,
+        "valid_paths": 144
+      }
+    }
+  ],
+  "notes": [
+    "Alternating paired order reduces run-to-run bias",
+    "RSS includes both solvers, not optimized-only memory or VRAM",
+    "Native and exhaustive discovery may differ in richer scenes; ray convergence remains scene dependent"
+  ]
+}

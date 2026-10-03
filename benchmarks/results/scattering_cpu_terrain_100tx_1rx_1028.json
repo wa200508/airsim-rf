@@ -1,0 +1,410 @@
+{
+  "scope": "Synthetic terrain; independent moving TX/RX plus first-order diffuse and specular propagation",
+  "scene_file": "benchmarks/scenes/terrain.xml",
+  "specular_planes": 800,
+  "geometry_prepare_ms": 21.182551005040295,
+  "model": {
+    "carrier_hz": 24125000000.0,
+    "depth": 1,
+    "refraction": false,
+    "diffraction": false,
+    "surface_geometry": "21x21 DEM, 800 planar triangles",
+    "elevation_range_m": [
+      -1.7254847902876684,
+      6.449507383581789
+    ],
+    "ground_extent_m": [
+      -100,
+      100
+    ],
+    "permittivity": 5,
+    "conductivity_s_per_m": 0.01,
+    "thickness_m": 0.5,
+    "scattering_coefficient": 0.3,
+    "scattering_pattern": "Sionna default Lambertian",
+    "tx_pattern": "tr38901",
+    "rx_pattern": "tr38901",
+    "polarization": "V",
+    "calibrated_ground_roughness": false,
+    "independent_random_scatterer_phases": false
+  },
+  "temporal_model": "Common random numbers per pulse; sampled hit points are not persistent world scatterers",
+  "sampling": {
+    "attempts_per_link": 1028,
+    "pattern_grid": [
+      64,
+      128
+    ],
+    "strategy": "Half TX-pattern proposals, half RX-pattern proposals; mixture area-PDF correction",
+    "uniform_fraction": 0.1,
+    "proposal_generation": "NumPy host draws; Mitsuba traces and Sionna fields on selected backend"
+  },
+  "excludes": [
+    "IQ synthesis",
+    "AirSim",
+    "moving mesh/BVH updates",
+    "transport",
+    "diagnostic classification"
+  ],
+  "versions": {
+    "sionna_rt": "2.2.0",
+    "mitsuba": "3.9.1",
+    "drjit": "1.5.0",
+    "backend": "llvm_ad_mono_polarized"
+  },
+  "arguments": {
+    "backend": "cpu",
+    "scene": "terrain",
+    "tx": 100,
+    "rx": 1,
+    "samples_per_link": 1028,
+    "uniform_fraction": 0.1,
+    "iterations": 10,
+    "warmup": 3,
+    "threads": 2,
+    "pulse_hz": 200,
+    "deployment_receivers": 10,
+    "output": "benchmarks/results/scattering_cpu_terrain_100tx_1rx_1028.json"
+  },
+  "host": {
+    "cpu_count": 3,
+    "cpu_quota": "200000 100000",
+    "memory_limit": "8589934592",
+    "drjit_threads": 2,
+    "peak_host_rss_mib": 214.4609375
+  },
+  "stage_timings": {
+    "proposal_table_prepare_ms": {
+      "p50_ms": 2.972280501126079,
+      "p95_ms": 3.562717048771446
+    },
+    "host_numpy_sampling_ms": {
+      "p50_ms": 16.986355502012884,
+      "p95_ms": 18.227695855603088
+    }
+  },
+  "gpu_deployment": {
+    "workload": {
+      "topology": "one GPU per physical receiver; all transmitters on every receiver worker",
+      "gpu_count": 10,
+      "transmitters_per_gpu": 100,
+      "receivers_per_gpu": 1,
+      "diffuse_attempts_per_gpu_per_pulse": 102800,
+      "visibility_queries_per_gpu_per_pulse_upper_bound": 365700,
+      "visibility_queries_fleet_per_pulse_upper_bound": 3657000,
+      "candidate_paths_per_gpu_upper_bound": 182900,
+      "compact_channel_bytes_per_gpu_per_pulse_upper_bound": 2926400,
+      "compact_channel_bytes_per_gpu_per_second_upper_bound": 585280000,
+      "pulse_hz": 200,
+      "pulse_budget_ms": 5.0,
+      "physics_hz": 120,
+      "physics_budget_ms": 8.333333333333334,
+      "ray_only_required_queries_per_second_at_pulse_rate": 73140000,
+      "ray_only_required_queries_per_second_at_physics_rate": 43884000,
+      "vram_requirement": "unmeasured; compact coefficients are not total device memory"
+    },
+    "gpu_channel_runtime_measured": false,
+    "gpu_iq_runtime_measured": false,
+    "cpu_to_gpu_speedup_applied": false,
+    "measured_host_sampling_ms_per_receiver_worker": 16.986355502012884,
+    "conditional_ray_stage_sensitivity": [
+      {
+        "assumed_effective_scene_queries_per_second": 100000000.0,
+        "ray_stage_ms_at_upper_bound_query_count": 3.657,
+        "unchanged_measured_host_sampling_plus_ray_stage_ms": 20.643355502012884
+      },
+      {
+        "assumed_effective_scene_queries_per_second": 250000000.0,
+        "ray_stage_ms_at_upper_bound_query_count": 1.4628,
+        "unchanged_measured_host_sampling_plus_ray_stage_ms": 18.449155502012886
+      },
+      {
+        "assumed_effective_scene_queries_per_second": 1000000000.0,
+        "ray_stage_ms_at_upper_bound_query_count": 0.3657,
+        "unchanged_measured_host_sampling_plus_ray_stage_ms": 17.352055502012885
+      }
+    ],
+    "conditional_rates_source": "Hypothetical effective whole-scene query throughput, not vendor RT-core specifications",
+    "gpu_deadline_status": "unmeasured",
+    "remaining_solve_cost": "mixed host/device; no pure GPU residual inferred",
+    "device_memory": "unmeasured; host RSS does not estimate VRAM"
+  },
+  "cold": {
+    "epoch_s": 0.0,
+    "total_ms": 73.71128900558688,
+    "pose_ms": 0.26981800328940153,
+    "solve_ms": 72.54004100104794,
+    "cir_numpy_ms": 0.9014300012495369,
+    "valid_paths": 96700,
+    "diffuse_paths": 96483,
+    "diffuse_per_link_min": 948,
+    "diffuse_per_link_median": 966.0,
+    "diffuse_per_link_max": 979,
+    "sum_diffuse_path_power": 6.497386628723234e-09,
+    "sampling": {
+      "samples_per_link": 1028,
+      "diffuse_launches": 102800,
+      "tx_launches": 51400,
+      "rx_launches": 51400,
+      "uniform_fraction": 0.1
+    },
+    "stage_timings": {
+      "proposal_table_prepare_ms": 6.501431002106983,
+      "host_numpy_sampling_ms": 17.447111000365112
+    }
+  },
+  "p50_ms": 70.14359999811859,
+  "p95_ms": 76.22831740045513,
+  "max_ms": 77.2711600002367,
+  "pulse_budget_ms": 5.0,
+  "deadline_misses": 10,
+  "samples": [
+    {
+      "epoch_s": 0.02,
+      "total_ms": 64.89882800087798,
+      "pose_ms": 0.31793900416232646,
+      "solve_ms": 63.72005899902433,
+      "cir_numpy_ms": 0.8608299976913258,
+      "valid_paths": 96700,
+      "diffuse_paths": 96483,
+      "diffuse_per_link_min": 948,
+      "diffuse_per_link_median": 966.0,
+      "diffuse_per_link_max": 979,
+      "sum_diffuse_path_power": 6.5300631568732115e-09,
+      "sampling": {
+        "samples_per_link": 1028,
+        "diffuse_launches": 102800,
+        "tx_launches": 51400,
+        "rx_launches": 51400,
+        "uniform_fraction": 0.1
+      },
+      "stage_timings": {
+        "proposal_table_prepare_ms": 2.7763960024458356,
+        "host_numpy_sampling_ms": 15.643188999092672
+      }
+    },
+    {
+      "epoch_s": 0.025,
+      "total_ms": 74.01949300401611,
+      "pose_ms": 0.26240700390189886,
+      "solve_ms": 72.9191999998875,
+      "cir_numpy_ms": 0.8378860002267174,
+      "valid_paths": 96702,
+      "diffuse_paths": 96485,
+      "diffuse_per_link_min": 948,
+      "diffuse_per_link_median": 966.0,
+      "diffuse_per_link_max": 979,
+      "sum_diffuse_path_power": 6.538402708144986e-09,
+      "sampling": {
+        "samples_per_link": 1028,
+        "diffuse_launches": 102800,
+        "tx_launches": 51400,
+        "rx_launches": 51400,
+        "uniform_fraction": 0.1
+      },
+      "stage_timings": {
+        "proposal_table_prepare_ms": 2.766201003396418,
+        "host_numpy_sampling_ms": 16.53006699780235
+      }
+    },
+    {
+      "epoch_s": 0.03,
+      "total_ms": 77.2711600002367,
+      "pose_ms": 0.39104600000428036,
+      "solve_ms": 76.20055099687306,
+      "cir_numpy_ms": 0.6795630033593625,
+      "valid_paths": 96702,
+      "diffuse_paths": 96485,
+      "diffuse_per_link_min": 948,
+      "diffuse_per_link_median": 966.0,
+      "diffuse_per_link_max": 979,
+      "sum_diffuse_path_power": 6.545822550663161e-09,
+      "sampling": {
+        "samples_per_link": 1028,
+        "diffuse_launches": 102800,
+        "tx_launches": 51400,
+        "rx_launches": 51400,
+        "uniform_fraction": 0.1
+      },
+      "stage_timings": {
+        "proposal_table_prepare_ms": 3.3522450030432083,
+        "host_numpy_sampling_ms": 17.078365999623202
+      }
+    },
+    {
+      "epoch_s": 0.035,
+      "total_ms": 66.94483599858359,
+      "pose_ms": 0.26977800007443875,
+      "solve_ms": 65.70876199839404,
+      "cir_numpy_ms": 0.9662960001151077,
+      "valid_paths": 96701,
+      "diffuse_paths": 96484,
+      "diffuse_per_link_min": 948,
+      "diffuse_per_link_median": 966.0,
+      "diffuse_per_link_max": 979,
+      "sum_diffuse_path_power": 6.554008002979117e-09,
+      "sampling": {
+        "samples_per_link": 1028,
+        "diffuse_launches": 102800,
+        "tx_launches": 51400,
+        "rx_launches": 51400,
+        "uniform_fraction": 0.1
+      },
+      "stage_timings": {
+        "proposal_table_prepare_ms": 3.67282799561508,
+        "host_numpy_sampling_ms": 15.942079997330438
+      }
+    },
+    {
+      "epoch_s": 0.04,
+      "total_ms": 65.98432899772888,
+      "pose_ms": 0.3044889963348396,
+      "solve_ms": 65.0251540064346,
+      "cir_numpy_ms": 0.6546859949594364,
+      "valid_paths": 96703,
+      "diffuse_paths": 96486,
+      "diffuse_per_link_min": 948,
+      "diffuse_per_link_median": 966.0,
+      "diffuse_per_link_max": 979,
+      "sum_diffuse_path_power": 6.561688525863474e-09,
+      "sampling": {
+        "samples_per_link": 1028,
+        "diffuse_launches": 102800,
+        "tx_launches": 51400,
+        "rx_launches": 51400,
+        "uniform_fraction": 0.1
+      },
+      "stage_timings": {
+        "proposal_table_prepare_ms": 2.704979997361079,
+        "host_numpy_sampling_ms": 17.155811001430266
+      }
+    },
+    {
+      "epoch_s": 0.045,
+      "total_ms": 68.19019300019136,
+      "pose_ms": 0.2781910006888211,
+      "solve_ms": 67.09564800257795,
+      "cir_numpy_ms": 0.8163539969245903,
+      "valid_paths": 96703,
+      "diffuse_paths": 96486,
+      "diffuse_per_link_min": 948,
+      "diffuse_per_link_median": 966.0,
+      "diffuse_per_link_max": 979,
+      "sum_diffuse_path_power": 6.568636745640788e-09,
+      "sampling": {
+        "samples_per_link": 1028,
+        "diffuse_launches": 102800,
+        "tx_launches": 51400,
+        "rx_launches": 51400,
+        "uniform_fraction": 0.1
+      },
+      "stage_timings": {
+        "proposal_table_prepare_ms": 2.944084000773728,
+        "host_numpy_sampling_ms": 18.52904600673355
+      }
+    },
+    {
+      "epoch_s": 0.05,
+      "total_ms": 70.1273009981378,
+      "pose_ms": 0.2827780044754036,
+      "solve_ms": 68.97764399764128,
+      "cir_numpy_ms": 0.8668789960211143,
+      "valid_paths": 96702,
+      "diffuse_paths": 96485,
+      "diffuse_per_link_min": 948,
+      "diffuse_per_link_median": 966.0,
+      "diffuse_per_link_max": 979,
+      "sum_diffuse_path_power": 6.5772152169074616e-09,
+      "sampling": {
+        "samples_per_link": 1028,
+        "diffuse_launches": 102800,
+        "tx_launches": 51400,
+        "rx_launches": 51400,
+        "uniform_fraction": 0.1
+      },
+      "stage_timings": {
+        "proposal_table_prepare_ms": 3.00047700147843,
+        "host_numpy_sampling_ms": 17.824457005190197
+      }
+    },
+    {
+      "epoch_s": 0.055,
+      "total_ms": 74.95373200072208,
+      "pose_ms": 0.4198500027996488,
+      "solve_ms": 73.77271899895277,
+      "cir_numpy_ms": 0.7611629989696667,
+      "valid_paths": 96702,
+      "diffuse_paths": 96485,
+      "diffuse_per_link_min": 948,
+      "diffuse_per_link_median": 966.0,
+      "diffuse_per_link_max": 978,
+      "sum_diffuse_path_power": 6.585530343272694e-09,
+      "sampling": {
+        "samples_per_link": 1028,
+        "diffuse_launches": 102800,
+        "tx_launches": 51400,
+        "rx_launches": 51400,
+        "uniform_fraction": 0.1
+      },
+      "stage_timings": {
+        "proposal_table_prepare_ms": 3.0686270038131624,
+        "host_numpy_sampling_ms": 16.894345004402567
+      }
+    },
+    {
+      "epoch_s": 0.06,
+      "total_ms": 71.93611999537097,
+      "pose_ms": 0.36133299727225676,
+      "solve_ms": 70.611695999105,
+      "cir_numpy_ms": 0.9630909989937209,
+      "valid_paths": 96704,
+      "diffuse_paths": 96487,
+      "diffuse_per_link_min": 948,
+      "diffuse_per_link_median": 966.0,
+      "diffuse_per_link_max": 979,
+      "sum_diffuse_path_power": 6.5941927474000295e-09,
+      "sampling": {
+        "samples_per_link": 1028,
+        "diffuse_launches": 102800,
+        "tx_launches": 51400,
+        "rx_launches": 51400,
+        "uniform_fraction": 0.1
+      },
+      "stage_timings": {
+        "proposal_table_prepare_ms": 3.428137002629228,
+        "host_numpy_sampling_ms": 16.606730998319108
+      }
+    },
+    {
+      "epoch_s": 0.065,
+      "total_ms": 70.15989899809938,
+      "pose_ms": 0.3095769934589043,
+      "solve_ms": 69.0203480044147,
+      "cir_numpy_ms": 0.8299740002257749,
+      "valid_paths": 96705,
+      "diffuse_paths": 96488,
+      "diffuse_per_link_min": 948,
+      "diffuse_per_link_median": 966.0,
+      "diffuse_per_link_max": 979,
+      "sum_diffuse_path_power": 6.6023142508697674e-09,
+      "sampling": {
+        "samples_per_link": 1028,
+        "diffuse_launches": 102800,
+        "tx_launches": 51400,
+        "rx_launches": 51400,
+        "uniform_fraction": 0.1
+      },
+      "stage_timings": {
+        "proposal_table_prepare_ms": 2.7889850025530905,
+        "host_numpy_sampling_ms": 17.85937900422141
+      }
+    }
+  ],
+  "notes": [
+    "Geometry plane-cache preparation is timed separately from cold/epoch channel solves",
+    "Attempts are not retained paths: misses, occlusion and zero response contribute zero",
+    "Incoherent sum of path powers is a normalization diagnostic, not coherent IQ power",
+    "Sample count does not establish clutter fidelity or convergence",
+    "Host RSS is not VRAM; no purchase minimum follows from CPU timing"
+  ]
+}

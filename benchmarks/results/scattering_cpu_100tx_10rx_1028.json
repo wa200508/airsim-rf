@@ -1,0 +1,199 @@
+{
+  "scope": "Synthetic finite ground; independent moving TX/RX plus first-order diffuse and specular propagation",
+  "model": {
+    "carrier_hz": 24125000000.0,
+    "depth": 1,
+    "refraction": false,
+    "diffraction": false,
+    "ground_extent_m": [
+      -100,
+      100
+    ],
+    "permittivity": 5,
+    "conductivity_s_per_m": 0.01,
+    "thickness_m": 0.5,
+    "scattering_coefficient": 0.3,
+    "scattering_pattern": "Sionna default Lambertian",
+    "tx_pattern": "tr38901",
+    "rx_pattern": "tr38901",
+    "polarization": "V",
+    "calibrated_ground_roughness": false,
+    "independent_random_scatterer_phases": false
+  },
+  "sampling": {
+    "attempts_per_link": 1028,
+    "pattern_grid": [
+      64,
+      128
+    ],
+    "strategy": "Half TX-pattern proposals, half RX-pattern proposals; mixture area-PDF correction",
+    "uniform_fraction": 0.1,
+    "proposal_generation": "NumPy host draws; Mitsuba traces and Sionna fields on selected backend"
+  },
+  "excludes": [
+    "IQ synthesis",
+    "AirSim",
+    "moving mesh/BVH updates",
+    "transport",
+    "diagnostic classification"
+  ],
+  "versions": {
+    "sionna_rt": "2.2.0",
+    "mitsuba": "3.9.1",
+    "drjit": "1.5.0",
+    "backend": "llvm_ad_mono_polarized"
+  },
+  "arguments": {
+    "backend": "cpu",
+    "tx": 100,
+    "rx": 10,
+    "samples_per_link": 1028,
+    "uniform_fraction": 0.1,
+    "iterations": 5,
+    "warmup": 2,
+    "threads": 2,
+    "pulse_hz": 200,
+    "output": "benchmarks/results/scattering_cpu_100tx_10rx_1028.json"
+  },
+  "host": {
+    "cpu_count": 3,
+    "cpu_quota": "200000 100000",
+    "memory_limit": "8589934592",
+    "drjit_threads": 2,
+    "peak_host_rss_mib": 413.609375
+  },
+  "cold": {
+    "epoch_s": 0.0,
+    "total_ms": 770.7342459980282,
+    "pose_ms": 0.23595799575559795,
+    "solve_ms": 766.8631060005282,
+    "cir_numpy_ms": 3.635182001744397,
+    "valid_paths": 965893,
+    "diffuse_paths": 963893,
+    "diffuse_per_link_min": 939,
+    "diffuse_per_link_median": 964.0,
+    "diffuse_per_link_max": 989,
+    "sum_diffuse_path_power": 6.5280076455565e-08,
+    "sampling": {
+      "samples_per_link": 1028,
+      "diffuse_launches": 1028000,
+      "tx_launches": 514000,
+      "rx_launches": 514000,
+      "uniform_fraction": 0.1
+    }
+  },
+  "p50_ms": 354.7209899988957,
+  "p95_ms": 366.6937973990571,
+  "max_ms": 368.1889069994213,
+  "pulse_budget_ms": 5.0,
+  "deadline_misses": 5,
+  "samples": [
+    {
+      "epoch_s": 0.015,
+      "total_ms": 368.1889069994213,
+      "pose_ms": 0.30645299557363614,
+      "solve_ms": 364.63698700390523,
+      "cir_numpy_ms": 3.245466999942437,
+      "valid_paths": 965900,
+      "diffuse_paths": 963900,
+      "diffuse_per_link_min": 939,
+      "diffuse_per_link_median": 964.0,
+      "diffuse_per_link_max": 989,
+      "sum_diffuse_path_power": 6.547435305037652e-08,
+      "sampling": {
+        "samples_per_link": 1028,
+        "diffuse_launches": 1028000,
+        "tx_launches": 514000,
+        "rx_launches": 514000,
+        "uniform_fraction": 0.1
+      }
+    },
+    {
+      "epoch_s": 0.02,
+      "total_ms": 352.98793399852,
+      "pose_ms": 0.3455600017332472,
+      "solve_ms": 349.0860980018624,
+      "cir_numpy_ms": 3.5562759949243627,
+      "valid_paths": 965901,
+      "diffuse_paths": 963901,
+      "diffuse_per_link_min": 939,
+      "diffuse_per_link_median": 964.0,
+      "diffuse_per_link_max": 989,
+      "sum_diffuse_path_power": 6.553963771693816e-08,
+      "sampling": {
+        "samples_per_link": 1028,
+        "diffuse_launches": 1028000,
+        "tx_launches": 514000,
+        "rx_launches": 514000,
+        "uniform_fraction": 0.1
+      }
+    },
+    {
+      "epoch_s": 0.025,
+      "total_ms": 360.71335899760015,
+      "pose_ms": 0.40390600042883307,
+      "solve_ms": 355.5738679933711,
+      "cir_numpy_ms": 4.7355850038002245,
+      "valid_paths": 965903,
+      "diffuse_paths": 963903,
+      "diffuse_per_link_min": 939,
+      "diffuse_per_link_median": 964.0,
+      "diffuse_per_link_max": 989,
+      "sum_diffuse_path_power": 6.560331655691698e-08,
+      "sampling": {
+        "samples_per_link": 1028,
+        "diffuse_launches": 1028000,
+        "tx_launches": 514000,
+        "rx_launches": 514000,
+        "uniform_fraction": 0.1
+      }
+    },
+    {
+      "epoch_s": 0.03,
+      "total_ms": 350.02291000273544,
+      "pose_ms": 0.3299870004411787,
+      "solve_ms": 345.5359910003608,
+      "cir_numpy_ms": 4.1569320019334555,
+      "valid_paths": 965903,
+      "diffuse_paths": 963903,
+      "diffuse_per_link_min": 939,
+      "diffuse_per_link_median": 964.0,
+      "diffuse_per_link_max": 989,
+      "sum_diffuse_path_power": 6.566843779864939e-08,
+      "sampling": {
+        "samples_per_link": 1028,
+        "diffuse_launches": 1028000,
+        "tx_launches": 514000,
+        "rx_launches": 514000,
+        "uniform_fraction": 0.1
+      }
+    },
+    {
+      "epoch_s": 0.035,
+      "total_ms": 354.7209899988957,
+      "pose_ms": 0.3049500010092743,
+      "solve_ms": 349.62916799850063,
+      "cir_numpy_ms": 4.786871999385767,
+      "valid_paths": 965900,
+      "diffuse_paths": 963900,
+      "diffuse_per_link_min": 939,
+      "diffuse_per_link_median": 964.0,
+      "diffuse_per_link_max": 989,
+      "sum_diffuse_path_power": 6.573503696927219e-08,
+      "sampling": {
+        "samples_per_link": 1028,
+        "diffuse_launches": 1028000,
+        "tx_launches": 514000,
+        "rx_launches": 514000,
+        "uniform_fraction": 0.1
+      }
+    }
+  ],
+  "notes": [
+    "Attempts are not retained paths: misses, occlusion and zero response contribute zero",
+    "Incoherent sum of path powers is a normalization diagnostic, not coherent IQ power",
+    "Sample count does not establish clutter fidelity or convergence",
+    "Host RSS is not VRAM; no purchase minimum follows from CPU timing"
+  ],
+  "temporal_model": "Common random numbers per pulse; sampled hit points are not persistent world scatterers"
+}

@@ -2,7 +2,7 @@ name: Test and publish container
 
 on:
   push:
-    branches: [main]
+    branches: [main, "optimization/**"]
     tags: ["v*"]
   pull_request:
   workflow_dispatch:
@@ -39,6 +39,8 @@ jobs:
         run: docker run --rm --network none airsim-rf:test python /opt/airsim-rf/examples/distance2gol_radar.py
       - name: Exercise two distributed RF workers offline
         run: docker run --rm --network none airsim-rf:test python /opt/airsim-rf/examples/distributed_hello.py
+      - name: Smoke test terrain and documentation plots offline
+        run: docker run --rm --network none airsim-rf:test python /opt/airsim-rf/benchmarks/generate_rf_waterfalls.py --epochs 2 --tx 4 --samples-per-link 128 --output-dir /work/figures
       - name: Registry tags
         id: meta
         if: github.event_name != 'pull_request'

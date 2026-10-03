@@ -16,6 +16,7 @@ import time
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--backend", choices=("cpu", "cuda"), default="cpu")
+    parser.add_argument("--solver", choices=("native", "single-bounce"), default="native")
     parser.add_argument("--tx", type=int, default=100)
     parser.add_argument("--rx", type=int, default=1)
     parser.add_argument("--scene", default="builtin:simple_street_canyon")
@@ -30,13 +31,14 @@ def main():
     parser.add_argument("--refraction", action="store_true")
     parser.add_argument("--iterations", type=int, default=10)
     parser.add_argument("--warmup", type=int, default=2)
+    parser.add_argument("--threads", type=int, default=0, help="0 keeps Dr.Jit's default CPU thread count")
     parser.add_argument("--pulse-hz", "--update-hz", dest="update_hz", type=float, default=200,
                         help="Channel solves/s; defaults to the current 5 ms PRI")
     parser.add_argument("--output", type=Path, required=True)
     args = parser.parse_args()
     if min(args.tx, args.rx, args.rays, args.path_cap, args.iterations) < 1:
         parser.error("TX, RX, rays, path cap and iterations must be positive")
-    if min(args.depth, args.tx_batch, args.warmup) < 0 or args.update_hz <= 0:
+    if min(args.depth, args.tx_batch, args.warmup, args.threads) < 0 or args.update_hz <= 0:
         parser.error("depth/batch/warmup must be nonnegative and rate positive")
     if args.path_cap < args.rx:
         parser.error("path cap must accommodate at least one path per receiver")
@@ -45,6 +47,8 @@ def main():
 
     import numpy as np
     import drjit as dr
+    if args.threads:
+        dr.set_thread_count(args.threads)
     if args.backend == "cuda" and not dr.has_backend(dr.JitBackend.CUDA):
         parser.error("CUDA is unavailable; CPU fallback is not allowed")
     import mitsuba as mi
@@ -77,7 +81,11 @@ def main():
     if len(batches) == 1:
         for tx in transmitters:
             scene.add(tx)
-    solver = rt.PathSolver(deterministic=True)
+    if args.solver == "single-bounce":
+        from airsim_rf.single_bounce import SingleBouncePathSolver
+        solver = SingleBouncePathSolver()
+    else:
+        solver = rt.PathSolver(deterministic=True)
     setup_ms = (time.perf_counter()-setup_start)*1000
 
     def update(index):
@@ -148,6 +156,7 @@ def main():
         "versions": {"python": platform.python_version(), "sionna_rt": rt.__version__,
                      "mitsuba": mi.__version__, "drjit": dr.__version__, "backend": mi.variant()},
         "host": {"platform": platform.platform(), "cpu_count": os.cpu_count(),
+                 "drjit_threads": dr.thread_count(),
                  "cpu_model": next((line.split(":", 1)[1].strip() for line in
                        Path("/proc/cpuinfo").read_text().splitlines() if line.startswith("model name")), "unknown"),
                  "cpu_quota": Path("/sys/fs/cgroup/cpu.max").read_text().strip(),
@@ -157,6 +166,7 @@ def main():
                  "cuda_visible_devices": os.environ.get("CUDA_VISIBLE_DEVICES")},
         "scene_objects": len(scene.objects), "scene_triangles": sum(
             len(obj.mi_mesh.faces_buffer())//3 for obj in scene.objects.values()),
+        "unique_reflection_planes": getattr(solver, "plane_count", None),
         "setup_ms": setup_ms, "cold": cold,
         "p50_ms": float(np.percentile(total, 50)), "p95_ms": float(np.percentile(total, 95)),
         "p99_ms": float(np.percentile(total, 99)), "max_ms": float(total.max()),
@@ -167,7 +177,9 @@ def main():
         "valid_paths_min": min(s["valid_paths"] for s in samples),
         "valid_paths_max": max(s["valid_paths"] for s in samples),
         "samples": samples,
-        "notes": ["Host RSS is not GPU VRAM", "Path cap and ray count require convergence studies",
+        "notes": ["Host RSS is not GPU VRAM",
+                  ("Exhaustive first-order specular mesh candidates; ray count and seed are unused"
+                   if args.solver == "single-bounce" else "Path cap and ray count require convergence studies"),
                   "Batched scene add/remove overhead is included", "Cold includes JIT work"],
     }
     args.output.parent.mkdir(parents=True, exist_ok=True)

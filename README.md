@@ -14,6 +14,22 @@ audits the work needed for a general AMS-GRA RF plane and provides reproducible
 network propagation benchmarks, scaling arithmetic and GPU sizing assumptions.
 The [accepted per-pulse, single-interaction model](PER_PULSE_RUNTIME.md) updates
 that baseline with compact channels, new measurements and current limitations.
+The [single-bounce optimization report](OPTIMIZATION.md) adds exhaustive one-way
+reflection candidates for ESM/comms channels, with paired timings and physical
+validation. Enable it with `RFReceiver(..., path_solver="single-bounce")`.
+For distributed ground return, use the separate
+[TX/RX-aware first-order scattering mode](GROUND_SCATTERING.md). Its per-link
+sampling budget covers both antenna patterns and preserves sidelobe support;
+the 144-path specular benchmark does not measure ground-clutter fidelity.
+
+[GPU runtime planning](GPU_RUNTIME.md) separates measured CPU costs from
+conditional per-GPU work estimates for the 100-TX/10-RX deployment. Host proposal
+sampling is timed separately; GPU deadlines and VRAM require target measurements.
+
+The [tested terrain scenario and waterfall plots](TERRAIN_SCENARIO.md) compare
+flat ground with a simple DEM containing hills, slopes and a drainage swale.
+It includes delay/Doppler waterfalls, coherent LFM responses, received-I/Q
+spectrograms, saved data and commands to reproduce them in the container.
 
 For a ready-made CPU test environment, see [the container guide](CONTAINER.md):
 

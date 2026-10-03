@@ -4,6 +4,11 @@ Updated 2026-10-03. This supersedes the depth-three planning baseline in
 [NETWORK_RUNTIME.md](NETWORK_RUNTIME.md); its older results remain available
 for comparison. Sionna/Mitsuba/Dr.Jit versions remain 2.2.0/3.9.1/1.5.0.
 
+The small-scene specular path counts below do not establish distributed
+ground-return coverage. [GROUND_SCATTERING.md](GROUND_SCATTERING.md) documents
+the added TX/RX-aware diffuse sampling mode, its per-link budget, separate
+runtime measurements and remaining roughness/temporal-coherence limitations.
+
 ## Model and implementation
 
 Compute path geometry, gain and absolute delay once at the start of each pulse.
@@ -44,9 +49,10 @@ disable shooting-and-bouncing candidate generation in native Sionna:
 `sb_candidate_generator.py` invokes that generator for any depth greater than
 zero. The image method subsequently refines discovered specular candidates.
 There is no public switch for exhaustive first-order image-method discovery
-without shooting. Such a candidate generator would be additional work; it has
-not been implemented. The revised benchmark must not be described as avoiding
-all shooting or as an exhaustive enumeration of every single reflection.
+without shooting. The optimization branch now adds an explicit
+`SingleBouncePathSolver` adapter; see [OPTIMIZATION.md](OPTIMIZATION.md).
+The measurements below remain the native sampled baseline. The adapter has
+separate paired measurements and does not enable diffuse or diffracted paths.
 
 The earlier tracing measurements also used one CIR epoch per solve; they never
 traced per fast-time sample. The earlier dense-memory warning concerned

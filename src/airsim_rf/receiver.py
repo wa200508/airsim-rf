@@ -114,7 +114,8 @@ class RFReceiver:
     """
 
     def __init__(self, scene, config: ReceiverConfig, *, max_depth=1, seed=42,
-                 samples_per_src=10000, max_num_paths_per_src=1000):
+                 samples_per_src=10000, max_num_paths_per_src=1000,
+                 path_solver="native"):
         from sionna.rt import PathSolver
         if isinstance(max_depth, bool) or not isinstance(max_depth, Integral) or max_depth not in (0, 1):
             raise ValueError("Receiver supports direct paths or at most one scene interaction")
@@ -125,7 +126,16 @@ class RFReceiver:
         self.samples_per_src = samples_per_src
         self.max_num_paths_per_src = max_num_paths_per_src
         self.rng = np.random.default_rng(seed)
-        self.solver = PathSolver(deterministic=True)
+        if path_solver == "native":
+            self.solver = PathSolver(deterministic=True)
+        elif path_solver == "single-bounce":
+            from .single_bounce import SingleBouncePathSolver
+            self.solver = SingleBouncePathSolver()
+        elif path_solver == "first-order-scattering":
+            from .scattering import FirstOrderScatteringPathSolver
+            self.solver = FirstOrderScatteringPathSolver()
+        else:
+            raise ValueError("path_solver must be native, single-bounce or first-order-scattering")
         scene.frequency = config.carrier_hz
 
     def capture(self, waveform: Waveform, sim_time_ns: int) -> IQBlock:

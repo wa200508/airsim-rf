@@ -1,0 +1,299 @@
+{
+  "scope": "Synthetic finite ground; independent moving TX/RX plus first-order diffuse and specular propagation",
+  "model": {
+    "carrier_hz": 24125000000.0,
+    "depth": 1,
+    "refraction": false,
+    "diffraction": false,
+    "ground_extent_m": [
+      -100,
+      100
+    ],
+    "permittivity": 5,
+    "conductivity_s_per_m": 0.01,
+    "thickness_m": 0.5,
+    "scattering_coefficient": 0.3,
+    "scattering_pattern": "Sionna default Lambertian",
+    "tx_pattern": "tr38901",
+    "rx_pattern": "tr38901",
+    "polarization": "V",
+    "calibrated_ground_roughness": false,
+    "independent_random_scatterer_phases": false
+  },
+  "sampling": {
+    "attempts_per_link": 1028,
+    "pattern_grid": [
+      64,
+      128
+    ],
+    "strategy": "Half TX-pattern proposals, half RX-pattern proposals; mixture area-PDF correction",
+    "uniform_fraction": 0.1,
+    "proposal_generation": "NumPy host draws; Mitsuba traces and Sionna fields on selected backend"
+  },
+  "excludes": [
+    "IQ synthesis",
+    "AirSim",
+    "moving mesh/BVH updates",
+    "transport",
+    "diagnostic classification"
+  ],
+  "versions": {
+    "sionna_rt": "2.2.0",
+    "mitsuba": "3.9.1",
+    "drjit": "1.5.0",
+    "backend": "llvm_ad_mono_polarized"
+  },
+  "arguments": {
+    "backend": "cpu",
+    "tx": 100,
+    "rx": 1,
+    "samples_per_link": 1028,
+    "uniform_fraction": 0.1,
+    "iterations": 10,
+    "warmup": 3,
+    "threads": 2,
+    "pulse_hz": 200,
+    "output": "benchmarks/results/scattering_cpu_100tx_1rx_1028.json"
+  },
+  "host": {
+    "cpu_count": 3,
+    "cpu_quota": "200000 100000",
+    "memory_limit": "8589934592",
+    "drjit_threads": 2,
+    "peak_host_rss_mib": 219.29296875
+  },
+  "cold": {
+    "epoch_s": 0.0,
+    "total_ms": 1203.8345120017766,
+    "pose_ms": 0.26016400079242885,
+    "solve_ms": 1202.6072110020323,
+    "cir_numpy_ms": 0.9671369989519008,
+    "valid_paths": 96589,
+    "diffuse_paths": 96389,
+    "diffuse_per_link_min": 947,
+    "diffuse_per_link_median": 965.0,
+    "diffuse_per_link_max": 980,
+    "sum_diffuse_path_power": 6.510736838549747e-09,
+    "sampling": {
+      "samples_per_link": 1028,
+      "diffuse_launches": 102800,
+      "tx_launches": 51400,
+      "rx_launches": 51400,
+      "uniform_fraction": 0.1
+    }
+  },
+  "p50_ms": 719.1392770000675,
+  "p95_ms": 753.7781086040923,
+  "max_ms": 756.9523690035567,
+  "pulse_budget_ms": 5.0,
+  "deadline_misses": 10,
+  "samples": [
+    {
+      "epoch_s": 0.02,
+      "total_ms": 721.5081360045588,
+      "pose_ms": 0.26305900246370584,
+      "solve_ms": 720.4871389985783,
+      "cir_numpy_ms": 0.757938003516756,
+      "valid_paths": 96587,
+      "diffuse_paths": 96387,
+      "diffuse_per_link_min": 947,
+      "diffuse_per_link_median": 964.5,
+      "diffuse_per_link_max": 980,
+      "sum_diffuse_path_power": 6.540051611381159e-09,
+      "sampling": {
+        "samples_per_link": 1028,
+        "diffuse_launches": 102800,
+        "tx_launches": 51400,
+        "rx_launches": 51400,
+        "uniform_fraction": 0.1
+      }
+    },
+    {
+      "epoch_s": 0.025,
+      "total_ms": 721.6704539969214,
+      "pose_ms": 0.2471550033078529,
+      "solve_ms": 720.7282739982475,
+      "cir_numpy_ms": 0.6950249953661114,
+      "valid_paths": 96587,
+      "diffuse_paths": 96387,
+      "diffuse_per_link_min": 947,
+      "diffuse_per_link_median": 964.5,
+      "diffuse_per_link_max": 980,
+      "sum_diffuse_path_power": 6.5471086330148864e-09,
+      "sampling": {
+        "samples_per_link": 1028,
+        "diffuse_launches": 102800,
+        "tx_launches": 51400,
+        "rx_launches": 51400,
+        "uniform_fraction": 0.1
+      }
+    },
+    {
+      "epoch_s": 0.03,
+      "total_ms": 710.3112439945107,
+      "pose_ms": 0.2530429992475547,
+      "solve_ms": 709.4146719973651,
+      "cir_numpy_ms": 0.6435289978981018,
+      "valid_paths": 96587,
+      "diffuse_paths": 96387,
+      "diffuse_per_link_min": 947,
+      "diffuse_per_link_median": 964.5,
+      "diffuse_per_link_max": 980,
+      "sum_diffuse_path_power": 6.554078169074273e-09,
+      "sampling": {
+        "samples_per_link": 1028,
+        "diffuse_launches": 102800,
+        "tx_launches": 51400,
+        "rx_launches": 51400,
+        "uniform_fraction": 0.1
+      }
+    },
+    {
+      "epoch_s": 0.035,
+      "total_ms": 712.9238190027536,
+      "pose_ms": 0.2506989985704422,
+      "solve_ms": 712.092253001174,
+      "cir_numpy_ms": 0.5808670030091889,
+      "valid_paths": 96589,
+      "diffuse_paths": 96389,
+      "diffuse_per_link_min": 947,
+      "diffuse_per_link_median": 964.5,
+      "diffuse_per_link_max": 980,
+      "sum_diffuse_path_power": 6.561685417239005e-09,
+      "sampling": {
+        "samples_per_link": 1028,
+        "diffuse_launches": 102800,
+        "tx_launches": 51400,
+        "rx_launches": 51400,
+        "uniform_fraction": 0.1
+      }
+    },
+    {
+      "epoch_s": 0.04,
+      "total_ms": 706.6220419947058,
+      "pose_ms": 0.34214499464724213,
+      "solve_ms": 705.682596002589,
+      "cir_numpy_ms": 0.5973009974695742,
+      "valid_paths": 96589,
+      "diffuse_paths": 96389,
+      "diffuse_per_link_min": 947,
+      "diffuse_per_link_median": 965.0,
+      "diffuse_per_link_max": 980,
+      "sum_diffuse_path_power": 6.568863675227021e-09,
+      "sampling": {
+        "samples_per_link": 1028,
+        "diffuse_launches": 102800,
+        "tx_launches": 51400,
+        "rx_launches": 51400,
+        "uniform_fraction": 0.1
+      }
+    },
+    {
+      "epoch_s": 0.045,
+      "total_ms": 716.1977499999921,
+      "pose_ms": 0.2323829976376146,
+      "solve_ms": 715.3115219989559,
+      "cir_numpy_ms": 0.653845003398601,
+      "valid_paths": 96589,
+      "diffuse_paths": 96389,
+      "diffuse_per_link_min": 947,
+      "diffuse_per_link_median": 965.0,
+      "diffuse_per_link_max": 980,
+      "sum_diffuse_path_power": 6.576780897660228e-09,
+      "sampling": {
+        "samples_per_link": 1028,
+        "diffuse_launches": 102800,
+        "tx_launches": 51400,
+        "rx_launches": 51400,
+        "uniform_fraction": 0.1
+      }
+    },
+    {
+      "epoch_s": 0.05,
+      "total_ms": 756.9523690035567,
+      "pose_ms": 0.24711400328669697,
+      "solve_ms": 754.5038980024401,
+      "cir_numpy_ms": 2.201356997829862,
+      "valid_paths": 96590,
+      "diffuse_paths": 96390,
+      "diffuse_per_link_min": 947,
+      "diffuse_per_link_median": 965.0,
+      "diffuse_per_link_max": 980,
+      "sum_diffuse_path_power": 6.583719347474926e-09,
+      "sampling": {
+        "samples_per_link": 1028,
+        "diffuse_launches": 102800,
+        "tx_launches": 51400,
+        "rx_launches": 51400,
+        "uniform_fraction": 0.1
+      }
+    },
+    {
+      "epoch_s": 0.055,
+      "total_ms": 749.8984570047469,
+      "pose_ms": 0.2506300006643869,
+      "solve_ms": 749.0776449994883,
+      "cir_numpy_ms": 0.5701820045942441,
+      "valid_paths": 96588,
+      "diffuse_paths": 96388,
+      "diffuse_per_link_min": 946,
+      "diffuse_per_link_median": 964.5,
+      "diffuse_per_link_max": 980,
+      "sum_diffuse_path_power": 6.5910148450143424e-09,
+      "sampling": {
+        "samples_per_link": 1028,
+        "diffuse_launches": 102800,
+        "tx_launches": 51400,
+        "rx_launches": 51400,
+        "uniform_fraction": 0.1
+      }
+    },
+    {
+      "epoch_s": 0.06,
+      "total_ms": 721.3608620004379,
+      "pose_ms": 0.27228199905948713,
+      "solve_ms": 720.2349100043648,
+      "cir_numpy_ms": 0.8536699970136397,
+      "valid_paths": 96587,
+      "diffuse_paths": 96387,
+      "diffuse_per_link_min": 946,
+      "diffuse_per_link_median": 964.5,
+      "diffuse_per_link_max": 980,
+      "sum_diffuse_path_power": 6.598157575865571e-09,
+      "sampling": {
+        "samples_per_link": 1028,
+        "diffuse_launches": 102800,
+        "tx_launches": 51400,
+        "rx_launches": 51400,
+        "uniform_fraction": 0.1
+      }
+    },
+    {
+      "epoch_s": 0.065,
+      "total_ms": 716.9176919996971,
+      "pose_ms": 0.2980499994009733,
+      "solve_ms": 715.9899629987194,
+      "cir_numpy_ms": 0.6296790015767328,
+      "valid_paths": 96586,
+      "diffuse_paths": 96386,
+      "diffuse_per_link_min": 946,
+      "diffuse_per_link_median": 964.5,
+      "diffuse_per_link_max": 980,
+      "sum_diffuse_path_power": 6.605279878613146e-09,
+      "sampling": {
+        "samples_per_link": 1028,
+        "diffuse_launches": 102800,
+        "tx_launches": 51400,
+        "rx_launches": 51400,
+        "uniform_fraction": 0.1
+      }
+    }
+  ],
+  "notes": [
+    "Attempts are not retained paths: misses, occlusion and zero response contribute zero",
+    "Incoherent sum of path powers is a normalization diagnostic, not coherent IQ power",
+    "Sample count does not establish clutter fidelity or convergence",
+    "Host RSS is not VRAM; no purchase minimum follows from CPU timing"
+  ],
+  "temporal_model": "Common random numbers per pulse; sampled hit points are not persistent world scatterers"
+}
