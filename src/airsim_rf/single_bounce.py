@@ -172,6 +172,11 @@ class SingleBouncePathSolver:
     def mesh_rebuilds(self):
         return self._candidates.mesh_rebuilds
 
+    def specular_plane_count(self, scene):
+        """Prepare/reuse candidate geometry for an explicit path-cap budget."""
+        self._candidates._planes(scene.mi_scene)
+        return self._candidates.plane_count
+
     def __call__(self, scene, **kwargs):
         kwargs.setdefault("max_depth", 1)
         kwargs.setdefault("refraction", False)

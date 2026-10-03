@@ -5,6 +5,18 @@ Start with [home setup](REPRODUCE.md) and the measured
 radar models, I/Q generation, Python AirSim adapter, tests and benchmarks.
 ProjectAirSim and Sionna RT are pinned external dependencies downloaded by setup.
 
+For a university hardware starter, see the
+[PlutoSDR-class COTS lab](COTS_SDR_LAB.md): two moving beacon drones and two
+passive receiver drones in one RF terrain scene, with multi-emitter I/Q,
+independent clocks, noise, receive filtering and signed 12-bit samples.
+It includes a dated hardware budget, plots, recordings, SigMF export and
+an AirSim network-mount bridge. Published device constraints and uncalibrated
+assumptions are listed separately; the distributed ESM protocol remains work.
+
+```bash
+.venv/bin/python examples/pluto_esm_drones.py --output-dir recordings/pluto_esm
+```
+
 The [distributed simulation guide](DISTRIBUTED.md) adds one receiver worker per
 GPU, an AirSim clock coordinator, and an AMS-GRA starter-kit RF MEL backend plus
 DIS scene truth. It includes CPU container tests and per-GPU deployment files.

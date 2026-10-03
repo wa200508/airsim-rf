@@ -4,6 +4,7 @@ __pycache__/
 .pytest_cache/
 *.npz
 !docs/figures/terrain_scan_iq.npz
+!docs/figures/pluto_esm_iq.npz
 research/
 .deps/
 recordings/

@@ -51,6 +51,15 @@ host path for your shell and omit `--user` if needed. The image includes the
 CPU backend; NVIDIA/CUDA operation is outside this container's validated scope.
 See [PERFORMANCE.md](PERFORMANCE.md) for timing limitations.
 
+The [COTS SDR lab](COTS_SDR_LAB.md) runs two beacons and two passive receivers
+through shared terrain propagation, a Pluto-class front end and I/Q export:
+
+```bash
+docker run --rm --network none --user "$(id -u):$(id -g)" \
+  -v "$PWD/output:/work" ghcr.io/wa200508/airsim-rf:latest \
+  python /opt/airsim-rf/examples/pluto_esm_drones.py --output-dir /work/pluto_esm
+```
+
 ## Build locally
 
 ```bash

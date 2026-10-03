@@ -39,6 +39,8 @@ jobs:
         run: docker run --rm --network none airsim-rf:test python /opt/airsim-rf/examples/distance2gol_radar.py
       - name: Exercise two distributed RF workers offline
         run: docker run --rm --network none airsim-rf:test python /opt/airsim-rf/examples/distributed_hello.py
+      - name: Smoke test COTS SDR network I/Q offline
+        run: docker run --rm --network none airsim-rf:test python /opt/airsim-rf/examples/pluto_esm_drones.py --epochs 2 --samples 1024 --samples-per-link 128 --output-dir /work/pluto_esm
       - name: Smoke test terrain and documentation plots offline
         run: docker run --rm --network none airsim-rf:test python /opt/airsim-rf/benchmarks/generate_rf_waterfalls.py --epochs 2 --tx 4 --samples-per-link 128 --output-dir /work/figures
       - name: Smoke test terrain features in coherent I/Q offline
