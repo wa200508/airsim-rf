@@ -1,5 +1,9 @@
 # Flat ground and DEM terrain: tested RF scenarios
 
+For a clear view of individual terrain features in I/Q, see the
+[focused beam scan and bandwidth comparison](TERRAIN_SIGNATURE.md). The
+aggregate scenario below tests many links; it is not a terrain imaging scan.
+
 These figures come from actual Sionna channel solves and the repository's complex
 voltage synthesis. They compare the original flat-ground fixture with a small
 synthetic digital elevation model (DEM). The offline scenario supplies platform

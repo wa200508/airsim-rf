@@ -6,6 +6,7 @@
 **/__pycache__
 **/*.egg-info
 *.npz
+!docs/figures/terrain_scan_iq.npz
 *.png
 !docs/figures/*.png
 benchmarks/results

@@ -31,6 +31,11 @@ flat ground with a simple DEM containing hills, slopes and a drainage swale.
 It includes delay/Doppler waterfalls, coherent LFM responses, received-I/Q
 spectrograms, saved data and commands to reproduce them in the container.
 
+To see individual hills and the swale in the received data, start with the
+[focused terrain scan](TERRAIN_SIGNATURE.md). Its pulse-compressed I/Q follows
+the terrain relief, with a flat-ground control, a bandwidth comparison and raw
+complex samples to inspect.
+
 For a ready-made CPU test environment, see [the container guide](CONTAINER.md):
 
 ```bash

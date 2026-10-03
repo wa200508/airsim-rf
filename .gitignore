@@ -3,6 +3,7 @@ __pycache__/
 *.egg-info/
 .pytest_cache/
 *.npz
+!docs/figures/terrain_scan_iq.npz
 research/
 .deps/
 recordings/
