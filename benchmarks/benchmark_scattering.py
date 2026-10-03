@@ -10,6 +10,7 @@ import time
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--backend", choices=("cpu", "cuda"), default="cpu")
+    parser.add_argument("--scene", choices=("ground", "terrain"), default="ground")
     parser.add_argument("--tx", type=int, default=100)
     parser.add_argument("--rx", type=int, default=1)
     parser.add_argument("--samples-per-link", type=int, default=1028)
@@ -36,30 +37,22 @@ def main():
     from sionna.rt.constants import InteractionType
     from airsim_rf.scattering import FirstOrderScatteringPathSolver
     from airsim_rf.runtime_metrics import receiver_gpu_workload, conditional_gpu_ray_times
-    scene = rt.load_scene(str(Path(__file__).resolve().parent/"scenes/ground.xml"))
-    scene.frequency = 24.125e9
-    scene.tx_array = rt.PlanarArray(num_rows=1, num_cols=1, pattern="tr38901", polarization="V")
-    scene.rx_array = rt.PlanarArray(num_rows=1, num_cols=1, pattern="tr38901", polarization="V")
-    for i in range(args.tx):
-        scene.add(rt.Transmitter(f"tx_{i}", position=[0, -25+50*i/max(args.tx-1, 1), 10],
-                  orientation=[0, np.pi/2, 0], velocity=[1, 0, 0]))
-    for i in range(args.rx):
-        scene.add(rt.Receiver(f"rx_{i}", position=[10, -5+i, 15],
-                  orientation=[0, np.pi/2, 0], velocity=[0, .5, 0]))
+    from scattering_scenario import load_fixture, update_platforms
+    from airsim_rf.terrain import demo_terrain
+    scene = load_fixture(args.scene, args.tx, args.rx)
+    elevations = demo_terrain().heights_m if args.scene == 'terrain' else np.zeros((2, 2))
     solver = FirstOrderScatteringPathSolver(uniform_fraction=args.uniform_fraction)
+    prepare_start = time.perf_counter()
+    planes = solver.specular_plane_count(scene)
+    geometry_prepare_ms = 1000*(time.perf_counter()-prepare_start)
 
     def run(index):
         start = time.perf_counter()
         epoch = index/args.pulse_hz
-        for i, tx in enumerate(scene.transmitters.values()):
-            tx.position = [epoch, -25+50*i/max(args.tx-1, 1), 10]
-            tx.orientation = [0, float(np.pi/2+.05*np.sin(epoch+i)), 0]
-        for i, rx in enumerate(scene.receivers.values()):
-            rx.position = [10, -5+i+.5*epoch, 15]
-            rx.orientation = [0, float(np.pi/2+.05*np.sin(epoch)), 0]
+        update_platforms(scene, epoch)
         pose_ms = (time.perf_counter()-start)*1000
         paths = solver(scene, samples_per_src=args.samples_per_link,
-                       max_num_paths_per_src=args.rx*(args.samples_per_link+2), seed=42)
+                       max_num_paths_per_src=args.rx*(args.samples_per_link+1+planes), seed=42)
         dr.eval(paths.a, paths.tau, paths.doppler)
         dr.sync_thread()
         solved = time.perf_counter()
@@ -90,11 +83,15 @@ def main():
                             "p95_ms": float(np.percentile([s['stage_timings'][name] for s in samples], 95))}
                      for name in samples[0]['stage_timings']}
     workload = receiver_gpu_workload(transmitters=args.tx, receivers=args.deployment_receivers,
-                attempts_per_link=args.samples_per_link, specular_planes=1, pulse_hz=args.pulse_hz)
+                attempts_per_link=args.samples_per_link, specular_planes=planes, pulse_hz=args.pulse_hz)
     # A multi-RX batch cannot establish one-worker host cost by dividing by RX.
     host_ms = stage_summary['host_numpy_sampling_ms']['p50_ms'] if args.rx == 1 else None
-    result = {"scope": "Synthetic finite ground; independent moving TX/RX plus first-order diffuse and specular propagation",
+    result = {"scope": f"Synthetic {args.scene}; independent moving TX/RX plus first-order diffuse and specular propagation",
+              "scene_file": f"benchmarks/scenes/{args.scene}.xml", "specular_planes": planes,
+              "geometry_prepare_ms": geometry_prepare_ms,
               "model": {"carrier_hz": 24.125e9, "depth": 1, "refraction": False, "diffraction": False,
+                        "surface_geometry": "21x21 DEM, 800 planar triangles" if args.scene == 'terrain' else "Flat mesh, two triangles",
+                        "elevation_range_m": [float(elevations.min()), float(elevations.max())],
                         "ground_extent_m": [-100, 100], "permittivity": 5, "conductivity_s_per_m": .01,
                         "thickness_m": .5, "scattering_coefficient": .3, "scattering_pattern": "Sionna default Lambertian",
                         "tx_pattern": "tr38901", "rx_pattern": "tr38901", "polarization": "V",
@@ -123,7 +120,8 @@ def main():
               "cold": cold, "p50_ms": float(np.median(times)), "p95_ms": float(np.percentile(times, 95)),
               "max_ms": float(times.max()), "pulse_budget_ms": 1000/args.pulse_hz,
               "deadline_misses": int((times > 1000/args.pulse_hz).sum()), "samples": samples,
-              "notes": ["Attempts are not retained paths: misses, occlusion and zero response contribute zero",
+              "notes": ["Geometry plane-cache preparation is timed separately from cold/epoch channel solves",
+                        "Attempts are not retained paths: misses, occlusion and zero response contribute zero",
                         "Incoherent sum of path powers is a normalization diagnostic, not coherent IQ power",
                         "Sample count does not establish clutter fidelity or convergence",
                         "Host RSS is not VRAM; no purchase minimum follows from CPU timing"]}

@@ -26,6 +26,11 @@ the 144-path specular benchmark does not measure ground-clutter fidelity.
 conditional per-GPU work estimates for the 100-TX/10-RX deployment. Host proposal
 sampling is timed separately; GPU deadlines and VRAM require target measurements.
 
+The [tested terrain scenario and waterfall plots](TERRAIN_SCENARIO.md) compare
+flat ground with a simple DEM containing hills, slopes and a drainage swale.
+It includes delay/Doppler waterfalls, coherent LFM responses, received-I/Q
+spectrograms, saved data and commands to reproduce them in the container.
+
 For a ready-made CPU test environment, see [the container guide](CONTAINER.md):
 
 ```bash

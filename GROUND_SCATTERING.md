@@ -95,6 +95,10 @@ an explicit terrain model. Repeating a seed alone does not supply that physics.
 
 ## What the test environment assumes
 
+The original measurements below use flat ground. The separate
+[DEM scenario and waterfall report](TERRAIN_SCENARIO.md) adds triangulated
+elevation relief with the same material assumptions and radio trajectories.
+
 The new synthetic fixture is a flat 200 × 200 m ground mesh with two triangles.
 It has relative permittivity 5, conductivity 0.01 S/m, thickness 0.5 m, scattering
 coefficient 0.3 and Sionna's default Lambertian scattering pattern. These are

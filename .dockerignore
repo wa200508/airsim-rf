@@ -7,5 +7,6 @@
 **/*.egg-info
 *.npz
 *.png
+!docs/figures/*.png
 benchmarks/results
 research

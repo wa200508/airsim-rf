@@ -234,6 +234,15 @@ class FirstOrderScatteringPathSolver:
         """
         return dict(self._candidates.last_timings)
 
+    def specular_plane_count(self, scene):
+        """Prepare/reuse the geometry cache and report its exact plane count.
+
+        Useful for budgeting all specular candidates on a triangulated DEM.
+        Radio poses and material properties are not cached by this operation.
+        """
+        self._candidates._planes(scene.mi_scene)
+        return self._candidates.plane_count
+
     def __call__(self, scene, **kwargs):
         kwargs.setdefault("max_depth", 1)
         kwargs.setdefault("refraction", False)

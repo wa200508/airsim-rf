@@ -91,6 +91,11 @@ the pinned Sionna/Mitsuba/Dr.Jit stack are prerequisites, not a throughput guara
 
 ## Measure the actual target
 
+The [DEM terrain scenario](TERRAIN_SCENARIO.md) has 800 specular planes. Its
+per-worker query-count upper bound is 365,700 per pulse rather than the flat
+fixture's 205,900. Use `--scene terrain` to measure that geometry;
+`benchmark_scattering.py` now derives its budgets from the actual plane count.
+
 On a CUDA-capable host, record the GPU name, driver and VRAM, then run a **one
 receiver** benchmark on each assigned device. This command refuses CPU fallback:
 
