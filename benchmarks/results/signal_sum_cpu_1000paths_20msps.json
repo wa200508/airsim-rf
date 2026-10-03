@@ -1,0 +1,29 @@
+{
+  "scope": "Existing NumPy synthesize_voltage, synthetic coefficients, one tone; no tracing or ADC",
+  "arguments": {
+    "paths": 1000,
+    "samples": 4096,
+    "sample_rate": 20000000.0,
+    "iterations": 10,
+    "output": "benchmarks/results/signal_sum_cpu_1000paths_20msps.json"
+  },
+  "simulated_block_ms": 0.2048,
+  "coefficient_bytes": 65536000,
+  "p50_ms": 106.868095000209,
+  "p95_ms": 111.39815744936641,
+  "realtime_slowdown_p50": 521.8168701182079,
+  "path_sample_contributions_per_s": 38327622.47696087,
+  "samples_ms": [
+    106.6620410001633,
+    105.38641999846732,
+    108.06177500126068,
+    106.04171700106235,
+    110.71292399901722,
+    108.87446299966541,
+    111.95880299965211,
+    107.07414900025469,
+    105.02207299941801,
+    106.46193499997025
+  ],
+  "finite_output": true
+}

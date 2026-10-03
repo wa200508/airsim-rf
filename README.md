@@ -9,6 +9,10 @@ The [distributed simulation guide](DISTRIBUTED.md) adds one receiver worker per
 GPU, an AirSim clock coordinator, and an AMS-GRA starter-kit RF MEL backend plus
 DIS scene truth. It includes CPU container tests and per-GPU deployment files.
 
+The [100-transmitter / 10-receiver runtime assessment](NETWORK_RUNTIME.md)
+audits the work needed for a general AMS-GRA RF plane and provides reproducible
+network propagation benchmarks, scaling arithmetic and GPU sizing assumptions.
+
 For a ready-made CPU test environment, see [the container guide](CONTAINER.md):
 
 ```bash

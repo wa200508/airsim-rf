@@ -1,5 +1,11 @@
 # RF timing versus a 120 Hz simulation
 
+For the broader AMS-GRA plane (100 independent transmitters, 10 receivers and
+moving-platform multipath), see [NETWORK_RUNTIME.md](NETWORK_RUNTIME.md).
+It audits current limitations and separates tracing, wideband I/Q synthesis,
+transport and hardware sizing using new multi-transmitter measurements.
+The measurements below remain specific to the monostatic radar prototype.
+
 A 120 Hz simulation tick has **8.333 ms** available for all synchronous work.
 On this machine, the current Sionna-based RF adapter does **not reliably fit**
 that deadline even before physics, rendering, RPC or data publication are added.
