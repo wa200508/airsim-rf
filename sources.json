@@ -10,5 +10,33 @@
     "commit": "15b5ee036917a4c2a9b6420e05570b77717e2fcc",
     "package_version": "2.2.0"
   },
-  "tested_python": "3.12"
+  "tested_python": "3.12",
+  "ams_gra": {
+    "starter_kit": {
+      "url": "https://github.com/open-arsenal/ams-gra-hello-world-sk.git",
+      "commit": "994ea81de70b20a195297b208b7fe480631471c1"
+    },
+    "squall": {
+      "url": "https://github.com/open-arsenal/ams-gra-hello-world-sk-sensors-squall.git",
+      "commit": "b1015728f904c799fa0c07489fce48e78f67845f"
+    },
+    "rf_mel": {
+      "url": "https://github.com/open-arsenal/ams-gra-hello-world-sk-interfaces-rf-mel.git",
+      "commit": "762ce84c5555dd0f3ea66f36b321fecf8839b89f"
+    },
+    "common_mel": {
+      "url": "https://github.com/open-arsenal/ams-gra-hello-world-sk-interfaces-common-mel.git",
+      "commit": "f6908437d8fd2f7fb69896f9eb9cfd272d10c439"
+    },
+    "ams_vita": {
+      "url": "https://github.com/open-arsenal/ams-gra-hello-world-sk-libraries-ams-vita.git",
+      "commit": "8e12a4cd7ac8ea8776d40b9d0b22fc4a22adaad8"
+    },
+    "ams_math": {
+      "url": "https://github.com/open-arsenal/ams-gra-hello-world-sk-libraries-ams-math.git",
+      "commit": "00be45190f0e47d268cece8b8c2f8fb58b5418d2"
+    },
+    "couloir_image": "registry.gitlab.com/open-arsenal/ams-gra/hello-world-sk/sensors/squall/couloir@sha256:1bfcfdb9b7df511db0fa84e475099321e0d0f2b3e4bece49d20b975e86527690",
+    "oms_rf_adapter_image": "registry.gitlab.com/open-arsenal/ams-gra/hello-world-sk/sensors/squall/oms-rf-adapter@sha256:34e2593a35b47799cc740c98176de0bffe72e39147ad27c65630f3ecf4bedbb3"
+  }
 }

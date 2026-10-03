@@ -1,0 +1,5 @@
+tcp_addr = "0.0.0.0:21205"
+metrics_port = 21331
+
+[routes]
+"/squall.rf.control.v1.SquallRfControl/" = "/sockets/squall-rf-control.sock"

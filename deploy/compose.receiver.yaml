@@ -1,0 +1,33 @@
+# One receiver per machine. The coordinator's URL uses this machine's LAN IP.
+name: airsim-rf-receiver
+services:
+  receiver:
+    image: ${RF_IMAGE:-ghcr.io/wa200508/airsim-rf:latest}
+    network_mode: host
+    command: [airsim-rf-worker, --receiver-id, '${RECEIVER_ID:?Set a globally unique RECEIVER_ID}', --backend, cuda, --grpc-address, 'unix:/sockets/squall-rf-control.sock', --seed, '${RF_SEED:-42}']
+    environment:
+      NVIDIA_DRIVER_CAPABILITIES: compute,utility,graphics
+    volumes: [rf-sockets:/sockets]
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              device_ids: ['${RECEIVER_GPU:-0}']
+              capabilities: [gpu]
+    healthcheck:
+      test: [CMD, python, -c, "import urllib.request; urllib.request.urlopen('http://127.0.0.1:22100/health', timeout=2)"]
+      interval: 2s
+      timeout: 3s
+      retries: 30
+  couloir:
+    image: registry.gitlab.com/open-arsenal/ams-gra/hello-world-sk/sensors/squall/couloir@sha256:1bfcfdb9b7df511db0fa84e475099321e0d0f2b3e4bece49d20b975e86527690
+    network_mode: host
+    command: [--config, /config/couloir.toml]
+    volumes:
+      - rf-sockets:/sockets
+      - ./couloir-rx0.toml:/config/couloir.toml:ro
+    depends_on:
+      receiver: {condition: service_healthy}
+volumes:
+  rf-sockets:

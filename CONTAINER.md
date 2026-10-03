@@ -73,3 +73,8 @@ example before pushing the same image to GHCR. Pull requests only build and
 test. Main publishes `latest` and a commit tag; version tags publish their tag
 and a commit tag. Publishing uses the workflow's `GITHUB_TOKEN` with
 `packages: write`; no stored registry password is needed.
+# Distributed simulation
+
+The same image can run `airsim-rf-worker` and `airsim-rf-coordinator`.
+See [DISTRIBUTED.md](DISTRIBUTED.md) for the offline two-worker demonstration,
+one-GPU-per-receiver deployment, and the AMS-GRA MEL integration.

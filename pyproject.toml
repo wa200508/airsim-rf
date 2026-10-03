@@ -4,10 +4,14 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "airsim-rf"
-version = "0.1.0"
+version = "0.2.0"
 description = "Experimental ProjectAirSim / Sionna RT complex voltage receiver"
 requires-python = ">=3.10"
-dependencies = ["numpy>=1.26", "scipy>=1.14.1", "sionna-rt==2.2.0"]
+dependencies = ["numpy>=1.26", "scipy>=1.14.1", "sionna-rt==2.2.0", "grpcio>=1.84,<2", "protobuf>=7.36.2,<8"]
+
+[project.scripts]
+airsim-rf-worker = "airsim_rf.distributed.worker:main"
+airsim-rf-coordinator = "airsim_rf.distributed.coordinator:main"
 
 [project.optional-dependencies]
 airsim = ["projectairsim>=1.1.0"]

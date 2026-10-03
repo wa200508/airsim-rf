@@ -1,0 +1,120 @@
+syntax = "proto3";
+
+package squall.rf.control.v1;
+
+// The primary control interface for Squall RF pipelines.
+// This provides a simplified backend API that the C++ MEL implementation translates
+// complex GRA/UCI commands into.
+service SquallRfControl {
+    // Query the live status of the pipeline (maps to RF MonitorMEL)
+    rpc GetStatus (GetStatusRequest) returns (GetStatusResponse);
+
+    // Dynamically register a new UDP destination for the data stream (Data Plane negotiation)
+    rpc AddDataDestination (AddDataDestinationRequest) returns (AddDataDestinationResponse);
+
+    // Explicitly unregister a dynamic UDP destination.
+    rpc RemoveDataDestination (RemoveDataDestinationRequest) returns (RemoveDataDestinationResponse);
+
+    // Send a dynamic tuning command to an active RF pipeline (maps to RF C2MEL JobRequests)
+    rpc TuneRf (TuneRfRequest) returns (TuneRfResponse);
+
+    // Send a state command to the active RF pipeline.
+    rpc CommandRf (CommandRfRequest) returns (CommandRfResponse);
+}
+
+message GetStatusRequest {}
+
+message GetStatusResponse {
+    string name = 1;
+    string domain = 2;          // always "rf"
+    bool running = 3;
+    bool ready = 4;
+    string rest_addr = 5;
+    uint32 metrics_port = 6;
+    uint64 uptime_seconds = 7;
+    
+    // Domain specific status
+    RfStatus rf_status = 8;
+}
+
+// Maps to ams::iface::mel::MFA_State receive-profile operating modes.
+enum RfMode {
+    RF_MODE_UNKNOWN = 0;
+    RF_MODE_INITIALIZATION = 1;
+    RF_MODE_MAINTENANCE = 2;
+    RF_MODE_IDLE = 3;
+    RF_MODE_OPERATIONAL = 4;
+}
+
+message RfStatus {
+    uint64 center_frequency_hz = 1;
+    uint32 sample_rate = 2;
+    uint32 block_size = 3;
+    // Active RF source type from the validated runtime configuration.
+    string source_type = 4;
+    // Runtime-detected tuner identity for RTL-SDR sources; empty for other source types.
+    string rtlsdr_tuner = 5;
+    RfMode current_mode = 6;
+}
+
+// -------------------------------------------------------------------------
+// Data Plane Negotiation
+// -------------------------------------------------------------------------
+
+message AddDataDestinationRequest {
+    // The IP:port where the client (MEL implementation) is listening for UDP data.
+    // e.g., "127.0.0.1:56789"
+    string udp_destination = 1;
+    // An identity matching the client, used to overwrite orphaned slots on restart.
+    string client_id = 2;
+}
+
+message AddDataDestinationResponse {
+    bool success = 1;
+    string error_message = 2;
+}
+
+message RemoveDataDestinationRequest {
+    string client_id = 1;
+}
+
+message RemoveDataDestinationResponse {
+    bool success = 1;
+    string error_message = 2;
+}
+
+// -------------------------------------------------------------------------
+// RF Commands
+// -------------------------------------------------------------------------
+
+message TuneRfRequest {
+    // The requested center frequency for the source (simulated or hardware).
+    uint64 center_frequency_hz = 1;
+    
+    // Optional parameters when a command requests bandwidth/sample rate changes.
+    // If 0, the pipeline ignores and keeps the currently configured value.
+    uint64 bandwidth_hz = 2;
+    uint32 sample_rate = 3;
+
+    // Receiver gain (if applicable).
+    optional bool agc = 4;
+    optional int32 gain = 5; 
+}
+
+message TuneRfResponse {
+    bool success = 1;
+    string error_message = 2;
+    // The actual frequency achieved (if quantization/hardware limits apply)
+    uint64 actual_center_frequency_hz = 3;
+}
+
+message CommandRfRequest {
+    oneof command {
+        RfMode set_mode = 1;
+    }
+}
+
+message CommandRfResponse {
+    bool success = 1;
+    string error_message = 2;
+}

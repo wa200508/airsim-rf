@@ -1,0 +1,62 @@
+# Merge the starter kit's COMPONENT Compose files (see DISTRIBUTED.md).
+# RF + DIS subset: AirSim supplies physics; original optical/FM demo is not radar DSP.
+services:
+  graupel:
+    environment:
+      GRAUPEL_NAMESPACE_UUID: ${NAMESPACE_UUID:-507e1ce1-1111-4444-8888-507e1ce11111}
+      GRAUPEL_MISSION_NAME: ${MISSION_NAME:-mission}
+  cesiumjs-client:
+    environment:
+      WORLDVIEW_NAMESPACE_UUID: ${NAMESPACE_UUID:-507e1ce1-1111-4444-8888-507e1ce11111}
+      WORLDVIEW_MISSION_NAME: ${MISSION_NAME:-mission}
+  sleet:
+    environment:
+      SLEET_NAMESPACE_UUID: ${NAMESPACE_UUID:-507e1ce1-1111-4444-8888-507e1ce11111}
+      SLEET_MISSION_NAME: ${MISSION_NAME:-mission}
+  supercell:
+    profiles: [legacy-supercell]
+  supercell-jsbsim-ownship:
+    profiles: [legacy-supercell]
+  supercell-jsbsim-bandit:
+    profiles: [legacy-supercell]
+  supercell-jsbsim-bandit-2:
+    profiles: [legacy-supercell]
+  squall-rf:
+    image: ${RF_IMAGE:-ghcr.io/wa200508/airsim-rf:latest}
+    entrypoint: []
+    command: [airsim-rf-worker, --receiver-id, rx0, --backend, cuda, --grpc-address, 'unix:/sockets/squall-rf-control.sock', --seed, '42']
+    environment:
+      NVIDIA_DRIVER_CAPABILITIES: compute,utility,graphics
+    volumes: [airsim-rf-sockets:/sockets]
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              device_ids: ['${RX0_GPU:-0}']
+              capabilities: [gpu]
+    healthcheck:
+      test: [CMD, python, -c, "import urllib.request; urllib.request.urlopen('http://127.0.0.1:22100/health', timeout=2)"]
+      interval: 2s
+      timeout: 3s
+      retries: 30
+  couloir:
+    image: registry.gitlab.com/open-arsenal/ams-gra/hello-world-sk/sensors/squall/couloir@sha256:1bfcfdb9b7df511db0fa84e475099321e0d0f2b3e4bece49d20b975e86527690
+    command: [--config, /rf-config/couloir-rx0.toml]
+    volumes:
+      - airsim-rf-sockets:/sockets
+      - ${AIRSIM_RF_DEPLOY:?Set AIRSIM_RF_DEPLOY to this repository deploy directory}:/rf-config:ro
+    depends_on:
+      squall-rf: {condition: service_healthy}
+  squall-rf-oms-adapter:
+    image: registry.gitlab.com/open-arsenal/ams-gra/hello-world-sk/sensors/squall/oms-rf-adapter@sha256:34e2593a35b47799cc740c98176de0bffe72e39147ad27c65630f3ecf4bedbb3
+  squall-optical:
+    profiles: [legacy-optical]
+  squall-ir-oms-adapter:
+    profiles: [legacy-optical]
+  ir-search-and-track-skill:
+    profiles: [legacy-optical]
+  rf-fm-demod-skill:
+    profiles: [legacy-fm]
+volumes:
+  airsim-rf-sockets:

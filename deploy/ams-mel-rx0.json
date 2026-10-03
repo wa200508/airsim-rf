@@ -1,0 +1,11 @@
+{
+  "log_level": "info",
+  "client_id": "airsim-rf-rx0",
+  "face_id": 0,
+  "va_definition_id": 0,
+  "va_instance_id": 0,
+  "rx_element_group_label": "0",
+  "rx_stream_id": 0,
+  "control_address": "127.0.0.1:21203",
+  "data_host": "127.0.0.1"
+}

@@ -5,6 +5,10 @@ Start with [home setup](REPRODUCE.md) and the measured
 radar models, I/Q generation, Python AirSim adapter, tests and benchmarks.
 ProjectAirSim and Sionna RT are pinned external dependencies downloaded by setup.
 
+The [distributed simulation guide](DISTRIBUTED.md) adds one receiver worker per
+GPU, an AirSim clock coordinator, and an AMS-GRA starter-kit RF MEL backend plus
+DIS scene truth. It includes CPU container tests and per-GPU deployment files.
+
 For a ready-made CPU test environment, see [the container guide](CONTAINER.md):
 
 ```bash

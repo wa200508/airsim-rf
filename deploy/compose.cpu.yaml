@@ -1,0 +1,29 @@
+name: airsim-rf-cpu
+services:
+  rx0:
+    image: ${RF_IMAGE:-ghcr.io/wa200508/airsim-rf:latest}
+    command: [airsim-rf-worker, --receiver-id, rx0, --backend, cpu, --seed, '42']
+    healthcheck:
+      test: [CMD, python, -c, "import urllib.request; urllib.request.urlopen('http://127.0.0.1:22100/health', timeout=2)"]
+      interval: 2s
+      timeout: 3s
+      retries: 30
+  rx1:
+    image: ${RF_IMAGE:-ghcr.io/wa200508/airsim-rf:latest}
+    command: [airsim-rf-worker, --receiver-id, rx1, --backend, cpu, --seed, '43']
+    healthcheck:
+      test: [CMD, python, -c, "import urllib.request; urllib.request.urlopen('http://127.0.0.1:22100/health', timeout=2)"]
+      interval: 2s
+      timeout: 3s
+      retries: 30
+  coordinator:
+    image: ${RF_IMAGE:-ghcr.io/wa200508/airsim-rf:latest}
+    command: [airsim-rf-coordinator, --config, /config/demo.json, --demo, --duration-s, '0.1', --output, /work]
+    volumes:
+      - ./demo.json:/config/demo.json:ro
+      - recordings:/work
+    depends_on:
+      rx0: {condition: service_healthy}
+      rx1: {condition: service_healthy}
+volumes:
+  recordings:

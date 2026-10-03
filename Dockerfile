@@ -44,8 +44,8 @@ RUN --mount=type=secret,id=proxy_ca \
     rm -rf /root/.cache/pip; \
     groupadd --gid 10001 rf; \
     useradd --uid 10001 --gid rf --create-home rf; \
-    mkdir /work; \
-    chown rf:rf /work
+    mkdir /work /sockets; \
+    chown rf:rf /work /sockets
 
 # Tests, examples and documentation can change without reinstalling dependencies.
 COPY --chmod=755 . .

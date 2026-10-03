@@ -1,0 +1,9 @@
+{
+  "physics_hz": 120,
+  "scene_id": "empty-free-space-v1",
+  "receivers": [
+    {"receiver_id": "rx0", "url": "http://rx0:22100"},
+    {"receiver_id": "rx1", "url": "http://rx1:22100"}
+  ],
+  "targets": [{"name": "reflector", "position_ned_m": [12, 0, 0], "rcs_m2": 1}]
+}

@@ -37,6 +37,8 @@ jobs:
         run: docker run --rm --network none airsim-rf:test
       - name: Smoke test radar I/Q generation
         run: docker run --rm --network none airsim-rf:test python /opt/airsim-rf/examples/distance2gol_radar.py
+      - name: Exercise two distributed RF workers offline
+        run: docker run --rm --network none airsim-rf:test python /opt/airsim-rf/examples/distributed_hello.py
       - name: Registry tags
         id: meta
         if: github.event_name != 'pull_request'
