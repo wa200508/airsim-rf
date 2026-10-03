@@ -14,7 +14,8 @@ an AirSim network-mount bridge. Published device constraints and uncalibrated
 assumptions are listed separately; the distributed ESM protocol remains work.
 
 See [SDR update rate and latency](SDR_RUNTIME.md) for complete channel-to-ADC
-CPU measurements and conditional GPU limits.
+CPU measurements and conditional GPU limits. The [code-derived scaling model](SDR_COMPLEXITY.md)
+compares O(paths × samples) work with measured CPU costs and proposed GPU kernels.
 
 ```bash
 .venv/bin/python examples/pluto_esm_drones.py --output-dir recordings/pluto_esm

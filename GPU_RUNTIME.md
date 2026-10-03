@@ -1,5 +1,8 @@
 # Runtime metrics for one GPU per receiver
 
+See [the code-derived scaling model](SDR_COMPLEXITY.md) for stage-by-stage
+complexity, CPU prediction checks and explicit GPU implementation estimates.
+
 The CPU benchmark is a correctness and host-cost baseline. It is not a measured
 GPU runtime, and CPU deadline misses do not establish GPU deadline misses.
 The deployment target is **10 receiver workers, each with one GPU and all 100

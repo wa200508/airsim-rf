@@ -1,5 +1,8 @@
 # SDR runtime: update rate and latency
 
+See [the code-derived scaling model](SDR_COMPLEXITY.md) for stage-by-stage
+complexity, CPU prediction checks and explicit GPU implementation estimates.
+
 Measured 2026-10-03 against the Pluto-class receiver introduced in commit
 279787aa181172fe5d95c14aaa5f61c729e9f701. These measurements include finished ADC
 I/Q. Earlier propagation-only reports do not measure this complete pipeline.

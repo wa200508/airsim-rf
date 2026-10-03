@@ -1,0 +1,235 @@
+{
+  "cpu_calibration_case": "2tx_1rx",
+  "cpu_ns_per_contribution": 62.77160092670328,
+  "cpu": [
+    {
+      "case": "2tx_1rx",
+      "tx": 2,
+      "rx": 1,
+      "attempts_per_link": 1028,
+      "planes": 800,
+      "processed_samples": 4352,
+      "mean_retained_paths": 810.9,
+      "contributions": 3529036.8,
+      "candidate_count": 3658,
+      "visibility_queries_upper_bound": 7314,
+      "cpu_ns_per_contribution": 62.77160092670328,
+      "measured_mean_iq_ms": 221.52328966524996,
+      "measured_mean_channel_ms": 23.57351293370205,
+      "measured_mean_service_ms": 245.14121583294278,
+      "measured_sustained_hz": 4.078801468167204,
+      "predicted_iq_ms_from_small_case": 221.52328966524996,
+      "predicted_service_ms_using_measured_channel": 245.09680259895202,
+      "iq_prediction_error_percent": 0.0
+    },
+    {
+      "case": "2tx_2rx",
+      "tx": 2,
+      "rx": 2,
+      "attempts_per_link": 1028,
+      "planes": 800,
+      "processed_samples": 4352,
+      "mean_retained_paths": 1463.4,
+      "contributions": 6368716.800000001,
+      "candidate_count": 7316,
+      "visibility_queries_upper_bound": 14628,
+      "cpu_ns_per_contribution": 61.608861228295076,
+      "measured_mean_iq_ms": 392.36938953351154,
+      "measured_mean_channel_ms": 19.952049599184345,
+      "measured_mean_service_ms": 412.3723780673269,
+      "measured_sustained_hz": 2.4248270397545344,
+      "predicted_iq_ms_from_small_case": 399.77454938479076,
+      "predicted_service_ms_using_measured_channel": 419.7265989839751,
+      "iq_prediction_error_percent": 1.8872929562836704
+    },
+    {
+      "case": "100tx_1rx",
+      "tx": 100,
+      "rx": 1,
+      "attempts_per_link": 1028,
+      "planes": 800,
+      "processed_samples": 4352,
+      "mean_retained_paths": 42519.6,
+      "contributions": 185045299.2,
+      "candidate_count": 182900,
+      "visibility_queries_upper_bound": 365700,
+      "cpu_ns_per_contribution": 58.6943729295289,
+      "measured_mean_iq_ms": 10861.117800101056,
+      "measured_mean_channel_ms": 687.5691212975653,
+      "measured_mean_service_ms": 11549.018482098472,
+      "measured_sustained_hz": 0.08658713435076425,
+      "predicted_iq_ms_from_small_case": 11615.589674744804,
+      "predicted_service_ms_using_measured_channel": 12303.15879604237,
+      "iq_prediction_error_percent": 6.946539836228727
+    }
+  ],
+  "gpu_estimates": [
+    {
+      "case": "2tx_1rx",
+      "proposed_implementation": "literal_three_phase_evaluations",
+      "assumed_contributions_per_second": [
+        250000000.0,
+        750000000.0
+      ],
+      "assumed_channel_ms": [
+        0.7,
+        2.0
+      ],
+      "assumed_other_ms": [
+        0.3,
+        0.8
+      ],
+      "estimated_service_latency_ms": [
+        5.7053823999999995,
+        16.9161472
+      ],
+      "estimated_serial_capacity_hz": [
+        59.11511576347597,
+        175.27308949528083
+      ],
+      "note": "Untested engineering envelope; endpoint sums, not probabilistic quantiles or hardware guarantees"
+    },
+    {
+      "case": "2tx_1rx",
+      "proposed_implementation": "fused_analytic_phase",
+      "assumed_contributions_per_second": [
+        750000000.0,
+        2500000000.0
+      ],
+      "assumed_channel_ms": [
+        0.7,
+        2.0
+      ],
+      "assumed_other_ms": [
+        0.3,
+        0.8
+      ],
+      "estimated_service_latency_ms": [
+        2.4116147199999998,
+        7.505382399999999
+      ],
+      "estimated_serial_capacity_hz": [
+        133.23771484315043,
+        414.659933739333
+      ],
+      "note": "Untested engineering envelope; endpoint sums, not probabilistic quantiles or hardware guarantees"
+    },
+    {
+      "case": "2tx_1rx",
+      "proposed_implementation": "tiled_tone_or_lfm_recurrence",
+      "assumed_contributions_per_second": [
+        30000000000.0,
+        100000000000.0
+      ],
+      "assumed_channel_ms": [
+        0.7,
+        2.0
+      ],
+      "assumed_other_ms": [
+        0.3,
+        0.8
+      ],
+      "estimated_service_latency_ms": [
+        1.0352903679999998,
+        2.91763456
+      ],
+      "estimated_serial_capacity_hz": [
+        342.7434037523877,
+        965.9125892688689
+      ],
+      "note": "Untested engineering envelope; endpoint sums, not probabilistic quantiles or hardware guarantees"
+    },
+    {
+      "case": "100tx_1rx",
+      "proposed_implementation": "literal_three_phase_evaluations",
+      "assumed_contributions_per_second": [
+        250000000.0,
+        750000000.0
+      ],
+      "assumed_channel_ms": [
+        2.0,
+        8.0
+      ],
+      "assumed_other_ms": [
+        0.5,
+        2.0
+      ],
+      "estimated_service_latency_ms": [
+        249.2270656,
+        750.1811968
+      ],
+      "estimated_serial_capacity_hz": [
+        1.3330112834947558,
+        4.012405304345886
+      ],
+      "note": "Untested engineering envelope; endpoint sums, not probabilistic quantiles or hardware guarantees"
+    },
+    {
+      "case": "100tx_1rx",
+      "proposed_implementation": "fused_analytic_phase",
+      "assumed_contributions_per_second": [
+        750000000.0,
+        2500000000.0
+      ],
+      "assumed_channel_ms": [
+        2.0,
+        8.0
+      ],
+      "assumed_other_ms": [
+        0.5,
+        2.0
+      ],
+      "estimated_service_latency_ms": [
+        76.51811968,
+        256.7270656
+      ],
+      "estimated_serial_capacity_hz": [
+        3.8951872786100195,
+        13.068799967667998
+      ],
+      "note": "Untested engineering envelope; endpoint sums, not probabilistic quantiles or hardware guarantees"
+    },
+    {
+      "case": "100tx_1rx",
+      "proposed_implementation": "tiled_tone_or_lfm_recurrence",
+      "assumed_contributions_per_second": [
+        30000000000.0,
+        100000000000.0
+      ],
+      "assumed_channel_ms": [
+        2.0,
+        8.0
+      ],
+      "assumed_other_ms": [
+        0.5,
+        2.0
+      ],
+      "estimated_service_latency_ms": [
+        4.350452992,
+        16.16817664
+      ],
+      "estimated_serial_capacity_hz": [
+        61.849893297553685,
+        229.86112063246952
+      ],
+      "note": "Untested engineering envelope; endpoint sums, not probabilistic quantiles or hardware guarantees"
+    }
+  ],
+  "gpu_reference_device": "RTX 4090 class, resident static DEM and tiled FP32 synthesis; not tested",
+  "gpu_central_planning_point": {
+    "case": "100tx_1rx",
+    "assumed_channel_ms": 4.0,
+    "assumed_other_ms": 1.0,
+    "assumed_contributions_per_second": 60000000000.0,
+    "service_ms": 8.08408832,
+    "serial_capacity_hz": 123.69978659510737
+  },
+  "gpu_math_note": "GPU work remains O(P*N). Throughput and phase recurrence change constants and parallel execution span.",
+  "exclusions": [
+    "AirSim RPC/physics",
+    "dispatch/network/queueing",
+    "RF skill processing",
+    "cold JIT/startup"
+  ],
+  "gpu_measurements_available": false
+}
