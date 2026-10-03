@@ -13,30 +13,77 @@
   "tested_python": "3.12",
   "ams_gra": {
     "starter_kit": {
-      "url": "https://github.com/open-arsenal/ams-gra-hello-world-sk.git",
-      "commit": "994ea81de70b20a195297b208b7fe480631471c1"
+      "group_url": "https://gitlab.com/open-arsenal/ams-gra/hello-world-sk",
+      "getting_started_docs": "https://open-arsenal.gitlab.io/ams-gra/hello-world-sk/getting-started/",
+      "release_tag": "v2026.09.01",
+      "github_mirror_snapshot": {
+        "url": "https://github.com/open-arsenal/ams-gra-hello-world-sk.git",
+        "commit": "994ea81de70b20a195297b208b7fe480631471c1"
+      }
     },
     "squall": {
-      "url": "https://github.com/open-arsenal/ams-gra-hello-world-sk-sensors-squall.git",
-      "commit": "b1015728f904c799fa0c07489fce48e78f67845f"
+      "url": "https://gitlab.com/open-arsenal/ams-gra/hello-world-sk/sensors/squall.git",
+      "commit": "b3d4aa780de954e39bf2c6dbd7b0121f699822b4"
     },
     "rf_mel": {
-      "url": "https://github.com/open-arsenal/ams-gra-hello-world-sk-interfaces-rf-mel.git",
+      "url": "https://gitlab.com/open-arsenal/ams-gra/hello-world-sk/interfaces/rf-mel.git",
       "commit": "762ce84c5555dd0f3ea66f36b321fecf8839b89f"
     },
     "common_mel": {
-      "url": "https://github.com/open-arsenal/ams-gra-hello-world-sk-interfaces-common-mel.git",
+      "url": "https://gitlab.com/open-arsenal/ams-gra/hello-world-sk/interfaces/common-mel.git",
       "commit": "f6908437d8fd2f7fb69896f9eb9cfd272d10c439"
     },
     "ams_vita": {
-      "url": "https://github.com/open-arsenal/ams-gra-hello-world-sk-libraries-ams-vita.git",
+      "url": "https://gitlab.com/open-arsenal/ams-gra/hello-world-sk/libraries/ams-vita.git",
       "commit": "8e12a4cd7ac8ea8776d40b9d0b22fc4a22adaad8"
     },
     "ams_math": {
-      "url": "https://github.com/open-arsenal/ams-gra-hello-world-sk-libraries-ams-math.git",
+      "url": "https://gitlab.com/open-arsenal/ams-gra/hello-world-sk/libraries/ams-math.git",
       "commit": "00be45190f0e47d268cece8b8c2f8fb58b5418d2"
     },
     "couloir_image": "registry.gitlab.com/open-arsenal/ams-gra/hello-world-sk/sensors/squall/couloir@sha256:1bfcfdb9b7df511db0fa84e475099321e0d0f2b3e4bece49d20b975e86527690",
-    "oms_rf_adapter_image": "registry.gitlab.com/open-arsenal/ams-gra/hello-world-sk/sensors/squall/oms-rf-adapter@sha256:34e2593a35b47799cc740c98176de0bffe72e39147ad27c65630f3ecf4bedbb3"
+    "oms_rf_adapter_image": "registry.gitlab.com/open-arsenal/ams-gra/hello-world-sk/sensors/squall/oms-rf-adapter@sha256:34e2593a35b47799cc740c98176de0bffe72e39147ad27c65630f3ecf4bedbb3",
+    "getting_started": {
+      "url": "https://gitlab.com/open-arsenal/ams-gra/hello-world-sk/getting-started.git",
+      "commit": "1d516818b9d33cc4a1d7d5b8b82f3ca41b2f4cce"
+    },
+    "supercell": {
+      "url": "https://gitlab.com/open-arsenal/ams-gra/hello-world-sk/sim/supercell.git",
+      "commit": "d46e0819f425faf09feecd453093c6f0d094a6e5"
+    },
+    "graupel": {
+      "url": "https://gitlab.com/open-arsenal/ams-gra/hello-world-sk/viz/graupel.git",
+      "commit": "0f4cec71674ffa32bf808596d374272da282b96f"
+    },
+    "worldview": {
+      "url": "https://gitlab.com/open-arsenal/ams-gra/hello-world-sk/viz/worldview.git",
+      "commit": "efedd54301c76bde6795d3c4ec07ed55fe61dec1"
+    },
+    "sleet": {
+      "url": "https://gitlab.com/open-arsenal/ams-gra/hello-world-sk/infra/sleet.git",
+      "commit": "e3c2d798a229766571ed7be1f5b28d2dcdb51868"
+    },
+    "ir_search_and_track": {
+      "url": "https://gitlab.com/open-arsenal/ams-gra/hello-world-sk/skills/ir-search-and-track.git",
+      "commit": "334a2a8ca9b3bdda525bdc342c0d4e2d0165b604"
+    },
+    "rf_fm_demod": {
+      "url": "https://gitlab.com/open-arsenal/ams-gra/hello-world-sk/skills/rf-fm-demod.git",
+      "commit": "bc0077e11f58b9a148acfd07e39fd1b808de1004"
+    },
+    "canonical_audit": {
+      "checked_date": "2026-10-03",
+      "squall_files_sha256": {
+        "crates/rf/proto/squall_rf.proto": "f5096ec47bcb7808cb7a04b4a4ce6735cd542f405ee34942745e9da6c43480df",
+        "interfaces/squall-rf-mel-impl/src/SquallDataMEL.cc": "8f919121076305f76bc6dc3fb6e114a40f7f0c7f5d3164abc65ab93e24fb7e18",
+        "interfaces/squall-rf-mel-impl/src/SquallGrpcClient.cc": "7dc011fe2c10e32665a82e82e0e7b7470f868850c9e039b960626359fd16a9f8",
+        "interfaces/squall-rf-mel-impl/src/SquallC2MEL.cc": "f7f8ea0760a9bbaadffc18f916974e01ab2c9363a757fa187b4e214b3161625e",
+        "interfaces/squall-rf-mel-impl/src/SquallVADB.h": "1109b5a3a68926a0b034902573d3fff3578caba0afe976bd8b1bdf163ddec198",
+        "compose.yaml": "eb22d2b33759671f60e3e08c8496251113d718bdd6341a3d3f4aac0841ce4743",
+        "config/couloir.toml": "bc6ee985c84c562458db5574756ec85adfb8864c6ddf8d18516ee60abb61c997",
+        "config/squall-rf-mel-profile.json": "b3fd93c9122a941d1f6ad906c3cb050435fded4b790d5c57b744307c369f0d13"
+      },
+      "rf_contract_matches_tested_github_snapshot": true
+    }
   }
 }

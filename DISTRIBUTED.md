@@ -145,8 +145,14 @@ be measured separately from sustained captures.
 
 ## Exact starter-kit integration boundary
 
-The checked starter kit is [Open Arsenal AMS-GRA hello-world](https://github.com/open-arsenal/ams-gra-hello-world-sk), root commit
-`994ea81de70b20a195297b208b7fe480631471c1`. Its Squall RF runtime exposes gRPC
+The canonical starter kit is the [Open Arsenal GitLab group](https://gitlab.com/open-arsenal/ams-gra/hello-world-sk),
+with [getting-started instructions](https://open-arsenal.gitlab.io/ams-gra/hello-world-sk/getting-started/).
+The checked release is `v2026.09.01`; the getting-started source pin is
+`1d516818b9d33cc4a1d7d5b8b82f3ca41b2f4cce`. Squall is pinned at
+`b3d4aa780de954e39bf2c6dbd7b0121f699822b4`. Its RF protobuf and native MEL control,
+data decoder, and RX job sources match the GitHub snapshot used for the original
+interoperability test byte for byte. See [the compatibility audit](AMS_GRA_COMPATIBILITY.md).
+Its Squall RF runtime exposes gRPC
 control through Couloir and sends **bare little-endian signed interleaved
 16-bit I/Q over UDP**. We implement its actual `SquallRfControl` protobuf service:
 status, destination registration/removal, fixed-profile tuning validation, and
@@ -158,12 +164,31 @@ explicitly rejected.
 The optional `deploy/compose.ams-overlay.yaml` replaces Squall RF with one GPU
 worker and keeps the kit's native RF OMS adapter and Couloir. It disables the
 Supercell/JSBSim simulator and the unrelated optical/FM demo services by profile.
-After installing the starter kit with its own installer:
+The upstream guide installs a release bundle using **Podman and podman-compose**.
+Our NVIDIA GPU reservations use Docker Compose. To use the Docker integration
+below, download the Linux AMD64 runtime bundle from the
+[canonical release page](https://gitlab.com/open-arsenal/ams-gra/hello-world-sk/getting-started/-/releases/v2026.09.01)
+and extract it. `AMS_STARTER` below is the **extracted bundle directory** containing
+`sleet/`, `squall/`, `worldview/`, `.env.example`, and the other components.
+Load its images into Docker; the upstream `install.sh` loads into Podman's
+separate image store. This Docker alternative does not require running that installer.
 
 ```bash
 export AIRSIM_RF_DEPLOY="$PWD/deploy"
-export AMS_STARTER=/absolute/path/to/the/starter-kit/getting-started
+export AMS_STARTER=/absolute/path/to/the/extracted/getting-started-bundle
+for image in "$AMS_STARTER"/*/images/*.tar; do
+  if [ -f "$image" ]; then docker load -i "$image"; fi
+done
+if [ ! -f "$AMS_STARTER/.env" ]; then
+  cp "$AMS_STARTER/.env.example" "$AMS_STARTER/.env"
+fi
+```
+
+Review the bundle's `.env`, then start the RF/DIS subset:
+
+```bash
 RX0_GPU=0 docker compose --project-directory "$AMS_STARTER" \
+  --env-file "$AMS_STARTER/.env" \
   -f "$AMS_STARTER/supercell/compose.yaml" \
   -f "$AMS_STARTER/graupel/compose.yaml" \
   -f "$AMS_STARTER/worldview/compose.yaml" \
@@ -182,8 +207,12 @@ MEL profiles and OMS identities, rather than routing multiple receivers through
 the same service prefix on one Couloir listener. Component manifests are merged
 directly because the kit's top-level `include` plus service overrides conflicts
 under Docker Compose 2.40.3. Set Worldview's simulation-center environment values
-to your scene origin. The merged Compose configuration was validated; integration
-with the full running kit has not been run here. The control and data boundary has.
+to your scene origin, and set `WORLDVIEW_WS_URL=ws://localhost:21400` for the
+default local Graupel connection. The current map defaults are `world.json` and
+`/tiledata/world.pmtiles`; maps are optional and do not affect RF propagation.
+The merged configuration was validated against the canonical GitLab component
+manifests. Integration with the full running kit has not been run here; the
+control and data boundary has. Podman GPU/CDI deployment has not been validated.
 
 AirSim body truth is published as DIS v7 EntityState PDUs, using WGS-84 ECEF
 position/velocity/orientation, explicit `(site, application, entity)` IDs, and

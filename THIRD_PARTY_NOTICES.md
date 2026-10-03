@@ -1,8 +1,8 @@
 # Third-party notices
 
 `third_party/ams-squall/squall_rf.proto` is copied from Open Arsenal's Squall
-repository at commit `b1015728f904c799fa0c07489fce48e78f67845f`:
-https://github.com/open-arsenal/ams-gra-hello-world-sk-sensors-squall/blob/b1015728f904c799fa0c07489fce48e78f67845f/crates/rf/proto/squall_rf.proto
+repository at commit `b3d4aa780de954e39bf2c6dbd7b0121f699822b4`:
+https://gitlab.com/open-arsenal/ams-gra/hello-world-sk/sensors/squall/-/blob/b3d4aa780de954e39bf2c6dbd7b0121f699822b4/crates/rf/proto/squall_rf.proto
 
 It is licensed under Apache License 2.0. The upstream license is retained in
 `third_party/ams-squall/LICENSE`. The Python protobuf/gRPC files in
