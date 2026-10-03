@@ -77,6 +77,8 @@ diffuse samples per independent TX/RX link**, covering both antenna patterns.
 CUDA is selectable with `--backend cuda` only in an environment with the required
 GPU runtime; the published CPU container does not establish GPU performance.
 
+See [SDR runtime](SDR_RUNTIME.md) for measured update throughput, service latency, and the current hybrid CUDA bottleneck. A nominal update cadence does not demonstrate real-time execution.
+
 The command saves:
 
 * `pluto_esm_iq.npz`: raw input-referred analog I/Q, reconstructed ADC I/Q,

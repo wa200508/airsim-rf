@@ -7,6 +7,8 @@ transmitters**. A 100-TX/10-RX CPU solve divided by ten does not measure that
 deployment. AirSim physics at 120 Hz has an 8.33 ms tick budget; the current
 200 Hz pulse cadence has a separate, tighter 5 ms channel budget.
 
+For the newer Pluto-class pipeline including completed I/Q, use [SDR runtime](SDR_RUNTIME.md). The propagation-only figures below exclude its CPU waveform and receiver chain.
+
 ## Per-GPU work
 
 For the current single-element, one-bounce ground fixture with N = 1,028 diffuse

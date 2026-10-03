@@ -1,0 +1,580 @@
+{
+  "arguments": {
+    "tx": 2,
+    "rx": 2,
+    "iterations": 30,
+    "warmup": 5,
+    "samples": 4096,
+    "samples_per_link": 1028,
+    "backend": "cpu",
+    "output": "benchmarks/results/sdr_cpu_2tx_2rx.json"
+  },
+  "scope": "915 MHz, 2 MS/s, 1 MHz filter, noisy independent-clock Pluto profile; moving mounts over 800-triangle DEM",
+  "timing_includes": "Pose writes, synchronized channel/NumPy export, per-path IQ, per-link diagnostic filters, receive noise/filter and ADC conversion",
+  "timing_excludes": [
+    "AirSim RPC/physics",
+    "transport",
+    "queueing",
+    "storage",
+    "plots",
+    "RF skill processing"
+  ],
+  "initial_tx_positions_m": [
+    [
+      -60.0,
+      -30.0,
+      12.0
+    ],
+    [
+      45.0,
+      45.0,
+      18.0
+    ]
+  ],
+  "initial_rx_positions_m": [
+    [
+      -30.0,
+      -10.0,
+      14.0
+    ],
+    [
+      30.0,
+      -50.0,
+      20.0
+    ]
+  ],
+  "capture_duration_ms": 2.048,
+  "filter_warmup_samples": 256,
+  "preparation_ms": 44.79702899698168,
+  "first_capture": {
+    "epoch_s": 0.0,
+    "service_ms": 401.2331340054516,
+    "pose_ms": 0.03847701009362936,
+    "capture_ms": 401.19442700233776,
+    "channel_ms": 16.751894989283755,
+    "cpu_iq_receiver_ms": 384.442532013054,
+    "stage_timings": {
+      "proposal_table_prepare_ms": 2.3850169964134693,
+      "host_numpy_sampling_ms": 1.0215849906671792
+    },
+    "retained_paths": 1462,
+    "clipping_fraction_max": 0.0
+  },
+  "first_capture_note": "New process with existing on-disk JIT cache; imports excluded; not a cache-cleared cold-start benchmark",
+  "service": {
+    "p50_ms": 410.4154209999251,
+    "p95_ms": 446.71460065510473,
+    "mean_ms": 412.3723780673269,
+    "max_ms": 459.54829700349364
+  },
+  "channel": {
+    "p50_ms": 19.58785099850502,
+    "p95_ms": 23.016654847015158,
+    "mean_ms": 19.952049599184345,
+    "max_ms": 24.06003000214696
+  },
+  "cpu_iq_receiver": {
+    "p50_ms": 389.7371664934326,
+    "p95_ms": 427.62603270894033,
+    "mean_ms": 392.36938953351154,
+    "max_ms": 439.05108301260043
+  },
+  "serial_wall_s": 12.372016440000152,
+  "sustained_updates_hz": 2.4248270397545344,
+  "receiver_blocks_per_second": 4.849654079509069,
+  "deadline_misses": {
+    "120": 30,
+    "200": 30
+  },
+  "stage_timings": {
+    "proposal_table_prepare_ms": {
+      "p50_ms": 1.716516497253906,
+      "p95_ms": 2.2891292435815553,
+      "mean_ms": 1.7966134328162298,
+      "max_ms": 2.3820209898985922
+    },
+    "host_numpy_sampling_ms": {
+      "p50_ms": 0.9760149914654903,
+      "p95_ms": 1.2567558995215222,
+      "mean_ms": 1.0454998671775684,
+      "max_ms": 2.089347006403841
+    }
+  },
+  "retained_paths": {
+    "min": 1462,
+    "max": 1465
+  },
+  "host": {
+    "cpu_count": 3,
+    "cpu_quota": "200000 100000",
+    "memory_limit_bytes": "8589934592",
+    "drjit_threads": 2,
+    "peak_rss_mib": 217.69140625,
+    "cuda_available": 0
+  },
+  "versions": {
+    "sionna_rt": "2.2.0",
+    "mitsuba": "3.9.1",
+    "drjit": "1.5.0",
+    "backend": "llvm_ad_mono_polarized"
+  },
+  "gpu_workload_per_receiver": {
+    "topology": "one GPU per physical receiver; all transmitters on every receiver worker",
+    "gpu_count": 10,
+    "transmitters_per_gpu": 2,
+    "receivers_per_gpu": 1,
+    "diffuse_attempts_per_gpu_per_pulse": 2056,
+    "visibility_queries_per_gpu_per_pulse_upper_bound": 7314,
+    "visibility_queries_fleet_per_pulse_upper_bound": 73140,
+    "candidate_paths_per_gpu_upper_bound": 3658,
+    "compact_channel_bytes_per_gpu_per_pulse_upper_bound": 58528,
+    "compact_channel_bytes_per_gpu_per_second_upper_bound": 11705600,
+    "pulse_hz": 200,
+    "pulse_budget_ms": 5.0,
+    "physics_hz": 120,
+    "physics_budget_ms": 8.333333333333334,
+    "ray_only_required_queries_per_second_at_pulse_rate": 1462800,
+    "ray_only_required_queries_per_second_at_physics_rate": 877680,
+    "vram_requirement": "unmeasured; compact coefficients are not total device memory"
+  },
+  "conditional_gpu_ray_stage": [
+    {
+      "assumed_effective_scene_queries_per_second": 100000000.0,
+      "ray_stage_ms_at_upper_bound_query_count": 0.07314,
+      "unchanged_measured_host_sampling_plus_ray_stage_ms": null
+    },
+    {
+      "assumed_effective_scene_queries_per_second": 250000000.0,
+      "ray_stage_ms_at_upper_bound_query_count": 0.029256,
+      "unchanged_measured_host_sampling_plus_ray_stage_ms": null
+    },
+    {
+      "assumed_effective_scene_queries_per_second": 1000000000.0,
+      "ray_stage_ms_at_upper_bound_query_count": 0.007314,
+      "unchanged_measured_host_sampling_plus_ray_stage_ms": null
+    }
+  ],
+  "gpu_note": "Ray-only hypothetical query throughput. IQ/receive chain and proposal draws remain CPU even with --backend cuda. No measured GPU latency or throughput.",
+  "samples": [
+    {
+      "epoch_s": 0.03,
+      "service_ms": 392.00322498800233,
+      "pose_ms": 0.04597799852490425,
+      "capture_ms": 391.9570659927558,
+      "channel_ms": 18.522871992900036,
+      "cpu_iq_receiver_ms": 373.4341939998558,
+      "stage_timings": {
+        "proposal_table_prepare_ms": 1.5825570008018985,
+        "host_numpy_sampling_ms": 0.968656997429207
+      },
+      "retained_paths": 1462,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.035,
+      "service_ms": 399.37047199055087,
+      "pose_ms": 0.04870198608841747,
+      "capture_ms": 399.3215989903547,
+      "channel_ms": 19.496776003506966,
+      "cpu_iq_receiver_ms": 379.8248229868477,
+      "stage_timings": {
+        "proposal_table_prepare_ms": 1.8327580037293956,
+        "host_numpy_sampling_ms": 1.055275002727285
+      },
+      "retained_paths": 1462,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.04,
+      "service_ms": 394.2166580090998,
+      "pose_ms": 0.04650899791158736,
+      "capture_ms": 394.1699580027489,
+      "channel_ms": 18.29157800239045,
+      "cpu_iq_receiver_ms": 375.87838000035845,
+      "stage_timings": {
+        "proposal_table_prepare_ms": 1.781943006790243,
+        "host_numpy_sampling_ms": 0.9547660010866821
+      },
+      "retained_paths": 1462,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.045,
+      "service_ms": 391.3460410112748,
+      "pose_ms": 0.04636900848709047,
+      "capture_ms": 391.299502007314,
+      "channel_ms": 18.755575991235673,
+      "cpu_iq_receiver_ms": 372.54392601607833,
+      "stage_timings": {
+        "proposal_table_prepare_ms": 1.9847840012516826,
+        "host_numpy_sampling_ms": 0.9737139916978776
+      },
+      "retained_paths": 1463,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.05,
+      "service_ms": 397.55378299742006,
+      "pose_ms": 0.04439600161276758,
+      "capture_ms": 397.5092469918309,
+      "channel_ms": 18.615378998219967,
+      "cpu_iq_receiver_ms": 378.8938679936109,
+      "stage_timings": {
+        "proposal_table_prepare_ms": 1.5921309968689457,
+        "host_numpy_sampling_ms": 0.9558669989928603
+      },
+      "retained_paths": 1463,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.055,
+      "service_ms": 410.401492001256,
+      "pose_ms": 0.05032400076743215,
+      "capture_ms": 410.35094700055197,
+      "channel_ms": 20.996847000787966,
+      "cpu_iq_receiver_ms": 389.354099999764,
+      "stage_timings": {
+        "proposal_table_prepare_ms": 1.6623159899609163,
+        "host_numpy_sampling_ms": 0.9518660081084818
+      },
+      "retained_paths": 1463,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.06,
+      "service_ms": 410.17389099579304,
+      "pose_ms": 0.052597999456338584,
+      "capture_ms": 410.121123000863,
+      "channel_ms": 22.46031499817036,
+      "cpu_iq_receiver_ms": 387.66080800269265,
+      "stage_timings": {
+        "proposal_table_prepare_ms": 1.6763369931140915,
+        "host_numpy_sampling_ms": 2.089347006403841
+      },
+      "retained_paths": 1463,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.065,
+      "service_ms": 414.3312530068215,
+      "pose_ms": 0.045617009163834155,
+      "capture_ms": 414.2854759993497,
+      "channel_ms": 18.43178301351145,
+      "cpu_iq_receiver_ms": 395.8536929858383,
+      "stage_timings": {
+        "proposal_table_prepare_ms": 1.6921700007515028,
+        "host_numpy_sampling_ms": 0.9915150003507733
+      },
+      "retained_paths": 1463,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.07,
+      "service_ms": 434.4176110025728,
+      "pose_ms": 0.04813099803868681,
+      "capture_ms": 434.36929999734275,
+      "channel_ms": 18.66538799367845,
+      "cpu_iq_receiver_ms": 415.7039120036643,
+      "stage_timings": {
+        "proposal_table_prepare_ms": 1.543809994473122,
+        "host_numpy_sampling_ms": 0.9374450019095093
+      },
+      "retained_paths": 1463,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.075,
+      "service_ms": 440.31225799699314,
+      "pose_ms": 0.04687899490818381,
+      "capture_ms": 440.26520899205934,
+      "channel_ms": 20.760023006005213,
+      "cpu_iq_receiver_ms": 419.50518598605413,
+      "stage_timings": {
+        "proposal_table_prepare_ms": 2.0289780077291653,
+        "host_numpy_sampling_ms": 0.9684909891802818
+      },
+      "retained_paths": 1463,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.08,
+      "service_ms": 459.54829700349364,
+      "pose_ms": 0.0566240050829947,
+      "capture_ms": 459.4914930057712,
+      "channel_ms": 20.44040999317076,
+      "cpu_iq_receiver_ms": 439.05108301260043,
+      "stage_timings": {
+        "proposal_table_prepare_ms": 2.3820209898985922,
+        "host_numpy_sampling_ms": 0.9794869984034449
+      },
+      "retained_paths": 1463,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.085,
+      "service_ms": 449.27971001015976,
+      "pose_ms": 0.04671899660024792,
+      "capture_ms": 449.2328010092024,
+      "channel_ms": 19.67892599350307,
+      "cpu_iq_receiver_ms": 429.5538750156993,
+      "stage_timings": {
+        "proposal_table_prepare_ms": 1.7972560017369688,
+        "host_numpy_sampling_ms": 1.0024719958892092
+      },
+      "retained_paths": 1463,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.09,
+      "service_ms": 400.8264970034361,
+      "pose_ms": 0.047160006943158805,
+      "capture_ms": 400.77916700101923,
+      "channel_ms": 23.471841996069998,
+      "cpu_iq_receiver_ms": 377.30732500494923,
+      "stage_timings": {
+        "proposal_table_prepare_ms": 2.218358000391163,
+        "host_numpy_sampling_ms": 0.991114997304976
+      },
+      "retained_paths": 1463,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.095,
+      "service_ms": 429.6214060013881,
+      "pose_ms": 0.04687999899033457,
+      "capture_ms": 429.5743760012556,
+      "channel_ms": 18.86624399048742,
+      "cpu_iq_receiver_ms": 410.70813201076817,
+      "stage_timings": {
+        "proposal_table_prepare_ms": 1.6536939947400242,
+        "host_numpy_sampling_ms": 1.0589250014163554
+      },
+      "retained_paths": 1463,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.1,
+      "service_ms": 418.1824599945685,
+      "pose_ms": 0.04844200157094747,
+      "capture_ms": 418.13386799185537,
+      "channel_ms": 20.816787000512704,
+      "cpu_iq_receiver_ms": 397.31708099134266,
+      "stage_timings": {
+        "proposal_table_prepare_ms": 1.934979998623021,
+        "host_numpy_sampling_ms": 1.075660009519197
+      },
+      "retained_paths": 1463,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.105,
+      "service_ms": 420.3625210066093,
+      "pose_ms": 0.10668700269889086,
+      "capture_ms": 420.2555430092616,
+      "channel_ms": 21.365769003750756,
+      "cpu_iq_receiver_ms": 398.88977400551084,
+      "stage_timings": {
+        "proposal_table_prepare_ms": 1.7408629937563092,
+        "host_numpy_sampling_ms": 0.978315991233103
+      },
+      "retained_paths": 1463,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.11,
+      "service_ms": 411.74929999397136,
+      "pose_ms": 0.046397995902225375,
+      "capture_ms": 411.7027210013475,
+      "channel_ms": 20.41419199667871,
+      "cpu_iq_receiver_ms": 391.2885290046688,
+      "stage_timings": {
+        "proposal_table_prepare_ms": 1.5325650019804016,
+        "host_numpy_sampling_ms": 0.9795470105018467
+      },
+      "retained_paths": 1464,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.115,
+      "service_ms": 417.92672099836636,
+      "pose_ms": 0.048811998567543924,
+      "capture_ms": 417.8777389897732,
+      "channel_ms": 18.98092299234122,
+      "cpu_iq_receiver_ms": 398.896815997432,
+      "stage_timings": {
+        "proposal_table_prepare_ms": 1.526947002275847,
+        "host_numpy_sampling_ms": 1.2389809999149293
+      },
+      "retained_paths": 1464,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.12,
+      "service_ms": 409.1631379997125,
+      "pose_ms": 0.045577005948871374,
+      "capture_ms": 409.1174009954557,
+      "channel_ms": 18.997168008354492,
+      "cpu_iq_receiver_ms": 390.1202329871012,
+      "stage_timings": {
+        "proposal_table_prepare_ms": 1.7722100019454956,
+        "host_numpy_sampling_ms": 0.9617719915695488
+      },
+      "retained_paths": 1464,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.125,
+      "service_ms": 400.97869200690184,
+      "pose_ms": 0.048622008762322366,
+      "capture_ms": 400.9299000026658,
+      "channel_ms": 19.759634000365622,
+      "cpu_iq_receiver_ms": 381.1702660023002,
+      "stage_timings": {
+        "proposal_table_prepare_ms": 1.6855810099514201,
+        "host_numpy_sampling_ms": 0.9601990022929385
+      },
+      "retained_paths": 1464,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.13,
+      "service_ms": 413.82002099999227,
+      "pose_ms": 0.04754999827127904,
+      "capture_ms": 413.77225099131465,
+      "channel_ms": 20.20212799834553,
+      "cpu_iq_receiver_ms": 393.5701229929691,
+      "stage_timings": {
+        "proposal_table_prepare_ms": 1.5673460002290085,
+        "host_numpy_sampling_ms": 1.2712989991996437
+      },
+      "retained_paths": 1464,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.135,
+      "service_ms": 416.0550050000893,
+      "pose_ms": 0.05430998862721026,
+      "capture_ms": 416.00053499860223,
+      "channel_ms": 24.06003000214696,
+      "cpu_iq_receiver_ms": 391.9405049964553,
+      "stage_timings": {
+        "proposal_table_prepare_ms": 2.2319979907479137,
+        "host_numpy_sampling_ms": 1.1121440038550645
+      },
+      "retained_paths": 1464,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.14,
+      "service_ms": 410.42934999859426,
+      "pose_ms": 0.04524699761532247,
+      "capture_ms": 410.38395299983677,
+      "channel_ms": 21.836514002643526,
+      "cpu_iq_receiver_ms": 388.54743899719324,
+      "stage_timings": {
+        "proposal_table_prepare_ms": 2.0257240103092045,
+        "host_numpy_sampling_ms": 1.0535170004004613
+      },
+      "retained_paths": 1464,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.145,
+      "service_ms": 419.44378400512505,
+      "pose_ms": 0.04683900624513626,
+      "capture_ms": 419.39675400499254,
+      "channel_ms": 21.091082991915755,
+      "cpu_iq_receiver_ms": 398.3056710130768,
+      "stage_timings": {
+        "proposal_table_prepare_ms": 1.8814109935192391,
+        "host_numpy_sampling_ms": 1.0824290075106546
+      },
+      "retained_paths": 1464,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.15,
+      "service_ms": 384.0109940065304,
+      "pose_ms": 0.04787000943906605,
+      "capture_ms": 383.9629430003697,
+      "channel_ms": 18.82266999746207,
+      "cpu_iq_receiver_ms": 365.14027300290763,
+      "stage_timings": {
+        "proposal_table_prepare_ms": 1.601456999196671,
+        "host_numpy_sampling_ms": 0.9580960031598806
+      },
+      "retained_paths": 1464,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.155,
+      "service_ms": 384.2912179970881,
+      "pose_ms": 0.04684898885898292,
+      "capture_ms": 384.244179003872,
+      "channel_ms": 18.308600003365427,
+      "cpu_iq_receiver_ms": 365.93557900050655,
+      "stage_timings": {
+        "proposal_table_prepare_ms": 1.5610169939463958,
+        "host_numpy_sampling_ms": 0.9554319985909387
+      },
+      "retained_paths": 1464,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.16,
+      "service_ms": 385.9998039988568,
+      "pose_ms": 0.0787070021033287,
+      "capture_ms": 385.9209169895621,
+      "channel_ms": 18.785456006298773,
+      "cpu_iq_receiver_ms": 367.13546098326333,
+      "stage_timings": {
+        "proposal_table_prepare_ms": 1.538083000923507,
+        "host_numpy_sampling_ms": 0.9613809961592779
+      },
+      "retained_paths": 1464,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.165,
+      "service_ms": 405.20680099143647,
+      "pose_ms": 0.04668899055104703,
+      "capture_ms": 405.1599420054117,
+      "channel_ms": 20.187707006698474,
+      "cpu_iq_receiver_ms": 384.97223499871325,
+      "stage_timings": {
+        "proposal_table_prepare_ms": 2.33587299589999,
+        "host_numpy_sampling_ms": 0.971927001955919
+      },
+      "retained_paths": 1464,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.17,
+      "service_ms": 406.5694720047759,
+      "pose_ms": 0.045016000512987375,
+      "capture_ms": 406.5242950018728,
+      "channel_ms": 19.21567998942919,
+      "cpu_iq_receiver_ms": 387.3086150124436,
+      "stage_timings": {
+        "proposal_table_prepare_ms": 1.89886600128375,
+        "host_numpy_sampling_ms": 0.9647260012570769
+      },
+      "retained_paths": 1464,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.175,
+      "service_ms": 443.57946699892636,
+      "pose_ms": 0.04634799552150071,
+      "capture_ms": 443.5329690022627,
+      "channel_ms": 18.26318800158333,
+      "cpu_iq_receiver_ms": 425.26978100067936,
+      "stage_timings": {
+        "proposal_table_prepare_ms": 1.6343690076610073,
+        "host_numpy_sampling_ms": 0.960628007305786
+      },
+      "retained_paths": 1465,
+      "clipping_fraction_max": 0.0
+    }
+  ]
+}
