@@ -1,5 +1,10 @@
 # First-order ground scattering: both TX and RX antenna coverage
 
+For primary-source comparisons with MathWorks, Ansys, Remcom, NVIDIA and
+RadarSimPy, see [published environmental RF precedents](ENVIRONMENTAL_RF_REFERENCES.md).
+The report covers terrain reflectivity, phase consistency, coherent I/Q
+validation and the environmental paths excluded by the first-order limit.
+
 The 144 paths in the optimization's street-scene test were retained direct and
 specular paths, not 144 rays sampling ground illumination. Both antenna patterns
 were applied to their fields, but distributed diffuse return was absent. Those

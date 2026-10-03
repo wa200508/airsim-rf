@@ -36,6 +36,27 @@ To see individual hills and the swale in the received data, start with the
 the terrain relief, with a flat-ground control, a bandwidth comparison and raw
 complex samples to inspect.
 
+## Published environmental RF precedents
+
+The [detailed comparison with published implementations](ENVIRONMENTAL_RF_REFERENCES.md)
+documents how this project relates to MathWorks terrain-clutter I/Q examples,
+Ansys STK/Perceive EM, Remcom WaveFarer, NVIDIA Sionna RT, RadarSimPy and RaySAR.
+It includes a capability matrix, modeling assumptions, code and paper citations,
+and a proposed independent validation sequence.
+
+The closest terrain-to-I/Q examples are MathWorks'
+[site-specific bistatic land clutter](https://www.mathworks.com/help/radar/ug/bistatic-clutter-part-3-simulating-site-specific-bistatic-land-clutter.html)
+and RadarSimPy's
+[Grand Canyon radar altimeter](https://radarsimx.com/2025/11/21/pulse-radar-altimeter-altitude/).
+Ansys' [RF Channel Modeler](https://help.agi.com/stk/Content/comm/RFCMOverview.htm)
+provides a close architectural precedent for a main scene simulator with a GPU
+RF plugin. These references support the scene/channel/waveform approach;
+our current ground model still needs calibrated backscatter, persistent
+scatterer phase, slow-time correlation and coherent-I/Q convergence checks.
+Our first-order mode also excludes target-plus-ground multiple-interaction paths.
+
+## Getting started
+
 For a ready-made CPU test environment, see [the container guide](CONTAINER.md):
 
 ```bash

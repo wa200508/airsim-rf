@@ -12,6 +12,11 @@ geometry and waveform so the existing features become resolvable. The raw
 I/Q and compressed profiles are saved in
 [`terrain_scan_iq.npz`](docs/figures/terrain_scan_iq.npz).
 
+The [published-implementation comparison](ENVIRONMENTAL_RF_REFERENCES.md)
+relates this scan to RadarSimPy's terrain altimeter and MathWorks' bistatic
+land-clutter examples. It distinguishes the demonstrated geometry/delay
+behavior from calibrated rough-ground amplitudes and slow-time statistics.
+
 ## Why the earlier plots hid the terrain
 
 The [original scenario](TERRAIN_SCENARIO.md) moved only about 3 m near the center
