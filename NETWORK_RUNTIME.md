@@ -25,6 +25,9 @@ GPU timing tables are conditional arithmetic, not measured GPU performance.
   arithmetic example, plus narrower/wider cases. This is not a user-confirmed
   requirement. Complex sample rate approximately equals occupied bandwidth at
   ideal Nyquist; practical filters generally require margin.
+- Network sizing below assumes transmitter waveforms can be generated locally
+  on RF GPUs from shared specifications/seeds. External skills streaming raw
+  transmitter I/Q require much larger ingress/fanout capacity, calculated below.
 - Ray density, interaction depth, path retention, scene geometry/materials,
   motion and acceptable signal error must be specified. "Full scene" needs
   convergence criteria, including clutter and weak paths, at finite depth.
@@ -208,6 +211,17 @@ SC16 streams for one hour needs 2.88 TB at 20 MS/s or 14.4 TB at 100 MS/s.
 Noise-like I/Q compresses poorly; provision sustained throughput or bounded
 recordings. Skill/control results require much less bandwidth.
 
+The table sizes **receiver output**, not raw transmitter input. If 100 external
+skills each stream a continuous 20 MS/s transmitter waveform, input alone is
+8 GB/s SC16 (64 Gbit/s), or 16 GB/s complex64 (128 Gbit/s), before distributing
+those waveforms to ten receiver workers. If every worker needs every raw
+waveform, each worker has that ingress rate and total switch egress is ten times
+larger. Multicast can reduce source uplink duplication but cannot eliminate
+receiver ingress or switch fanout. Prefer local generation from shared emission
+descriptions/seeds when possible; arbitrary external I/Q playback must have an
+explicit placement/distribution plan. Co-locating a skill with its GPU worker
+can also avoid shipping its receiver output through a central collector.
+
 The NPZ response includes multiple representations of a sample; at 100 MS/s
 an 8.33 ms block would exceed the 8 MiB cap before compression. One UDP datagram
 can hold only about 16,376 SC16 samples even before avoiding IP fragmentation.
@@ -232,8 +246,9 @@ No purchase minimum has been validated. These are practical starting allocations
 | Larger scene GPU | 48 GiB RTX workstation class, e.g. RTX 6000 Ada class | More geometry/candidate/clutter capacity; does not cure compute/launch bottlenecks |
 | RF host CPU/RAM | Start with 8 physical cores and 32 GiB/GPU; 64 GiB preferred | Control, packetization, staging and geometry; measure shared-host contention |
 | World host | Start around 16 physical cores/64 GiB, separate rendering GPU when needed | Benchmark 110-platform physics and selected sensors independently |
-| Network, 20 MS/s | 2.5/10 GbE per RX; 10 GbE aggregate for SC16, 25 GbE preferred | Payload is 6.4 Gbit/s aggregate SC16 or 12.8 Gbit/s complex64 |
-| Network, 100 MS/s | 10 GbE/RX; 50/100 GbE aggregate SC16, 100 GbE complex64 | Payload is 32/64 Gbit/s aggregate |
+| Output network, 20 MS/s | 2.5/10 GbE per RX; 10 GbE aggregate for SC16, 25 GbE preferred | Payload is 6.4 Gbit/s aggregate SC16 or 12.8 Gbit/s complex64 |
+| Output network, 100 MS/s | 10 GbE/RX; 50/100 GbE aggregate SC16, 100 GbE complex64 | Payload is 32/64 Gbit/s aggregate |
+| External raw TX I/Q, 20 MS/s each | Separately size 100/200 GbE-class ingress per RX or redesign placement/distribution | All 100 sources are 64/128 Gbit/s payload per worker before headroom |
 | Software | Native Linux x86-64, tested Python 3.12/pinned dependencies, NVIDIA Container Toolkit | Current container/Compose target |
 
 [Mitsuba 3.9.1 requirements](https://github.com/mitsuba-renderer/mitsuba3/blob/v3.9.1/README.md#requirements)
