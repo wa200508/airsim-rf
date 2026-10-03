@@ -1,0 +1,400 @@
+{
+  "scope": "Synthetic finite ground; independent moving TX/RX plus first-order diffuse and specular propagation",
+  "model": {
+    "carrier_hz": 24125000000.0,
+    "depth": 1,
+    "refraction": false,
+    "diffraction": false,
+    "ground_extent_m": [
+      -100,
+      100
+    ],
+    "permittivity": 5,
+    "conductivity_s_per_m": 0.01,
+    "thickness_m": 0.5,
+    "scattering_coefficient": 0.3,
+    "scattering_pattern": "Sionna default Lambertian",
+    "tx_pattern": "tr38901",
+    "rx_pattern": "tr38901",
+    "polarization": "V",
+    "calibrated_ground_roughness": false,
+    "independent_random_scatterer_phases": false
+  },
+  "temporal_model": "Common random numbers per pulse; sampled hit points are not persistent world scatterers",
+  "sampling": {
+    "attempts_per_link": 1028,
+    "pattern_grid": [
+      64,
+      128
+    ],
+    "strategy": "Half TX-pattern proposals, half RX-pattern proposals; mixture area-PDF correction",
+    "uniform_fraction": 0.1,
+    "proposal_generation": "NumPy host draws; Mitsuba traces and Sionna fields on selected backend"
+  },
+  "excludes": [
+    "IQ synthesis",
+    "AirSim",
+    "moving mesh/BVH updates",
+    "transport",
+    "diagnostic classification"
+  ],
+  "versions": {
+    "sionna_rt": "2.2.0",
+    "mitsuba": "3.9.1",
+    "drjit": "1.5.0",
+    "backend": "llvm_ad_mono_polarized"
+  },
+  "arguments": {
+    "backend": "cpu",
+    "tx": 100,
+    "rx": 1,
+    "samples_per_link": 1028,
+    "uniform_fraction": 0.1,
+    "iterations": 10,
+    "warmup": 3,
+    "threads": 2,
+    "pulse_hz": 200,
+    "deployment_receivers": 10,
+    "output": "benchmarks/results/scattering_cpu_100tx_1rx_gpu_planning.json"
+  },
+  "host": {
+    "cpu_count": 3,
+    "cpu_quota": "200000 100000",
+    "memory_limit": "8589934592",
+    "drjit_threads": 2,
+    "peak_host_rss_mib": 205.7578125
+  },
+  "stage_timings": {
+    "proposal_table_prepare_ms": {
+      "p50_ms": 2.034682001976762,
+      "p95_ms": 2.101333901009639
+    },
+    "host_numpy_sampling_ms": {
+      "p50_ms": 15.316182500100695,
+      "p95_ms": 15.964983350568218
+    }
+  },
+  "gpu_deployment": {
+    "workload": {
+      "topology": "one GPU per physical receiver; all transmitters on every receiver worker",
+      "gpu_count": 10,
+      "transmitters_per_gpu": 100,
+      "receivers_per_gpu": 1,
+      "diffuse_attempts_per_gpu_per_pulse": 102800,
+      "visibility_queries_per_gpu_per_pulse_upper_bound": 205900,
+      "visibility_queries_fleet_per_pulse_upper_bound": 2059000,
+      "candidate_paths_per_gpu_upper_bound": 103000,
+      "compact_channel_bytes_per_gpu_per_pulse_upper_bound": 1648000,
+      "compact_channel_bytes_per_gpu_per_second_upper_bound": 329600000,
+      "pulse_hz": 200,
+      "pulse_budget_ms": 5.0,
+      "physics_hz": 120,
+      "physics_budget_ms": 8.333333333333334,
+      "ray_only_required_queries_per_second_at_pulse_rate": 41180000,
+      "ray_only_required_queries_per_second_at_physics_rate": 24708000,
+      "vram_requirement": "unmeasured; compact coefficients are not total device memory"
+    },
+    "gpu_channel_runtime_measured": false,
+    "gpu_iq_runtime_measured": false,
+    "cpu_to_gpu_speedup_applied": false,
+    "measured_host_sampling_ms_per_receiver_worker": 15.316182500100695,
+    "conditional_ray_stage_sensitivity": [
+      {
+        "assumed_effective_scene_queries_per_second": 100000000.0,
+        "ray_stage_ms_at_upper_bound_query_count": 2.059,
+        "unchanged_measured_host_sampling_plus_ray_stage_ms": 17.375182500100696
+      },
+      {
+        "assumed_effective_scene_queries_per_second": 250000000.0,
+        "ray_stage_ms_at_upper_bound_query_count": 0.8236,
+        "unchanged_measured_host_sampling_plus_ray_stage_ms": 16.139782500100694
+      },
+      {
+        "assumed_effective_scene_queries_per_second": 1000000000.0,
+        "ray_stage_ms_at_upper_bound_query_count": 0.2059,
+        "unchanged_measured_host_sampling_plus_ray_stage_ms": 15.522082500100694
+      }
+    ],
+    "conditional_rates_source": "Hypothetical effective whole-scene query throughput, not vendor RT-core specifications",
+    "gpu_deadline_status": "unmeasured",
+    "remaining_solve_cost": "mixed host/device; no pure GPU residual inferred",
+    "device_memory": "unmeasured; host RSS does not estimate VRAM"
+  },
+  "cold": {
+    "epoch_s": 0.0,
+    "total_ms": 59.5412690017838,
+    "pose_ms": 0.24770500021986663,
+    "solve_ms": 58.5560359977535,
+    "cir_numpy_ms": 0.7375280038104393,
+    "valid_paths": 96589,
+    "diffuse_paths": 96389,
+    "diffuse_per_link_min": 947,
+    "diffuse_per_link_median": 965.0,
+    "diffuse_per_link_max": 980,
+    "sum_diffuse_path_power": 6.510736838549747e-09,
+    "sampling": {
+      "samples_per_link": 1028,
+      "diffuse_launches": 102800,
+      "tx_launches": 51400,
+      "rx_launches": 51400,
+      "uniform_fraction": 0.1
+    },
+    "stage_timings": {
+      "proposal_table_prepare_ms": 3.410060999158304,
+      "host_numpy_sampling_ms": 17.788234996260144
+    }
+  },
+  "p50_ms": 48.56824449962005,
+  "p95_ms": 49.20075404988893,
+  "max_ms": 49.29266699764412,
+  "pulse_budget_ms": 5.0,
+  "deadline_misses": 10,
+  "samples": [
+    {
+      "epoch_s": 0.02,
+      "total_ms": 49.088416002632584,
+      "pose_ms": 0.25650900352047756,
+      "solve_ms": 48.242807999486104,
+      "cir_numpy_ms": 0.5890989996260032,
+      "valid_paths": 96587,
+      "diffuse_paths": 96387,
+      "diffuse_per_link_min": 947,
+      "diffuse_per_link_median": 964.5,
+      "diffuse_per_link_max": 980,
+      "sum_diffuse_path_power": 6.540051611381159e-09,
+      "sampling": {
+        "samples_per_link": 1028,
+        "diffuse_launches": 102800,
+        "tx_launches": 51400,
+        "rx_launches": 51400,
+        "uniform_fraction": 0.1
+      },
+      "stage_timings": {
+        "proposal_table_prepare_ms": 1.9662620034068823,
+        "host_numpy_sampling_ms": 15.254596000886522
+      }
+    },
+    {
+      "epoch_s": 0.025,
+      "total_ms": 48.04540800250834,
+      "pose_ms": 0.3000030046678148,
+      "solve_ms": 47.15349099569721,
+      "cir_numpy_ms": 0.5919140021433122,
+      "valid_paths": 96587,
+      "diffuse_paths": 96387,
+      "diffuse_per_link_min": 947,
+      "diffuse_per_link_median": 964.5,
+      "diffuse_per_link_max": 980,
+      "sum_diffuse_path_power": 6.5471086330148864e-09,
+      "sampling": {
+        "samples_per_link": 1028,
+        "diffuse_launches": 102800,
+        "tx_launches": 51400,
+        "rx_launches": 51400,
+        "uniform_fraction": 0.1
+      },
+      "stage_timings": {
+        "proposal_table_prepare_ms": 1.8841290002455935,
+        "host_numpy_sampling_ms": 15.581700004986487
+      }
+    },
+    {
+      "epoch_s": 0.03,
+      "total_ms": 47.69267700612545,
+      "pose_ms": 0.2431980028632097,
+      "solve_ms": 46.86494600173319,
+      "cir_numpy_ms": 0.5845330015290529,
+      "valid_paths": 96587,
+      "diffuse_paths": 96387,
+      "diffuse_per_link_min": 947,
+      "diffuse_per_link_median": 964.5,
+      "diffuse_per_link_max": 980,
+      "sum_diffuse_path_power": 6.554078169074273e-09,
+      "sampling": {
+        "samples_per_link": 1028,
+        "diffuse_launches": 102800,
+        "tx_launches": 51400,
+        "rx_launches": 51400,
+        "uniform_fraction": 0.1
+      },
+      "stage_timings": {
+        "proposal_table_prepare_ms": 2.008183000725694,
+        "host_numpy_sampling_ms": 14.95342200360028
+      }
+    },
+    {
+      "epoch_s": 0.035,
+      "total_ms": 49.00790700048674,
+      "pose_ms": 0.2516210006433539,
+      "solve_ms": 48.15633100224659,
+      "cir_numpy_ms": 0.5999549975967966,
+      "valid_paths": 96589,
+      "diffuse_paths": 96389,
+      "diffuse_per_link_min": 947,
+      "diffuse_per_link_median": 964.5,
+      "diffuse_per_link_max": 980,
+      "sum_diffuse_path_power": 6.561685417239005e-09,
+      "sampling": {
+        "samples_per_link": 1028,
+        "diffuse_launches": 102800,
+        "tx_launches": 51400,
+        "rx_launches": 51400,
+        "uniform_fraction": 0.1
+      },
+      "stage_timings": {
+        "proposal_table_prepare_ms": 1.9734809975489043,
+        "host_numpy_sampling_ms": 15.154209002503194
+      }
+    },
+    {
+      "epoch_s": 0.04,
+      "total_ms": 48.49459099932574,
+      "pose_ms": 0.2741150019573979,
+      "solve_ms": 47.63281899795402,
+      "cir_numpy_ms": 0.587656999414321,
+      "valid_paths": 96589,
+      "diffuse_paths": 96389,
+      "diffuse_per_link_min": 947,
+      "diffuse_per_link_median": 965.0,
+      "diffuse_per_link_max": 980,
+      "sum_diffuse_path_power": 6.568863675227021e-09,
+      "sampling": {
+        "samples_per_link": 1028,
+        "diffuse_launches": 102800,
+        "tx_launches": 51400,
+        "rx_launches": 51400,
+        "uniform_fraction": 0.1
+      },
+      "stage_timings": {
+        "proposal_table_prepare_ms": 2.061792001768481,
+        "host_numpy_sampling_ms": 15.120069001568481
+      }
+    },
+    {
+      "epoch_s": 0.045,
+      "total_ms": 49.29266699764412,
+      "pose_ms": 0.23084999702405185,
+      "solve_ms": 48.42837199976202,
+      "cir_numpy_ms": 0.6334450008580461,
+      "valid_paths": 96589,
+      "diffuse_paths": 96389,
+      "diffuse_per_link_min": 947,
+      "diffuse_per_link_median": 965.0,
+      "diffuse_per_link_max": 980,
+      "sum_diffuse_path_power": 6.576780897660228e-09,
+      "sampling": {
+        "samples_per_link": 1028,
+        "diffuse_launches": 102800,
+        "tx_launches": 51400,
+        "rx_launches": 51400,
+        "uniform_fraction": 0.1
+      },
+      "stage_timings": {
+        "proposal_table_prepare_ms": 2.0600800053216517,
+        "host_numpy_sampling_ms": 16.043561001424678
+      }
+    },
+    {
+      "epoch_s": 0.05,
+      "total_ms": 48.23706099705305,
+      "pose_ms": 0.246433999564033,
+      "solve_ms": 47.436528999242,
+      "cir_numpy_ms": 0.5540979982470162,
+      "valid_paths": 96590,
+      "diffuse_paths": 96390,
+      "diffuse_per_link_min": 947,
+      "diffuse_per_link_median": 965.0,
+      "diffuse_per_link_max": 980,
+      "sum_diffuse_path_power": 6.583719347474926e-09,
+      "sampling": {
+        "samples_per_link": 1028,
+        "diffuse_launches": 102800,
+        "tx_launches": 51400,
+        "rx_launches": 51400,
+        "uniform_fraction": 0.1
+      },
+      "stage_timings": {
+        "proposal_table_prepare_ms": 2.0969540055375546,
+        "host_numpy_sampling_ms": 15.377768999314867
+      }
+    },
+    {
+      "epoch_s": 0.055,
+      "total_ms": 48.9099129990791,
+      "pose_ms": 0.2385319967288524,
+      "solve_ms": 48.0563439996331,
+      "cir_numpy_ms": 0.6150370027171448,
+      "valid_paths": 96588,
+      "diffuse_paths": 96388,
+      "diffuse_per_link_min": 946,
+      "diffuse_per_link_median": 964.5,
+      "diffuse_per_link_max": 980,
+      "sum_diffuse_path_power": 6.5910148450143424e-09,
+      "sampling": {
+        "samples_per_link": 1028,
+        "diffuse_launches": 102800,
+        "tx_launches": 51400,
+        "rx_launches": 51400,
+        "uniform_fraction": 0.1
+      },
+      "stage_timings": {
+        "proposal_table_prepare_ms": 2.0982659989385866,
+        "host_numpy_sampling_ms": 15.868943999521434
+      }
+    },
+    {
+      "epoch_s": 0.06,
+      "total_ms": 48.4466589987278,
+      "pose_ms": 0.24735499755479395,
+      "solve_ms": 47.634239999752026,
+      "cir_numpy_ms": 0.5650640014209785,
+      "valid_paths": 96587,
+      "diffuse_paths": 96387,
+      "diffuse_per_link_min": 946,
+      "diffuse_per_link_median": 964.5,
+      "diffuse_per_link_max": 980,
+      "sum_diffuse_path_power": 6.598157575865571e-09,
+      "sampling": {
+        "samples_per_link": 1028,
+        "diffuse_launches": 102800,
+        "tx_launches": 51400,
+        "rx_launches": 51400,
+        "uniform_fraction": 0.1
+      },
+      "stage_timings": {
+        "proposal_table_prepare_ms": 2.103844002704136,
+        "host_numpy_sampling_ms": 15.073089001816697
+      }
+    },
+    {
+      "epoch_s": 0.065,
+      "total_ms": 48.64189799991436,
+      "pose_ms": 0.24566299543948844,
+      "solve_ms": 47.771964003914036,
+      "cir_numpy_ms": 0.6242710005608387,
+      "valid_paths": 96586,
+      "diffuse_paths": 96386,
+      "diffuse_per_link_min": 946,
+      "diffuse_per_link_median": 964.5,
+      "diffuse_per_link_max": 980,
+      "sum_diffuse_path_power": 6.605279878613146e-09,
+      "sampling": {
+        "samples_per_link": 1028,
+        "diffuse_launches": 102800,
+        "tx_launches": 51400,
+        "rx_launches": 51400,
+        "uniform_fraction": 0.1
+      },
+      "stage_timings": {
+        "proposal_table_prepare_ms": 2.0092839986318722,
+        "host_numpy_sampling_ms": 15.420081006595865
+      }
+    }
+  ],
+  "notes": [
+    "Attempts are not retained paths: misses, occlusion and zero response contribute zero",
+    "Incoherent sum of path powers is a normalization diagnostic, not coherent IQ power",
+    "Sample count does not establish clutter fidelity or convergence",
+    "Host RSS is not VRAM; no purchase minimum follows from CPU timing"
+  ]
+}

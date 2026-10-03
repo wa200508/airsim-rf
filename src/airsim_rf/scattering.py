@@ -4,6 +4,7 @@ Sionna's material/field model is preserved; this is not a calibrated stochastic
 rough-ground model. Samples cover both ends of every independent TX/RX link.
 """
 from dataclasses import dataclass
+from time import perf_counter
 
 import numpy as np
 
@@ -66,6 +67,7 @@ class _ScatteringCandidates(_PlanarCandidates):
         self.scene = None
         self.synthetic_array = True
         self.last_sampling = {}
+        self.last_timings = {}
 
     def __call__(self, **kwargs):
         import drjit as dr
@@ -75,6 +77,7 @@ class _ScatteringCandidates(_PlanarCandidates):
         from sionna.rt.utils import rotation_matrix, spawn_ray_to
 
         diffuse = kwargs["diffuse_reflection"]
+        self.last_timings = {}
         if diffuse and any(not isinstance(shape, mi.Mesh) for shape in kwargs["mi_scene"].shapes()):
             raise ValueError("First-order scattering supports triangle meshes only")
         if diffuse and kwargs["max_depth"] != 1:
@@ -109,16 +112,22 @@ class _ScatteringCandidates(_PlanarCandidates):
         dr.scatter(visibility, self.visibility, base_row)
         self.visibility = visibility
 
+        proposal_start = perf_counter()
         tx_proposal = _AngularProposal.from_patterns(self.scene.tx_array.antenna_pattern.patterns,
                       receive=False, uniform_fraction=self.uniform_fraction)
         rx_proposal = _AngularProposal.from_patterns(self.scene.rx_array.antenna_pattern.patterns,
                       receive=True, uniform_fraction=self.uniform_fraction)
+        proposal_ms = (perf_counter()-proposal_start)*1000
+        sampling_start = perf_counter()
         rng = np.random.default_rng(kwargs["seed"])
         tx_count, rx_count = (samples+1)//2, samples//2
         pairs = sources*targets
         local = np.empty((3, pairs, samples))
         local[:, :, :tx_count] = tx_proposal.draw(rng, pairs*tx_count).reshape(3, pairs, tx_count)
         local[:, :, tx_count:] = rx_proposal.draw(rng, pairs*rx_count).reshape(3, pairs, rx_count)
+        # This region is strictly NumPy/host work, even with a CUDA backend.
+        # Table preparation above includes backend evaluation and host export.
+        sampling_ms = (perf_counter()-sampling_start)*1000
         local = mi.Vector3f(local.reshape(3, -1))
         dr.make_opaque(local)
         lane = dr.arange(mi.UInt, width)
@@ -184,6 +193,8 @@ class _ScatteringCandidates(_PlanarCandidates):
         self.last_sampling = {"samples_per_link": samples, "diffuse_launches": width,
                               "tx_launches": pairs*tx_count, "rx_launches": pairs*rx_count,
                               "uniform_fraction": self.uniform_fraction}
+        self.last_timings = {"proposal_table_prepare_ms": proposal_ms,
+                             "host_numpy_sampling_ms": sampling_ms}
         return paths
 
 
@@ -212,6 +223,16 @@ class FirstOrderScatteringPathSolver:
     @property
     def sampling(self):
         return dict(self._candidates.last_sampling)
+
+    @property
+    def stage_timings(self):
+        """Wall timings of table preparation and strictly host NumPy draws.
+
+        Table preparation includes backend work/export; the remaining solve
+        is mixed host/device work. These timings do not synchronize each ray
+        or field stage and must not be interpreted as GPU kernel timings.
+        """
+        return dict(self._candidates.last_timings)
 
     def __call__(self, scene, **kwargs):
         kwargs.setdefault("max_depth", 1)

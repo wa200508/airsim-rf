@@ -18,9 +18,11 @@ def main():
     parser.add_argument("--warmup", type=int, default=3)
     parser.add_argument("--threads", type=int, default=2)
     parser.add_argument("--pulse-hz", type=float, default=200)
+    parser.add_argument("--deployment-receivers", type=int, default=10,
+                        help="Fleet receiver/GPU count; benchmark --rx remains the local solve size")
     parser.add_argument("--output", type=Path, required=True)
     args = parser.parse_args()
-    if min(args.tx, args.rx, args.iterations, args.samples_per_link) < 1 or args.samples_per_link < 2 or min(args.warmup, args.threads) < 0 or args.pulse_hz <= 0:
+    if min(args.tx, args.rx, args.iterations, args.samples_per_link, args.deployment_receivers) < 1 or args.samples_per_link < 2 or min(args.warmup, args.threads) < 0 or args.pulse_hz <= 0:
         parser.error("Counts/rate must be positive, samples >= 2, warmup/threads nonnegative")
     import numpy as np
     import drjit as dr
@@ -33,6 +35,7 @@ def main():
     import sionna.rt as rt
     from sionna.rt.constants import InteractionType
     from airsim_rf.scattering import FirstOrderScatteringPathSolver
+    from airsim_rf.runtime_metrics import receiver_gpu_workload, conditional_gpu_ray_times
     scene = rt.load_scene(str(Path(__file__).resolve().parent/"scenes/ground.xml"))
     scene.frequency = 24.125e9
     scene.tx_array = rt.PlanarArray(num_rows=1, num_cols=1, pattern="tr38901", polarization="V")
@@ -76,13 +79,20 @@ def main():
                 "diffuse_per_link_min": int(per_link.min()), "diffuse_per_link_median": float(np.median(per_link)),
                 "diffuse_per_link_max": int(per_link.max()),
                 "sum_diffuse_path_power": float(power[diffuse].sum()),
-                "sampling": solver.sampling}
+                "sampling": solver.sampling, "stage_timings": solver.stage_timings}
 
     cold = run(0)
     for i in range(args.warmup):
         run(i+1)
     samples = [run(i+args.warmup+1) for i in range(args.iterations)]
     times = np.asarray([sample['total_ms'] for sample in samples])
+    stage_summary = {name: {"p50_ms": float(np.median([s['stage_timings'][name] for s in samples])),
+                            "p95_ms": float(np.percentile([s['stage_timings'][name] for s in samples], 95))}
+                     for name in samples[0]['stage_timings']}
+    workload = receiver_gpu_workload(transmitters=args.tx, receivers=args.deployment_receivers,
+                attempts_per_link=args.samples_per_link, specular_planes=1, pulse_hz=args.pulse_hz)
+    # A multi-RX batch cannot establish one-worker host cost by dividing by RX.
+    host_ms = stage_summary['host_numpy_sampling_ms']['p50_ms'] if args.rx == 1 else None
     result = {"scope": "Synthetic finite ground; independent moving TX/RX plus first-order diffuse and specular propagation",
               "model": {"carrier_hz": 24.125e9, "depth": 1, "refraction": False, "diffraction": False,
                         "ground_extent_m": [-100, 100], "permittivity": 5, "conductivity_s_per_m": .01,
@@ -99,6 +109,17 @@ def main():
               "host": {"cpu_count": os.cpu_count(), "cpu_quota": Path('/sys/fs/cgroup/cpu.max').read_text().strip(),
                        "memory_limit": Path('/sys/fs/cgroup/memory.max').read_text().strip(),
                        "drjit_threads": dr.thread_count(), "peak_host_rss_mib": resource.getrusage(resource.RUSAGE_SELF).ru_maxrss/1024},
+              "stage_timings": stage_summary,
+              "gpu_deployment": {"workload": workload,
+                    "gpu_channel_runtime_measured": args.backend == "cuda",
+                    "gpu_iq_runtime_measured": False,
+                    "cpu_to_gpu_speedup_applied": False,
+                    "measured_host_sampling_ms_per_receiver_worker": host_ms,
+                    "conditional_ray_stage_sensitivity": conditional_gpu_ray_times(workload, host_sampling_ms=host_ms),
+                    "conditional_rates_source": "Hypothetical effective whole-scene query throughput, not vendor RT-core specifications",
+                    "gpu_deadline_status": "unmeasured" if args.backend == "cpu" else "see local channel-only measured timings; IQ/AirSim/transport excluded",
+                    "remaining_solve_cost": "mixed host/device; no pure GPU residual inferred",
+                    "device_memory": "unmeasured; host RSS does not estimate VRAM"},
               "cold": cold, "p50_ms": float(np.median(times)), "p95_ms": float(np.percentile(times, 95)),
               "max_ms": float(times.max()), "pulse_budget_ms": 1000/args.pulse_hz,
               "deadline_misses": int((times > 1000/args.pulse_hz).sum()), "samples": samples,

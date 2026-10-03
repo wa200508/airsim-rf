@@ -22,6 +22,10 @@ For distributed ground return, use the separate
 sampling budget covers both antenna patterns and preserves sidelobe support;
 the 144-path specular benchmark does not measure ground-clutter fidelity.
 
+[GPU runtime planning](GPU_RUNTIME.md) separates measured CPU costs from
+conditional per-GPU work estimates for the 100-TX/10-RX deployment. Host proposal
+sampling is timed separately; GPU deadlines and VRAM require target measurements.
+
 For a ready-made CPU test environment, see [the container guide](CONTAINER.md):
 
 ```bash

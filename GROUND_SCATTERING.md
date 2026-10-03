@@ -138,7 +138,12 @@ less than one. New path-count/scene variations can incur fresh compilation.
 All measured epochs missed 5 ms; GPU deadlines and VRAM remain unmeasured.
 Host sampling itself remains work to optimize before a GPU real-time claim.
 
-**51 tests pass.** New checks cover both endpoint proposal boresights and
+[GPU deployment metrics](GPU_RUNTIME.md) separate measured CPU costs from
+conditional GPU ray-stage estimates for one GPU per receiver. The new report
+measures host NumPy sampling independently and records per-GPU query counts,
+channel export capacity, pulse/physics budgets and unmeasured GPU/VRAM status.
+
+The propagation tests cover both endpoint proposal boresights and
 sidelobe support, independent TX/RX steering, importance-versus-uniform power,
 native uniform-sampling agreement, power stability under increased ray counts,
 physical scattered delay and both endpoint Dopplers, zero-scattering materials,
