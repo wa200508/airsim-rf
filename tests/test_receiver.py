@@ -31,6 +31,25 @@ def test_coherent_paths_can_cancel():
     assert np.count_nonzero(block.iq_volts) == 0
 
 
+def test_compact_multipath_doppler_is_continuous_across_pulses():
+    cfg = ReceiverConfig(num_samples=128, sample_rate_hz=100000, transmit_power_w=0.25)
+    gains = np.array([0.1+0.2j, -0.15j])
+    delays = np.array([0.7e-6, 3.2e-6])
+    doppler = np.array([-123.0, 245.0])
+    tone = 20000.0
+    for epoch_ns in (27000000, 28280000):
+        epoch = epoch_ns*1e-9
+        channel_at_pulse = gains*np.exp(2j*np.pi*doppler*epoch)
+        block = synthesize_voltage(channel_at_pulse, delays,
+            lambda t: np.exp(2j*np.pi*tone*t), sim_time_ns=epoch_ns,
+            config=cfg, doppler_hz=doppler)
+        t = epoch + np.arange(cfg.num_samples)/cfg.sample_rate_hz
+        expected = np.sqrt(cfg.impedance_ohm*cfg.transmit_power_w)*sum(
+            g*np.exp(-2j*np.pi*tone*delay)*np.exp(2j*np.pi*(tone+fd)*t)
+            for g, delay, fd in zip(gains, delays, doppler))
+        np.testing.assert_allclose(block.iq_volts, expected, rtol=2e-6, atol=1e-7)
+
+
 def test_empty_channel_and_thermal_noise_power():
     cfg = ReceiverConfig(num_samples=100000, noise_enabled=True, noise_figure_db=6)
     # waveform should not be called on an empty channel.
@@ -67,6 +86,28 @@ def test_sionna_free_space_loss_absolute_delay_carrier_phase_and_doppler(tmp_pat
         np.testing.assert_array_equal(data["iq_volts"], block.iq_volts)
         assert data["iq_volts"].dtype == np.complex64
         assert data["impedance_ohm"] == 50
+
+
+def test_single_reflection_geometry_and_compact_moving_channel():
+    from sionna.rt import PlanarArray, Receiver, Transmitter, load_scene, scene as scenes
+    scene = load_scene(scenes.floor_wall)
+    scene.tx_array = PlanarArray(num_rows=1, num_cols=1, pattern="iso", polarization="V")
+    scene.rx_array = PlanarArray(num_rows=1, num_cols=1, pattern="iso", polarization="V")
+    scene.add(Transmitter("tx", position=[0.5, 0.2, 2]))
+    scene.add(Receiver("rx", position=[1.5, 0.2, 2], velocity=[1, 0, 0]))
+    cfg = ReceiverConfig(num_samples=64)
+    receiver = RFReceiver(scene, cfg)
+    block = receiver.capture(np.ones_like, 0)
+    # Exactly direct, wall image and floor image paths; no wall-floor bounce.
+    np.testing.assert_allclose(np.sort(block.path_delays_s*299792458.0),
+                               [1, 2, np.sqrt(17)], rtol=1e-5)
+    paths = receiver.solver(scene, max_depth=1, samples_per_src=10000,
+                            max_num_paths_per_src=1000, refraction=False, seed=42)
+    a, tau = paths.cir(sampling_frequency=cfg.sample_rate_hz,
+                       num_time_steps=cfg.num_samples, normalize_delays=False, out_type="numpy")
+    dense_reference = synthesize_voltage(a[0, 0, 0, 0], tau[0, 0], np.ones_like,
+                                         sim_time_ns=0, config=cfg)
+    np.testing.assert_allclose(block.iq_volts, dense_reference.iq_volts, rtol=1e-5, atol=1e-8)
 
 
 def tilted_kinematics():

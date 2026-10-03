@@ -15,6 +15,7 @@ def main():
     parser.add_argument("--samples", type=int, default=4096)
     parser.add_argument("--sample-rate", type=float, default=20e6)
     parser.add_argument("--iterations", type=int, default=10)
+    parser.add_argument("--compact", action="store_true", help="One gain/path at the pulse epoch")
     parser.add_argument("--output", type=Path, required=True)
     args = parser.parse_args()
     if min(args.paths, args.samples, args.iterations, args.sample_rate) <= 0:
@@ -22,7 +23,8 @@ def main():
     import numpy as np
     from airsim_rf.receiver import ReceiverConfig, synthesize_voltage
     config = ReceiverConfig(sample_rate_hz=args.sample_rate, num_samples=args.samples)
-    coefficients = np.full((args.paths, args.samples), 1e-5+1e-5j, dtype=np.complex128)
+    shape = (args.paths,) if args.compact else (args.paths, args.samples)
+    coefficients = np.full(shape, 1e-5+1e-5j, dtype=np.complex128)
     delays = np.linspace(1e-8, 1e-6, args.paths)
 
     def waveform(t):

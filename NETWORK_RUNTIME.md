@@ -1,12 +1,16 @@
 # Runtime assessment: 100 transmitters, 10 receivers
 
+**Updated baseline:** [PER_PULSE_RUNTIME.md](PER_PULSE_RUNTIME.md) applies the
+accepted one-solve-per-pulse, depth-one model, compact coefficients and new
+measurements. This document preserves the original depth-three assessment.
+
 Assessed 2026-10-03 against application commit
 `557bf23ab87b3a552d1f79378cc26aebc4beabe4`, Sionna RT 2.2.0 at
 `15b5ee036917a4c2a9b6420e05570b77717e2fcc`, Mitsuba 3.9.1 and Dr.Jit 1.5.0.
 The accompanying benchmark scripts/results were added during this assessment.
 
-The repository is a tested distributed radar prototype: all 28 Python tests
-pass. It is ready for performance investigation. It is not yet a general
+At the originally audited commit, all 28 Python tests passed. The prototype
+is ready for performance investigation. It is not yet a general
 AMS-GRA RF simulation plane. The deployed worker is one monostatic FMCW radar
 with direct-path point-target echoes; Sionna can model independent radio links,
 but the application needs a general channel-to-I/Q backend.

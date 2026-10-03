@@ -1,5 +1,9 @@
 # RF timing versus a 120 Hz simulation
 
+The current accepted assumptions and updated results are in
+[PER_PULSE_RUNTIME.md](PER_PULSE_RUNTIME.md): one channel epoch per pulse and
+at most one scene interaction, with compact coefficients and analytic Doppler.
+
 For the broader AMS-GRA plane (100 independent transmitters, 10 receivers and
 moving-platform multipath), see [NETWORK_RUNTIME.md](NETWORK_RUNTIME.md).
 It audits current limitations and separates tracing, wideband I/Q synthesis,

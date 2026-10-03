@@ -32,7 +32,7 @@ def main():
         scene.add(Transmitter("tx", position=(NED_TO_RF @ args.tx_ned).tolist()))
         rx = Receiver("rx", position=[0, 0, 0])
         scene.add(rx)
-        receiver = RFReceiver(scene, ReceiverConfig(), max_depth=3 if args.rf_scene else 0)
+        receiver = RFReceiver(scene, ReceiverConfig(), max_depth=1 if args.rf_scene else 0)
         bridge = AirSimRFBridge(world, robot, receiver, rx)
         block = bridge.capture(lambda t: np.exp(2j * np.pi * 10000 * t))
         block.save(args.output)

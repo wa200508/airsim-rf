@@ -1,0 +1,289 @@
+{
+  "scope": "Moving independent radios; Sionna propagation and one-epoch NumPy CIR only",
+  "channel_refresh": "Once per pulse; no fast-time tracing",
+  "pulse_rate_hz": 200,
+  "interaction_flags": {
+    "los": true,
+    "specular_reflection": true,
+    "diffuse_reflection": false,
+    "diffraction": false,
+    "refraction": false
+  },
+  "excludes": [
+    "waveform synthesis",
+    "RF filtering/ADC",
+    "moving meshes/BVH update",
+    "AirSim physics/render/RPC",
+    "worker transport",
+    "file I/O"
+  ],
+  "arguments": {
+    "backend": "cpu",
+    "tx": 100,
+    "rx": 1,
+    "scene": "builtin:simple_street_canyon",
+    "depth": 1,
+    "rays": 10000,
+    "path_cap": 1000,
+    "tx_batch": 0,
+    "diffuse": false,
+    "scattering_coefficient": 0.3,
+    "diffraction": false,
+    "refraction": false,
+    "iterations": 20,
+    "warmup": 5,
+    "update_hz": 200,
+    "output": "benchmarks/results/network_cpu_100tx_1rx_depth1_10krays_200hz.json"
+  },
+  "versions": {
+    "python": "3.12.14",
+    "sionna_rt": "2.2.0",
+    "mitsuba": "3.9.1",
+    "drjit": "1.5.0",
+    "backend": "llvm_ad_mono_polarized"
+  },
+  "host": {
+    "platform": "Linux-6.18.44-x86_64-with-glibc2.41",
+    "cpu_count": 3,
+    "cpu_model": "AMD EPYC 9V74 80-Core Processor",
+    "cpu_quota": "200000 100000",
+    "memory_limit": "8589934592",
+    "peak_host_rss_mib": 993.9921875,
+    "gpu_inventory": null,
+    "cuda_visible_devices": null
+  },
+  "scene_objects": 5,
+  "scene_triangles": 74,
+  "setup_ms": 12.375999001960736,
+  "cold": {
+    "total_ms": 912.5599069993768,
+    "pose_ms": 0.06829999983892776,
+    "solve_ms": 911.7413389976718,
+    "cir_numpy_ms": 0.7464209993486293,
+    "valid_paths": 144,
+    "padded_paths": 400,
+    "possible_path_cap_hit": false,
+    "channel_power_checksum": 2.5132344489975367e-06
+  },
+  "p50_ms": 162.30026250013907,
+  "p95_ms": 178.33781089902914,
+  "p99_ms": 187.71050938004916,
+  "max_ms": 190.0536840003042,
+  "budget_ms": 5.0,
+  "deadline_misses": 20,
+  "stage_p50_ms": {
+    "pose_ms": 0.10194549940933939,
+    "solve_ms": 161.8905880004604,
+    "cir_numpy_ms": 0.2611050022096606
+  },
+  "valid_paths_min": 144,
+  "valid_paths_max": 144,
+  "samples": [
+    {
+      "total_ms": 153.05941399856238,
+      "pose_ms": 0.10101899897563271,
+      "solve_ms": 152.70325900200987,
+      "cir_numpy_ms": 0.2523720031604171,
+      "valid_paths": 144,
+      "padded_paths": 400,
+      "possible_path_cap_hit": false,
+      "channel_power_checksum": 2.56060047831852e-06
+    },
+    {
+      "total_ms": 158.28088800117257,
+      "pose_ms": 0.10750799992820248,
+      "solve_ms": 157.8385350003373,
+      "cir_numpy_ms": 0.33230000190087594,
+      "valid_paths": 144,
+      "padded_paths": 400,
+      "possible_path_cap_hit": false,
+      "channel_power_checksum": 2.5686335902719293e-06
+    },
+    {
+      "total_ms": 177.2011820030457,
+      "pose_ms": 0.13561000014306046,
+      "solve_ms": 176.78772200088133,
+      "cir_numpy_ms": 0.2755759996944107,
+      "valid_paths": 144,
+      "padded_paths": 400,
+      "possible_path_cap_hit": false,
+      "channel_power_checksum": 2.5767083116079448e-06
+    },
+    {
+      "total_ms": 148.98310100033996,
+      "pose_ms": 0.11345800157869235,
+      "solve_ms": 148.59141299893963,
+      "cir_numpy_ms": 0.2755660025286488,
+      "valid_paths": 144,
+      "padded_paths": 400,
+      "possible_path_cap_hit": false,
+      "channel_power_checksum": 2.584823505458189e-06
+    },
+    {
+      "total_ms": 190.0536840003042,
+      "pose_ms": 0.11325699961162172,
+      "solve_ms": 189.6553769984166,
+      "cir_numpy_ms": 0.28256700170459226,
+      "valid_paths": 144,
+      "padded_paths": 400,
+      "possible_path_cap_hit": false,
+      "channel_power_checksum": 2.5929800813173642e-06
+    },
+    {
+      "total_ms": 171.54339499757043,
+      "pose_ms": 0.11222499961149879,
+      "solve_ms": 171.1404509987915,
+      "cir_numpy_ms": 0.2879650019167457,
+      "valid_paths": 144,
+      "padded_paths": 400,
+      "possible_path_cap_hit": false,
+      "channel_power_checksum": 2.601177584438119e-06
+    },
+    {
+      "total_ms": 156.4729609999631,
+      "pose_ms": 0.10565599950496107,
+      "solve_ms": 156.01297200191766,
+      "cir_numpy_ms": 0.35121800101478584,
+      "valid_paths": 144,
+      "padded_paths": 400,
+      "possible_path_cap_hit": false,
+      "channel_power_checksum": 2.6094178338098573e-06
+    },
+    {
+      "total_ms": 152.41021600013482,
+      "pose_ms": 0.10315200051991269,
+      "solve_ms": 152.05287799835787,
+      "cir_numpy_ms": 0.25155099865514785,
+      "valid_paths": 144,
+      "padded_paths": 400,
+      "possible_path_cap_hit": false,
+      "channel_power_checksum": 2.617699919937877e-06
+    },
+    {
+      "total_ms": 174.5520740005304,
+      "pose_ms": 0.1042139992932789,
+      "solve_ms": 174.16237899669795,
+      "cir_numpy_ms": 0.28283800202189013,
+      "valid_paths": 144,
+      "padded_paths": 400,
+      "possible_path_cap_hit": false,
+      "channel_power_checksum": 2.626024297569529e-06
+    },
+    {
+      "total_ms": 138.8945299986517,
+      "pose_ms": 0.10644700159900822,
+      "solve_ms": 138.51176599928294,
+      "cir_numpy_ms": 0.2736829992500134,
+      "valid_paths": 144,
+      "padded_paths": 400,
+      "possible_path_cap_hit": false,
+      "channel_power_checksum": 2.634392103573191e-06
+    },
+    {
+      "total_ms": 168.432432001282,
+      "pose_ms": 0.1015900015772786,
+      "solve_ms": 168.08632099855458,
+      "cir_numpy_ms": 0.2420169985271059,
+      "valid_paths": 144,
+      "padded_paths": 400,
+      "possible_path_cap_hit": false,
+      "channel_power_checksum": 2.6428028832015116e-06
+    },
+    {
+      "total_ms": 146.9026090016996,
+      "pose_ms": 0.09472999954596162,
+      "solve_ms": 146.56242699857103,
+      "cir_numpy_ms": 0.24321900127688423,
+      "valid_paths": 144,
+      "padded_paths": 400,
+      "possible_path_cap_hit": false,
+      "channel_power_checksum": 2.6512575459491927e-06
+    },
+    {
+      "total_ms": 168.77896300138673,
+      "pose_ms": 0.10120899969479069,
+      "solve_ms": 168.42948799967417,
+      "cir_numpy_ms": 0.24539200239814818,
+      "valid_paths": 144,
+      "padded_paths": 400,
+      "possible_path_cap_hit": false,
+      "channel_power_checksum": 2.659755409695208e-06
+    },
+    {
+      "total_ms": 175.83990300045116,
+      "pose_ms": 0.09348800085717812,
+      "solve_ms": 175.47427300087293,
+      "cir_numpy_ms": 0.2698380012589041,
+      "valid_paths": 144,
+      "padded_paths": 400,
+      "possible_path_cap_hit": false,
+      "channel_power_checksum": 2.668297611307935e-06
+    },
+    {
+      "total_ms": 156.21375200134935,
+      "pose_ms": 0.09986800068872981,
+      "solve_ms": 155.86449599868502,
+      "cir_numpy_ms": 0.2469549981469754,
+      "valid_paths": 144,
+      "padded_paths": 400,
+      "possible_path_cap_hit": false,
+      "channel_power_checksum": 2.676884605534724e-06
+    },
+    {
+      "total_ms": 170.5035279992444,
+      "pose_ms": 0.10006799857364967,
+      "solve_ms": 170.15932999856886,
+      "cir_numpy_ms": 0.24190700059989467,
+      "valid_paths": 144,
+      "padded_paths": 400,
+      "possible_path_cap_hit": false,
+      "channel_power_checksum": 2.6855159376282245e-06
+    },
+    {
+      "total_ms": 177.72118599896203,
+      "pose_ms": 0.09443000089959241,
+      "solve_ms": 177.37509500148008,
+      "cir_numpy_ms": 0.24910700085456483,
+      "valid_paths": 144,
+      "padded_paths": 400,
+      "possible_path_cap_hit": false,
+      "channel_power_checksum": 2.694192971830489e-06
+    },
+    {
+      "total_ms": 143.09196800240898,
+      "pose_ms": 0.09989700265577994,
+      "solve_ms": 142.74389600177528,
+      "cir_numpy_ms": 0.24533200121368282,
+      "valid_paths": 144,
+      "padded_paths": 400,
+      "possible_path_cap_hit": false,
+      "channel_power_checksum": 2.7029159355151933e-06
+    },
+    {
+      "total_ms": 166.31963699910557,
+      "pose_ms": 0.10132999886991456,
+      "solve_ms": 165.94264100058354,
+      "cir_numpy_ms": 0.27319400032865815,
+      "valid_paths": 144,
+      "padded_paths": 400,
+      "possible_path_cap_hit": false,
+      "channel_power_checksum": 2.7116846013086615e-06
+    },
+    {
+      "total_ms": 148.7777769980312,
+      "pose_ms": 0.10230099724140018,
+      "solve_ms": 148.42797099845484,
+      "cir_numpy_ms": 0.2449509993311949,
+      "valid_paths": 144,
+      "padded_paths": 400,
+      "possible_path_cap_hit": false,
+      "channel_power_checksum": 2.720500106079271e-06
+    }
+  ],
+  "notes": [
+    "Host RSS is not GPU VRAM",
+    "Path cap and ray count require convergence studies",
+    "Batched scene add/remove overhead is included",
+    "Cold includes JIT work"
+  ]
+}

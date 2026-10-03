@@ -19,7 +19,7 @@ def main():
     parser.add_argument("--tx", type=int, default=100)
     parser.add_argument("--rx", type=int, default=1)
     parser.add_argument("--scene", default="builtin:simple_street_canyon")
-    parser.add_argument("--depth", type=int, default=3)
+    parser.add_argument("--depth", type=int, default=1)
     parser.add_argument("--rays", type=int, default=10000)
     parser.add_argument("--path-cap", type=int, default=1000)
     parser.add_argument("--tx-batch", type=int, default=0, help="0 means all TX in one solve")
@@ -27,9 +27,11 @@ def main():
     parser.add_argument("--scattering-coefficient", type=float, default=0.3,
                         help="Synthetic material coefficient used only with --diffuse")
     parser.add_argument("--diffraction", action="store_true")
+    parser.add_argument("--refraction", action="store_true")
     parser.add_argument("--iterations", type=int, default=10)
     parser.add_argument("--warmup", type=int, default=2)
-    parser.add_argument("--update-hz", type=float, default=120)
+    parser.add_argument("--pulse-hz", "--update-hz", dest="update_hz", type=float, default=200,
+                        help="Channel solves/s; defaults to the current 5 ms PRI")
     parser.add_argument("--output", type=Path, required=True)
     args = parser.parse_args()
     if min(args.tx, args.rx, args.rays, args.path_cap, args.iterations) < 1:
@@ -95,7 +97,8 @@ def main():
             before = time.perf_counter()
             paths = solver(scene, max_depth=args.depth, samples_per_src=args.rays,
                            max_num_paths_per_src=args.path_cap,
-                           diffuse_reflection=args.diffuse, diffraction=args.diffraction, seed=42)
+                           diffuse_reflection=args.diffuse, diffraction=args.diffraction,
+                           refraction=args.refraction, seed=42)
             # Force completion on CPU or GPU before stopping the solve timer.
             dr.eval(paths.a, paths.tau, paths.doppler)
             dr.sync_thread()
@@ -134,6 +137,11 @@ def main():
             gpu_info = "nvidia-smi query unavailable"
     result = {
         "scope": "Moving independent radios; Sionna propagation and one-epoch NumPy CIR only",
+        "channel_refresh": "Once per pulse; no fast-time tracing",
+        "pulse_rate_hz": args.update_hz,
+        "interaction_flags": {"los": True, "specular_reflection": True,
+                              "diffuse_reflection": args.diffuse,
+                              "diffraction": args.diffraction, "refraction": args.refraction},
         "excludes": ["waveform synthesis", "RF filtering/ADC", "moving meshes/BVH update",
                      "AirSim physics/render/RPC", "worker transport", "file I/O"],
         "arguments": {k: str(v) if isinstance(v, Path) else v for k, v in vars(args).items()},

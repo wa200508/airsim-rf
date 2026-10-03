@@ -1,5 +1,6 @@
 """SISO baseband voltage receiver; propagation is supplied by Sionna RT."""
 from dataclasses import dataclass
+from numbers import Integral
 from pathlib import Path
 from typing import Callable
 
@@ -52,28 +53,45 @@ class IQBlock:
 
 def synthesize_voltage(coefficients, delays_s, waveform: Waveform, *,
                        sim_time_ns: int, config: ReceiverConfig,
+                       doppler_hz=None,
                        rng: np.random.Generator | None = None) -> IQBlock:
     """Apply a CIR to a unit-average-power, continuous complex waveform.
 
-    coefficients[p,n] already include carrier-delay phase and local Doppler.
+    Compact coefficients[p] include carrier-delay phase at the pulse epoch.
+    Optional doppler_hz[p] evolves phase analytically within the pulse while
+    geometry, amplitude and delay stay fixed. No fast-time ray tracing occurs.
+    Legacy coefficients[p,n] already include carrier-delay phase/local Doppler.
     waveform(t) is evaluated at ABSOLUTE simulation time minus path delay.
     Invalid Sionna padding paths have delay -1 and contribute nothing.
     """
     a = np.asarray(coefficients, dtype=np.complex128)
     tau = np.asarray(delays_s, dtype=np.float64)
-    if a.ndim != 2 or tau.ndim != 1 or a.shape != (tau.size, config.num_samples):
-        raise ValueError("Expected coefficients [paths,samples] and delays [paths]")
+    compact = a.ndim == 1
+    expected_shape = (tau.size,) if compact else (tau.size, config.num_samples)
+    if a.ndim not in (1, 2) or tau.ndim != 1 or a.shape != expected_shape:
+        raise ValueError("Expected coefficients [paths] or [paths,samples] and delays [paths]")
+    if doppler_hz is not None and not compact:
+        raise ValueError("Doppler must already be included in per-sample coefficients")
+    doppler = np.zeros(tau.size) if doppler_hz is None else np.asarray(doppler_hz, dtype=float)
+    if doppler.shape != tau.shape:
+        raise ValueError("Expected Doppler frequencies [paths]")
     valid = np.isfinite(tau) & (tau >= 0)
     a, tau = a[valid], tau[valid]
+    doppler = doppler[valid]
     if not np.all(np.isfinite(a)):
         raise ValueError("Nonfinite channel coefficients")
-    times = sim_time_ns * 1e-9 + np.arange(config.num_samples) / config.sample_rate_hz
+    if not np.all(np.isfinite(doppler)):
+        raise ValueError("Nonfinite Doppler frequencies")
+    relative_time = np.arange(config.num_samples) / config.sample_rate_hz
+    times = sim_time_ns * 1e-9 + relative_time
     iq = np.zeros(config.num_samples, dtype=np.complex128)
     # Keep memory bounded by summing one path at a time.
-    for gain, delay in zip(a, tau):
+    for gain, delay, frequency in zip(a, tau, doppler):
         x = np.asarray(waveform(times - delay), dtype=np.complex128)
         if x.shape != times.shape or not np.all(np.isfinite(x)):
             raise ValueError("waveform must return finite complex samples with the input shape")
+        if compact and frequency != 0:
+            x = x * np.exp(2j * np.pi * frequency * relative_time)
         iq += gain * x
     iq *= np.sqrt(config.impedance_ohm * config.transmit_power_w)
     if config.noise_enabled:
@@ -89,27 +107,39 @@ def synthesize_voltage(coefficients, delays_s, waveform: Waveform, *,
 
 
 class RFReceiver:
-    """One transmitter, one receive antenna; explicit scene and local CIR epoch."""
+    """SISO: one channel epoch per capture, at most one scene interaction.
 
-    def __init__(self, scene, config: ReceiverConfig, *, max_depth=3, seed=42):
+    Path geometry/gain/delay stay fixed within the block. Narrowband Doppler
+    evolves analytically from compact coefficients rather than retracing.
+    """
+
+    def __init__(self, scene, config: ReceiverConfig, *, max_depth=1, seed=42,
+                 samples_per_src=10000, max_num_paths_per_src=1000):
         from sionna.rt import PathSolver
+        if isinstance(max_depth, bool) or not isinstance(max_depth, Integral) or max_depth not in (0, 1):
+            raise ValueError("Receiver supports direct paths or at most one scene interaction")
         self.scene = scene
         self.config = config
         self.max_depth = max_depth
         self.seed = seed
+        self.samples_per_src = samples_per_src
+        self.max_num_paths_per_src = max_num_paths_per_src
         self.rng = np.random.default_rng(seed)
         self.solver = PathSolver(deterministic=True)
         scene.frequency = config.carrier_hz
 
     def capture(self, waveform: Waveform, sim_time_ns: int) -> IQBlock:
         paths = self.solver(self.scene, max_depth=self.max_depth,
-                            samples_per_src=10000, seed=self.seed)
-        a, tau = paths.cir(sampling_frequency=self.config.sample_rate_hz,
-                          num_time_steps=self.config.num_samples,
+                            samples_per_src=self.samples_per_src,
+                            max_num_paths_per_src=self.max_num_paths_per_src,
+                            refraction=False, seed=self.seed)
+        a, tau = paths.cir(num_time_steps=1,
                           normalize_delays=False, out_type="numpy")
         if a.shape[:4] != (1, 1, 1, 1):
             raise ValueError("Initial receiver supports exactly one TX/RX and one antenna each")
         delays = tau[0, 0] if tau.ndim == 3 else tau[0, 0, 0, 0]
-        return synthesize_voltage(a[0, 0, 0, 0], delays, waveform,
+        doppler = paths.doppler.numpy().reshape(-1)
+        return synthesize_voltage(a[0, 0, 0, 0, :, 0], delays, waveform,
                                   sim_time_ns=sim_time_ns, config=self.config,
+                                  doppler_hz=doppler,
                                   rng=self.rng)

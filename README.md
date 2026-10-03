@@ -12,6 +12,8 @@ DIS scene truth. It includes CPU container tests and per-GPU deployment files.
 The [100-transmitter / 10-receiver runtime assessment](NETWORK_RUNTIME.md)
 audits the work needed for a general AMS-GRA RF plane and provides reproducible
 network propagation benchmarks, scaling arithmetic and GPU sizing assumptions.
+The [accepted per-pulse, single-interaction model](PER_PULSE_RUNTIME.md) updates
+that baseline with compact channels, new measurements and current limitations.
 
 For a ready-made CPU test environment, see [the container guide](CONTAINER.md):
 
@@ -122,6 +124,12 @@ v[n] = sqrt(R * Ptx) * sum_p h_p[n] * x(t0 + n/fs - tau_p) + noise[n]
 antenna response, propagation loss, material effects, and local Doppler. Absolute
 path delays are preserved with `normalize_delays=False`. Padded invalid paths
 are removed. No received-power or delay normalization is applied.
+
+The SISO receiver computes geometry/gain/delay once per capture, with at most
+one reflection, and stores one complex coefficient and Doppler value per path.
+Fast-time phase evolves analytically; no per-sample ray tracing or dense
+paths-by-time coefficient export is needed. Native Sionna still shoots rays
+to discover single-reflection candidates at depth one.
 
 The complex voltage envelope uses the RMS convention:
 `v_RF(t) = sqrt(2) * real(v(t) * exp(j*2*pi*fc*t))`, giving matched-load average
