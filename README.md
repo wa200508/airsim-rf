@@ -14,6 +14,9 @@ audits the work needed for a general AMS-GRA RF plane and provides reproducible
 network propagation benchmarks, scaling arithmetic and GPU sizing assumptions.
 The [accepted per-pulse, single-interaction model](PER_PULSE_RUNTIME.md) updates
 that baseline with compact channels, new measurements and current limitations.
+The [single-bounce optimization report](OPTIMIZATION.md) adds exhaustive one-way
+reflection candidates for ESM/comms channels, with paired timings and physical
+validation. Enable it with `RFReceiver(..., path_solver="single-bounce")`.
 
 For a ready-made CPU test environment, see [the container guide](CONTAINER.md):
 

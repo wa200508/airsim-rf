@@ -2,7 +2,7 @@ name: Test and publish container
 
 on:
   push:
-    branches: [main]
+    branches: [main, "optimization/**"]
     tags: ["v*"]
   pull_request:
   workflow_dispatch:

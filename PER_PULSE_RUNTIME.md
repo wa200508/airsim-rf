@@ -44,9 +44,10 @@ disable shooting-and-bouncing candidate generation in native Sionna:
 `sb_candidate_generator.py` invokes that generator for any depth greater than
 zero. The image method subsequently refines discovered specular candidates.
 There is no public switch for exhaustive first-order image-method discovery
-without shooting. Such a candidate generator would be additional work; it has
-not been implemented. The revised benchmark must not be described as avoiding
-all shooting or as an exhaustive enumeration of every single reflection.
+without shooting. The optimization branch now adds an explicit
+`SingleBouncePathSolver` adapter; see [OPTIMIZATION.md](OPTIMIZATION.md).
+The measurements below remain the native sampled baseline. The adapter has
+separate paired measurements and does not enable diffuse or diffracted paths.
 
 The earlier tracing measurements also used one CIR epoch per solve; they never
 traced per fast-time sample. The earlier dense-memory warning concerned
