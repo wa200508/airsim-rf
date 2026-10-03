@@ -1,5 +1,13 @@
 # Exhaustive single-bounce optimization
 
+**Scope correction:** the 144-path benchmark below measures retained LoS and
+specular paths in a tiny scene. It has no distributed diffuse ground return and
+does not establish clutter coverage. Both antenna patterns weight its fields;
+it does not importance-sample either pattern. The new
+[TX/RX-aware ground-scattering mode](GROUND_SCATTERING.md) covers distributed
+first-order scattering with an explicit per-link sampling budget and separate
+timings. These specular timings must not be used as its runtime estimate.
+
 This branch implements **one-way TX → RX** propagation for ESM, comms and other
 RF skills. It does not infer a return channel from reciprocity, square a channel,
 or assume a monostatic radar. The radar worker remains its existing point-target
@@ -116,7 +124,7 @@ plane enumeration expensive; simplify the RF mesh or use the native solver.
 Exact plane extraction also has an upfront CPU cost on large meshes and repeats
 when their geometry changes. Moving-platform poses alone do not trigger it.
 
-Directional patterns currently weight fields without pruning candidates. Future
+In the specular-only backend, directional patterns weight fields without pruning candidates. Future
 antenna-sector pruning should use explicit sidelobe or received-power bounds,
 including reflected departure/arrival directions. Beamwidth alone is an unsafe
 cut for ESM because a weak sidelobe may be the signal of interest. Omnidirectional

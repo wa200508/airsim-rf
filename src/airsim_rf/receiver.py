@@ -131,8 +131,11 @@ class RFReceiver:
         elif path_solver == "single-bounce":
             from .single_bounce import SingleBouncePathSolver
             self.solver = SingleBouncePathSolver()
+        elif path_solver == "first-order-scattering":
+            from .scattering import FirstOrderScatteringPathSolver
+            self.solver = FirstOrderScatteringPathSolver()
         else:
-            raise ValueError("path_solver must be native or single-bounce")
+            raise ValueError("path_solver must be native, single-bounce or first-order-scattering")
         scene.frequency = config.carrier_hz
 
     def capture(self, waveform: Waveform, sim_time_ns: int) -> IQBlock:

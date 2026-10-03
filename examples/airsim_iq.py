@@ -18,7 +18,9 @@ def main():
     parser.add_argument("--robot", default="Drone1")
     parser.add_argument("--tx-ned", nargs=3, type=float, default=[100, 0, -10])
     parser.add_argument("--rf-scene", help="Optional matching Mitsuba XML in meters, x north/y west/z up")
-    parser.add_argument("--path-solver", choices=("native", "single-bounce"), default="native")
+    parser.add_argument("--path-solver", choices=("native", "single-bounce", "first-order-scattering"), default="native")
+    parser.add_argument("--samples-per-link", type=int, default=1028,
+                        help="Diffuse attempts/link for first-order-scattering")
     parser.add_argument("--output", type=Path, default=Path("airsim_iq.npz"))
     args = parser.parse_args()
     client = ProjectAirSimClient(address=args.address)
@@ -33,8 +35,11 @@ def main():
         scene.add(Transmitter("tx", position=(NED_TO_RF @ args.tx_ned).tolist()))
         rx = Receiver("rx", position=[0, 0, 0])
         scene.add(rx)
+        scatter_options = ({"samples_per_src": args.samples_per_link,
+                            "max_num_paths_per_src": args.samples_per_link+1000}
+                           if args.path_solver == "first-order-scattering" else {})
         receiver = RFReceiver(scene, ReceiverConfig(), max_depth=1 if args.rf_scene else 0,
-                              path_solver=args.path_solver)
+                              path_solver=args.path_solver, **scatter_options)
         bridge = AirSimRFBridge(world, robot, receiver, rx)
         block = bridge.capture(lambda t: np.exp(2j * np.pi * 10000 * t))
         block.save(args.output)

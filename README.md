@@ -17,6 +17,10 @@ that baseline with compact channels, new measurements and current limitations.
 The [single-bounce optimization report](OPTIMIZATION.md) adds exhaustive one-way
 reflection candidates for ESM/comms channels, with paired timings and physical
 validation. Enable it with `RFReceiver(..., path_solver="single-bounce")`.
+For distributed ground return, use the separate
+[TX/RX-aware first-order scattering mode](GROUND_SCATTERING.md). Its per-link
+sampling budget covers both antenna patterns and preserves sidelobe support;
+the 144-path specular benchmark does not measure ground-clutter fidelity.
 
 For a ready-made CPU test environment, see [the container guide](CONTAINER.md):
 

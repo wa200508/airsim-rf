@@ -4,6 +4,11 @@ Updated 2026-10-03. This supersedes the depth-three planning baseline in
 [NETWORK_RUNTIME.md](NETWORK_RUNTIME.md); its older results remain available
 for comparison. Sionna/Mitsuba/Dr.Jit versions remain 2.2.0/3.9.1/1.5.0.
 
+The small-scene specular path counts below do not establish distributed
+ground-return coverage. [GROUND_SCATTERING.md](GROUND_SCATTERING.md) documents
+the added TX/RX-aware diffuse sampling mode, its per-link budget, separate
+runtime measurements and remaining roughness/temporal-coherence limitations.
+
 ## Model and implementation
 
 Compute path geometry, gain and absolute delay once at the start of each pulse.

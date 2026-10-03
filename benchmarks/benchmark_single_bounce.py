@@ -122,7 +122,8 @@ def main():
                            "deadline_misses_pulse_budget": int((times > 1000/args.pulse_hz).sum()),
                            "valid_paths_min": min(s[name]["valid_paths"] for s in samples),
                            "valid_paths_max": max(s[name]["valid_paths"] for s in samples)}
-    result = {"scope": "One-way moving TX/RX; synchronized propagation plus one-epoch CIR/Doppler export",
+    result = {"scope": "Specular-only one-way moving TX/RX; synchronized propagation plus one-epoch CIR/Doppler export",
+              "ground_clutter_coverage": False,
               "excludes": ["IQ synthesis", "AirSim", "transport", "moving mesh/BVH updates"],
               "arguments": {k: str(v) if isinstance(v, Path) else v for k, v in vars(args).items()},
               "versions": {"sionna_rt": rt.__version__, "mitsuba": mi.__version__, "drjit": dr.__version__,
