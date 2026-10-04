@@ -1,0 +1,6 @@
+# Pascal-compatible CUDA 12.2 user-space libraries; host supplies NVIDIA driver.
+cupy-cuda12x==13.6.0
+fastrlock==0.8.3
+nvidia-cuda-runtime-cu12==12.2.140
+nvidia-cuda-nvrtc-cu12==12.2.140
+nvidia-cufft-cu12==11.0.8.103

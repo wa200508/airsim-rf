@@ -4,6 +4,7 @@ FROM ${BASE_IMAGE}
 USER root
 ARG PROFILE_SOURCE_REV=unknown
 ARG PROFILE_SOURCE_DIRTY=unknown
+ARG PROFILE_BASIS_CUDA=0
 ENV RF_PROFILE_SOURCE_REV=${PROFILE_SOURCE_REV} \
     RF_PROFILE_SOURCE_DIRTY=${PROFILE_SOURCE_DIRTY}
 LABEL org.opencontainers.image.description="AirSim RF profiling harness; CUDA runtime supplied by NVIDIA Container Toolkit"
@@ -12,7 +13,10 @@ COPY --chmod=755 . /opt/airsim-rf/
 RUN --mount=type=secret,id=proxy_ca \
     set -eu; \
     if [ -f /run/secrets/proxy_ca ]; then export PIP_CERT=/run/secrets/proxy_ca; fi; \
-    /opt/airsim-rf/.venv/bin/python -m pip install --no-deps nvtx==0.2.13
+    /opt/airsim-rf/.venv/bin/python -m pip install --no-deps nvtx==0.2.13; \
+    if [ "$PROFILE_BASIS_CUDA" = 1 ]; then \
+      /opt/airsim-rf/.venv/bin/python -m pip install --no-cache-dir -r /opt/airsim-rf/requirements-p100-cuda.txt; \
+    fi
 USER rf
 WORKDIR /work
 ENTRYPOINT ["python", "/opt/airsim-rf/scripts/run_gpu_profile.py"]

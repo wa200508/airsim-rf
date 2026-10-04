@@ -1,5 +1,12 @@
 # Run and publish P100 profiling measurements
 
+For the **updated Doppler-basis FFT test on `profiling/p100`**, use
+[the CuPy/CUDA 12.2 P100 guide](P100_BASIS_PROFILING.md). Its one-command run
+measures 100 private transmitter streams, all-valid paths and complete 120 Hz
+sample windows. The current Dr.Jit stack rejects SM 6.0; the new renderer
+therefore uses CuPy directly. The general current-stack/legacy guides below
+remain separate propagation and older renderer references.
+
 Branch: **`optimization/direct-path-renderer`**. This branch extends the
 profiling kit with [direct path LLVM/CUDA recurrence](DIRECT_PATH_RENDERING.md).
 The collector compares NumPy, direct and [batched rendering](BATCHED_RENDERING.md),

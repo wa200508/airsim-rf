@@ -64,3 +64,34 @@ def test_profiled_metrics_rejected(tmp_path):
     result=subprocess.run([sys.executable,ROOT/'scripts/aggregate_gpu_profile.py',bundle],capture_output=True,text=True)
     assert result.returncode!=0
     assert 'instrumented run cannot enter performance table' in result.stderr
+
+
+def test_basis_report_excludes_instrumented_runs_and_marks_invalid_accuracy(tmp_path):
+    bundle=write_bundle(tmp_path)
+    manifest=json.loads((bundle/'manifest.json').read_text())
+    manifest.update(scope='doppler_basis_renderer',required_tasks_passed=True,gpu_status='verified_cuda_cupy')
+    (bundle/'manifest.json').write_text(json.dumps(manifest))
+    # Create realistic small renderer-only records without running a benchmark.
+    data=dict(scope='doppler_basis_receiver_rendering',measurement_mode='unprofiled_basis_benchmark',
+        backend='cuda',arguments=dict(tx=100,rx=1,paths=1028,samples=16667),
+        summary=dict(p50_ms=10.,p95_ms=11.,p99_ms=12.,max_ms=12.),captures_per_second=100.,
+        misses_120hz=2,rows=[{},{}],accuracy=dict(passed=False),profile_receivers=[])
+    (bundle/'profiles/basis.json').write_text(json.dumps(data))
+    data.update(measurement_mode='instrumented_basis_profile',summary=dict(p50_ms=999.,p95_ms=999.,p99_ms=999.,max_ms=999.))
+    (bundle/'profiles/basis_nsys.json').write_text(json.dumps(data))
+    subprocess.run([sys.executable,ROOT/'scripts/aggregate_gpu_profile.py',bundle],check=True,capture_output=True)
+    report=(bundle/'REPORT.md').read_text()
+    assert 'FAILED / INCOMPLETE' in report and 'INVALID' in report
+    assert '10.000 ms' in report and '999.000 ms' not in report
+    assert 'not a ten-GPU fleet measurement' in report
+
+
+def test_basis_cuda_failure_writes_a_blocked_preflight(tmp_path):
+    artifact=tmp_path/'preflight.json'
+    result=subprocess.run([sys.executable,ROOT/'scripts/basis_cuda_preflight.py','--output',artifact],capture_output=True,text=True)
+    data=json.loads(artifact.read_text())
+    if result.returncode==0:
+        assert data['status']=='verified_cuda_cupy'
+    else:
+        assert data['status']=='blocked' and data['error']
+        assert result.returncode==20

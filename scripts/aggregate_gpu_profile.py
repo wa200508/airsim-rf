@@ -66,11 +66,85 @@ def telemetry_summary(path):
     return {'devices':devices,'note':'One-second nvidia-smi samples; includes other processes and may miss peaks. Not allocated-byte or guaranteed peak VRAM measurement.'}
 
 
+def finish_report(root, lines):
+    report=root/'REPORT.md';report.write_text('\n'.join(lines)+'\n')
+    checksums={str(p.relative_to(root)):hashlib.sha256(p.read_bytes()).hexdigest() for p in sorted(root.rglob('*'))
+        if p.is_file() and 'raw' not in p.relative_to(root).parts and p.name!='checksums.json'}
+    (root/'checksums.json').write_text(json.dumps(checksums,indent=2)+'\n')
+    print(f'Report: {report}')
+
+
+def basis_report(root, manifest, env):
+    measurements=[]
+    profiles={}
+    for path in sorted((root/'profiles').glob('*.json')):
+        data=load(path)
+        if data.get('scope')!='doppler_basis_receiver_rendering':continue
+        mode=data.get('measurement_mode')
+        if mode=='unprofiled_basis_benchmark':measurements.append((path,data))
+        elif mode!='instrumented_basis_profile':raise ValueError('Unknown basis measurement mode')
+        profiles[path.name]=data.get('profile_receivers',[])
+    valid=all(data.get('accuracy',{}).get('passed',False) for _,data in measurements)
+    gpu_valid=all(data['backend']!='cuda' or manifest.get('gpu_status')=='verified_cuda_cupy' for _,data in measurements)
+    verdict='COMPLETE' if manifest.get('complete') and manifest.get('required_tasks_passed') and valid and gpu_valid else 'FAILED / INCOMPLETE'
+    if manifest.get('gpu_status')=='not_requested':verdict+=' — CPU-only harness validation'
+    telemetry=telemetry_summary(root/'raw/gpu_telemetry.csv')
+    (root/'profile_summary.json').write_text(json.dumps(profiles,indent=2)+'\n')
+    (root/'telemetry_summary.json').write_text(json.dumps(telemetry,indent=2)+'\n')
+    lines=[f"# Doppler-basis renderer profiling: {manifest['run_id']}",'',f'Status: **{verdict}**.','',
+        f"Renderer GPU status: `{manifest.get('gpu_status')}`. Source: `{env.get('source_revision')}`; dirty: `{env.get('source_dirty')}`.",'',
+        '**Renderer-only:** synthetic changing channels, equal sample clocks, FP64/complex128, private source data and FFTs. All configured paths are valid. No ray tracing, source generation, clock resampling, noise/filter/ADC, AirSim or network/queueing is included.','',
+        f"Propagation: {manifest.get('propagation_status')}. A successful renderer run does not establish current Sionna compatibility or complete RF service at 120 Hz.",'',
+        '## Unprofiled window latency and serial throughput','',
+        '| Backend | TX × RX | Valid paths/link | Samples | Median | p95 | p99 | Max | Windows/s | Misses 120 Hz | Accuracy |',
+        '|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---|']
+    pairs={}
+    for path,data in measurements:
+        a=data['arguments'];s=data['summary'];qualified=data['accuracy']['passed']
+        if data['backend']=='cuda' and not gpu_valid:qualified=False
+        lines.append(f"| [{data['backend']}](profiles/{path.name}) | {a['tx']} × {a['rx']} | {a['paths']} | {a['samples']} | {s['p50_ms']:.3f} ms | {s['p95_ms']:.3f} ms | {s['p99_ms']:.3f} ms | {s['max_ms']:.3f} ms | {data['captures_per_second']:.3f} | {data['misses_120hz']}/{len(data['rows'])} | {'PASS' if qualified else 'INVALID'} |")
+        key=tuple(a.get(k) for k in ('tx','rx','paths','samples','sample_rate','max_delay_us','max_doppler_hz','taps','block_samples','tolerance'))
+        if qualified:pairs.setdefault(key,{})[data['backend']]=data
+    if not measurements:lines.append('| No successful measurements | — | — | — | — | — | — | — | — | — | — |')
+    lines+=['','Timing includes fresh path-dependent setup, host validation/packing, private input uploads, GPU coefficient construction/projection, private FFTs, receiver summation and synchronized final output export. First-use/JIT time is recorded separately. Instrumented Nsight runs are excluded from this table.','',
+        'The scene deadline is 8.333 ms. Default windows contain 16,667 samples at 2 MS/s (8.3335 ms of signal). Live input accumulation, interpolation lookahead and transport add delivery latency. This API exports a complete window; it is not yet a persistent continuous streaming receiver.','',
+        '## Paired CPU/GPU renderer measurements','']
+    for key,pair in pairs.items():
+        if {'cpu','cuda'}<=pair.keys():
+            cpu,gpu=pair['cpu'],pair['cuda']
+            lines.append(f"* {key[0]} TX × {key[1]} RX: observed CPU/CUDA median ratio **{cpu['summary']['p50_ms']/gpu['summary']['p50_ms']:.2f}×**; CUDA output rate **{gpu['output_samples_per_second_per_receiver']:.0f} samples/s per receiver**; remaining mean-latency factor to 120 Hz **{gpu['required_speedup_to_120hz']:.2f}×**.")
+    if not any({'cpu','cuda'}<=p.keys() for p in pairs.values()):lines.append('No qualified CPU/CUDA pair.')
+    lines+=['','## Separate GPU stage spans and memory','',
+        'One extra instrumented capture supplies CUDA-event spans and NVTX ranges. Event spans can include host submission/idle gaps, especially packing; they are not pure kernel execution times. Do not add these spans to wall latency. Use Nsight kernel/API statistics for execution-level attribution.','']
+    for name,receivers in profiles.items():
+        for ri,metric in enumerate(receivers):
+            groups=defaultdict(float)
+            for event in metric.get('events',[]):groups[event['name']]+=event['cuda_ms']
+            lines.append(f"* [{name}](profiles/{name}), receiver {ri}: stage spans {dict(groups)}. Pool used/reserved {metric.get('pool_used_bytes')}/{metric.get('pool_reserved_bytes')} bytes; largest sampled pool-use checkpoint {metric.get('max_checkpoint_pool_used_bytes')} bytes. Allocator snapshots include plans/cache and are not exact process peak VRAM.")
+    lines+=['','## Accuracy and hardware','',
+        'Every benchmark compares all receiver output samples against CPU basis reconstruction, checks all paths of all links in initial/final sample prefixes against direct rendering, and checks complete direct output for the first/last transmitter of each receiver. Tests cover cancellation, changed channels, split captures, finite boundaries and Unix timestamps. Error is relative to the finite interpolation operator; ideal-sinc/noise-floor qualification remains separate.','',
+        f"CPU quota: `{env.get('cpu_quota')}`. Hardware, pinned packages and source hashes: [environment.json](environment.json) and [installed_packages.json](installed_packages.json).",'',
+        '```text',env.get('gpu',{}).get('stdout','').strip() or 'GPU inventory unavailable','```','',
+        telemetry['note'],'',json.dumps(telemetry['devices'],indent=2),'',
+        '## Task outcomes','', '| Task | Status | Required | Log |','|---|---|---|---|']
+    for task in manifest['tasks']:
+        lines.append(f"| {task['name']} | {task['status']} | {task.get('required',False)} | "+(f"[log]({task['log']})" if task.get('log') else task.get('reason','—'))+' |')
+    if manifest.get('error'):lines+=['',f"Run error: {manifest['error']}"]
+    preflight=root/'profiles/basis_cuda_preflight.json'
+    if preflight.is_file() and load(preflight).get('error'):lines+=['','CUDA blocker:','', '```text',load(preflight)['error'],'```']
+    lines+=['','One P100 normally tests one receiver with 100 private TX inputs. `--rx 10` measures ten receivers sequentially on this GPU; it is not a ten-GPU fleet measurement. A renderer meeting the deadline still leaves propagation and mandatory receiver processing to qualify.','',
+            'Large Nsight traces remain in ignored raw/. Small reports/JSON/logs can be published with scripts/publish_gpu_results.py.','']
+    finish_report(root,lines)
+
+
 def main():
     p=argparse.ArgumentParser(description=__doc__)
     p.add_argument('bundle',type=Path)
     args=p.parse_args();root=args.bundle.resolve()
     manifest=load(root/'manifest.json');env=load(root/'environment.json')
+    if manifest.get('scope')=='doppler_basis_renderer':
+        basis_report(root,manifest,env)
+        return
     metrics=[]
     summaries={}
     sampled=[]

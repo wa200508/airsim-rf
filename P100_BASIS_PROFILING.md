@@ -1,0 +1,151 @@
+# Updated P100 test: Doppler-basis FFT rendering
+
+Branch: **`profiling/p100`**. This branch includes the newer architecture and
+preserves the previously published P100/legacy Sionna results.
+
+The updated test uses **CuPy 13.6, CUDA 12.2, FP64/complex128**, and a native
+projection/reconstruction kernel compiled for the actual GPU. The current
+Dr.Jit 1.5/Mitsuba 3.9 stack rejects the P100's SM 6.0, as the existing
+[P100 diagnostic](results/profiling/p100-quick-20261003-2005/logs/cuda_compatibility_diagnostic.log)
+shows. This renderer therefore executes without Dr.Jit CUDA or OptiX. It does
+not claim that current Sionna propagation works on a P100. No production
+dependency rollback or implicit CPU fallback is performed.
+
+## Run on the Docker host
+
+Requires Linux, Docker with NVIDIA Container Toolkit, a P100 visible to
+`nvidia-smi`, and internet for the build. User-space CUDA libraries are installed
+from [pinned wheels](requirements-p100-cuda.txt); the host supplies its driver.
+You do not need to install a host CUDA toolkit.
+Use a Linux NVIDIA driver compatible with CUDA 12.2 (535.54.03 or newer);
+the previously recorded P100 used 580.178.04.
+
+```bash
+git clone --branch profiling/p100 --single-branch https://github.com/wa200508/airsim-rf.git
+cd airsim-rf
+nvidia-smi
+bash scripts/run_p100_docker.sh --doppler-basis --quick \
+  --run-id p100-basis-quick
+bash scripts/run_p100_docker.sh --doppler-basis \
+  --run-id p100-basis-full
+```
+
+For an existing checkout, fetch and fast-forward `profiling/p100` first. Run
+from a clean checkout so source provenance is unambiguous. Use a unique run ID:
+existing result directories are not overwritten. Choose another GPU with
+`RF_PROFILE_GPU=...`; the container sees the selected device as device zero.
+
+Default cases: **1, 4 and 100 independent transmitters, one receiver, 1,028
+valid paths per link, 16,667 outputs at 2 MS/s**. Delay range 0–100 microseconds,
+Doppler range +/-2,500 Hz, 32 input interpolation taps, internal processing
+blocks of 2,048 samples, GPU groups of eight independent links, and temporal
+tolerance 1e-10. All path arrays change between synthetic channel epochs.
+Input waveforms are independent random complex samples occupying 90% of the
+sample-rate bandwidth. Each job pays for separate storage and FFT processing.
+
+Quick collection uses one warmup and two timed windows per case; full collection
+uses three warmups and thirty timed windows. **Quick retains all default paths
+and samples**; its percentiles are smoke statistics. Full runs also include CPU
+basis comparisons and numerical references, so they can take several minutes.
+The CPU references are not CUDA fallback measurements.
+
+## What is measured and checked
+
+1. Real CUDA preflight: execute FP64 path projection, temporal construction,
+   FFT filtering and reconstruction, then compare synchronized output to CPU.
+   A driver/library/device error produces a failed report and nonzero exit.
+2. Correctness tests on the actual device: independent jobs, changing data,
+   different interpolation supports, padded path counts, coherent cancellation,
+   split windows, finite transmission boundaries and Unix-scale timestamps.
+3. Paired unprofiled CPU/CuPy wall timing, including host validation and packing,
+   private uploads, fresh channel construction, filtering, receiver sum and
+   final synchronized output download. Startup/JIT is recorded separately.
+4. Full all-receiver output comparison against CPU basis reconstruction. Initial
+   and final sample prefixes include every path of every transmitter in the
+   direct reference. First/last transmitters of each receiver also receive a
+   complete all-path direct-output check. Failed accuracy invalidates timings.
+5. A separate instrumented capture: CUDA-event stage spans, NVTX ranges and
+   allocator snapshots. These spans can contain host submission/idle time and
+   are not pure kernel execution time. Nsight, when installed, additionally
+   captures a timeline and kernel/API/NVTX statistics in separate logs.
+6. GPU telemetry, hardware/runtime/source hashes, package versions, Markdown
+   report and checksums. Large profiler traces remain in ignored `raw/`.
+
+The CUDA temporal basis is built with a sampled Chebyshev transform and FFTs
+on-device, not CPU Bessel evaluation. The rank uses half the requested tolerance
+to budget both the omitted tail and transform aliasing. Host tests check these
+coefficients against Bessel values and the original phase equation. Projection
+gathers the complete contributing path interval for each delay/basis coefficient;
+it uses sorted delay starts and register accumulation rather than contended
+atomic writes. Reconstruction evolves the basis in registers in one kernel.
+No paths or individual Dopplers are dropped or averaged. See
+[the mathematical model and citations](DOPPLER_BASIS_FFT.md).
+
+This workspace has no GPU. The new kernels compile successfully for
+`compute_60` using CUDA 12.2 NVRTC; execution correctness/performance must be
+verified by the P100 run. The scripts explicitly distinguish compilation from
+actual device execution.
+
+## Read and publish the results
+
+```bash
+cat results/profiling/p100-basis-full/REPORT.md
+python3 scripts/publish_gpu_results.py results/profiling/p100-basis-full --push
+```
+
+The publisher creates `profiling/results/p100-basis-full`, commits only small
+reports/JSON/logs, then pushes normally. Reported quantities include median,
+p95/p99/max synchronized window latency, achieved windows/s, output samples/s,
+120 Hz deadline misses and the remaining mean-latency factor to 120 Hz.
+Report aggregation preserves accuracy failures and excludes instrumented
+Nsight timings from throughput comparisons.
+
+## Explore the limits
+
+```bash
+# Only the target one-receiver case, with a different group size.
+bash scripts/run_p100_docker.sh --doppler-basis --tx 100 --batch-links 16 \
+  --run-id p100-basis-batch16
+
+# Wider Doppler, preserving paths, bandwidth and continuous output count.
+bash scripts/run_p100_docker.sh --doppler-basis --tx 100 \
+  --max-doppler-hz 25000 --run-id p100-basis-high-doppler
+
+# Ten receivers sequentially on ONE P100: 1,000 private link jobs.
+bash scripts/run_p100_docker.sh --doppler-basis --tx 100 --rx 10 \
+  --run-id p100-basis-ten-receivers
+```
+
+The last case is a one-device capacity stress, not a ten-GPU fleet measurement.
+Every receiver gets private waveform copies; transforms are not shared. Hardware
+memory/compute limits and failures must be reported, not addressed by reducing
+paths or sample budgets. Increasing delay or Doppler ranges grows work/memory.
+
+## Already inside a sandbox
+
+If NVIDIA passthrough is already available, run without nested Docker:
+
+```bash
+.venv/bin/python -m pip install -r requirements-p100-cuda.txt
+.venv/bin/python scripts/basis_launch.py scripts/run_doppler_basis_profile.py \
+  --quick --run-id p100-basis-quick
+```
+
+This requires the project's pinned CPU environment as well. The launcher exposes
+wheel CUDA library/include paths before Python starts. If GPU passthrough is
+missing, installing packages cannot provide it.
+
+## Scope of the 120 Hz result
+
+The target renderer deadline is **8.33 ms per output window**. Mandatory RF
+receiver processing, source generation/delivery, scene propagation, clock
+resampling, AirSim and network/queueing are excluded. Sample clocks are equal;
+independent oscillator offsets are included. These are synthetic channel
+updates, not scene/pose-driven propagation.
+
+The renderer exports a whole preloaded window. Live input accumulation can add
+up to the window duration (8.3335 ms by default), plus interpolation lookahead
+(up to 8 microseconds), processing and transport. A sustained renderer rate of
+120 Hz is a necessary milestone, not complete simulation-plane qualification
+or an established live-stream delivery latency. Persistent receiver state and
+clock resampling remain implementation work.

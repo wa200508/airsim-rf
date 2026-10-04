@@ -1,5 +1,10 @@
 # airsim-rf
 
+On `profiling/p100`, run the [updated Doppler-basis GPU profiling kit](P100_BASIS_PROFILING.md)
+with `bash scripts/run_p100_docker.sh --doppler-basis --quick --run-id p100-basis-quick`.
+It uses Pascal-compatible CuPy/CUDA 12.2 and reports renderer latency, throughput,
+accuracy and the remaining gap to 120 Hz for 100 private transmitter inputs.
+
 On branch `optimization/direct-path-renderer`, use
 [direct path rendering](DIRECT_PATH_RENDERING.md) to retain every path's
 Doppler evolution with tiled LLVM/CUDA recurrence. The

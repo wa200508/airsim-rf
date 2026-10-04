@@ -39,6 +39,7 @@ def environment():
     revision=probe(['git','-C',str(ROOT),'rev-parse','HEAD'])
     status=probe(['git','-C',str(ROOT),'status','--porcelain','--untracked-files=no'])
     files=[ROOT/'sources.json',ROOT/'requirements-lock.txt']
+    if (ROOT/'requirements-p100-cuda.txt').is_file(): files.append(ROOT/'requirements-p100-cuda.txt')
     for directory in ('src','scripts','benchmarks'):
         files.extend(p for p in (ROOT/directory).rglob('*.py') if '__pycache__' not in p.parts)
     hashes={str(p.relative_to(ROOT)):hashlib.sha256(p.read_bytes()).hexdigest() for p in sorted(files)}
