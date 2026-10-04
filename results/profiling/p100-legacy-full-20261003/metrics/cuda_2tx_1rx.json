@@ -1,0 +1,3134 @@
+{
+  "arguments": {
+    "tx": 2,
+    "rx": 1,
+    "iterations": 200,
+    "warmup": 20,
+    "samples": 4096,
+    "samples_per_link": 1028,
+    "backend": "cuda",
+    "profile": false,
+    "threads": 2,
+    "output": "/work/results/p100-legacy-full-20261003/metrics/cuda_2tx_1rx.json"
+  },
+  "measurement_mode": "unprofiled_benchmark",
+  "scope": "915 MHz, 2 MS/s, 1 MHz filter, noisy independent-clock Pluto profile; moving mounts over 800-triangle DEM",
+  "timing_includes": "Pose writes, synchronized channel/NumPy export, per-path IQ, per-link diagnostic filters, receive noise/filter and ADC conversion",
+  "timing_excludes": [
+    "AirSim RPC/physics",
+    "transport",
+    "queueing",
+    "storage",
+    "plots",
+    "RF skill processing"
+  ],
+  "initial_tx_positions_m": [
+    [
+      -60.0,
+      -30.0,
+      12.0
+    ],
+    [
+      45.0,
+      45.0,
+      18.0
+    ]
+  ],
+  "initial_rx_positions_m": [
+    [
+      -30.0,
+      -10.0,
+      14.0
+    ]
+  ],
+  "capture_duration_ms": 2.048,
+  "filter_warmup_samples": 256,
+  "preparation_ms": 1912.7175210001042,
+  "first_capture": {
+    "epoch_s": 0.0,
+    "service_ms": 1463.3655969996653,
+    "pose_ms": 0.4562229996736278,
+    "capture_ms": 1462.9089539998859,
+    "channel_ms": 1299.676592999731,
+    "cpu_iq_receiver_ms": 163.23236100015492,
+    "stage_timings": {
+      "legacy_native_solve_export_ms": 1292.609131000063,
+      "host_numpy_sampling_ms": 0.0,
+      "proposal_table_prepare_ms": 0.0
+    },
+    "retained_paths": 847,
+    "clipping_fraction_max": 0.0
+  },
+  "first_capture_note": "New process with existing on-disk JIT cache; imports excluded; not a cache-cleared cold-start benchmark",
+  "service": {
+    "p50_ms": 488.51219899961507,
+    "p95_ms": 501.12936720038306,
+    "mean_ms": 489.1922600849921,
+    "max_ms": 551.2632770000891
+  },
+  "channel": {
+    "p50_ms": 324.09434600003806,
+    "p95_ms": 334.7354000002724,
+    "mean_ms": 325.0184843899842,
+    "max_ms": 386.013635999916
+  },
+  "cpu_iq_receiver": {
+    "p50_ms": 163.0625405000501,
+    "p95_ms": 167.10103890059145,
+    "mean_ms": 163.44729965501529,
+    "max_ms": 172.64532300032442
+  },
+  "serial_wall_s": 97.84694262599987,
+  "sustained_updates_hz": 2.04400867960136,
+  "receiver_blocks_per_second": 2.04400867960136,
+  "deadline_misses": {
+    "120": 200,
+    "200": 200
+  },
+  "stage_timings": {
+    "legacy_native_solve_export_ms": {
+      "p50_ms": 312.54185550005786,
+      "p95_ms": 323.060527049779,
+      "mean_ms": 313.2135738000079,
+      "max_ms": 375.9716929998831
+    }
+  },
+  "retained_paths": {
+    "min": 845,
+    "max": 859
+  },
+  "host": {
+    "cpu_count": 16,
+    "cpu_quota": "max 100000",
+    "memory_limit_bytes": "max",
+    "drjit_threads": 2,
+    "peak_rss_mib": 1329.859375,
+    "cuda_available": 1
+  },
+  "versions": {
+    "sionna_rt": "0.19.2",
+    "mitsuba": "3.5.2",
+    "drjit": "0.4.6",
+    "backend": "cuda_ad_rgb"
+  },
+  "profile_note": "Profiled serial throughput includes event/history instrumentation; use separate unprofiled runs for performance.",
+  "gpu_note": "Measured legacy service/channel latency. Original custom-solver work-count estimates do not apply.",
+  "samples": [
+    {
+      "epoch_s": 0.105,
+      "service_ms": 481.3208749997102,
+      "pose_ms": 0.6882650000079593,
+      "capture_ms": 480.6321000000935,
+      "channel_ms": 318.4023819999311,
+      "cpu_iq_receiver_ms": 162.2297180001624,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 308.53976999969746,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 851,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.11,
+      "service_ms": 487.4995489999492,
+      "pose_ms": 0.5639339997287607,
+      "capture_ms": 486.93523500014635,
+      "channel_ms": 319.13416699990194,
+      "cpu_iq_receiver_ms": 167.8010680002444,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 308.0755959999806,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 852,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.115,
+      "service_ms": 480.9897540003476,
+      "pose_ms": 0.9566270000505028,
+      "capture_ms": 480.03269700029705,
+      "channel_ms": 319.02210699990974,
+      "cpu_iq_receiver_ms": 161.0105900003873,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 307.35089200015864,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 849,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.12,
+      "service_ms": 483.8944839998476,
+      "pose_ms": 0.6757749997632345,
+      "capture_ms": 483.21826900019005,
+      "channel_ms": 320.28617600008147,
+      "cpu_iq_receiver_ms": 162.93209300010858,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 308.4979310001472,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 853,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.125,
+      "service_ms": 477.4832080001943,
+      "pose_ms": 0.738765000278363,
+      "capture_ms": 476.74401299991587,
+      "channel_ms": 316.29969799996616,
+      "cpu_iq_receiver_ms": 160.4443149999497,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 306.3719849997142,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 852,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.13,
+      "service_ms": 477.86315099983767,
+      "pose_ms": 0.5246639998404135,
+      "capture_ms": 477.3381069999232,
+      "channel_ms": 315.32854000033694,
+      "cpu_iq_receiver_ms": 162.00956699958624,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 305.21092799972394,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 849,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.135,
+      "service_ms": 484.0953970001465,
+      "pose_ms": 0.8287260002362018,
+      "capture_ms": 483.26619099998425,
+      "channel_ms": 320.05372499997975,
+      "cpu_iq_receiver_ms": 163.2124660000045,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 308.66937300015707,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 851,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.14,
+      "service_ms": 498.44868199988923,
+      "pose_ms": 0.5200730001888587,
+      "capture_ms": 497.92821899973205,
+      "channel_ms": 333.3410929999445,
+      "cpu_iq_receiver_ms": 164.58712599978753,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 323.0565569997452,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 853,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.145,
+      "service_ms": 551.2632770000891,
+      "pose_ms": 0.6269949999477831,
+      "capture_ms": 550.6358520001413,
+      "channel_ms": 386.013635999916,
+      "cpu_iq_receiver_ms": 164.6222160002253,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 375.9716929998831,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 848,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.15,
+      "service_ms": 486.4831870004309,
+      "pose_ms": 0.6946860003154143,
+      "capture_ms": 485.78807100011545,
+      "channel_ms": 322.5310040002114,
+      "cpu_iq_receiver_ms": 163.25706699990405,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 312.3362010001074,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 848,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.155,
+      "service_ms": 493.6133589999372,
+      "pose_ms": 0.9170260000246344,
+      "capture_ms": 492.6952129999336,
+      "channel_ms": 327.46307099978367,
+      "cpu_iq_receiver_ms": 165.2321420001499,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 315.51960499973575,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 846,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.16,
+      "service_ms": 490.99577999959365,
+      "pose_ms": 0.7536759999311471,
+      "capture_ms": 490.24161399984223,
+      "channel_ms": 327.4897710002733,
+      "cpu_iq_receiver_ms": 162.7518429995689,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 316.2556800002676,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 854,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.165,
+      "service_ms": 483.82226900002934,
+      "pose_ms": 0.7215649998215667,
+      "capture_ms": 483.10028400010196,
+      "channel_ms": 321.7509999999493,
+      "cpu_iq_receiver_ms": 161.3492840001527,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 311.04018299993186,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 852,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.17,
+      "service_ms": 503.69975400008116,
+      "pose_ms": 0.7884460001150728,
+      "capture_ms": 502.910888000315,
+      "channel_ms": 341.10292100012884,
+      "cpu_iq_receiver_ms": 161.80796700018618,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 329.825418999917,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 852,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.175,
+      "service_ms": 479.1620060000241,
+      "pose_ms": 0.5923849998907826,
+      "capture_ms": 478.56920100002753,
+      "channel_ms": 316.89955500041833,
+      "cpu_iq_receiver_ms": 161.6696459996092,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 302.935683999749,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 852,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.18,
+      "service_ms": 483.3267069998328,
+      "pose_ms": 0.8644669997011079,
+      "capture_ms": 482.46182999992016,
+      "channel_ms": 320.6516929999452,
+      "cpu_iq_receiver_ms": 161.81013699997493,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 309.1500789996644,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 845,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.185,
+      "service_ms": 496.6373150000436,
+      "pose_ms": 0.7741460003671818,
+      "capture_ms": 495.8627789997081,
+      "channel_ms": 328.9389440001287,
+      "cpu_iq_receiver_ms": 166.9238349995794,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 314.39527900010944,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 849,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.19,
+      "service_ms": 494.28827800011277,
+      "pose_ms": 0.7559660002698365,
+      "capture_ms": 493.5319219998746,
+      "channel_ms": 329.5487979999052,
+      "cpu_iq_receiver_ms": 163.9831239999694,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 315.92868999996426,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 849,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.195,
+      "service_ms": 487.38177800032645,
+      "pose_ms": 0.6743849999111262,
+      "capture_ms": 486.70696300041527,
+      "channel_ms": 323.12336199993297,
+      "cpu_iq_receiver_ms": 163.5836010004823,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 313.1458389998443,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 847,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.2,
+      "service_ms": 486.99403599994184,
+      "pose_ms": 0.5474839999806136,
+      "capture_ms": 486.44611200006693,
+      "channel_ms": 321.6670129995691,
+      "cpu_iq_receiver_ms": 164.7790990004978,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 311.81261999972776,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 850,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.205,
+      "service_ms": 494.35712000013154,
+      "pose_ms": 1.2312990002101287,
+      "capture_ms": 493.1254110001646,
+      "channel_ms": 328.73464300018895,
+      "cpu_iq_receiver_ms": 164.39076799997565,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 318.05602599979466,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 847,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.21,
+      "service_ms": 484.22888700042677,
+      "pose_ms": 0.8035360001485969,
+      "capture_ms": 483.4248510001089,
+      "channel_ms": 319.5225969998319,
+      "cpu_iq_receiver_ms": 163.90225400027703,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 307.7325720000772,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 847,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.215,
+      "service_ms": 491.75695200028713,
+      "pose_ms": 0.754274999962945,
+      "capture_ms": 491.0022970002501,
+      "channel_ms": 326.01142500016067,
+      "cpu_iq_receiver_ms": 164.99087200008944,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 315.55945800027985,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 851,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.22,
+      "service_ms": 485.89243000014903,
+      "pose_ms": 0.7296860003407346,
+      "capture_ms": 485.16240399976596,
+      "channel_ms": 320.7776469998862,
+      "cpu_iq_receiver_ms": 164.38475699987976,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 310.10390900019047,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 847,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.225,
+      "service_ms": 491.5444319999551,
+      "pose_ms": 0.7572460003757442,
+      "capture_ms": 490.7860759999494,
+      "channel_ms": 325.6538330001604,
+      "cpu_iq_receiver_ms": 165.132242999789,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 313.3057030004238,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 851,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.23,
+      "service_ms": 485.0213839999924,
+      "pose_ms": 0.7339649996538355,
+      "capture_ms": 484.28689899992605,
+      "channel_ms": 322.39056900016294,
+      "cpu_iq_receiver_ms": 161.8963299997631,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 311.68293100017763,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 854,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.235,
+      "service_ms": 483.7286160000076,
+      "pose_ms": 0.6390450002982107,
+      "capture_ms": 483.0891309998151,
+      "channel_ms": 321.7870949997632,
+      "cpu_iq_receiver_ms": 161.30203600005188,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 310.7683950001956,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 854,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.24,
+      "service_ms": 483.864247999918,
+      "pose_ms": 0.6881750000502507,
+      "capture_ms": 483.17561300018497,
+      "channel_ms": 319.9739229999068,
+      "cpu_iq_receiver_ms": 163.20169000027818,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 310.1343599996653,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 851,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.245,
+      "service_ms": 483.7307270004203,
+      "pose_ms": 0.7572050003545883,
+      "capture_ms": 482.97310200041466,
+      "channel_ms": 318.0924190000951,
+      "cpu_iq_receiver_ms": 164.88068300031955,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 307.97932499990566,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 851,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.25,
+      "service_ms": 479.55086699994354,
+      "pose_ms": 0.5433339997580333,
+      "capture_ms": 479.00719300014316,
+      "channel_ms": 316.2572659998659,
+      "cpu_iq_receiver_ms": 162.74992700027724,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 306.2803830002849,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 851,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.255,
+      "service_ms": 482.7571809996698,
+      "pose_ms": 0.8864759997777583,
+      "capture_ms": 481.870274999892,
+      "channel_ms": 319.81040199934796,
+      "cpu_iq_receiver_ms": 162.05987300054403,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 307.4205519997122,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 851,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.26,
+      "service_ms": 480.15699200004747,
+      "pose_ms": 0.7214249999378808,
+      "capture_ms": 479.43513700010953,
+      "channel_ms": 319.25933900038217,
+      "cpu_iq_receiver_ms": 160.17579799972737,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 308.71630199999345,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 850,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.265,
+      "service_ms": 477.6916049995634,
+      "pose_ms": 0.7018159994913731,
+      "capture_ms": 476.98936899996625,
+      "channel_ms": 317.03092200041283,
+      "cpu_iq_receiver_ms": 159.95844699955342,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 307.5954839996484,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 852,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.27,
+      "service_ms": 477.90580699984275,
+      "pose_ms": 0.6116849999671103,
+      "capture_ms": 477.29366199928336,
+      "channel_ms": 317.0765830000164,
+      "cpu_iq_receiver_ms": 160.21707899926696,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 307.04500100000587,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 852,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.275,
+      "service_ms": 489.2351400003463,
+      "pose_ms": 0.8165570006894995,
+      "capture_ms": 488.4180529998048,
+      "channel_ms": 325.957228000334,
+      "cpu_iq_receiver_ms": 162.4608249994708,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 313.8439489994198,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 852,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.28,
+      "service_ms": 486.75291200015636,
+      "pose_ms": 0.573024000004807,
+      "capture_ms": 486.1794379994535,
+      "channel_ms": 323.0524680002418,
+      "cpu_iq_receiver_ms": 163.12696999921172,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 312.98105400037457,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 852,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.285,
+      "service_ms": 485.6510340005116,
+      "pose_ms": 0.5924340002820827,
+      "capture_ms": 485.0581600003352,
+      "channel_ms": 321.2213340002563,
+      "cpu_iq_receiver_ms": 163.83682600007887,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 308.23263900038,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 852,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.29,
+      "service_ms": 492.6924269993833,
+      "pose_ms": 0.9395769993716385,
+      "capture_ms": 491.7524399998001,
+      "channel_ms": 329.60021599956235,
+      "cpu_iq_receiver_ms": 162.15222400023777,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 316.1573679999492,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 852,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.295,
+      "service_ms": 482.07071900014853,
+      "pose_ms": 0.8187560006263084,
+      "capture_ms": 481.2515630001144,
+      "channel_ms": 317.15847499981464,
+      "cpu_iq_receiver_ms": 164.09308800029976,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 307.1155320003527,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 851,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.3,
+      "service_ms": 492.30537500079663,
+      "pose_ms": 0.6324540008790791,
+      "capture_ms": 491.67257099998096,
+      "channel_ms": 327.57812299951183,
+      "cpu_iq_receiver_ms": 164.09444800046913,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 311.76812699959555,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 852,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.305,
+      "service_ms": 493.77001599987125,
+      "pose_ms": 0.6347250000544591,
+      "capture_ms": 493.1349210000917,
+      "channel_ms": 326.2792229998013,
+      "cpu_iq_receiver_ms": 166.85569800029043,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 315.7915159999902,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 857,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.31,
+      "service_ms": 485.69768800007296,
+      "pose_ms": 0.5985650004731724,
+      "capture_ms": 485.0987930003612,
+      "channel_ms": 322.0033420002437,
+      "cpu_iq_receiver_ms": 163.09545100011746,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 307.8615990007165,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 854,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.315,
+      "service_ms": 493.462465000448,
+      "pose_ms": 0.7182950002970756,
+      "capture_ms": 492.7437500000451,
+      "channel_ms": 327.39741200020944,
+      "cpu_iq_receiver_ms": 165.34633799983567,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 317.8977620000296,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 854,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.32,
+      "service_ms": 486.01663099998405,
+      "pose_ms": 0.6871650002722163,
+      "capture_ms": 485.3289559996483,
+      "channel_ms": 320.7650240001385,
+      "cpu_iq_receiver_ms": 164.5639319995098,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 310.27299699962896,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 851,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.325,
+      "service_ms": 490.1699310003096,
+      "pose_ms": 0.6553640005222405,
+      "capture_ms": 489.51419700006227,
+      "channel_ms": 327.58588300021074,
+      "cpu_iq_receiver_ms": 161.92831399985153,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 314.18115600081364,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 853,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.33,
+      "service_ms": 485.9082919992943,
+      "pose_ms": 0.9003569994092686,
+      "capture_ms": 485.0074850000965,
+      "channel_ms": 320.5183529998976,
+      "cpu_iq_receiver_ms": 164.48913200019888,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 309.25394099995174,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 851,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.335,
+      "service_ms": 481.1532369994893,
+      "pose_ms": 0.6140850000520004,
+      "capture_ms": 480.5387520000295,
+      "channel_ms": 317.6391609995335,
+      "cpu_iq_receiver_ms": 162.899591000496,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 307.99708099948475,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 847,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.34,
+      "service_ms": 491.35790299988,
+      "pose_ms": 0.750245999370236,
+      "capture_ms": 490.60713700055203,
+      "channel_ms": 328.72945300005085,
+      "cpu_iq_receiver_ms": 161.87768400050118,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 316.76471600076184,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 849,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.345,
+      "service_ms": 493.7047799994616,
+      "pose_ms": 0.7803660000718082,
+      "capture_ms": 492.92398399938975,
+      "channel_ms": 329.25152699954197,
+      "cpu_iq_receiver_ms": 163.67245699984778,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 311.28190599974914,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 854,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.35,
+      "service_ms": 490.6600289996277,
+      "pose_ms": 0.6527550003738725,
+      "capture_ms": 490.006913999423,
+      "channel_ms": 325.03170700056216,
+      "cpu_iq_receiver_ms": 164.9752069988608,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 314.40505899990967,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 850,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.355,
+      "service_ms": 478.0426359993726,
+      "pose_ms": 0.7189449997895281,
+      "capture_ms": 477.32327099947724,
+      "channel_ms": 314.31586899998365,
+      "cpu_iq_receiver_ms": 163.0074019994936,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 302.46058299962897,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 852,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.36,
+      "service_ms": 474.76372300025105,
+      "pose_ms": 0.5562440001085633,
+      "capture_ms": 474.20707900073467,
+      "channel_ms": 311.4707780005119,
+      "cpu_iq_receiver_ms": 162.73630100022274,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 301.517385999432,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 852,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.365,
+      "service_ms": 487.6144879999629,
+      "pose_ms": 1.1916690000361996,
+      "capture_ms": 486.4222690002862,
+      "channel_ms": 322.01397600056225,
+      "cpu_iq_receiver_ms": 164.40829299972393,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 307.74458199994115,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 855,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.37,
+      "service_ms": 497.74665199947776,
+      "pose_ms": 0.6982249997236067,
+      "capture_ms": 497.0480669999233,
+      "channel_ms": 329.5035410001219,
+      "cpu_iq_receiver_ms": 167.5445259998014,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 318.39152999964426,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 852,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.375,
+      "service_ms": 483.98282200014364,
+      "pose_ms": 0.5242840006758342,
+      "capture_ms": 483.4581879995312,
+      "channel_ms": 320.2095440001358,
+      "cpu_iq_receiver_ms": 163.24864399939543,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 309.7126370003025,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 851,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.38,
+      "service_ms": 475.137258000359,
+      "pose_ms": 0.8974270003818674,
+      "capture_ms": 474.2394310005693,
+      "channel_ms": 312.20104500062007,
+      "cpu_iq_receiver_ms": 162.03838599994924,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 299.9754960001155,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 852,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.385,
+      "service_ms": 480.41417700005695,
+      "pose_ms": 0.7737959995210986,
+      "capture_ms": 479.6399510005358,
+      "channel_ms": 317.0045900005789,
+      "cpu_iq_receiver_ms": 162.6353609999569,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 306.09364099927916,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 851,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.39,
+      "service_ms": 480.9556419995715,
+      "pose_ms": 0.8497970002281363,
+      "capture_ms": 480.10539499955485,
+      "channel_ms": 318.1810289997884,
+      "cpu_iq_receiver_ms": 161.92436599976645,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 308.25705699953687,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 851,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.395,
+      "service_ms": 482.7343249999103,
+      "pose_ms": 0.7139849994928227,
+      "capture_ms": 482.0199200003117,
+      "channel_ms": 320.31492599980993,
+      "cpu_iq_receiver_ms": 161.70499400050176,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 310.39732199951686,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 851,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.4,
+      "service_ms": 476.7497419998108,
+      "pose_ms": 0.715565000064089,
+      "capture_ms": 476.0337569996409,
+      "channel_ms": 314.6447250001074,
+      "cpu_iq_receiver_ms": 161.38903199953347,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 304.6981510005935,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 850,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.405,
+      "service_ms": 496.46173600012844,
+      "pose_ms": 0.7536160001109238,
+      "capture_ms": 495.70684999980585,
+      "channel_ms": 330.75365200056694,
+      "cpu_iq_receiver_ms": 164.9531979992389,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 320.9993119999126,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 849,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.41,
+      "service_ms": 487.40419000023394,
+      "pose_ms": 0.6437339998228708,
+      "capture_ms": 486.7601360001572,
+      "channel_ms": 324.11979399967095,
+      "cpu_iq_receiver_ms": 162.64034200048627,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 308.2638779997069,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 850,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.415,
+      "service_ms": 478.5823160000291,
+      "pose_ms": 1.0603569999148021,
+      "capture_ms": 477.52152900011424,
+      "channel_ms": 316.2439870002345,
+      "cpu_iq_receiver_ms": 161.27754199987976,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 302.99734999971406,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 853,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.42,
+      "service_ms": 475.7538060002844,
+      "pose_ms": 0.6698650004182127,
+      "capture_ms": 475.08352099976037,
+      "channel_ms": 314.0815509996173,
+      "cpu_iq_receiver_ms": 161.00197000014305,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 304.0920379999079,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 851,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.425,
+      "service_ms": 482.1012630000041,
+      "pose_ms": 0.6175039998197462,
+      "capture_ms": 481.4833489999728,
+      "channel_ms": 321.0559330000251,
+      "cpu_iq_receiver_ms": 160.4274159999477,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 310.3463950001242,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 852,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.43,
+      "service_ms": 480.3656009999031,
+      "pose_ms": 0.5605750002359855,
+      "capture_ms": 479.8046659998363,
+      "channel_ms": 320.0028149994978,
+      "cpu_iq_receiver_ms": 159.8018510003385,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 309.1608049999195,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 849,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.435,
+      "service_ms": 488.4232399999746,
+      "pose_ms": 0.6312140003501554,
+      "capture_ms": 487.79158599973016,
+      "channel_ms": 321.1322150000342,
+      "cpu_iq_receiver_ms": 166.65937099969597,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 307.840906999445,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 853,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.44,
+      "service_ms": 490.9667890005949,
+      "pose_ms": 0.8179160004146979,
+      "capture_ms": 490.1485030004551,
+      "channel_ms": 326.4927029995306,
+      "cpu_iq_receiver_ms": 163.6558000009245,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 312.78180299977976,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 852,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.445,
+      "service_ms": 490.2303459994073,
+      "pose_ms": 0.5891849996260135,
+      "capture_ms": 489.6407910000562,
+      "channel_ms": 322.23292299931927,
+      "cpu_iq_receiver_ms": 167.40786800073693,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 311.1825920004776,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 853,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.45,
+      "service_ms": 496.83087399989745,
+      "pose_ms": 0.7312750003620749,
+      "capture_ms": 496.09921899991605,
+      "channel_ms": 331.0810679995484,
+      "cpu_iq_receiver_ms": 165.01815100036765,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 317.51909900049213,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 848,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.455,
+      "service_ms": 485.7328130001406,
+      "pose_ms": 0.7797960006428184,
+      "capture_ms": 484.95265699966694,
+      "channel_ms": 322.36559400007536,
+      "cpu_iq_receiver_ms": 162.58706299959158,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 311.06333200023073,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 853,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.46,
+      "service_ms": 488.4577929997249,
+      "pose_ms": 0.5905540001549525,
+      "capture_ms": 487.8668089995699,
+      "channel_ms": 323.0244189999212,
+      "cpu_iq_receiver_ms": 164.84238999964873,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 312.9711550000138,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 852,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.465,
+      "service_ms": 486.3827890003449,
+      "pose_ms": 0.7045849997666664,
+      "capture_ms": 485.6777740005782,
+      "channel_ms": 323.6639950000608,
+      "cpu_iq_receiver_ms": 162.0137790005174,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 311.1531330005164,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 854,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.47,
+      "service_ms": 484.85285799961275,
+      "pose_ms": 0.6273239996517077,
+      "capture_ms": 484.22513399964373,
+      "channel_ms": 321.6673899996749,
+      "cpu_iq_receiver_ms": 162.5577439999688,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 311.0159420002674,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 855,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.475,
+      "service_ms": 482.91025399976206,
+      "pose_ms": 0.6330839996735449,
+      "capture_ms": 482.2767199993905,
+      "channel_ms": 319.92695900044055,
+      "cpu_iq_receiver_ms": 162.34976099894993,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 307.22731500009104,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 854,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.48,
+      "service_ms": 490.05457699968247,
+      "pose_ms": 0.9398269994562725,
+      "capture_ms": 489.11427999973967,
+      "channel_ms": 325.56347900026594,
+      "cpu_iq_receiver_ms": 163.55080099947372,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 313.30207900009555,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 855,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.485,
+      "service_ms": 487.48142899967206,
+      "pose_ms": 0.6853049999335781,
+      "capture_ms": 486.7957139995269,
+      "channel_ms": 326.28732600005605,
+      "cpu_iq_receiver_ms": 160.50838799947087,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 314.35867699929076,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 850,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.49,
+      "service_ms": 486.3579109996863,
+      "pose_ms": 0.8373159998882329,
+      "capture_ms": 485.5202349999672,
+      "channel_ms": 323.20521299971006,
+      "cpu_iq_receiver_ms": 162.31502200025716,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 310.95983300019725,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 853,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.495,
+      "service_ms": 483.0913879995933,
+      "pose_ms": 0.7752059991616989,
+      "capture_ms": 482.31575200043153,
+      "channel_ms": 319.97728000078496,
+      "cpu_iq_receiver_ms": 162.33847199964657,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 309.93012599992653,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 853,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.5,
+      "service_ms": 487.9258340006345,
+      "pose_ms": 0.6186750006236252,
+      "capture_ms": 487.3065689998839,
+      "channel_ms": 323.62084699980187,
+      "cpu_iq_receiver_ms": 163.68572200008202,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 312.05788100032805,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 853,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.505,
+      "service_ms": 486.39035299947864,
+      "pose_ms": 0.6527049999931478,
+      "capture_ms": 485.7372079995912,
+      "channel_ms": 322.75777099948755,
+      "cpu_iq_receiver_ms": 162.97943700010364,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 312.50212600025407,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 851,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.51,
+      "service_ms": 486.6953660002764,
+      "pose_ms": 0.6549449999511125,
+      "capture_ms": 486.04004100070597,
+      "channel_ms": 322.49085900002683,
+      "cpu_iq_receiver_ms": 163.54918200067914,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 312.30976400001964,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 855,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.515,
+      "service_ms": 496.1360249999416,
+      "pose_ms": 0.6469649997598026,
+      "capture_ms": 495.4885800007105,
+      "channel_ms": 333.40623900039645,
+      "cpu_iq_receiver_ms": 162.08234100031405,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 322.0315059998029,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 855,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.52,
+      "service_ms": 477.09525500067684,
+      "pose_ms": 0.7704950003244448,
+      "capture_ms": 476.32433000035235,
+      "channel_ms": 313.4974439999496,
+      "cpu_iq_receiver_ms": 162.82688600040274,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 303.7460719997398,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 852,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.525,
+      "service_ms": 484.11764800039236,
+      "pose_ms": 0.6701550000798306,
+      "capture_ms": 483.44707300020673,
+      "channel_ms": 320.71606699992117,
+      "cpu_iq_receiver_ms": 162.73100600028556,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 310.0905689998399,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 855,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.53,
+      "service_ms": 501.37684600031207,
+      "pose_ms": 0.5669649999617832,
+      "capture_ms": 500.8095310004137,
+      "channel_ms": 338.79511000031926,
+      "cpu_iq_receiver_ms": 162.01442100009444,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 327.6452479994987,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 852,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.535,
+      "service_ms": 516.3808860006611,
+      "pose_ms": 0.7278050006789272,
+      "capture_ms": 515.6526110004052,
+      "channel_ms": 347.9920890003996,
+      "cpu_iq_receiver_ms": 167.66052200000559,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 336.9902269996601,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 853,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.54,
+      "service_ms": 492.932674000258,
+      "pose_ms": 0.8160460001818137,
+      "capture_ms": 492.1160880003299,
+      "channel_ms": 327.61976800065895,
+      "cpu_iq_receiver_ms": 164.49631999967096,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 317.05571100064844,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 857,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.545,
+      "service_ms": 480.3646430000299,
+      "pose_ms": 1.0769680002340465,
+      "capture_ms": 479.28723499990156,
+      "channel_ms": 317.1931130000303,
+      "cpu_iq_receiver_ms": 162.09412199987128,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 306.9275170000765,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 852,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.55,
+      "service_ms": 485.1647679997768,
+      "pose_ms": 0.9199269998134696,
+      "capture_ms": 484.24442099985754,
+      "channel_ms": 321.2931930002014,
+      "cpu_iq_receiver_ms": 162.9512279996561,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 308.4213379997891,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 852,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.555,
+      "service_ms": 480.2853529999993,
+      "pose_ms": 0.6451139997807331,
+      "capture_ms": 479.639868999584,
+      "channel_ms": 319.16341799933434,
+      "cpu_iq_receiver_ms": 160.47645100024965,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 302.81488800028455,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 852,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.56,
+      "service_ms": 481.236650000028,
+      "pose_ms": 0.7831260008970276,
+      "capture_ms": 480.4531039999347,
+      "channel_ms": 316.9475009999587,
+      "cpu_iq_receiver_ms": 163.50560299997596,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 304.36050899970724,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 853,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.565,
+      "service_ms": 485.1715499999045,
+      "pose_ms": 0.720175999958883,
+      "capture_ms": 484.4509439999456,
+      "channel_ms": 320.67796899991663,
+      "cpu_iq_receiver_ms": 163.77297500002896,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 306.86208800034365,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 853,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.57,
+      "service_ms": 483.128005999788,
+      "pose_ms": 0.6044349993317155,
+      "capture_ms": 482.5231510003505,
+      "channel_ms": 319.7404029997415,
+      "cpu_iq_receiver_ms": 162.782748000609,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 309.75662900073075,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 853,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.575,
+      "service_ms": 481.5368639992812,
+      "pose_ms": 0.8925759993871907,
+      "capture_ms": 480.6438479999997,
+      "channel_ms": 320.05948500045633,
+      "cpu_iq_receiver_ms": 160.58436299954337,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 308.3826800002498,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 851,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.58,
+      "service_ms": 484.0940430003684,
+      "pose_ms": 0.622393999947235,
+      "capture_ms": 483.4711890007384,
+      "channel_ms": 322.4637839994102,
+      "cpu_iq_receiver_ms": 161.00740500132815,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 310.487335000289,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 852,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.585,
+      "service_ms": 483.00976600057766,
+      "pose_ms": 1.2843200001952937,
+      "capture_ms": 481.7248760000439,
+      "channel_ms": 319.9274049993619,
+      "cpu_iq_receiver_ms": 161.79747100068198,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 307.7963859996089,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 853,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.59,
+      "service_ms": 484.70029899999645,
+      "pose_ms": 0.763216000450484,
+      "capture_ms": 483.93668299922865,
+      "channel_ms": 321.2680549995639,
+      "cpu_iq_receiver_ms": 162.66862799966475,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 309.4309680000151,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 855,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.595,
+      "service_ms": 486.5529629996672,
+      "pose_ms": 0.7156259998737369,
+      "capture_ms": 485.8368969998992,
+      "channel_ms": 324.1381560001173,
+      "cpu_iq_receiver_ms": 161.69874099978188,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 312.2392690002016,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 854,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.6,
+      "service_ms": 494.5379020000473,
+      "pose_ms": 0.753275000533904,
+      "capture_ms": 493.7842469998941,
+      "channel_ms": 330.80374599921925,
+      "cpu_iq_receiver_ms": 162.98050100067485,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 319.612173000678,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 853,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.605,
+      "service_ms": 486.0483900001782,
+      "pose_ms": 0.6510949997391435,
+      "capture_ms": 485.39685500054475,
+      "channel_ms": 322.93215899971983,
+      "cpu_iq_receiver_ms": 162.46469600082492,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 312.3697600003652,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 855,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.61,
+      "service_ms": 494.4044320000103,
+      "pose_ms": 0.839446000099997,
+      "capture_ms": 493.5644159995718,
+      "channel_ms": 328.88748299956205,
+      "cpu_iq_receiver_ms": 164.67693300000974,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 317.40269800047827,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 855,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.615,
+      "service_ms": 489.4588269999076,
+      "pose_ms": 0.6085949999032891,
+      "capture_ms": 488.849852000385,
+      "channel_ms": 328.39674899969395,
+      "cpu_iq_receiver_ms": 160.45310300069104,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 315.716785999939,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 852,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.62,
+      "service_ms": 477.4571480002123,
+      "pose_ms": 0.5987940003251424,
+      "capture_ms": 476.85797400026786,
+      "channel_ms": 314.5099180001125,
+      "cpu_iq_receiver_ms": 162.34805600015534,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 304.3724330000259,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 854,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.625,
+      "service_ms": 489.6423689997391,
+      "pose_ms": 0.7104460000846302,
+      "capture_ms": 488.93151299944293,
+      "channel_ms": 323.8718960001279,
+      "cpu_iq_receiver_ms": 165.05961699931504,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 310.37835699953575,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 853,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.63,
+      "service_ms": 496.4013389999309,
+      "pose_ms": 0.9025859999383101,
+      "capture_ms": 495.498342999781,
+      "channel_ms": 332.1968489999563,
+      "cpu_iq_receiver_ms": 163.30149399982474,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 311.3219639999443,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 854,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.635,
+      "service_ms": 487.5115240001833,
+      "pose_ms": 0.9420770002179779,
+      "capture_ms": 486.5689170001133,
+      "channel_ms": 321.5327299994897,
+      "cpu_iq_receiver_ms": 165.0361870006236,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 308.9293170005476,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 855,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.64,
+      "service_ms": 492.78117299945734,
+      "pose_ms": 0.7265449994520168,
+      "capture_ms": 492.05414799962455,
+      "channel_ms": 329.80319099988264,
+      "cpu_iq_receiver_ms": 162.2509569997419,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 318.43529799971293,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 853,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.645,
+      "service_ms": 492.5056209995091,
+      "pose_ms": 0.6713450002280297,
+      "capture_ms": 491.83389599966176,
+      "channel_ms": 328.33551000021544,
+      "cpu_iq_receiver_ms": 163.49838599944633,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 317.374839999502,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 857,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.65,
+      "service_ms": 488.89559600047505,
+      "pose_ms": 0.7099260001268703,
+      "capture_ms": 488.18421000032686,
+      "channel_ms": 323.4856349999973,
+      "cpu_iq_receiver_ms": 164.69857500032958,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 313.3881210005711,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 857,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.655,
+      "service_ms": 485.04526799933956,
+      "pose_ms": 0.7415149993903469,
+      "capture_ms": 484.30332299994916,
+      "channel_ms": 323.43849599965324,
+      "cpu_iq_receiver_ms": 160.86482700029592,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 312.6481959998273,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 855,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.66,
+      "service_ms": 491.2019240000518,
+      "pose_ms": 0.5281940002532792,
+      "capture_ms": 490.67332000049646,
+      "channel_ms": 327.69588799965277,
+      "cpu_iq_receiver_ms": 162.9774320008437,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 317.42725200001587,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 852,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.665,
+      "service_ms": 490.82653099958407,
+      "pose_ms": 0.7262449998961529,
+      "capture_ms": 490.0998659995821,
+      "channel_ms": 327.15364300020155,
+      "cpu_iq_receiver_ms": 162.94622299938055,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 316.72168699969916,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 852,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.67,
+      "service_ms": 491.54068699954223,
+      "pose_ms": 0.6824739994044648,
+      "capture_ms": 490.85779300003196,
+      "channel_ms": 324.59076500072115,
+      "cpu_iq_receiver_ms": 166.2670279993108,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 313.69000500035327,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 852,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.675,
+      "service_ms": 488.9737379999133,
+      "pose_ms": 0.7873459999245824,
+      "capture_ms": 488.1859520000944,
+      "channel_ms": 322.10115699945163,
+      "cpu_iq_receiver_ms": 166.08479500064277,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 312.2688939993168,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 852,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.68,
+      "service_ms": 496.176751999883,
+      "pose_ms": 0.7577349997518468,
+      "capture_ms": 495.4184970001734,
+      "channel_ms": 330.5384889999914,
+      "cpu_iq_receiver_ms": 164.880008000182,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 319.64097900072375,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 855,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.685,
+      "service_ms": 494.6097709998867,
+      "pose_ms": 0.7721450001554331,
+      "capture_ms": 493.837085999985,
+      "channel_ms": 330.43576999989455,
+      "cpu_iq_receiver_ms": 163.40131600009045,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 313.65571500009537,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 856,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.69,
+      "service_ms": 495.81825099994603,
+      "pose_ms": 0.6771150001441129,
+      "capture_ms": 495.14065599942114,
+      "channel_ms": 329.44105199931073,
+      "cpu_iq_receiver_ms": 165.6996040001104,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 318.0473679994975,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 856,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.695,
+      "service_ms": 489.3442029997459,
+      "pose_ms": 0.621944999693369,
+      "capture_ms": 488.721847999841,
+      "channel_ms": 324.4822349997776,
+      "cpu_iq_receiver_ms": 164.2396130000634,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 313.460755000051,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 856,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.7,
+      "service_ms": 491.15885800074466,
+      "pose_ms": 0.5247140006758855,
+      "capture_ms": 490.6337340007667,
+      "channel_ms": 323.53417000012996,
+      "cpu_iq_receiver_ms": 167.09956400063675,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 313.5928960000456,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 856,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.705,
+      "service_ms": 478.76312600055826,
+      "pose_ms": 0.6568150001839967,
+      "capture_ms": 478.1058610005857,
+      "channel_ms": 312.4001779997343,
+      "cpu_iq_receiver_ms": 165.70568300085142,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 300.7598019994475,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 852,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.71,
+      "service_ms": 485.80994900021324,
+      "pose_ms": 0.6537750005009002,
+      "capture_ms": 485.155794000093,
+      "channel_ms": 323.16230699962034,
+      "cpu_iq_receiver_ms": 161.99348700047267,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 312.89983199985727,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 855,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.715,
+      "service_ms": 504.27546500031895,
+      "pose_ms": 0.8740360008232528,
+      "capture_ms": 503.40097899970715,
+      "channel_ms": 337.75259499998356,
+      "cpu_iq_receiver_ms": 165.6483839997236,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 322.6909040004102,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 851,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.72,
+      "service_ms": 497.857870000189,
+      "pose_ms": 0.6580649996976717,
+      "capture_ms": 497.19923500015284,
+      "channel_ms": 334.68349400027364,
+      "cpu_iq_receiver_ms": 162.5157409998792,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 317.15200300004653,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 853,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.725,
+      "service_ms": 495.24756899973,
+      "pose_ms": 0.6369140000970219,
+      "capture_ms": 494.61023499952717,
+      "channel_ms": 332.23011500012944,
+      "cpu_iq_receiver_ms": 162.38011999939772,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 321.66880699969624,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 851,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.73,
+      "service_ms": 483.95579699990776,
+      "pose_ms": 0.6398750001608278,
+      "capture_ms": 483.3155220003391,
+      "channel_ms": 321.9287689998964,
+      "cpu_iq_receiver_ms": 161.3867530004427,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 311.44073199993727,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 854,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.735,
+      "service_ms": 492.75162200046907,
+      "pose_ms": 0.71654600014881,
+      "capture_ms": 492.03465600021445,
+      "channel_ms": 329.8495779999939,
+      "cpu_iq_receiver_ms": 162.18507800022053,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 315.5359419997694,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 853,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.74,
+      "service_ms": 486.54135699962353,
+      "pose_ms": 0.7916360000308487,
+      "capture_ms": 485.7493009994869,
+      "channel_ms": 323.86841399966215,
+      "cpu_iq_receiver_ms": 161.88088699982472,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 307.6890850006748,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 859,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.745,
+      "service_ms": 482.8658699998414,
+      "pose_ms": 0.6467749999501393,
+      "capture_ms": 482.2186649998912,
+      "channel_ms": 320.4401589991903,
+      "cpu_iq_receiver_ms": 161.77850600070087,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 309.6648690006987,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 856,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.75,
+      "service_ms": 481.10481799994886,
+      "pose_ms": 0.7275750003827852,
+      "capture_ms": 480.376812999566,
+      "channel_ms": 319.62351400034095,
+      "cpu_iq_receiver_ms": 160.75329899922508,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 306.12133399972663,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 853,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.755,
+      "service_ms": 475.80890900007944,
+      "pose_ms": 0.6693149998682202,
+      "capture_ms": 475.13918399999966,
+      "channel_ms": 313.30363699999,
+      "cpu_iq_receiver_ms": 161.83554700000968,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 302.42206700040697,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 855,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.76,
+      "service_ms": 480.5617849997361,
+      "pose_ms": 0.8596260004196665,
+      "capture_ms": 479.70171899942216,
+      "channel_ms": 317.7773799998249,
+      "cpu_iq_receiver_ms": 161.92433899959724,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 307.766306999838,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 857,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.765,
+      "service_ms": 484.2832129997987,
+      "pose_ms": 0.6765049993191496,
+      "capture_ms": 483.60628800037375,
+      "channel_ms": 323.3088820006742,
+      "cpu_iq_receiver_ms": 160.29740599969955,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 312.8207139998267,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 853,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.77,
+      "service_ms": 483.4531570004401,
+      "pose_ms": 0.7189950001702528,
+      "capture_ms": 482.73372200037556,
+      "channel_ms": 321.7290709999361,
+      "cpu_iq_receiver_ms": 161.00465100043948,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 311.2976239999625,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 856,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.775,
+      "service_ms": 490.05296700033796,
+      "pose_ms": 0.6482549997599563,
+      "capture_ms": 489.40426199987996,
+      "channel_ms": 325.08451600006083,
+      "cpu_iq_receiver_ms": 164.31974599981913,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 315.1409120000608,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 856,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.78,
+      "service_ms": 490.36231900026905,
+      "pose_ms": 0.768326000070374,
+      "capture_ms": 489.59345299954293,
+      "channel_ms": 327.1964610003124,
+      "cpu_iq_receiver_ms": 162.39699199923052,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 316.25104999966425,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 854,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.785,
+      "service_ms": 479.49720900032844,
+      "pose_ms": 0.8806260002529598,
+      "capture_ms": 478.6161629999697,
+      "channel_ms": 316.4970429997993,
+      "cpu_iq_receiver_ms": 162.11912000017037,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 303.9041600004566,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 855,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.79,
+      "service_ms": 483.0872159991486,
+      "pose_ms": 0.7221549994937959,
+      "capture_ms": 482.36465099944326,
+      "channel_ms": 321.95897400015383,
+      "cpu_iq_receiver_ms": 160.40567699928943,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 311.97766900004353,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 853,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.795,
+      "service_ms": 493.5093529993537,
+      "pose_ms": 0.8399660000577569,
+      "capture_ms": 492.66894699940167,
+      "channel_ms": 327.5566450001861,
+      "cpu_iq_receiver_ms": 165.11230199921556,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 311.09287299932475,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 857,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.8,
+      "service_ms": 482.5157830000535,
+      "pose_ms": 0.7202350006991765,
+      "capture_ms": 481.79511799935426,
+      "channel_ms": 319.5951360003164,
+      "cpu_iq_receiver_ms": 162.19998199903785,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 309.33586100036337,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 855,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.805,
+      "service_ms": 490.84927500007325,
+      "pose_ms": 0.7798659999025404,
+      "capture_ms": 490.06888900021295,
+      "channel_ms": 326.19820599938976,
+      "cpu_iq_receiver_ms": 163.8706830008232,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 309.70240399983595,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 854,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.81,
+      "service_ms": 495.5716410004243,
+      "pose_ms": 0.7128460001695203,
+      "capture_ms": 494.85839499993745,
+      "channel_ms": 331.40983399971446,
+      "cpu_iq_receiver_ms": 163.44856100022298,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 316.6480950003461,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 856,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.815,
+      "service_ms": 498.29088100068475,
+      "pose_ms": 0.7691160008107545,
+      "capture_ms": 497.52135500057193,
+      "channel_ms": 334.008853999876,
+      "cpu_iq_receiver_ms": 163.51250100069592,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 322.3052879993702,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 857,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.82,
+      "service_ms": 490.9496370000852,
+      "pose_ms": 0.6644649993177154,
+      "capture_ms": 490.2847120001752,
+      "channel_ms": 326.089714999398,
+      "cpu_iq_receiver_ms": 164.19499700077722,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 312.58158499986166,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 855,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.825,
+      "service_ms": 493.0670829999144,
+      "pose_ms": 0.6430550001823576,
+      "capture_ms": 492.42364799920324,
+      "channel_ms": 326.95849199990334,
+      "cpu_iq_receiver_ms": 165.4651559992999,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 315.3761059993485,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 855,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.83,
+      "service_ms": 497.2955349994663,
+      "pose_ms": 0.6006139992678072,
+      "capture_ms": 496.69455099956394,
+      "channel_ms": 334.31802800078003,
+      "cpu_iq_receiver_ms": 162.3765229987839,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 323.19030400049087,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 853,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.835,
+      "service_ms": 486.6209070005425,
+      "pose_ms": 0.717775999873993,
+      "capture_ms": 485.9026910007742,
+      "channel_ms": 323.0359839999437,
+      "cpu_iq_receiver_ms": 162.8667070008305,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 312.22082399926876,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 859,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.84,
+      "service_ms": 493.85633100064297,
+      "pose_ms": 0.711456000317412,
+      "capture_ms": 493.14445500021975,
+      "channel_ms": 328.15078200019343,
+      "cpu_iq_receiver_ms": 164.99367300002632,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 317.21282099988457,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 854,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.845,
+      "service_ms": 480.23975099931704,
+      "pose_ms": 0.6953659994906047,
+      "capture_ms": 479.5439849995091,
+      "channel_ms": 318.00283699976717,
+      "cpu_iq_receiver_ms": 161.54114799974195,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 308.12525400051527,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 851,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.85,
+      "service_ms": 489.1684370004441,
+      "pose_ms": 0.6706450003548525,
+      "capture_ms": 488.4973420003007,
+      "channel_ms": 326.3200390001657,
+      "cpu_iq_receiver_ms": 162.177303000135,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 314.9723249998715,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 852,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.855,
+      "service_ms": 490.80866999975115,
+      "pose_ms": 0.6799350003348081,
+      "capture_ms": 490.12831500022,
+      "channel_ms": 329.0993210002853,
+      "cpu_iq_receiver_ms": 161.02899399993476,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 315.73785100044915,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 851,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.86,
+      "service_ms": 486.0075850001522,
+      "pose_ms": 0.7429960005538305,
+      "capture_ms": 485.26414899970405,
+      "channel_ms": 325.36746299956576,
+      "cpu_iq_receiver_ms": 159.8966860001383,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 314.6047329992143,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 853,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.865,
+      "service_ms": 486.7072300003201,
+      "pose_ms": 0.6713250004395377,
+      "capture_ms": 486.03545500009204,
+      "channel_ms": 322.03580799978226,
+      "cpu_iq_receiver_ms": 163.99964700030978,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 311.96139399980893,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 853,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.87,
+      "service_ms": 488.5666049995052,
+      "pose_ms": 0.8079459994405624,
+      "capture_ms": 487.75825899974734,
+      "channel_ms": 324.7286289997646,
+      "cpu_iq_receiver_ms": 163.02962999998272,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 314.7030640002413,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 854,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.875,
+      "service_ms": 487.68495800050005,
+      "pose_ms": 0.8360159999938332,
+      "capture_ms": 486.84849200071767,
+      "channel_ms": 318.8260059996537,
+      "cpu_iq_receiver_ms": 168.02248600106395,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 305.2699350000694,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 854,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.88,
+      "service_ms": 488.7752670001646,
+      "pose_ms": 0.808495999990555,
+      "capture_ms": 487.9663609999625,
+      "channel_ms": 325.0500619997183,
+      "cpu_iq_receiver_ms": 162.91629900024418,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 310.12634100079595,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 851,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.885,
+      "service_ms": 493.1222899995191,
+      "pose_ms": 0.8242959993367549,
+      "capture_ms": 492.2975640001823,
+      "channel_ms": 325.9453290002057,
+      "cpu_iq_receiver_ms": 166.35223499997664,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 311.60812200050714,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 852,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.89,
+      "service_ms": 497.46851199961384,
+      "pose_ms": 0.7137949996831594,
+      "capture_ms": 496.7543069997191,
+      "channel_ms": 333.7512569996761,
+      "cpu_iq_receiver_ms": 163.003050000043,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 323.13595800042094,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 854,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.895,
+      "service_ms": 491.3912780002647,
+      "pose_ms": 0.7713060003879946,
+      "capture_ms": 490.6195419998767,
+      "channel_ms": 327.06067799972516,
+      "cpu_iq_receiver_ms": 163.55886400015152,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 314.28656299976865,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 856,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.9,
+      "service_ms": 490.356131000226,
+      "pose_ms": 0.8146259997374727,
+      "capture_ms": 489.5411150000655,
+      "channel_ms": 326.32203199955256,
+      "cpu_iq_receiver_ms": 163.2190830005129,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 315.56755299970973,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 853,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.905,
+      "service_ms": 495.80389200036734,
+      "pose_ms": 0.7274760000655078,
+      "capture_ms": 495.0759860003018,
+      "channel_ms": 326.63729500018235,
+      "cpu_iq_receiver_ms": 168.43869100011943,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 310.30255399946327,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 855,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.91,
+      "service_ms": 475.0907580000785,
+      "pose_ms": 0.6459750002250075,
+      "capture_ms": 474.4443930003399,
+      "channel_ms": 312.37006899937114,
+      "cpu_iq_receiver_ms": 162.07432400096877,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 302.2388849994968,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 854,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.915,
+      "service_ms": 491.9802639997215,
+      "pose_ms": 0.8416459995714831,
+      "capture_ms": 491.1381980000442,
+      "channel_ms": 327.18080100039515,
+      "cpu_iq_receiver_ms": 163.95739699964906,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 314.83885799934797,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 856,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.92,
+      "service_ms": 490.08276000040496,
+      "pose_ms": 0.8199660005629994,
+      "capture_ms": 489.2622340003072,
+      "channel_ms": 327.29652099988016,
+      "cpu_iq_receiver_ms": 161.96571300042706,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 314.11544299953675,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 855,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.925,
+      "service_ms": 500.66422000054445,
+      "pose_ms": 0.7301060004465398,
+      "capture_ms": 499.9336939999921,
+      "channel_ms": 328.90853299977607,
+      "cpu_iq_receiver_ms": 171.02516100021603,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 314.02163299935637,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 853,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.93,
+      "service_ms": 502.5219039998774,
+      "pose_ms": 0.64928499978123,
+      "capture_ms": 501.8722690001596,
+      "channel_ms": 335.72161400024925,
+      "cpu_iq_receiver_ms": 166.15065499991033,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 320.9991549992992,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 856,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.935,
+      "service_ms": 498.80670699985785,
+      "pose_ms": 0.8423459994446603,
+      "capture_ms": 497.9639709999901,
+      "channel_ms": 330.83490900025936,
+      "cpu_iq_receiver_ms": 167.12906199973077,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 316.3052809995861,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 858,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.94,
+      "service_ms": 510.9897969996382,
+      "pose_ms": 0.7624959998793202,
+      "capture_ms": 510.22674099931464,
+      "channel_ms": 343.57847299997957,
+      "cpu_iq_receiver_ms": 166.64826799933508,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 328.1428579994099,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 858,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.945,
+      "service_ms": 497.87188099980995,
+      "pose_ms": 0.6014040000081877,
+      "capture_ms": 497.27005700060545,
+      "channel_ms": 330.9741800003394,
+      "cpu_iq_receiver_ms": 166.29587700026605,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 319.1796720002458,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 856,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.95,
+      "service_ms": 511.2398800001756,
+      "pose_ms": 0.5847239999638987,
+      "capture_ms": 510.65480600027513,
+      "channel_ms": 338.0094829999507,
+      "cpu_iq_receiver_ms": 172.64532300032442,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 327.27987300040695,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 854,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.955,
+      "service_ms": 507.10794999940845,
+      "pose_ms": 0.6296639994616271,
+      "capture_ms": 506.4779759995872,
+      "channel_ms": 340.42351100015367,
+      "cpu_iq_receiver_ms": 166.05446499943355,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 329.0781160003462,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 854,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.96,
+      "service_ms": 485.17469800026447,
+      "pose_ms": 0.5119839997860254,
+      "capture_ms": 484.6623040002669,
+      "channel_ms": 321.9936340001368,
+      "cpu_iq_receiver_ms": 162.66867000013008,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 311.00551200051996,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 855,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.965,
+      "service_ms": 496.04773900045984,
+      "pose_ms": 0.6847350005045882,
+      "capture_ms": 495.3625739999552,
+      "channel_ms": 331.5148359997693,
+      "cpu_iq_receiver_ms": 163.84773800018593,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 313.4845710001173,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 856,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.97,
+      "service_ms": 496.42419300016627,
+      "pose_ms": 0.6630750003751018,
+      "capture_ms": 495.7607980004468,
+      "channel_ms": 329.77193299939245,
+      "cpu_iq_receiver_ms": 165.98886500105436,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 319.0916230005314,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 853,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.975,
+      "service_ms": 490.7989710000038,
+      "pose_ms": 0.6350849998852937,
+      "capture_ms": 490.16347599990695,
+      "channel_ms": 328.3649120003247,
+      "cpu_iq_receiver_ms": 161.79856399958226,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 317.7117429995633,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 853,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.98,
+      "service_ms": 487.6213279994772,
+      "pose_ms": 0.7753659992886242,
+      "capture_ms": 486.8455420000828,
+      "channel_ms": 320.42843399995036,
+      "cpu_iq_receiver_ms": 166.41710800013243,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 309.2650600001434,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 856,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.985,
+      "service_ms": 488.6228759996811,
+      "pose_ms": 0.5907049999223091,
+      "capture_ms": 488.03176099954726,
+      "channel_ms": 325.7611740000357,
+      "cpu_iq_receiver_ms": 162.27058699951158,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 315.6428890006282,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 858,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.99,
+      "service_ms": 504.86381700011407,
+      "pose_ms": 0.7341360005739261,
+      "capture_ms": 504.1292309997516,
+      "channel_ms": 339.8972989998583,
+      "cpu_iq_receiver_ms": 164.23193199989328,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 329.6534330002032,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 857,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.995,
+      "service_ms": 495.29701600022236,
+      "pose_ms": 0.712924999788811,
+      "capture_ms": 494.58367100032774,
+      "channel_ms": 331.1822949999623,
+      "cpu_iq_receiver_ms": 163.40137600036542,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 320.6617470004858,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 856,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 1.0,
+      "service_ms": 488.1247430002986,
+      "pose_ms": 0.6253950004975195,
+      "capture_ms": 487.49889800001256,
+      "channel_ms": 323.458837000544,
+      "cpu_iq_receiver_ms": 164.04006099946855,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 313.0961809993096,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 856,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 1.005,
+      "service_ms": 490.2923399995416,
+      "pose_ms": 0.9651769996708026,
+      "capture_ms": 489.3267229999765,
+      "channel_ms": 327.9439919997458,
+      "cpu_iq_receiver_ms": 161.3827310002307,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 315.39223800064065,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 856,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 1.01,
+      "service_ms": 491.0249449994808,
+      "pose_ms": 0.7745149996480905,
+      "capture_ms": 490.24999999983265,
+      "channel_ms": 327.72585000020626,
+      "cpu_iq_receiver_ms": 162.5241499996264,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 313.57648500033974,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 854,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 1.015,
+      "service_ms": 497.59148600060144,
+      "pose_ms": 0.7145660001697252,
+      "capture_ms": 496.8765000003259,
+      "channel_ms": 333.3252420006829,
+      "cpu_iq_receiver_ms": 163.55125799964298,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 321.7477460002556,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 858,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 1.02,
+      "service_ms": 499.85217199991894,
+      "pose_ms": 0.6585649998669396,
+      "capture_ms": 499.1931869999462,
+      "channel_ms": 334.36761000029946,
+      "cpu_iq_receiver_ms": 164.82557699964673,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 322.9998360002355,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 857,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 1.025,
+      "service_ms": 501.1163420003868,
+      "pose_ms": 0.7896050001363619,
+      "capture_ms": 500.3263070002504,
+      "channel_ms": 331.8393810004636,
+      "cpu_iq_receiver_ms": 168.48692599978676,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 319.79522200072097,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 857,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 1.03,
+      "service_ms": 493.36152499927266,
+      "pose_ms": 0.78387599933194,
+      "capture_ms": 492.5772090000464,
+      "channel_ms": 325.79599600012443,
+      "cpu_iq_receiver_ms": 166.781212999922,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 314.7757149999961,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 857,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 1.035,
+      "service_ms": 492.0440059995599,
+      "pose_ms": 0.6184949997987133,
+      "capture_ms": 491.4249710000149,
+      "channel_ms": 326.3828819999617,
+      "cpu_iq_receiver_ms": 165.04208900005324,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 316.1413750003703,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 857,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 1.04,
+      "service_ms": 494.5357149999836,
+      "pose_ms": 0.5780649998996523,
+      "capture_ms": 493.9572399998724,
+      "channel_ms": 330.09585899981175,
+      "cpu_iq_receiver_ms": 163.86138100006065,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 318.74843500008865,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 855,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 1.045,
+      "service_ms": 485.6570900001316,
+      "pose_ms": 0.8244570008173469,
+      "capture_ms": 484.8322029993142,
+      "channel_ms": 323.384790000091,
+      "cpu_iq_receiver_ms": 161.44741299922316,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 310.25029299962625,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 854,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 1.05,
+      "service_ms": 494.8819179999191,
+      "pose_ms": 0.5294040001899702,
+      "capture_ms": 494.3521140003213,
+      "channel_ms": 327.33286900020175,
+      "cpu_iq_receiver_ms": 167.01924500011955,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 316.7949509997925,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 856,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 1.055,
+      "service_ms": 491.88301600042905,
+      "pose_ms": 0.7547850000264589,
+      "capture_ms": 491.12782100019103,
+      "channel_ms": 327.7052530002038,
+      "cpu_iq_receiver_ms": 163.42256799998722,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 317.0487540000977,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 855,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 1.06,
+      "service_ms": 492.78106299971114,
+      "pose_ms": 0.877245999618026,
+      "capture_ms": 491.90340699988155,
+      "channel_ms": 330.11507100036397,
+      "cpu_iq_receiver_ms": 161.78833599951759,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 317.7771380005652,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 855,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 1.065,
+      "service_ms": 497.26056800045626,
+      "pose_ms": 0.6173749998197309,
+      "capture_ms": 496.64275300074223,
+      "channel_ms": 332.30331699996896,
+      "cpu_iq_receiver_ms": 164.33943600077328,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 313.06662499991944,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 855,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 1.07,
+      "service_ms": 494.63334800020675,
+      "pose_ms": 0.6621849997827667,
+      "capture_ms": 493.9707630001067,
+      "channel_ms": 329.42426599947794,
+      "cpu_iq_receiver_ms": 164.54649700062873,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 317.10095400012506,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 857,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 1.075,
+      "service_ms": 485.59219100025075,
+      "pose_ms": 0.6539240002894076,
+      "capture_ms": 484.93789700023626,
+      "channel_ms": 319.90935599969816,
+      "cpu_iq_receiver_ms": 165.0285410005381,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 308.38993999986997,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 856,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 1.08,
+      "service_ms": 490.08665599922097,
+      "pose_ms": 0.6721049994666828,
+      "capture_ms": 489.4141309996485,
+      "channel_ms": 326.57402499989985,
+      "cpu_iq_receiver_ms": 162.84010599974863,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 315.02707000072405,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 853,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 1.085,
+      "service_ms": 493.42875099955563,
+      "pose_ms": 0.8847859999150387,
+      "capture_ms": 492.5435449995348,
+      "channel_ms": 329.01270399997884,
+      "cpu_iq_receiver_ms": 163.53084099955595,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 316.35810999978276,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 854,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 1.09,
+      "service_ms": 487.7215089991296,
+      "pose_ms": 1.1191189996679896,
+      "capture_ms": 486.60184999971534,
+      "channel_ms": 325.6047389995729,
+      "cpu_iq_receiver_ms": 160.99711100014247,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 314.7891280004842,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 854,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 1.095,
+      "service_ms": 487.1239149997564,
+      "pose_ms": 0.535543999831134,
+      "capture_ms": 486.5880309998829,
+      "channel_ms": 324.06889800040517,
+      "cpu_iq_receiver_ms": 162.51913299947773,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 313.12175699986255,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 854,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 1.1,
+      "service_ms": 492.0665019999433,
+      "pose_ms": 0.7757759995001834,
+      "capture_ms": 491.2900859999354,
+      "channel_ms": 327.97903700065945,
+      "cpu_iq_receiver_ms": 163.31104899927595,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 315.67366600029345,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 855,
+      "clipping_fraction_max": 0.0
+    }
+  ],
+  "legacy_scope": {
+    "stack": {
+      "sionna": "0.19.2",
+      "mitsuba": "3.5.2",
+      "drjit": "0.4.6",
+      "tensorflow": "2.15.1",
+      "python": "3.11"
+    },
+    "propagation": "Legacy native Sionna Fibonacci solver; max_depth=1, LoS/reflection/scattering, scat_keep_prob=1, scat_random_phases=False. 1028 launched rays per TX, shared across receivers. Synthetic single-element arrays. Original terrain mesh and dielectric parameters (epsilon_r=5, conductivity=.01, scattering=.3), converted to legacy scene format; the legacy material has no thickness equivalent.",
+    "receiver": "Original branch SDRNetworkReceiver, waveform synthesis, independent clocks, filtering, noise and ADC; external Paths adapter supplies compact legacy channels and platform Doppler.",
+    "comparison_limit": "Not the profiling/p100 custom first-order sampler or Sionna 2.2 implementation. No numerical equivalence validation. Legacy rays and retained-path counts differ. Published current-solver CPU results and its work-count model are not directly comparable.",
+    "profile_limit": "Dr.Jit histories record its CUDA/OptiX operations only, not TensorFlow CUDA kernels. Inclusive host ranges overlap. Device-event sums are not service critical-path latency.",
+    "sampling_timers": "Original host_numpy_sampling_ms and proposal_table_prepare_ms are adapter compatibility placeholders set to zero; they are not measured stage timings and are excluded from the report.",
+    "cpu_baseline": "CPU cases hide GPUs from TensorFlow and use Mitsuba llvm_ad_rgb. CUDA cases use cuda_ad_rgb and TensorFlow CUDA. Dr.Jit uses two threads; TensorFlow thread defaults are not constrained.",
+    "outputs": "4096 complex samples per capture at 2 MS/s, 915 MHz carrier, 1 MHz receive bandwidth, one receiver per benchmark; example uses two TX and two RX."
+  }
+}

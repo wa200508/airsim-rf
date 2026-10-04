@@ -1,0 +1,3416 @@
+{
+  "arguments": {
+    "tx": 100,
+    "rx": 1,
+    "iterations": 2,
+    "warmup": 1,
+    "samples": 4096,
+    "samples_per_link": 1028,
+    "backend": "cuda",
+    "profile": true,
+    "threads": 2,
+    "output": "/work/results/p100-legacy-quick-20261003/profiles/cuda_100tx_1rx_events.json"
+  },
+  "measurement_mode": "instrumented_profile",
+  "scope": "915 MHz, 2 MS/s, 1 MHz filter, noisy independent-clock Pluto profile; moving mounts over 800-triangle DEM",
+  "timing_includes": "Pose writes, synchronized channel/NumPy export, per-path IQ, per-link diagnostic filters, receive noise/filter and ADC conversion",
+  "timing_excludes": [
+    "AirSim RPC/physics",
+    "transport",
+    "queueing",
+    "storage",
+    "plots",
+    "RF skill processing"
+  ],
+  "initial_tx_positions_m": [
+    [
+      0.0,
+      -25.0,
+      10.0
+    ],
+    [
+      0.0,
+      -24.494949494949495,
+      10.0
+    ],
+    [
+      0.0,
+      -23.98989898989899,
+      10.0
+    ],
+    [
+      0.0,
+      -23.484848484848484,
+      10.0
+    ],
+    [
+      0.0,
+      -22.97979797979798,
+      10.0
+    ],
+    [
+      0.0,
+      -22.474747474747474,
+      10.0
+    ],
+    [
+      0.0,
+      -21.96969696969697,
+      10.0
+    ],
+    [
+      0.0,
+      -21.464646464646464,
+      10.0
+    ],
+    [
+      0.0,
+      -20.95959595959596,
+      10.0
+    ],
+    [
+      0.0,
+      -20.454545454545453,
+      10.0
+    ],
+    [
+      0.0,
+      -19.949494949494948,
+      10.0
+    ],
+    [
+      0.0,
+      -19.444444444444443,
+      10.0
+    ],
+    [
+      0.0,
+      -18.939393939393938,
+      10.0
+    ],
+    [
+      0.0,
+      -18.434343434343432,
+      10.0
+    ],
+    [
+      0.0,
+      -17.929292929292927,
+      10.0
+    ],
+    [
+      0.0,
+      -17.424242424242422,
+      10.0
+    ],
+    [
+      0.0,
+      -16.919191919191917,
+      10.0
+    ],
+    [
+      0.0,
+      -16.41414141414141,
+      10.0
+    ],
+    [
+      0.0,
+      -15.909090909090908,
+      10.0
+    ],
+    [
+      0.0,
+      -15.404040404040403,
+      10.0
+    ],
+    [
+      0.0,
+      -14.898989898989898,
+      10.0
+    ],
+    [
+      0.0,
+      -14.393939393939393,
+      10.0
+    ],
+    [
+      0.0,
+      -13.888888888888888,
+      10.0
+    ],
+    [
+      0.0,
+      -13.383838383838382,
+      10.0
+    ],
+    [
+      0.0,
+      -12.878787878787879,
+      10.0
+    ],
+    [
+      0.0,
+      -12.373737373737374,
+      10.0
+    ],
+    [
+      0.0,
+      -11.868686868686869,
+      10.0
+    ],
+    [
+      0.0,
+      -11.363636363636363,
+      10.0
+    ],
+    [
+      0.0,
+      -10.858585858585858,
+      10.0
+    ],
+    [
+      0.0,
+      -10.353535353535353,
+      10.0
+    ],
+    [
+      0.0,
+      -9.848484848484848,
+      10.0
+    ],
+    [
+      0.0,
+      -9.343434343434343,
+      10.0
+    ],
+    [
+      0.0,
+      -8.838383838383837,
+      10.0
+    ],
+    [
+      0.0,
+      -8.333333333333332,
+      10.0
+    ],
+    [
+      0.0,
+      -7.828282828282827,
+      10.0
+    ],
+    [
+      0.0,
+      -7.323232323232322,
+      10.0
+    ],
+    [
+      0.0,
+      -6.818181818181817,
+      10.0
+    ],
+    [
+      0.0,
+      -6.313131313131311,
+      10.0
+    ],
+    [
+      0.0,
+      -5.808080808080806,
+      10.0
+    ],
+    [
+      0.0,
+      -5.303030303030301,
+      10.0
+    ],
+    [
+      0.0,
+      -4.797979797979796,
+      10.0
+    ],
+    [
+      0.0,
+      -4.292929292929291,
+      10.0
+    ],
+    [
+      0.0,
+      -3.7878787878787854,
+      10.0
+    ],
+    [
+      0.0,
+      -3.28282828282828,
+      10.0
+    ],
+    [
+      0.0,
+      -2.777777777777775,
+      10.0
+    ],
+    [
+      0.0,
+      -2.27272727272727,
+      10.0
+    ],
+    [
+      0.0,
+      -1.7676767676767646,
+      10.0
+    ],
+    [
+      0.0,
+      -1.2626262626262594,
+      10.0
+    ],
+    [
+      0.0,
+      -0.7575757575757578,
+      10.0
+    ],
+    [
+      0.0,
+      -0.2525252525252526,
+      10.0
+    ],
+    [
+      0.0,
+      0.2525252525252526,
+      10.0
+    ],
+    [
+      0.0,
+      0.7575757575757578,
+      10.0
+    ],
+    [
+      0.0,
+      1.262626262626263,
+      10.0
+    ],
+    [
+      0.0,
+      1.7676767676767682,
+      10.0
+    ],
+    [
+      0.0,
+      2.2727272727272734,
+      10.0
+    ],
+    [
+      0.0,
+      2.7777777777777786,
+      10.0
+    ],
+    [
+      0.0,
+      3.2828282828282838,
+      10.0
+    ],
+    [
+      0.0,
+      3.787878787878789,
+      10.0
+    ],
+    [
+      0.0,
+      4.292929292929294,
+      10.0
+    ],
+    [
+      0.0,
+      4.797979797979799,
+      10.0
+    ],
+    [
+      0.0,
+      5.3030303030303045,
+      10.0
+    ],
+    [
+      0.0,
+      5.80808080808081,
+      10.0
+    ],
+    [
+      0.0,
+      6.313131313131315,
+      10.0
+    ],
+    [
+      0.0,
+      6.81818181818182,
+      10.0
+    ],
+    [
+      0.0,
+      7.323232323232325,
+      10.0
+    ],
+    [
+      0.0,
+      7.8282828282828305,
+      10.0
+    ],
+    [
+      0.0,
+      8.333333333333336,
+      10.0
+    ],
+    [
+      0.0,
+      8.838383838383841,
+      10.0
+    ],
+    [
+      0.0,
+      9.343434343434346,
+      10.0
+    ],
+    [
+      0.0,
+      9.848484848484851,
+      10.0
+    ],
+    [
+      0.0,
+      10.353535353535356,
+      10.0
+    ],
+    [
+      0.0,
+      10.858585858585862,
+      10.0
+    ],
+    [
+      0.0,
+      11.363636363636367,
+      10.0
+    ],
+    [
+      0.0,
+      11.868686868686872,
+      10.0
+    ],
+    [
+      0.0,
+      12.373737373737377,
+      10.0
+    ],
+    [
+      0.0,
+      12.878787878787882,
+      10.0
+    ],
+    [
+      0.0,
+      13.383838383838388,
+      10.0
+    ],
+    [
+      0.0,
+      13.888888888888893,
+      10.0
+    ],
+    [
+      0.0,
+      14.393939393939398,
+      10.0
+    ],
+    [
+      0.0,
+      14.898989898989903,
+      10.0
+    ],
+    [
+      0.0,
+      15.404040404040408,
+      10.0
+    ],
+    [
+      0.0,
+      15.909090909090914,
+      10.0
+    ],
+    [
+      0.0,
+      16.41414141414142,
+      10.0
+    ],
+    [
+      0.0,
+      16.919191919191924,
+      10.0
+    ],
+    [
+      0.0,
+      17.42424242424243,
+      10.0
+    ],
+    [
+      0.0,
+      17.929292929292934,
+      10.0
+    ],
+    [
+      0.0,
+      18.43434343434344,
+      10.0
+    ],
+    [
+      0.0,
+      18.939393939393945,
+      10.0
+    ],
+    [
+      0.0,
+      19.44444444444445,
+      10.0
+    ],
+    [
+      0.0,
+      19.949494949494955,
+      10.0
+    ],
+    [
+      0.0,
+      20.45454545454546,
+      10.0
+    ],
+    [
+      0.0,
+      20.959595959595966,
+      10.0
+    ],
+    [
+      0.0,
+      21.46464646464647,
+      10.0
+    ],
+    [
+      0.0,
+      21.969696969696976,
+      10.0
+    ],
+    [
+      0.0,
+      22.47474747474748,
+      10.0
+    ],
+    [
+      0.0,
+      22.979797979797986,
+      10.0
+    ],
+    [
+      0.0,
+      23.484848484848484,
+      10.0
+    ],
+    [
+      0.0,
+      23.98989898989899,
+      10.0
+    ],
+    [
+      0.0,
+      24.494949494949495,
+      10.0
+    ],
+    [
+      0.0,
+      25.0,
+      10.0
+    ]
+  ],
+  "initial_rx_positions_m": [
+    [
+      -30.0,
+      -10.0,
+      14.0
+    ]
+  ],
+  "capture_duration_ms": 2.048,
+  "filter_warmup_samples": 256,
+  "preparation_ms": 2037.1198670000012,
+  "first_capture": {
+    "epoch_s": 0.0,
+    "service_ms": 10433.769742000095,
+    "pose_ms": 11.76868899983674,
+    "capture_ms": 10422.000113000195,
+    "channel_ms": 1303.5890420001124,
+    "cpu_iq_receiver_ms": 9118.411071000082,
+    "stage_timings": {
+      "legacy_native_solve_export_ms": 1294.0503069999068,
+      "host_numpy_sampling_ms": 0.0,
+      "proposal_table_prepare_ms": 0.0
+    },
+    "retained_paths": 47831,
+    "clipping_fraction_max": 0.0,
+    "profile": {
+      "records": [
+        {
+          "backend": "CUDA",
+          "type": "Other",
+          "execution_time": 0.009696000255644321,
+          "codegen_time": 0.0,
+          "backend_time": 0.0
+        },
+        {
+          "backend": "CUDA",
+          "type": "JIT",
+          "hash": "69c04c2c35918aa10bb5e5600badc333",
+          "execution_time": 0.13478399813175201,
+          "operation_count": 185,
+          "cache_hit": 1,
+          "cache_disk": 1,
+          "codegen_time": 0.07286100089550018,
+          "backend_time": 0.0,
+          "uses_optix": 1
+        },
+        {
+          "backend": "CUDA",
+          "type": "JIT",
+          "hash": "79b75222b28fcc1c8bdc4686763cdeb6",
+          "execution_time": 0.1430400013923645,
+          "operation_count": 180,
+          "cache_hit": 1,
+          "cache_disk": 1,
+          "codegen_time": 0.09756001085042953,
+          "backend_time": 0.0,
+          "uses_optix": 1
+        },
+        {
+          "backend": "CUDA",
+          "type": "JIT",
+          "hash": "a5efba9aed35404559ca230ffb1c1c67",
+          "execution_time": 0.012992000207304955,
+          "operation_count": 19,
+          "cache_hit": 1,
+          "cache_disk": 0,
+          "codegen_time": 0.0056500001810491085,
+          "backend_time": 0.0,
+          "uses_optix": 0
+        },
+        {
+          "backend": "CUDA",
+          "type": "JIT",
+          "hash": "bbb37c8863c7d41cc1904c5a31d5caf5",
+          "execution_time": 0.07692799717187881,
+          "operation_count": 36,
+          "cache_hit": 1,
+          "cache_disk": 1,
+          "codegen_time": 0.03922000154852867,
+          "backend_time": 0.0,
+          "uses_optix": 1
+        },
+        {
+          "backend": "CUDA",
+          "type": "JIT",
+          "hash": "bbb37c8863c7d41cc1904c5a31d5caf5",
+          "execution_time": 0.045632001012563705,
+          "operation_count": 36,
+          "cache_hit": 1,
+          "cache_disk": 0,
+          "codegen_time": 0.025470001623034477,
+          "backend_time": 0.0,
+          "uses_optix": 1
+        },
+        {
+          "backend": "CUDA",
+          "type": "JIT",
+          "hash": "bbb37c8863c7d41cc1904c5a31d5caf5",
+          "execution_time": 0.13171200454235077,
+          "operation_count": 36,
+          "cache_hit": 1,
+          "cache_disk": 0,
+          "codegen_time": 0.03421100229024887,
+          "backend_time": 0.0,
+          "uses_optix": 1
+        }
+      ],
+      "cuda_operation_count": 7,
+      "cuda_event_time_sum_ms": 0.5547840027138591,
+      "optix_kernel_count": 5,
+      "note": "Event-time sum includes recorded CUDA operations; not critical-path latency. IR omitted.",
+      "host_ranges": [
+        {
+          "name": "rf.channel.solve",
+          "inclusive_host_ms": 1298.671769000066
+        },
+        {
+          "name": "rf.channel.export",
+          "inclusive_host_ms": 4.890633000286471
+        },
+        {
+          "name": "rf.channel",
+          "inclusive_host_ms": 1303.584581999985
+        },
+        {
+          "name": "rf.iq.waveforms",
+          "inclusive_host_ms": 90.22845900017273
+        },
+        {
+          "name": "rf.iq.link_diagnostics",
+          "inclusive_host_ms": 0.1936310000019148
+        },
+        {
+          "name": "rf.iq.waveforms",
+          "inclusive_host_ms": 90.6369609997455
+        },
+        {
+          "name": "rf.iq.link_diagnostics",
+          "inclusive_host_ms": 0.15839100024095387
+        },
+        {
+          "name": "rf.iq.waveforms",
+          "inclusive_host_ms": 91.56115799987674
+        },
+        {
+          "name": "rf.iq.link_diagnostics",
+          "inclusive_host_ms": 0.1600609998604341
+        },
+        {
+          "name": "rf.iq.waveforms",
+          "inclusive_host_ms": 91.53205799975694
+        },
+        {
+          "name": "rf.iq.link_diagnostics",
+          "inclusive_host_ms": 0.15625100013494375
+        },
+        {
+          "name": "rf.iq.waveforms",
+          "inclusive_host_ms": 90.83894299965323
+        },
+        {
+          "name": "rf.iq.link_diagnostics",
+          "inclusive_host_ms": 0.1482010002291645
+        },
+        {
+          "name": "rf.iq.waveforms",
+          "inclusive_host_ms": 93.75641299993731
+        },
+        {
+          "name": "rf.iq.link_diagnostics",
+          "inclusive_host_ms": 0.21362100005717366
+        },
+        {
+          "name": "rf.iq.waveforms",
+          "inclusive_host_ms": 91.21945500010042
+        },
+        {
+          "name": "rf.iq.link_diagnostics",
+          "inclusive_host_ms": 0.14816100019743317
+        },
+        {
+          "name": "rf.iq.waveforms",
+          "inclusive_host_ms": 91.08829499973581
+        },
+        {
+          "name": "rf.iq.link_diagnostics",
+          "inclusive_host_ms": 0.16275099960694206
+        },
+        {
+          "name": "rf.iq.waveforms",
+          "inclusive_host_ms": 91.28059600016059
+        },
+        {
+          "name": "rf.iq.link_diagnostics",
+          "inclusive_host_ms": 0.18761199999062228
+        },
+        {
+          "name": "rf.iq.waveforms",
+          "inclusive_host_ms": 90.92957400025625
+        },
+        {
+          "name": "rf.iq.link_diagnostics",
+          "inclusive_host_ms": 0.19877100021403749
+        },
+        {
+          "name": "rf.iq.waveforms",
+          "inclusive_host_ms": 91.1921959996107
+        },
+        {
+          "name": "rf.iq.link_diagnostics",
+          "inclusive_host_ms": 0.1538410001558077
+        },
+        {
+          "name": "rf.iq.waveforms",
+          "inclusive_host_ms": 90.32082999965496
+        },
+        {
+          "name": "rf.iq.link_diagnostics",
+          "inclusive_host_ms": 0.17024100043272483
+        },
+        {
+          "name": "rf.iq.waveforms",
+          "inclusive_host_ms": 90.13130800030922
+        },
+        {
+          "name": "rf.iq.link_diagnostics",
+          "inclusive_host_ms": 0.14303999978437787
+        },
+        {
+          "name": "rf.iq.waveforms",
+          "inclusive_host_ms": 89.95189699999173
+        },
+        {
+          "name": "rf.iq.link_diagnostics",
+          "inclusive_host_ms": 0.13353099984669825
+        },
+        {
+          "name": "rf.iq.waveforms",
+          "inclusive_host_ms": 89.98983799983762
+        },
+        {
+          "name": "rf.iq.link_diagnostics",
+          "inclusive_host_ms": 0.13407100004769745
+        },
+        {
+          "name": "rf.iq.waveforms",
+          "inclusive_host_ms": 90.19033900040085
+        },
+        {
+          "name": "rf.iq.link_diagnostics",
+          "inclusive_host_ms": 0.2005310002459737
+        },
+        {
+          "name": "rf.iq.waveforms",
+          "inclusive_host_ms": 90.23394900032145
+        },
+        {
+          "name": "rf.iq.link_diagnostics",
+          "inclusive_host_ms": 0.14017100011187722
+        },
+        {
+          "name": "rf.iq.waveforms",
+          "inclusive_host_ms": 90.2668389999235
+        },
+        {
+          "name": "rf.iq.link_diagnostics",
+          "inclusive_host_ms": 0.14211099960448337
+        },
+        {
+          "name": "rf.iq.waveforms",
+          "inclusive_host_ms": 89.75471599978846
+        },
+        {
+          "name": "rf.iq.link_diagnostics",
+          "inclusive_host_ms": 0.13742099963565124
+        },
+        {
+          "name": "rf.iq.waveforms",
+          "inclusive_host_ms": 90.09296800013544
+        },
+        {
+          "name": "rf.iq.link_diagnostics",
+          "inclusive_host_ms": 0.1827910000429256
+        },
+        {
+          "name": "rf.iq.waveforms",
+          "inclusive_host_ms": 90.24388000034378
+        },
+        {
+          "name": "rf.iq.link_diagnostics",
+          "inclusive_host_ms": 0.13366099983613822
+        },
+        {
+          "name": "rf.iq.waveforms",
+          "inclusive_host_ms": 90.4370610001024
+        },
+        {
+          "name": "rf.iq.link_diagnostics",
+          "inclusive_host_ms": 0.13790099956167978
+        },
+        {
+          "name": "rf.iq.waveforms",
+          "inclusive_host_ms": 90.08395799992286
+        },
+        {
+          "name": "rf.iq.link_diagnostics",
+          "inclusive_host_ms": 0.13886099986848421
+        },
+        {
+          "name": "rf.iq.waveforms",
+          "inclusive_host_ms": 90.89291400005095
+        },
+        {
+          "name": "rf.iq.link_diagnostics",
+          "inclusive_host_ms": 0.14277099990067654
+        },
+        {
+          "name": "rf.iq.waveforms",
+          "inclusive_host_ms": 90.97724499997639
+        },
+        {
+          "name": "rf.iq.link_diagnostics",
+          "inclusive_host_ms": 0.14382100016518962
+        },
+        {
+          "name": "rf.iq.waveforms",
+          "inclusive_host_ms": 92.00933199963401
+        },
+        {
+          "name": "rf.iq.link_diagnostics",
+          "inclusive_host_ms": 0.14775099998587393
+        },
+        {
+          "name": "rf.iq.waveforms",
+          "inclusive_host_ms": 91.38483699962308
+        },
+        {
+          "name": "rf.iq.link_diagnostics",
+          "inclusive_host_ms": 0.15658100028304034
+        },
+        {
+          "name": "rf.iq.waveforms",
+          "inclusive_host_ms": 90.72864200015829
+        },
+        {
+          "name": "rf.iq.link_diagnostics",
+          "inclusive_host_ms": 0.14817100009167916
+        },
+        {
+          "name": "rf.iq.waveforms",
+          "inclusive_host_ms": 91.27999600013936
+        },
+        {
+          "name": "rf.iq.link_diagnostics",
+          "inclusive_host_ms": 0.15070100016600918
+        },
+        {
+          "name": "rf.iq.waveforms",
+          "inclusive_host_ms": 90.2702399998816
+        },
+        {
+          "name": "rf.iq.link_diagnostics",
+          "inclusive_host_ms": 0.15361099985966575
+        },
+        {
+          "name": "rf.iq.waveforms",
+          "inclusive_host_ms": 90.12666799981162
+        },
+        {
+          "name": "rf.iq.link_diagnostics",
+          "inclusive_host_ms": 0.1375710003230779
+        },
+        {
+          "name": "rf.iq.waveforms",
+          "inclusive_host_ms": 92.6517259999855
+        },
+        {
+          "name": "rf.iq.link_diagnostics",
+          "inclusive_host_ms": 0.14984100016590673
+        },
+        {
+          "name": "rf.iq.waveforms",
+          "inclusive_host_ms": 93.0435589998524
+        },
+        {
+          "name": "rf.iq.link_diagnostics",
+          "inclusive_host_ms": 0.18880099969464936
+        },
+        {
+          "name": "rf.iq.waveforms",
+          "inclusive_host_ms": 92.53281500014054
+        },
+        {
+          "name": "rf.iq.link_diagnostics",
+          "inclusive_host_ms": 0.14930099996490753
+        },
+        {
+          "name": "rf.iq.waveforms",
+          "inclusive_host_ms": 91.97516199992606
+        },
+        {
+          "name": "rf.iq.link_diagnostics",
+          "inclusive_host_ms": 0.14512100005958928
+        },
+        {
+          "name": "rf.iq.waveforms",
+          "inclusive_host_ms": 91.15860599968073
+        },
+        {
+          "name": "rf.iq.link_diagnostics",
+          "inclusive_host_ms": 0.1478210001550906
+        },
+        {
+          "name": "rf.iq.waveforms",
+          "inclusive_host_ms": 92.0105519999197
+        },
+        {
+          "name": "rf.iq.link_diagnostics",
+          "inclusive_host_ms": 0.1418510000803508
+        },
+        {
+          "name": "rf.iq.waveforms",
+          "inclusive_host_ms": 90.3740009998728
+        },
+        {
+          "name": "rf.iq.link_diagnostics",
+          "inclusive_host_ms": 0.12770100011039176
+        },
+        {
+          "name": "rf.iq.waveforms",
+          "inclusive_host_ms": 90.14488899993012
+        },
+        {
+          "name": "rf.iq.link_diagnostics",
+          "inclusive_host_ms": 0.12593100018420955
+        },
+        {
+          "name": "rf.iq.waveforms",
+          "inclusive_host_ms": 90.77440400005798
+        },
+        {
+          "name": "rf.iq.link_diagnostics",
+          "inclusive_host_ms": 0.14446100021814345
+        },
+        {
+          "name": "rf.iq.waveforms",
+          "inclusive_host_ms": 90.5759920001401
+        },
+        {
+          "name": "rf.iq.link_diagnostics",
+          "inclusive_host_ms": 0.20741200023621786
+        },
+        {
+          "name": "rf.iq.waveforms",
+          "inclusive_host_ms": 90.22271999992881
+        },
+        {
+          "name": "rf.iq.link_diagnostics",
+          "inclusive_host_ms": 0.13413100032266811
+        },
+        {
+          "name": "rf.iq.waveforms",
+          "inclusive_host_ms": 89.93422799994732
+        },
+        {
+          "name": "rf.iq.link_diagnostics",
+          "inclusive_host_ms": 0.1376310001433012
+        },
+        {
+          "name": "rf.iq.waveforms",
+          "inclusive_host_ms": 89.55270500018742
+        },
+        {
+          "name": "rf.iq.link_diagnostics",
+          "inclusive_host_ms": 0.12258100014150841
+        },
+        {
+          "name": "rf.iq.waveforms",
+          "inclusive_host_ms": 89.79552700020577
+        },
+        {
+          "name": "rf.iq.link_diagnostics",
+          "inclusive_host_ms": 0.14220100001693936
+        },
+        {
+          "name": "rf.iq.waveforms",
+          "inclusive_host_ms": 89.54733600012332
+        },
+        {
+          "name": "rf.iq.link_diagnostics",
+          "inclusive_host_ms": 0.134550999973726
+        },
+        {
+          "name": "rf.iq.waveforms",
+          "inclusive_host_ms": 89.38045400009287
+        },
+        {
+          "name": "rf.iq.link_diagnostics",
+          "inclusive_host_ms": 0.1247010000042792
+        },
+        {
+          "name": "rf.iq.waveforms",
+          "inclusive_host_ms": 88.68820999987292
+        },
+        {
+          "name": "rf.iq.link_diagnostics",
+          "inclusive_host_ms": 0.13518100013243384
+        },
+        {
+          "name": "rf.iq.waveforms",
+          "inclusive_host_ms": 87.7364029997807
+        },
+        {
+          "name": "rf.iq.link_diagnostics",
+          "inclusive_host_ms": 0.13935099968875875
+        },
+        {
+          "name": "rf.iq.waveforms",
+          "inclusive_host_ms": 90.02753899994786
+        },
+        {
+          "name": "rf.iq.link_diagnostics",
+          "inclusive_host_ms": 0.12829100023736828
+        },
+        {
+          "name": "rf.iq.waveforms",
+          "inclusive_host_ms": 89.43576499996198
+        },
+        {
+          "name": "rf.iq.link_diagnostics",
+          "inclusive_host_ms": 0.1314510000156588
+        },
+        {
+          "name": "rf.iq.waveforms",
+          "inclusive_host_ms": 90.48509200010812
+        },
+        {
+          "name": "rf.iq.link_diagnostics",
+          "inclusive_host_ms": 0.13892100014345488
+        },
+        {
+          "name": "rf.iq.waveforms",
+          "inclusive_host_ms": 90.57491200019285
+        },
+        {
+          "name": "rf.iq.link_diagnostics",
+          "inclusive_host_ms": 0.13762099979430786
+        },
+        {
+          "name": "rf.iq.waveforms",
+          "inclusive_host_ms": 91.26365799966152
+        },
+        {
+          "name": "rf.iq.link_diagnostics",
+          "inclusive_host_ms": 0.14288100010162452
+        },
+        {
+          "name": "rf.iq.waveforms",
+          "inclusive_host_ms": 90.66076300041459
+        },
+        {
+          "name": "rf.iq.link_diagnostics",
+          "inclusive_host_ms": 0.13981100028104265
+        },
+        {
+          "name": "rf.iq.waveforms",
+          "inclusive_host_ms": 91.33962800024165
+        },
+        {
+          "name": "rf.iq.link_diagnostics",
+          "inclusive_host_ms": 0.20937099998263875
+        },
+        {
+          "name": "rf.iq.waveforms",
+          "inclusive_host_ms": 90.34770099970046
+        },
+        {
+          "name": "rf.iq.link_diagnostics",
+          "inclusive_host_ms": 0.1243110000359593
+        },
+        {
+          "name": "rf.iq.waveforms",
+          "inclusive_host_ms": 90.90732499998921
+        },
+        {
+          "name": "rf.iq.link_diagnostics",
+          "inclusive_host_ms": 0.13451099994199467
+        },
+        {
+          "name": "rf.iq.waveforms",
+          "inclusive_host_ms": 90.53968200032614
+        },
+        {
+          "name": "rf.iq.link_diagnostics",
+          "inclusive_host_ms": 0.13613100009024492
+        },
+        {
+          "name": "rf.iq.waveforms",
+          "inclusive_host_ms": 91.38320900001418
+        },
+        {
+          "name": "rf.iq.link_diagnostics",
+          "inclusive_host_ms": 0.18310099994778284
+        },
+        {
+          "name": "rf.iq.waveforms",
+          "inclusive_host_ms": 91.49031900005866
+        },
+        {
+          "name": "rf.iq.link_diagnostics",
+          "inclusive_host_ms": 0.1857010001913295
+        },
+        {
+          "name": "rf.iq.waveforms",
+          "inclusive_host_ms": 90.99720499989417
+        },
+        {
+          "name": "rf.iq.link_diagnostics",
+          "inclusive_host_ms": 0.13688100034414674
+        },
+        {
+          "name": "rf.iq.waveforms",
+          "inclusive_host_ms": 90.35025200000746
+        },
+        {
+          "name": "rf.iq.link_diagnostics",
+          "inclusive_host_ms": 0.1413509999110829
+        },
+        {
+          "name": "rf.iq.waveforms",
+          "inclusive_host_ms": 91.18322700032877
+        },
+        {
+          "name": "rf.iq.link_diagnostics",
+          "inclusive_host_ms": 0.1366910000797361
+        },
+        {
+          "name": "rf.iq.waveforms",
+          "inclusive_host_ms": 91.01477500007604
+        },
+        {
+          "name": "rf.iq.link_diagnostics",
+          "inclusive_host_ms": 0.12831100002586027
+        },
+        {
+          "name": "rf.iq.waveforms",
+          "inclusive_host_ms": 91.10420699971655
+        },
+        {
+          "name": "rf.iq.link_diagnostics",
+          "inclusive_host_ms": 0.14432099987971014
+        },
+        {
+          "name": "rf.iq.waveforms",
+          "inclusive_host_ms": 91.60922999990362
+        },
+        {
+          "name": "rf.iq.link_diagnostics",
+          "inclusive_host_ms": 0.14446100021814345
+        },
+        {
+          "name": "rf.iq.waveforms",
+          "inclusive_host_ms": 91.16165700015699
+        },
+        {
+          "name": "rf.iq.link_diagnostics",
+          "inclusive_host_ms": 0.14753100003872532
+        },
+        {
+          "name": "rf.iq.waveforms",
+          "inclusive_host_ms": 90.89158500000849
+        },
+        {
+          "name": "rf.iq.link_diagnostics",
+          "inclusive_host_ms": 0.13590999969892437
+        },
+        {
+          "name": "rf.iq.waveforms",
+          "inclusive_host_ms": 91.4772589999302
+        },
+        {
+          "name": "rf.iq.link_diagnostics",
+          "inclusive_host_ms": 0.20595099977072095
+        },
+        {
+          "name": "rf.iq.waveforms",
+          "inclusive_host_ms": 91.22895800010156
+        },
+        {
+          "name": "rf.iq.link_diagnostics",
+          "inclusive_host_ms": 0.3285020002294914
+        },
+        {
+          "name": "rf.iq.waveforms",
+          "inclusive_host_ms": 91.40985800013368
+        },
+        {
+          "name": "rf.iq.link_diagnostics",
+          "inclusive_host_ms": 0.15839099978620652
+        },
+        {
+          "name": "rf.iq.waveforms",
+          "inclusive_host_ms": 91.20374700023604
+        },
+        {
+          "name": "rf.iq.link_diagnostics",
+          "inclusive_host_ms": 0.1401409999743919
+        },
+        {
+          "name": "rf.iq.waveforms",
+          "inclusive_host_ms": 90.9911160001684
+        },
+        {
+          "name": "rf.iq.link_diagnostics",
+          "inclusive_host_ms": 0.14178099991113413
+        },
+        {
+          "name": "rf.iq.waveforms",
+          "inclusive_host_ms": 91.29759799998283
+        },
+        {
+          "name": "rf.iq.link_diagnostics",
+          "inclusive_host_ms": 0.13636100038638688
+        },
+        {
+          "name": "rf.iq.waveforms",
+          "inclusive_host_ms": 91.22273699995276
+        },
+        {
+          "name": "rf.iq.link_diagnostics",
+          "inclusive_host_ms": 0.1343110002380854
+        },
+        {
+          "name": "rf.iq.waveforms",
+          "inclusive_host_ms": 91.65488999997251
+        },
+        {
+          "name": "rf.iq.link_diagnostics",
+          "inclusive_host_ms": 0.18925099993793992
+        },
+        {
+          "name": "rf.iq.waveforms",
+          "inclusive_host_ms": 92.05717299983007
+        },
+        {
+          "name": "rf.iq.link_diagnostics",
+          "inclusive_host_ms": 0.16071099980763393
+        },
+        {
+          "name": "rf.iq.waveforms",
+          "inclusive_host_ms": 91.23087799980567
+        },
+        {
+          "name": "rf.iq.link_diagnostics",
+          "inclusive_host_ms": 0.14642099995398894
+        },
+        {
+          "name": "rf.iq.waveforms",
+          "inclusive_host_ms": 91.4595190001819
+        },
+        {
+          "name": "rf.iq.link_diagnostics",
+          "inclusive_host_ms": 0.14092100036577904
+        },
+        {
+          "name": "rf.iq.waveforms",
+          "inclusive_host_ms": 91.0110159998112
+        },
+        {
+          "name": "rf.iq.link_diagnostics",
+          "inclusive_host_ms": 0.13814100020681508
+        },
+        {
+          "name": "rf.iq.waveforms",
+          "inclusive_host_ms": 91.41061900027125
+        },
+        {
+          "name": "rf.iq.link_diagnostics",
+          "inclusive_host_ms": 0.5138439996699162
+        },
+        {
+          "name": "rf.iq.waveforms",
+          "inclusive_host_ms": 91.39599899981476
+        },
+        {
+          "name": "rf.iq.link_diagnostics",
+          "inclusive_host_ms": 0.14218100022844737
+        },
+        {
+          "name": "rf.iq.waveforms",
+          "inclusive_host_ms": 91.24005800003943
+        },
+        {
+          "name": "rf.iq.link_diagnostics",
+          "inclusive_host_ms": 0.13915099998484948
+        },
+        {
+          "name": "rf.iq.waveforms",
+          "inclusive_host_ms": 91.03894600002604
+        },
+        {
+          "name": "rf.iq.link_diagnostics",
+          "inclusive_host_ms": 0.17865200015876326
+        },
+        {
+          "name": "rf.iq.waveforms",
+          "inclusive_host_ms": 91.88983200010625
+        },
+        {
+          "name": "rf.iq.link_diagnostics",
+          "inclusive_host_ms": 0.17791099980968283
+        },
+        {
+          "name": "rf.iq.waveforms",
+          "inclusive_host_ms": 90.80807500004084
+        },
+        {
+          "name": "rf.iq.link_diagnostics",
+          "inclusive_host_ms": 0.1960219997272361
+        },
+        {
+          "name": "rf.iq.waveforms",
+          "inclusive_host_ms": 91.35610800012728
+        },
+        {
+          "name": "rf.iq.link_diagnostics",
+          "inclusive_host_ms": 0.13611999975182698
+        },
+        {
+          "name": "rf.iq.waveforms",
+          "inclusive_host_ms": 92.40760599959685
+        },
+        {
+          "name": "rf.iq.link_diagnostics",
+          "inclusive_host_ms": 0.1421309998477227
+        },
+        {
+          "name": "rf.iq.waveforms",
+          "inclusive_host_ms": 96.33671199981109
+        },
+        {
+          "name": "rf.iq.link_diagnostics",
+          "inclusive_host_ms": 0.17342199998893193
+        },
+        {
+          "name": "rf.iq.waveforms",
+          "inclusive_host_ms": 92.58662699994602
+        },
+        {
+          "name": "rf.iq.link_diagnostics",
+          "inclusive_host_ms": 0.14915100018697558
+        },
+        {
+          "name": "rf.iq.waveforms",
+          "inclusive_host_ms": 91.63859099999172
+        },
+        {
+          "name": "rf.iq.link_diagnostics",
+          "inclusive_host_ms": 0.13782099995296448
+        },
+        {
+          "name": "rf.iq.waveforms",
+          "inclusive_host_ms": 91.59000099998593
+        },
+        {
+          "name": "rf.iq.link_diagnostics",
+          "inclusive_host_ms": 0.1427810002496699
+        },
+        {
+          "name": "rf.iq.waveforms",
+          "inclusive_host_ms": 90.92715599990697
+        },
+        {
+          "name": "rf.iq.link_diagnostics",
+          "inclusive_host_ms": 0.18058100022244616
+        },
+        {
+          "name": "rf.iq.waveforms",
+          "inclusive_host_ms": 91.02726599985544
+        },
+        {
+          "name": "rf.iq.link_diagnostics",
+          "inclusive_host_ms": 0.14554099971064716
+        },
+        {
+          "name": "rf.iq.waveforms",
+          "inclusive_host_ms": 90.77351499990982
+        },
+        {
+          "name": "rf.iq.link_diagnostics",
+          "inclusive_host_ms": 0.12394100031087874
+        },
+        {
+          "name": "rf.iq.waveforms",
+          "inclusive_host_ms": 90.8359160002874
+        },
+        {
+          "name": "rf.iq.link_diagnostics",
+          "inclusive_host_ms": 0.13304100002642372
+        },
+        {
+          "name": "rf.iq.waveforms",
+          "inclusive_host_ms": 90.57621300007668
+        },
+        {
+          "name": "rf.iq.link_diagnostics",
+          "inclusive_host_ms": 0.13946099988970673
+        },
+        {
+          "name": "rf.iq.waveforms",
+          "inclusive_host_ms": 91.28947799990783
+        },
+        {
+          "name": "rf.iq.link_diagnostics",
+          "inclusive_host_ms": 0.1946219999808818
+        },
+        {
+          "name": "rf.iq.waveforms",
+          "inclusive_host_ms": 92.20388499988985
+        },
+        {
+          "name": "rf.iq.link_diagnostics",
+          "inclusive_host_ms": 0.1440010000806069
+        },
+        {
+          "name": "rf.receiver.noise_filter_adc",
+          "inclusive_host_ms": 0.27985199994873255
+        },
+        {
+          "name": "capture.first.0",
+          "inclusive_host_ms": 10421.936213000208
+        }
+      ],
+      "nvtx_available": true
+    }
+  },
+  "first_capture_note": "New process with existing on-disk JIT cache; imports excluded; not a cache-cleared cold-start benchmark",
+  "service": {
+    "p50_ms": 9595.659065999826,
+    "p95_ms": 9640.161078899882,
+    "mean_ms": 9595.659065999826,
+    "max_ms": 9645.105746999889
+  },
+  "channel": {
+    "p50_ms": 356.19007499985855,
+    "p95_ms": 358.4370302999787,
+    "mean_ms": 356.19007499985855,
+    "max_ms": 358.68669199999204
+  },
+  "cpu_iq_receiver": {
+    "p50_ms": 9227.277352500096,
+    "p95_ms": 9269.712523950011,
+    "mean_ms": 9227.277352500096,
+    "max_ms": 9274.427543000002
+  },
+  "serial_wall_s": 19.1917693839996,
+  "sustained_updates_hz": 0.10421133976669307,
+  "receiver_blocks_per_second": 0.10421133976669307,
+  "deadline_misses": {
+    "120": 2,
+    "200": 2
+  },
+  "stage_timings": {
+    "legacy_native_solve_export_ms": {
+      "p50_ms": 341.9550975002039,
+      "p95_ms": 347.09122515021136,
+      "mean_ms": 341.9550975002039,
+      "max_ms": 347.6619060002122
+    },
+    "host_numpy_sampling_ms": {
+      "p50_ms": 0.0,
+      "p95_ms": 0.0,
+      "mean_ms": 0.0,
+      "max_ms": 0.0
+    },
+    "proposal_table_prepare_ms": {
+      "p50_ms": 0.0,
+      "p95_ms": 0.0,
+      "mean_ms": 0.0,
+      "max_ms": 0.0
+    }
+  },
+  "retained_paths": {
+    "min": 47833,
+    "max": 47833
+  },
+  "host": {
+    "cpu_count": 16,
+    "cpu_quota": "max 100000",
+    "memory_limit_bytes": "max",
+    "drjit_threads": 2,
+    "peak_rss_mib": 1306.015625,
+    "cuda_available": 1
+  },
+  "versions": {
+    "sionna_rt": "0.19.2",
+    "mitsuba": "3.5.2",
+    "drjit": "0.4.6",
+    "backend": "cuda_ad_rgb"
+  },
+  "gpu_workload_per_receiver": {
+    "topology": "one GPU per physical receiver; all transmitters on every receiver worker",
+    "gpu_count": 10,
+    "transmitters_per_gpu": 100,
+    "receivers_per_gpu": 1,
+    "diffuse_attempts_per_gpu_per_pulse": 102800,
+    "visibility_queries_per_gpu_per_pulse_upper_bound": 365700,
+    "visibility_queries_fleet_per_pulse_upper_bound": 3657000,
+    "candidate_paths_per_gpu_upper_bound": 182900,
+    "compact_channel_bytes_per_gpu_per_pulse_upper_bound": 2926400,
+    "compact_channel_bytes_per_gpu_per_second_upper_bound": 585280000,
+    "pulse_hz": 200,
+    "pulse_budget_ms": 5.0,
+    "physics_hz": 120,
+    "physics_budget_ms": 8.333333333333334,
+    "ray_only_required_queries_per_second_at_pulse_rate": 73140000,
+    "ray_only_required_queries_per_second_at_physics_rate": 43884000,
+    "vram_requirement": "unmeasured; compact coefficients are not total device memory"
+  },
+  "conditional_gpu_ray_stage": [
+    {
+      "assumed_effective_scene_queries_per_second": 100000000.0,
+      "ray_stage_ms_at_upper_bound_query_count": 3.657,
+      "unchanged_measured_host_sampling_plus_ray_stage_ms": 3.657
+    },
+    {
+      "assumed_effective_scene_queries_per_second": 250000000.0,
+      "ray_stage_ms_at_upper_bound_query_count": 1.4628,
+      "unchanged_measured_host_sampling_plus_ray_stage_ms": 1.4628
+    },
+    {
+      "assumed_effective_scene_queries_per_second": 1000000000.0,
+      "ray_stage_ms_at_upper_bound_query_count": 0.3657,
+      "unchanged_measured_host_sampling_plus_ray_stage_ms": 0.3657
+    }
+  ],
+  "profile_note": "Profiled serial throughput includes event/history instrumentation; use separate unprofiled runs for performance.",
+  "gpu_note": "Ray-only hypothetical query throughput. IQ/receive chain and proposal draws remain CPU even with --backend cuda. No measured GPU latency or throughput.",
+  "samples": [
+    {
+      "epoch_s": 0.01,
+      "service_ms": 9645.105746999889,
+      "pose_ms": 11.990721999609377,
+      "capture_ms": 9633.114234999994,
+      "channel_ms": 358.68669199999204,
+      "cpu_iq_receiver_ms": 9274.427543000002,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 347.6619060002122,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 47833,
+      "clipping_fraction_max": 0.0,
+      "profile": {
+        "records": [
+          {
+            "backend": "CUDA",
+            "type": "Other",
+            "execution_time": 0.0074880002066493034,
+            "codegen_time": 0.0,
+            "backend_time": 0.0
+          },
+          {
+            "backend": "CUDA",
+            "type": "JIT",
+            "hash": "a39f1f13b2389a541f078f1dbacdf07f",
+            "execution_time": 0.15385599434375763,
+            "operation_count": 185,
+            "cache_hit": 1,
+            "cache_disk": 0,
+            "codegen_time": 0.07874000817537308,
+            "backend_time": 0.0,
+            "uses_optix": 1
+          },
+          {
+            "backend": "CUDA",
+            "type": "JIT",
+            "hash": "a48059c114a2bcac34c78b6350fef20d",
+            "execution_time": 0.15644800662994385,
+            "operation_count": 180,
+            "cache_hit": 1,
+            "cache_disk": 0,
+            "codegen_time": 0.1000400111079216,
+            "backend_time": 0.0,
+            "uses_optix": 1
+          },
+          {
+            "backend": "CUDA",
+            "type": "JIT",
+            "hash": "a5efba9aed35404559ca230ffb1c1c67",
+            "execution_time": 0.013632000423967838,
+            "operation_count": 19,
+            "cache_hit": 1,
+            "cache_disk": 0,
+            "codegen_time": 0.004650000482797623,
+            "backend_time": 0.0,
+            "uses_optix": 0
+          },
+          {
+            "backend": "CUDA",
+            "type": "JIT",
+            "hash": "bbb37c8863c7d41cc1904c5a31d5caf5",
+            "execution_time": 0.1037760004401207,
+            "operation_count": 36,
+            "cache_hit": 1,
+            "cache_disk": 0,
+            "codegen_time": 0.05626100301742554,
+            "backend_time": 0.0,
+            "uses_optix": 1
+          },
+          {
+            "backend": "CUDA",
+            "type": "JIT",
+            "hash": "bbb37c8863c7d41cc1904c5a31d5caf5",
+            "execution_time": 0.05129599943757057,
+            "operation_count": 36,
+            "cache_hit": 1,
+            "cache_disk": 0,
+            "codegen_time": 0.05637000501155853,
+            "backend_time": 0.0,
+            "uses_optix": 1
+          },
+          {
+            "backend": "CUDA",
+            "type": "JIT",
+            "hash": "bbb37c8863c7d41cc1904c5a31d5caf5",
+            "execution_time": 0.12220799922943115,
+            "operation_count": 36,
+            "cache_hit": 1,
+            "cache_disk": 0,
+            "codegen_time": 0.06398100405931473,
+            "backend_time": 0.0,
+            "uses_optix": 1
+          }
+        ],
+        "cuda_operation_count": 7,
+        "cuda_event_time_sum_ms": 0.608704000711441,
+        "optix_kernel_count": 5,
+        "note": "Event-time sum includes recorded CUDA operations; not critical-path latency. IR omitted.",
+        "host_ranges": [
+          {
+            "name": "rf.channel.solve",
+            "inclusive_host_ms": 353.5993770001369
+          },
+          {
+            "name": "rf.channel.export",
+            "inclusive_host_ms": 5.064165000021603
+          },
+          {
+            "name": "rf.channel",
+            "inclusive_host_ms": 358.6830520002877
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 89.8514420000538
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.15217100008158013
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 90.77101799994125
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.20694199974968797
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 90.88596800029336
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.1647009999032889
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 92.09423699985564
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.19722100023500388
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 92.91536199998518
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.14564100001734914
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 92.46441899995261
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.153991000388487
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 92.25138800002242
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.14218099977370002
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 92.13599699978658
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.1924510002027091
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 91.05828999963705
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.17272100012633018
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 94.5493629997145
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.14159100010147085
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 91.27062100014882
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.15752200033603003
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 90.67148700023608
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.14607100001740037
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 91.89177700000073
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.13942100031272275
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 92.39507900019817
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.15854100001888582
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 93.6132369997722
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.1427409997631912
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 92.02068600006896
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.14209099981599138
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 91.98674599974765
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.1430510001227958
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 91.86125599990191
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.1440609999008302
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 92.00130599992917
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.14877100011290167
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 91.97516699987318
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.20987200014133123
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 91.83327600021585
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.14498099972115597
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 92.7185619998454
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.20305099997131038
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 93.1881550000071
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.14560099998561782
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 91.98273699985293
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.14136100026007625
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 92.53698100019392
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.15767099966979004
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 92.18011799976011
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.14547099999617785
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 92.5213900000017
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.14355099983731634
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 92.57394100040983
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.2022219996433705
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 92.53470099974948
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.15168099980655825
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 92.26497899999231
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.1395710000906547
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 93.88794999995298
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.14978099989093607
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 92.65455200011274
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.29382199954852695
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 92.47112100001686
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.19891100009772344
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 90.89931000016804
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.1820110001062858
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 92.76734300010503
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.146170999869355
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 92.47698099989066
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.1532910000605625
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 92.04206799995518
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.14613099983762368
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 92.16160899995884
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.13498099997377722
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 92.5106310000956
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.1429109997843625
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 92.44832000013048
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.14008099969942123
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 92.45073100009904
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.14336100002765306
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 94.61764499974379
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.15013099982752465
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 92.02276799987885
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.15028100006020395
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 92.30820000038875
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.19632099974842276
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 92.156027999863
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.20158200004516402
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 91.32284299994353
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.15027100016595796
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 91.43336399984037
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.19435100011833129
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 91.61973500022214
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.13806099968860508
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 91.75578599979417
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.14063099979466642
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 91.0668909996275
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.1422210002601787
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 90.34273599991138
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.12775099958162173
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 90.4005170000346
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.1315109998358821
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 90.96176999992167
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.14364099979502498
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 90.82473899979959
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.14902099974278826
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 90.88762999999744
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.20940100012012408
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 90.27651699989292
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.1871209997261758
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 90.82684999975754
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.1525409998066607
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 91.26356299975669
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.14971100017646677
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 91.69596499987165
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.1461010001548857
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 91.55174500028807
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.1408009998158377
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 92.05648800025301
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.14060100011192844
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 90.89503099994545
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.1346209996881953
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 91.33091300009255
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.13589099989985698
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 91.22241300019596
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.14431099998546415
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 91.45736399977977
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.13517100023818784
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 91.20055199991839
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.13818099978379905
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 107.83357699983753
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.2461220001350739
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 102.33441899981699
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.1585009999871545
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 90.97229100007098
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.14071099985812907
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 90.88691099987045
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.19226100039304583
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 91.07640100000935
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.2164409997931216
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 91.56196499998259
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.1459599998270278
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 90.83042000020214
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.1291710000259627
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 90.87471099974209
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.21616100002574967
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 94.29654399991705
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.15148099964790163
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 98.17212999996627
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.19298100005471497
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 97.78437800014217
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.15373099995485973
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 92.63722300011068
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.15150099989114096
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 92.53357199986567
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.1445410002816061
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 92.79899300008765
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.14918099986971356
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 94.2301730001418
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.1500319999649946
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 91.70667600028537
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.20476200006669387
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 93.43269800001508
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.14432099987971014
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 91.86213700013468
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.17296099986197078
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 92.6990529997056
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.21010099999330123
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 92.67132300010417
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.1478809999753139
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 93.62624000004871
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.14897099981681095
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 93.55849999974453
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.20663099985540612
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 94.72924800002147
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.2148010003111267
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 93.6341500000708
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.14217099987945403
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 92.7680039999359
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.13885099997423822
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 92.3622410000462
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.141051000355219
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 95.04775000004884
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.148811000144633
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 93.13680700006444
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.13896099972043885
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 95.0591999999233
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.14492099990093266
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 92.80452399980277
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.20673199969678535
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 92.71163399989746
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.19492100000206847
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 94.00675299957584
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.14350100036608637
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 91.67439699967872
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.1368110001749301
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 91.96894899969266
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.14249100013330462
+          },
+          {
+            "name": "rf.receiver.noise_filter_adc",
+            "inclusive_host_ms": 0.24964200019894633
+          },
+          {
+            "name": "capture.timed.2",
+            "inclusive_host_ms": 9633.065003999945
+          }
+        ],
+        "nvtx_available": true
+      }
+    },
+    {
+      "epoch_s": 0.015,
+      "service_ms": 9546.212384999762,
+      "pose_ms": 12.391194999963773,
+      "capture_ms": 9533.820619999915,
+      "channel_ms": 353.69345799972507,
+      "cpu_iq_receiver_ms": 9180.12716200019,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 336.24828900019565,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 47833,
+      "clipping_fraction_max": 0.0,
+      "profile": {
+        "records": [
+          {
+            "backend": "CUDA",
+            "type": "Other",
+            "execution_time": 0.008191999979317188,
+            "codegen_time": 0.0,
+            "backend_time": 0.0
+          },
+          {
+            "backend": "CUDA",
+            "type": "JIT",
+            "hash": "a39f1f13b2389a541f078f1dbacdf07f",
+            "execution_time": 0.13663999736309052,
+            "operation_count": 185,
+            "cache_hit": 1,
+            "cache_disk": 0,
+            "codegen_time": 0.06388001143932343,
+            "backend_time": 0.0,
+            "uses_optix": 1
+          },
+          {
+            "backend": "CUDA",
+            "type": "JIT",
+            "hash": "a48059c114a2bcac34c78b6350fef20d",
+            "execution_time": 0.13715200126171112,
+            "operation_count": 180,
+            "cache_hit": 1,
+            "cache_disk": 0,
+            "codegen_time": 0.0994110107421875,
+            "backend_time": 0.0,
+            "uses_optix": 1
+          },
+          {
+            "backend": "CUDA",
+            "type": "JIT",
+            "hash": "a5efba9aed35404559ca230ffb1c1c67",
+            "execution_time": 0.013472000136971474,
+            "operation_count": 19,
+            "cache_hit": 1,
+            "cache_disk": 0,
+            "codegen_time": 0.004820000380277634,
+            "backend_time": 0.0,
+            "uses_optix": 0
+          },
+          {
+            "backend": "CUDA",
+            "type": "JIT",
+            "hash": "bbb37c8863c7d41cc1904c5a31d5caf5",
+            "execution_time": 0.09833600372076035,
+            "operation_count": 36,
+            "cache_hit": 1,
+            "cache_disk": 0,
+            "codegen_time": 0.04746100306510925,
+            "backend_time": 0.0,
+            "uses_optix": 1
+          },
+          {
+            "backend": "CUDA",
+            "type": "JIT",
+            "hash": "bbb37c8863c7d41cc1904c5a31d5caf5",
+            "execution_time": 0.03532800078392029,
+            "operation_count": 36,
+            "cache_hit": 1,
+            "cache_disk": 0,
+            "codegen_time": 0.021460002288222313,
+            "backend_time": 0.0,
+            "uses_optix": 1
+          },
+          {
+            "backend": "CUDA",
+            "type": "JIT",
+            "hash": "bbb37c8863c7d41cc1904c5a31d5caf5",
+            "execution_time": 0.12809599936008453,
+            "operation_count": 36,
+            "cache_hit": 1,
+            "cache_disk": 0,
+            "codegen_time": 0.07245101034641266,
+            "backend_time": 0.0,
+            "uses_optix": 1
+          }
+        ],
+        "cuda_operation_count": 7,
+        "cuda_event_time_sum_ms": 0.5572160026058555,
+        "optix_kernel_count": 5,
+        "note": "Event-time sum includes recorded CUDA operations; not critical-path latency. IR omitted.",
+        "host_ranges": [
+          {
+            "name": "rf.channel.solve",
+            "inclusive_host_ms": 348.9377760001844
+          },
+          {
+            "name": "rf.channel.export",
+            "inclusive_host_ms": 4.7357019998344185
+          },
+          {
+            "name": "rf.channel",
+            "inclusive_host_ms": 353.69023800012656
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 91.35009500005253
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.1449910000701493
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 90.89731199992457
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.13798099962514243
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 91.3113940000585
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.14366100003826432
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 92.21962099991288
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.1999810001507285
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 92.39097199997559
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.1405010002599738
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 90.88922199998706
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.15923099999781698
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 90.20789700025489
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.13533100036511314
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 89.92316500007291
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.13678999994226615
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 90.31621799977074
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.18917099987447727
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 90.84390199996051
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.1841710000007879
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 92.29181199998493
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.13710100029129535
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 90.21839700017154
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.1433009997526824
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 90.23484700037443
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.16717099970264826
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 91.00914200007537
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.15383099980681436
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 90.50451900020562
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.18602099999043276
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 90.18222700024126
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.18986100030815578
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 90.3427390003344
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.16301100004056934
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 89.80874500002756
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.12242100001458311
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 90.61469000016587
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.14549099978466984
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 90.6084599996575
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.12735100017380319
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 90.81963200014798
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.13387099988904083
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 91.20747399992979
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.14221099991118535
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 90.54465899998831
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.14043100009075715
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 90.49368000023605
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.13242100021670922
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 90.59268000009979
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.1331610001216177
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 90.34917799999675
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.14854099981675972
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 90.64548999958788
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.1735619998726179
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 90.44949899998755
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.1295209999625513
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 90.51537999994252
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.1640810000935744
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 90.09550599967042
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.12423999987731804
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 90.54918899983022
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.16818100039017736
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 90.30683799983308
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.13144099966666545
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 93.18804799977443
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.15892099963821238
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 95.4457130001174
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.15863099997659447
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 94.75541799974962
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.15868099990257178
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 90.23039799967592
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.2017110000451794
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 91.87193899970225
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.19219100022382918
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 90.44919000007212
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.13715100021727267
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 90.59535899996263
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.14496099993266398
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 91.04247400000531
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.14082100005907705
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 91.10624400000233
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.1395909998791467
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 90.2315179996549
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.14263100001699058
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 90.43887899997571
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.14177100001688814
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 90.27747899972383
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.14410099993256154
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 90.39275999975871
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.14333099989016773
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 90.39829900029872
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.19323199967402616
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 90.38133900003231
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.2098509999086673
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 92.17970100007733
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.14101100032348768
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 92.55382399987866
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.15249100033543073
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 91.06476400029351
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.14141100018605357
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 91.80749899996954
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.20163199997114134
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 92.73660600001676
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.14944100030334084
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 92.0687809998526
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.19875099997079815
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 91.35707599989473
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.14207099957275204
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 92.48584400029358
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.1411210000696883
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 90.55403100001058
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.13970099962534732
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 91.25968499984083
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.14159100010147085
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 90.82943299972612
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.2158219999728317
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 92.11104099995282
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.2139419998457015
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 92.31493299967042
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.14272099997469923
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 92.04690099977597
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.13992100002724328
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 91.58257799981584
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.14123099981588894
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 91.94494999974268
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.18923100014944794
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 92.12250099972152
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.1354910000372911
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 92.5986649999686
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.14295100027084118
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 93.0853379995824
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.13876100001652958
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 92.56629499986957
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.14815099984843982
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 93.52868100040723
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.14164100002744817
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 93.78208299995094
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.17941099986273912
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 93.65453200007323
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.14590099999622907
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 91.12997600004746
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.1778010000634822
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 90.70674199983841
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.13301100034368574
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 90.79542300014509
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.13867100005882094
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 91.04724500002703
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.13928099997428944
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 91.39237699992009
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.1449910000701493
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 91.23782599999686
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.1855519999480748
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 91.09198499982085
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.12928099977216334
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 90.72217199991428
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.17678099993645446
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 91.4519369998743
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.1400610003656766
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 91.01048399998035
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.13932000001659617
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 91.7562990002807
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.18399100008537062
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 91.26602600008482
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.18349099991610274
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 91.81295999997019
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.14467099981629872
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 91.9641010000305
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.13883099973099888
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 91.52605799999947
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.13179100005800137
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 91.02497499998208
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.1353309999103658
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 92.35218399999212
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.14388099998541293
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 91.79467000012664
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.13867100005882094
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 90.91694400012784
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.1434509999853617
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 92.01938100022744
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.13844099976267898
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 91.58267900011197
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.13867100005882094
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 91.8623600000501
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.1449910000701493
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 91.20803600035288
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.18481100005374174
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 91.82116099964333
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.16040100035752403
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 90.96156499981589
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.13475100013238261
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 91.711858999588
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.18521099991630763
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 91.83511099990938
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.14651099991169758
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 92.05157199994574
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.1461010001548857
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 113.93487200029995
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.14720099989062874
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 92.11647199981599
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.19924099979107268
+          },
+          {
+            "name": "rf.receiver.noise_filter_adc",
+            "inclusive_host_ms": 0.2688209997359081
+          },
+          {
+            "name": "capture.timed.3",
+            "inclusive_host_ms": 9533.779319999667
+          }
+        ],
+        "nvtx_available": true
+      }
+    }
+  ]
+}

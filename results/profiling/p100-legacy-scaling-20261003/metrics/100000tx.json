@@ -1,0 +1,45 @@
+{
+  "arguments": {
+    "tx": 100000,
+    "rays_per_tx": 1028,
+    "iterations": 3,
+    "warmup": 1,
+    "output": "/work/results/metrics/100000tx.json"
+  },
+  "status": "timeout",
+  "measurement": "simultaneous native legacy propagation; no signal rendering, no IQ, no ADC; not transmitter batches",
+  "epochs": [],
+  "stage": "first_solve",
+  "versions": {
+    "sionna": "0.19.2",
+    "mitsuba": "3.5.2",
+    "drjit": "0.4.6",
+    "tensorflow": "2.15.1",
+    "backend": "cuda_ad_rgb"
+  },
+  "host": {
+    "cpu_count": 16,
+    "cpu_quota": "max 100000",
+    "memory_limit": "12884901888"
+  },
+  "ray_count": 102800000,
+  "import_s": 2.0590738820001206,
+  "created_transmitters": 100000,
+  "setup_elapsed_s": 17.173776094999994,
+  "setup_s": 17.177772622000703,
+  "termination": {
+    "returncode": 137,
+    "container_state": {
+      "command": [
+        "docker",
+        "inspect",
+        "--format",
+        "{{json .State}}",
+        "p100-legacy-scaling-20261003-100000"
+      ],
+      "returncode": 0,
+      "stdout": "{\"Status\":\"exited\",\"Running\":false,\"Paused\":false,\"Restarting\":false,\"OOMKilled\":false,\"Dead\":false,\"Pid\":0,\"ExitCode\":137,\"Error\":\"\",\"StartedAt\":\"2026-10-04T01:41:32.376238133Z\",\"FinishedAt\":\"2026-10-04T01:47:42.640218049Z\"}\n",
+      "stderr": ""
+    }
+  }
+}

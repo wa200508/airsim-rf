@@ -1,0 +1,77 @@
+2026-10-04 01:03:25.676223: E external/local_xla/xla/stream_executor/cuda/cuda_dnn.cc:9261] Unable to register cuDNN factory: Attempting to register factory for plugin cuDNN when one has already been registered
+2026-10-04 01:03:25.676284: E external/local_xla/xla/stream_executor/cuda/cuda_fft.cc:607] Unable to register cuFFT factory: Attempting to register factory for plugin cuFFT when one has already been registered
+2026-10-04 01:03:25.677253: E external/local_xla/xla/stream_executor/cuda/cuda_blas.cc:1515] Unable to register cuBLAS factory: Attempting to register factory for plugin cuBLAS when one has already been registered
+LEGACY P100 ADAPTER: Sionna 0.19.2; native Fibonacci rays; original I/Q receiver chain; backend llvm_ad_rgb
+5/200: 379.8 ms
+10/200: 370.7 ms
+15/200: 374.0 ms
+20/200: 377.5 ms
+25/200: 367.7 ms
+30/200: 365.0 ms
+35/200: 370.0 ms
+40/200: 360.8 ms
+45/200: 374.9 ms
+50/200: 371.4 ms
+55/200: 364.5 ms
+60/200: 368.6 ms
+65/200: 362.8 ms
+70/200: 370.5 ms
+75/200: 365.9 ms
+80/200: 375.7 ms
+85/200: 365.6 ms
+90/200: 368.8 ms
+95/200: 364.3 ms
+100/200: 375.1 ms
+105/200: 371.0 ms
+110/200: 371.1 ms
+115/200: 373.6 ms
+120/200: 374.1 ms
+125/200: 370.8 ms
+130/200: 370.3 ms
+135/200: 377.0 ms
+140/200: 375.0 ms
+145/200: 360.7 ms
+150/200: 367.7 ms
+155/200: 385.0 ms
+160/200: 377.2 ms
+165/200: 366.4 ms
+170/200: 368.8 ms
+175/200: 371.8 ms
+180/200: 392.1 ms
+185/200: 373.1 ms
+190/200: 368.9 ms
+195/200: 379.1 ms
+200/200: 378.3 ms
+{
+  "service": {
+    "p50_ms": 371.2530410002728,
+    "p95_ms": 384.17977439996776,
+    "mean_ms": 372.6088538700037,
+    "max_ms": 427.3333599999205
+  },
+  "channel": {
+    "p50_ms": 207.23770600011449,
+    "p95_ms": 217.60628150009325,
+    "mean_ms": 208.10097501501556,
+    "max_ms": 252.18587200015463
+  },
+  "cpu_iq_receiver": {
+    "p50_ms": 163.75020450027478,
+    "p95_ms": 167.72270214962646,
+    "mean_ms": 164.21484027497397,
+    "max_ms": 174.8872959997243
+  },
+  "sustained_updates_hz": 2.683503686903893,
+  "retained_paths": {
+    "min": 845,
+    "max": 857
+  },
+  "host": {
+    "cpu_count": 16,
+    "cpu_quota": "max 100000",
+    "memory_limit_bytes": "max",
+    "drjit_threads": 2,
+    "peak_rss_mib": 951.11328125,
+    "cuda_available": 1
+  }
+}

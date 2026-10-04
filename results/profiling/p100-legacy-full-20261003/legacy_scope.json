@@ -1,0 +1,16 @@
+{
+  "stack": {
+    "sionna": "0.19.2",
+    "mitsuba": "3.5.2",
+    "drjit": "0.4.6",
+    "tensorflow": "2.15.1",
+    "python": "3.11"
+  },
+  "propagation": "Legacy native Sionna Fibonacci solver; max_depth=1, LoS/reflection/scattering, scat_keep_prob=1, scat_random_phases=False. 1028 launched rays per TX, shared across receivers. Synthetic single-element arrays. Original terrain mesh and dielectric parameters (epsilon_r=5, conductivity=.01, scattering=.3), converted to legacy scene format; the legacy material has no thickness equivalent.",
+  "receiver": "Original branch SDRNetworkReceiver, waveform synthesis, independent clocks, filtering, noise and ADC; external Paths adapter supplies compact legacy channels and platform Doppler.",
+  "comparison_limit": "Not the profiling/p100 custom first-order sampler or Sionna 2.2 implementation. No numerical equivalence validation. Legacy rays and retained-path counts differ. Published current-solver CPU results and its work-count model are not directly comparable.",
+  "profile_limit": "Dr.Jit histories record its CUDA/OptiX operations only, not TensorFlow CUDA kernels. Inclusive host ranges overlap. Device-event sums are not service critical-path latency.",
+  "sampling_timers": "Original host_numpy_sampling_ms and proposal_table_prepare_ms are adapter compatibility placeholders set to zero; they are not measured stage timings and are excluded from the report.",
+  "cpu_baseline": "CPU cases hide GPUs from TensorFlow and use Mitsuba llvm_ad_rgb. CUDA cases use cuda_ad_rgb and TensorFlow CUDA. Dr.Jit uses two threads; TensorFlow thread defaults are not constrained.",
+  "outputs": "4096 complex samples per capture at 2 MS/s, 915 MHz carrier, 1 MHz receive bandwidth, one receiver per benchmark; example uses two TX and two RX."
+}

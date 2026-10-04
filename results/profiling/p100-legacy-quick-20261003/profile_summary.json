@@ -1,0 +1,85 @@
+{
+  "cuda_100tx_1rx_events.json": {
+    "timed_capture_count": 2,
+    "cuda_event_time_sum": {
+      "p50_ms": 0.5829600016586483,
+      "p95_ms": 0.6061296008061617,
+      "mean_ms": 0.5829600016586483,
+      "max_ms": 0.608704000711441
+    },
+    "cuda_operations": 14,
+    "optix_kernels": 10,
+    "nvtx_available": true,
+    "operations": {
+      "CUDA / Other": {
+        "count": 2,
+        "event_ms": 0.01568000018596649,
+        "codegen_ms": 0.0,
+        "backend_compile_ms": 0.0,
+        "cache_hits": 0,
+        "cache_misses": 0
+      },
+      "CUDA / JIT / OptiX": {
+        "count": 10,
+        "event_ms": 1.1231360025703907,
+        "codegen_ms": 0.6600550692528486,
+        "backend_compile_ms": 0.0,
+        "cache_hits": 10,
+        "cache_misses": 0
+      },
+      "CUDA / JIT": {
+        "count": 2,
+        "event_ms": 0.027104000560939312,
+        "codegen_ms": 0.009470000863075256,
+        "backend_compile_ms": 0.0,
+        "cache_hits": 2,
+        "cache_misses": 0
+      }
+    },
+    "inclusive_host_ranges": {
+      "rf.channel.solve": {
+        "p50_ms": 351.26857650016063,
+        "p95_ms": 353.36629695013926,
+        "mean_ms": 351.26857650016063,
+        "max_ms": 353.5993770001369
+      },
+      "rf.channel.export": {
+        "p50_ms": 4.899933499928011,
+        "p95_ms": 5.047741850012244,
+        "mean_ms": 4.899933499928011,
+        "max_ms": 5.064165000021603
+      },
+      "rf.channel": {
+        "p50_ms": 356.18664500020714,
+        "p95_ms": 358.43341130027966,
+        "mean_ms": 356.18664500020714,
+        "max_ms": 358.6830520002877
+      },
+      "rf.iq.waveforms": {
+        "p50_ms": 9206.716589497091,
+        "p95_ms": 9248.86877124693,
+        "mean_ms": 9206.716589497091,
+        "max_ms": 9253.552346996912
+      },
+      "rf.iq.link_diagnostics": {
+        "p50_ms": 15.771605998452287,
+        "p95_ms": 16.073477697136695,
+        "mean_ms": 15.771605998452287,
+        "max_ms": 16.10701899699052
+      },
+      "rf.receiver.noise_filter_adc": {
+        "p50_ms": 0.2592314999674272,
+        "p95_ms": 0.26786204975906003,
+        "mean_ms": 0.2592314999674272,
+        "max_ms": 0.2688209997359081
+      },
+      "capture.timed": {
+        "p50_ms": 9583.422161999806,
+        "p95_ms": 9628.100719799932,
+        "mean_ms": 9583.422161999806,
+        "max_ms": 9633.065003999945
+      }
+    },
+    "note": "Timed captures only. Device operation sums and nested inclusive host ranges are not additive service latency."
+  }
+}

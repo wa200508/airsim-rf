@@ -1,0 +1,17 @@
+2026-10-04 01:19:57.568079: E external/local_xla/xla/stream_executor/cuda/cuda_dnn.cc:9261] Unable to register cuDNN factory: Attempting to register factory for plugin cuDNN when one has already been registered
+2026-10-04 01:19:57.568144: E external/local_xla/xla/stream_executor/cuda/cuda_fft.cc:607] Unable to register cuFFT factory: Attempting to register factory for plugin cuFFT when one has already been registered
+2026-10-04 01:19:57.568974: E external/local_xla/xla/stream_executor/cuda/cuda_blas.cc:1515] Unable to register cuBLAS factory: Attempting to register factory for plugin cuBLAS when one has already been registered
+LEGACY P100 ADAPTER: Sionna 0.19.2; native Fibonacci rays; original I/Q receiver chain; backend cuda_ad_rgb
+epoch 0.000s: listener_a A=-58.7 B=-96.9 dBm; listener_b A=-67.1 B=-97.6 dBm
+epoch 0.500s: listener_a A=-58.6 B=-95.8 dBm; listener_b A=-66.6 B=-96.7 dBm
+epoch 1.000s: listener_a A=-58.5 B=-96.2 dBm; listener_b A=-65.2 B=-96.7 dBm
+epoch 1.500s: listener_a A=-59.4 B=-96.5 dBm; listener_b A=-65.7 B=-96.8 dBm
+epoch 2.000s: listener_a A=-59.1 B=-96.7 dBm; listener_b A=-66.7 B=-96.3 dBm
+epoch 2.500s: listener_a A=-59.4 B=-95.3 dBm; listener_b A=-67.4 B=-96.2 dBm
+epoch 3.000s: listener_a A=-59.5 B=-95.5 dBm; listener_b A=-67.6 B=-96.2 dBm
+epoch 3.500s: listener_a A=-59.0 B=-95.9 dBm; listener_b A=-67.0 B=-96.3 dBm
+epoch 4.000s: listener_a A=-59.8 B=-95.8 dBm; listener_b A=-65.5 B=-96.1 dBm
+epoch 4.500s: listener_a A=-59.4 B=-95.3 dBm; listener_b A=-65.0 B=-95.4 dBm
+epoch 5.000s: listener_a A=-60.2 B=-94.8 dBm; listener_b A=-64.2 B=-94.9 dBm
+epoch 5.500s: listener_a A=-60.2 B=-95.2 dBm; listener_b A=-63.3 B=-95.0 dBm
+Saved recordings, plots and assumptions to /work/results/p100-legacy-full-20261003/raw/example

@@ -1,0 +1,77 @@
+2026-10-04 01:04:51.125013: E external/local_xla/xla/stream_executor/cuda/cuda_dnn.cc:9261] Unable to register cuDNN factory: Attempting to register factory for plugin cuDNN when one has already been registered
+2026-10-04 01:04:51.125084: E external/local_xla/xla/stream_executor/cuda/cuda_fft.cc:607] Unable to register cuFFT factory: Attempting to register factory for plugin cuFFT when one has already been registered
+2026-10-04 01:04:51.125987: E external/local_xla/xla/stream_executor/cuda/cuda_blas.cc:1515] Unable to register cuBLAS factory: Attempting to register factory for plugin cuBLAS when one has already been registered
+LEGACY P100 ADAPTER: Sionna 0.19.2; native Fibonacci rays; original I/Q receiver chain; backend cuda_ad_rgb
+5/200: 477.5 ms
+10/200: 486.5 ms
+15/200: 479.2 ms
+20/200: 487.0 ms
+25/200: 491.5 ms
+30/200: 479.6 ms
+35/200: 489.2 ms
+40/200: 492.3 ms
+45/200: 490.2 ms
+50/200: 490.7 ms
+55/200: 484.0 ms
+60/200: 476.7 ms
+65/200: 482.1 ms
+70/200: 496.8 ms
+75/200: 482.9 ms
+80/200: 487.9 ms
+85/200: 484.1 ms
+90/200: 485.2 ms
+95/200: 481.5 ms
+100/200: 494.5 ms
+105/200: 489.6 ms
+110/200: 488.9 ms
+115/200: 489.0 ms
+120/200: 491.2 ms
+125/200: 495.2 ms
+130/200: 481.1 ms
+135/200: 490.1 ms
+140/200: 482.5 ms
+145/200: 493.1 ms
+150/200: 489.2 ms
+155/200: 487.7 ms
+160/200: 490.4 ms
+165/200: 500.7 ms
+170/200: 511.2 ms
+175/200: 490.8 ms
+180/200: 488.1 ms
+185/200: 501.1 ms
+190/200: 494.9 ms
+195/200: 485.6 ms
+200/200: 492.1 ms
+{
+  "service": {
+    "p50_ms": 488.51219899961507,
+    "p95_ms": 501.12936720038306,
+    "mean_ms": 489.1922600849921,
+    "max_ms": 551.2632770000891
+  },
+  "channel": {
+    "p50_ms": 324.09434600003806,
+    "p95_ms": 334.7354000002724,
+    "mean_ms": 325.0184843899842,
+    "max_ms": 386.013635999916
+  },
+  "cpu_iq_receiver": {
+    "p50_ms": 163.0625405000501,
+    "p95_ms": 167.10103890059145,
+    "mean_ms": 163.44729965501529,
+    "max_ms": 172.64532300032442
+  },
+  "sustained_updates_hz": 2.04400867960136,
+  "retained_paths": {
+    "min": 845,
+    "max": 859
+  },
+  "host": {
+    "cpu_count": 16,
+    "cpu_quota": "max 100000",
+    "memory_limit_bytes": "max",
+    "drjit_threads": 2,
+    "peak_rss_mib": 1329.859375,
+    "cuda_available": 1
+  }
+}

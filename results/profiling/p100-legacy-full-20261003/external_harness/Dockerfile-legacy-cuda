@@ -1,0 +1,3 @@
+FROM airsim-rf:p100-sionna-0.19.2
+RUN python -m pip install --no-cache-dir 'tensorflow[and-cuda]==2.15.1'
+ENTRYPOINT ["python"]

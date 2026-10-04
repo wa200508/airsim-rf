@@ -1,0 +1,17 @@
+2026-10-04 01:00:03.077837: E external/local_xla/xla/stream_executor/cuda/cuda_dnn.cc:9261] Unable to register cuDNN factory: Attempting to register factory for plugin cuDNN when one has already been registered
+2026-10-04 01:00:03.077900: E external/local_xla/xla/stream_executor/cuda/cuda_fft.cc:607] Unable to register cuFFT factory: Attempting to register factory for plugin cuFFT when one has already been registered
+2026-10-04 01:00:03.078802: E external/local_xla/xla/stream_executor/cuda/cuda_blas.cc:1515] Unable to register cuBLAS factory: Attempting to register factory for plugin cuBLAS when one has already been registered
+LEGACY P100 ADAPTER: Sionna 0.19.2; native Fibonacci rays; original I/Q receiver chain; backend cuda_ad_rgb
+{
+  "backend_requested": "cuda",
+  "status": "ok",
+  "cuda_available": 1,
+  "versions": {
+    "sionna_rt": "0.19.2",
+    "mitsuba": "3.5.2",
+    "drjit": "0.4.6",
+    "backend": "cuda_ad_rgb"
+  },
+  "specular_planes": 800,
+  "retained_paths": 15
+}

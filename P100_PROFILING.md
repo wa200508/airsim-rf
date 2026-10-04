@@ -7,6 +7,26 @@ and separately measures private arbitrary sampled I/Q. Receiver filtering and
 ADC remain CPU work; the batched backend groups transfers across independent
 jobs. Defaults keep per-link diagnostics enabled.
 
+## Measured P100 compatibility and results
+
+The pinned Sionna RT 2.2 / Mitsuba 3.9.1 / Dr.Jit 1.5 stack does **not** run
+on this P100 (compute capability 6.0). The standard launcher below retains those
+pins and is not a working P100 recipe. An isolated legacy stack was needed:
+Sionna 0.19.2, Mitsuba 3.5.2, Dr.Jit 0.4.6, TensorFlow 2.15.1 and Python 3.11.
+
+- [Initial compatibility failure](results/profiling/p100-quick-20261003-2005/REPORT.md)
+- [Full legacy profiling collection](results/profiling/p100-legacy-full-20261003/REPORT.md)
+- [Propagation-only simultaneous transmitter scaling](results/profiling/p100-legacy-scaling-20261003/REPORT.md)
+- [Legacy harness and reproduction instructions](scripts/p100_legacy/README.md)
+
+These measurements use legacy native propagation in place of the branch's
+custom solver. The full collection retains the original host I/Q/receiver
+chain; scaling removes that chain. They establish execution and performance,
+not physical or numerical equivalence to the current solver. Production code
+and dependency locks are unchanged. Large I/Q files and profiler traces remain
+local under ignored `raw/` directories; reports, small metrics and logs are
+committed.
+
 ## One command on the Docker host
 
 Requires Linux x86-64, Docker with NVIDIA Container Toolkit, a P100 visible to

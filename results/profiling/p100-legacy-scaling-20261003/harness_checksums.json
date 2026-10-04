@@ -1,0 +1,12 @@
+{
+  "sitecustomize.py": "30fbf8ada526b87651b95fe84c3e6841411e1ca55cd0b8aa7cbf374496f64ae4",
+  "benchmark_propagation.py": "e9f580a93f6fd49f433a4e46874ff2f295b53aa32c56ce84620de247c789a359",
+  "analyze_scaling.py": "74019a3745f0f9bffa8bd7c753e339dbce7df79b5e8cbe27fc7c5267787dc23b",
+  "run_scaling.py": "f1ad89cc59754353e35773fb5fada2d00c8a6864820a2709a7a35ea2166d277f",
+  "Dockerfile.cuda": "fe92828d4e3b9fdcfa4fa34ae739d8ec4037960948a75c5bb5ebae0feb4f16c3",
+  "launch.py": "eaec13064dd78671e3adc0a705431e2dd4a65246db09e04bc4f32ba0636fe809",
+  "Dockerfile.legacy": "cf5beb5433396858dfbb806f0aeeaf67711dd418160690d6166c3afa07000cf1",
+  "analyze_legacy.py": "8a47df264336d931fdbac9f1112758473996ffe30811bde1433c07a3da2ca884",
+  "Dockerfile.metrics": "7f5f7d6f4ebc5f5336d70dbef47da0801ff495851cfe477a34b287e6b101ff8c",
+  "README.md": "855c6da57b554d18a8aa646f2e45d77d0966ae1ffde8b038ddc7fcac01cd6939"
+}

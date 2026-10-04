@@ -1,0 +1,44 @@
+2026-10-04 01:00:09.372016: E external/local_xla/xla/stream_executor/cuda/cuda_dnn.cc:9261] Unable to register cuDNN factory: Attempting to register factory for plugin cuDNN when one has already been registered
+2026-10-04 01:00:09.372108: E external/local_xla/xla/stream_executor/cuda/cuda_fft.cc:607] Unable to register cuFFT factory: Attempting to register factory for plugin cuFFT when one has already been registered
+2026-10-04 01:00:09.373184: E external/local_xla/xla/stream_executor/cuda/cuda_blas.cc:1515] Unable to register cuBLAS factory: Attempting to register factory for plugin cuBLAS when one has already been registered
+LEGACY P100 ADAPTER: Sionna 0.19.2; native Fibonacci rays; original I/Q receiver chain; backend llvm_ad_rgb
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/drjit/detail.py", line 268, in array_init
+    self.assign(array_from_dlpack(type(self), to_dlpack(o)))
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/drjit/detail.py", line 80, in array_from_dlpack
+    raise _dr.Exception("Cannot create an Dr.Jit CPU array from a "
+drjit.Exception: Cannot create an Dr.Jit CPU array from a DLPack GPU tensor!
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/opt/airsim-rf/benchmarks/benchmark_sdr_runtime.py", line 159, in <module>
+    main()
+  File "/opt/airsim-rf/benchmarks/benchmark_sdr_runtime.py", line 108, in main
+    first = run(0, "first")
+            ^^^^^^^^^^^^^^^
+  File "/opt/airsim-rf/benchmarks/benchmark_sdr_runtime.py", line 86, in run
+    captures = receiver.capture(round(epoch*1e9), num_samples=args.samples)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/airsim-rf/src/airsim_rf/sdr.py", line 205, in capture
+    paths = self.solver(self.scene, max_depth=self.max_depth, seed=self.seed,
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/work/harness/sitecustomize.py", line 82, in __call__
+    native=scene.compute_paths(max_depth=kwargs.get('max_depth',1),num_samples=samples*len(scene.transmitters),los=True,reflection=True,diffraction=False,scattering=kwargs.get('diffuse_reflection',True),ris=False,scat_keep_prob=1.,scat_random_phases=False)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/sionna/rt/scene.py", line 948, in compute_paths
+    traced_paths = self.trace_paths(max_depth, method, num_samples, los,
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/sionna/rt/scene.py", line 644, in trace_paths
+    paths = self._solver_paths.trace_paths(max_depth,
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/sionna/rt/solver_paths.py", line 540, in trace_paths
+    output = self._list_candidates_fibonacci(max_depth,
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/sionna/rt/solver_paths.py", line 1262, in _list_candidates_fibonacci
+    sampled_d = self._mi_point2_t(sampled_d)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/drjit/detail.py", line 297, in array_init
+    raise TypeError("%s constructor expects: %s%i values "
+TypeError: Point2f constructor expects: 1 or 2 values of type "Float", a matching list/tuple, or a NumPy/PyTorch/TF/Jax array.

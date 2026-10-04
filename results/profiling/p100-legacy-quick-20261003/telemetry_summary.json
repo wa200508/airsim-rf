@@ -1,0 +1,13 @@
+{
+  "devices": {
+    "GPU-0d70be84-560c-cf1e-8d49-c41015f45415": {
+      "samples": 161,
+      "index": "0",
+      "max_sampled_memory_mib": 637.0,
+      "max_sampled_utilization_percent": 12.0,
+      "max_sampled_power_w": 33.06,
+      "max_sampled_temperature_c": 43.0
+    }
+  },
+  "note": "One-second nvidia-smi samples; includes other processes and may miss peaks. Not allocated-byte or guaranteed peak VRAM measurement."
+}

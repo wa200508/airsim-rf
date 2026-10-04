@@ -1,0 +1,17 @@
+imports
+2026-10-04 01:41:32.916040: E external/local_xla/xla/stream_executor/cuda/cuda_dnn.cc:9261] Unable to register cuDNN factory: Attempting to register factory for plugin cuDNN when one has already been registered
+2026-10-04 01:41:32.916077: E external/local_xla/xla/stream_executor/cuda/cuda_fft.cc:607] Unable to register cuFFT factory: Attempting to register factory for plugin cuFFT when one has already been registered
+2026-10-04 01:41:32.916930: E external/local_xla/xla/stream_executor/cuda/cuda_blas.cc:1515] Unable to register cuBLAS factory: Attempting to register factory for plugin cuBLAS when one has already been registered
+scene_setup
+created 10000/100000
+created 20000/100000
+created 30000/100000
+created 40000/100000
+created 50000/100000
+created 60000/100000
+created 70000/100000
+created 80000/100000
+created 90000/100000
+created 100000/100000
+first_solve
+jit_flush_malloc_cache(): Dr.Jit exhausted the available memory and had to flush its allocation cache to free up additional memory. This is an expensive operation and will have a negative effect on performance. You may want to change your computation so that it uses less memory. This warning will only be displayed once.

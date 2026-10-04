@@ -1,0 +1,965 @@
+{
+  "arguments": {
+    "tx": 2,
+    "rx": 1,
+    "iterations": 5,
+    "warmup": 3,
+    "samples": 4096,
+    "samples_per_link": 1028,
+    "backend": "cuda",
+    "profile": true,
+    "threads": 2,
+    "output": "/work/results/p100-legacy-full-20261003/profiles/cuda_2tx_1rx_events.json"
+  },
+  "measurement_mode": "instrumented_profile",
+  "scope": "915 MHz, 2 MS/s, 1 MHz filter, noisy independent-clock Pluto profile; moving mounts over 800-triangle DEM",
+  "timing_includes": "Pose writes, synchronized channel/NumPy export, per-path IQ, per-link diagnostic filters, receive noise/filter and ADC conversion",
+  "timing_excludes": [
+    "AirSim RPC/physics",
+    "transport",
+    "queueing",
+    "storage",
+    "plots",
+    "RF skill processing"
+  ],
+  "initial_tx_positions_m": [
+    [
+      -60.0,
+      -30.0,
+      12.0
+    ],
+    [
+      45.0,
+      45.0,
+      18.0
+    ]
+  ],
+  "initial_rx_positions_m": [
+    [
+      -30.0,
+      -10.0,
+      14.0
+    ]
+  ],
+  "capture_duration_ms": 2.048,
+  "filter_warmup_samples": 256,
+  "preparation_ms": 1898.5421620000125,
+  "first_capture": {
+    "epoch_s": 0.0,
+    "service_ms": 1388.402125000539,
+    "pose_ms": 0.4670530006478657,
+    "capture_ms": 1387.9346120002083,
+    "channel_ms": 1223.6791849991278,
+    "cpu_iq_receiver_ms": 164.25542700108053,
+    "stage_timings": {
+      "legacy_native_solve_export_ms": 1215.0372590003826,
+      "host_numpy_sampling_ms": 0.0,
+      "proposal_table_prepare_ms": 0.0
+    },
+    "retained_paths": 847,
+    "clipping_fraction_max": 0.0,
+    "profile": {
+      "records": [
+        {
+          "backend": "CUDA",
+          "type": "Other",
+          "execution_time": 0.007040000054985285,
+          "codegen_time": 0.0,
+          "backend_time": 0.0
+        },
+        {
+          "backend": "CUDA",
+          "type": "JIT",
+          "hash": "69c04c2c35918aa10bb5e5600badc333",
+          "execution_time": 0.06745599955320358,
+          "operation_count": 185,
+          "cache_hit": 1,
+          "cache_disk": 1,
+          "codegen_time": 0.06750000268220901,
+          "backend_time": 0.0,
+          "uses_optix": 1
+        },
+        {
+          "backend": "CUDA",
+          "type": "JIT",
+          "hash": "79b75222b28fcc1c8bdc4686763cdeb6",
+          "execution_time": 0.06390400230884552,
+          "operation_count": 180,
+          "cache_hit": 1,
+          "cache_disk": 1,
+          "codegen_time": 0.0941610112786293,
+          "backend_time": 0.0,
+          "uses_optix": 1
+        },
+        {
+          "backend": "CUDA",
+          "type": "JIT",
+          "hash": "a5efba9aed35404559ca230ffb1c1c67",
+          "execution_time": 0.006752000190317631,
+          "operation_count": 19,
+          "cache_hit": 1,
+          "cache_disk": 0,
+          "codegen_time": 0.005530000664293766,
+          "backend_time": 0.0,
+          "uses_optix": 0
+        },
+        {
+          "backend": "CUDA",
+          "type": "JIT",
+          "hash": "bbb37c8863c7d41cc1904c5a31d5caf5",
+          "execution_time": 0.04950400069355965,
+          "operation_count": 36,
+          "cache_hit": 1,
+          "cache_disk": 1,
+          "codegen_time": 0.038680002093315125,
+          "backend_time": 0.0,
+          "uses_optix": 1
+        },
+        {
+          "backend": "CUDA",
+          "type": "JIT",
+          "hash": "bbb37c8863c7d41cc1904c5a31d5caf5",
+          "execution_time": 0.03590400144457817,
+          "operation_count": 36,
+          "cache_hit": 1,
+          "cache_disk": 0,
+          "codegen_time": 0.01999000273644924,
+          "backend_time": 0.0,
+          "uses_optix": 1
+        },
+        {
+          "backend": "CUDA",
+          "type": "JIT",
+          "hash": "bbb37c8863c7d41cc1904c5a31d5caf5",
+          "execution_time": 0.08473599702119827,
+          "operation_count": 36,
+          "cache_hit": 1,
+          "cache_disk": 0,
+          "codegen_time": 0.029130002483725548,
+          "backend_time": 0.0,
+          "uses_optix": 1
+        }
+      ],
+      "cuda_operation_count": 7,
+      "cuda_event_time_sum_ms": 0.3152960012666881,
+      "optix_kernel_count": 5,
+      "note": "Event-time sum includes recorded CUDA operations; not critical-path latency. IR omitted.",
+      "host_ranges": [
+        {
+          "name": "rf.channel.solve",
+          "inclusive_host_ms": 1219.0797490002296
+        },
+        {
+          "name": "rf.channel.export",
+          "inclusive_host_ms": 4.575955000291287
+        },
+        {
+          "name": "rf.channel",
+          "inclusive_host_ms": 1223.6747639999521
+        },
+        {
+          "name": "rf.iq.waveforms",
+          "inclusive_host_ms": 86.77065799929551
+        },
+        {
+          "name": "rf.iq.link_diagnostics",
+          "inclusive_host_ms": 0.15550100033578929
+        },
+        {
+          "name": "rf.iq.waveforms",
+          "inclusive_host_ms": 76.499151000462
+        },
+        {
+          "name": "rf.iq.link_diagnostics",
+          "inclusive_host_ms": 0.1475809995099553
+        },
+        {
+          "name": "rf.receiver.noise_filter_adc",
+          "inclusive_host_ms": 0.2567609999459819
+        },
+        {
+          "name": "capture.first.0",
+          "inclusive_host_ms": 1387.8643219995865
+        }
+      ],
+      "nvtx_available": true
+    }
+  },
+  "first_capture_note": "New process with existing on-disk JIT cache; imports excluded; not a cache-cleared cold-start benchmark",
+  "service": {
+    "p50_ms": 484.0600200004701,
+    "p95_ms": 497.8758150000431,
+    "mean_ms": 485.53249740016327,
+    "max_ms": 500.8083650000117
+  },
+  "channel": {
+    "p50_ms": 322.42476099963824,
+    "p95_ms": 331.52722680006264,
+    "mean_ms": 322.37833900016994,
+    "max_ms": 333.7022050000087
+  },
+  "cpu_iq_receiver": {
+    "p50_ms": 161.34809699997277,
+    "p95_ms": 165.51659960059624,
+    "mean_ms": 162.44142100040335,
+    "max_ms": 166.23641300066083
+  },
+  "serial_wall_s": 2.428810145999705,
+  "sustained_updates_hz": 2.058621176395813,
+  "receiver_blocks_per_second": 2.058621176395813,
+  "deadline_misses": {
+    "120": 5,
+    "200": 5
+  },
+  "stage_timings": {
+    "legacy_native_solve_export_ms": {
+      "p50_ms": 311.2088269999731,
+      "p95_ms": 320.9009196001716,
+      "mean_ms": 312.10468640001636,
+      "max_ms": 322.84770400019625
+    }
+  },
+  "retained_paths": {
+    "min": 849,
+    "max": 853
+  },
+  "host": {
+    "cpu_count": 16,
+    "cpu_quota": "max 100000",
+    "memory_limit_bytes": "max",
+    "drjit_threads": 2,
+    "peak_rss_mib": 1288.28515625,
+    "cuda_available": 1
+  },
+  "versions": {
+    "sionna_rt": "0.19.2",
+    "mitsuba": "3.5.2",
+    "drjit": "0.4.6",
+    "backend": "cuda_ad_rgb"
+  },
+  "profile_note": "Profiled serial throughput includes event/history instrumentation; use separate unprofiled runs for performance.",
+  "gpu_note": "Measured legacy service/channel latency. Original custom-solver work-count estimates do not apply.",
+  "samples": [
+    {
+      "epoch_s": 0.02,
+      "service_ms": 500.8083650000117,
+      "pose_ms": 0.869247000082396,
+      "capture_ms": 499.9386180006695,
+      "channel_ms": 333.7022050000087,
+      "cpu_iq_receiver_ms": 166.23641300066083,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 322.84770400019625,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 850,
+      "clipping_fraction_max": 0.0,
+      "profile": {
+        "records": [
+          {
+            "backend": "CUDA",
+            "type": "Other",
+            "execution_time": 0.006976000033318996,
+            "codegen_time": 0.0,
+            "backend_time": 0.0
+          },
+          {
+            "backend": "CUDA",
+            "type": "JIT",
+            "hash": "a39f1f13b2389a541f078f1dbacdf07f",
+            "execution_time": 0.060416001826524734,
+            "operation_count": 185,
+            "cache_hit": 1,
+            "cache_disk": 0,
+            "codegen_time": 0.07339101284742355,
+            "backend_time": 0.0,
+            "uses_optix": 1
+          },
+          {
+            "backend": "CUDA",
+            "type": "JIT",
+            "hash": "a48059c114a2bcac34c78b6350fef20d",
+            "execution_time": 0.06457599997520447,
+            "operation_count": 180,
+            "cache_hit": 1,
+            "cache_disk": 0,
+            "codegen_time": 0.08942101150751114,
+            "backend_time": 0.0,
+            "uses_optix": 1
+          },
+          {
+            "backend": "CUDA",
+            "type": "JIT",
+            "hash": "a5efba9aed35404559ca230ffb1c1c67",
+            "execution_time": 0.007007999811321497,
+            "operation_count": 19,
+            "cache_hit": 1,
+            "cache_disk": 0,
+            "codegen_time": 0.004980000201612711,
+            "backend_time": 0.0,
+            "uses_optix": 0
+          },
+          {
+            "backend": "CUDA",
+            "type": "JIT",
+            "hash": "bbb37c8863c7d41cc1904c5a31d5caf5",
+            "execution_time": 0.08563199639320374,
+            "operation_count": 36,
+            "cache_hit": 1,
+            "cache_disk": 0,
+            "codegen_time": 0.09117001295089722,
+            "backend_time": 0.0,
+            "uses_optix": 1
+          },
+          {
+            "backend": "CUDA",
+            "type": "JIT",
+            "hash": "bbb37c8863c7d41cc1904c5a31d5caf5",
+            "execution_time": 0.0729919970035553,
+            "operation_count": 36,
+            "cache_hit": 1,
+            "cache_disk": 0,
+            "codegen_time": 0.07883000373840332,
+            "backend_time": 0.0,
+            "uses_optix": 1
+          },
+          {
+            "backend": "CUDA",
+            "type": "JIT",
+            "hash": "bbb37c8863c7d41cc1904c5a31d5caf5",
+            "execution_time": 0.10950399935245514,
+            "operation_count": 36,
+            "cache_hit": 1,
+            "cache_disk": 0,
+            "codegen_time": 0.047460004687309265,
+            "backend_time": 0.0,
+            "uses_optix": 1
+          }
+        ],
+        "cuda_operation_count": 7,
+        "cuda_event_time_sum_ms": 0.40710399439558387,
+        "optix_kernel_count": 5,
+        "note": "Event-time sum includes recorded CUDA operations; not critical-path latency. IR omitted.",
+        "host_ranges": [
+          {
+            "name": "rf.channel.solve",
+            "inclusive_host_ms": 329.43762299964874
+          },
+          {
+            "name": "rf.channel.export",
+            "inclusive_host_ms": 4.241032000209088
+          },
+          {
+            "name": "rf.channel",
+            "inclusive_host_ms": 333.6992349995853
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 86.55046700005187
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.14979100069467677
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 78.77554900005634
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.14666200058854884
+          },
+          {
+            "name": "rf.receiver.noise_filter_adc",
+            "inclusive_host_ms": 0.23558099928777665
+          },
+          {
+            "name": "capture.timed.4",
+            "inclusive_host_ms": 499.9062779997985
+          }
+        ],
+        "nvtx_available": true
+      }
+    },
+    {
+      "epoch_s": 0.025,
+      "service_ms": 486.1456150001686,
+      "pose_ms": 0.680504999763798,
+      "capture_ms": 485.4646600006163,
+      "channel_ms": 322.8273140002784,
+      "cpu_iq_receiver_ms": 162.63734600033786,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 313.1137820000731,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 853,
+      "clipping_fraction_max": 0.0,
+      "profile": {
+        "records": [
+          {
+            "backend": "CUDA",
+            "type": "Other",
+            "execution_time": 0.00848000030964613,
+            "codegen_time": 0.0,
+            "backend_time": 0.0
+          },
+          {
+            "backend": "CUDA",
+            "type": "JIT",
+            "hash": "a39f1f13b2389a541f078f1dbacdf07f",
+            "execution_time": 0.05951999872922897,
+            "operation_count": 185,
+            "cache_hit": 1,
+            "cache_disk": 0,
+            "codegen_time": 0.10198000818490982,
+            "backend_time": 0.0,
+            "uses_optix": 1
+          },
+          {
+            "backend": "CUDA",
+            "type": "JIT",
+            "hash": "a48059c114a2bcac34c78b6350fef20d",
+            "execution_time": 0.07241600006818771,
+            "operation_count": 180,
+            "cache_hit": 1,
+            "cache_disk": 0,
+            "codegen_time": 0.08167100697755814,
+            "backend_time": 0.0,
+            "uses_optix": 1
+          },
+          {
+            "backend": "CUDA",
+            "type": "JIT",
+            "hash": "a5efba9aed35404559ca230ffb1c1c67",
+            "execution_time": 0.006719999946653843,
+            "operation_count": 19,
+            "cache_hit": 1,
+            "cache_disk": 0,
+            "codegen_time": 0.004740000702440739,
+            "backend_time": 0.0,
+            "uses_optix": 0
+          },
+          {
+            "backend": "CUDA",
+            "type": "JIT",
+            "hash": "bbb37c8863c7d41cc1904c5a31d5caf5",
+            "execution_time": 0.08668799698352814,
+            "operation_count": 36,
+            "cache_hit": 1,
+            "cache_disk": 0,
+            "codegen_time": 0.04971000552177429,
+            "backend_time": 0.0,
+            "uses_optix": 1
+          },
+          {
+            "backend": "CUDA",
+            "type": "JIT",
+            "hash": "bbb37c8863c7d41cc1904c5a31d5caf5",
+            "execution_time": 0.04588799923658371,
+            "operation_count": 36,
+            "cache_hit": 1,
+            "cache_disk": 0,
+            "codegen_time": 0.042170003056526184,
+            "backend_time": 0.0,
+            "uses_optix": 1
+          },
+          {
+            "backend": "CUDA",
+            "type": "JIT",
+            "hash": "bbb37c8863c7d41cc1904c5a31d5caf5",
+            "execution_time": 0.10611200332641602,
+            "operation_count": 36,
+            "cache_hit": 1,
+            "cache_disk": 0,
+            "codegen_time": 0.07980100810527802,
+            "backend_time": 0.0,
+            "uses_optix": 1
+          }
+        ],
+        "cuda_operation_count": 7,
+        "cuda_event_time_sum_ms": 0.3858239986002445,
+        "optix_kernel_count": 5,
+        "note": "Event-time sum includes recorded CUDA operations; not critical-path latency. IR omitted.",
+        "host_ranges": [
+          {
+            "name": "rf.channel.solve",
+            "inclusive_host_ms": 318.8759049999135
+          },
+          {
+            "name": "rf.channel.export",
+            "inclusive_host_ms": 3.9346690000456874
+          },
+          {
+            "name": "rf.channel",
+            "inclusive_host_ms": 322.82500400015124
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 84.69845400031772
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.14319100046122912
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 77.10148699970887
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.1795210000636871
+          },
+          {
+            "name": "rf.receiver.noise_filter_adc",
+            "inclusive_host_ms": 0.2368320001551183
+          },
+          {
+            "name": "capture.timed.5",
+            "inclusive_host_ms": 485.43145999974513
+          }
+        ],
+        "nvtx_available": true
+      }
+    },
+    {
+      "epoch_s": 0.03,
+      "service_ms": 484.0600200004701,
+      "pose_ms": 0.5890239999644109,
+      "capture_ms": 483.4704960003364,
+      "channel_ms": 322.42476099963824,
+      "cpu_iq_receiver_ms": 161.0457350006982,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 311.2088269999731,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 851,
+      "clipping_fraction_max": 0.0,
+      "profile": {
+        "records": [
+          {
+            "backend": "CUDA",
+            "type": "Other",
+            "execution_time": 0.00723200011998415,
+            "codegen_time": 0.0,
+            "backend_time": 0.0
+          },
+          {
+            "backend": "CUDA",
+            "type": "JIT",
+            "hash": "a39f1f13b2389a541f078f1dbacdf07f",
+            "execution_time": 0.05766399949789047,
+            "operation_count": 185,
+            "cache_hit": 1,
+            "cache_disk": 0,
+            "codegen_time": 0.07094000279903412,
+            "backend_time": 0.0,
+            "uses_optix": 1
+          },
+          {
+            "backend": "CUDA",
+            "type": "JIT",
+            "hash": "a48059c114a2bcac34c78b6350fef20d",
+            "execution_time": 0.07078400254249573,
+            "operation_count": 180,
+            "cache_hit": 1,
+            "cache_disk": 0,
+            "codegen_time": 0.11292100697755814,
+            "backend_time": 0.0,
+            "uses_optix": 1
+          },
+          {
+            "backend": "CUDA",
+            "type": "JIT",
+            "hash": "a5efba9aed35404559ca230ffb1c1c67",
+            "execution_time": 0.007391999941319227,
+            "operation_count": 19,
+            "cache_hit": 1,
+            "cache_disk": 0,
+            "codegen_time": 0.005180000327527523,
+            "backend_time": 0.0,
+            "uses_optix": 0
+          },
+          {
+            "backend": "CUDA",
+            "type": "JIT",
+            "hash": "bbb37c8863c7d41cc1904c5a31d5caf5",
+            "execution_time": 0.09247999638319016,
+            "operation_count": 36,
+            "cache_hit": 1,
+            "cache_disk": 0,
+            "codegen_time": 0.049400005489587784,
+            "backend_time": 0.0,
+            "uses_optix": 1
+          },
+          {
+            "backend": "CUDA",
+            "type": "JIT",
+            "hash": "bbb37c8863c7d41cc1904c5a31d5caf5",
+            "execution_time": 0.056543998420238495,
+            "operation_count": 36,
+            "cache_hit": 1,
+            "cache_disk": 0,
+            "codegen_time": 0.03085000440478325,
+            "backend_time": 0.0,
+            "uses_optix": 1
+          },
+          {
+            "backend": "CUDA",
+            "type": "JIT",
+            "hash": "bbb37c8863c7d41cc1904c5a31d5caf5",
+            "execution_time": 0.07254400104284286,
+            "operation_count": 36,
+            "cache_hit": 1,
+            "cache_disk": 0,
+            "codegen_time": 0.03779100254178047,
+            "backend_time": 0.0,
+            "uses_optix": 1
+          }
+        ],
+        "cuda_operation_count": 7,
+        "cuda_event_time_sum_ms": 0.3646399979479611,
+        "optix_kernel_count": 5,
+        "note": "Event-time sum includes recorded CUDA operations; not critical-path latency. IR omitted.",
+        "host_ranges": [
+          {
+            "name": "rf.channel.solve",
+            "inclusive_host_ms": 317.2456520005653
+          },
+          {
+            "name": "rf.channel.export",
+            "inclusive_host_ms": 5.151798999577295
+          },
+          {
+            "name": "rf.channel",
+            "inclusive_host_ms": 322.42172099995514
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 84.06587900026352
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.19319199964229483
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 76.09793900064687
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.1261509996766108
+          },
+          {
+            "name": "rf.receiver.noise_filter_adc",
+            "inclusive_host_ms": 0.22894199992151698
+          },
+          {
+            "name": "capture.timed.6",
+            "inclusive_host_ms": 483.4363959998882
+          }
+        ],
+        "nvtx_available": true
+      }
+    },
+    {
+      "epoch_s": 0.035,
+      "service_ms": 475.325286000043,
+      "pose_ms": 0.6890749991725897,
+      "capture_ms": 474.63574100038386,
+      "channel_ms": 313.2876440004111,
+      "cpu_iq_receiver_ms": 161.34809699997277,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 303.22531900037575,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 850,
+      "clipping_fraction_max": 0.0,
+      "profile": {
+        "records": [
+          {
+            "backend": "CUDA",
+            "type": "Other",
+            "execution_time": 0.006976000033318996,
+            "codegen_time": 0.0,
+            "backend_time": 0.0
+          },
+          {
+            "backend": "CUDA",
+            "type": "JIT",
+            "hash": "a39f1f13b2389a541f078f1dbacdf07f",
+            "execution_time": 0.07993599772453308,
+            "operation_count": 185,
+            "cache_hit": 1,
+            "cache_disk": 0,
+            "codegen_time": 0.06265000253915787,
+            "backend_time": 0.0,
+            "uses_optix": 1
+          },
+          {
+            "backend": "CUDA",
+            "type": "JIT",
+            "hash": "a48059c114a2bcac34c78b6350fef20d",
+            "execution_time": 0.09081599861383438,
+            "operation_count": 180,
+            "cache_hit": 1,
+            "cache_disk": 0,
+            "codegen_time": 0.07783100754022598,
+            "backend_time": 0.0,
+            "uses_optix": 1
+          },
+          {
+            "backend": "CUDA",
+            "type": "JIT",
+            "hash": "a5efba9aed35404559ca230ffb1c1c67",
+            "execution_time": 0.0071680000983178616,
+            "operation_count": 19,
+            "cache_hit": 1,
+            "cache_disk": 0,
+            "codegen_time": 0.00469000032171607,
+            "backend_time": 0.0,
+            "uses_optix": 0
+          },
+          {
+            "backend": "CUDA",
+            "type": "JIT",
+            "hash": "bbb37c8863c7d41cc1904c5a31d5caf5",
+            "execution_time": 0.04569600149989128,
+            "operation_count": 36,
+            "cache_hit": 1,
+            "cache_disk": 0,
+            "codegen_time": 0.03453000262379646,
+            "backend_time": 0.0,
+            "uses_optix": 1
+          },
+          {
+            "backend": "CUDA",
+            "type": "JIT",
+            "hash": "bbb37c8863c7d41cc1904c5a31d5caf5",
+            "execution_time": 0.05564799904823303,
+            "operation_count": 36,
+            "cache_hit": 1,
+            "cache_disk": 0,
+            "codegen_time": 0.02552100270986557,
+            "backend_time": 0.0,
+            "uses_optix": 1
+          },
+          {
+            "backend": "CUDA",
+            "type": "JIT",
+            "hash": "bbb37c8863c7d41cc1904c5a31d5caf5",
+            "execution_time": 0.05539200082421303,
+            "operation_count": 36,
+            "cache_hit": 1,
+            "cache_disk": 0,
+            "codegen_time": 0.028051001951098442,
+            "backend_time": 0.0,
+            "uses_optix": 1
+          }
+        ],
+        "cuda_operation_count": 7,
+        "cuda_event_time_sum_ms": 0.34163199784234166,
+        "optix_kernel_count": 5,
+        "note": "Event-time sum includes recorded CUDA operations; not critical-path latency. IR omitted.",
+        "host_ranges": [
+          {
+            "name": "rf.channel.solve",
+            "inclusive_host_ms": 309.4087949993991
+          },
+          {
+            "name": "rf.channel.export",
+            "inclusive_host_ms": 3.8610789997619577
+          },
+          {
+            "name": "rf.channel",
+            "inclusive_host_ms": 313.28499400024157
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 84.28438999999344
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.1458609995097504
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 76.29618099963409
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.13320099969860166
+          },
+          {
+            "name": "rf.receiver.noise_filter_adc",
+            "inclusive_host_ms": 0.22817199987912318
+          },
+          {
+            "name": "capture.timed.7",
+            "inclusive_host_ms": 474.6026909997454
+          }
+        ],
+        "nvtx_available": true
+      }
+    },
+    {
+      "epoch_s": 0.04,
+      "service_ms": 481.32320100012294,
+      "pose_ms": 0.733505999960471,
+      "capture_ms": 480.5892850008604,
+      "channel_ms": 319.6497710005133,
+      "cpu_iq_receiver_ms": 160.93951400034712,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 310.1277999994636,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 849,
+      "clipping_fraction_max": 0.0,
+      "profile": {
+        "records": [
+          {
+            "backend": "CUDA",
+            "type": "Other",
+            "execution_time": 0.008063999935984612,
+            "codegen_time": 0.0,
+            "backend_time": 0.0
+          },
+          {
+            "backend": "CUDA",
+            "type": "JIT",
+            "hash": "a39f1f13b2389a541f078f1dbacdf07f",
+            "execution_time": 0.10105600208044052,
+            "operation_count": 185,
+            "cache_hit": 1,
+            "cache_disk": 0,
+            "codegen_time": 0.09457100927829742,
+            "backend_time": 0.0,
+            "uses_optix": 1
+          },
+          {
+            "backend": "CUDA",
+            "type": "JIT",
+            "hash": "a48059c114a2bcac34c78b6350fef20d",
+            "execution_time": 0.057920001447200775,
+            "operation_count": 180,
+            "cache_hit": 1,
+            "cache_disk": 0,
+            "codegen_time": 0.06040000542998314,
+            "backend_time": 0.0,
+            "uses_optix": 1
+          },
+          {
+            "backend": "CUDA",
+            "type": "JIT",
+            "hash": "a5efba9aed35404559ca230ffb1c1c67",
+            "execution_time": 0.007104000076651573,
+            "operation_count": 19,
+            "cache_hit": 1,
+            "cache_disk": 0,
+            "codegen_time": 0.004670000169426203,
+            "backend_time": 0.0,
+            "uses_optix": 0
+          },
+          {
+            "backend": "CUDA",
+            "type": "JIT",
+            "hash": "bbb37c8863c7d41cc1904c5a31d5caf5",
+            "execution_time": 0.08659200370311737,
+            "operation_count": 36,
+            "cache_hit": 1,
+            "cache_disk": 0,
+            "codegen_time": 0.04774000495672226,
+            "backend_time": 0.0,
+            "uses_optix": 1
+          },
+          {
+            "backend": "CUDA",
+            "type": "JIT",
+            "hash": "bbb37c8863c7d41cc1904c5a31d5caf5",
+            "execution_time": 0.04390399903059006,
+            "operation_count": 36,
+            "cache_hit": 1,
+            "cache_disk": 0,
+            "codegen_time": 0.024500003084540367,
+            "backend_time": 0.0,
+            "uses_optix": 1
+          },
+          {
+            "backend": "CUDA",
+            "type": "JIT",
+            "hash": "bbb37c8863c7d41cc1904c5a31d5caf5",
+            "execution_time": 0.12390399724245071,
+            "operation_count": 36,
+            "cache_hit": 1,
+            "cache_disk": 0,
+            "codegen_time": 0.08591100573539734,
+            "backend_time": 0.0,
+            "uses_optix": 1
+          }
+        ],
+        "cuda_operation_count": 7,
+        "cuda_event_time_sum_ms": 0.4285440035164356,
+        "optix_kernel_count": 5,
+        "note": "Event-time sum includes recorded CUDA operations; not critical-path latency. IR omitted.",
+        "host_ranges": [
+          {
+            "name": "rf.channel.solve",
+            "inclusive_host_ms": 315.57566999981645
+          },
+          {
+            "name": "rf.channel.export",
+            "inclusive_host_ms": 4.05536000016582
+          },
+          {
+            "name": "rf.channel",
+            "inclusive_host_ms": 319.6469810000053
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 84.31709100023
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.19622100080596283
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 75.80031700035761
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.12266100020497106
+          },
+          {
+            "name": "rf.receiver.noise_filter_adc",
+            "inclusive_host_ms": 0.22981100028118817
+          },
+          {
+            "name": "capture.timed.8",
+            "inclusive_host_ms": 480.56198499944
+          }
+        ],
+        "nvtx_available": true
+      }
+    }
+  ],
+  "legacy_scope": {
+    "stack": {
+      "sionna": "0.19.2",
+      "mitsuba": "3.5.2",
+      "drjit": "0.4.6",
+      "tensorflow": "2.15.1",
+      "python": "3.11"
+    },
+    "propagation": "Legacy native Sionna Fibonacci solver; max_depth=1, LoS/reflection/scattering, scat_keep_prob=1, scat_random_phases=False. 1028 launched rays per TX, shared across receivers. Synthetic single-element arrays. Original terrain mesh and dielectric parameters (epsilon_r=5, conductivity=.01, scattering=.3), converted to legacy scene format; the legacy material has no thickness equivalent.",
+    "receiver": "Original branch SDRNetworkReceiver, waveform synthesis, independent clocks, filtering, noise and ADC; external Paths adapter supplies compact legacy channels and platform Doppler.",
+    "comparison_limit": "Not the profiling/p100 custom first-order sampler or Sionna 2.2 implementation. No numerical equivalence validation. Legacy rays and retained-path counts differ. Published current-solver CPU results and its work-count model are not directly comparable.",
+    "profile_limit": "Dr.Jit histories record its CUDA/OptiX operations only, not TensorFlow CUDA kernels. Inclusive host ranges overlap. Device-event sums are not service critical-path latency.",
+    "sampling_timers": "Original host_numpy_sampling_ms and proposal_table_prepare_ms are adapter compatibility placeholders set to zero; they are not measured stage timings and are excluded from the report.",
+    "cpu_baseline": "CPU cases hide GPUs from TensorFlow and use Mitsuba llvm_ad_rgb. CUDA cases use cuda_ad_rgb and TensorFlow CUDA. Dr.Jit uses two threads; TensorFlow thread defaults are not constrained.",
+    "outputs": "4096 complex samples per capture at 2 MS/s, 915 MHz carrier, 1 MHz receive bandwidth, one receiver per benchmark; example uses two TX and two RX."
+  }
+}
