@@ -11,3 +11,4 @@
 !docs/figures/*.png
 benchmarks/results
 research
+results/profiling

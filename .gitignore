@@ -8,3 +8,5 @@ __pycache__/
 research/
 .deps/
 recordings/
+# Keep large GPU profiler traces / IQ local; commit Markdown + small JSON/logs.
+results/profiling/*/raw/

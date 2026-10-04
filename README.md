@@ -1,5 +1,8 @@
 # airsim-rf
 
+On branch `profiling/p100`, use [the P100 profiling kit](P100_PROFILING.md)
+to collect paired CPU/CUDA measurements, device profiles and a publishable report.
+
 Start with [home setup](REPRODUCE.md) and the measured
 [120 Hz timing report](PERFORMANCE.md). This standalone repository contains the
 radar models, I/Q generation, Python AirSim adapter, tests and benchmarks.

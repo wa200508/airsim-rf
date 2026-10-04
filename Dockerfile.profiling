@@ -1,0 +1,19 @@
+# syntax=docker/dockerfile:1
+ARG BASE_IMAGE=ghcr.io/wa200508/airsim-rf:sha-8138f878dd35f3b22742fe54956b74f4e9576e36
+FROM ${BASE_IMAGE}
+USER root
+ARG PROFILE_SOURCE_REV=unknown
+ARG PROFILE_SOURCE_DIRTY=unknown
+ENV RF_PROFILE_SOURCE_REV=${PROFILE_SOURCE_REV} \
+    RF_PROFILE_SOURCE_DIRTY=${PROFILE_SOURCE_DIRTY}
+LABEL org.opencontainers.image.description="AirSim RF profiling harness; CUDA runtime supplied by NVIDIA Container Toolkit"
+# Preserve the base venv/dependencies through .dockerignore; overlay this branch.
+COPY --chmod=755 . /opt/airsim-rf/
+RUN --mount=type=secret,id=proxy_ca \
+    set -eu; \
+    if [ -f /run/secrets/proxy_ca ]; then export PIP_CERT=/run/secrets/proxy_ca; fi; \
+    /opt/airsim-rf/.venv/bin/python -m pip install --no-deps nvtx==0.2.13
+USER rf
+WORKDIR /work
+ENTRYPOINT ["python", "/opt/airsim-rf/scripts/run_gpu_profile.py"]
+CMD []

@@ -12,6 +12,7 @@ import numpy as np
 from scipy.signal import butter, sosfilt, sosfreqz
 
 from .receiver import BOLTZMANN, ReceiverConfig, synthesize_voltage
+from .profiling import profile_range
 
 
 @dataclass(frozen=True)
@@ -199,17 +200,20 @@ class SDRNetworkReceiver:
         if tuple(self.scene.transmitters) != self.tx_names or tuple(self.scene.receivers) != self.rx_names:
             raise ValueError("Devices changed after receiver construction")
         start = perf_counter()
-        paths = self.solver(self.scene, max_depth=self.max_depth, seed=self.seed,
-                  diffuse_reflection=self.diffuse, refraction=False,
-                  samples_per_src=self.samples_per_link,
-                  max_num_paths_per_src=len(self.rx_names)*(1+self.planes+self.samples_per_link))
-        a, tau = paths.cir(num_time_steps=1, normalize_delays=False, out_type="numpy")
-        if a.shape[:4] != (len(self.rx_names), 1, len(self.tx_names), 1):
-            raise ValueError("One antenna per transmitter and receiver required")
-        a = a[:, 0, :, 0, :, 0]
-        if tau.ndim == 5:
-            tau = tau[:, 0, :, 0, :]
-        doppler = paths.doppler.numpy()
+        with profile_range("rf.channel"):
+            with profile_range("rf.channel.solve"):
+                paths = self.solver(self.scene, max_depth=self.max_depth, seed=self.seed,
+                          diffuse_reflection=self.diffuse, refraction=False,
+                          samples_per_src=self.samples_per_link,
+                          max_num_paths_per_src=len(self.rx_names)*(1+self.planes+self.samples_per_link))
+            with profile_range("rf.channel.export"):
+                a, tau = paths.cir(num_time_steps=1, normalize_delays=False, out_type="numpy")
+                if a.shape[:4] != (len(self.rx_names), 1, len(self.tx_names), 1):
+                    raise ValueError("One antenna per transmitter and receiver required")
+                a = a[:, 0, :, 0, :, 0]
+                if tau.ndim == 5:
+                    tau = tau[:, 0, :, 0, :]
+                doppler = paths.doppler.numpy()
         self.last_channel_ms = 1000*(perf_counter()-start)
         captures = {}
         warmup = 256
@@ -230,26 +234,29 @@ class SDRNetworkReceiver:
                          num_samples=num_samples+warmup, transmit_power_w=emitter.transmit_power_w,
                          impedance_ohm=self.profile.impedance_ohm, noise_enabled=False)
                 epoch_gain = a[ri, ti] * np.exp(2j*np.pi*doppler[ri, ti]*delta_epoch)
-                signal = synthesize_voltage(epoch_gain, tau[ri, ti],
-                    emitter.rf_envelope(self.profile.carrier_hz), sim_time_ns=warmup_ns,
-                    config=config, doppler_hz=doppler[ri, ti]).iq_volts * lo
-                total += signal
-                filtered_link = sosfilt(self.sos, signal)[warmup:]
-                link_power[tx_name] = float(np.mean(np.abs(filtered_link)**2)/self.profile.impedance_ohm)
-                retained[tx_name] = int(np.sum(tau[ri, ti] >= 0))
-            noise_bandwidth = actual_rate * self.noise_bandwidth_fraction
-            noise_power = BOLTZMANN * self.profile.temperature_k * noise_bandwidth * 10**(self.profile.noise_figure_db/10)
-            if self.profile.noise_enabled:
-                rng = self.rngs[rx_name]
-                variance = self.profile.impedance_ohm * BOLTZMANN * self.profile.temperature_k * actual_rate * 10**(self.profile.noise_figure_db/10)
-                total += np.sqrt(variance/2)*(rng.standard_normal(total.size)+1j*rng.standard_normal(total.size))
-            else:
-                noise_power = 0.
-            analog = sosfilt(self.sos, total)[warmup:].astype(np.complex64)
-            codes, digital, step, clipping = quantize_iq(analog,
-                    full_scale_dbm=self.profile.input_full_scale_dbm,
-                    impedance_ohm=self.profile.impedance_ohm, bits=self.profile.adc_bits)
-            captures[rx_name] = SDRCapture(analog, digital, codes, sim_time_ns,
-                    self.profile.sample_rate_hz, actual_rate, step, clipping, link_power,
-                    float(noise_power), noise_bandwidth, retained)
+                with profile_range("rf.iq.waveforms"):
+                    signal = synthesize_voltage(epoch_gain, tau[ri, ti],
+                        emitter.rf_envelope(self.profile.carrier_hz), sim_time_ns=warmup_ns,
+                        config=config, doppler_hz=doppler[ri, ti]).iq_volts * lo
+                    total += signal
+                with profile_range("rf.iq.link_diagnostics"):
+                    filtered_link = sosfilt(self.sos, signal)[warmup:]
+                    link_power[tx_name] = float(np.mean(np.abs(filtered_link)**2)/self.profile.impedance_ohm)
+                    retained[tx_name] = int(np.sum(tau[ri, ti] >= 0))
+            with profile_range("rf.receiver.noise_filter_adc"):
+                noise_bandwidth = actual_rate * self.noise_bandwidth_fraction
+                noise_power = BOLTZMANN * self.profile.temperature_k * noise_bandwidth * 10**(self.profile.noise_figure_db/10)
+                if self.profile.noise_enabled:
+                    rng = self.rngs[rx_name]
+                    variance = self.profile.impedance_ohm * BOLTZMANN * self.profile.temperature_k * actual_rate * 10**(self.profile.noise_figure_db/10)
+                    total += np.sqrt(variance/2)*(rng.standard_normal(total.size)+1j*rng.standard_normal(total.size))
+                else:
+                    noise_power = 0.
+                analog = sosfilt(self.sos, total)[warmup:].astype(np.complex64)
+                codes, digital, step, clipping = quantize_iq(analog,
+                        full_scale_dbm=self.profile.input_full_scale_dbm,
+                        impedance_ohm=self.profile.impedance_ohm, bits=self.profile.adc_bits)
+                captures[rx_name] = SDRCapture(analog, digital, codes, sim_time_ns,
+                        self.profile.sample_rate_hz, actual_rate, step, clipping, link_power,
+                        float(noise_power), noise_bandwidth, retained)
         return captures

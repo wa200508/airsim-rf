@@ -16,20 +16,24 @@ def main():
     p.add_argument('--samples', type=int, default=4096)
     p.add_argument('--samples-per-link', type=int, default=1028)
     p.add_argument('--backend', choices=('cpu', 'cuda'), default='cpu')
+    p.add_argument("--profile", action="store_true", help="Separate instrumented Dr.Jit event/NVTX run")
+    p.add_argument("--threads", type=int, default=2)
     p.add_argument('--output', type=Path, required=True)
     args = p.parse_args()
-    if min(args.tx, args.iterations, args.samples) < 1 or args.warmup < 0 or args.samples_per_link < 2:
+    if min(args.tx, args.iterations, args.samples) < 1 or args.warmup < 0 or args.samples_per_link < 2 or args.threads < 1:
         p.error('Positive counts, >=2 attempts/link and nonnegative warmup required')
     import numpy as np
     import drjit as dr
     import mitsuba as mi
-    dr.set_thread_count(2)
+    dr.set_thread_count(args.threads)
     if args.backend == 'cuda' and not dr.has_backend(dr.JitBackend.CUDA):
         p.error('CUDA unavailable; no implicit CPU fallback')
     mi.set_variant('cuda_ad_mono_polarized' if args.backend == 'cuda' else 'llvm_ad_mono_polarized')
     import sionna.rt as rt
     from airsim_rf.sdr import PlutoSDRProfile, RadioClock, SDREmitter, SDRNetworkReceiver
     from airsim_rf.runtime_metrics import receiver_gpu_workload, conditional_gpu_ray_times
+    from airsim_rf.profiling import CaptureProfiler, summarize_kernel_history
+    profiler = CaptureProfiler() if args.profile else None
     root = Path(__file__).resolve().parents[1]
     start = perf_counter()
     scene = rt.load_scene(str(root/'benchmarks/scenes/terrain.xml'))
@@ -67,30 +71,47 @@ def main():
     preparation_ms = 1000*(perf_counter()-start)
     positions, velocities = np.vstack((tx_pos, rx_pos)), np.vstack((tx_vel, rx_vel))
 
-    def run(index):
+    def run(index, phase):
+        dr.sync_thread()
+        if profiler is not None:
+            dr.kernel_history_clear()
+            profiler.take_host_ranges()
         start = perf_counter()
         epoch = index/200.
         for i, device in enumerate(devices):
             device.position = (positions[i]+velocities[i]*epoch).tolist()
         pose_ms = 1000*(perf_counter()-start)
         capture_start = perf_counter()
-        captures = receiver.capture(round(epoch*1e9), num_samples=args.samples)
+        if profiler is None:
+            captures = receiver.capture(round(epoch*1e9), num_samples=args.samples)
+        else:
+            with dr.scoped_set_flag(dr.JitFlag.KernelHistory, True), profiler.activate():
+                with profiler.range(f"capture.{phase}.{index}"):
+                    captures = receiver.capture(round(epoch*1e9), num_samples=args.samples)
         finish = perf_counter()
         capture_ms = 1000*(finish-capture_start)
-        return dict(epoch_s=epoch, service_ms=1000*(finish-start), pose_ms=pose_ms,
+        row = dict(epoch_s=epoch, service_ms=1000*(finish-start), pose_ms=pose_ms,
             capture_ms=capture_ms, channel_ms=receiver.last_channel_ms,
             cpu_iq_receiver_ms=capture_ms-receiver.last_channel_ms,
             stage_timings=receiver.solver.stage_timings,
             retained_paths=sum(sum(cap.retained_paths.values()) for cap in captures.values()),
             clipping_fraction_max=max(cap.clipped_component_fraction for cap in captures.values()))
+        if profiler is not None:
+            dr.sync_thread()
+            row["profile"] = summarize_kernel_history(dr.kernel_history())
+            row["profile"]["host_ranges"] = profiler.take_host_ranges()
+            row["profile"]["nvtx_available"] = profiler.nvtx is not None
+            if args.backend == "cuda" and not row["profile"]["cuda_operation_count"]:
+                raise RuntimeError("Instrumented CUDA capture recorded no CUDA operations")
+        return row
 
-    first = run(0)
+    first = run(0, "first")
     for i in range(args.warmup):
-        run(i+1)
+        run(i+1, "warmup")
     start = perf_counter()
     rows = []
     for i in range(args.iterations):
-        row = run(i+args.warmup+1)
+        row = run(i+args.warmup+1, "timed")
         rows.append(row)
         if (i+1) % 5 == 0:
             print(f'{i+1}/{args.iterations}: {row["service_ms"]:.1f} ms', flush=True)
@@ -104,6 +125,7 @@ def main():
         attempts_per_link=args.samples_per_link, specular_planes=receiver.planes, pulse_hz=200)
     host = np.median([r['stage_timings']['host_numpy_sampling_ms'] for r in rows]) if args.rx == 1 else None
     result = dict(arguments={k: str(v) if isinstance(v, Path) else v for k, v in vars(args).items()},
+        measurement_mode='instrumented_profile' if args.profile else 'unprofiled_benchmark',
         scope='915 MHz, 2 MS/s, 1 MHz filter, noisy independent-clock Pluto profile; moving mounts over 800-triangle DEM',
         timing_includes='Pose writes, synchronized channel/NumPy export, per-path IQ, per-link diagnostic filters, receive noise/filter and ADC conversion',
         timing_excludes=['AirSim RPC/physics', 'transport', 'queueing', 'storage', 'plots', 'RF skill processing'],
@@ -125,6 +147,7 @@ def main():
         versions=dict(sionna_rt=rt.__version__, mitsuba=mi.__version__, drjit=dr.__version__, backend=mi.variant()),
         gpu_workload_per_receiver=workload,
         conditional_gpu_ray_stage=conditional_gpu_ray_times(workload,host_sampling_ms=None if host is None else float(host)),
+        profile_note='Profiled serial throughput includes event/history instrumentation; use separate unprofiled runs for performance.',
         gpu_note='Ray-only hypothetical query throughput. IQ/receive chain and proposal draws remain CPU even with --backend cuda. No measured GPU latency or throughput.',
         samples=rows)
     args.output.parent.mkdir(parents=True, exist_ok=True)

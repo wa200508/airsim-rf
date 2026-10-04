@@ -9,6 +9,7 @@ from time import perf_counter
 import numpy as np
 
 from .single_bounce import _PlanarCandidates, _VisibleImageMethod
+from .profiling import profile_range
 
 
 @dataclass(frozen=True)
@@ -113,20 +114,22 @@ class _ScatteringCandidates(_PlanarCandidates):
         self.visibility = visibility
 
         proposal_start = perf_counter()
-        tx_proposal = _AngularProposal.from_patterns(self.scene.tx_array.antenna_pattern.patterns,
-                      receive=False, uniform_fraction=self.uniform_fraction)
-        rx_proposal = _AngularProposal.from_patterns(self.scene.rx_array.antenna_pattern.patterns,
-                      receive=True, uniform_fraction=self.uniform_fraction)
+        with profile_range("rf.channel.proposal_tables"):
+            tx_proposal = _AngularProposal.from_patterns(self.scene.tx_array.antenna_pattern.patterns,
+                          receive=False, uniform_fraction=self.uniform_fraction)
+            rx_proposal = _AngularProposal.from_patterns(self.scene.rx_array.antenna_pattern.patterns,
+                          receive=True, uniform_fraction=self.uniform_fraction)
         proposal_ms = (perf_counter()-proposal_start)*1000
         sampling_start = perf_counter()
-        rng = np.random.default_rng(kwargs["seed"])
-        tx_count, rx_count = (samples+1)//2, samples//2
-        pairs = sources*targets
-        local = np.empty((3, pairs, samples))
-        local[:, :, :tx_count] = tx_proposal.draw(rng, pairs*tx_count).reshape(3, pairs, tx_count)
-        local[:, :, tx_count:] = rx_proposal.draw(rng, pairs*rx_count).reshape(3, pairs, rx_count)
-        # This region is strictly NumPy/host work, even with a CUDA backend.
-        # Table preparation above includes backend evaluation and host export.
+        with profile_range("rf.channel.host_proposal_draws"):
+            rng = np.random.default_rng(kwargs["seed"])
+            tx_count, rx_count = (samples+1)//2, samples//2
+            pairs = sources*targets
+            local = np.empty((3, pairs, samples))
+            local[:, :, :tx_count] = tx_proposal.draw(rng, pairs*tx_count).reshape(3, pairs, tx_count)
+            local[:, :, tx_count:] = rx_proposal.draw(rng, pairs*rx_count).reshape(3, pairs, rx_count)
+            # This region is strictly NumPy/host work, even with a CUDA backend.
+            # Table preparation above includes backend evaluation and host export.
         sampling_ms = (perf_counter()-sampling_start)*1000
         local = mi.Vector3f(local.reshape(3, -1))
         dr.make_opaque(local)

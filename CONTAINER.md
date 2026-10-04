@@ -1,5 +1,8 @@
 # Run the tests in a container
 
+For the GPU profiling branch, [P100_PROFILING.md](P100_PROFILING.md) provides
+a pinned-base profiling image, host launcher and results-publication helper.
+
 The CPU image bundles Python 3.12, LLVM 19, the pinned Sionna RT and ProjectAirSim
 Python SDK, and this project's code and tests. Tests run as an unprivileged user
 and require no GPU, running AirSim instance, or network access. This is the RF

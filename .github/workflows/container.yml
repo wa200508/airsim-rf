@@ -2,7 +2,7 @@ name: Test and publish container
 
 on:
   push:
-    branches: [main, "optimization/**"]
+    branches: [main, "optimization/**", "profiling/p100"]
     tags: ["v*"]
   pull_request:
   workflow_dispatch:
@@ -45,6 +45,8 @@ jobs:
         run: docker run --rm --network none airsim-rf:test python /opt/airsim-rf/benchmarks/generate_rf_waterfalls.py --epochs 2 --tx 4 --samples-per-link 128 --output-dir /work/figures
       - name: Smoke test terrain features in coherent I/Q offline
         run: docker run --rm --network none airsim-rf:test python /opt/airsim-rf/benchmarks/generate_terrain_signature.py --scan-points 9 --samples-per-link 128 --output-dir /work/terrain_scan
+      - name: Smoke test CPU profiling and report generation offline
+        run: docker run --rm --network none airsim-rf:test python /opt/airsim-rf/scripts/run_gpu_profile.py --cpu-only --quick --tx 2 --samples 1024 --samples-per-link 128 --no-example --no-nsys --no-telemetry --output-root /work/profiling --run-id ci-smoke
       - name: Registry tags
         id: meta
         if: github.event_name != 'pull_request'
