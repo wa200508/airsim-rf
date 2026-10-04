@@ -16,37 +16,67 @@ not demonstrate complete 120 Hz service, GPU performance or the $5,000 target.
 
 Under the already accepted narrowband Doppler model, a link is:
 
-```text
-y[n] = sum_p gain[p] * exp(j*2*pi*fd[p]*(t[n]-channel_epoch))
-                      * reconstructed_private_input(t[n]-delay[p])
-```
+$$
+y[n]=\sum_{p=1}^{P}a_p\,
+e^{\,j2\pi f_{D,p}(t_n-t_0)}\,
+\widetilde{x}(t_n-\tau_p),
+\qquad t_n=t_{\mathrm{start}}+\frac{n}{f_s}.
+$$
 
-The finite input reconstruction is the same normalized Lanczos interpolation
-as the existing sampled renderer. Every supplied path enters the new channel;
-its fractional delay and its own Doppler remain. Equal-delay paths with
-different Dopplers still beat and can cancel. No Doppler averaging, dominant
-path selection, reduced output rate or reduced scene updates are used.
+Here, $a_p$ is the complex path gain, $\tau_p$ its delay, $f_{D,p}$ its
+Doppler frequency, $t_0$ the channel epoch, and $\widetilde{x}$ the reconstructed
+private input waveform. This is the project's implemented model, with its
+narrowband approximation and finite interpolation made explicit; see the
+[direct reference implementation](src/airsim_rf/batched_rendering.py).
 
-For each small processing block, write output time as its centre plus `u`
-times half its duration, where `u` ranges from -1 to 1. The Jacobi–Anger identity
-gives the Chebyshev expansion:
+Every supplied path enters the new channel. Its fractional delay and its own
+Doppler remain. Equal-delay paths with different Dopplers still beat and can
+cancel. No Doppler averaging, dominant path selection, reduced output rate
+or reduced scene updates are used.
 
-```text
-exp(j*z*u) = J_0(z) + 2*sum_{q>=1} j^q*J_q(z)*T_q(u)
-z[p]       = pi*fd[p]*block_duration
-```
+For a block with centre $t_c$ and duration $\Delta t$, define
 
-`J_q` is a Bessel function and `T_q` a Chebyshev polynomial. Truncate this
-temporal expansion at a degree chosen from the **declared maximum Doppler**,
+$$
+u_n=\frac{2(t_n-t_c)}{\Delta t}\in[-1,1],
+\qquad z_p=\pi f_{D,p}\Delta t.
+$$
+
+The [Jacobi–Anger identities, NIST DLMF Eq. 10.12.3](https://dlmf.nist.gov/10.12#E3),
+combined with the [Chebyshev identity $T_q(\cos\theta)=\cos(q\theta)$,
+DLMF Eq. 18.5.1](https://dlmf.nist.gov/18.5#E1), give
+
+$$
+e^{jzu}=J_0(z)+2\sum_{q=1}^{\infty}j^qJ_q(z)\,T_q(u).
+$$
+
+$J_q$ is a Bessel function and $T_q$ a Chebyshev polynomial. Truncate this
+temporal expansion at a degree chosen from the declared maximum Doppler,
 block duration and error tolerance. There is no snapping Dopplers onto bins.
 For each basis term, combine the delayed path weights into a filter:
 
-```text
-H_q[k] = sum_p interpolation_weight[p,k] * gain[p]
-              * exp(j*2*pi*fd[p]*(block_centre-channel_epoch))
-              * chebyshev_coefficient[q,p]
-y[n]   = sum_q T_q(u[n]) * overlap_save_convolution(H_q, private_input)[n]
-```
+$$
+c_{q,p}=
+\begin{cases}
+J_0(z_p), & q=0,\\
+2j^qJ_q(z_p), & q\geq1.
+\end{cases}
+$$
+
+$$
+H_q[k]=\sum_{p=1}^{P}w_{p,k}\,a_p\,
+e^{\,j2\pi f_{D,p}(t_c-t_0)}\,c_{q,p}.
+$$
+
+$$
+\widehat{y}[n]=\sum_{q=0}^{K}T_q(u_n)\,(H_q*x)[n],
+\qquad
+(H_q*x)[n]=\sum_k H_q[k]\,x[n-k].
+$$
+
+$w_{p,k}$ are the finite fractional-delay reconstruction weights and $K$ is
+the retained temporal degree. These filter equations are this project's
+derivation from the identity above. Overlap-save FFT filtering computes the
+convolutions; it does not replace time-varying Doppler with a static channel.
 
 Thus path projection precedes fast-time filtering. The waveform is arbitrary
 sampled I/Q; its structure is not used to remove work. Each link performs its
@@ -63,19 +93,47 @@ approximation is an explicit additional numerical assumption.
 
 ## Error and qualification bounds
 
-The degree selection uses a conservative uniform Bessel-tail bound:
+The degree selection uses a conservative bound **derived here** from the
+[Bessel power series, NIST DLMF Eq. 10.2.2](https://dlmf.nist.gov/10.2#E2).
+Taking absolute values and using $(q+m)!\geq q!\,(q+1)^m$ gives
 
-```text
-|J_q(z)| <= (|z|/2)^q/q! * exp(z^2/(4*(q+1)))
-tail     <= 2*B_q/(1-|z_max|/(2*(q+1)))
-```
+$$
+|J_q(z)|\leq B_q(|z|),
+\qquad
+B_q(s)=\frac{(s/2)^q}{q!}
+\exp\!\left(\frac{s^2}{4(q+1)}\right).
+$$
 
-Starting beyond `|z_max|`, this bounds the omitted Chebyshev terms for every
-`u` in [-1,1] and every Doppler in the declared range. The default dimensionless
-temporal tolerance is 1e-10. The reported absolute output bound multiplies that
-tolerance by maximum input amplitude and the sum of absolute path gains times
-the interpolation weights' L1 norms. It therefore still applies near coherent
-cancellation, where relative output error alone can be misleading.
+Define $z_{\max}=\pi f_{D,\max}\Delta t$ and let $q=K+1$ be the first omitted
+degree. For $q\geq\lceil z_{\max}\rceil$ and $q\geq1$, successive bounds decrease
+at least geometrically, so the omitted temporal terms satisfy
+
+$$
+\sup_{\substack{|z|\leq z_{\max}\\|u|\leq1}}
+\left|e^{jzu}-\sum_{\ell=0}^{K}c_\ell(z)T_\ell(u)\right|
+\leq
+\frac{2B_q(z_{\max})}
+{1-\dfrac{z_{\max}}{2(q+1)}}
+\leq\varepsilon.
+$$
+
+Here $c_0(z)=J_0(z)$ and $c_\ell(z)=2j^\ell J_\ell(z)$ for $\ell\geq1$.
+The zero-Doppler case is exact with $K=0$. The geometric-tail step and its
+degree-selection rule are our derivation, not a bound quoted verbatim from
+DLMF or from Hofer et al.
+
+The default dimensionless temporal tolerance is $\varepsilon=10^{-10}$.
+The triangle inequality gives the corresponding absolute output error bound:
+
+$$
+|\widehat{y}[n]-y[n]|
+\leq
+\varepsilon\,\|x\|_\infty
+\sum_{p=1}^{P}|a_p|\sum_k|w_{p,k}|.
+$$
+
+This bound remains applicable near coherent cancellation, where relative
+output error alone can be misleading.
 
 This bound covers temporal truncation. It excludes floating-point roundoff and
 the finite input reconstruction's error relative to ideal infinite sinc.
