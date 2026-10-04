@@ -36,6 +36,12 @@ private transmitter batches, replayed kernels and per-path interpolation.
 Matched CPU service falls from 274 ms to 243 ms; GPU performance and the full
 continuous 120 Hz target remain unverified.
 
+For an architectural change, [Doppler-basis FFT rendering](DOPPLER_BASIS_FFT.md)
+demonstrates about 22 times faster CPU rendering of arbitrary private sampled
+I/Q with 1,028 valid paths/link and time-evolving Doppler. It is an equal-clock
+research prototype with explicit numerical bounds; GPU and full receiver
+qualification remain work.
+
 See [SDR update rate and latency](SDR_RUNTIME.md) for complete channel-to-ADC
 CPU measurements and conditional GPU limits. The [code-derived scaling model](SDR_COMPLEXITY.md)
 compares O(paths × samples) work with measured CPU costs and proposed GPU kernels.

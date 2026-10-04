@@ -35,6 +35,13 @@ with private inputs and retained path Dopplers. Its finite interpolation kernel
 and CPU measurements are documented separately; the full target workload and
 ideal-reconstruction accuracy remain to be qualified.
 
+A new [bounded-error Doppler-basis FFT experiment](DOPPLER_BASIS_FFT.md) tests
+the alternative representation on synthetic channels with 1,028 valid paths,
+100-microsecond delay bounds and +/-2,500 Hz Doppler bounds. It measures about
+22 times faster CPU rendering, with separate wider-range cases, independent
+private input transforms and explicit equal-clock scope. This is evidence for
+an architectural candidate, not qualification of the target RF plane.
+
 Other representations remain research candidates only if they handle the same
 declared workload and numerical accuracy, report their unfavorable cases, and
 do not obtain their speedup by pruning paths, averaging Dopplers, narrowing the

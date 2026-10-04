@@ -11,4 +11,6 @@
 !docs/figures/*.png
 benchmarks/results
 research
+!src/airsim_rf/research
+!src/airsim_rf/research/**
 results/profiling

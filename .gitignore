@@ -6,6 +6,8 @@ __pycache__/
 !docs/figures/terrain_scan_iq.npz
 !docs/figures/pluto_esm_iq.npz
 research/
+!src/airsim_rf/research/
+!src/airsim_rf/research/*.py
 .deps/
 recordings/
 # Keep large GPU profiler traces / IQ local; commit Markdown + small JSON/logs.

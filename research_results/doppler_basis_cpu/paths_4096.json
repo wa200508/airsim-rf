@@ -1,0 +1,387 @@
+{
+  "scope": "research_doppler_basis_fft",
+  "utc": "2026-10-04T13:39:13.657618+00:00",
+  "arguments": {
+    "links": 1,
+    "paths": 4096,
+    "samples": 16667,
+    "sample_rate": 2000000.0,
+    "max_delay_us": 100.0,
+    "max_doppler_hz": 2500.0,
+    "taps": 32,
+    "block_samples": 2048,
+    "tolerance": 1e-10,
+    "iterations": 5,
+    "warmup": 2,
+    "threads": 2,
+    "skip_direct_timing": true,
+    "output": "research_results/doppler_basis_cpu/paths_4096.json"
+  },
+  "qualification": "Equal sample clocks only; oscillator offsets enabled; not an integrated scene/receiver test",
+  "includes": [
+    "private source packing and FFT per link",
+    "all-path interpolation map rebuilt per capture",
+    "all-path temporal projection per block",
+    "overlap-save filtering and basis reconstruction",
+    "oscillator phase and coherent summation"
+  ],
+  "excludes": [
+    "scene propagation",
+    "clock resampling",
+    "noise/filter/ADC",
+    "AirSim",
+    "transport/queues",
+    "source generation"
+  ],
+  "no_source_sharing": true,
+  "valid_paths": 4096,
+  "private_source_bytes": 271920,
+  "source_generation_ms": 1.8670950084924698,
+  "sample_duration_ms": 8.3335,
+  "first_ms": {
+    "basis": 112.69639799138531
+  },
+  "rows": {
+    "basis": [
+      {
+        "total_ms": 78.2801179739181,
+        "metrics": {
+          "preparation_ms": 6.535222026286647,
+          "channel_construction_ms": 62.200295040383935,
+          "fft_and_reconstruction_ms": 6.97387004038319,
+          "total_ms": 77.8457980195526,
+          "blocks": [
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 283,
+              "degree": 10,
+              "temporal_tail_bound": 8.082681397874134e-11
+            }
+          ],
+          "valid_paths": 4096,
+          "delay_coefficients": [
+            233
+          ],
+          "temporal_only_absolute_error_bound": [
+            6.30604158772636e-08
+          ]
+        }
+      },
+      {
+        "total_ms": 79.06976400408894,
+        "metrics": {
+          "preparation_ms": 6.749028019839898,
+          "channel_construction_ms": 62.87927707307972,
+          "fft_and_reconstruction_ms": 6.771602958906442,
+          "total_ms": 78.5982990055345,
+          "blocks": [
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 283,
+              "degree": 10,
+              "temporal_tail_bound": 8.082681397874134e-11
+            }
+          ],
+          "valid_paths": 4096,
+          "delay_coefficients": [
+            233
+          ],
+          "temporal_only_absolute_error_bound": [
+            6.30604158772636e-08
+          ]
+        }
+      },
+      {
+        "total_ms": 82.88440300384536,
+        "metrics": {
+          "preparation_ms": 6.417077995138243,
+          "channel_construction_ms": 66.33230001898482,
+          "fft_and_reconstruction_ms": 7.176897022873163,
+          "total_ms": 82.33702500001527,
+          "blocks": [
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 283,
+              "degree": 10,
+              "temporal_tail_bound": 8.082681397874134e-11
+            }
+          ],
+          "valid_paths": 4096,
+          "delay_coefficients": [
+            233
+          ],
+          "temporal_only_absolute_error_bound": [
+            6.30604158772636e-08
+          ]
+        }
+      },
+      {
+        "total_ms": 80.76847001211718,
+        "metrics": {
+          "preparation_ms": 6.256972003029659,
+          "channel_construction_ms": 64.113844971871,
+          "fft_and_reconstruction_ms": 7.266131025971845,
+          "total_ms": 80.31453998410143,
+          "blocks": [
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 283,
+              "degree": 10,
+              "temporal_tail_bound": 8.082681397874134e-11
+            }
+          ],
+          "valid_paths": 4096,
+          "delay_coefficients": [
+            233
+          ],
+          "temporal_only_absolute_error_bound": [
+            6.30604158772636e-08
+          ]
+        }
+      },
+      {
+        "total_ms": 82.65674600261264,
+        "metrics": {
+          "preparation_ms": 6.390088994521648,
+          "channel_construction_ms": 64.32185301673599,
+          "fft_and_reconstruction_ms": 9.17890403070487,
+          "total_ms": 82.18188499449752,
+          "blocks": [
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 283,
+              "degree": 10,
+              "temporal_tail_bound": 8.082681397874134e-11
+            }
+          ],
+          "valid_paths": 4096,
+          "delay_coefficients": [
+            233
+          ],
+          "temporal_only_absolute_error_bound": [
+            6.30604158772636e-08
+          ]
+        }
+      }
+    ],
+    "direct": []
+  },
+  "summary": {
+    "basis": {
+      "p50_ms": 80.76847001211718,
+      "p95_ms": 82.83887160359882
+    }
+  },
+  "speedup": null,
+  "accuracy": {
+    "links_checked": 1,
+    "paths_checked": 4096,
+    "samples_checked": 16667,
+    "normalized_rms_error": 2.2044237181457825e-12,
+    "max_absolute_error": 4.65015942348506e-11,
+    "temporal_only_absolute_error_bound": 6.30604158772636e-08
+  },
+  "accuracy_scope": "Agreement with finite Lanczos sampled reconstruction; ideal sinc and noise-floor qualification remain separate",
+  "cpu_quota": "200000 100000",
+  "source_sha256": {
+    "src/airsim_rf/research/doppler_basis.py": "2a0eb9cb8a1598af14c9b3af488d9f2a23dc4a44b464f7b82148f347963956f8",
+    "src/airsim_rf/batched_rendering.py": "56589719ddfd1f49f416b3835f23b327aa4812fcbdefc4f3b58922309a94da59",
+    "src/airsim_rf/sampled_waveform.py": "bd762a283bc984ef11f502c02f4b384fa7863be878a1803521ba1f9f808ae5ab",
+    "benchmarks/benchmark_doppler_basis.py": "51ac942ab033211f625d66a4ec9751910ce856d5be79cc502c589c3ce1bcea48"
+  }
+}
