@@ -36,6 +36,11 @@ existing result directories are not overwritten. Choose another GPU with
 `RF_PROFILE_GPU=...`; the container sees the selected device as device zero.
 CuPy and driver caches use writable temporary directories, so the host UID/GID
 used by the Docker launcher does not need access to the image user's home.
+The launcher also gives LLVM reference kernels a writable Dr.Jit cache and
+sets `DRJIT_LIBCUDA_PATH` to an absent library path to disable Dr.Jit's
+unsupported CUDA initialization. CuPy uses the actual NVIDIA driver separately;
+its CUDA preflight must still pass. This avoids a startup hang observed when
+the CPU direct reference initialized Dr.Jit after other numerical libraries.
 
 Default cases: **1, 4 and 100 independent transmitters, one receiver, 1,028
 valid paths per link, 16,667 outputs at 2 MS/s**. Delay range 0–100 microseconds,

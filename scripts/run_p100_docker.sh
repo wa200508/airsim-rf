@@ -34,7 +34,9 @@ profile_run=(docker run --rm --user "$(id -u):$(id -g)"
   -e MPLCONFIGDIR=/tmp/matplotlib)
 if [[ "$profile_basis" == true ]]; then
   profile_run+=(--entrypoint python -e CUPY_CACHE_DIR=/tmp/cupy-kernel-cache
-    -e CUDA_CACHE_PATH=/tmp/cuda-kernel-cache)
+    -e CUDA_CACHE_PATH=/tmp/cuda-kernel-cache
+    -e DRJIT_CACHE_DIR=/tmp/drjit-cache
+    -e DRJIT_LIBCUDA_PATH=/tmp/disabled-drjit-cuda.so)
 fi
 profile_cpu_only=false
 for profile_arg in "$@"; do
