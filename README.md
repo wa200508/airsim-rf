@@ -25,6 +25,8 @@ It compares direct rendering, time-varying channel compression, FFT/SIMD/GPU
 backends, FPGA emulators and shared research infrastructure, with new measured
 channel support and an arbitrary-waveform accuracy experiment. It provides a
 qualification plan rather than a claim of achieved real-time operation.
+Its updated constraint requires general workload qualification without relying
+on this scene's short delay spread or low Doppler.
 
 See [SDR update rate and latency](SDR_RUNTIME.md) for complete channel-to-ADC
 CPU measurements and conditional GPU limits. The [code-derived scaling model](SDR_COMPLEXITY.md)

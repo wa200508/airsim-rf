@@ -6,12 +6,45 @@ moving platforms, and first-order environmental multipath. The initial sample
 rate is **2 MS/s per radio**, with the existing approximately 1 MHz receive
 bandwidth. No GPU result or complete 120 Hz demonstration is claimed here.
 
-The recommendation is to keep direct path rendering as the reference and add
-a **sampled-waveform renderer using a compact, time-varying channel**. Support
-CPU execution and portable GPU primitives, but qualify real-time capacity for
-a bounded workload on specific hardware. Do not require ten GPUs as the first
-university deployment. Preserve ten logical receiver workers and permit them
-to share one or two devices.
+## Required scope: do not optimize by simplifying the scenario
+
+The user explicitly requires that optimization not rely on the current scene's
+short delay spread, low Doppler, favorable visibility, waveform family or small
+number of effective channel coefficients. The terrain measurements below are
+case-specific accuracy evidence; they are not the production sizing basis.
+The previous recommendation to make a compact channel the primary renderer,
+using those properties to justify the budget, is withdrawn.
+
+The baseline is a **general sampled-waveform direct path renderer**. Preserve
+all supplied valid paths, their fractional delays, individual Doppler evolution,
+coherent sums and continuous samples at the configured rate. Keep the requested
+scene/channel update cadence. Optimize execution: fuse interpolation, phase
+updates and summation; avoid path-by-sample intermediate writes; reuse source
+buffers; batch work and transfers; keep mandatory processing on-device where
+beneficial. Scheduling across one, two or more GPUs is a measured deployment
+choice, not an assumed capacity improvement.
+
+Other representations remain research candidates only if they handle the same
+declared workload and numerical accuracy, report their unfavorable cases, and
+do not obtain their speedup by pruning paths, averaging Dopplers, narrowing the
+waveform bandwidth or quietly reducing scene updates. Caching static mesh
+acceleration is useful; skipping required visibility checks on moving geometry
+is not an equivalent optimization.
+
+Qualify rendering independently of the scene's surviving-ray count: include
+at least 1,028 valid paths per directed link for all 100x10 links, parameterized
+larger counts, fractional delays over the declared delay range, independent
+Dopplers over the declared Doppler range and arbitrary sampled inputs. The
+initial 1,028-path stress amounts to 1.028 million paths and 2.056 trillion
+path/sample contributions per second at continuous 2 MS/s. It is a renderer
+stress workload, not a claim that the present geometry produces that many rays.
+Delay range and Doppler range must be explicit qualification parameters; there
+is no performance guarantee for unbounded channels or arbitrary hardware.
+
+Whether a $5,000 machine can meet the complete 120 Hz target for that workload
+is **unresolved**. A hardware allocation is a budget ceiling, not evidence of
+capacity. If equal-fidelity optimization is insufficient, report the measured
+hardware requirement or achieved rate rather than making the scene easier.
 
 ## Correct the workload before choosing hardware
 
@@ -37,7 +70,7 @@ current implementation, not a universal limit for direct rendering: fused
 on-chip accumulation can avoid those buffers. It does establish why switching
 the current kernel to an inexpensive GPU is insufficient.
 
-## New measurements: the channel is compact despite many rays
+## Case-specific channel measurements: not a sizing basis
 
 [The channel-support inspection](research_results/affordable_realtime/channel_support.json)
 uses the first epoch of the existing 100-TX, one-receiver DEM scenario:
@@ -65,7 +98,7 @@ The source inspection and experiments were performed on the CPU implementation
 based on commit `e6a18dd4a4b220b464cd1b2b96e8d78a91fd9b43`. They do not alter
 the production renderer or provide a complete simulation-plane timing result.
 
-## Preserve Doppler in a smaller representation
+## Alternative representation study: accuracy evidence, not the selected baseline
 
 For sampled, bandlimited transmitter data, define the time-varying channel:
 
@@ -134,9 +167,9 @@ reconstruction, overlap/history, stateful clocks and receiver filters.
 
 | Approach | Arbitrary sampled waveforms and Doppler | Hardware / assessment |
 |---|---|---|
-| Direct per-path interpolation and summation | Yes, with a fractional-delay interpolator and individual phase evolution | CPU, CUDA, OpenCL/SYCL possible. Keep as reference and for sparse channels; dense continuous streams need substantial optimization. Our existing direct backend supports analytic tone/LFM descriptors, not arbitrary sample streams yet. |
-| Compact time-varying FIR with SIMD/GPU kernels | Yes; all rays contribute to coefficients that evolve at sample times | Best initial route for the short-delay scene. CPU fallback; batch all links on GPU. Interpolation and temporal approximation must be controlled. |
-| Temporal basis expansion plus overlap-save FFT convolution | Yes; separately filter through each basis channel, then combine with its time-varying basis function | Best additional candidate for large numbers of links or longer delay support. Reuse TX FFTs and sum transmitters before receiver inverse FFTs. A static block FFT alone does not preserve intra-block Doppler. |
+| Direct per-path interpolation and summation | Yes, with a fractional-delay interpolator and individual phase evolution | CPU, CUDA, OpenCL/SYCL possible. Required general baseline and correctness reference; dense continuous streams need fused execution and full-workload qualification. Our existing direct backend supports analytic tone/LFM descriptors, not arbitrary sample streams yet. |
+| Compact time-varying FIR with SIMD/GPU kernels | Yes; all rays contribute to coefficients that evolve at sample times | Conditional candidate; short-delay performance cannot establish general capacity. Interpolation and temporal approximation must be controlled. |
+| Temporal basis expansion plus overlap-save FFT convolution | Yes; separately filter through each basis channel, then combine with its time-varying basis function | Candidate with explicit dependence on delay support and temporal rank. Reuse TX FFTs and sum transmitters before receiver inverse FFTs. A static block FFT alone does not preserve intra-block Doppler. |
 | Delay/Doppler spreading-grid or low-rank compression | Yes within validated delay/Doppler bounds | Potentially efficient; off-grid delays/Dopplers require interpolation or basis expansions. Simple nearest-bin quantization is not sufficient for coherent data. |
 | Cached geometry and persistent scatterer support | Independent of waveform | Complements every renderer. Reuse static mesh acceleration, candidates and quadrature support; update gains, angles, delays, visibility and Doppler with motion. Cache invalidation and sampling weights matter. |
 | Commodity FPGA channel emulation | Arbitrary input I/Q; small published designs have limited paths/links | Low latency for a few hardware links. Attractive later for hardware-in-the-loop; not the cheapest way to implement 1,000 rich virtual links. |
@@ -283,26 +316,25 @@ needed and include actual RF skill consumption in delivery-latency tests.
    production, including fractional sample counts at 120 Hz. The rendering
    backend must handle recorded data, modulation and pulses without waveform
    family-specific formulas.
-2. **Add compact time-varying channel construction.** Every valid path enters
-   a fractional-delay/temporal representation; select support and basis rank
-   against error tolerances. Start with short FIR, retain the direct renderer
-   as an oracle, and stress higher Doppler/delay spread. Keep geometry updates
-   at the requested cadence; slower scene tracing is an optional future
-   approximation requiring explicit validation.
-3. **Benchmark both fused FIR and temporal-basis FFT rendering.** Share each
-   TX waveform/FFT across all receivers. Sum TX contributions before RX inverse
-   FFTs where the basis formulation permits it. Choose 256–1,024-sample streaming
-   chunks initially, about 0.128–0.512 ms at 2 MS/s. Chunk size trades latency
-   against launch efficiency. Preserve overlap and coefficient epochs.
+2. **Implement fused general direct rendering.** Fractional-delay interpolation
+   of arbitrary sampled inputs, individual Doppler phase evolution and coherent
+   accumulation. Eliminate the current full path-tile/sample-window contribution
+   buffers. Preserve the existing reference for comparison; validate across the
+   declared path count, delay and Doppler ranges, not only this terrain case.
+3. **Compare general algorithms at equal fidelity.** Evaluate direct rendering,
+   time-varying FIR and temporal-basis FFT methods against the same stress suite.
+   Report costs as delay support and Doppler complexity grow. Share each TX
+   waveform across receivers and retain all required input/filter history.
+   Approximation error and any extra lookahead belong in the results.
 4. **Remove CPU work from the critical path.** Batch proposals/visibility tests,
    reuse scene acceleration and candidates, keep paths/channel state on-device,
    and disable or decimate optional per-link diagnostic filters. Keep mandatory
    receiver noise, clocks, stateful filtering and ADC. Do not count deleted
    physical effects as an optimization.
-5. **Consolidate devices and preserve distribution.** Start with all ten logical
-   receivers on one GPU; partition onto two if measurements require it. Keep
-   the one-worker-per-GPU deployment as an option for larger budgets. Separate
-   scene scheduling from sample streaming without allowing growing queues.
+5. **Measure consolidation and preserve distribution.** Compare logical
+   receiver batching on one/two GPUs with the one-worker-per-GPU architecture.
+   Select deployment from measured full-workload capacity. Separate scene
+   scheduling from sample streaming without allowing growing queues.
 6. **Qualify the actual affordable machine.** Test all 100x10 links, moving
    platforms, all attempted-ray budgets and continuous 2 MS/s input/output.
    A useful engineering target is RF service below 5 ms per 8.33 ms scene tick
@@ -310,7 +342,8 @@ needed and include actual RF skill consumption in delivery-latency tests.
    delivery latency, p95/p99, deadline misses and dropped samples for sustained
    runs. Then add AirSim/AMS-GRA, consumers and transport to the same test.
 
-A simple work estimate supports investing in this prototype: 1,000 links with
+The following small-filter arithmetic is a case-specific illustration only.
+It must not be used to justify the general workload or the $5,000 target: 1,000 links with
 18 sampled coefficients at 2 MS/s require 36 billion complex multiply-accumulates
 per second, about 288 GFLOP/s at eight real operations per complex MAC, excluding
 coefficient reconstruction, ray tracing, resampling and receiver effects.
@@ -323,8 +356,8 @@ about 8.3 billion complex MACs/s for the frequency-domain link products, roughly
 66 GFLOP/s, before FFT/channel setup and other stages. TX transforms are reused;
 RX transforms are needed per receiver/basis, rather than per link. Four basis
 terms are an illustration, not a qualified rank for every scene. These are
-operation counts, not measured latency estimates. They explain why changing
-the algorithm is more promising than asking a GPU to close a CPU timing ratio.
+operation counts, not measured latency estimates. They describe only that illustrative rank/support choice. Neither those
+counts nor this scene's compactness establish the required general runtime.
 
 ## Reproduce the research experiments
 
