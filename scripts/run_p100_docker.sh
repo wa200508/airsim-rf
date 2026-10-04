@@ -32,7 +32,10 @@ mkdir -p results/profiling
 profile_run=(docker run --rm --user "$(id -u):$(id -g)"
   -v "$profile_repo_root/results/profiling:/work/results"
   -e MPLCONFIGDIR=/tmp/matplotlib)
-if [[ "$profile_basis" == true ]]; then profile_run+=(--entrypoint python); fi
+if [[ "$profile_basis" == true ]]; then
+  profile_run+=(--entrypoint python -e CUPY_CACHE_DIR=/tmp/cupy-kernel-cache
+    -e CUDA_CACHE_PATH=/tmp/cuda-kernel-cache)
+fi
 profile_cpu_only=false
 for profile_arg in "$@"; do
   if [[ "$profile_arg" == --cpu-only ]]; then profile_cpu_only=true; fi
