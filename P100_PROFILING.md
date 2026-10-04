@@ -2,8 +2,10 @@
 
 Branch: **`optimization/direct-path-renderer`**. This branch extends the
 profiling kit with [direct path LLVM/CUDA recurrence](DIRECT_PATH_RENDERING.md).
-The collector compares it with the existing NumPy renderer. Receiver filtering
-and ADC remain CPU work; GPU execution includes per-link host/device transfers.
+The collector compares NumPy, direct and [batched rendering](BATCHED_RENDERING.md),
+and separately measures private arbitrary sampled I/Q. Receiver filtering and
+ADC remain CPU work; the batched backend groups transfers across independent
+jobs. Defaults keep per-link diagnostics enabled.
 
 ## One command on the Docker host
 
@@ -83,7 +85,7 @@ The runner performs these tasks sequentially:
 3. Renderer correctness tests, including CUDA analytic-equation and continuous
    Doppler checks when GPU preflight succeeds.
 4. Paired **unprofiled CPU and CUDA** one-receiver benchmarks for 2 and 100 TX,
-   for both NumPy and direct LLVM/CUDA recurrence.
+   for NumPy, direct LLVM/CUDA recurrence and batched replay.
    Defaults: 20 warmups / 200 epochs for 2 TX, and 5 warmups / 30 epochs for
    100 TX. Same terrain, sample/ray budgets, clocks and waveform definitions.
 5. Separate instrumented runs: 3 warmups / 5 timed epochs, Dr.Jit CUDA-event
@@ -91,7 +93,10 @@ The runner performs these tasks sequentially:
    for small/large cases, with 2 timed epochs in each profile.
 6. Optional short Nsight Systems runs and kernel/API/NVTX statistics.
 7. The default two-beacon/two-receiver Pluto example, including I/Q and plots.
-8. Aggregation into `REPORT.md`, JSON summaries and artifact checksums.
+8. Separate sampled-input renderer stress cases (1,028 valid paths per link,
+   4,096 outputs by default, 32 interpolation taps), without scene tracing or
+   receiver DSP. Use `--samples 16667` for approximately one 120 Hz interval.
+9. Aggregation into `REPORT.md`, JSON summaries and artifact checksums.
 
 Service latency includes local pose writes, synchronized channel export,
 waveform summation, diagnostic per-link filtering, receiver noise/filtering and

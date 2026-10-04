@@ -1,0 +1,1128 @@
+{
+  "arguments": {
+    "tx": 100,
+    "rx": 1,
+    "iterations": 10,
+    "warmup": 2,
+    "samples": 4096,
+    "samples_per_link": 1028,
+    "backend": "cpu",
+    "renderer": "batched-llvm",
+    "path_tile": 128,
+    "sample_tile": 32,
+    "accumulation": "local",
+    "no_replay": false,
+    "max_render_lanes": 1000000,
+    "batch_reduction": "auto",
+    "no_link_diagnostics": false,
+    "profile": false,
+    "threads": 2,
+    "output": "research_results/batched_renderer_cpu/batched_32.json"
+  },
+  "measurement_mode": "unprofiled_benchmark",
+  "scope": "915 MHz, 2 MS/s, 1 MHz filter, noisy independent-clock Pluto profile; moving mounts over 800-triangle DEM",
+  "timing_includes": "Pose writes, synchronized channel/NumPy export, per-path IQ, enabled per-link diagnostics, receive noise/filter and ADC conversion",
+  "timing_excludes": [
+    "AirSim RPC/physics",
+    "transport",
+    "queueing",
+    "storage",
+    "plots",
+    "RF skill processing"
+  ],
+  "initial_tx_positions_m": [
+    [
+      0.0,
+      -25.0,
+      10.0
+    ],
+    [
+      0.0,
+      -24.494949494949495,
+      10.0
+    ],
+    [
+      0.0,
+      -23.98989898989899,
+      10.0
+    ],
+    [
+      0.0,
+      -23.484848484848484,
+      10.0
+    ],
+    [
+      0.0,
+      -22.97979797979798,
+      10.0
+    ],
+    [
+      0.0,
+      -22.474747474747474,
+      10.0
+    ],
+    [
+      0.0,
+      -21.96969696969697,
+      10.0
+    ],
+    [
+      0.0,
+      -21.464646464646464,
+      10.0
+    ],
+    [
+      0.0,
+      -20.95959595959596,
+      10.0
+    ],
+    [
+      0.0,
+      -20.454545454545453,
+      10.0
+    ],
+    [
+      0.0,
+      -19.949494949494948,
+      10.0
+    ],
+    [
+      0.0,
+      -19.444444444444443,
+      10.0
+    ],
+    [
+      0.0,
+      -18.939393939393938,
+      10.0
+    ],
+    [
+      0.0,
+      -18.434343434343432,
+      10.0
+    ],
+    [
+      0.0,
+      -17.929292929292927,
+      10.0
+    ],
+    [
+      0.0,
+      -17.424242424242422,
+      10.0
+    ],
+    [
+      0.0,
+      -16.919191919191917,
+      10.0
+    ],
+    [
+      0.0,
+      -16.41414141414141,
+      10.0
+    ],
+    [
+      0.0,
+      -15.909090909090908,
+      10.0
+    ],
+    [
+      0.0,
+      -15.404040404040403,
+      10.0
+    ],
+    [
+      0.0,
+      -14.898989898989898,
+      10.0
+    ],
+    [
+      0.0,
+      -14.393939393939393,
+      10.0
+    ],
+    [
+      0.0,
+      -13.888888888888888,
+      10.0
+    ],
+    [
+      0.0,
+      -13.383838383838382,
+      10.0
+    ],
+    [
+      0.0,
+      -12.878787878787879,
+      10.0
+    ],
+    [
+      0.0,
+      -12.373737373737374,
+      10.0
+    ],
+    [
+      0.0,
+      -11.868686868686869,
+      10.0
+    ],
+    [
+      0.0,
+      -11.363636363636363,
+      10.0
+    ],
+    [
+      0.0,
+      -10.858585858585858,
+      10.0
+    ],
+    [
+      0.0,
+      -10.353535353535353,
+      10.0
+    ],
+    [
+      0.0,
+      -9.848484848484848,
+      10.0
+    ],
+    [
+      0.0,
+      -9.343434343434343,
+      10.0
+    ],
+    [
+      0.0,
+      -8.838383838383837,
+      10.0
+    ],
+    [
+      0.0,
+      -8.333333333333332,
+      10.0
+    ],
+    [
+      0.0,
+      -7.828282828282827,
+      10.0
+    ],
+    [
+      0.0,
+      -7.323232323232322,
+      10.0
+    ],
+    [
+      0.0,
+      -6.818181818181817,
+      10.0
+    ],
+    [
+      0.0,
+      -6.313131313131311,
+      10.0
+    ],
+    [
+      0.0,
+      -5.808080808080806,
+      10.0
+    ],
+    [
+      0.0,
+      -5.303030303030301,
+      10.0
+    ],
+    [
+      0.0,
+      -4.797979797979796,
+      10.0
+    ],
+    [
+      0.0,
+      -4.292929292929291,
+      10.0
+    ],
+    [
+      0.0,
+      -3.7878787878787854,
+      10.0
+    ],
+    [
+      0.0,
+      -3.28282828282828,
+      10.0
+    ],
+    [
+      0.0,
+      -2.777777777777775,
+      10.0
+    ],
+    [
+      0.0,
+      -2.27272727272727,
+      10.0
+    ],
+    [
+      0.0,
+      -1.7676767676767646,
+      10.0
+    ],
+    [
+      0.0,
+      -1.2626262626262594,
+      10.0
+    ],
+    [
+      0.0,
+      -0.7575757575757578,
+      10.0
+    ],
+    [
+      0.0,
+      -0.2525252525252526,
+      10.0
+    ],
+    [
+      0.0,
+      0.2525252525252526,
+      10.0
+    ],
+    [
+      0.0,
+      0.7575757575757578,
+      10.0
+    ],
+    [
+      0.0,
+      1.262626262626263,
+      10.0
+    ],
+    [
+      0.0,
+      1.7676767676767682,
+      10.0
+    ],
+    [
+      0.0,
+      2.2727272727272734,
+      10.0
+    ],
+    [
+      0.0,
+      2.7777777777777786,
+      10.0
+    ],
+    [
+      0.0,
+      3.2828282828282838,
+      10.0
+    ],
+    [
+      0.0,
+      3.787878787878789,
+      10.0
+    ],
+    [
+      0.0,
+      4.292929292929294,
+      10.0
+    ],
+    [
+      0.0,
+      4.797979797979799,
+      10.0
+    ],
+    [
+      0.0,
+      5.3030303030303045,
+      10.0
+    ],
+    [
+      0.0,
+      5.80808080808081,
+      10.0
+    ],
+    [
+      0.0,
+      6.313131313131315,
+      10.0
+    ],
+    [
+      0.0,
+      6.81818181818182,
+      10.0
+    ],
+    [
+      0.0,
+      7.323232323232325,
+      10.0
+    ],
+    [
+      0.0,
+      7.8282828282828305,
+      10.0
+    ],
+    [
+      0.0,
+      8.333333333333336,
+      10.0
+    ],
+    [
+      0.0,
+      8.838383838383841,
+      10.0
+    ],
+    [
+      0.0,
+      9.343434343434346,
+      10.0
+    ],
+    [
+      0.0,
+      9.848484848484851,
+      10.0
+    ],
+    [
+      0.0,
+      10.353535353535356,
+      10.0
+    ],
+    [
+      0.0,
+      10.858585858585862,
+      10.0
+    ],
+    [
+      0.0,
+      11.363636363636367,
+      10.0
+    ],
+    [
+      0.0,
+      11.868686868686872,
+      10.0
+    ],
+    [
+      0.0,
+      12.373737373737377,
+      10.0
+    ],
+    [
+      0.0,
+      12.878787878787882,
+      10.0
+    ],
+    [
+      0.0,
+      13.383838383838388,
+      10.0
+    ],
+    [
+      0.0,
+      13.888888888888893,
+      10.0
+    ],
+    [
+      0.0,
+      14.393939393939398,
+      10.0
+    ],
+    [
+      0.0,
+      14.898989898989903,
+      10.0
+    ],
+    [
+      0.0,
+      15.404040404040408,
+      10.0
+    ],
+    [
+      0.0,
+      15.909090909090914,
+      10.0
+    ],
+    [
+      0.0,
+      16.41414141414142,
+      10.0
+    ],
+    [
+      0.0,
+      16.919191919191924,
+      10.0
+    ],
+    [
+      0.0,
+      17.42424242424243,
+      10.0
+    ],
+    [
+      0.0,
+      17.929292929292934,
+      10.0
+    ],
+    [
+      0.0,
+      18.43434343434344,
+      10.0
+    ],
+    [
+      0.0,
+      18.939393939393945,
+      10.0
+    ],
+    [
+      0.0,
+      19.44444444444445,
+      10.0
+    ],
+    [
+      0.0,
+      19.949494949494955,
+      10.0
+    ],
+    [
+      0.0,
+      20.45454545454546,
+      10.0
+    ],
+    [
+      0.0,
+      20.959595959595966,
+      10.0
+    ],
+    [
+      0.0,
+      21.46464646464647,
+      10.0
+    ],
+    [
+      0.0,
+      21.969696969696976,
+      10.0
+    ],
+    [
+      0.0,
+      22.47474747474748,
+      10.0
+    ],
+    [
+      0.0,
+      22.979797979797986,
+      10.0
+    ],
+    [
+      0.0,
+      23.484848484848484,
+      10.0
+    ],
+    [
+      0.0,
+      23.98989898989899,
+      10.0
+    ],
+    [
+      0.0,
+      24.494949494949495,
+      10.0
+    ],
+    [
+      0.0,
+      25.0,
+      10.0
+    ]
+  ],
+  "initial_rx_positions_m": [
+    [
+      -30.0,
+      -10.0,
+      14.0
+    ]
+  ],
+  "capture_duration_ms": 2.048,
+  "filter_warmup_samples": 256,
+  "preparation_ms": 164.20582801220007,
+  "first_capture": {
+    "epoch_s": 0.0,
+    "service_ms": 532.2750239865854,
+    "pose_ms": 0.3040109877474606,
+    "capture_ms": 531.9707329908852,
+    "channel_ms": 160.35441600251943,
+    "cpu_iq_receiver_ms": 371.6163169883657,
+    "iq_receiver_ms": 371.6163169883657,
+    "render_ms": 360.8213679981418,
+    "stage_timings": {
+      "proposal_table_prepare_ms": 25.053513003513217,
+      "host_numpy_sampling_ms": 50.323917996138334
+    },
+    "render_metrics": [
+      {
+        "preparation_ms": 23.074919008649886,
+        "schedule_pack_ms": 36.10190702602267,
+        "export_wait_ms": 301.0964000131935,
+        "total_ms": 360.3643710084725,
+        "retained_paths": 42503,
+        "groups": [
+          {
+            "jobs": 57,
+            "capacity_paths_per_job": 512,
+            "lanes": 992256,
+            "reduction": "expand"
+          },
+          {
+            "jobs": 43,
+            "capacity_paths_per_job": 512,
+            "lanes": 748544,
+            "reduction": "expand"
+          }
+        ],
+        "recordings_added": 2,
+        "reduction": "auto",
+        "replay": true,
+        "sum_output": false
+      }
+    ],
+    "retained_paths": 42503,
+    "clipping_fraction_max": 0.0
+  },
+  "first_capture_note": "New process with existing on-disk JIT cache; imports excluded; not a cache-cleared cold-start benchmark",
+  "service": {
+    "p50_ms": 247.32169750495814,
+    "p95_ms": 256.4537248923443,
+    "mean_ms": 247.753542396822,
+    "max_ms": 257.0559679879807
+  },
+  "channel": {
+    "p50_ms": 60.71120900742244,
+    "p95_ms": 67.66220570425503,
+    "mean_ms": 61.98783150466625,
+    "max_ms": 70.43713700841181
+  },
+  "cpu_iq_receiver": {
+    "p50_ms": 181.9639634777559,
+    "p95_ms": 194.72578018321656,
+    "mean_ms": 185.47833998745773,
+    "max_ms": 194.78511897614226
+  },
+  "iq_receiver": {
+    "p50_ms": 181.9639634777559,
+    "p95_ms": 194.72578018321656,
+    "mean_ms": 185.47833998745773,
+    "max_ms": 194.78511897614226
+  },
+  "rendering": {
+    "p50_ms": 170.31756599317305,
+    "p95_ms": 183.57569329818944,
+    "mean_ms": 174.39893949776888,
+    "max_ms": 183.5865949979052
+  },
+  "serial_wall_s": 2.4782515020051505,
+  "sustained_updates_hz": 4.035102971554345,
+  "receiver_blocks_per_second": 4.035102971554345,
+  "deadline_misses": {
+    "120": 10,
+    "200": 10
+  },
+  "stage_timings": {
+    "proposal_table_prepare_ms": {
+      "p50_ms": 2.7256545145064592,
+      "p95_ms": 3.1350547084002756,
+      "mean_ms": 2.751248306594789,
+      "max_ms": 3.20653899689205
+    },
+    "host_numpy_sampling_ms": {
+      "p50_ms": 16.331224498571828,
+      "p95_ms": 17.4006533328793,
+      "mean_ms": 16.443757395609282,
+      "max_ms": 17.616498982533813
+    }
+  },
+  "retained_paths": {
+    "min": 42513,
+    "max": 42526
+  },
+  "host": {
+    "cpu_count": 3,
+    "cpu_quota": "200000 100000",
+    "memory_limit_bytes": "8589934592",
+    "drjit_threads": 2,
+    "peak_rss_mib": 346.6796875,
+    "cuda_available": 0
+  },
+  "versions": {
+    "sionna_rt": "2.2.0",
+    "mitsuba": "3.9.1",
+    "drjit": "1.5.0",
+    "backend": "llvm_ad_mono_polarized"
+  },
+  "gpu_workload_per_receiver": {
+    "topology": "one GPU per physical receiver; all transmitters on every receiver worker",
+    "gpu_count": 10,
+    "transmitters_per_gpu": 100,
+    "receivers_per_gpu": 1,
+    "diffuse_attempts_per_gpu_per_pulse": 102800,
+    "visibility_queries_per_gpu_per_pulse_upper_bound": 365700,
+    "visibility_queries_fleet_per_pulse_upper_bound": 3657000,
+    "candidate_paths_per_gpu_upper_bound": 182900,
+    "compact_channel_bytes_per_gpu_per_pulse_upper_bound": 2926400,
+    "compact_channel_bytes_per_gpu_per_second_upper_bound": 585280000,
+    "pulse_hz": 200,
+    "pulse_budget_ms": 5.0,
+    "physics_hz": 120,
+    "physics_budget_ms": 8.333333333333334,
+    "ray_only_required_queries_per_second_at_pulse_rate": 73140000,
+    "ray_only_required_queries_per_second_at_physics_rate": 43884000,
+    "vram_requirement": "unmeasured; compact coefficients are not total device memory"
+  },
+  "conditional_gpu_ray_stage": [
+    {
+      "assumed_effective_scene_queries_per_second": 100000000.0,
+      "ray_stage_ms_at_upper_bound_query_count": 3.657,
+      "unchanged_measured_host_sampling_plus_ray_stage_ms": 19.988224498571828
+    },
+    {
+      "assumed_effective_scene_queries_per_second": 250000000.0,
+      "ray_stage_ms_at_upper_bound_query_count": 1.4628,
+      "unchanged_measured_host_sampling_plus_ray_stage_ms": 17.79402449857183
+    },
+    {
+      "assumed_effective_scene_queries_per_second": 1000000000.0,
+      "ray_stage_ms_at_upper_bound_query_count": 0.3657,
+      "unchanged_measured_host_sampling_plus_ray_stage_ms": 16.69692449857183
+    }
+  ],
+  "profile_note": "Profiled serial throughput includes event/history instrumentation; use separate unprofiled runs for performance.",
+  "gpu_note": "Renderer is selected independently of propagation backend. Direct CUDA includes per-link host/device transfers; proposal draws, channel export and front-end filters/ADC remain CPU. Legacy cpu_iq_receiver fields alias the mixed iq_receiver stage.",
+  "samples": [
+    {
+      "epoch_s": 0.015,
+      "service_ms": 239.0690269821789,
+      "pose_ms": 0.30636097653768957,
+      "capture_ms": 238.76248497981578,
+      "channel_ms": 59.863522998057306,
+      "cpu_iq_receiver_ms": 178.89896198175848,
+      "iq_receiver_ms": 178.89896198175848,
+      "render_ms": 167.89883899036795,
+      "stage_timings": {
+        "proposal_table_prepare_ms": 2.5661840045358986,
+        "host_numpy_sampling_ms": 16.19838800979778
+      },
+      "render_metrics": [
+        {
+          "preparation_ms": 8.011224010260776,
+          "schedule_pack_ms": 4.170820990111679,
+          "export_wait_ms": 155.3444149903953,
+          "total_ms": 167.58795999339782,
+          "retained_paths": 42513,
+          "groups": [
+            {
+              "jobs": 57,
+              "capacity_paths_per_job": 512,
+              "lanes": 992256,
+              "reduction": "expand"
+            },
+            {
+              "jobs": 43,
+              "capacity_paths_per_job": 512,
+              "lanes": 748544,
+              "reduction": "expand"
+            }
+          ],
+          "recordings_added": 0,
+          "reduction": "auto",
+          "replay": true,
+          "sum_output": false
+        }
+      ],
+      "retained_paths": 42513,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.02,
+      "service_ms": 240.8734679920599,
+      "pose_ms": 0.28975799796171486,
+      "capture_ms": 240.5834699748084,
+      "channel_ms": 60.24342399905436,
+      "cpu_iq_receiver_ms": 180.34004597575404,
+      "iq_receiver_ms": 180.34004597575404,
+      "render_ms": 169.28701600409113,
+      "stage_timings": {
+        "proposal_table_prepare_ms": 2.508759993361309,
+        "host_numpy_sampling_ms": 16.37057200423442
+      },
+      "render_metrics": [
+        {
+          "preparation_ms": 7.549763977294788,
+          "schedule_pack_ms": 4.497472022194415,
+          "export_wait_ms": 156.5578340087086,
+          "total_ms": 168.9380909956526,
+          "retained_paths": 42514,
+          "groups": [
+            {
+              "jobs": 57,
+              "capacity_paths_per_job": 512,
+              "lanes": 992256,
+              "reduction": "expand"
+            },
+            {
+              "jobs": 43,
+              "capacity_paths_per_job": 512,
+              "lanes": 748544,
+              "reduction": "expand"
+            }
+          ],
+          "recordings_added": 0,
+          "reduction": "auto",
+          "replay": true,
+          "sum_output": false
+        }
+      ],
+      "retained_paths": 42514,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.025,
+      "service_ms": 242.1976710029412,
+      "pose_ms": 0.29105000430718064,
+      "capture_ms": 241.90639099106193,
+      "channel_ms": 61.66420900262892,
+      "cpu_iq_receiver_ms": 180.242181988433,
+      "iq_receiver_ms": 180.242181988433,
+      "render_ms": 169.36807599267922,
+      "stage_timings": {
+        "proposal_table_prepare_ms": 2.720462012803182,
+        "host_numpy_sampling_ms": 16.465533000882715
+      },
+      "render_metrics": [
+        {
+          "preparation_ms": 7.632555993041024,
+          "schedule_pack_ms": 4.554006009129807,
+          "export_wait_ms": 156.7926499992609,
+          "total_ms": 169.04444797546603,
+          "retained_paths": 42517,
+          "groups": [
+            {
+              "jobs": 57,
+              "capacity_paths_per_job": 512,
+              "lanes": 992256,
+              "reduction": "expand"
+            },
+            {
+              "jobs": 43,
+              "capacity_paths_per_job": 512,
+              "lanes": 748544,
+              "reduction": "expand"
+            }
+          ],
+          "recordings_added": 0,
+          "reduction": "auto",
+          "replay": true,
+          "sum_output": false
+        }
+      ],
+      "retained_paths": 42517,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.03,
+      "service_ms": 240.81439001020044,
+      "pose_ms": 0.2765569952316582,
+      "capture_ms": 240.5376720125787,
+      "channel_ms": 61.574607010697946,
+      "cpu_iq_receiver_ms": 178.96306500188075,
+      "iq_receiver_ms": 178.96306500188075,
+      "render_ms": 168.14074499416165,
+      "stage_timings": {
+        "proposal_table_prepare_ms": 2.6574090006761253,
+        "host_numpy_sampling_ms": 16.4976809755899
+      },
+      "render_metrics": [
+        {
+          "preparation_ms": 7.154140010243282,
+          "schedule_pack_ms": 4.67033899622038,
+          "export_wait_ms": 155.93087000888772,
+          "total_ms": 167.8163470060099,
+          "retained_paths": 42516,
+          "groups": [
+            {
+              "jobs": 57,
+              "capacity_paths_per_job": 512,
+              "lanes": 992256,
+              "reduction": "expand"
+            },
+            {
+              "jobs": 43,
+              "capacity_paths_per_job": 512,
+              "lanes": 748544,
+              "reduction": "expand"
+            }
+          ],
+          "recordings_added": 0,
+          "reduction": "auto",
+          "replay": true,
+          "sum_output": false
+        }
+      ],
+      "retained_paths": 42516,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.035,
+      "service_ms": 240.1101420109626,
+      "pose_ms": 0.2924310101661831,
+      "capture_ms": 239.81745101627894,
+      "channel_ms": 60.41706001269631,
+      "cpu_iq_receiver_ms": 179.40039100358263,
+      "iq_receiver_ms": 179.40039100358263,
+      "render_ms": 168.39194600470364,
+      "stage_timings": {
+        "proposal_table_prepare_ms": 2.7308470162097365,
+        "host_numpy_sampling_ms": 16.156997997313738
+      },
+      "render_metrics": [
+        {
+          "preparation_ms": 7.345101999817416,
+          "schedule_pack_ms": 4.601066000759602,
+          "export_wait_ms": 156.05717699509114,
+          "total_ms": 168.06542500853539,
+          "retained_paths": 42519,
+          "groups": [
+            {
+              "jobs": 57,
+              "capacity_paths_per_job": 512,
+              "lanes": 992256,
+              "reduction": "expand"
+            },
+            {
+              "jobs": 43,
+              "capacity_paths_per_job": 512,
+              "lanes": 748544,
+              "reduction": "expand"
+            }
+          ],
+          "recordings_added": 0,
+          "reduction": "auto",
+          "replay": true,
+          "sum_output": false
+        }
+      ],
+      "retained_paths": 42519,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.04,
+      "service_ms": 254.301315988414,
+      "pose_ms": 0.27602698537521064,
+      "capture_ms": 254.02501798816957,
+      "channel_ms": 70.43713700841181,
+      "cpu_iq_receiver_ms": 183.58788097975776,
+      "iq_receiver_ms": 183.58788097975776,
+      "render_ms": 171.26705599366687,
+      "stage_timings": {
+        "proposal_table_prepare_ms": 2.4915440008044243,
+        "host_numpy_sampling_ms": 17.616498982533813
+      },
+      "render_metrics": [
+        {
+          "preparation_ms": 8.001300011528656,
+          "schedule_pack_ms": 5.121242022141814,
+          "export_wait_ms": 157.76331099914387,
+          "total_ms": 170.95271201105788,
+          "retained_paths": 42520,
+          "groups": [
+            {
+              "jobs": 57,
+              "capacity_paths_per_job": 512,
+              "lanes": 992256,
+              "reduction": "expand"
+            },
+            {
+              "jobs": 43,
+              "capacity_paths_per_job": 512,
+              "lanes": 748544,
+              "reduction": "expand"
+            }
+          ],
+          "recordings_added": 0,
+          "reduction": "auto",
+          "replay": true,
+          "sum_output": false
+        }
+      ],
+      "retained_paths": 42520,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.045,
+      "service_ms": 257.0559679879807,
+      "pose_ms": 0.2693969872780144,
+      "capture_ms": 256.7863699805457,
+      "channel_ms": 64.27062299917452,
+      "cpu_iq_receiver_ms": 192.5157469813712,
+      "iq_receiver_ms": 192.5157469813712,
+      "render_ms": 181.72065800172277,
+      "stage_timings": {
+        "proposal_table_prepare_ms": 3.0476850224658847,
+        "host_numpy_sampling_ms": 17.136841983301565
+      },
+      "render_metrics": [
+        {
+          "preparation_ms": 7.9499649873469025,
+          "schedule_pack_ms": 6.572152022272348,
+          "export_wait_ms": 166.81055902154185,
+          "total_ms": 181.39635000261478,
+          "retained_paths": 42523,
+          "groups": [
+            {
+              "jobs": 57,
+              "capacity_paths_per_job": 512,
+              "lanes": 992256,
+              "reduction": "expand"
+            },
+            {
+              "jobs": 43,
+              "capacity_paths_per_job": 512,
+              "lanes": 748544,
+              "reduction": "expand"
+            }
+          ],
+          "recordings_added": 0,
+          "reduction": "auto",
+          "replay": true,
+          "sum_output": false
+        }
+      ],
+      "retained_paths": 42523,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.05,
+      "service_ms": 255.71764999767765,
+      "pose_ms": 0.2951050119008869,
+      "capture_ms": 255.42230397695675,
+      "channel_ms": 60.6371850008145,
+      "cpu_iq_receiver_ms": 194.78511897614226,
+      "iq_receiver_ms": 194.78511897614226,
+      "render_ms": 183.5865949979052,
+      "stage_timings": {
+        "proposal_table_prepare_ms": 2.7956019912380725,
+        "host_numpy_sampling_ms": 15.965655009495094
+      },
+      "render_metrics": [
+        {
+          "preparation_ms": 7.196783000836149,
+          "schedule_pack_ms": 5.864528997335583,
+          "export_wait_ms": 170.13056899304502,
+          "total_ms": 183.25707799522206,
+          "retained_paths": 42525,
+          "groups": [
+            {
+              "jobs": 57,
+              "capacity_paths_per_job": 512,
+              "lanes": 992256,
+              "reduction": "expand"
+            },
+            {
+              "jobs": 43,
+              "capacity_paths_per_job": 512,
+              "lanes": 748544,
+              "reduction": "expand"
+            }
+          ],
+          "recordings_added": 0,
+          "reduction": "auto",
+          "replay": true,
+          "sum_output": false
+        }
+      ],
+      "retained_paths": 42525,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.055,
+      "service_ms": 254.9500679888297,
+      "pose_ms": 0.31117899925448,
+      "capture_ms": 254.63856899295934,
+      "channel_ms": 59.98531400109641,
+      "cpu_iq_receiver_ms": 194.65325499186292,
+      "iq_receiver_ms": 194.65325499186292,
+      "render_ms": 183.56236899853684,
+      "stage_timings": {
+        "proposal_table_prepare_ms": 2.7874510269612074,
+        "host_numpy_sampling_ms": 16.291876992909238
+      },
+      "render_metrics": [
+        {
+          "preparation_ms": 7.148903008783236,
+          "schedule_pack_ms": 5.925820005359128,
+          "export_wait_ms": 170.00559502048418,
+          "total_ms": 183.1461749970913,
+          "retained_paths": 42523,
+          "groups": [
+            {
+              "jobs": 57,
+              "capacity_paths_per_job": 512,
+              "lanes": 992256,
+              "reduction": "expand"
+            },
+            {
+              "jobs": 43,
+              "capacity_paths_per_job": 512,
+              "lanes": 748544,
+              "reduction": "expand"
+            }
+          ],
+          "recordings_added": 0,
+          "reduction": "auto",
+          "replay": true,
+          "sum_output": false
+        }
+      ],
+      "retained_paths": 42523,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.06,
+      "service_ms": 252.44572400697507,
+      "pose_ms": 0.2635289856698364,
+      "capture_ms": 252.18198500806466,
+      "channel_ms": 60.78523301403038,
+      "cpu_iq_receiver_ms": 191.39675199403428,
+      "iq_receiver_ms": 191.39675199403428,
+      "render_ms": 180.76609499985352,
+      "stage_timings": {
+        "proposal_table_prepare_ms": 3.20653899689205,
+        "host_numpy_sampling_ms": 15.737529000034556
+      },
+      "render_metrics": [
+        {
+          "preparation_ms": 7.557073986390606,
+          "schedule_pack_ms": 4.999371973099187,
+          "export_wait_ms": 167.8234379796777,
+          "total_ms": 180.44309798278846,
+          "retained_paths": 42526,
+          "groups": [
+            {
+              "jobs": 57,
+              "capacity_paths_per_job": 512,
+              "lanes": 992256,
+              "reduction": "expand"
+            },
+            {
+              "jobs": 43,
+              "capacity_paths_per_job": 512,
+              "lanes": 748544,
+              "reduction": "expand"
+            }
+          ],
+          "recordings_added": 0,
+          "reduction": "auto",
+          "replay": true,
+          "sum_output": false
+        }
+      ],
+      "retained_paths": 42526,
+      "clipping_fraction_max": 0.0
+    }
+  ]
+}

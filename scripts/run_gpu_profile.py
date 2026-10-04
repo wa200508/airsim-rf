@@ -91,8 +91,12 @@ def main():
     p.add_argument('--quick',action='store_true',help='Fewer epochs; default ray and sample budgets unchanged')
     p.add_argument('--cpu-only',action='store_true',help='Explicit non-GPU harness validation')
     p.add_argument('--tx',type=int,nargs='+',default=[2,100])
-    p.add_argument('--renderers',choices=('numpy','direct'),nargs='+',default=['numpy','direct'],
-        help='Compare existing NumPy synthesis and direct LLVM/CUDA recurrence')
+    p.add_argument('--renderers',choices=('numpy','direct','batched'),nargs='+',default=['numpy','direct','batched'],
+        help='Compare NumPy synthesis, per-link recurrence and batched replay')
+    p.add_argument('--sample-tile',type=int,default=32)
+    p.add_argument('--max-render-lanes',type=int,default=1_000_000)
+    p.add_argument('--direct-accumulation',choices=('partial','local'),default='local')
+    p.add_argument('--batch-reduction',choices=('auto','local'),default='auto')
     p.add_argument('--samples',type=int,default=4096)
     p.add_argument('--samples-per-link',type=int,default=1028)
     p.add_argument('--threads',type=int,default=2)
@@ -161,21 +165,24 @@ def main():
             available=run_task('cuda_preflight',[sys.executable,ROOT/'scripts/gpu_preflight.py','--output',artifact],artifact)
             manifest['gpu_status']='verified_cuda_optix' if available else 'blocked'
             required_failure |= not available
-        if available and 'direct' in args.renderers:
+        if available and any(r in args.renderers for r in ('direct','batched')):
             required_failure |= not run_task('direct_renderer_correctness',
-                [sys.executable,'-m','pytest',ROOT/'tests/test_rendering.py','-q'])
+                [sys.executable,'-m','pytest',ROOT/'tests/test_rendering.py',ROOT/'tests/test_batched_rendering.py','-q'])
         # CUDA blocked: retain same-host CPU evidence and a failure report.
         for tx in dict.fromkeys(args.tx):
             warmup=1 if args.quick else (20 if tx==2 else 5)
             iterations=(3 if tx==2 else 2) if args.quick else (200 if tx==2 else 30)
             common=['--tx',str(tx),'--rx','1','--samples',str(args.samples),
-                '--samples-per-link',str(args.samples_per_link),'--threads',str(args.threads)]
+                '--samples-per-link',str(args.samples_per_link),'--threads',str(args.threads),
+                '--sample-tile',str(args.sample_tile),'--max-render-lanes',str(args.max_render_lanes)]
             for backend in (['cpu','cuda'] if available else ['cpu']):
                 for renderer_kind in dict.fromkeys(args.renderers):
-                    renderer='numpy' if renderer_kind=='numpy' else ('direct-cuda' if backend=='cuda' else 'direct-llvm')
-                    suffix='' if renderer=='numpy' else '_direct'
+                    renderer='numpy' if renderer_kind=='numpy' else renderer_kind+'-'+('cuda' if backend=='cuda' else 'llvm')
+                    suffix='' if renderer=='numpy' else '_'+renderer_kind
                     name=f'{backend}_{tx}tx_1rx{suffix}'
                     renderer_args=['--renderer',renderer]
+                    if renderer_kind=='direct': renderer_args+=['--accumulation',args.direct_accumulation]
+                    if renderer_kind=='batched': renderer_args+=['--batch-reduction',args.batch_reduction]
                     artifact=output/'metrics'/f'{name}.json'
                     required_failure |= not run_task(name,[sys.executable,benchmark,'--backend',backend,*common,
                         *renderer_args,'--warmup',str(warmup),'--iterations',str(iterations),'--output',artifact],artifact)
@@ -200,6 +207,19 @@ def main():
                     elif backend=='cuda' and not args.no_nsys:
                         manifest['tasks'].append(dict(name=f'nsys_{name}',status='unavailable',required=False,
                             reason='Nsight Systems not installed; CUDA-event profiling still collected'))
+        if 'batched' in args.renderers:
+            # Separate renderer-only stress: fixed valid path count and private
+            # arbitrary inputs. It cannot be mixed into scene-service tables.
+            for backend in (['llvm','cuda'] if available else ['llvm']):
+                artifact=output/'profiles'/f'{backend}_sampled_renderer.json'
+                required_failure |= not run_task(f'{backend}_sampled_renderer',
+                    [sys.executable,ROOT/'benchmarks/benchmark_batched_rendering.py',
+                     '--backend',backend,'--links','2' if args.quick else str(max(args.tx)),
+                     '--paths',str(args.samples_per_link),'--samples',str(args.samples),
+                     '--sample-tile',str(args.sample_tile),'--max-lanes',str(args.max_render_lanes),
+                     '--reduction',args.batch_reduction,
+                     '--threads',str(args.threads),'--warmup','1' if args.quick else '3',
+                     '--iterations','2' if args.quick else '10','--output',artifact],artifact)
         if available and not args.no_example:
             required_failure |= not run_task('pluto_example',[sys.executable,ROOT/'examples/pluto_esm_drones.py',
                 '--backend','cuda','--epochs','2' if args.quick else '12',

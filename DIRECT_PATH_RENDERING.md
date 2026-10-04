@@ -56,6 +56,10 @@ nondeterministic summation-rounding differences; the default remains
 comparison with the full receive chain. No transmitter buffers are shared.
 See [the measurements and profiling commands](INDEPENDENT_TX_OPTIMIZATION.md).
 
+The newer [batched backend](BATCHED_RENDERING.md) adds independent private-input
+jobs, reusable execution and sampled-waveform interpolation. The analytic-only
+restriction below applies to the original `direct-*` backends.
+
 Arbitrary Python waveform callbacks continue to work with the existing NumPy
 renderer. They are rejected explicitly by the direct backend. Sampled comms
 waveforms with fractional-delay interpolation are a subsequent extension;

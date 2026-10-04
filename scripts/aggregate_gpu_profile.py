@@ -73,6 +73,7 @@ def main():
     manifest=load(root/'manifest.json');env=load(root/'environment.json')
     metrics=[]
     summaries={}
+    sampled=[]
     for path in sorted((root/'metrics').glob('*.json')):
         data=load(path)
         if data.get('measurement_mode')!='unprofiled_benchmark':
@@ -81,6 +82,7 @@ def main():
     for path in sorted((root/'profiles').glob('*.json')):
         data=load(path)
         if data.get('measurement_mode')=='instrumented_profile': summaries[path.name]=event_summary(data)
+        if data.get('scope')=='standalone_sampled_renderer': sampled.append((path,data))
     (root/'profile_summary.json').write_text(json.dumps(summaries,indent=2)+'\n')
     telemetry=telemetry_summary(root/'raw/gpu_telemetry.csv')
     (root/'telemetry_summary.json').write_text(json.dumps(telemetry,indent=2)+'\n')
@@ -89,7 +91,7 @@ def main():
     lines=[f"# RF profiling results: {manifest['run_id']}",'',f"Status: **{verdict}**.",'',
         f"GPU status: `{manifest.get('gpu_status')}`. Source: `{env.get('source_revision') or 'unknown'}`; dirty: `{env.get('source_dirty')}`.",'',
         f"Started: {manifest['started_utc']}. Finished: {manifest.get('finished_utc','interrupted')}.",'',
-        'Renderer and propagation backend are selected independently. Direct recurrence uses LLVM or CUDA; NumPy is the original renderer. Proposal draws, channel export and receiver filters/ADC remain CPU work. Direct CUDA timing includes per-link transfers and reduction.','',
+        'Renderer and propagation backend are selected independently. Direct and batched recurrence use LLVM or CUDA; NumPy is the original renderer. Proposal draws, channel export and receiver filters/ADC remain CPU work. Direct CUDA timing includes per-link transfers and reduction; batched CUDA groups transfers across private jobs.','',
         '## Environment','',f"Host: `{env['hostname']}`. Python: `{env['python'].splitlines()[0]}`.",
         f"CPU quota: `{env.get('cpu_quota')}`; memory limit: `{env.get('memory_limit')}`. Detailed hardware, versions and source-file hashes: [environment.json](environment.json).",'',
         'GPU inventory:','', '```text',env.get('gpu',{}).get('stdout','').strip() or env.get('gpu',{}).get('error','nvidia-smi unavailable'),'```','',
@@ -104,7 +106,13 @@ def main():
         '## Paired CPU/CUDA comparison','']
     paired={}
     for path,data in metrics:
-        a=data['arguments'];paired.setdefault((a['tx'],a['rx'],a['samples'],a['samples_per_link'], 'direct' if a.get('renderer','numpy').startswith('direct-') else 'numpy'),{})[a['backend']]=data
+        a=data['arguments'];kind=a.get('renderer','numpy').split('-')[0]
+        # Configuration belongs in pairing: do not compare differing diagnostics,
+        # recurrence lengths, replay modes or reduction strategies as GPU speedup.
+        paired.setdefault((a['tx'],a['rx'],a['samples'],a['samples_per_link'],kind,
+                           a.get('sample_tile',32),a.get('accumulation','partial'),
+                           a.get('no_link_diagnostics',False),a.get('no_replay',False),
+                           a.get('max_render_lanes',1_000_000),a.get('batch_reduction','auto')),{})[a['backend']]=data
     for key,pair in paired.items():
         if {'cpu','cuda'}<=pair.keys():
             cpu,gpu=pair['cpu'],pair['cuda']
@@ -120,7 +128,15 @@ def main():
         duration=data.get('rendering',{}).get('p50_ms')
         label=f'{duration:.3f} ms' if duration is not None else 'not recorded'
         lines.append(f"| {path.stem} | {renderer} | {label} | {data['service']['p50_ms']:.3f} ms |")
-    lines+=['','Direct rendering retains all valid paths and their independent Dopplers. Default tiles: 128 paths × 32 recurrent samples; FP64 arithmetic with analytic phase reinitialization every sample tile. Temporary contribution buffers hold one path tile × the receive window, not all scene paths. See direct_renderer_correctness task for GPU numerical checks.','']
+    lines+=['','All direct/batched modes retain valid paths and independent Dopplers in FP64. Per-link direct rendering selects contribution buffers or local reduction. Batched rendering uses bounded independent jobs and replay, with local CUDA reduction and threshold-dependent thread-private CPU reduction; it has no path-by-sample contribution buffers. Configuration and replay/batch metrics are recorded in each JSON. See direct_renderer_correctness for GPU numerical checks.','']
+    if sampled:
+        lines+=['## Separate arbitrary sampled-input renderer stress','',
+                'Renderer-only timings, excluding propagation and receiver DSP. Every job owns private input data; all configured paths are valid. Finite interpolation error relative to ideal sinc is not qualified by equality to the reference operator.','',
+                '| Backend | Private links | Valid paths/link | Output samples | Interpolation taps | Median renderer | p95 |',
+                '|---|---:|---:|---:|---:|---:|---:|']
+        for path,data in sampled:
+            a=data['arguments']
+            lines.append(f"| [{a['backend']}](profiles/{path.name}) | {a['links']} | {a['paths']} | {a['samples']} | {a['taps']} | {data['p50_ms']:.3f} ms | {data['p95_ms']:.3f} ms |")
     lines+=['','## Separate instrumented profiles','',
         'These instrumented runs are excluded from the performance table. CUDA-event sums are recorded device operation time, not critical-path latency. Host ranges are inclusive and nested; do not add them together.','']
     if not summaries: lines.append('No completed instrumented profiles.')

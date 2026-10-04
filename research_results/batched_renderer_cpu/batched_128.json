@@ -1,0 +1,1062 @@
+{
+  "arguments": {
+    "tx": 100,
+    "rx": 1,
+    "iterations": 10,
+    "warmup": 2,
+    "samples": 4096,
+    "samples_per_link": 1028,
+    "backend": "cpu",
+    "renderer": "batched-llvm",
+    "path_tile": 128,
+    "sample_tile": 128,
+    "accumulation": "local",
+    "no_replay": false,
+    "max_render_lanes": 1000000,
+    "batch_reduction": "auto",
+    "no_link_diagnostics": false,
+    "profile": false,
+    "threads": 2,
+    "output": "research_results/batched_renderer_cpu/batched_128.json"
+  },
+  "measurement_mode": "unprofiled_benchmark",
+  "scope": "915 MHz, 2 MS/s, 1 MHz filter, noisy independent-clock Pluto profile; moving mounts over 800-triangle DEM",
+  "timing_includes": "Pose writes, synchronized channel/NumPy export, per-path IQ, enabled per-link diagnostics, receive noise/filter and ADC conversion",
+  "timing_excludes": [
+    "AirSim RPC/physics",
+    "transport",
+    "queueing",
+    "storage",
+    "plots",
+    "RF skill processing"
+  ],
+  "initial_tx_positions_m": [
+    [
+      0.0,
+      -25.0,
+      10.0
+    ],
+    [
+      0.0,
+      -24.494949494949495,
+      10.0
+    ],
+    [
+      0.0,
+      -23.98989898989899,
+      10.0
+    ],
+    [
+      0.0,
+      -23.484848484848484,
+      10.0
+    ],
+    [
+      0.0,
+      -22.97979797979798,
+      10.0
+    ],
+    [
+      0.0,
+      -22.474747474747474,
+      10.0
+    ],
+    [
+      0.0,
+      -21.96969696969697,
+      10.0
+    ],
+    [
+      0.0,
+      -21.464646464646464,
+      10.0
+    ],
+    [
+      0.0,
+      -20.95959595959596,
+      10.0
+    ],
+    [
+      0.0,
+      -20.454545454545453,
+      10.0
+    ],
+    [
+      0.0,
+      -19.949494949494948,
+      10.0
+    ],
+    [
+      0.0,
+      -19.444444444444443,
+      10.0
+    ],
+    [
+      0.0,
+      -18.939393939393938,
+      10.0
+    ],
+    [
+      0.0,
+      -18.434343434343432,
+      10.0
+    ],
+    [
+      0.0,
+      -17.929292929292927,
+      10.0
+    ],
+    [
+      0.0,
+      -17.424242424242422,
+      10.0
+    ],
+    [
+      0.0,
+      -16.919191919191917,
+      10.0
+    ],
+    [
+      0.0,
+      -16.41414141414141,
+      10.0
+    ],
+    [
+      0.0,
+      -15.909090909090908,
+      10.0
+    ],
+    [
+      0.0,
+      -15.404040404040403,
+      10.0
+    ],
+    [
+      0.0,
+      -14.898989898989898,
+      10.0
+    ],
+    [
+      0.0,
+      -14.393939393939393,
+      10.0
+    ],
+    [
+      0.0,
+      -13.888888888888888,
+      10.0
+    ],
+    [
+      0.0,
+      -13.383838383838382,
+      10.0
+    ],
+    [
+      0.0,
+      -12.878787878787879,
+      10.0
+    ],
+    [
+      0.0,
+      -12.373737373737374,
+      10.0
+    ],
+    [
+      0.0,
+      -11.868686868686869,
+      10.0
+    ],
+    [
+      0.0,
+      -11.363636363636363,
+      10.0
+    ],
+    [
+      0.0,
+      -10.858585858585858,
+      10.0
+    ],
+    [
+      0.0,
+      -10.353535353535353,
+      10.0
+    ],
+    [
+      0.0,
+      -9.848484848484848,
+      10.0
+    ],
+    [
+      0.0,
+      -9.343434343434343,
+      10.0
+    ],
+    [
+      0.0,
+      -8.838383838383837,
+      10.0
+    ],
+    [
+      0.0,
+      -8.333333333333332,
+      10.0
+    ],
+    [
+      0.0,
+      -7.828282828282827,
+      10.0
+    ],
+    [
+      0.0,
+      -7.323232323232322,
+      10.0
+    ],
+    [
+      0.0,
+      -6.818181818181817,
+      10.0
+    ],
+    [
+      0.0,
+      -6.313131313131311,
+      10.0
+    ],
+    [
+      0.0,
+      -5.808080808080806,
+      10.0
+    ],
+    [
+      0.0,
+      -5.303030303030301,
+      10.0
+    ],
+    [
+      0.0,
+      -4.797979797979796,
+      10.0
+    ],
+    [
+      0.0,
+      -4.292929292929291,
+      10.0
+    ],
+    [
+      0.0,
+      -3.7878787878787854,
+      10.0
+    ],
+    [
+      0.0,
+      -3.28282828282828,
+      10.0
+    ],
+    [
+      0.0,
+      -2.777777777777775,
+      10.0
+    ],
+    [
+      0.0,
+      -2.27272727272727,
+      10.0
+    ],
+    [
+      0.0,
+      -1.7676767676767646,
+      10.0
+    ],
+    [
+      0.0,
+      -1.2626262626262594,
+      10.0
+    ],
+    [
+      0.0,
+      -0.7575757575757578,
+      10.0
+    ],
+    [
+      0.0,
+      -0.2525252525252526,
+      10.0
+    ],
+    [
+      0.0,
+      0.2525252525252526,
+      10.0
+    ],
+    [
+      0.0,
+      0.7575757575757578,
+      10.0
+    ],
+    [
+      0.0,
+      1.262626262626263,
+      10.0
+    ],
+    [
+      0.0,
+      1.7676767676767682,
+      10.0
+    ],
+    [
+      0.0,
+      2.2727272727272734,
+      10.0
+    ],
+    [
+      0.0,
+      2.7777777777777786,
+      10.0
+    ],
+    [
+      0.0,
+      3.2828282828282838,
+      10.0
+    ],
+    [
+      0.0,
+      3.787878787878789,
+      10.0
+    ],
+    [
+      0.0,
+      4.292929292929294,
+      10.0
+    ],
+    [
+      0.0,
+      4.797979797979799,
+      10.0
+    ],
+    [
+      0.0,
+      5.3030303030303045,
+      10.0
+    ],
+    [
+      0.0,
+      5.80808080808081,
+      10.0
+    ],
+    [
+      0.0,
+      6.313131313131315,
+      10.0
+    ],
+    [
+      0.0,
+      6.81818181818182,
+      10.0
+    ],
+    [
+      0.0,
+      7.323232323232325,
+      10.0
+    ],
+    [
+      0.0,
+      7.8282828282828305,
+      10.0
+    ],
+    [
+      0.0,
+      8.333333333333336,
+      10.0
+    ],
+    [
+      0.0,
+      8.838383838383841,
+      10.0
+    ],
+    [
+      0.0,
+      9.343434343434346,
+      10.0
+    ],
+    [
+      0.0,
+      9.848484848484851,
+      10.0
+    ],
+    [
+      0.0,
+      10.353535353535356,
+      10.0
+    ],
+    [
+      0.0,
+      10.858585858585862,
+      10.0
+    ],
+    [
+      0.0,
+      11.363636363636367,
+      10.0
+    ],
+    [
+      0.0,
+      11.868686868686872,
+      10.0
+    ],
+    [
+      0.0,
+      12.373737373737377,
+      10.0
+    ],
+    [
+      0.0,
+      12.878787878787882,
+      10.0
+    ],
+    [
+      0.0,
+      13.383838383838388,
+      10.0
+    ],
+    [
+      0.0,
+      13.888888888888893,
+      10.0
+    ],
+    [
+      0.0,
+      14.393939393939398,
+      10.0
+    ],
+    [
+      0.0,
+      14.898989898989903,
+      10.0
+    ],
+    [
+      0.0,
+      15.404040404040408,
+      10.0
+    ],
+    [
+      0.0,
+      15.909090909090914,
+      10.0
+    ],
+    [
+      0.0,
+      16.41414141414142,
+      10.0
+    ],
+    [
+      0.0,
+      16.919191919191924,
+      10.0
+    ],
+    [
+      0.0,
+      17.42424242424243,
+      10.0
+    ],
+    [
+      0.0,
+      17.929292929292934,
+      10.0
+    ],
+    [
+      0.0,
+      18.43434343434344,
+      10.0
+    ],
+    [
+      0.0,
+      18.939393939393945,
+      10.0
+    ],
+    [
+      0.0,
+      19.44444444444445,
+      10.0
+    ],
+    [
+      0.0,
+      19.949494949494955,
+      10.0
+    ],
+    [
+      0.0,
+      20.45454545454546,
+      10.0
+    ],
+    [
+      0.0,
+      20.959595959595966,
+      10.0
+    ],
+    [
+      0.0,
+      21.46464646464647,
+      10.0
+    ],
+    [
+      0.0,
+      21.969696969696976,
+      10.0
+    ],
+    [
+      0.0,
+      22.47474747474748,
+      10.0
+    ],
+    [
+      0.0,
+      22.979797979797986,
+      10.0
+    ],
+    [
+      0.0,
+      23.484848484848484,
+      10.0
+    ],
+    [
+      0.0,
+      23.98989898989899,
+      10.0
+    ],
+    [
+      0.0,
+      24.494949494949495,
+      10.0
+    ],
+    [
+      0.0,
+      25.0,
+      10.0
+    ]
+  ],
+  "initial_rx_positions_m": [
+    [
+      -30.0,
+      -10.0,
+      14.0
+    ]
+  ],
+  "capture_duration_ms": 2.048,
+  "filter_warmup_samples": 256,
+  "preparation_ms": 125.19102598889731,
+  "first_capture": {
+    "epoch_s": 0.0,
+    "service_ms": 309.1580909967888,
+    "pose_ms": 0.27252198196947575,
+    "capture_ms": 308.8853190129157,
+    "channel_ms": 70.50102201174013,
+    "cpu_iq_receiver_ms": 238.38429700117558,
+    "iq_receiver_ms": 238.38429700117558,
+    "render_ms": 226.84118399047293,
+    "stage_timings": {
+      "proposal_table_prepare_ms": 6.152373010991141,
+      "host_numpy_sampling_ms": 18.49864100222476
+    },
+    "render_metrics": [
+      {
+        "preparation_ms": 7.764651003526524,
+        "schedule_pack_ms": 96.05628802091815,
+        "export_wait_ms": 122.25285300519317,
+        "total_ms": 226.13245900720358,
+        "retained_paths": 42503,
+        "groups": [
+          {
+            "jobs": 100,
+            "capacity_paths_per_job": 512,
+            "lanes": 435200,
+            "reduction": "expand"
+          }
+        ],
+        "recordings_added": 1,
+        "reduction": "auto",
+        "replay": true,
+        "sum_output": false
+      }
+    ],
+    "retained_paths": 42503,
+    "clipping_fraction_max": 0.0
+  },
+  "first_capture_note": "New process with existing on-disk JIT cache; imports excluded; not a cache-cleared cold-start benchmark",
+  "service": {
+    "p50_ms": 243.25429850432556,
+    "p95_ms": 272.3092458967585,
+    "mean_ms": 248.01517690648325,
+    "max_ms": 272.70677499473095
+  },
+  "channel": {
+    "p50_ms": 61.248055499163456,
+    "p95_ms": 66.04805870738346,
+    "mean_ms": 61.9872700975975,
+    "max_ms": 67.94706502114423
+  },
+  "cpu_iq_receiver": {
+    "p50_ms": 180.49949752457906,
+    "p95_ms": 207.16599273728207,
+    "mean_ms": 185.73457110614982,
+    "max_ms": 210.09528799913824
+  },
+  "iq_receiver": {
+    "p50_ms": 180.49949752457906,
+    "p95_ms": 207.16599273728207,
+    "mean_ms": 185.73457110614982,
+    "max_ms": 210.09528799913824
+  },
+  "rendering": {
+    "p50_ms": 169.8713730002055,
+    "p95_ms": 196.074296196457,
+    "mean_ms": 175.2332321018912,
+    "max_ms": 199.01558800484054
+  },
+  "serial_wall_s": 2.480830157001037,
+  "sustained_updates_hz": 4.030908755192071,
+  "receiver_blocks_per_second": 4.030908755192071,
+  "deadline_misses": {
+    "120": 10,
+    "200": 10
+  },
+  "stage_timings": {
+    "proposal_table_prepare_ms": {
+      "p50_ms": 2.98713099618908,
+      "p95_ms": 3.4128334824345075,
+      "mean_ms": 3.0529176932759583,
+      "max_ms": 3.4676749783102423
+    },
+    "host_numpy_sampling_ms": {
+      "p50_ms": 15.360237506683916,
+      "p95_ms": 15.986010755295865,
+      "mean_ms": 15.321681610657834,
+      "max_ms": 15.989703009836376
+    }
+  },
+  "retained_paths": {
+    "min": 42513,
+    "max": 42526
+  },
+  "host": {
+    "cpu_count": 3,
+    "cpu_quota": "200000 100000",
+    "memory_limit_bytes": "8589934592",
+    "drjit_threads": 2,
+    "peak_rss_mib": 419.13671875,
+    "cuda_available": 0
+  },
+  "versions": {
+    "sionna_rt": "2.2.0",
+    "mitsuba": "3.9.1",
+    "drjit": "1.5.0",
+    "backend": "llvm_ad_mono_polarized"
+  },
+  "gpu_workload_per_receiver": {
+    "topology": "one GPU per physical receiver; all transmitters on every receiver worker",
+    "gpu_count": 10,
+    "transmitters_per_gpu": 100,
+    "receivers_per_gpu": 1,
+    "diffuse_attempts_per_gpu_per_pulse": 102800,
+    "visibility_queries_per_gpu_per_pulse_upper_bound": 365700,
+    "visibility_queries_fleet_per_pulse_upper_bound": 3657000,
+    "candidate_paths_per_gpu_upper_bound": 182900,
+    "compact_channel_bytes_per_gpu_per_pulse_upper_bound": 2926400,
+    "compact_channel_bytes_per_gpu_per_second_upper_bound": 585280000,
+    "pulse_hz": 200,
+    "pulse_budget_ms": 5.0,
+    "physics_hz": 120,
+    "physics_budget_ms": 8.333333333333334,
+    "ray_only_required_queries_per_second_at_pulse_rate": 73140000,
+    "ray_only_required_queries_per_second_at_physics_rate": 43884000,
+    "vram_requirement": "unmeasured; compact coefficients are not total device memory"
+  },
+  "conditional_gpu_ray_stage": [
+    {
+      "assumed_effective_scene_queries_per_second": 100000000.0,
+      "ray_stage_ms_at_upper_bound_query_count": 3.657,
+      "unchanged_measured_host_sampling_plus_ray_stage_ms": 19.017237506683916
+    },
+    {
+      "assumed_effective_scene_queries_per_second": 250000000.0,
+      "ray_stage_ms_at_upper_bound_query_count": 1.4628,
+      "unchanged_measured_host_sampling_plus_ray_stage_ms": 16.823037506683917
+    },
+    {
+      "assumed_effective_scene_queries_per_second": 1000000000.0,
+      "ray_stage_ms_at_upper_bound_query_count": 0.3657,
+      "unchanged_measured_host_sampling_plus_ray_stage_ms": 15.725937506683916
+    }
+  ],
+  "profile_note": "Profiled serial throughput includes event/history instrumentation; use separate unprofiled runs for performance.",
+  "gpu_note": "Renderer is selected independently of propagation backend. Direct CUDA includes per-link host/device transfers; proposal draws, channel export and front-end filters/ADC remain CPU. Legacy cpu_iq_receiver fields alias the mixed iq_receiver stage.",
+  "samples": [
+    {
+      "epoch_s": 0.015,
+      "service_ms": 239.55277100321837,
+      "pose_ms": 0.3115090075880289,
+      "capture_ms": 239.24108099890873,
+      "channel_ms": 60.95308100339025,
+      "cpu_iq_receiver_ms": 178.28799999551848,
+      "iq_receiver_ms": 178.28799999551848,
+      "render_ms": 167.39755900925957,
+      "stage_timings": {
+        "proposal_table_prepare_ms": 3.000716009410098,
+        "host_numpy_sampling_ms": 15.341585007263348
+      },
+      "render_metrics": [
+        {
+          "preparation_ms": 6.947065005078912,
+          "schedule_pack_ms": 3.117728017969057,
+          "export_wait_ms": 156.90808999352157,
+          "total_ms": 167.0017860014923,
+          "retained_paths": 42513,
+          "groups": [
+            {
+              "jobs": 100,
+              "capacity_paths_per_job": 512,
+              "lanes": 435200,
+              "reduction": "expand"
+            }
+          ],
+          "recordings_added": 0,
+          "reduction": "auto",
+          "replay": true,
+          "sum_output": false
+        }
+      ],
+      "retained_paths": 42513,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.02,
+      "service_ms": 272.70677499473095,
+      "pose_ms": 0.28698399546556175,
+      "capture_ms": 272.4195609916933,
+      "channel_ms": 62.32427299255505,
+      "cpu_iq_receiver_ms": 210.09528799913824,
+      "iq_receiver_ms": 210.09528799913824,
+      "render_ms": 199.01558800484054,
+      "stage_timings": {
+        "proposal_table_prepare_ms": 3.0616949952673167,
+        "host_numpy_sampling_ms": 15.016475023003295
+      },
+      "render_metrics": [
+        {
+          "preparation_ms": 7.380244001979008,
+          "schedule_pack_ms": 3.481594001641497,
+          "export_wait_ms": 187.73269897792488,
+          "total_ms": 198.6246620072052,
+          "retained_paths": 42514,
+          "groups": [
+            {
+              "jobs": 100,
+              "capacity_paths_per_job": 512,
+              "lanes": 435200,
+              "reduction": "expand"
+            }
+          ],
+          "recordings_added": 0,
+          "reduction": "auto",
+          "replay": true,
+          "sum_output": false
+        }
+      ],
+      "retained_paths": 42514,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.025,
+      "service_ms": 271.82337699923664,
+      "pose_ms": 0.29034900944679976,
+      "capture_ms": 271.5328079939354,
+      "channel_ms": 67.94706502114423,
+      "cpu_iq_receiver_ms": 203.5857429727912,
+      "iq_receiver_ms": 203.5857429727912,
+      "render_ms": 192.47938398621045,
+      "stage_timings": {
+        "proposal_table_prepare_ms": 2.847069001290947,
+        "host_numpy_sampling_ms": 15.833831013878807
+      },
+      "render_metrics": [
+        {
+          "preparation_ms": 10.744915984105319,
+          "schedule_pack_ms": 4.565872979583219,
+          "export_wait_ms": 176.75831902306527,
+          "total_ms": 192.10380999720655,
+          "retained_paths": 42517,
+          "groups": [
+            {
+              "jobs": 100,
+              "capacity_paths_per_job": 512,
+              "lanes": 435200,
+              "reduction": "expand"
+            }
+          ],
+          "recordings_added": 0,
+          "reduction": "auto",
+          "replay": true,
+          "sum_output": false
+        }
+      ],
+      "retained_paths": 42517,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.03,
+      "service_ms": 245.1976550219115,
+      "pose_ms": 0.2795520122162998,
+      "capture_ms": 244.91789302555844,
+      "channel_ms": 63.72705099056475,
+      "cpu_iq_receiver_ms": 181.1908420349937,
+      "iq_receiver_ms": 181.1908420349937,
+      "render_ms": 170.11568800080568,
+      "stage_timings": {
+        "proposal_table_prepare_ms": 2.952765004010871,
+        "host_numpy_sampling_ms": 15.378890006104484
+      },
+      "render_metrics": [
+        {
+          "preparation_ms": 7.226898014778271,
+          "schedule_pack_ms": 4.463822988327593,
+          "export_wait_ms": 157.90643298532814,
+          "total_ms": 169.62825899827294,
+          "retained_paths": 42516,
+          "groups": [
+            {
+              "jobs": 100,
+              "capacity_paths_per_job": 512,
+              "lanes": 435200,
+              "reduction": "expand"
+            }
+          ],
+          "recordings_added": 0,
+          "reduction": "auto",
+          "replay": true,
+          "sum_output": false
+        }
+      ],
+      "retained_paths": 42516,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.035,
+      "service_ms": 241.63707499974407,
+      "pose_ms": 0.2857109939213842,
+      "capture_ms": 241.35118300910108,
+      "channel_ms": 61.54302999493666,
+      "cpu_iq_receiver_ms": 179.80815301416442,
+      "iq_receiver_ms": 179.80815301416442,
+      "render_ms": 168.92680499586277,
+      "stage_timings": {
+        "proposal_table_prepare_ms": 2.9356289887800813,
+        "host_numpy_sampling_ms": 15.662999008782208
+      },
+      "render_metrics": [
+        {
+          "preparation_ms": 7.31395700131543,
+          "schedule_pack_ms": 4.457653994904831,
+          "export_wait_ms": 156.74380798009224,
+          "total_ms": 168.54585401597433,
+          "retained_paths": 42519,
+          "groups": [
+            {
+              "jobs": 100,
+              "capacity_paths_per_job": 512,
+              "lanes": 435200,
+              "reduction": "expand"
+            }
+          ],
+          "recordings_added": 0,
+          "reduction": "auto",
+          "replay": true,
+          "sum_output": false
+        }
+      ],
+      "retained_paths": 42519,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.04,
+      "service_ms": 240.08923300425522,
+      "pose_ms": 0.30550098745152354,
+      "capture_ms": 239.7835320152808,
+      "channel_ms": 60.580450983252376,
+      "cpu_iq_receiver_ms": 179.20308103202842,
+      "iq_receiver_ms": 179.20308103202842,
+      "render_ms": 169.38406898407266,
+      "stage_timings": {
+        "proposal_table_prepare_ms": 3.075985994655639,
+        "host_numpy_sampling_ms": 15.981497999746352
+      },
+      "render_metrics": [
+        {
+          "preparation_ms": 7.271453010616824,
+          "schedule_pack_ms": 4.254494997439906,
+          "export_wait_ms": 156.89859699341469,
+          "total_ms": 168.4526760072913,
+          "retained_paths": 42520,
+          "groups": [
+            {
+              "jobs": 100,
+              "capacity_paths_per_job": 512,
+              "lanes": 435200,
+              "reduction": "expand"
+            }
+          ],
+          "recordings_added": 0,
+          "reduction": "auto",
+          "replay": true,
+          "sum_output": false
+        }
+      ],
+      "retained_paths": 42520,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.045,
+      "service_ms": 238.88130401610397,
+      "pose_ms": 0.2801440132316202,
+      "capture_ms": 238.60097999568097,
+      "channel_ms": 58.99017699994147,
+      "cpu_iq_receiver_ms": 179.6108029957395,
+      "iq_receiver_ms": 179.6108029957395,
+      "render_ms": 169.6270579996053,
+      "stage_timings": {
+        "proposal_table_prepare_ms": 2.868290990591049,
+        "host_numpy_sampling_ms": 14.501298021059483
+      },
+      "render_metrics": [
+        {
+          "preparation_ms": 7.845801999792457,
+          "schedule_pack_ms": 4.549190023681149,
+          "export_wait_ms": 156.1530449835118,
+          "total_ms": 168.57961300411262,
+          "retained_paths": 42523,
+          "groups": [
+            {
+              "jobs": 100,
+              "capacity_paths_per_job": 512,
+              "lanes": 435200,
+              "reduction": "expand"
+            }
+          ],
+          "recordings_added": 0,
+          "reduction": "auto",
+          "replay": true,
+          "sum_output": false
+        }
+      ],
+      "retained_paths": 42523,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.05,
+      "service_ms": 243.0914030119311,
+      "pose_ms": 0.3089150122832507,
+      "capture_ms": 242.78228799812496,
+      "channel_ms": 63.100899977143854,
+      "cpu_iq_receiver_ms": 179.6813880209811,
+      "iq_receiver_ms": 179.6813880209811,
+      "render_ms": 169.55550300190225,
+      "stage_timings": {
+        "proposal_table_prepare_ms": 2.973545982968062,
+        "host_numpy_sampling_ms": 15.989703009836376
+      },
+      "render_metrics": [
+        {
+          "preparation_ms": 8.20207700598985,
+          "schedule_pack_ms": 4.789313999935985,
+          "export_wait_ms": 155.35697099403478,
+          "total_ms": 168.38728898437694,
+          "retained_paths": 42525,
+          "groups": [
+            {
+              "jobs": 100,
+              "capacity_paths_per_job": 512,
+              "lanes": 435200,
+              "reduction": "expand"
+            }
+          ],
+          "recordings_added": 0,
+          "reduction": "auto",
+          "replay": true,
+          "sum_output": false
+        }
+      ],
+      "retained_paths": 42525,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.055,
+      "service_ms": 243.75498201698065,
+      "pose_ms": 0.27825101278722286,
+      "capture_ms": 243.47644101362675,
+      "channel_ms": 60.54782401770353,
+      "cpu_iq_receiver_ms": 182.92861699592322,
+      "iq_receiver_ms": 182.92861699592322,
+      "render_ms": 172.93382601928897,
+      "stage_timings": {
+        "proposal_table_prepare_ms": 3.345804987475276,
+        "host_numpy_sampling_ms": 14.743236009962857
+      },
+      "render_metrics": [
+        {
+          "preparation_ms": 7.653257984202355,
+          "schedule_pack_ms": 4.651961993658915,
+          "export_wait_ms": 159.07748800236732,
+          "total_ms": 171.41424398869276,
+          "retained_paths": 42523,
+          "groups": [
+            {
+              "jobs": 100,
+              "capacity_paths_per_job": 512,
+              "lanes": 435200,
+              "reduction": "expand"
+            }
+          ],
+          "recordings_added": 0,
+          "reduction": "auto",
+          "replay": true,
+          "sum_output": false
+        }
+      ],
+      "retained_paths": 42523,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.06,
+      "service_ms": 243.41719399672002,
+      "pose_ms": 0.30429899925366044,
+      "capture_ms": 243.11264499556273,
+      "channel_ms": 60.15884899534285,
+      "cpu_iq_receiver_ms": 182.95379600021988,
+      "iq_receiver_ms": 182.95379600021988,
+      "render_ms": 172.8968410170637,
+      "stage_timings": {
+        "proposal_table_prepare_ms": 3.4676749783102423,
+        "host_numpy_sampling_ms": 14.767301006941125
+      },
+      "render_metrics": [
+        {
+          "preparation_ms": 7.323482015635818,
+          "schedule_pack_ms": 4.514419008046389,
+          "export_wait_ms": 160.0475790037308,
+          "total_ms": 171.9165760150645,
+          "retained_paths": 42526,
+          "groups": [
+            {
+              "jobs": 100,
+              "capacity_paths_per_job": 512,
+              "lanes": 435200,
+              "reduction": "expand"
+            }
+          ],
+          "recordings_added": 0,
+          "reduction": "auto",
+          "replay": true,
+          "sum_output": false
+        }
+      ],
+      "retained_paths": 42526,
+      "clipping_fraction_max": 0.0
+    }
+  ]
+}

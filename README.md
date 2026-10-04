@@ -31,6 +31,11 @@ The [independent-transmitter optimization study](INDEPENDENT_TX_OPTIMIZATION.md)
 adds a measured accumulation experiment, private-buffer bandwidth accounting
 and GPU commands, without transmitter sharing or reduced path coverage.
 
+[Batched rendering and arbitrary sampled I/Q](BATCHED_RENDERING.md) implement
+private transmitter batches, replayed kernels and per-path interpolation.
+Matched CPU service falls from 274 ms to 243 ms; GPU performance and the full
+continuous 120 Hz target remain unverified.
+
 See [SDR update rate and latency](SDR_RUNTIME.md) for complete channel-to-ADC
 CPU measurements and conditional GPU limits. The [code-derived scaling model](SDR_COMPLEXITY.md)
 compares O(paths × samples) work with measured CPU costs and proposed GPU kernels.

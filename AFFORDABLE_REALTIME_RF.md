@@ -30,6 +30,11 @@ for each transmitter job, with private copies in separate receiver workers.
 Physical coherent summation at a receiver still combines independent signals.
 See [the independent-transmitter experiments and next steps](INDEPENDENT_TX_OPTIMIZATION.md).
 
+A first [batched sampled-I/Q implementation](BATCHED_RENDERING.md) now exists,
+with private inputs and retained path Dopplers. Its finite interpolation kernel
+and CPU measurements are documented separately; the full target workload and
+ideal-reconstruction accuracy remain to be qualified.
+
 Other representations remain research candidates only if they handle the same
 declared workload and numerical accuracy, report their unfavorable cases, and
 do not obtain their speedup by pruning paths, averaging Dopplers, narrowing the

@@ -16,10 +16,14 @@ def main():
     p.add_argument('--samples', type=int, default=4096)
     p.add_argument('--samples-per-link', type=int, default=1028)
     p.add_argument('--backend', choices=('cpu', 'cuda'), default='cpu')
-    p.add_argument('--renderer', choices=('numpy', 'direct-llvm', 'direct-cuda'), default='numpy')
+    p.add_argument('--renderer', choices=('numpy', 'direct-llvm', 'direct-cuda', 'batched-llvm', 'batched-cuda'), default='numpy')
     p.add_argument('--path-tile', type=int, default=128)
     p.add_argument('--sample-tile', type=int, default=32)
     p.add_argument('--accumulation', choices=('partial', 'local'), default='partial')
+    p.add_argument('--no-replay', action='store_true', help='Rebuild batched graphs instead of replaying them')
+    p.add_argument('--max-render-lanes', type=int, default=1_000_000)
+    p.add_argument('--batch-reduction', choices=('auto','local','expand'), default='auto')
+    p.add_argument('--no-link-diagnostics', action='store_true', help='Exclude optional per-emitter power reports; RF frontend remains')
     p.add_argument("--profile", action="store_true", help="Separate instrumented Dr.Jit event/NVTX run")
     p.add_argument("--threads", type=int, default=2)
     p.add_argument('--output', type=Path, required=True)
@@ -73,7 +77,9 @@ def main():
         rx_clocks[name] = [RadioClock(5, -.7), RadioClock(-10, .4)][i]
     receiver = SDRNetworkReceiver(scene, emitters, PlutoSDRProfile(), clocks=rx_clocks,
         samples_per_link=args.samples_per_link, renderer=args.renderer,
-        path_tile=args.path_tile, sample_tile=args.sample_tile, accumulation=args.accumulation)
+        path_tile=args.path_tile, sample_tile=args.sample_tile, accumulation=args.accumulation,
+        replay=not args.no_replay, max_render_lanes=args.max_render_lanes,
+        link_diagnostics=not args.no_link_diagnostics, batch_reduction=args.batch_reduction)
     preparation_ms = 1000*(perf_counter()-start)
     positions, velocities = np.vstack((tx_pos, rx_pos)), np.vstack((tx_vel, rx_vel))
 
@@ -101,6 +107,7 @@ def main():
             cpu_iq_receiver_ms=capture_ms-receiver.last_channel_ms,
             iq_receiver_ms=capture_ms-receiver.last_channel_ms, render_ms=receiver.last_render_ms,
             stage_timings=receiver.solver.stage_timings,
+            render_metrics=receiver.last_render_metrics,
             retained_paths=sum(sum(cap.retained_paths.values()) for cap in captures.values()),
             clipping_fraction_max=max(cap.clipped_component_fraction for cap in captures.values()))
         if profiler is not None:
@@ -134,7 +141,7 @@ def main():
     result = dict(arguments={k: str(v) if isinstance(v, Path) else v for k, v in vars(args).items()},
         measurement_mode='instrumented_profile' if args.profile else 'unprofiled_benchmark',
         scope='915 MHz, 2 MS/s, 1 MHz filter, noisy independent-clock Pluto profile; moving mounts over 800-triangle DEM',
-        timing_includes='Pose writes, synchronized channel/NumPy export, per-path IQ, per-link diagnostic filters, receive noise/filter and ADC conversion',
+        timing_includes='Pose writes, synchronized channel/NumPy export, per-path IQ, enabled per-link diagnostics, receive noise/filter and ADC conversion',
         timing_excludes=['AirSim RPC/physics', 'transport', 'queueing', 'storage', 'plots', 'RF skill processing'],
         initial_tx_positions_m=tx_pos.tolist(), initial_rx_positions_m=rx_pos.tolist(),
         capture_duration_ms=args.samples/2e6*1000, filter_warmup_samples=256,
