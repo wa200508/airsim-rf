@@ -1,7 +1,10 @@
 # airsim-rf
 
-On branch `profiling/p100`, use [the P100 profiling kit](P100_PROFILING.md)
-to collect paired CPU/CUDA measurements, device profiles and a publishable report.
+On branch `optimization/direct-path-renderer`, use
+[direct path rendering](DIRECT_PATH_RENDERING.md) to retain every path's
+Doppler evolution with tiled LLVM/CUDA recurrence. The
+[P100 profiling kit](P100_PROFILING.md) compares it with the existing NumPy
+renderer and generates device profiles and a publishable report.
 
 Start with [home setup](REPRODUCE.md) and the measured
 [120 Hz timing report](PERFORMANCE.md). This standalone repository contains the

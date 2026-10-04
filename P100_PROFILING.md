@@ -1,8 +1,9 @@
 # Run and publish P100 profiling measurements
 
-Branch: **`profiling/p100`**. This branch adds instrumentation and measurement
-scripts; it does not implement GPU I/Q synthesis or the proposed recurrence
-optimization. Its CUDA execution is the existing hybrid RF implementation.
+Branch: **`optimization/direct-path-renderer`**. This branch extends the
+profiling kit with [direct path LLVM/CUDA recurrence](DIRECT_PATH_RENDERING.md).
+The collector compares it with the existing NumPy renderer. Receiver filtering
+and ADC remain CPU work; GPU execution includes per-link host/device transfers.
 
 ## One command on the Docker host
 
@@ -11,7 +12,7 @@ the host, and git. Host driver libraries are supplied by the NVIDIA runtime;
 installing a CUDA toolkit alone does not expose a GPU to a sandbox.
 
 ```bash
-git clone --branch profiling/p100 --single-branch https://github.com/wa200508/airsim-rf.git
+git clone --branch optimization/direct-path-renderer --single-branch https://github.com/wa200508/airsim-rf.git
 cd airsim-rf
 nvidia-smi
 bash scripts/run_p100_docker.sh --run-id p100-20261004
@@ -29,8 +30,8 @@ Default GPU is device 0. Select another physical index or UUID with
 CPU quota and memory limits actually seen inside the container are recorded.
 The default Dr.Jit thread count is two; change with `--threads` if appropriate.
 
-The full run can take **15–30 minutes or longer**, because the 100-TX I/Q chain
-still runs on the CPU. A shorter initial check is:
+The full run can take **15–30 minutes or longer**, because the comparison also runs the original 100-TX
+NumPy renderer. A shorter initial check is:
 
 ```bash
 bash scripts/run_p100_docker.sh --quick --run-id p100-quick-20261004
@@ -79,15 +80,18 @@ The runner performs these tasks sequentially:
    SHA-256 hashes and optional one-second `nvidia-smi` telemetry.
 2. A real first-order terrain CUDA/OptiX smoke solve with kernel-history proof
    of CUDA and OptiX execution, finite coefficients and retained paths.
-3. Paired **unprofiled CPU and CUDA** one-receiver benchmarks for 2 and 100 TX.
+3. Renderer correctness tests, including CUDA analytic-equation and continuous
+   Doppler checks when GPU preflight succeeds.
+4. Paired **unprofiled CPU and CUDA** one-receiver benchmarks for 2 and 100 TX,
+   for both NumPy and direct LLVM/CUDA recurrence.
    Defaults: 20 warmups / 200 epochs for 2 TX, and 5 warmups / 30 epochs for
    100 TX. Same terrain, sample/ray budgets, clocks and waveform definitions.
-4. Separate instrumented runs: 3 warmups / 5 timed epochs, Dr.Jit CUDA-event
+5. Separate instrumented runs: 3 warmups / 5 timed epochs, Dr.Jit CUDA-event
    history and optional NVTX. `--quick` uses 1 warmup and 3/2 unprofiled epochs
    for small/large cases, with 2 timed epochs in each profile.
-5. Optional short Nsight Systems runs and kernel/API/NVTX statistics.
-6. The default two-beacon/two-receiver Pluto example, including I/Q and plots.
-7. Aggregation into `REPORT.md`, JSON summaries and artifact checksums.
+6. Optional short Nsight Systems runs and kernel/API/NVTX statistics.
+7. The default two-beacon/two-receiver Pluto example, including I/Q and plots.
+8. Aggregation into `REPORT.md`, JSON summaries and artifact checksums.
 
 Service latency includes local pose writes, synchronized channel export,
 waveform summation, diagnostic per-link filtering, receiver noise/filtering and
@@ -97,7 +101,7 @@ counted as RF service time. First capture is separate from warmed epochs;
 existing disk JIT caches are not purged.
 
 The report contains median/p95/max latency, sustained serial update rate,
-120/200 Hz deadline misses, channel versus host I/Q time, paired CPU/CUDA
+120/200 Hz deadline misses, channel versus I/Q/front-end time, separate rendering latency, paired CPU/CUDA
 ratios, retained path counts, device-event summaries, host ranges, compilation
 and cache metadata, telemetry and task failures. Events are measured through
 Dr.Jit CUDA events. Nested host ranges are inclusive and no per-range
@@ -182,7 +186,7 @@ host-level error must be resolved before collection can produce a report.
 
 Additional controls: `--tx 2` for a small worker only, `--no-example`,
 `--no-nsys`, `--no-telemetry`, `--samples`, `--samples-per-link`, `--threads`,
-`--output-root`. Changing sample/ray budgets changes the workload and is
+`--output-root`, `--renderers numpy direct`. Changing sample/ray budgets changes the workload and is
 recorded. The fixed receiver count is one; the example still uses two receivers.
 
 ## Validation performed on this branch

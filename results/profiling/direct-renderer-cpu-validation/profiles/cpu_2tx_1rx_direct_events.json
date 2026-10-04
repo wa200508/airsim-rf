@@ -1,0 +1,5170 @@
+{
+  "arguments": {
+    "tx": 2,
+    "rx": 1,
+    "iterations": 2,
+    "warmup": 1,
+    "samples": 4096,
+    "samples_per_link": 1028,
+    "backend": "cpu",
+    "renderer": "direct-llvm",
+    "path_tile": 128,
+    "sample_tile": 32,
+    "profile": true,
+    "threads": 2,
+    "output": "/workspace/airsim-rf-publish/results/profiling/direct-renderer-cpu-validation/profiles/cpu_2tx_1rx_direct_events.json"
+  },
+  "measurement_mode": "instrumented_profile",
+  "scope": "915 MHz, 2 MS/s, 1 MHz filter, noisy independent-clock Pluto profile; moving mounts over 800-triangle DEM",
+  "timing_includes": "Pose writes, synchronized channel/NumPy export, per-path IQ, per-link diagnostic filters, receive noise/filter and ADC conversion",
+  "timing_excludes": [
+    "AirSim RPC/physics",
+    "transport",
+    "queueing",
+    "storage",
+    "plots",
+    "RF skill processing"
+  ],
+  "initial_tx_positions_m": [
+    [
+      -60.0,
+      -30.0,
+      12.0
+    ],
+    [
+      45.0,
+      45.0,
+      18.0
+    ]
+  ],
+  "initial_rx_positions_m": [
+    [
+      -30.0,
+      -10.0,
+      14.0
+    ]
+  ],
+  "capture_duration_ms": 2.048,
+  "filter_warmup_samples": 256,
+  "preparation_ms": 43.89688800438307,
+  "first_capture": {
+    "epoch_s": 0.0,
+    "service_ms": 25.94084700103849,
+    "pose_ms": 0.037385005271062255,
+    "capture_ms": 25.903261004714295,
+    "channel_ms": 14.431584000703879,
+    "cpu_iq_receiver_ms": 11.471677004010417,
+    "iq_receiver_ms": 11.471677004010417,
+    "render_ms": 9.908392006764188,
+    "stage_timings": {
+      "proposal_table_prepare_ms": 2.326650996110402,
+      "host_numpy_sampling_ms": 0.6890670047141612
+    },
+    "retained_paths": 810,
+    "clipping_fraction_max": 0.0,
+    "profile": {
+      "records": [
+        {
+          "backend": "LLVM",
+          "type": "Memset",
+          "execution_time": 0.0005510000046342611,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "Memset",
+          "execution_time": 0.0002500000118743628,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "Memset",
+          "execution_time": 7.100000220816582e-05,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "Memset",
+          "execution_time": 9.000000136438757e-05,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "JIT",
+          "hash": "884c1514b85d4fc23d797176d3554f1b",
+          "execution_time": 0.0005610000225715339,
+          "operation_count": 16,
+          "cache_hit": 1,
+          "cache_disk": 1,
+          "codegen_time": 0.023104002699255943,
+          "backend_time": 0.0,
+          "uses_optix": 0,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "Memset",
+          "execution_time": 0.00018000000272877514,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "Memset",
+          "execution_time": 7.999999797903001e-05,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "Memset",
+          "execution_time": 4.999999873689376e-05,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "Memset",
+          "execution_time": 4.999999873689376e-05,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "Memset",
+          "execution_time": 9.000000136438757e-05,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "Memset",
+          "execution_time": 5.999999848427251e-05,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "Memset",
+          "execution_time": 5.999999848427251e-05,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "Memset",
+          "execution_time": 3.9999998989515007e-05,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "Memset",
+          "execution_time": 7.000000186963007e-05,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "Memset",
+          "execution_time": 5.999999848427251e-05,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "JIT",
+          "hash": "810b9e4ecca9b1bffd5d93abe47c087f",
+          "execution_time": 0.0003100000030826777,
+          "operation_count": 28,
+          "cache_hit": 1,
+          "cache_disk": 1,
+          "codegen_time": 0.007250000722706318,
+          "backend_time": 0.0,
+          "uses_optix": 0,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "Memset",
+          "execution_time": 9.000000136438757e-05,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "Memset",
+          "execution_time": 0.00046099998871795833,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "Memset",
+          "execution_time": 0.0005910000181756914,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "Memset",
+          "execution_time": 0.00021100000594742596,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "Memset",
+          "execution_time": 0.0002010000025620684,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "Memset",
+          "execution_time": 0.0002699999895412475,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "Memset",
+          "execution_time": 0.0001900000061141327,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "Memset",
+          "execution_time": 0.0002099999983329326,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "Memset",
+          "execution_time": 0.0002099999983329326,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "Memset",
+          "execution_time": 0.0002099999983329326,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "JIT",
+          "hash": "8077dd1eda9b156bf01c92684ef658b9",
+          "execution_time": 0.03150700032711029,
+          "operation_count": 71,
+          "cache_hit": 1,
+          "cache_disk": 1,
+          "codegen_time": 0.02561800368130207,
+          "backend_time": 0.0,
+          "uses_optix": 0,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "Memset",
+          "execution_time": 0.0009410000056959689,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "Memset",
+          "execution_time": 0.0008210000232793391,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "Memset",
+          "execution_time": 0.00022000000171829015,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "Memset",
+          "execution_time": 0.00015999999595806003,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "Memset",
+          "execution_time": 0.0005799999926239252,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "Memset",
+          "execution_time": 0.00018000000272877514,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "Memset",
+          "execution_time": 0.00019099999917671084,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "Memset",
+          "execution_time": 7.999999797903001e-05,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "Memset",
+          "execution_time": 0.001702000037766993,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "Aggregate",
+          "execution_time": 0.0006309999735094607,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "JIT",
+          "hash": "63df36e5b1bfd5e394f898223043989b",
+          "execution_time": 0.01809700019657612,
+          "operation_count": 69,
+          "cache_hit": 1,
+          "cache_disk": 1,
+          "codegen_time": 0.045618005096912384,
+          "backend_time": 0.0,
+          "uses_optix": 0,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "Memset",
+          "execution_time": 0.00039999998989515007,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "Memset",
+          "execution_time": 0.00034100000630132854,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "Memset",
+          "execution_time": 0.00204299995675683,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "Memset",
+          "execution_time": 0.002002999885007739,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "Memset",
+          "execution_time": 0.0005810000002384186,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "Memset",
+          "execution_time": 0.0003699999942909926,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "Memset",
+          "execution_time": 9.000000136438757e-05,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "Memset",
+          "execution_time": 0.0008210000232793391,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "Memset",
+          "execution_time": 0.0009710000013001263,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "Memset",
+          "execution_time": 0.0008219999726861715,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "Memset",
+          "execution_time": 0.000610999995842576,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "Memset",
+          "execution_time": 0.0005310000269673765,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "Memset",
+          "execution_time": 0.023174000903964043,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "Memset",
+          "execution_time": 0.0039450000040233135,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "Memset",
+          "execution_time": 0.00013000000035390258,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "JIT",
+          "hash": "3b688307cd6010126391cddce67866f4",
+          "execution_time": 0.051134999841451645,
+          "operation_count": 293,
+          "cache_hit": 1,
+          "cache_disk": 1,
+          "codegen_time": 0.06261300295591354,
+          "backend_time": 0.0,
+          "uses_optix": 0,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "JIT",
+          "hash": "acf4efd08b0dfcc416ce2b6766c71bb5",
+          "execution_time": 0.01633399911224842,
+          "operation_count": 51,
+          "cache_hit": 1,
+          "cache_disk": 1,
+          "codegen_time": 0.013550001196563244,
+          "backend_time": 0.0,
+          "uses_optix": 0,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "JIT",
+          "hash": "cd233d6ed663fa1b6d34f229ccba1517",
+          "execution_time": 0.0388530008494854,
+          "operation_count": 473,
+          "cache_hit": 1,
+          "cache_disk": 1,
+          "codegen_time": 0.06460600346326828,
+          "backend_time": 0.0,
+          "uses_optix": 0,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "JIT",
+          "hash": "d377976ba2e5a6c52427ca4ff7b78157",
+          "execution_time": 0.004335999954491854,
+          "operation_count": 11,
+          "cache_hit": 1,
+          "cache_disk": 1,
+          "codegen_time": 0.008403001353144646,
+          "backend_time": 0.0,
+          "uses_optix": 0,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "LLVMHostFunc",
+          "execution_time": 0.01735600084066391,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "Memset",
+          "execution_time": 0.00015999999595806003,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "Memset",
+          "execution_time": 7.999999797903001e-05,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "Memset",
+          "execution_time": 5.999999848427251e-05,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "Memset",
+          "execution_time": 4.999999873689376e-05,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "JIT",
+          "hash": "f6bc2fb2c293add063120774547055f9",
+          "execution_time": 0.0003110000106971711,
+          "operation_count": 16,
+          "cache_hit": 1,
+          "cache_disk": 1,
+          "codegen_time": 0.005699000786989927,
+          "backend_time": 0.0,
+          "uses_optix": 0,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "Memset",
+          "execution_time": 0.00018099999579135329,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "Memset",
+          "execution_time": 4.999999873689376e-05,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "Memset",
+          "execution_time": 4.999999873689376e-05,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "Memset",
+          "execution_time": 7.000000186963007e-05,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "Memset",
+          "execution_time": 5.0999999075429514e-05,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "Memset",
+          "execution_time": 7.100000220816582e-05,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "Memset",
+          "execution_time": 5.999999848427251e-05,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "Memset",
+          "execution_time": 5.999999848427251e-05,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "Memset",
+          "execution_time": 9.000000136438757e-05,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "Memset",
+          "execution_time": 6.0999998822808266e-05,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "JIT",
+          "hash": "5e96d0f260f946f07f7b4635937e124c",
+          "execution_time": 0.00015999999595806003,
+          "operation_count": 91,
+          "cache_hit": 1,
+          "cache_disk": 1,
+          "codegen_time": 0.015523001551628113,
+          "backend_time": 0.0,
+          "uses_optix": 0,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "JIT",
+          "hash": "8689ce6b19aed4f0462ee7d728b91cb2",
+          "execution_time": 0.00015999999595806003,
+          "operation_count": 140,
+          "cache_hit": 1,
+          "cache_disk": 1,
+          "codegen_time": 0.019419001415371895,
+          "backend_time": 0.0,
+          "uses_optix": 0,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "JIT",
+          "hash": "159dc4ef91c85f076e6355aab233bf27",
+          "execution_time": 0.00019099999917671084,
+          "operation_count": 140,
+          "cache_hit": 1,
+          "cache_disk": 1,
+          "codegen_time": 0.017056003212928772,
+          "backend_time": 0.0,
+          "uses_optix": 0,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "JIT",
+          "hash": "55cd95b1347d6d23fe2d16ec4f316ba2",
+          "execution_time": 0.00014000000373926014,
+          "operation_count": 90,
+          "cache_hit": 1,
+          "cache_disk": 1,
+          "codegen_time": 0.011547001078724861,
+          "backend_time": 0.0,
+          "uses_optix": 0,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "JIT",
+          "hash": "a0ef87e000b901dd9d1a3008ee73dee4",
+          "execution_time": 0.0002209999947808683,
+          "operation_count": 140,
+          "cache_hit": 1,
+          "cache_disk": 1,
+          "codegen_time": 0.019609002396464348,
+          "backend_time": 0.0,
+          "uses_optix": 0,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "JIT",
+          "hash": "e2c2bb97c514d37b5176dbaff7fe31ca",
+          "execution_time": 0.0002209999947808683,
+          "operation_count": 140,
+          "cache_hit": 1,
+          "cache_disk": 1,
+          "codegen_time": 0.015873001888394356,
+          "backend_time": 0.0,
+          "uses_optix": 0,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "JIT",
+          "hash": "1abff472751bc9735c0020d31ef0e2b0",
+          "execution_time": 0.00019999999494757503,
+          "operation_count": 55,
+          "cache_hit": 1,
+          "cache_disk": 1,
+          "codegen_time": 0.007240000646561384,
+          "backend_time": 0.0,
+          "uses_optix": 0,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "JIT",
+          "hash": "84f4eba156d780ce640e1ce94da6c1e9",
+          "execution_time": 0.0002099999983329326,
+          "operation_count": 90,
+          "cache_hit": 1,
+          "cache_disk": 1,
+          "codegen_time": 0.010946000926196575,
+          "backend_time": 0.0,
+          "uses_optix": 0,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "JIT",
+          "hash": "5e96d0f260f946f07f7b4635937e124c",
+          "execution_time": 0.00012099999730708078,
+          "operation_count": 91,
+          "cache_hit": 1,
+          "cache_disk": 0,
+          "codegen_time": 0.011357001028954983,
+          "backend_time": 0.0,
+          "uses_optix": 0,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "Aggregate",
+          "execution_time": 0.00033000000985339284,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "JIT",
+          "hash": "f21a15cafa424fafc0455d4c54d6cec9",
+          "execution_time": 0.4897730052471161,
+          "operation_count": 697,
+          "cache_hit": 1,
+          "cache_disk": 1,
+          "codegen_time": 0.1765100210905075,
+          "backend_time": 0.0,
+          "uses_optix": 0,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "LLVMHostFunc",
+          "execution_time": 0.019037999212741852,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "LLVMHostFunc",
+          "execution_time": 0.0003000000142492354,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "JIT",
+          "hash": "a9c5428efbfab6c18aafcf3aa40a1b99",
+          "execution_time": 0.0015020000282675028,
+          "operation_count": 9,
+          "cache_hit": 1,
+          "cache_disk": 1,
+          "codegen_time": 0.006160000804811716,
+          "backend_time": 0.0,
+          "uses_optix": 0,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "Memset",
+          "execution_time": 2.9999999242136255e-05,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "Memset",
+          "execution_time": 7.000000186963007e-05,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "Memcpy",
+          "execution_time": 0.001322000054642558,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "Memcpy",
+          "execution_time": 0.0008410000009462237,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "Memcpy",
+          "execution_time": 0.0007409999961964786,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "Memset",
+          "execution_time": 5.999999848427251e-05,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "Aggregate",
+          "execution_time": 0.0003100000030826777,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "JIT",
+          "hash": "a09971d5c8e83c6ca749566d75059f83",
+          "execution_time": 0.03141599893569946,
+          "operation_count": 231,
+          "cache_hit": 1,
+          "cache_disk": 1,
+          "codegen_time": 0.07064400613307953,
+          "backend_time": 0.0,
+          "uses_optix": 0,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "Memcpy",
+          "execution_time": 0.0009510000236332417,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "Memcpy",
+          "execution_time": 0.0006009999779053032,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "Memcpy",
+          "execution_time": 0.000661000027321279,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "Memcpy",
+          "execution_time": 0.000610999995842576,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "Memcpy",
+          "execution_time": 0.0006399999838322401,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "Aggregate",
+          "execution_time": 0.0003100000030826777,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "JIT",
+          "hash": "325fb111c8371f2323abf211821426ad",
+          "execution_time": 0.13456900417804718,
+          "operation_count": 571,
+          "cache_hit": 1,
+          "cache_disk": 1,
+          "codegen_time": 0.186365008354187,
+          "backend_time": 0.0,
+          "uses_optix": 0,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "Aggregate",
+          "execution_time": 0.000691999972332269,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "JIT",
+          "hash": "843612934fc5a96174f183c0ac156363",
+          "execution_time": 0.2901880145072937,
+          "operation_count": 3642,
+          "cache_hit": 1,
+          "cache_disk": 1,
+          "codegen_time": 0.8979641199111938,
+          "backend_time": 0.0,
+          "uses_optix": 0,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "Compress",
+          "execution_time": 0.009324000217020512,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "Memset",
+          "execution_time": 7.999999797903001e-05,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "Memset",
+          "execution_time": 0.00033000000985339284,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "JIT",
+          "hash": "b6f12f44977bb7ea256ab0c08d159472",
+          "execution_time": 0.00864300038665533,
+          "operation_count": 9,
+          "cache_hit": 1,
+          "cache_disk": 1,
+          "codegen_time": 0.008263001218438148,
+          "backend_time": 0.0,
+          "uses_optix": 0,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "BlockReduce",
+          "execution_time": 0.0007210000185295939,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "Memcpy",
+          "execution_time": 0.00015999999595806003,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "Memset",
+          "execution_time": 0.00033099998836405575,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "Memset",
+          "execution_time": 0.00013000000035390258,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "Memset",
+          "execution_time": 7.999999797903001e-05,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "Memset",
+          "execution_time": 0.0005510000046342611,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "Memset",
+          "execution_time": 0.0002610000083222985,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "Memset",
+          "execution_time": 0.0002099999983329326,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "Memset",
+          "execution_time": 0.00011000000085914508,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "Memset",
+          "execution_time": 0.0001500000071246177,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "Memset",
+          "execution_time": 0.00019999999494757503,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "JIT",
+          "hash": "2326e875ac5e9ae7987bf2e878458eef",
+          "execution_time": 0.020580999553203583,
+          "operation_count": 196,
+          "cache_hit": 1,
+          "cache_disk": 1,
+          "codegen_time": 0.033660002052783966,
+          "backend_time": 0.0,
+          "uses_optix": 0,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "JIT",
+          "hash": "3a2e8340a16e767a6916b8ff8eb56e62",
+          "execution_time": 0.0019729998894035816,
+          "operation_count": 18,
+          "cache_hit": 1,
+          "cache_disk": 1,
+          "codegen_time": 0.005418000277131796,
+          "backend_time": 0.0,
+          "uses_optix": 0,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "Memset",
+          "execution_time": 0.000830999983008951,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "JIT",
+          "hash": "cb394594e3605232373bafbc954d26fb",
+          "execution_time": 0.0029349999967962503,
+          "operation_count": 22,
+          "cache_hit": 1,
+          "cache_disk": 1,
+          "codegen_time": 0.005468000657856464,
+          "backend_time": 0.0,
+          "uses_optix": 0,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "JIT",
+          "hash": "3a2e8340a16e767a6916b8ff8eb56e62",
+          "execution_time": 0.0020129999611526728,
+          "operation_count": 18,
+          "cache_hit": 1,
+          "cache_disk": 0,
+          "codegen_time": 0.0041860006749629974,
+          "backend_time": 0.0,
+          "uses_optix": 0,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "Memset",
+          "execution_time": 0.00019999999494757503,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "JIT",
+          "hash": "d99f4e9678e29bf838c39e899156027e",
+          "execution_time": 0.006198999937623739,
+          "operation_count": 38,
+          "cache_hit": 1,
+          "cache_disk": 1,
+          "codegen_time": 0.006730000954121351,
+          "backend_time": 0.0,
+          "uses_optix": 0,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "JIT",
+          "hash": "589a70db1ca33e94a0d39292c4ff32ab",
+          "execution_time": 0.001762000028975308,
+          "operation_count": 78,
+          "cache_hit": 1,
+          "cache_disk": 1,
+          "codegen_time": 0.015633001923561096,
+          "backend_time": 0.0,
+          "uses_optix": 0,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "JIT",
+          "hash": "8380d6fce57f27467011e0870d25dc83",
+          "execution_time": 0.0013680000556632876,
+          "operation_count": 78,
+          "cache_hit": 1,
+          "cache_disk": 1,
+          "codegen_time": 0.01245800033211708,
+          "backend_time": 0.0,
+          "uses_optix": 0,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "Memset",
+          "execution_time": 0.7254999876022339,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "Memset",
+          "execution_time": 0.7056509852409363,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "Memset",
+          "execution_time": 0.09323800355195999,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "Memset",
+          "execution_time": 0.10794900357723236,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "JIT",
+          "hash": "a9c4986d22e31eacc0245bb5ca0a47c6",
+          "execution_time": 0.6818410158157349,
+          "operation_count": 181,
+          "cache_hit": 1,
+          "cache_disk": 1,
+          "codegen_time": 0.030024003237485886,
+          "backend_time": 0.0,
+          "uses_optix": 0,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "BlockReduce",
+          "execution_time": 0.059863001108169556,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "BlockReduce",
+          "execution_time": 0.0685570016503334,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "LLVMHostFunc",
+          "execution_time": 0.018237000331282616,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "LLVMHostFunc",
+          "execution_time": 0.0006210000137798488,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "LLVMHostFunc",
+          "execution_time": 0.0005610000225715339,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "Memset",
+          "execution_time": 0.09756399691104889,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "Memset",
+          "execution_time": 0.050133999437093735,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "Memset",
+          "execution_time": 0.05036399886012077,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "Memset",
+          "execution_time": 0.049543000757694244,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "LLVMHostFunc",
+          "execution_time": 0.015111999586224556,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "JIT",
+          "hash": "a9c4986d22e31eacc0245bb5ca0a47c6",
+          "execution_time": 0.5502070188522339,
+          "operation_count": 181,
+          "cache_hit": 1,
+          "cache_disk": 0,
+          "codegen_time": 0.025467002764344215,
+          "backend_time": 0.0,
+          "uses_optix": 0,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "BlockReduce",
+          "execution_time": 0.07186099886894226,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "BlockReduce",
+          "execution_time": 0.06871700286865234,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "JIT",
+          "hash": "c22a6e2c097271ccf3e335275712d2af",
+          "execution_time": 0.026605000719428062,
+          "operation_count": 7,
+          "cache_hit": 1,
+          "cache_disk": 1,
+          "codegen_time": 0.008322000503540039,
+          "backend_time": 0.0,
+          "uses_optix": 0,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "LLVMHostFunc",
+          "execution_time": 0.015111999586224556,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "LLVMHostFunc",
+          "execution_time": 0.000661000027321279,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "LLVMHostFunc",
+          "execution_time": 0.00011000000085914508,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "Memset",
+          "execution_time": 0.07218699902296066,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "Memset",
+          "execution_time": 0.05039399862289429,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "Memset",
+          "execution_time": 0.0495229996740818,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "Memset",
+          "execution_time": 0.050223998725414276,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "LLVMHostFunc",
+          "execution_time": 0.012879000045359135,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "JIT",
+          "hash": "a9c4986d22e31eacc0245bb5ca0a47c6",
+          "execution_time": 0.5959330201148987,
+          "operation_count": 181,
+          "cache_hit": 1,
+          "cache_disk": 0,
+          "codegen_time": 0.03412100300192833,
+          "backend_time": 0.0,
+          "uses_optix": 0,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "BlockReduce",
+          "execution_time": 0.05793000012636185,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "BlockReduce",
+          "execution_time": 0.057794999331235886,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "JIT",
+          "hash": "c22a6e2c097271ccf3e335275712d2af",
+          "execution_time": 0.004166000057011843,
+          "operation_count": 7,
+          "cache_hit": 1,
+          "cache_disk": 0,
+          "codegen_time": 0.0032340004108846188,
+          "backend_time": 0.0,
+          "uses_optix": 0,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "LLVMHostFunc",
+          "execution_time": 0.013058999553322792,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "LLVMHostFunc",
+          "execution_time": 0.00033999999868683517,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "LLVMHostFunc",
+          "execution_time": 0.0002099999983329326,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "Memset",
+          "execution_time": 0.36196398735046387,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "Memset",
+          "execution_time": 0.3053700029850006,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "Memset",
+          "execution_time": 0.01510199997574091,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "Memset",
+          "execution_time": 0.017255999147892,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "LLVMHostFunc",
+          "execution_time": 0.01673400029540062,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "JIT",
+          "hash": "573fd068e0572738251a4d2d80bb71dc",
+          "execution_time": 0.1382489949464798,
+          "operation_count": 180,
+          "cache_hit": 1,
+          "cache_disk": 1,
+          "codegen_time": 0.02731100283563137,
+          "backend_time": 0.0,
+          "uses_optix": 0,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "BlockReduce",
+          "execution_time": 0.020330000668764114,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "BlockReduce",
+          "execution_time": 0.020099999383091927,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "JIT",
+          "hash": "c22a6e2c097271ccf3e335275712d2af",
+          "execution_time": 0.004511999897658825,
+          "operation_count": 7,
+          "cache_hit": 1,
+          "cache_disk": 0,
+          "codegen_time": 0.003124000271782279,
+          "backend_time": 0.0,
+          "uses_optix": 0,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "Memset",
+          "execution_time": 0.07154499739408493,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "Memset",
+          "execution_time": 0.08414400368928909,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "Memset",
+          "execution_time": 0.06206100061535835,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "Memset",
+          "execution_time": 0.060568999499082565,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "JIT",
+          "hash": "a9c4986d22e31eacc0245bb5ca0a47c6",
+          "execution_time": 0.8498240113258362,
+          "operation_count": 181,
+          "cache_hit": 1,
+          "cache_disk": 0,
+          "codegen_time": 0.03836600109934807,
+          "backend_time": 0.0,
+          "uses_optix": 0,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "BlockReduce",
+          "execution_time": 0.05462000146508217,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "BlockReduce",
+          "execution_time": 0.054896000772714615,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "LLVMHostFunc",
+          "execution_time": 0.017544999718666077,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "LLVMHostFunc",
+          "execution_time": 0.0015529999509453773,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "LLVMHostFunc",
+          "execution_time": 0.0002209999947808683,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "Memset",
+          "execution_time": 0.07550200074911118,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "Memset",
+          "execution_time": 0.049713000655174255,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "Memset",
+          "execution_time": 0.050565000623464584,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "Memset",
+          "execution_time": 0.04949299991130829,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "LLVMHostFunc",
+          "execution_time": 0.012569000013172626,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "JIT",
+          "hash": "a9c4986d22e31eacc0245bb5ca0a47c6",
+          "execution_time": 0.5934060215950012,
+          "operation_count": 181,
+          "cache_hit": 1,
+          "cache_disk": 0,
+          "codegen_time": 0.02770100347697735,
+          "backend_time": 0.0,
+          "uses_optix": 0,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "BlockReduce",
+          "execution_time": 0.05497099831700325,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "BlockReduce",
+          "execution_time": 0.05897099897265434,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "JIT",
+          "hash": "c22a6e2c097271ccf3e335275712d2af",
+          "execution_time": 0.0028989999555051327,
+          "operation_count": 7,
+          "cache_hit": 1,
+          "cache_disk": 0,
+          "codegen_time": 0.0036960002034902573,
+          "backend_time": 0.0,
+          "uses_optix": 0,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "LLVMHostFunc",
+          "execution_time": 0.01296900026500225,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "LLVMHostFunc",
+          "execution_time": 0.0003910000086762011,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "LLVMHostFunc",
+          "execution_time": 0.00048099999548867345,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "Memset",
+          "execution_time": 0.0537090003490448,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "Memset",
+          "execution_time": 0.07023300230503082,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "Memset",
+          "execution_time": 0.05039500072598457,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "Memset",
+          "execution_time": 0.05648399889469147,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "LLVMHostFunc",
+          "execution_time": 0.01296900026500225,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "JIT",
+          "hash": "a9c4986d22e31eacc0245bb5ca0a47c6",
+          "execution_time": 0.5968559980392456,
+          "operation_count": 181,
+          "cache_hit": 1,
+          "cache_disk": 0,
+          "codegen_time": 0.025648001581430435,
+          "backend_time": 0.0,
+          "uses_optix": 0,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "BlockReduce",
+          "execution_time": 0.05469999834895134,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "BlockReduce",
+          "execution_time": 0.05467500165104866,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "JIT",
+          "hash": "c22a6e2c097271ccf3e335275712d2af",
+          "execution_time": 0.004556000232696533,
+          "operation_count": 7,
+          "cache_hit": 1,
+          "cache_disk": 0,
+          "codegen_time": 0.002324000233784318,
+          "backend_time": 0.0,
+          "uses_optix": 0,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "LLVMHostFunc",
+          "execution_time": 0.013690000399947166,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "LLVMHostFunc",
+          "execution_time": 0.0004910000134259462,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "LLVMHostFunc",
+          "execution_time": 0.00014000000373926014,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "Memset",
+          "execution_time": 0.14333100616931915,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "Memset",
+          "execution_time": 0.1658950001001358,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "Memset",
+          "execution_time": 0.00471699982881546,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "Memset",
+          "execution_time": 0.006240000016987324,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "LLVMHostFunc",
+          "execution_time": 0.012618999928236008,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "JIT",
+          "hash": "7febf8d900c56fc35cb433534a48ef8b",
+          "execution_time": 0.05313299968838692,
+          "operation_count": 180,
+          "cache_hit": 1,
+          "cache_disk": 1,
+          "codegen_time": 0.023885000497102737,
+          "backend_time": 0.0,
+          "uses_optix": 0,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "BlockReduce",
+          "execution_time": 0.014688000082969666,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "BlockReduce",
+          "execution_time": 0.01469700038433075,
+          "recording_mode": "Inactive"
+        },
+        {
+          "backend": "LLVM",
+          "type": "JIT",
+          "hash": "c22a6e2c097271ccf3e335275712d2af",
+          "execution_time": 0.004497000016272068,
+          "operation_count": 7,
+          "cache_hit": 1,
+          "cache_disk": 0,
+          "codegen_time": 0.0033040002454072237,
+          "backend_time": 0.0,
+          "uses_optix": 0,
+          "recording_mode": "Inactive"
+        }
+      ],
+      "cuda_operation_count": 0,
+      "cuda_event_time_sum_ms": 0,
+      "optix_kernel_count": 0,
+      "note": "Event-time sum includes recorded CUDA operations; not critical-path latency. IR omitted.",
+      "host_ranges": [
+        {
+          "name": "rf.channel.proposal_tables",
+          "inclusive_host_ms": 2.3163870064308867
+        },
+        {
+          "name": "rf.channel.host_proposal_draws",
+          "inclusive_host_ms": 0.6831079954281449
+        },
+        {
+          "name": "rf.channel.solve",
+          "inclusive_host_ms": 14.12002400320489
+        },
+        {
+          "name": "rf.channel.export",
+          "inclusive_host_ms": 0.2907090092776343
+        },
+        {
+          "name": "rf.channel",
+          "inclusive_host_ms": 14.427356989472173
+        },
+        {
+          "name": "rf.iq.waveforms",
+          "inclusive_host_ms": 5.900631003896706
+        },
+        {
+          "name": "rf.iq.link_diagnostics",
+          "inclusive_host_ms": 0.32823400397319347
+        },
+        {
+          "name": "rf.iq.waveforms",
+          "inclusive_host_ms": 4.026137990877032
+        },
+        {
+          "name": "rf.iq.link_diagnostics",
+          "inclusive_host_ms": 0.2083569997921586
+        },
+        {
+          "name": "rf.receiver.noise_filter_adc",
+          "inclusive_host_ms": 0.5592340021394193
+        },
+        {
+          "name": "capture.first.0",
+          "inclusive_host_ms": 25.868209995678626
+        }
+      ],
+      "nvtx_available": false
+    }
+  },
+  "first_capture_note": "New process with existing on-disk JIT cache; imports excluded; not a cache-cleared cold-start benchmark",
+  "service": {
+    "p50_ms": 19.56363199860789,
+    "p95_ms": 19.572960493678693,
+    "mean_ms": 19.56363199860789,
+    "max_ms": 19.573996993131004
+  },
+  "channel": {
+    "p50_ms": 10.9593825036427,
+    "p95_ms": 10.991046753770206,
+    "mean_ms": 10.9593825036427,
+    "max_ms": 10.994565003784373
+  },
+  "cpu_iq_receiver": {
+    "p50_ms": 8.555707499908749,
+    "p95_ms": 8.57886315570795,
+    "mean_ms": 8.555707499908749,
+    "max_ms": 8.581436006352305
+  },
+  "iq_receiver": {
+    "p50_ms": 8.555707499908749,
+    "p95_ms": 8.57886315570795,
+    "mean_ms": 8.555707499908749,
+    "max_ms": 8.581436006352305
+  },
+  "rendering": {
+    "p50_ms": 7.349248990067281,
+    "p95_ms": 7.4026981863426045,
+    "mean_ms": 7.349248990067281,
+    "max_ms": 7.4086369859287515
+  },
+  "serial_wall_s": 0.04389957200328354,
+  "sustained_updates_hz": 45.55853072668697,
+  "receiver_blocks_per_second": 45.55853072668697,
+  "deadline_misses": {
+    "120": 2,
+    "200": 2
+  },
+  "stage_timings": {
+    "proposal_table_prepare_ms": {
+      "p50_ms": 1.7398214986314997,
+      "p95_ms": 1.7731570478645153,
+      "mean_ms": 1.7398214986314997,
+      "max_ms": 1.7768609977792948
+    },
+    "host_numpy_sampling_ms": {
+      "p50_ms": 0.7072329972288571,
+      "p95_ms": 0.7263948988111224,
+      "mean_ms": 0.7072329972288571,
+      "max_ms": 0.7285239989869297
+    }
+  },
+  "retained_paths": {
+    "min": 810,
+    "max": 810
+  },
+  "host": {
+    "cpu_count": 3,
+    "cpu_quota": "200000 100000",
+    "memory_limit_bytes": "8589934592",
+    "drjit_threads": 2,
+    "peak_rss_mib": 222.19140625,
+    "cuda_available": 0
+  },
+  "versions": {
+    "sionna_rt": "2.2.0",
+    "mitsuba": "3.9.1",
+    "drjit": "1.5.0",
+    "backend": "llvm_ad_mono_polarized"
+  },
+  "gpu_workload_per_receiver": {
+    "topology": "one GPU per physical receiver; all transmitters on every receiver worker",
+    "gpu_count": 10,
+    "transmitters_per_gpu": 2,
+    "receivers_per_gpu": 1,
+    "diffuse_attempts_per_gpu_per_pulse": 2056,
+    "visibility_queries_per_gpu_per_pulse_upper_bound": 7314,
+    "visibility_queries_fleet_per_pulse_upper_bound": 73140,
+    "candidate_paths_per_gpu_upper_bound": 3658,
+    "compact_channel_bytes_per_gpu_per_pulse_upper_bound": 58528,
+    "compact_channel_bytes_per_gpu_per_second_upper_bound": 11705600,
+    "pulse_hz": 200,
+    "pulse_budget_ms": 5.0,
+    "physics_hz": 120,
+    "physics_budget_ms": 8.333333333333334,
+    "ray_only_required_queries_per_second_at_pulse_rate": 1462800,
+    "ray_only_required_queries_per_second_at_physics_rate": 877680,
+    "vram_requirement": "unmeasured; compact coefficients are not total device memory"
+  },
+  "conditional_gpu_ray_stage": [
+    {
+      "assumed_effective_scene_queries_per_second": 100000000.0,
+      "ray_stage_ms_at_upper_bound_query_count": 0.07314,
+      "unchanged_measured_host_sampling_plus_ray_stage_ms": 0.7803729972288571
+    },
+    {
+      "assumed_effective_scene_queries_per_second": 250000000.0,
+      "ray_stage_ms_at_upper_bound_query_count": 0.029256,
+      "unchanged_measured_host_sampling_plus_ray_stage_ms": 0.7364889972288571
+    },
+    {
+      "assumed_effective_scene_queries_per_second": 1000000000.0,
+      "ray_stage_ms_at_upper_bound_query_count": 0.007314,
+      "unchanged_measured_host_sampling_plus_ray_stage_ms": 0.7145469972288572
+    }
+  ],
+  "profile_note": "Profiled serial throughput includes event/history instrumentation; use separate unprofiled runs for performance.",
+  "gpu_note": "Renderer is selected independently of propagation backend. Direct CUDA includes per-link host/device transfers; proposal draws, channel export and front-end filters/ADC remain CPU. Legacy cpu_iq_receiver fields alias the mixed iq_receiver stage.",
+  "samples": [
+    {
+      "epoch_s": 0.01,
+      "service_ms": 19.573996993131004,
+      "pose_ms": 0.049112000851891935,
+      "capture_ms": 19.524543997249566,
+      "channel_ms": 10.994565003784373,
+      "cpu_iq_receiver_ms": 8.529978993465193,
+      "iq_receiver_ms": 8.529978993465193,
+      "render_ms": 7.28986099420581,
+      "stage_timings": {
+        "proposal_table_prepare_ms": 1.7768609977792948,
+        "host_numpy_sampling_ms": 0.7285239989869297
+      },
+      "retained_paths": 810,
+      "clipping_fraction_max": 0.0,
+      "profile": {
+        "records": [
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 0.0003800000122282654,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 0.0006409999914467335,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 7.999999797903001e-05,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 9.000000136438757e-05,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "JIT",
+            "hash": "b9afaa24a2e7b11f4a437124ebe131e0",
+            "execution_time": 0.0004710000066552311,
+            "operation_count": 16,
+            "cache_hit": 1,
+            "cache_disk": 1,
+            "codegen_time": 0.009434000588953495,
+            "backend_time": 0.0,
+            "uses_optix": 0,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 0.00031999999191612005,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 0.0002010000025620684,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 0.0003910000086762011,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 5.999999848427251e-05,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 7.999999797903001e-05,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 0.000291000003926456,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 7.999999797903001e-05,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 9.000000136438757e-05,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 7.999999797903001e-05,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 5.999999848427251e-05,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "JIT",
+            "hash": "d6dc6fa681e91edb4b577266225efa8e",
+            "execution_time": 0.00040099999750964344,
+            "operation_count": 29,
+            "cache_hit": 1,
+            "cache_disk": 1,
+            "codegen_time": 0.00733100064098835,
+            "backend_time": 0.0,
+            "uses_optix": 0,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 0.00019999999494757503,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 0.00026000000070780516,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 0.0008510000188834965,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 0.00033999999868683517,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 0.0008009999874047935,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 0.0010420000180602074,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 0.000770999991800636,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 0.0008510000188834965,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 0.0009420000133104622,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 0.0008019999950192869,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "JIT",
+            "hash": "8077dd1eda9b156bf01c92684ef658b9",
+            "execution_time": 0.003425000002607703,
+            "operation_count": 71,
+            "cache_hit": 1,
+            "cache_disk": 0,
+            "codegen_time": 0.02045000158250332,
+            "backend_time": 0.0,
+            "uses_optix": 0,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 0.001272000023163855,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 0.0015429999912157655,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 0.0009710000013001263,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 0.0008609999786131084,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 0.0008720000041648746,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 0.0007510000141337514,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 0.0008210000232793391,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 0.00018000000272877514,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 0.001661999966017902,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Aggregate",
+            "execution_time": 0.0005109999910928309,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "JIT",
+            "hash": "63df36e5b1bfd5e394f898223043989b",
+            "execution_time": 0.020400000736117363,
+            "operation_count": 69,
+            "cache_hit": 1,
+            "cache_disk": 0,
+            "codegen_time": 0.03713500499725342,
+            "backend_time": 0.0,
+            "uses_optix": 0,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 0.001883000019006431,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 0.0018129999516531825,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 0.002833999926224351,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 0.00254400004632771,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 0.001782999956049025,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 0.0018230000277981162,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 0.0008820000221021473,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 0.0016820000018924475,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 0.0015529999509453773,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 0.001892999978736043,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 0.0011020000092685223,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 0.0010710000060498714,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 0.0021329999435693026,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 0.001322000054642558,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 0.00042100000428035855,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "JIT",
+            "hash": "2281b5effc970660d2802ede492c5512",
+            "execution_time": 0.03446599841117859,
+            "operation_count": 293,
+            "cache_hit": 1,
+            "cache_disk": 0,
+            "codegen_time": 0.04496600478887558,
+            "backend_time": 0.0,
+            "uses_optix": 0,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "JIT",
+            "hash": "acf4efd08b0dfcc416ce2b6766c71bb5",
+            "execution_time": 0.01323499996215105,
+            "operation_count": 51,
+            "cache_hit": 1,
+            "cache_disk": 0,
+            "codegen_time": 0.011076000519096851,
+            "backend_time": 0.0,
+            "uses_optix": 0,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "JIT",
+            "hash": "cd233d6ed663fa1b6d34f229ccba1517",
+            "execution_time": 0.03842199966311455,
+            "operation_count": 473,
+            "cache_hit": 1,
+            "cache_disk": 0,
+            "codegen_time": 0.060509003698825836,
+            "backend_time": 0.0,
+            "uses_optix": 0,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "JIT",
+            "hash": "d377976ba2e5a6c52427ca4ff7b78157",
+            "execution_time": 0.005388000048696995,
+            "operation_count": 11,
+            "cache_hit": 1,
+            "cache_disk": 0,
+            "codegen_time": 0.007081000600010157,
+            "backend_time": 0.0,
+            "uses_optix": 0,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "LLVMHostFunc",
+            "execution_time": 0.019838999956846237,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 0.0003000000142492354,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 0.0002300000051036477,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 9.000000136438757e-05,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 0.0002300000051036477,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "JIT",
+            "hash": "4226728667f266d15a7b785e49b0aa7e",
+            "execution_time": 0.0003809999907389283,
+            "operation_count": 16,
+            "cache_hit": 1,
+            "cache_disk": 1,
+            "codegen_time": 0.004486000165343285,
+            "backend_time": 0.0,
+            "uses_optix": 0,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 0.0001900000061141327,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 0.00011000000085914508,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 0.00019099999917671084,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 0.00034100000630132854,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 0.00010099999781232327,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 7.999999797903001e-05,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 5.999999848427251e-05,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 7.000000186963007e-05,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 0.0001900000061141327,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 2.9999999242136255e-05,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "JIT",
+            "hash": "5e96d0f260f946f07f7b4635937e124c",
+            "execution_time": 0.0007210000185295939,
+            "operation_count": 91,
+            "cache_hit": 1,
+            "cache_disk": 0,
+            "codegen_time": 0.015322001650929451,
+            "backend_time": 0.0,
+            "uses_optix": 0,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "JIT",
+            "hash": "8689ce6b19aed4f0462ee7d728b91cb2",
+            "execution_time": 0.0006210000137798488,
+            "operation_count": 140,
+            "cache_hit": 1,
+            "cache_disk": 0,
+            "codegen_time": 0.017726002261042595,
+            "backend_time": 0.0,
+            "uses_optix": 0,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "JIT",
+            "hash": "159dc4ef91c85f076e6355aab233bf27",
+            "execution_time": 0.0006009999779053032,
+            "operation_count": 140,
+            "cache_hit": 1,
+            "cache_disk": 0,
+            "codegen_time": 0.015863001346588135,
+            "backend_time": 0.0,
+            "uses_optix": 0,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "JIT",
+            "hash": "55cd95b1347d6d23fe2d16ec4f316ba2",
+            "execution_time": 0.0006210000137798488,
+            "operation_count": 90,
+            "cache_hit": 1,
+            "cache_disk": 0,
+            "codegen_time": 0.010416001081466675,
+            "backend_time": 0.0,
+            "uses_optix": 0,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "JIT",
+            "hash": "a0ef87e000b901dd9d1a3008ee73dee4",
+            "execution_time": 0.0007110000005923212,
+            "operation_count": 140,
+            "cache_hit": 1,
+            "cache_disk": 0,
+            "codegen_time": 0.015393001027405262,
+            "backend_time": 0.0,
+            "uses_optix": 0,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "JIT",
+            "hash": "e2c2bb97c514d37b5176dbaff7fe31ca",
+            "execution_time": 0.0007910000276751816,
+            "operation_count": 140,
+            "cache_hit": 1,
+            "cache_disk": 0,
+            "codegen_time": 0.014962001703679562,
+            "backend_time": 0.0,
+            "uses_optix": 0,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "JIT",
+            "hash": "1abff472751bc9735c0020d31ef0e2b0",
+            "execution_time": 0.0004799999878741801,
+            "operation_count": 55,
+            "cache_hit": 1,
+            "cache_disk": 0,
+            "codegen_time": 0.006530000362545252,
+            "backend_time": 0.0,
+            "uses_optix": 0,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "JIT",
+            "hash": "84f4eba156d780ce640e1ce94da6c1e9",
+            "execution_time": 0.00034100000630132854,
+            "operation_count": 90,
+            "cache_hit": 1,
+            "cache_disk": 0,
+            "codegen_time": 0.009925000369548798,
+            "backend_time": 0.0,
+            "uses_optix": 0,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "JIT",
+            "hash": "5e96d0f260f946f07f7b4635937e124c",
+            "execution_time": 0.00011999999696854502,
+            "operation_count": 91,
+            "cache_hit": 1,
+            "cache_disk": 0,
+            "codegen_time": 0.009905001148581505,
+            "backend_time": 0.0,
+            "uses_optix": 0,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Aggregate",
+            "execution_time": 0.0005810000002384186,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "JIT",
+            "hash": "f21a15cafa424fafc0455d4c54d6cec9",
+            "execution_time": 0.45443999767303467,
+            "operation_count": 697,
+            "cache_hit": 1,
+            "cache_disk": 0,
+            "codegen_time": 0.17314501106739044,
+            "backend_time": 0.0,
+            "uses_optix": 0,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "LLVMHostFunc",
+            "execution_time": 0.02405500039458275,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "LLVMHostFunc",
+            "execution_time": 0.0002610000083222985,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "JIT",
+            "hash": "a9c5428efbfab6c18aafcf3aa40a1b99",
+            "execution_time": 0.0020729999523609877,
+            "operation_count": 9,
+            "cache_hit": 1,
+            "cache_disk": 0,
+            "codegen_time": 0.0034750003833323717,
+            "backend_time": 0.0,
+            "uses_optix": 0,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 3.9999998989515007e-05,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 7.000000186963007e-05,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memcpy",
+            "execution_time": 0.001062000053934753,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memcpy",
+            "execution_time": 0.0010710000060498714,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memcpy",
+            "execution_time": 0.000990999978967011,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 4.999999873689376e-05,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Aggregate",
+            "execution_time": 0.00026000000070780516,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "JIT",
+            "hash": "a09971d5c8e83c6ca749566d75059f83",
+            "execution_time": 0.03353000059723854,
+            "operation_count": 231,
+            "cache_hit": 1,
+            "cache_disk": 0,
+            "codegen_time": 0.06808000802993774,
+            "backend_time": 0.0,
+            "uses_optix": 0,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memcpy",
+            "execution_time": 0.0018629999831318855,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memcpy",
+            "execution_time": 0.001943000010214746,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memcpy",
+            "execution_time": 0.0018230000277981162,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memcpy",
+            "execution_time": 0.0017430000007152557,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memcpy",
+            "execution_time": 0.0014519999967887998,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Aggregate",
+            "execution_time": 0.00036100001307204366,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "JIT",
+            "hash": "325fb111c8371f2323abf211821426ad",
+            "execution_time": 0.13782300055027008,
+            "operation_count": 571,
+            "cache_hit": 1,
+            "cache_disk": 0,
+            "codegen_time": 0.18929001688957214,
+            "backend_time": 0.0,
+            "uses_optix": 0,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Aggregate",
+            "execution_time": 0.0006000000284984708,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "JIT",
+            "hash": "843612934fc5a96174f183c0ac156363",
+            "execution_time": 0.2911590039730072,
+            "operation_count": 3642,
+            "cache_hit": 1,
+            "cache_disk": 0,
+            "codegen_time": 0.8339591026306152,
+            "backend_time": 0.0,
+            "uses_optix": 0,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Compress",
+            "execution_time": 0.00938399974256754,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 9.000000136438757e-05,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 0.00018099999579135329,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "JIT",
+            "hash": "b6f12f44977bb7ea256ab0c08d159472",
+            "execution_time": 0.006779999937862158,
+            "operation_count": 9,
+            "cache_hit": 1,
+            "cache_disk": 0,
+            "codegen_time": 0.007692000828683376,
+            "backend_time": 0.0,
+            "uses_optix": 0,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "BlockReduce",
+            "execution_time": 0.00041099998634308577,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memcpy",
+            "execution_time": 0.00011000000085914508,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 0.00014000000373926014,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 0.0002809999859891832,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 0.00023099999816622585,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 0.000610999995842576,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 0.000371000001905486,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 0.00033000000985339284,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 0.0005409999866969883,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 0.00035099999513477087,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 0.0002500000118743628,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "JIT",
+            "hash": "2326e875ac5e9ae7987bf2e878458eef",
+            "execution_time": 0.01743599958717823,
+            "operation_count": 196,
+            "cache_hit": 1,
+            "cache_disk": 0,
+            "codegen_time": 0.030024003237485886,
+            "backend_time": 0.0,
+            "uses_optix": 0,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "JIT",
+            "hash": "3a2e8340a16e767a6916b8ff8eb56e62",
+            "execution_time": 0.002274000085890293,
+            "operation_count": 18,
+            "cache_hit": 1,
+            "cache_disk": 0,
+            "codegen_time": 0.003916000481694937,
+            "backend_time": 0.0,
+            "uses_optix": 0,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 0.0003499999875202775,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "JIT",
+            "hash": "cb394594e3605232373bafbc954d26fb",
+            "execution_time": 0.0035459999926388264,
+            "operation_count": 22,
+            "cache_hit": 1,
+            "cache_disk": 0,
+            "codegen_time": 0.0038960003294050694,
+            "backend_time": 0.0,
+            "uses_optix": 0,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "JIT",
+            "hash": "3a2e8340a16e767a6916b8ff8eb56e62",
+            "execution_time": 0.0019330000504851341,
+            "operation_count": 18,
+            "cache_hit": 1,
+            "cache_disk": 0,
+            "codegen_time": 0.002885000314563513,
+            "backend_time": 0.0,
+            "uses_optix": 0,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 0.00039999998989515007,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "JIT",
+            "hash": "d99f4e9678e29bf838c39e899156027e",
+            "execution_time": 0.006029000040143728,
+            "operation_count": 38,
+            "cache_hit": 1,
+            "cache_disk": 0,
+            "codegen_time": 0.0060890004970133305,
+            "backend_time": 0.0,
+            "uses_optix": 0,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "JIT",
+            "hash": "589a70db1ca33e94a0d39292c4ff32ab",
+            "execution_time": 0.0015670000575482845,
+            "operation_count": 78,
+            "cache_hit": 1,
+            "cache_disk": 0,
+            "codegen_time": 0.012569000944495201,
+            "backend_time": 0.0,
+            "uses_optix": 0,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "JIT",
+            "hash": "8380d6fce57f27467011e0870d25dc83",
+            "execution_time": 0.001357999979518354,
+            "operation_count": 78,
+            "cache_hit": 1,
+            "cache_disk": 0,
+            "codegen_time": 0.009685001336038113,
+            "backend_time": 0.0,
+            "uses_optix": 0,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 0.12554499506950378,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 0.14282099902629852,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 0.060318998992443085,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 0.09328799694776535,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "JIT",
+            "hash": "a9c4986d22e31eacc0245bb5ca0a47c6",
+            "execution_time": 0.6991109848022461,
+            "operation_count": 181,
+            "cache_hit": 1,
+            "cache_disk": 0,
+            "codegen_time": 0.03115600347518921,
+            "backend_time": 0.0,
+            "uses_optix": 0,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "BlockReduce",
+            "execution_time": 0.055052001029253006,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "BlockReduce",
+            "execution_time": 0.05491099879145622,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "LLVMHostFunc",
+            "execution_time": 0.01752600073814392,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "LLVMHostFunc",
+            "execution_time": 0.00041099998634308577,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "LLVMHostFunc",
+            "execution_time": 0.0002809999859891832,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 0.0505639985203743,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 0.05033399909734726,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 0.04934300109744072,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 0.04945199936628342,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "LLVMHostFunc",
+            "execution_time": 0.01600399985909462,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "JIT",
+            "hash": "a9c4986d22e31eacc0245bb5ca0a47c6",
+            "execution_time": 0.5708469748497009,
+            "operation_count": 181,
+            "cache_hit": 1,
+            "cache_disk": 0,
+            "codegen_time": 0.028752002865076065,
+            "backend_time": 0.0,
+            "uses_optix": 0,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "BlockReduce",
+            "execution_time": 0.05452600121498108,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "BlockReduce",
+            "execution_time": 0.05491099879145622,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "JIT",
+            "hash": "c22a6e2c097271ccf3e335275712d2af",
+            "execution_time": 0.0038399999029934406,
+            "operation_count": 7,
+            "cache_hit": 1,
+            "cache_disk": 0,
+            "codegen_time": 0.003335000481456518,
+            "backend_time": 0.0,
+            "uses_optix": 0,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "LLVMHostFunc",
+            "execution_time": 0.012788999825716019,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "LLVMHostFunc",
+            "execution_time": 0.0005000000237487257,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "LLVMHostFunc",
+            "execution_time": 0.0003809999907389283,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 0.05047500133514404,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 0.05026400089263916,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 0.04943300038576126,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 0.0494530014693737,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "LLVMHostFunc",
+            "execution_time": 0.012818999588489532,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "JIT",
+            "hash": "a9c4986d22e31eacc0245bb5ca0a47c6",
+            "execution_time": 0.6064500212669373,
+            "operation_count": 181,
+            "cache_hit": 1,
+            "cache_disk": 0,
+            "codegen_time": 0.02659900300204754,
+            "backend_time": 0.0,
+            "uses_optix": 0,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "BlockReduce",
+            "execution_time": 0.05450500175356865,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "BlockReduce",
+            "execution_time": 0.05482099950313568,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "JIT",
+            "hash": "c22a6e2c097271ccf3e335275712d2af",
+            "execution_time": 0.004021999891847372,
+            "operation_count": 7,
+            "cache_hit": 1,
+            "cache_disk": 0,
+            "codegen_time": 0.00203300011344254,
+            "backend_time": 0.0,
+            "uses_optix": 0,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "LLVMHostFunc",
+            "execution_time": 0.013170000165700912,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "LLVMHostFunc",
+            "execution_time": 0.0010110000148415565,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "LLVMHostFunc",
+            "execution_time": 0.000291000003926456,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 0.04895300045609474,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 0.049281999468803406,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 0.013399000279605389,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 0.014631999656558037,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "LLVMHostFunc",
+            "execution_time": 0.01336000021547079,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "JIT",
+            "hash": "573fd068e0572738251a4d2d80bb71dc",
+            "execution_time": 0.1338070034980774,
+            "operation_count": 180,
+            "cache_hit": 1,
+            "cache_disk": 0,
+            "codegen_time": 0.024035003036260605,
+            "backend_time": 0.0,
+            "uses_optix": 0,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "BlockReduce",
+            "execution_time": 0.02054000087082386,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "BlockReduce",
+            "execution_time": 0.020205000415444374,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "JIT",
+            "hash": "c22a6e2c097271ccf3e335275712d2af",
+            "execution_time": 0.0050130002200603485,
+            "operation_count": 7,
+            "cache_hit": 1,
+            "cache_disk": 0,
+            "codegen_time": 0.0022040000185370445,
+            "backend_time": 0.0,
+            "uses_optix": 0,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 0.05136600136756897,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 0.06022899970412254,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 0.05531200021505356,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 0.05959799885749817,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "JIT",
+            "hash": "a9c4986d22e31eacc0245bb5ca0a47c6",
+            "execution_time": 0.7176839709281921,
+            "operation_count": 181,
+            "cache_hit": 1,
+            "cache_disk": 0,
+            "codegen_time": 0.0390080064535141,
+            "backend_time": 0.0,
+            "uses_optix": 0,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "BlockReduce",
+            "execution_time": 0.05459599941968918,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "BlockReduce",
+            "execution_time": 0.05463099852204323,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "LLVMHostFunc",
+            "execution_time": 0.015502999536693096,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "LLVMHostFunc",
+            "execution_time": 0.000371000001905486,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "LLVMHostFunc",
+            "execution_time": 0.001993000041693449,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 0.05060499906539917,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 0.05027399957180023,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 0.049293000251054764,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 0.04942300170660019,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "LLVMHostFunc",
+            "execution_time": 0.01244799979031086,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "JIT",
+            "hash": "a9c4986d22e31eacc0245bb5ca0a47c6",
+            "execution_time": 0.5673019886016846,
+            "operation_count": 181,
+            "cache_hit": 1,
+            "cache_disk": 0,
+            "codegen_time": 0.02681000344455242,
+            "backend_time": 0.0,
+            "uses_optix": 0,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "BlockReduce",
+            "execution_time": 0.05567200109362602,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "BlockReduce",
+            "execution_time": 0.05451500043272972,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "JIT",
+            "hash": "c22a6e2c097271ccf3e335275712d2af",
+            "execution_time": 0.0030300000216811895,
+            "operation_count": 7,
+            "cache_hit": 1,
+            "cache_disk": 0,
+            "codegen_time": 0.0029340004548430443,
+            "backend_time": 0.0,
+            "uses_optix": 0,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "LLVMHostFunc",
+            "execution_time": 0.01406100019812584,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "LLVMHostFunc",
+            "execution_time": 0.0004710000066552311,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "LLVMHostFunc",
+            "execution_time": 0.00019999999494757503,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 0.05034400150179863,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 0.05606300011277199,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 0.04960300028324127,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 0.049302998930215836,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "LLVMHostFunc",
+            "execution_time": 0.012368000112473965,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "JIT",
+            "hash": "a9c4986d22e31eacc0245bb5ca0a47c6",
+            "execution_time": 0.5798050165176392,
+            "operation_count": 181,
+            "cache_hit": 1,
+            "cache_disk": 0,
+            "codegen_time": 0.02696000225841999,
+            "backend_time": 0.0,
+            "uses_optix": 0,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "BlockReduce",
+            "execution_time": 0.07532700151205063,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "BlockReduce",
+            "execution_time": 0.059021998196840286,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "JIT",
+            "hash": "c22a6e2c097271ccf3e335275712d2af",
+            "execution_time": 0.003986000083386898,
+            "operation_count": 7,
+            "cache_hit": 1,
+            "cache_disk": 0,
+            "codegen_time": 0.002133000176399946,
+            "backend_time": 0.0,
+            "uses_optix": 0,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "LLVMHostFunc",
+            "execution_time": 0.0128389997407794,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "LLVMHostFunc",
+            "execution_time": 0.0007110000005923212,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "LLVMHostFunc",
+            "execution_time": 0.00014099999680183828,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 0.01927899941802025,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 0.021011000499129295,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 0.004377000033855438,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 0.00532800005748868,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "LLVMHostFunc",
+            "execution_time": 0.012107999995350838,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "JIT",
+            "hash": "7febf8d900c56fc35cb433534a48ef8b",
+            "execution_time": 0.053704001009464264,
+            "operation_count": 180,
+            "cache_hit": 1,
+            "cache_disk": 0,
+            "codegen_time": 0.024546002969145775,
+            "backend_time": 0.0,
+            "uses_optix": 0,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "BlockReduce",
+            "execution_time": 0.014620999805629253,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "BlockReduce",
+            "execution_time": 0.01462200004607439,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "JIT",
+            "hash": "c22a6e2c097271ccf3e335275712d2af",
+            "execution_time": 0.0043310001492500305,
+            "operation_count": 7,
+            "cache_hit": 1,
+            "cache_disk": 0,
+            "codegen_time": 0.0020730001851916313,
+            "backend_time": 0.0,
+            "uses_optix": 0,
+            "recording_mode": "Inactive"
+          }
+        ],
+        "cuda_operation_count": 0,
+        "cuda_event_time_sum_ms": 0,
+        "optix_kernel_count": 0,
+        "note": "Event-time sum includes recorded CUDA operations; not critical-path latency. IR omitted.",
+        "host_ranges": [
+          {
+            "name": "rf.channel.proposal_tables",
+            "inclusive_host_ms": 1.7696989962132648
+          },
+          {
+            "name": "rf.channel.host_proposal_draws",
+            "inclusive_host_ms": 0.7230060000438243
+          },
+          {
+            "name": "rf.channel.solve",
+            "inclusive_host_ms": 10.843511001439765
+          },
+          {
+            "name": "rf.channel.export",
+            "inclusive_host_ms": 0.13780400331597775
+          },
+          {
+            "name": "rf.channel",
+            "inclusive_host_ms": 10.992251001880504
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 3.808046007179655
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.23465599224437028
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 3.495896002277732
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.19012000120710582
+          },
+          {
+            "name": "rf.receiver.noise_filter_adc",
+            "inclusive_host_ms": 0.4516259941738099
+          },
+          {
+            "name": "capture.timed.2",
+            "inclusive_host_ms": 19.500758993672207
+          }
+        ],
+        "nvtx_available": false
+      }
+    },
+    {
+      "epoch_s": 0.015,
+      "service_ms": 19.553267004084773,
+      "pose_ms": 0.04739999712910503,
+      "capture_ms": 19.505636009853333,
+      "channel_ms": 10.924200003501028,
+      "cpu_iq_receiver_ms": 8.581436006352305,
+      "iq_receiver_ms": 8.581436006352305,
+      "render_ms": 7.4086369859287515,
+      "stage_timings": {
+        "proposal_table_prepare_ms": 1.7027819994837046,
+        "host_numpy_sampling_ms": 0.6859419954707846
+      },
+      "retained_paths": 810,
+      "clipping_fraction_max": 0.0,
+      "profile": {
+        "records": [
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 0.0002809999859891832,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 0.0004400000034365803,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 0.00022000000171829015,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 0.0002099999983329326,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "JIT",
+            "hash": "fa6a02b7aa31f94c76923514f9d41d89",
+            "execution_time": 0.0004299999854993075,
+            "operation_count": 16,
+            "cache_hit": 1,
+            "cache_disk": 1,
+            "codegen_time": 0.010135000571608543,
+            "backend_time": 0.0,
+            "uses_optix": 0,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 0.0002099999983329326,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 0.0001900000061141327,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 0.0002099999983329326,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 7.999999797903001e-05,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 0.00022000000171829015,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 0.00019999999494757503,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 8.099999831756577e-05,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 5.999999848427251e-05,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 7.999999797903001e-05,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 0.00019099999917671084,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "JIT",
+            "hash": "6f16911a23cd6bc741a04b840bd694bf",
+            "execution_time": 0.0003600000054575503,
+            "operation_count": 29,
+            "cache_hit": 1,
+            "cache_disk": 1,
+            "codegen_time": 0.006830000784248114,
+            "backend_time": 0.0,
+            "uses_optix": 0,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 0.0002010000025620684,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 0.0003499999875202775,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 0.0007719999994151294,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 0.00033000000985339284,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 0.0008510000188834965,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 0.0007210000185295939,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 0.0007510000141337514,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 0.0005910000181756914,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 0.0006910000229254365,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 0.0008709999965503812,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "JIT",
+            "hash": "8077dd1eda9b156bf01c92684ef658b9",
+            "execution_time": 0.0032649999484419823,
+            "operation_count": 71,
+            "cache_hit": 1,
+            "cache_disk": 0,
+            "codegen_time": 0.020800001919269562,
+            "backend_time": 0.0,
+            "uses_optix": 0,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 0.0015330000314861536,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 0.0012809999752789736,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 0.0008709999965503812,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 0.000610999995842576,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 0.0007409999961964786,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 0.0006810000049881637,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 0.0007110000005923212,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 0.00017100000695791095,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 0.0015320000238716602,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Aggregate",
+            "execution_time": 0.0006810000049881637,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "JIT",
+            "hash": "63df36e5b1bfd5e394f898223043989b",
+            "execution_time": 0.020820999518036842,
+            "operation_count": 69,
+            "cache_hit": 1,
+            "cache_disk": 0,
+            "codegen_time": 0.03720500320196152,
+            "backend_time": 0.0,
+            "uses_optix": 0,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 0.0013620000099763274,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 0.002463999902829528,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 0.0025839998852461576,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 0.002824000082910061,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 0.0018520000157877803,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 0.0017419999931007624,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 0.000610999995842576,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 0.0014019999653100967,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 0.001711999997496605,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 0.001512999995611608,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 0.001993000041693449,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 0.0018629999831318855,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 0.0018019999843090773,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 0.0014120000414550304,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 0.0004910000134259462,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "JIT",
+            "hash": "2281b5effc970660d2802ede492c5512",
+            "execution_time": 0.03374499827623367,
+            "operation_count": 293,
+            "cache_hit": 1,
+            "cache_disk": 0,
+            "codegen_time": 0.04545700177550316,
+            "backend_time": 0.0,
+            "uses_optix": 0,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "JIT",
+            "hash": "acf4efd08b0dfcc416ce2b6766c71bb5",
+            "execution_time": 0.012954000383615494,
+            "operation_count": 51,
+            "cache_hit": 1,
+            "cache_disk": 0,
+            "codegen_time": 0.010947001166641712,
+            "backend_time": 0.0,
+            "uses_optix": 0,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "JIT",
+            "hash": "cd233d6ed663fa1b6d34f229ccba1517",
+            "execution_time": 0.03811100125312805,
+            "operation_count": 473,
+            "cache_hit": 1,
+            "cache_disk": 0,
+            "codegen_time": 0.0887410119175911,
+            "backend_time": 0.0,
+            "uses_optix": 0,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "JIT",
+            "hash": "d377976ba2e5a6c52427ca4ff7b78157",
+            "execution_time": 0.00495699979364872,
+            "operation_count": 11,
+            "cache_hit": 1,
+            "cache_disk": 0,
+            "codegen_time": 0.006790000945329666,
+            "backend_time": 0.0,
+            "uses_optix": 0,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "LLVMHostFunc",
+            "execution_time": 0.023794999346137047,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 0.00019999999494757503,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 0.00011000000085914508,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 0.0003809999907389283,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 0.0003000000142492354,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "JIT",
+            "hash": "10110e419a887d410e62d725c73393fa",
+            "execution_time": 0.00031999999191612005,
+            "operation_count": 16,
+            "cache_hit": 1,
+            "cache_disk": 1,
+            "codegen_time": 0.005008000414818525,
+            "backend_time": 0.0,
+            "uses_optix": 0,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 0.0003110000106971711,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 0.00022000000171829015,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 0.00019999999494757503,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 7.999999797903001e-05,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 0.0003600000054575503,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 0.0003009999927598983,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 7.000000186963007e-05,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 7.999999797903001e-05,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 8.099999831756577e-05,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 2.9999999242136255e-05,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "JIT",
+            "hash": "5e96d0f260f946f07f7b4635937e124c",
+            "execution_time": 0.0007309999782592058,
+            "operation_count": 91,
+            "cache_hit": 1,
+            "cache_disk": 0,
+            "codegen_time": 0.01566300168633461,
+            "backend_time": 0.0,
+            "uses_optix": 0,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "JIT",
+            "hash": "8689ce6b19aed4f0462ee7d728b91cb2",
+            "execution_time": 0.0006210000137798488,
+            "operation_count": 140,
+            "cache_hit": 1,
+            "cache_disk": 0,
+            "codegen_time": 0.01826700195670128,
+            "backend_time": 0.0,
+            "uses_optix": 0,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "JIT",
+            "hash": "159dc4ef91c85f076e6355aab233bf27",
+            "execution_time": 0.0005200000014156103,
+            "operation_count": 140,
+            "cache_hit": 1,
+            "cache_disk": 0,
+            "codegen_time": 0.016434000805020332,
+            "backend_time": 0.0,
+            "uses_optix": 0,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "JIT",
+            "hash": "55cd95b1347d6d23fe2d16ec4f316ba2",
+            "execution_time": 0.0004710000066552311,
+            "operation_count": 90,
+            "cache_hit": 1,
+            "cache_disk": 0,
+            "codegen_time": 0.010336000472307205,
+            "backend_time": 0.0,
+            "uses_optix": 0,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "JIT",
+            "hash": "a0ef87e000b901dd9d1a3008ee73dee4",
+            "execution_time": 0.000610999995842576,
+            "operation_count": 140,
+            "cache_hit": 1,
+            "cache_disk": 0,
+            "codegen_time": 0.015203001908957958,
+            "backend_time": 0.0,
+            "uses_optix": 0,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "JIT",
+            "hash": "e2c2bb97c514d37b5176dbaff7fe31ca",
+            "execution_time": 0.0010720000136643648,
+            "operation_count": 140,
+            "cache_hit": 1,
+            "cache_disk": 0,
+            "codegen_time": 0.015092001296579838,
+            "backend_time": 0.0,
+            "uses_optix": 0,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "JIT",
+            "hash": "1abff472751bc9735c0020d31ef0e2b0",
+            "execution_time": 0.0004600000102072954,
+            "operation_count": 55,
+            "cache_hit": 1,
+            "cache_disk": 0,
+            "codegen_time": 0.006530000362545252,
+            "backend_time": 0.0,
+            "uses_optix": 0,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "JIT",
+            "hash": "84f4eba156d780ce640e1ce94da6c1e9",
+            "execution_time": 0.00034100000630132854,
+            "operation_count": 90,
+            "cache_hit": 1,
+            "cache_disk": 0,
+            "codegen_time": 0.009885000996291637,
+            "backend_time": 0.0,
+            "uses_optix": 0,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "JIT",
+            "hash": "5e96d0f260f946f07f7b4635937e124c",
+            "execution_time": 0.00022000000171829015,
+            "operation_count": 91,
+            "cache_hit": 1,
+            "cache_disk": 0,
+            "codegen_time": 0.009824001230299473,
+            "backend_time": 0.0,
+            "uses_optix": 0,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Aggregate",
+            "execution_time": 0.00039000000106170774,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "JIT",
+            "hash": "f21a15cafa424fafc0455d4c54d6cec9",
+            "execution_time": 0.4555410146713257,
+            "operation_count": 697,
+            "cache_hit": 1,
+            "cache_disk": 0,
+            "codegen_time": 0.2006460279226303,
+            "backend_time": 0.0,
+            "uses_optix": 0,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "LLVMHostFunc",
+            "execution_time": 0.0008820000221021473,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "LLVMHostFunc",
+            "execution_time": 0.0002899999963119626,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "JIT",
+            "hash": "a9c5428efbfab6c18aafcf3aa40a1b99",
+            "execution_time": 0.001943000010214746,
+            "operation_count": 9,
+            "cache_hit": 1,
+            "cache_disk": 0,
+            "codegen_time": 0.00367500027641654,
+            "backend_time": 0.0,
+            "uses_optix": 0,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 3.9999998989515007e-05,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 9.000000136438757e-05,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memcpy",
+            "execution_time": 0.0014220000011846423,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memcpy",
+            "execution_time": 0.0017719999887049198,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memcpy",
+            "execution_time": 0.0013520000502467155,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 3.9999998989515007e-05,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Aggregate",
+            "execution_time": 0.00015999999595806003,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "JIT",
+            "hash": "a09971d5c8e83c6ca749566d75059f83",
+            "execution_time": 0.033208999782800674,
+            "operation_count": 231,
+            "cache_hit": 1,
+            "cache_disk": 0,
+            "codegen_time": 0.06657800823450089,
+            "backend_time": 0.0,
+            "uses_optix": 0,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memcpy",
+            "execution_time": 0.002002999885007739,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memcpy",
+            "execution_time": 0.0018629999831318855,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memcpy",
+            "execution_time": 0.00228299992159009,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memcpy",
+            "execution_time": 0.0019630000460892916,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memcpy",
+            "execution_time": 0.002002999885007739,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Aggregate",
+            "execution_time": 0.00041000000783242285,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "JIT",
+            "hash": "325fb111c8371f2323abf211821426ad",
+            "execution_time": 0.13856500387191772,
+            "operation_count": 571,
+            "cache_hit": 1,
+            "cache_disk": 0,
+            "codegen_time": 0.21813201904296875,
+            "backend_time": 0.0,
+            "uses_optix": 0,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Aggregate",
+            "execution_time": 0.00048099999548867345,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "JIT",
+            "hash": "843612934fc5a96174f183c0ac156363",
+            "execution_time": 0.29370298981666565,
+            "operation_count": 3642,
+            "cache_hit": 1,
+            "cache_disk": 0,
+            "codegen_time": 0.8065200448036194,
+            "backend_time": 0.0,
+            "uses_optix": 0,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Compress",
+            "execution_time": 0.00924300029873848,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 9.000000136438757e-05,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 0.0002809999859891832,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "JIT",
+            "hash": "b6f12f44977bb7ea256ab0c08d159472",
+            "execution_time": 0.007350999861955643,
+            "operation_count": 9,
+            "cache_hit": 1,
+            "cache_disk": 0,
+            "codegen_time": 0.007841001264750957,
+            "backend_time": 0.0,
+            "uses_optix": 0,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "BlockReduce",
+            "execution_time": 0.0003910000086762011,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memcpy",
+            "execution_time": 0.00023099999816622585,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 0.00044999999227002263,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 0.0005200000014156103,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 0.0002300000051036477,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 0.0009609999833628535,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 0.0003110000106971711,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 0.0005109999910928309,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 0.0004309999931138009,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 0.0003809999907389283,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 0.00023999999393709004,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "JIT",
+            "hash": "2326e875ac5e9ae7987bf2e878458eef",
+            "execution_time": 0.01893799938261509,
+            "operation_count": 196,
+            "cache_hit": 1,
+            "cache_disk": 0,
+            "codegen_time": 0.059588003903627396,
+            "backend_time": 0.0,
+            "uses_optix": 0,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "JIT",
+            "hash": "3a2e8340a16e767a6916b8ff8eb56e62",
+            "execution_time": 0.0022929999977350235,
+            "operation_count": 18,
+            "cache_hit": 1,
+            "cache_disk": 0,
+            "codegen_time": 0.004046000074595213,
+            "backend_time": 0.0,
+            "uses_optix": 0,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 0.0003110000106971711,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "JIT",
+            "hash": "cb394594e3605232373bafbc954d26fb",
+            "execution_time": 0.0031449999660253525,
+            "operation_count": 22,
+            "cache_hit": 1,
+            "cache_disk": 0,
+            "codegen_time": 0.003916000481694937,
+            "backend_time": 0.0,
+            "uses_optix": 0,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "JIT",
+            "hash": "3a2e8340a16e767a6916b8ff8eb56e62",
+            "execution_time": 0.001883000019006431,
+            "operation_count": 18,
+            "cache_hit": 1,
+            "cache_disk": 0,
+            "codegen_time": 0.0029140000697225332,
+            "backend_time": 0.0,
+            "uses_optix": 0,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 0.0004710000066552311,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "JIT",
+            "hash": "d99f4e9678e29bf838c39e899156027e",
+            "execution_time": 0.005698000080883503,
+            "operation_count": 38,
+            "cache_hit": 1,
+            "cache_disk": 0,
+            "codegen_time": 0.006049000658094883,
+            "backend_time": 0.0,
+            "uses_optix": 0,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "JIT",
+            "hash": "589a70db1ca33e94a0d39292c4ff32ab",
+            "execution_time": 0.0015480000292882323,
+            "operation_count": 78,
+            "cache_hit": 1,
+            "cache_disk": 0,
+            "codegen_time": 0.011867000721395016,
+            "backend_time": 0.0,
+            "uses_optix": 0,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "JIT",
+            "hash": "8380d6fce57f27467011e0870d25dc83",
+            "execution_time": 0.001307999948039651,
+            "operation_count": 78,
+            "cache_hit": 1,
+            "cache_disk": 0,
+            "codegen_time": 0.009855001233518124,
+            "backend_time": 0.0,
+            "uses_optix": 0,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 0.12694700062274933,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 0.18074600398540497,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 0.0641539990901947,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 0.10600599646568298,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "JIT",
+            "hash": "a9c4986d22e31eacc0245bb5ca0a47c6",
+            "execution_time": 0.7065219879150391,
+            "operation_count": 181,
+            "cache_hit": 1,
+            "cache_disk": 0,
+            "codegen_time": 0.06128000468015671,
+            "backend_time": 0.0,
+            "uses_optix": 0,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "BlockReduce",
+            "execution_time": 0.07814600318670273,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "BlockReduce",
+            "execution_time": 0.05449499934911728,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "LLVMHostFunc",
+            "execution_time": 0.017836999148130417,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "LLVMHostFunc",
+            "execution_time": 0.0005799999926239252,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "LLVMHostFunc",
+            "execution_time": 9.000000136438757e-05,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 0.05048400163650513,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 0.05027399957180023,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 0.049653999507427216,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 0.050214000046253204,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "LLVMHostFunc",
+            "execution_time": 0.014421000145375729,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "JIT",
+            "hash": "a9c4986d22e31eacc0245bb5ca0a47c6",
+            "execution_time": 0.553471028804779,
+            "operation_count": 181,
+            "cache_hit": 1,
+            "cache_disk": 0,
+            "codegen_time": 0.02837200276553631,
+            "backend_time": 0.0,
+            "uses_optix": 0,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "BlockReduce",
+            "execution_time": 0.054694999009370804,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "BlockReduce",
+            "execution_time": 0.07403899729251862,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "JIT",
+            "hash": "c22a6e2c097271ccf3e335275712d2af",
+            "execution_time": 0.003711000084877014,
+            "operation_count": 7,
+            "cache_hit": 1,
+            "cache_disk": 0,
+            "codegen_time": 0.0030040002893656492,
+            "backend_time": 0.0,
+            "uses_optix": 0,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "LLVMHostFunc",
+            "execution_time": 0.012378999963402748,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "LLVMHostFunc",
+            "execution_time": 0.0005910000181756914,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "LLVMHostFunc",
+            "execution_time": 0.0009009999921545386,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 0.0504940003156662,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 0.05070500075817108,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 0.04967299848794937,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 0.05443999916315079,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "LLVMHostFunc",
+            "execution_time": 0.01193699985742569,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "JIT",
+            "hash": "a9c4986d22e31eacc0245bb5ca0a47c6",
+            "execution_time": 0.57955002784729,
+            "operation_count": 181,
+            "cache_hit": 1,
+            "cache_disk": 0,
+            "codegen_time": 0.027640001848340034,
+            "backend_time": 0.0,
+            "uses_optix": 0,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "BlockReduce",
+            "execution_time": 0.05435499921441078,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "BlockReduce",
+            "execution_time": 0.056988999247550964,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "JIT",
+            "hash": "c22a6e2c097271ccf3e335275712d2af",
+            "execution_time": 0.003886000020429492,
+            "operation_count": 7,
+            "cache_hit": 1,
+            "cache_disk": 0,
+            "codegen_time": 0.002193000167608261,
+            "backend_time": 0.0,
+            "uses_optix": 0,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "LLVMHostFunc",
+            "execution_time": 0.013179999776184559,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "LLVMHostFunc",
+            "execution_time": 0.0007510000141337514,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "LLVMHostFunc",
+            "execution_time": 0.0005310000269673765,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 0.07066500186920166,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 0.08036799728870392,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 0.01474200002849102,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 0.018717000260949135,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "LLVMHostFunc",
+            "execution_time": 0.012908999808132648,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "JIT",
+            "hash": "573fd068e0572738251a4d2d80bb71dc",
+            "execution_time": 0.13431799411773682,
+            "operation_count": 180,
+            "cache_hit": 1,
+            "cache_disk": 0,
+            "codegen_time": 0.06272300332784653,
+            "backend_time": 0.0,
+            "uses_optix": 0,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "BlockReduce",
+            "execution_time": 0.020275000482797623,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "BlockReduce",
+            "execution_time": 0.020244000479578972,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "JIT",
+            "hash": "c22a6e2c097271ccf3e335275712d2af",
+            "execution_time": 0.004792000167071819,
+            "operation_count": 7,
+            "cache_hit": 1,
+            "cache_disk": 0,
+            "codegen_time": 0.002264000242576003,
+            "backend_time": 0.0,
+            "uses_optix": 0,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 0.06832099705934525,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 0.07538100332021713,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 0.05718399956822395,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 0.06097999960184097,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "JIT",
+            "hash": "a9c4986d22e31eacc0245bb5ca0a47c6",
+            "execution_time": 0.7748879790306091,
+            "operation_count": 181,
+            "cache_hit": 1,
+            "cache_disk": 0,
+            "codegen_time": 0.0372450053691864,
+            "backend_time": 0.0,
+            "uses_optix": 0,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "BlockReduce",
+            "execution_time": 0.05484100058674812,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "BlockReduce",
+            "execution_time": 0.054760999977588654,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "LLVMHostFunc",
+            "execution_time": 0.01707500033080578,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "LLVMHostFunc",
+            "execution_time": 0.0004799999878741801,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "LLVMHostFunc",
+            "execution_time": 0.00040099999750964344,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 0.050574999302625656,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 0.05001400038599968,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 0.05033399909734726,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 0.05036500096321106,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "LLVMHostFunc",
+            "execution_time": 0.014601999893784523,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "JIT",
+            "hash": "a9c4986d22e31eacc0245bb5ca0a47c6",
+            "execution_time": 0.5571810007095337,
+            "operation_count": 181,
+            "cache_hit": 1,
+            "cache_disk": 0,
+            "codegen_time": 0.027431003749370575,
+            "backend_time": 0.0,
+            "uses_optix": 0,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "BlockReduce",
+            "execution_time": 0.07541099935770035,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "BlockReduce",
+            "execution_time": 0.05506499856710434,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "JIT",
+            "hash": "c22a6e2c097271ccf3e335275712d2af",
+            "execution_time": 0.002879000036045909,
+            "operation_count": 7,
+            "cache_hit": 1,
+            "cache_disk": 0,
+            "codegen_time": 0.0028340001590549946,
+            "backend_time": 0.0,
+            "uses_optix": 0,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "LLVMHostFunc",
+            "execution_time": 0.01245800033211708,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "LLVMHostFunc",
+            "execution_time": 0.0005709999823011458,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "LLVMHostFunc",
+            "execution_time": 0.00014000000373926014,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 0.05052400007843971,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 0.04985300078988075,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 0.04927299916744232,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 0.05529100075364113,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "LLVMHostFunc",
+            "execution_time": 0.012639000080525875,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "JIT",
+            "hash": "a9c4986d22e31eacc0245bb5ca0a47c6",
+            "execution_time": 0.5749930143356323,
+            "operation_count": 181,
+            "cache_hit": 1,
+            "cache_disk": 0,
+            "codegen_time": 0.026589002460241318,
+            "backend_time": 0.0,
+            "uses_optix": 0,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "BlockReduce",
+            "execution_time": 0.05466099828481674,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "BlockReduce",
+            "execution_time": 0.0739239975810051,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "JIT",
+            "hash": "c22a6e2c097271ccf3e335275712d2af",
+            "execution_time": 0.003971999976783991,
+            "operation_count": 7,
+            "cache_hit": 1,
+            "cache_disk": 0,
+            "codegen_time": 0.002384000224992633,
+            "backend_time": 0.0,
+            "uses_optix": 0,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "LLVMHostFunc",
+            "execution_time": 0.0122079998254776,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "LLVMHostFunc",
+            "execution_time": 0.0008019999950192869,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "LLVMHostFunc",
+            "execution_time": 0.0009510000236332417,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 0.021842999383807182,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 0.01927799917757511,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 0.004606999922543764,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "Memset",
+            "execution_time": 0.005537999793887138,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "LLVMHostFunc",
+            "execution_time": 0.01184799987822771,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "JIT",
+            "hash": "7febf8d900c56fc35cb433534a48ef8b",
+            "execution_time": 0.05376899987459183,
+            "operation_count": 180,
+            "cache_hit": 1,
+            "cache_disk": 0,
+            "codegen_time": 0.026629002764821053,
+            "backend_time": 0.0,
+            "uses_optix": 0,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "BlockReduce",
+            "execution_time": 0.014732000418007374,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "BlockReduce",
+            "execution_time": 0.014566999860107899,
+            "recording_mode": "Inactive"
+          },
+          {
+            "backend": "LLVM",
+            "type": "JIT",
+            "hash": "c22a6e2c097271ccf3e335275712d2af",
+            "execution_time": 0.003900999901816249,
+            "operation_count": 7,
+            "cache_hit": 1,
+            "cache_disk": 0,
+            "codegen_time": 0.0022730000782757998,
+            "backend_time": 0.0,
+            "uses_optix": 0,
+            "recording_mode": "Inactive"
+          }
+        ],
+        "cuda_operation_count": 0,
+        "cuda_event_time_sum_ms": 0,
+        "optix_kernel_count": 0,
+        "note": "Event-time sum includes recorded CUDA operations; not critical-path latency. IR omitted.",
+        "host_ranges": [
+          {
+            "name": "rf.channel.proposal_tables",
+            "inclusive_host_ms": 1.6950099961832166
+          },
+          {
+            "name": "rf.channel.host_proposal_draws",
+            "inclusive_host_ms": 0.6811950006522238
+          },
+          {
+            "name": "rf.channel.solve",
+            "inclusive_host_ms": 10.77018299838528
+          },
+          {
+            "name": "rf.channel.export",
+            "inclusive_host_ms": 0.1400760083924979
+          },
+          {
+            "name": "rf.channel",
+            "inclusive_host_ms": 10.921576991677284
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 3.90186499862466
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.258920990745537
+          },
+          {
+            "name": "rf.iq.waveforms",
+            "inclusive_host_ms": 3.5217240074416623
+          },
+          {
+            "name": "rf.iq.link_diagnostics",
+            "inclusive_host_ms": 0.1683979935478419
+          },
+          {
+            "name": "rf.receiver.noise_filter_adc",
+            "inclusive_host_ms": 0.39224899956025183
+          },
+          {
+            "name": "capture.timed.3",
+            "inclusive_host_ms": 19.48391400219407
+          }
+        ],
+        "nvtx_available": false
+      }
+    }
+  ]
+}

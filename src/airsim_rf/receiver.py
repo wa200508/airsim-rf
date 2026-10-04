@@ -53,7 +53,8 @@ class IQBlock:
 
 def synthesize_voltage(coefficients, delays_s, waveform: Waveform, *,
                        sim_time_ns: int, config: ReceiverConfig,
-                       doppler_hz=None,
+                       doppler_hz=None, renderer="numpy", channel_epoch_ns=None,
+                       path_tile=128, sample_tile=32,
                        rng: np.random.Generator | None = None) -> IQBlock:
     """Apply a CIR to a unit-average-power, continuous complex waveform.
 
@@ -64,6 +65,8 @@ def synthesize_voltage(coefficients, delays_s, waveform: Waveform, *,
     waveform(t) is evaluated at ABSOLUTE simulation time minus path delay.
     Invalid Sionna padding paths have delay -1 and contribute nothing.
     """
+    if renderer not in ("numpy", "direct-llvm", "direct-cuda"):
+        raise ValueError("renderer must be numpy, direct-llvm or direct-cuda")
     a = np.asarray(coefficients, dtype=np.complex128)
     tau = np.asarray(delays_s, dtype=np.float64)
     compact = a.ndim == 1
@@ -85,14 +88,24 @@ def synthesize_voltage(coefficients, delays_s, waveform: Waveform, *,
     relative_time = np.arange(config.num_samples) / config.sample_rate_hz
     times = sim_time_ns * 1e-9 + relative_time
     iq = np.zeros(config.num_samples, dtype=np.complex128)
-    # Keep memory bounded by summing one path at a time.
-    for gain, delay, frequency in zip(a, tau, doppler):
-        x = np.asarray(waveform(times - delay), dtype=np.complex128)
-        if x.shape != times.shape or not np.all(np.isfinite(x)):
-            raise ValueError("waveform must return finite complex samples with the input shape")
-        if compact and frequency != 0:
-            x = x * np.exp(2j * np.pi * frequency * relative_time)
-        iq += gain * x
+    if renderer != "numpy":
+        if not compact:
+            raise ValueError("Direct rendering requires compact path coefficients")
+        from .rendering import render_paths
+        iq = render_paths(a, tau, doppler, waveform, sample_rate_hz=config.sample_rate_hz,
+                          num_samples=config.num_samples, sim_time_ns=sim_time_ns,
+                          channel_epoch_ns=channel_epoch_ns, backend=renderer.removeprefix("direct-"),
+                          path_tile=path_tile, sample_tile=sample_tile)
+    else:
+        # Keep memory bounded by summing one path at a time.
+        epoch_offset = 0. if channel_epoch_ns is None else (sim_time_ns-channel_epoch_ns)*1e-9
+        for gain, delay, frequency in zip(a, tau, doppler):
+            x = np.asarray(waveform(times - delay), dtype=np.complex128)
+            if x.shape != times.shape or not np.all(np.isfinite(x)):
+                raise ValueError("waveform must return finite complex samples with the input shape")
+            if compact and frequency != 0:
+                x = x * np.exp(2j * np.pi * frequency * (relative_time+epoch_offset))
+            iq += gain * x
     iq *= np.sqrt(config.impedance_ohm * config.transmit_power_w)
     if config.noise_enabled:
         if rng is None:
@@ -115,12 +128,13 @@ class RFReceiver:
 
     def __init__(self, scene, config: ReceiverConfig, *, max_depth=1, seed=42,
                  samples_per_src=10000, max_num_paths_per_src=1000,
-                 path_solver="native"):
+                 path_solver="native", renderer="numpy"):
         from sionna.rt import PathSolver
         if isinstance(max_depth, bool) or not isinstance(max_depth, Integral) or max_depth not in (0, 1):
             raise ValueError("Receiver supports direct paths or at most one scene interaction")
         self.scene = scene
         self.config = config
+        self.renderer = renderer
         self.max_depth = max_depth
         self.seed = seed
         self.samples_per_src = samples_per_src
@@ -151,5 +165,5 @@ class RFReceiver:
         doppler = paths.doppler.numpy().reshape(-1)
         return synthesize_voltage(a[0, 0, 0, 0, :, 0], delays, waveform,
                                   sim_time_ns=sim_time_ns, config=self.config,
-                                  doppler_hz=doppler,
+                                  doppler_hz=doppler, renderer=self.renderer,
                                   rng=self.rng)

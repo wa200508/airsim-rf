@@ -132,9 +132,10 @@ class PointTargetRadar:
     No mesh target scattering or multipath is inferred from the radio solver.
     """
 
-    def __init__(self, config: RadarConfig = RadarConfig(), *, rf_scene=None, seed=42):
+    def __init__(self, config: RadarConfig = RadarConfig(), *, rf_scene=None, seed=42, renderer="numpy"):
         from sionna.rt import PlanarArray, PathSolver, Receiver, Transmitter, load_scene
         self.config = config
+        self.renderer = renderer
         self.scene = load_scene(rf_scene)
         self.scene.frequency = config.carrier_hz
         self.scene.tx_array = PlanarArray(num_rows=1, num_cols=1, pattern="iso", polarization="V")
@@ -159,7 +160,7 @@ class PointTargetRadar:
         self.tx.position = position.tolist()
         self.tx.velocity = velocity.tolist()
         self.tx.orientation = orientation.tolist()
-        coefficients, delays = [], []
+        coefficients, delays, path_dopplers = [], [], []
         ranges, dopplers = [], []
         wavelength = C / cfg.carrier_hz
         for target in targets:
@@ -175,7 +176,7 @@ class PointTargetRadar:
             self.probe.position = np.asarray(target.position_m, dtype=float).tolist()
             self.probe.velocity = np.asarray(target.velocity_m_s, dtype=float).tolist()
             paths = self.solver(self.scene, max_depth=0, seed=self.seed)
-            a, tau = paths.cir(sampling_frequency=cfg.sample_rate_hz, num_time_steps=cfg.num_samples,
+            a, tau = paths.cir(num_time_steps=1,
                               normalize_delays=False, out_type="numpy")
             if a.shape[:4] != (1, 1, 1, 1):
                 raise ValueError("Radar requires exactly one transmitter and virtual receiver")
@@ -184,13 +185,17 @@ class PointTargetRadar:
             if valid.size > 1:
                 raise ValueError("Point-target model supports one direct path per target")
             for p in valid:
-                coefficients.append(a[0, 0, 0, 0, p]**2 * np.sqrt(4 * np.pi * target.rcs_m2) / wavelength)
+                coefficients.append(a[0, 0, 0, 0, p, 0]**2 * np.sqrt(4 * np.pi * target.rcs_m2) / wavelength)
                 delays.append(2 * float(tau[p]))
-        channel = np.asarray(coefficients).reshape(len(coefficients), cfg.num_samples)
+                path_dopplers.append(2*float(paths.doppler.numpy().reshape(-1)[p]))
+        channel = np.asarray(coefficients, dtype=np.complex128)
         # Pulse-relative time preserves sub-sample precision even when AirSim
         # timestamps are Unix-scale nanoseconds. Geometry supplies RF phase.
-        block = synthesize_voltage(channel, delays, cfg.chirp, sim_time_ns=0,
-                                   config=cfg.receiver_config(), rng=self.rng)
+        from .rendering import LFMChirpWaveform
+        waveform = cfg.chirp if self.renderer == "numpy" else LFMChirpWaveform(cfg.bandwidth_hz, cfg.pulse_width_s)
+        block = synthesize_voltage(channel, delays, waveform, sim_time_ns=0,
+                                   config=cfg.receiver_config(), rng=self.rng,
+                                   doppler_hz=path_dopplers, renderer=self.renderer)
         iq = block.iq_volts.copy()
         if cfg.transmit_blanking:
             iq[:cfg.template().size] = 0

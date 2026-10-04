@@ -149,7 +149,8 @@ class SDRNetworkReceiver:
     """
     def __init__(self, scene, emitters: dict[str, SDREmitter],
                  profile=PlutoSDRProfile(), *, clocks=None, path_solver="first-order-scattering",
-                 max_depth=1, samples_per_link=1028, seed=42):
+                 max_depth=1, samples_per_link=1028, seed=42, renderer="numpy",
+                 path_tile=128, sample_tile=32):
         if not emitters or set(emitters) != set(scene.transmitters):
             raise ValueError("Supply one emitter for every scene transmitter")
         if not scene.receivers:
@@ -158,6 +159,16 @@ class SDRNetworkReceiver:
             raise ValueError("At most one surface interaction is supported")
         if isinstance(samples_per_link, bool) or not isinstance(samples_per_link, int) or samples_per_link < 2:
             raise ValueError("At least two attempted samples per link required")
+        if renderer not in ("numpy", "direct-llvm", "direct-cuda"):
+            raise ValueError("renderer must be numpy, direct-llvm or direct-cuda")
+        if renderer != "numpy":
+            from .rendering import ToneWaveform, LFMChirpWaveform
+            if any(not isinstance(e.waveform, (ToneWaveform, LFMChirpWaveform)) for e in emitters.values()):
+                raise TypeError("Direct renderer requires tone/LFM waveform descriptors for every emitter")
+        for size in (path_tile, sample_tile):
+            if isinstance(size, bool) or not isinstance(size, int) or size < 1:
+                raise ValueError("Tile sizes must be positive integers")
+        self.renderer, self.path_tile, self.sample_tile = renderer, path_tile, sample_tile
         self.scene, self.profile, self.seed = scene, profile, seed
         self.tx_names, self.rx_names = tuple(scene.transmitters), tuple(scene.receivers)
         self.emitters = dict(emitters)
@@ -191,6 +202,7 @@ class SDRNetworkReceiver:
         self.rngs = {name: np.random.default_rng(child) for name, child in
                      zip(self.rx_names, np.random.SeedSequence(seed).spawn(len(self.rx_names)))}
         self.last_channel_ms = 0.
+        self.last_render_ms = 0.
 
     def capture(self, sim_time_ns: int, *, num_samples=4096):
         if isinstance(num_samples, bool) or not isinstance(num_samples, int) or num_samples < 1:
@@ -216,6 +228,7 @@ class SDRNetworkReceiver:
                 doppler = paths.doppler.numpy()
         self.last_channel_ms = 1000*(perf_counter()-start)
         captures = {}
+        self.last_render_ms = 0.
         warmup = 256
         for ri, rx_name in enumerate(self.rx_names):
             clock = self.clocks[rx_name]
@@ -235,9 +248,23 @@ class SDRNetworkReceiver:
                          impedance_ohm=self.profile.impedance_ohm, noise_enabled=False)
                 epoch_gain = a[ri, ti] * np.exp(2j*np.pi*doppler[ri, ti]*delta_epoch)
                 with profile_range("rf.iq.waveforms"):
-                    signal = synthesize_voltage(epoch_gain, tau[ri, ti],
-                        emitter.rf_envelope(self.profile.carrier_hz), sim_time_ns=warmup_ns,
-                        config=config, doppler_hz=doppler[ri, ti]).iq_volts * lo
+                    render_start = perf_counter()
+                    if self.renderer == "numpy":
+                        signal = synthesize_voltage(epoch_gain, tau[ri, ti],
+                            emitter.rf_envelope(self.profile.carrier_hz), sim_time_ns=warmup_ns,
+                            config=config, doppler_hz=doppler[ri, ti]).iq_volts * lo
+                    else:
+                        from .rendering import render_paths
+                        signal = render_paths(a[ri, ti], tau[ri, ti], doppler[ri, ti],
+                            emitter.waveform, sim_time_ns=warmup_ns, channel_epoch_ns=sim_time_ns,
+                            sample_rate_hz=actual_rate, num_samples=num_samples+warmup,
+                            amplitude_scale=np.sqrt(self.profile.impedance_ohm*emitter.transmit_power_w),
+                            time_scale=emitter.clock.rate_scale,
+                            frequency_offset_hz=self.profile.carrier_hz*emitter.clock.error_ppm*1e-6,
+                            phase_offset_rad=emitter.clock.phase_rad,
+                            backend=self.renderer.removeprefix("direct-"),
+                            path_tile=self.path_tile, sample_tile=self.sample_tile) * lo
+                    self.last_render_ms += 1000*(perf_counter()-render_start)
                     total += signal
                 with profile_range("rf.iq.link_diagnostics"):
                     filtered_link = sosfilt(self.sos, signal)[warmup:]

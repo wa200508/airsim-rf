@@ -16,6 +16,9 @@ def main():
     p.add_argument('--samples', type=int, default=4096)
     p.add_argument('--samples-per-link', type=int, default=1028)
     p.add_argument('--backend', choices=('cpu', 'cuda'), default='cpu')
+    p.add_argument('--renderer', choices=('numpy', 'direct-llvm', 'direct-cuda'), default='numpy')
+    p.add_argument('--path-tile', type=int, default=128)
+    p.add_argument('--sample-tile', type=int, default=32)
     p.add_argument("--profile", action="store_true", help="Separate instrumented Dr.Jit event/NVTX run")
     p.add_argument("--threads", type=int, default=2)
     p.add_argument('--output', type=Path, required=True)
@@ -30,6 +33,7 @@ def main():
         p.error('CUDA unavailable; no implicit CPU fallback')
     mi.set_variant('cuda_ad_mono_polarized' if args.backend == 'cuda' else 'llvm_ad_mono_polarized')
     import sionna.rt as rt
+    from airsim_rf.rendering import ToneWaveform
     from airsim_rf.sdr import PlutoSDRProfile, RadioClock, SDREmitter, SDRNetworkReceiver
     from airsim_rf.runtime_metrics import receiver_gpu_workload, conditional_gpu_ray_times
     from airsim_rf.profiling import CaptureProfiler, summarize_kernel_history
@@ -57,7 +61,7 @@ def main():
         scene.add(device)
         devices.append(device)
         frequency = float(frequencies[i])
-        emitters[name] = SDREmitter(lambda t, f=frequency: np.exp(2j*np.pi*f*t),
+        emitters[name] = SDREmitter(ToneWaveform(frequency),
             transmit_power_w=float(powers[i]), clock=clocks[i], baseband_frequency_bounds_hz=(frequency, frequency))
     rx_clocks = {}
     for i in range(args.rx):
@@ -67,7 +71,8 @@ def main():
         devices.append(device)
         rx_clocks[name] = [RadioClock(5, -.7), RadioClock(-10, .4)][i]
     receiver = SDRNetworkReceiver(scene, emitters, PlutoSDRProfile(), clocks=rx_clocks,
-        samples_per_link=args.samples_per_link)
+        samples_per_link=args.samples_per_link, renderer=args.renderer,
+        path_tile=args.path_tile, sample_tile=args.sample_tile)
     preparation_ms = 1000*(perf_counter()-start)
     positions, velocities = np.vstack((tx_pos, rx_pos)), np.vstack((tx_vel, rx_vel))
 
@@ -93,6 +98,7 @@ def main():
         row = dict(epoch_s=epoch, service_ms=1000*(finish-start), pose_ms=pose_ms,
             capture_ms=capture_ms, channel_ms=receiver.last_channel_ms,
             cpu_iq_receiver_ms=capture_ms-receiver.last_channel_ms,
+            iq_receiver_ms=capture_ms-receiver.last_channel_ms, render_ms=receiver.last_render_ms,
             stage_timings=receiver.solver.stage_timings,
             retained_paths=sum(sum(cap.retained_paths.values()) for cap in captures.values()),
             clipping_fraction_max=max(cap.clipped_component_fraction for cap in captures.values()))
@@ -135,6 +141,8 @@ def main():
         first_capture_note='New process with existing on-disk JIT cache; imports excluded; not a cache-cleared cold-start benchmark',
         service=stats(times), channel=stats([r['channel_ms'] for r in rows]),
         cpu_iq_receiver=stats([r['cpu_iq_receiver_ms'] for r in rows]),
+        iq_receiver=stats([r['iq_receiver_ms'] for r in rows]),
+        rendering=stats([r['render_ms'] for r in rows]),
         serial_wall_s=serial_wall_s, sustained_updates_hz=args.iterations/serial_wall_s,
         receiver_blocks_per_second=args.iterations*args.rx/serial_wall_s,
         deadline_misses={str(hz):int((times>1000/hz).sum()) for hz in (120,200)},
@@ -148,7 +156,7 @@ def main():
         gpu_workload_per_receiver=workload,
         conditional_gpu_ray_stage=conditional_gpu_ray_times(workload,host_sampling_ms=None if host is None else float(host)),
         profile_note='Profiled serial throughput includes event/history instrumentation; use separate unprofiled runs for performance.',
-        gpu_note='Ray-only hypothetical query throughput. IQ/receive chain and proposal draws remain CPU even with --backend cuda. No measured GPU latency or throughput.',
+        gpu_note='Renderer is selected independently of propagation backend. Direct CUDA includes per-link host/device transfers; proposal draws, channel export and front-end filters/ADC remain CPU. Legacy cpu_iq_receiver fields alias the mixed iq_receiver stage.',
         samples=rows)
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(result, indent=2)+'\n')

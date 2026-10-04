@@ -1,0 +1,224 @@
+{
+  "arguments": {
+    "tx": 2,
+    "rx": 1,
+    "iterations": 3,
+    "warmup": 1,
+    "samples": 4096,
+    "samples_per_link": 1028,
+    "backend": "cpu",
+    "renderer": "numpy",
+    "path_tile": 128,
+    "sample_tile": 32,
+    "profile": false,
+    "threads": 2,
+    "output": "/workspace/airsim-rf-publish/results/profiling/direct-renderer-cpu-validation/metrics/cpu_2tx_1rx.json"
+  },
+  "measurement_mode": "unprofiled_benchmark",
+  "scope": "915 MHz, 2 MS/s, 1 MHz filter, noisy independent-clock Pluto profile; moving mounts over 800-triangle DEM",
+  "timing_includes": "Pose writes, synchronized channel/NumPy export, per-path IQ, per-link diagnostic filters, receive noise/filter and ADC conversion",
+  "timing_excludes": [
+    "AirSim RPC/physics",
+    "transport",
+    "queueing",
+    "storage",
+    "plots",
+    "RF skill processing"
+  ],
+  "initial_tx_positions_m": [
+    [
+      -60.0,
+      -30.0,
+      12.0
+    ],
+    [
+      45.0,
+      45.0,
+      18.0
+    ]
+  ],
+  "initial_rx_positions_m": [
+    [
+      -30.0,
+      -10.0,
+      14.0
+    ]
+  ],
+  "capture_duration_ms": 2.048,
+  "filter_warmup_samples": 256,
+  "preparation_ms": 118.35190099372994,
+  "first_capture": {
+    "epoch_s": 0.0,
+    "service_ms": 234.21255900757387,
+    "pose_ms": 0.04465600068215281,
+    "capture_ms": 234.16770300536882,
+    "channel_ms": 15.4293129889993,
+    "cpu_iq_receiver_ms": 218.73839001636952,
+    "iq_receiver_ms": 218.73839001636952,
+    "render_ms": 217.31762599665672,
+    "stage_timings": {
+      "proposal_table_prepare_ms": 2.2605919948546216,
+      "host_numpy_sampling_ms": 0.7189699972514063
+    },
+    "retained_paths": 810,
+    "clipping_fraction_max": 0.0
+  },
+  "first_capture_note": "New process with existing on-disk JIT cache; imports excluded; not a cache-cleared cold-start benchmark",
+  "service": {
+    "p50_ms": 230.22784599743318,
+    "p95_ms": 230.2348462093505,
+    "mean_ms": 229.183956340421,
+    "max_ms": 230.23562401067466
+  },
+  "channel": {
+    "p50_ms": 11.769869001000188,
+    "p95_ms": 12.881585898867343,
+    "mean_ms": 12.073783330076063,
+    "max_ms": 13.00510999863036
+  },
+  "cpu_iq_receiver": {
+    "p50_ms": 217.17832099238876,
+    "p95_ms": 218.58870830765227,
+    "mean_ms": 217.06608133778596,
+    "max_ms": 218.7454180093482
+  },
+  "iq_receiver": {
+    "p50_ms": 217.17832099238876,
+    "p95_ms": 218.58870830765227,
+    "mean_ms": 217.06608133778596,
+    "max_ms": 218.7454180093482
+  },
+  "rendering": {
+    "p50_ms": 215.80638800514862,
+    "p95_ms": 217.24416680372087,
+    "mean_ms": 215.7165646640351,
+    "max_ms": 217.40392000356223
+  },
+  "serial_wall_s": 0.6876203489955515,
+  "sustained_updates_hz": 4.3628726293255875,
+  "receiver_blocks_per_second": 4.3628726293255875,
+  "deadline_misses": {
+    "120": 3,
+    "200": 3
+  },
+  "stage_timings": {
+    "proposal_table_prepare_ms": {
+      "p50_ms": 2.1564290073001757,
+      "p95_ms": 2.215375409286935,
+      "mean_ms": 2.080270341442277,
+      "max_ms": 2.221925009507686
+    },
+    "host_numpy_sampling_ms": {
+      "p50_ms": 0.7255300006363541,
+      "p95_ms": 0.7943098025862128,
+      "mean_ms": 0.7499823356435323,
+      "max_ms": 0.8019520028028637
+    }
+  },
+  "retained_paths": {
+    "min": 810,
+    "max": 810
+  },
+  "host": {
+    "cpu_count": 3,
+    "cpu_quota": "200000 100000",
+    "memory_limit_bytes": "8589934592",
+    "drjit_threads": 2,
+    "peak_rss_mib": 203.2421875,
+    "cuda_available": 0
+  },
+  "versions": {
+    "sionna_rt": "2.2.0",
+    "mitsuba": "3.9.1",
+    "drjit": "1.5.0",
+    "backend": "llvm_ad_mono_polarized"
+  },
+  "gpu_workload_per_receiver": {
+    "topology": "one GPU per physical receiver; all transmitters on every receiver worker",
+    "gpu_count": 10,
+    "transmitters_per_gpu": 2,
+    "receivers_per_gpu": 1,
+    "diffuse_attempts_per_gpu_per_pulse": 2056,
+    "visibility_queries_per_gpu_per_pulse_upper_bound": 7314,
+    "visibility_queries_fleet_per_pulse_upper_bound": 73140,
+    "candidate_paths_per_gpu_upper_bound": 3658,
+    "compact_channel_bytes_per_gpu_per_pulse_upper_bound": 58528,
+    "compact_channel_bytes_per_gpu_per_second_upper_bound": 11705600,
+    "pulse_hz": 200,
+    "pulse_budget_ms": 5.0,
+    "physics_hz": 120,
+    "physics_budget_ms": 8.333333333333334,
+    "ray_only_required_queries_per_second_at_pulse_rate": 1462800,
+    "ray_only_required_queries_per_second_at_physics_rate": 877680,
+    "vram_requirement": "unmeasured; compact coefficients are not total device memory"
+  },
+  "conditional_gpu_ray_stage": [
+    {
+      "assumed_effective_scene_queries_per_second": 100000000.0,
+      "ray_stage_ms_at_upper_bound_query_count": 0.07314,
+      "unchanged_measured_host_sampling_plus_ray_stage_ms": 0.7986700006363541
+    },
+    {
+      "assumed_effective_scene_queries_per_second": 250000000.0,
+      "ray_stage_ms_at_upper_bound_query_count": 0.029256,
+      "unchanged_measured_host_sampling_plus_ray_stage_ms": 0.754786000636354
+    },
+    {
+      "assumed_effective_scene_queries_per_second": 1000000000.0,
+      "ray_stage_ms_at_upper_bound_query_count": 0.007314,
+      "unchanged_measured_host_sampling_plus_ray_stage_ms": 0.7328440006363541
+    }
+  ],
+  "profile_note": "Profiled serial throughput includes event/history instrumentation; use separate unprofiled runs for performance.",
+  "gpu_note": "Renderer is selected independently of propagation backend. Direct CUDA includes per-link host/device transfers; proposal draws, channel export and front-end filters/ADC remain CPU. Legacy cpu_iq_receiver fields alias the mixed iq_receiver stage.",
+  "samples": [
+    {
+      "epoch_s": 0.01,
+      "service_ms": 227.08839901315514,
+      "pose_ms": 0.043845007894560695,
+      "capture_ms": 227.04437401262112,
+      "channel_ms": 11.769869001000188,
+      "cpu_iq_receiver_ms": 215.27450501162093,
+      "iq_receiver_ms": 215.27450501162093,
+      "render_ms": 213.93938598339446,
+      "stage_timings": {
+        "proposal_table_prepare_ms": 2.1564290073001757,
+        "host_numpy_sampling_ms": 0.7224650034913793
+      },
+      "retained_paths": 810,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.015,
+      "service_ms": 230.22784599743318,
+      "pose_ms": 0.04425500810611993,
+      "capture_ms": 230.18343099101912,
+      "channel_ms": 13.00510999863036,
+      "cpu_iq_receiver_ms": 217.17832099238876,
+      "iq_receiver_ms": 217.17832099238876,
+      "render_ms": 215.80638800514862,
+      "stage_timings": {
+        "proposal_table_prepare_ms": 2.221925009507686,
+        "host_numpy_sampling_ms": 0.8019520028028637
+      },
+      "retained_paths": 810,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.02,
+      "service_ms": 230.23562401067466,
+      "pose_ms": 0.0436650007031858,
+      "capture_ms": 230.19178899994586,
+      "channel_ms": 11.446370990597643,
+      "cpu_iq_receiver_ms": 218.7454180093482,
+      "iq_receiver_ms": 218.7454180093482,
+      "render_ms": 217.40392000356223,
+      "stage_timings": {
+        "proposal_table_prepare_ms": 1.8624570075189695,
+        "host_numpy_sampling_ms": 0.7255300006363541
+      },
+      "retained_paths": 810,
+      "clipping_fraction_max": 0.0
+    }
+  ]
+}

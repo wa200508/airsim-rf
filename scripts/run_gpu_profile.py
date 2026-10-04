@@ -91,6 +91,8 @@ def main():
     p.add_argument('--quick',action='store_true',help='Fewer epochs; default ray and sample budgets unchanged')
     p.add_argument('--cpu-only',action='store_true',help='Explicit non-GPU harness validation')
     p.add_argument('--tx',type=int,nargs='+',default=[2,100])
+    p.add_argument('--renderers',choices=('numpy','direct'),nargs='+',default=['numpy','direct'],
+        help='Compare existing NumPy synthesis and direct LLVM/CUDA recurrence')
     p.add_argument('--samples',type=int,default=4096)
     p.add_argument('--samples-per-link',type=int,default=1028)
     p.add_argument('--threads',type=int,default=2)
@@ -159,6 +161,9 @@ def main():
             available=run_task('cuda_preflight',[sys.executable,ROOT/'scripts/gpu_preflight.py','--output',artifact],artifact)
             manifest['gpu_status']='verified_cuda_optix' if available else 'blocked'
             required_failure |= not available
+        if available and 'direct' in args.renderers:
+            required_failure |= not run_task('direct_renderer_correctness',
+                [sys.executable,'-m','pytest',ROOT/'tests/test_rendering.py','-q'])
         # CUDA blocked: retain same-host CPU evidence and a failure report.
         for tx in dict.fromkeys(args.tx):
             warmup=1 if args.quick else (20 if tx==2 else 5)
@@ -166,31 +171,35 @@ def main():
             common=['--tx',str(tx),'--rx','1','--samples',str(args.samples),
                 '--samples-per-link',str(args.samples_per_link),'--threads',str(args.threads)]
             for backend in (['cpu','cuda'] if available else ['cpu']):
-                name=f'{backend}_{tx}tx_1rx'
-                artifact=output/'metrics'/f'{name}.json'
-                required_failure |= not run_task(name,[sys.executable,benchmark,'--backend',backend,*common,
-                    '--warmup',str(warmup),'--iterations',str(iterations),'--output',artifact],artifact)
-            if available or args.cpu_only:
-                backend='cuda' if available else 'cpu'
-                name=f'{backend}_{tx}tx_1rx_events'
-                artifact=output/'profiles'/f'{name}.json'
-                required_failure |= not run_task(name,[sys.executable,benchmark,'--backend',backend,*common,'--profile',
-                    '--warmup','1' if args.quick else '3','--iterations','2' if args.quick else '5','--output',artifact],artifact)
-                nsys=os.environ.get('NSYS_BIN') or shutil.which('nsys')
-                if available and not args.no_nsys and nsys:
-                    stem=output/'raw'/f'nsys_{tx}tx_1rx'
-                    artifact=output/'profiles'/f'nsys_{tx}tx_1rx.json'
-                    success=run_task(f'nsys_{tx}tx_1rx',[nsys,'profile','--trace=cuda,nvtx,osrt',
-                        '--sample=none','--cpuctxsw=none','--force-overwrite=true',f'--output={stem}',
-                        sys.executable,benchmark,'--backend','cuda',*common,'--profile',
-                        '--warmup','1' if args.quick else '3','--iterations','2' if args.quick else '5',
-                        '--output',artifact],artifact,required=False)
-                    if success:
-                        run_task(f'nsys_{tx}tx_1rx_stats',[nsys,'stats','--report',
-                            'cuda_gpu_kern_sum,cuda_api_sum,nvtx_sum',str(stem)+'.nsys-rep'],required=False)
-                elif available and not args.no_nsys:
-                    manifest['tasks'].append(dict(name=f'nsys_{tx}tx_1rx',status='unavailable',required=False,
-                        reason='Nsight Systems not installed; CUDA-event profiling still collected'))
+                for renderer_kind in dict.fromkeys(args.renderers):
+                    renderer='numpy' if renderer_kind=='numpy' else ('direct-cuda' if backend=='cuda' else 'direct-llvm')
+                    suffix='' if renderer=='numpy' else '_direct'
+                    name=f'{backend}_{tx}tx_1rx{suffix}'
+                    renderer_args=['--renderer',renderer]
+                    artifact=output/'metrics'/f'{name}.json'
+                    required_failure |= not run_task(name,[sys.executable,benchmark,'--backend',backend,*common,
+                        *renderer_args,'--warmup',str(warmup),'--iterations',str(iterations),'--output',artifact],artifact)
+                    if backend=='cpu' and not args.cpu_only: continue
+                    profile_name=name+'_events'
+                    artifact=output/'profiles'/f'{profile_name}.json'
+                    required_failure |= not run_task(profile_name,[sys.executable,benchmark,'--backend',backend,
+                        *common,*renderer_args,'--profile','--warmup','1' if args.quick else '3',
+                        '--iterations','2' if args.quick else '5','--output',artifact],artifact)
+                    nsys=os.environ.get('NSYS_BIN') or shutil.which('nsys')
+                    if backend=='cuda' and not args.no_nsys and nsys:
+                        stem=output/'raw'/f'nsys_{name}'
+                        artifact=output/'profiles'/f'nsys_{name}.json'
+                        success=run_task(f'nsys_{name}',[nsys,'profile','--trace=cuda,nvtx,osrt',
+                            '--sample=none','--cpuctxsw=none','--force-overwrite=true',f'--output={stem}',
+                            sys.executable,benchmark,'--backend',backend,*common,*renderer_args,'--profile',
+                            '--warmup','1' if args.quick else '3','--iterations','2' if args.quick else '5',
+                            '--output',artifact],artifact,required=False)
+                        if success:
+                            run_task(f'nsys_{name}_stats',[nsys,'stats','--report',
+                                'cuda_gpu_kern_sum,cuda_api_sum,nvtx_sum',str(stem)+'.nsys-rep'],required=False)
+                    elif backend=='cuda' and not args.no_nsys:
+                        manifest['tasks'].append(dict(name=f'nsys_{name}',status='unavailable',required=False,
+                            reason='Nsight Systems not installed; CUDA-event profiling still collected'))
         if available and not args.no_example:
             required_failure |= not run_task('pluto_example',[sys.executable,ROOT/'examples/pluto_esm_drones.py',
                 '--backend','cuda','--epochs','2' if args.quick else '12',

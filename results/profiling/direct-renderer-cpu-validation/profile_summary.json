@@ -1,0 +1,526 @@
+{
+  "cpu_100tx_1rx_direct_events.json": {
+    "timed_capture_count": 2,
+    "cuda_event_time_sum": {
+      "p50_ms": 0.0,
+      "p95_ms": 0.0,
+      "mean_ms": 0,
+      "max_ms": 0
+    },
+    "cuda_operations": 0,
+    "optix_kernels": 0,
+    "nvtx_available": false,
+    "operations": {
+      "LLVM / Memset": {
+        "count": 3348,
+        "event_ms": 256.8899429477242,
+        "codegen_ms": 0.0,
+        "backend_compile_ms": 0.0,
+        "cache_hits": 0,
+        "cache_misses": 0
+      },
+      "LLVM / JIT": {
+        "count": 1850,
+        "event_ms": 332.49258099744475,
+        "codegen_ms": 23.5237522830721,
+        "backend_compile_ms": 0.0,
+        "cache_hits": 1850,
+        "cache_misses": 0
+      },
+      "LLVM / Aggregate": {
+        "count": 10,
+        "event_ms": 0.007970999926328659,
+        "codegen_ms": 0.0,
+        "backend_compile_ms": 0.0,
+        "cache_hits": 0,
+        "cache_misses": 0
+      },
+      "LLVM / LLVMHostFunc": {
+        "count": 2398,
+        "event_ms": 13.228885994307348,
+        "codegen_ms": 0.0,
+        "backend_compile_ms": 0.0,
+        "cache_hits": 0,
+        "cache_misses": 0
+      },
+      "LLVM / Memcpy": {
+        "count": 18,
+        "event_ms": 1.1576869962518685,
+        "codegen_ms": 0.0,
+        "backend_compile_ms": 0.0,
+        "cache_hits": 0,
+        "cache_misses": 0
+      },
+      "LLVM / Compress": {
+        "count": 4,
+        "event_ms": 0.5262530148029327,
+        "codegen_ms": 0.0,
+        "backend_compile_ms": 0.0,
+        "cache_hits": 0,
+        "cache_misses": 0
+      },
+      "LLVM / BlockPrefixReduce": {
+        "count": 2,
+        "event_ms": 0.0013620000099763274,
+        "codegen_ms": 0.0,
+        "backend_compile_ms": 0.0,
+        "cache_hits": 0,
+        "cache_misses": 0
+      },
+      "LLVM / BlockReduce": {
+        "count": 1598,
+        "event_ms": 55.80134200188331,
+        "codegen_ms": 0.0,
+        "backend_compile_ms": 0.0,
+        "cache_hits": 0,
+        "cache_misses": 0
+      }
+    },
+    "inclusive_host_ranges": {
+      "rf.channel.proposal_tables": {
+        "p50_ms": 3.09927600028459,
+        "p95_ms": 3.389949898701161,
+        "mean_ms": 3.09927600028459,
+        "max_ms": 3.4222469985252246
+      },
+      "rf.channel.host_proposal_draws": {
+        "p50_ms": 16.078206994279753,
+        "p95_ms": 16.89413079220685,
+        "mean_ms": 16.078206994279753,
+        "max_ms": 16.98478899197653
+      },
+      "rf.channel.solve": {
+        "p50_ms": 67.75937749625882,
+        "p95_ms": 74.4533376499021,
+        "mean_ms": 67.75937749625882,
+        "max_ms": 75.1971110003069
+      },
+      "rf.channel.export": {
+        "p50_ms": 1.1929794927709736,
+        "p95_ms": 1.2590192440256942,
+        "mean_ms": 1.1929794927709736,
+        "max_ms": 1.2663569941651076
+      },
+      "rf.channel": {
+        "p50_ms": 68.97527600085596,
+        "p95_ms": 75.73576730137574,
+        "mean_ms": 68.97527600085596,
+        "max_ms": 76.4869330014335
+      },
+      "rf.iq.waveforms": {
+        "p50_ms": 330.6229709778563,
+        "p95_ms": 360.13062932688626,
+        "mean_ms": 330.6229709778563,
+        "max_ms": 363.40925803233404
+      },
+      "rf.iq.link_diagnostics": {
+        "p50_ms": 17.84254896483617,
+        "p95_ms": 18.857783130806638,
+        "mean_ms": 17.84254896483617,
+        "max_ms": 18.97058692702558
+      },
+      "rf.receiver.noise_filter_adc": {
+        "p50_ms": 0.4113870018045418,
+        "p95_ms": 0.45639959644177,
+        "mean_ms": 0.4113870018045418,
+        "max_ms": 0.46140099584590644
+      },
+      "capture.timed": {
+        "p50_ms": 423.34785649291007,
+        "p95_ms": 447.2306592411769,
+        "mean_ms": 423.34785649291007,
+        "max_ms": 449.88430399098434
+      }
+    },
+    "note": "Timed captures only. Device operation sums and nested inclusive host ranges are not additive service latency."
+  },
+  "cpu_100tx_1rx_events.json": {
+    "timed_capture_count": 2,
+    "cuda_event_time_sum": {
+      "p50_ms": 0.0,
+      "p95_ms": 0.0,
+      "mean_ms": 0,
+      "max_ms": 0
+    },
+    "cuda_operations": 0,
+    "optix_kernels": 0,
+    "nvtx_available": false,
+    "operations": {
+      "LLVM / Memset": {
+        "count": 156,
+        "event_ms": 2.7001099912886275,
+        "codegen_ms": 0.0,
+        "backend_compile_ms": 0.0,
+        "cache_hits": 0,
+        "cache_misses": 0
+      },
+      "LLVM / JIT": {
+        "count": 454,
+        "event_ms": 47.3053350312548,
+        "codegen_ms": 3.9299444432836026,
+        "backend_compile_ms": 0.0,
+        "cache_hits": 454,
+        "cache_misses": 0
+      },
+      "LLVM / Aggregate": {
+        "count": 10,
+        "event_ms": 0.00893399995402433,
+        "codegen_ms": 0.0,
+        "backend_compile_ms": 0.0,
+        "cache_hits": 0,
+        "cache_misses": 0
+      },
+      "LLVM / LLVMHostFunc": {
+        "count": 6,
+        "event_ms": 0.07104600081220269,
+        "codegen_ms": 0.0,
+        "backend_compile_ms": 0.0,
+        "cache_hits": 0,
+        "cache_misses": 0
+      },
+      "LLVM / Memcpy": {
+        "count": 18,
+        "event_ms": 1.0299889921298018,
+        "codegen_ms": 0.0,
+        "backend_compile_ms": 0.0,
+        "cache_hits": 0,
+        "cache_misses": 0
+      },
+      "LLVM / Compress": {
+        "count": 4,
+        "event_ms": 0.4553210027515888,
+        "codegen_ms": 0.0,
+        "backend_compile_ms": 0.0,
+        "cache_hits": 0,
+        "cache_misses": 0
+      },
+      "LLVM / BlockPrefixReduce": {
+        "count": 2,
+        "event_ms": 0.0010610000463202596,
+        "codegen_ms": 0.0,
+        "backend_compile_ms": 0.0,
+        "cache_hits": 0,
+        "cache_misses": 0
+      },
+      "LLVM / BlockReduce": {
+        "count": 2,
+        "event_ms": 0.0013620000099763274,
+        "codegen_ms": 0.0,
+        "backend_compile_ms": 0.0,
+        "cache_hits": 0,
+        "cache_misses": 0
+      }
+    },
+    "inclusive_host_ranges": {
+      "rf.channel.proposal_tables": {
+        "p50_ms": 2.9849525017198175,
+        "p95_ms": 3.11021045781672,
+        "mean_ms": 2.9849525017198175,
+        "max_ms": 3.1241280084941536
+      },
+      "rf.channel.host_proposal_draws": {
+        "p50_ms": 16.06219899986172,
+        "p95_ms": 16.277716596232494,
+        "mean_ms": 16.06219899986172,
+        "max_ms": 16.301662995829247
+      },
+      "rf.channel.solve": {
+        "p50_ms": 59.93200049852021,
+        "p95_ms": 60.20772854681127,
+        "mean_ms": 59.93200049852021,
+        "max_ms": 60.238364996621385
+      },
+      "rf.channel.export": {
+        "p50_ms": 1.2512000030255876,
+        "p95_ms": 1.377011904696701,
+        "mean_ms": 1.2512000030255876,
+        "max_ms": 1.3909910048823804
+      },
+      "rf.channel": {
+        "p50_ms": 61.202083503303584,
+        "p95_ms": 61.60208805886214,
+        "mean_ms": 61.202083503303584,
+        "max_ms": 61.646533009479754
+      },
+      "rf.iq.waveforms": {
+        "p50_ms": 11087.443834010628,
+        "p95_ms": 11108.53803758946,
+        "mean_ms": 11087.443834010628,
+        "max_ms": 11110.881837987108
+      },
+      "rf.iq.link_diagnostics": {
+        "p50_ms": 26.473631034605205,
+        "p95_ms": 26.506587250332814,
+        "mean_ms": 26.473631034605205,
+        "max_ms": 26.510249052080326
+      },
+      "rf.receiver.noise_filter_adc": {
+        "p50_ms": 0.3735960053745657,
+        "p95_ms": 0.3831909009022638,
+        "mean_ms": 0.3735960053745657,
+        "max_ms": 0.3842570004053414
+      },
+      "capture.timed": {
+        "p50_ms": 11182.629069495306,
+        "p95_ms": 11203.986401137809,
+        "mean_ms": 11182.629069495306,
+        "max_ms": 11206.359437986976
+      }
+    },
+    "note": "Timed captures only. Device operation sums and nested inclusive host ranges are not additive service latency."
+  },
+  "cpu_2tx_1rx_direct_events.json": {
+    "timed_capture_count": 2,
+    "cuda_event_time_sum": {
+      "p50_ms": 0.0,
+      "p95_ms": 0.0,
+      "mean_ms": 0,
+      "max_ms": 0
+    },
+    "cuda_operations": 0,
+    "optix_kernels": 0,
+    "nvtx_available": false,
+    "operations": {
+      "LLVM / Memset": {
+        "count": 220,
+        "event_ms": 3.5171279910246085,
+        "codegen_ms": 0.0,
+        "backend_compile_ms": 0.0,
+        "cache_hits": 0,
+        "cache_misses": 0
+      },
+      "LLVM / JIT": {
+        "count": 90,
+        "event_ms": 10.077444002527045,
+        "codegen_ms": 3.969428374664858,
+        "backend_compile_ms": 0.0,
+        "cache_hits": 90,
+        "cache_misses": 0
+      },
+      "LLVM / Aggregate": {
+        "count": 10,
+        "event_ms": 0.004435000038938597,
+        "codegen_ms": 0.0,
+        "backend_compile_ms": 0.0,
+        "cache_hits": 0,
+        "cache_misses": 0
+      },
+      "LLVM / LLVMHostFunc": {
+        "count": 54,
+        "event_ms": 0.41116099861392286,
+        "codegen_ms": 0.0,
+        "backend_compile_ms": 0.0,
+        "cache_hits": 0,
+        "cache_misses": 0
+      },
+      "LLVM / Memcpy": {
+        "count": 18,
+        "event_ms": 0.026949999817588832,
+        "codegen_ms": 0.0,
+        "backend_compile_ms": 0.0,
+        "cache_hits": 0,
+        "cache_misses": 0
+      },
+      "LLVM / Compress": {
+        "count": 2,
+        "event_ms": 0.01862700004130602,
+        "codegen_ms": 0.0,
+        "backend_compile_ms": 0.0,
+        "cache_hits": 0,
+        "cache_misses": 0
+      },
+      "LLVM / BlockReduce": {
+        "count": 34,
+        "event_ms": 1.5644789942889474,
+        "codegen_ms": 0.0,
+        "backend_compile_ms": 0.0,
+        "cache_hits": 0,
+        "cache_misses": 0
+      }
+    },
+    "inclusive_host_ranges": {
+      "rf.channel.proposal_tables": {
+        "p50_ms": 1.7323544961982407,
+        "p95_ms": 1.7659645462117624,
+        "mean_ms": 1.7323544961982407,
+        "max_ms": 1.7696989962132648
+      },
+      "rf.channel.host_proposal_draws": {
+        "p50_ms": 0.7021005003480241,
+        "p95_ms": 0.7209154500742443,
+        "mean_ms": 0.7021005003480241,
+        "max_ms": 0.7230060000438243
+      },
+      "rf.channel.solve": {
+        "p50_ms": 10.806846999912523,
+        "p95_ms": 10.83984460128704,
+        "mean_ms": 10.806846999912523,
+        "max_ms": 10.843511001439765
+      },
+      "rf.channel.export": {
+        "p50_ms": 0.13894000585423782,
+        "p95_ms": 0.1399624081386719,
+        "mean_ms": 0.13894000585423782,
+        "max_ms": 0.1400760083924979
+      },
+      "rf.channel": {
+        "p50_ms": 10.956913996778894,
+        "p95_ms": 10.988717301370343,
+        "mean_ms": 10.956913996778894,
+        "max_ms": 10.992251001880504
+      },
+      "rf.iq.waveforms": {
+        "p50_ms": 7.363765507761855,
+        "p95_ms": 7.417606656235876,
+        "mean_ms": 7.363765507761855,
+        "max_ms": 7.423589006066322
+      },
+      "rf.iq.link_diagnostics": {
+        "p50_ms": 0.4260474888724275,
+        "p95_ms": 0.42719183475128375,
+        "mean_ms": 0.4260474888724275,
+        "max_ms": 0.4273189842933789
+      },
+      "rf.receiver.noise_filter_adc": {
+        "p50_ms": 0.42193749686703086,
+        "p95_ms": 0.448657144443132,
+        "mean_ms": 0.42193749686703086,
+        "max_ms": 0.4516259941738099
+      },
+      "capture.timed": {
+        "p50_ms": 19.492336497933138,
+        "p95_ms": 19.4999167440983,
+        "mean_ms": 19.492336497933138,
+        "max_ms": 19.500758993672207
+      }
+    },
+    "note": "Timed captures only. Device operation sums and nested inclusive host ranges are not additive service latency."
+  },
+  "cpu_2tx_1rx_events.json": {
+    "timed_capture_count": 2,
+    "cuda_event_time_sum": {
+      "p50_ms": 0.0,
+      "p95_ms": 0.0,
+      "mean_ms": 0,
+      "max_ms": 0
+    },
+    "cuda_operations": 0,
+    "optix_kernels": 0,
+    "nvtx_available": false,
+    "operations": {
+      "LLVM / Memset": {
+        "count": 156,
+        "event_ms": 0.12151299985634978,
+        "codegen_ms": 0.0,
+        "backend_compile_ms": 0.0,
+        "cache_hits": 0,
+        "cache_misses": 0
+      },
+      "LLVM / JIT": {
+        "count": 62,
+        "event_ms": 1.8560080037204898,
+        "codegen_ms": 2.8305682339705527,
+        "backend_compile_ms": 0.0,
+        "cache_hits": 62,
+        "cache_misses": 0
+      },
+      "LLVM / Aggregate": {
+        "count": 10,
+        "event_ms": 0.006127000000560656,
+        "codegen_ms": 0.0,
+        "backend_compile_ms": 0.0,
+        "cache_hits": 0,
+        "cache_misses": 0
+      },
+      "LLVM / LLVMHostFunc": {
+        "count": 6,
+        "event_ms": 0.03720300037821289,
+        "codegen_ms": 0.0,
+        "backend_compile_ms": 0.0,
+        "cache_hits": 0,
+        "cache_misses": 0
+      },
+      "LLVM / Memcpy": {
+        "count": 18,
+        "event_ms": 0.02759199984575389,
+        "codegen_ms": 0.0,
+        "backend_compile_ms": 0.0,
+        "cache_hits": 0,
+        "cache_misses": 0
+      },
+      "LLVM / Compress": {
+        "count": 2,
+        "event_ms": 0.026650000363588333,
+        "codegen_ms": 0.0,
+        "backend_compile_ms": 0.0,
+        "cache_hits": 0,
+        "cache_misses": 0
+      },
+      "LLVM / BlockReduce": {
+        "count": 2,
+        "event_ms": 0.0011520000407472253,
+        "codegen_ms": 0.0,
+        "backend_compile_ms": 0.0,
+        "cache_hits": 0,
+        "cache_misses": 0
+      }
+    },
+    "inclusive_host_ranges": {
+      "rf.channel.proposal_tables": {
+        "p50_ms": 1.7158854971057735,
+        "p95_ms": 1.7291933465457987,
+        "mean_ms": 1.7158854971057735,
+        "max_ms": 1.7306719964835793
+      },
+      "rf.channel.host_proposal_draws": {
+        "p50_ms": 0.6347010057652369,
+        "p95_ms": 0.6433041126001626,
+        "mean_ms": 0.6347010057652369,
+        "max_ms": 0.6442600133595988
+      },
+      "rf.channel.solve": {
+        "p50_ms": 9.5098800084088,
+        "p95_ms": 9.539655606204178,
+        "mean_ms": 9.5098800084088,
+        "max_ms": 9.54296400595922
+      },
+      "rf.channel.export": {
+        "p50_ms": 0.1377234948449768,
+        "p95_ms": 0.15455124594154768,
+        "mean_ms": 0.1377234948449768,
+        "max_ms": 0.15642099606338888
+      },
+      "rf.channel": {
+        "p50_ms": 9.657657494244631,
+        "p95_ms": 9.66977554562618,
+        "mean_ms": 9.657657494244631,
+        "max_ms": 9.671121995779686
+      },
+      "rf.iq.waveforms": {
+        "p50_ms": 216.32165399933,
+        "p95_ms": 219.2550842963101,
+        "mean_ms": 216.32165399933,
+        "max_ms": 219.58102099597454
+      },
+      "rf.iq.link_diagnostics": {
+        "p50_ms": 0.5522849969565868,
+        "p95_ms": 0.5582069949014112,
+        "mean_ms": 0.5522849969565868,
+        "max_ms": 0.5588649946730584
+      },
+      "rf.receiver.noise_filter_adc": {
+        "p50_ms": 0.3379580011824146,
+        "p95_ms": 0.340589604456909,
+        "mean_ms": 0.3379580011824146,
+        "max_ms": 0.3408820048207417
+      },
+      "capture.timed": {
+        "p50_ms": 227.2231105089304,
+        "p95_ms": 230.1697811613849,
+        "mean_ms": 227.2231105089304,
+        "max_ms": 230.4971890116576
+      }
+    },
+    "note": "Timed captures only. Device operation sums and nested inclusive host ranges are not additive service latency."
+  }
+}

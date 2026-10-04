@@ -89,12 +89,12 @@ def main():
     lines=[f"# RF profiling results: {manifest['run_id']}",'',f"Status: **{verdict}**.",'',
         f"GPU status: `{manifest.get('gpu_status')}`. Source: `{env.get('source_revision') or 'unknown'}`; dirty: `{env.get('source_dirty')}`.",'',
         f"Started: {manifest['started_utc']}. Finished: {manifest.get('finished_utc','interrupted')}.",'',
-        'This measures the existing hybrid implementation: propagation may use CUDA, but proposal draws and I/Q/receiver processing remain CPU work. GPU synthesis optimizations are not implemented by this branch.','',
+        'Renderer and propagation backend are selected independently. Direct recurrence uses LLVM or CUDA; NumPy is the original renderer. Proposal draws, channel export and receiver filters/ADC remain CPU work. Direct CUDA timing includes per-link transfers and reduction.','',
         '## Environment','',f"Host: `{env['hostname']}`. Python: `{env['python'].splitlines()[0]}`.",
         f"CPU quota: `{env.get('cpu_quota')}`; memory limit: `{env.get('memory_limit')}`. Detailed hardware, versions and source-file hashes: [environment.json](environment.json).",'',
         'GPU inventory:','', '```text',env.get('gpu',{}).get('stdout','').strip() or env.get('gpu',{}).get('error','nvidia-smi unavailable'),'```','',
         '## Unprofiled latency and serial throughput','',
-        '| Case | Epochs | Median service | p95 service | Max service | Updates/s | Median channel | Median CPU I/Q+receiver | Misses 120/200 Hz |',
+        '| Case | Epochs | Median service | p95 service | Max service | Updates/s | Median channel | Median I/Q+receiver | Misses 120/200 Hz |',
         '|---|---:|---:|---:|---:|---:|---:|---:|---:|']
     for path,data in metrics:
         s=data['service'];miss=data['deadline_misses'];count=len(data['samples'])
@@ -104,14 +104,23 @@ def main():
         '## Paired CPU/CUDA comparison','']
     paired={}
     for path,data in metrics:
-        a=data['arguments'];paired.setdefault((a['tx'],a['rx'],a['samples'],a['samples_per_link']),{})[a['backend']]=data
+        a=data['arguments'];paired.setdefault((a['tx'],a['rx'],a['samples'],a['samples_per_link'], 'direct' if a.get('renderer','numpy').startswith('direct-') else 'numpy'),{})[a['backend']]=data
     for key,pair in paired.items():
         if {'cpu','cuda'}<=pair.keys():
             cpu,gpu=pair['cpu'],pair['cuda']
             cp=sum(s['retained_paths'] for s in cpu['samples'])/len(cpu['samples'])
             gp=sum(s['retained_paths'] for s in gpu['samples'])/len(gpu['samples'])
-            lines.append(f"* {key[0]} TX / {key[1]} RX: observed median service ratio CPU/CUDA **{cpu['service']['p50_ms']/gpu['service']['p50_ms']:.2f}×**; channel ratio **{cpu['channel']['p50_ms']/gpu['channel']['p50_ms']:.2f}×**. Mean retained paths CPU/CUDA: {cp:.1f}/{gp:.1f}. This is hybrid performance, not a GPU-resident synthesis speedup.")
+            lines.append(f"* {key[0]} TX / {key[1]} RX / {key[4]} renderer: observed median service ratio CPU/CUDA **{cpu['service']['p50_ms']/gpu['service']['p50_ms']:.2f}×**; channel ratio **{cpu['channel']['p50_ms']/gpu['channel']['p50_ms']:.2f}×**. Mean retained paths CPU/CUDA: {cp:.1f}/{gp:.1f}. This is end-to-end hybrid performance; filters/ADC and host/device transfers remain included.")
     if not any({'cpu','cuda'}<=v.keys() for v in paired.values()): lines.append('No complete CPU/CUDA pair is available.')
+    lines+=['','## Renderer comparison','',
+        '| Case | Renderer | Median rendering including transfers | Median service |',
+        '|---|---|---:|---:|']
+    for path,data in metrics:
+        renderer=data['arguments'].get('renderer','numpy')
+        duration=data.get('rendering',{}).get('p50_ms')
+        label=f'{duration:.3f} ms' if duration is not None else 'not recorded'
+        lines.append(f"| {path.stem} | {renderer} | {label} | {data['service']['p50_ms']:.3f} ms |")
+    lines+=['','Direct rendering retains all valid paths and their independent Dopplers. Default tiles: 128 paths × 32 recurrent samples; FP64 arithmetic with analytic phase reinitialization every sample tile. Temporary contribution buffers hold one path tile × the receive window, not all scene paths. See direct_renderer_correctness task for GPU numerical checks.','']
     lines+=['','## Separate instrumented profiles','',
         'These instrumented runs are excluded from the performance table. CUDA-event sums are recorded device operation time, not critical-path latency. Host ranges are inclusive and nested; do not add them together.','']
     if not summaries: lines.append('No completed instrumented profiles.')

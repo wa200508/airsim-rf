@@ -1,0 +1,4 @@
+{
+  "devices": {},
+  "note": "One-second nvidia-smi samples; includes other processes and may miss peaks. Not allocated-byte or guaranteed peak VRAM measurement."
+}

@@ -16,9 +16,16 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--output", type=Path, default=Path("lfm_radar.npz"))
     parser.add_argument("--noise", action="store_true", help="Enable thermal noise, 4 dB noise figure")
+    parser.add_argument("--backend", choices=("cpu", "cuda"), default="cpu")
+    parser.add_argument("--renderer", choices=("numpy", "direct-llvm", "direct-cuda"), default="numpy")
     args = parser.parse_args()
+    import drjit as dr
+    import mitsuba as mi
+    if args.backend == "cuda" and not dr.has_backend(dr.JitBackend.CUDA):
+        parser.error("CUDA unavailable; no implicit CPU fallback")
+    mi.set_variant("cuda_ad_mono_polarized" if args.backend == "cuda" else "llvm_ad_mono_polarized")
     config = replace(RadarConfig(), noise_enabled=args.noise)
-    radar = PointTargetRadar(config)
+    radar = PointTargetRadar(config, renderer=args.renderer)
     targets = [PointTarget("target_300m", (300, 0, 50), rcs_m2=1),
                PointTarget("target_600m", (600, 0, 50), rcs_m2=16)]
     capture = radar.capture(targets, position_m=[0, 0, 50], velocity_m_s=[20, 0, 0])
