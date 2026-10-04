@@ -19,10 +19,16 @@ The baseline is a **general sampled-waveform direct path renderer**. Preserve
 all supplied valid paths, their fractional delays, individual Doppler evolution,
 coherent sums and continuous samples at the configured rate. Keep the requested
 scene/channel update cadence. Optimize execution: fuse interpolation, phase
-updates and summation; avoid path-by-sample intermediate writes; reuse source
-buffers; batch work and transfers; keep mandatory processing on-device where
+updates and summation; avoid path-by-sample intermediate writes; batch
+independent jobs and transfers; keep mandatory processing on-device where
 beneficial. Scheduling across one, two or more GPUs is a measured deployment
 choice, not an assumed capacity improvement.
+
+The 100 transmitters are independent. **Do not credit transmitter-buffer or
+transform sharing as an optimization.** Benchmark separate data and storage
+for each transmitter job, with private copies in separate receiver workers.
+Physical coherent summation at a receiver still combines independent signals.
+See [the independent-transmitter experiments and next steps](INDEPENDENT_TX_OPTIMIZATION.md).
 
 Other representations remain research candidates only if they handle the same
 declared workload and numerical accuracy, report their unfavorable cases, and
@@ -123,8 +129,8 @@ bandwidth comes from physical path Doppler and geometry evolution, rather than
 the 2 MHz waveform sample rate. Stationarity boundaries, path appearance and
 occlusion transitions require their own update handling.
 
-Radio LO offsets must be factored separately: apply each transmitter's oscillator
-and resampling once to its waveform, include its delay-dependent LO phase in
+Radio LO offsets must be factored separately: apply a transmitter's oscillator
+and resampling to that job's private waveform, include its delay-dependent LO phase in
 path gains, and apply each receiver's oscillator/resampling once after coherent
 summation. Otherwise a 20 kHz oscillator offset unnecessarily inflates the
 basis needed for a physical channel whose Dopplers are only tens of hertz.
@@ -169,7 +175,7 @@ reconstruction, overlap/history, stateful clocks and receiver filters.
 |---|---|---|
 | Direct per-path interpolation and summation | Yes, with a fractional-delay interpolator and individual phase evolution | CPU, CUDA, OpenCL/SYCL possible. Required general baseline and correctness reference; dense continuous streams need fused execution and full-workload qualification. Our existing direct backend supports analytic tone/LFM descriptors, not arbitrary sample streams yet. |
 | Compact time-varying FIR with SIMD/GPU kernels | Yes; all rays contribute to coefficients that evolve at sample times | Conditional candidate; short-delay performance cannot establish general capacity. Interpolation and temporal approximation must be controlled. |
-| Temporal basis expansion plus overlap-save FFT convolution | Yes; separately filter through each basis channel, then combine with its time-varying basis function | Candidate with explicit dependence on delay support and temporal rank. Reuse TX FFTs and sum transmitters before receiver inverse FFTs. A static block FFT alone does not preserve intra-block Doppler. |
+| Temporal basis expansion plus overlap-save FFT convolution | Yes; separately filter through each basis channel, then combine with its time-varying basis function | Candidate with explicit dependence on delay support and temporal rank. Account for private per-link input transforms and receiver summation. A static block FFT alone does not preserve intra-block Doppler. |
 | Delay/Doppler spreading-grid or low-rank compression | Yes within validated delay/Doppler bounds | Potentially efficient; off-grid delays/Dopplers require interpolation or basis expansions. Simple nearest-bin quantization is not sufficient for coherent data. |
 | Cached geometry and persistent scatterer support | Independent of waveform | Complements every renderer. Reuse static mesh acceleration, candidates and quadrature support; update gains, angles, delays, visibility and Doppler with motion. Cache invalidation and sampling weights matter. |
 | Commodity FPGA channel emulation | Arbitrary input I/Q; small published designs have limited paths/links | Low latency for a few hardware links. Attractive later for hardware-in-the-loop; not the cheapest way to implement 1,000 rich virtual links. |
@@ -301,10 +307,13 @@ headless RF host or a separate display device is useful, but live AirSim with
 its physics/rendering cost.
 
 At 2 MS/s, complex64 transmitter data for 100 sources is **1.6 GB/s** and ten
-receiver outputs are **160 MB/s**. Upload each source once and reuse it across
-receivers. Ten workers independently fetching every source would multiply
-traffic and cost. A single 10 GbE link cannot carry all 100 raw transmitter
-streams continuously; local/shared-memory generation is the low-cost default.
+receiver outputs are **160 MB/s** for one complex64 stream per receiver.
+Under the independent-buffer benchmark, each of ten receiver workers pays for
+its own 100 input streams: **16 GB/s aggregate input traffic**, without sharing
+credit. A single 10 GbE link cannot carry even one worker's 1.6 GB/s payload.
+Private local generation or suitably provisioned transport must be measured;
+neither makes independent input generation or transfers free. Persistent
+private device buffers can avoid allocation churn without aliasing input data.
 Do not continuously archive every intermediate. Record selected outputs when
 needed and include actual RF skill consumption in delivery-latency tests.
 
@@ -323,8 +332,8 @@ needed and include actual RF skill consumption in delivery-latency tests.
    declared path count, delay and Doppler ranges, not only this terrain case.
 3. **Compare general algorithms at equal fidelity.** Evaluate direct rendering,
    time-varying FIR and temporal-basis FFT methods against the same stress suite.
-   Report costs as delay support and Doppler complexity grow. Share each TX
-   waveform across receivers and retain all required input/filter history.
+   Report costs as delay support and Doppler complexity grow. Retain private
+   input buffers/transforms and all required input/filter history for each job.
    Approximation error and any extra lookahead belong in the results.
 4. **Remove CPU work from the critical path.** Batch proposals/visibility tests,
    reuse scene acceleration and candidates, keep paths/channel state on-device,
@@ -353,8 +362,11 @@ also depends on memory reuse and fusion.
 For temporal-basis FFT rendering, an illustrative 512-point block with 18-tap
 support produces 495 valid samples. Four basis terms, 100 TX and 10 RX require
 about 8.3 billion complex MACs/s for the frequency-domain link products, roughly
-66 GFLOP/s, before FFT/channel setup and other stages. TX transforms are reused;
-RX transforms are needed per receiver/basis, rather than per link. Four basis
+66 GFLOP/s, before FFT/channel setup and other stages. With private input
+transforms for all 1,000 directed links, forward FFTs add roughly 93 GFLOP/s
+using the rough `5 * K * log2(K)` operation estimate; they are not shared.
+RX inverse transforms are needed per receiver/basis after coherent summation.
+Four basis
 terms are an illustration, not a qualified rank for every scene. These are
 operation counts, not measured latency estimates. They describe only that illustrative rank/support choice. Neither those
 counts nor this scene's compactness establish the required general runtime.

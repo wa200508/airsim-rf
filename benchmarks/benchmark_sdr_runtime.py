@@ -19,6 +19,7 @@ def main():
     p.add_argument('--renderer', choices=('numpy', 'direct-llvm', 'direct-cuda'), default='numpy')
     p.add_argument('--path-tile', type=int, default=128)
     p.add_argument('--sample-tile', type=int, default=32)
+    p.add_argument('--accumulation', choices=('partial', 'local'), default='partial')
     p.add_argument("--profile", action="store_true", help="Separate instrumented Dr.Jit event/NVTX run")
     p.add_argument("--threads", type=int, default=2)
     p.add_argument('--output', type=Path, required=True)
@@ -72,7 +73,7 @@ def main():
         rx_clocks[name] = [RadioClock(5, -.7), RadioClock(-10, .4)][i]
     receiver = SDRNetworkReceiver(scene, emitters, PlutoSDRProfile(), clocks=rx_clocks,
         samples_per_link=args.samples_per_link, renderer=args.renderer,
-        path_tile=args.path_tile, sample_tile=args.sample_tile)
+        path_tile=args.path_tile, sample_tile=args.sample_tile, accumulation=args.accumulation)
     preparation_ms = 1000*(perf_counter()-start)
     positions, velocities = np.vstack((tx_pos, rx_pos)), np.vstack((tx_vel, rx_vel))
 

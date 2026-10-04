@@ -150,7 +150,7 @@ class SDRNetworkReceiver:
     def __init__(self, scene, emitters: dict[str, SDREmitter],
                  profile=PlutoSDRProfile(), *, clocks=None, path_solver="first-order-scattering",
                  max_depth=1, samples_per_link=1028, seed=42, renderer="numpy",
-                 path_tile=128, sample_tile=32):
+                 path_tile=128, sample_tile=32, accumulation="partial"):
         if not emitters or set(emitters) != set(scene.transmitters):
             raise ValueError("Supply one emitter for every scene transmitter")
         if not scene.receivers:
@@ -161,6 +161,9 @@ class SDRNetworkReceiver:
             raise ValueError("At least two attempted samples per link required")
         if renderer not in ("numpy", "direct-llvm", "direct-cuda"):
             raise ValueError("renderer must be numpy, direct-llvm or direct-cuda")
+        if accumulation not in ("partial", "local"):
+            raise ValueError("accumulation must be partial or local")
+        self.accumulation = accumulation
         if renderer != "numpy":
             from .rendering import ToneWaveform, LFMChirpWaveform
             if any(not isinstance(e.waveform, (ToneWaveform, LFMChirpWaveform)) for e in emitters.values()):
@@ -263,7 +266,8 @@ class SDRNetworkReceiver:
                             frequency_offset_hz=self.profile.carrier_hz*emitter.clock.error_ppm*1e-6,
                             phase_offset_rad=emitter.clock.phase_rad,
                             backend=self.renderer.removeprefix("direct-"),
-                            path_tile=self.path_tile, sample_tile=self.sample_tile) * lo
+                            path_tile=self.path_tile, sample_tile=self.sample_tile,
+                            accumulation=self.accumulation) * lo
                     self.last_render_ms += 1000*(perf_counter()-render_start)
                     total += signal
                 with profile_range("rf.iq.link_diagnostics"):

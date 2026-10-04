@@ -1,0 +1,827 @@
+{
+  "arguments": {
+    "tx": 100,
+    "rx": 1,
+    "iterations": 10,
+    "warmup": 2,
+    "samples": 4096,
+    "samples_per_link": 1028,
+    "backend": "cpu",
+    "renderer": "direct-llvm",
+    "path_tile": 128,
+    "sample_tile": 32,
+    "accumulation": "partial",
+    "profile": false,
+    "threads": 2,
+    "output": "research_results/affordable_realtime/sdr_partial_cpu.json"
+  },
+  "measurement_mode": "unprofiled_benchmark",
+  "scope": "915 MHz, 2 MS/s, 1 MHz filter, noisy independent-clock Pluto profile; moving mounts over 800-triangle DEM",
+  "timing_includes": "Pose writes, synchronized channel/NumPy export, per-path IQ, per-link diagnostic filters, receive noise/filter and ADC conversion",
+  "timing_excludes": [
+    "AirSim RPC/physics",
+    "transport",
+    "queueing",
+    "storage",
+    "plots",
+    "RF skill processing"
+  ],
+  "initial_tx_positions_m": [
+    [
+      0.0,
+      -25.0,
+      10.0
+    ],
+    [
+      0.0,
+      -24.494949494949495,
+      10.0
+    ],
+    [
+      0.0,
+      -23.98989898989899,
+      10.0
+    ],
+    [
+      0.0,
+      -23.484848484848484,
+      10.0
+    ],
+    [
+      0.0,
+      -22.97979797979798,
+      10.0
+    ],
+    [
+      0.0,
+      -22.474747474747474,
+      10.0
+    ],
+    [
+      0.0,
+      -21.96969696969697,
+      10.0
+    ],
+    [
+      0.0,
+      -21.464646464646464,
+      10.0
+    ],
+    [
+      0.0,
+      -20.95959595959596,
+      10.0
+    ],
+    [
+      0.0,
+      -20.454545454545453,
+      10.0
+    ],
+    [
+      0.0,
+      -19.949494949494948,
+      10.0
+    ],
+    [
+      0.0,
+      -19.444444444444443,
+      10.0
+    ],
+    [
+      0.0,
+      -18.939393939393938,
+      10.0
+    ],
+    [
+      0.0,
+      -18.434343434343432,
+      10.0
+    ],
+    [
+      0.0,
+      -17.929292929292927,
+      10.0
+    ],
+    [
+      0.0,
+      -17.424242424242422,
+      10.0
+    ],
+    [
+      0.0,
+      -16.919191919191917,
+      10.0
+    ],
+    [
+      0.0,
+      -16.41414141414141,
+      10.0
+    ],
+    [
+      0.0,
+      -15.909090909090908,
+      10.0
+    ],
+    [
+      0.0,
+      -15.404040404040403,
+      10.0
+    ],
+    [
+      0.0,
+      -14.898989898989898,
+      10.0
+    ],
+    [
+      0.0,
+      -14.393939393939393,
+      10.0
+    ],
+    [
+      0.0,
+      -13.888888888888888,
+      10.0
+    ],
+    [
+      0.0,
+      -13.383838383838382,
+      10.0
+    ],
+    [
+      0.0,
+      -12.878787878787879,
+      10.0
+    ],
+    [
+      0.0,
+      -12.373737373737374,
+      10.0
+    ],
+    [
+      0.0,
+      -11.868686868686869,
+      10.0
+    ],
+    [
+      0.0,
+      -11.363636363636363,
+      10.0
+    ],
+    [
+      0.0,
+      -10.858585858585858,
+      10.0
+    ],
+    [
+      0.0,
+      -10.353535353535353,
+      10.0
+    ],
+    [
+      0.0,
+      -9.848484848484848,
+      10.0
+    ],
+    [
+      0.0,
+      -9.343434343434343,
+      10.0
+    ],
+    [
+      0.0,
+      -8.838383838383837,
+      10.0
+    ],
+    [
+      0.0,
+      -8.333333333333332,
+      10.0
+    ],
+    [
+      0.0,
+      -7.828282828282827,
+      10.0
+    ],
+    [
+      0.0,
+      -7.323232323232322,
+      10.0
+    ],
+    [
+      0.0,
+      -6.818181818181817,
+      10.0
+    ],
+    [
+      0.0,
+      -6.313131313131311,
+      10.0
+    ],
+    [
+      0.0,
+      -5.808080808080806,
+      10.0
+    ],
+    [
+      0.0,
+      -5.303030303030301,
+      10.0
+    ],
+    [
+      0.0,
+      -4.797979797979796,
+      10.0
+    ],
+    [
+      0.0,
+      -4.292929292929291,
+      10.0
+    ],
+    [
+      0.0,
+      -3.7878787878787854,
+      10.0
+    ],
+    [
+      0.0,
+      -3.28282828282828,
+      10.0
+    ],
+    [
+      0.0,
+      -2.777777777777775,
+      10.0
+    ],
+    [
+      0.0,
+      -2.27272727272727,
+      10.0
+    ],
+    [
+      0.0,
+      -1.7676767676767646,
+      10.0
+    ],
+    [
+      0.0,
+      -1.2626262626262594,
+      10.0
+    ],
+    [
+      0.0,
+      -0.7575757575757578,
+      10.0
+    ],
+    [
+      0.0,
+      -0.2525252525252526,
+      10.0
+    ],
+    [
+      0.0,
+      0.2525252525252526,
+      10.0
+    ],
+    [
+      0.0,
+      0.7575757575757578,
+      10.0
+    ],
+    [
+      0.0,
+      1.262626262626263,
+      10.0
+    ],
+    [
+      0.0,
+      1.7676767676767682,
+      10.0
+    ],
+    [
+      0.0,
+      2.2727272727272734,
+      10.0
+    ],
+    [
+      0.0,
+      2.7777777777777786,
+      10.0
+    ],
+    [
+      0.0,
+      3.2828282828282838,
+      10.0
+    ],
+    [
+      0.0,
+      3.787878787878789,
+      10.0
+    ],
+    [
+      0.0,
+      4.292929292929294,
+      10.0
+    ],
+    [
+      0.0,
+      4.797979797979799,
+      10.0
+    ],
+    [
+      0.0,
+      5.3030303030303045,
+      10.0
+    ],
+    [
+      0.0,
+      5.80808080808081,
+      10.0
+    ],
+    [
+      0.0,
+      6.313131313131315,
+      10.0
+    ],
+    [
+      0.0,
+      6.81818181818182,
+      10.0
+    ],
+    [
+      0.0,
+      7.323232323232325,
+      10.0
+    ],
+    [
+      0.0,
+      7.8282828282828305,
+      10.0
+    ],
+    [
+      0.0,
+      8.333333333333336,
+      10.0
+    ],
+    [
+      0.0,
+      8.838383838383841,
+      10.0
+    ],
+    [
+      0.0,
+      9.343434343434346,
+      10.0
+    ],
+    [
+      0.0,
+      9.848484848484851,
+      10.0
+    ],
+    [
+      0.0,
+      10.353535353535356,
+      10.0
+    ],
+    [
+      0.0,
+      10.858585858585862,
+      10.0
+    ],
+    [
+      0.0,
+      11.363636363636367,
+      10.0
+    ],
+    [
+      0.0,
+      11.868686868686872,
+      10.0
+    ],
+    [
+      0.0,
+      12.373737373737377,
+      10.0
+    ],
+    [
+      0.0,
+      12.878787878787882,
+      10.0
+    ],
+    [
+      0.0,
+      13.383838383838388,
+      10.0
+    ],
+    [
+      0.0,
+      13.888888888888893,
+      10.0
+    ],
+    [
+      0.0,
+      14.393939393939398,
+      10.0
+    ],
+    [
+      0.0,
+      14.898989898989903,
+      10.0
+    ],
+    [
+      0.0,
+      15.404040404040408,
+      10.0
+    ],
+    [
+      0.0,
+      15.909090909090914,
+      10.0
+    ],
+    [
+      0.0,
+      16.41414141414142,
+      10.0
+    ],
+    [
+      0.0,
+      16.919191919191924,
+      10.0
+    ],
+    [
+      0.0,
+      17.42424242424243,
+      10.0
+    ],
+    [
+      0.0,
+      17.929292929292934,
+      10.0
+    ],
+    [
+      0.0,
+      18.43434343434344,
+      10.0
+    ],
+    [
+      0.0,
+      18.939393939393945,
+      10.0
+    ],
+    [
+      0.0,
+      19.44444444444445,
+      10.0
+    ],
+    [
+      0.0,
+      19.949494949494955,
+      10.0
+    ],
+    [
+      0.0,
+      20.45454545454546,
+      10.0
+    ],
+    [
+      0.0,
+      20.959595959595966,
+      10.0
+    ],
+    [
+      0.0,
+      21.46464646464647,
+      10.0
+    ],
+    [
+      0.0,
+      21.969696969696976,
+      10.0
+    ],
+    [
+      0.0,
+      22.47474747474748,
+      10.0
+    ],
+    [
+      0.0,
+      22.979797979797986,
+      10.0
+    ],
+    [
+      0.0,
+      23.484848484848484,
+      10.0
+    ],
+    [
+      0.0,
+      23.98989898989899,
+      10.0
+    ],
+    [
+      0.0,
+      24.494949494949495,
+      10.0
+    ],
+    [
+      0.0,
+      25.0,
+      10.0
+    ]
+  ],
+  "initial_rx_positions_m": [
+    [
+      -30.0,
+      -10.0,
+      14.0
+    ]
+  ],
+  "capture_duration_ms": 2.048,
+  "filter_warmup_samples": 256,
+  "preparation_ms": 130.9761599986814,
+  "first_capture": {
+    "epoch_s": 0.0,
+    "service_ms": 473.5877380007878,
+    "pose_ms": 0.31180999940261245,
+    "capture_ms": 473.2756080047693,
+    "channel_ms": 86.89637901261449,
+    "cpu_iq_receiver_ms": 386.3792289921548,
+    "iq_receiver_ms": 386.3792289921548,
+    "render_ms": 361.82036096579395,
+    "stage_timings": {
+      "proposal_table_prepare_ms": 7.946233992697671,
+      "host_numpy_sampling_ms": 19.970266002928838
+    },
+    "retained_paths": 42503,
+    "clipping_fraction_max": 0.0
+  },
+  "first_capture_note": "New process with existing on-disk JIT cache; imports excluded; not a cache-cleared cold-start benchmark",
+  "service": {
+    "p50_ms": 461.35894100007135,
+    "p95_ms": 1045.6960985946353,
+    "mean_ms": 631.7349773948081,
+    "max_ms": 1074.7497959819157
+  },
+  "channel": {
+    "p50_ms": 84.02803950593807,
+    "p95_ms": 93.82295846153283,
+    "mean_ms": 83.93073930637911,
+    "max_ms": 94.99360600602813
+  },
+  "cpu_iq_receiver": {
+    "p50_ms": 376.7658709984971,
+    "p95_ms": 956.6338662276393,
+    "mean_ms": 547.5058509939117,
+    "max_ms": 982.0724179735407
+  },
+  "iq_receiver": {
+    "p50_ms": 376.7658709984971,
+    "p95_ms": 956.6338662276393,
+    "mean_ms": 547.5058509939117,
+    "max_ms": 982.0724179735407
+  },
+  "rendering": {
+    "p50_ms": 355.5664255400188,
+    "p95_ms": 930.4823982180096,
+    "mean_ms": 525.0775617168983,
+    "max_ms": 954.549898946425
+  },
+  "serial_wall_s": 6.318082505022176,
+  "sustained_updates_hz": 1.5827586917472363,
+  "receiver_blocks_per_second": 1.5827586917472363,
+  "deadline_misses": {
+    "120": 10,
+    "200": 10
+  },
+  "stage_timings": {
+    "proposal_table_prepare_ms": {
+      "p50_ms": 2.8440760070225224,
+      "p95_ms": 3.299689147388562,
+      "mean_ms": 2.921329005039297,
+      "max_ms": 3.4500400070101023
+    },
+    "host_numpy_sampling_ms": {
+      "p50_ms": 16.820131495478563,
+      "p95_ms": 17.972546837700065,
+      "mean_ms": 16.91018329001963,
+      "max_ms": 18.023651995463297
+    }
+  },
+  "retained_paths": {
+    "min": 42513,
+    "max": 42526
+  },
+  "host": {
+    "cpu_count": 3,
+    "cpu_quota": "200000 100000",
+    "memory_limit_bytes": "8589934592",
+    "drjit_threads": 2,
+    "peak_rss_mib": 303.5546875,
+    "cuda_available": 0
+  },
+  "versions": {
+    "sionna_rt": "2.2.0",
+    "mitsuba": "3.9.1",
+    "drjit": "1.5.0",
+    "backend": "llvm_ad_mono_polarized"
+  },
+  "gpu_workload_per_receiver": {
+    "topology": "one GPU per physical receiver; all transmitters on every receiver worker",
+    "gpu_count": 10,
+    "transmitters_per_gpu": 100,
+    "receivers_per_gpu": 1,
+    "diffuse_attempts_per_gpu_per_pulse": 102800,
+    "visibility_queries_per_gpu_per_pulse_upper_bound": 365700,
+    "visibility_queries_fleet_per_pulse_upper_bound": 3657000,
+    "candidate_paths_per_gpu_upper_bound": 182900,
+    "compact_channel_bytes_per_gpu_per_pulse_upper_bound": 2926400,
+    "compact_channel_bytes_per_gpu_per_second_upper_bound": 585280000,
+    "pulse_hz": 200,
+    "pulse_budget_ms": 5.0,
+    "physics_hz": 120,
+    "physics_budget_ms": 8.333333333333334,
+    "ray_only_required_queries_per_second_at_pulse_rate": 73140000,
+    "ray_only_required_queries_per_second_at_physics_rate": 43884000,
+    "vram_requirement": "unmeasured; compact coefficients are not total device memory"
+  },
+  "conditional_gpu_ray_stage": [
+    {
+      "assumed_effective_scene_queries_per_second": 100000000.0,
+      "ray_stage_ms_at_upper_bound_query_count": 3.657,
+      "unchanged_measured_host_sampling_plus_ray_stage_ms": 20.477131495478563
+    },
+    {
+      "assumed_effective_scene_queries_per_second": 250000000.0,
+      "ray_stage_ms_at_upper_bound_query_count": 1.4628,
+      "unchanged_measured_host_sampling_plus_ray_stage_ms": 18.282931495478564
+    },
+    {
+      "assumed_effective_scene_queries_per_second": 1000000000.0,
+      "ray_stage_ms_at_upper_bound_query_count": 0.3657,
+      "unchanged_measured_host_sampling_plus_ray_stage_ms": 17.185831495478563
+    }
+  ],
+  "profile_note": "Profiled serial throughput includes event/history instrumentation; use separate unprofiled runs for performance.",
+  "gpu_note": "Renderer is selected independently of propagation backend. Direct CUDA includes per-link host/device transfers; proposal draws, channel export and front-end filters/ADC remain CPU. Legacy cpu_iq_receiver fields alias the mixed iq_receiver stage.",
+  "samples": [
+    {
+      "epoch_s": 0.015,
+      "service_ms": 728.0195379862562,
+      "pose_ms": 0.25989298592321575,
+      "capture_ms": 727.7594750048593,
+      "channel_ms": 64.98759498936124,
+      "cpu_iq_receiver_ms": 662.771880015498,
+      "iq_receiver_ms": 662.771880015498,
+      "render_ms": 639.1062958864495,
+      "stage_timings": {
+        "proposal_table_prepare_ms": 2.8840849990956485,
+        "host_numpy_sampling_ms": 16.93814099417068
+      },
+      "retained_paths": 42513,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.02,
+      "service_ms": 426.94502498488873,
+      "pose_ms": 0.2541949797887355,
+      "capture_ms": 426.69058899628,
+      "channel_ms": 83.67806999012828,
+      "cpu_iq_receiver_ms": 343.0125190061517,
+      "iq_receiver_ms": 343.0125190061517,
+      "render_ms": 322.31093023438007,
+      "stage_timings": {
+        "proposal_table_prepare_ms": 2.797668013954535,
+        "host_numpy_sampling_ms": 17.19712300109677
+      },
+      "retained_paths": 42514,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.025,
+      "service_ms": 483.97437800304033,
+      "pose_ms": 0.5219299928285182,
+      "capture_ms": 483.45214800792746,
+      "channel_ms": 85.77781802159734,
+      "cpu_iq_receiver_ms": 397.6743299863301,
+      "iq_receiver_ms": 397.6743299863301,
+      "render_ms": 376.12527410965413,
+      "stage_timings": {
+        "proposal_table_prepare_ms": 2.68475100165233,
+        "host_numpy_sampling_ms": 17.91008497821167
+      },
+      "retained_paths": 42517,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.03,
+      "service_ms": 417.9342810239177,
+      "pose_ms": 0.2531240170355886,
+      "capture_ms": 417.68098701140843,
+      "channel_ms": 84.95607698569074,
+      "cpu_iq_receiver_ms": 332.7249100257177,
+      "iq_receiver_ms": 332.7249100257177,
+      "render_ms": 313.02276204223745,
+      "stage_timings": {
+        "proposal_table_prepare_ms": 3.097590000834316,
+        "host_numpy_sampling_ms": 16.68606899329461
+      },
+      "retained_paths": 42516,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.035,
+      "service_ms": 438.7435039971024,
+      "pose_ms": 0.2872140030376613,
+      "capture_ms": 438.4561000042595,
+      "channel_ms": 82.59868799359538,
+      "cpu_iq_receiver_ms": 355.8574120106641,
+      "iq_receiver_ms": 355.8574120106641,
+      "render_ms": 335.0075769703835,
+      "stage_timings": {
+        "proposal_table_prepare_ms": 2.69256200408563,
+        "host_numpy_sampling_ms": 16.702121996786445
+      },
+      "retained_paths": 42519,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.04,
+      "service_ms": 425.6714259972796,
+      "pose_ms": 0.31396301346831024,
+      "capture_ms": 425.3571929875761,
+      "channel_ms": 94.99360600602813,
+      "cpu_iq_receiver_ms": 330.363586981548,
+      "iq_receiver_ms": 330.363586981548,
+      "render_ms": 311.4336501748767,
+      "stage_timings": {
+        "proposal_table_prepare_ms": 3.4500400070101023,
+        "host_numpy_sampling_ms": 18.023651995463297
+      },
+      "retained_paths": 42520,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.045,
+      "service_ms": 897.6888969773427,
+      "pose_ms": 0.2827269781846553,
+      "capture_ms": 897.4060399923474,
+      "channel_ms": 82.37218300928362,
+      "cpu_iq_receiver_ms": 815.0338569830637,
+      "iq_receiver_ms": 815.0338569830637,
+      "render_ms": 788.5224078490864,
+      "stage_timings": {
+        "proposal_table_prepare_ms": 2.8040670149493963,
+        "host_numpy_sampling_ms": 16.410030977567658
+      },
+      "retained_paths": 42523,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.05,
+      "service_ms": 1074.7497959819157,
+      "pose_ms": 0.28506998205557466,
+      "capture_ms": 1074.4645849918015,
+      "channel_ms": 92.3921670182608,
+      "cpu_iq_receiver_ms": 982.0724179735407,
+      "iq_receiver_ms": 982.0724179735407,
+      "render_ms": 954.549898946425,
+      "stage_timings": {
+        "proposal_table_prepare_ms": 3.0028510082047433,
+        "host_numpy_sampling_ms": 16.93884198903106
+      },
+      "retained_paths": 42525,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.055,
+      "service_ms": 1010.1860240101814,
+      "pose_ms": 0.2655110147316009,
+      "capture_ms": 1009.9203120043967,
+      "channel_ms": 84.37800902174786,
+      "cpu_iq_receiver_ms": 925.5423029826488,
+      "iq_receiver_ms": 925.5423029826488,
+      "render_ms": 901.0665639943909,
+      "stage_timings": {
+        "proposal_table_prepare_ms": 3.115926985628903,
+        "host_numpy_sampling_ms": 16.251856985036284
+      },
+      "retained_paths": 42523,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.06,
+      "service_ms": 413.43690498615615,
+      "pose_ms": 0.2582710003480315,
+      "capture_ms": 413.1784740020521,
+      "channel_ms": 83.1731800280977,
+      "cpu_iq_receiver_ms": 330.0052939739544,
+      "iq_receiver_ms": 330.0052939739544,
+      "render_ms": 309.6302569610998,
+      "stage_timings": {
+        "proposal_table_prepare_ms": 2.6837490149773657,
+        "host_numpy_sampling_ms": 16.043910989537835
+      },
+      "retained_paths": 42526,
+      "clipping_fraction_max": 0.0
+    }
+  ]
+}

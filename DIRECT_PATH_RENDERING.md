@@ -47,6 +47,15 @@ plus recurrence state, reduction/output arrays and runtime allocations.
 Work remains O(paths × samples). This implementation is a correctness-first
 baseline; tile sizes and launch/reduction overhead require GPU profiling.
 
+An experimental `render_paths(..., accumulation="local")` option replaces the
+contribution buffers with SIMD-packet/CUDA-warp local pre-reduction followed by
+atomic output addition. It preserves the same waveform, FP64 arithmetic, valid
+paths and individual Dopplers. It can introduce atomic contention and small
+nondeterministic summation-rounding differences; the default remains
+`"partial"`. `SDRNetworkReceiver(..., accumulation="local")` exposes it for
+comparison with the full receive chain. No transmitter buffers are shared.
+See [the measurements and profiling commands](INDEPENDENT_TX_OPTIMIZATION.md).
+
 Arbitrary Python waveform callbacks continue to work with the existing NumPy
 renderer. They are rejected explicitly by the direct backend. Sampled comms
 waveforms with fractional-delay interpolation are a subsequent extension;

@@ -15,7 +15,8 @@ def require_cuda_for_cuda_cases(request):
 
 @pytest.mark.parametrize('backend', ['numpy', 'llvm', 'cuda'])
 @pytest.mark.parametrize('waveform', [ToneWaveform(12340., .3), LFMChirpWaveform(40000., .002)])
-def test_paths_match_independent_analytic_equation(backend, waveform):
+@pytest.mark.parametrize('accumulation', ['partial', 'local'])
+def test_paths_match_independent_analytic_equation(backend, waveform, accumulation):
     if backend == 'cuda':
         import drjit as dr
         if not dr.has_backend(dr.JitBackend.CUDA):
@@ -30,29 +31,33 @@ def test_paths_match_independent_analytic_equation(backend, waveform):
                    for g, delay, fd in zip(gains[:3], delays[:3], dopplers[:3]))
     actual = render_paths(gains, delays, dopplers, waveform, sample_rate_hz=fs,
                           num_samples=count, sim_time_ns=start_ns, channel_epoch_ns=epoch_ns,
-                          backend=backend, path_tile=2, sample_tile=17)
+                          backend=backend, path_tile=2, sample_tile=17,
+                          accumulation=accumulation)
     np.testing.assert_allclose(actual, expected, atol=3e-12, rtol=3e-12)
 
 
 @pytest.mark.parametrize('backend', ['numpy', 'llvm', 'cuda'])
-def test_distinct_dopplers_at_same_delay_remain_distinct(backend):
+@pytest.mark.parametrize('accumulation', ['partial', 'local'])
+def test_distinct_dopplers_at_same_delay_remain_distinct(backend, accumulation):
     fs = 100000.
     n = np.arange(1024)
     # Equal delays and opposing coefficients cancel only at the initial epoch.
     actual = render_paths([1., -1.], [0., 0.], [1000., -700.], ToneWaveform(0.),
-                          sample_rate_hz=fs, num_samples=n.size, backend=backend)
+                          sample_rate_hz=fs, num_samples=n.size, backend=backend,
+                          accumulation=accumulation)
     expected = np.exp(2j*np.pi*1000*n/fs)-np.exp(-2j*np.pi*700*n/fs)
     np.testing.assert_allclose(actual, expected, atol=2e-12)
     assert abs(actual[0]) < 1e-12 and np.max(abs(actual)) > 1.9
 
 
 @pytest.mark.parametrize('backend', ['numpy', 'llvm', 'cuda'])
-def test_large_epoch_lfm_and_doppler_do_not_reset_between_blocks(backend):
+@pytest.mark.parametrize('accumulation', ['partial', 'local'])
+def test_large_epoch_lfm_and_doppler_do_not_reset_between_blocks(backend, accumulation):
     epoch = 1790976000000000000
     fs = 1000000.
     wave = LFMChirpWaveform(300000., .002, reference_time_ns=epoch)
     kw = dict(sample_rate_hz=fs, channel_epoch_ns=epoch, backend=backend,
-              path_tile=2, sample_tile=31)
+              path_tile=2, sample_tile=31, accumulation=accumulation)
     args = ([1+.2j, .3j], [1.37/fs, 10.25/fs], [1234., -300.], wave)
     whole = render_paths(*args, num_samples=1700, sim_time_ns=epoch, **kw)
     first = render_paths(*args, num_samples=731, sim_time_ns=epoch, **kw)
@@ -86,7 +91,8 @@ def test_empty_padding_and_invalid_inputs():
         render_paths([1.], [0.], [0.], lambda t: t, **kw)
 
 
-def test_direct_network_renderer_matches_existing_physical_frontend():
+@pytest.mark.parametrize('accumulation', ['partial', 'local'])
+def test_direct_network_renderer_matches_existing_physical_frontend(accumulation):
     from airsim_rf.sdr import PlutoSDRProfile, RadioClock, SDREmitter, SDRNetworkReceiver
     from test_sdr import free_space_scene
     def capture(renderer):
@@ -96,7 +102,8 @@ def test_direct_network_renderer_matches_existing_physical_frontend():
         emitters = {'tx0': SDREmitter(ToneWaveform(80000.), clock=RadioClock(10, .4)),
                     'tx1': SDREmitter(ToneWaveform(-130000.), clock=RadioClock(-7, -.8))}
         receiver = SDRNetworkReceiver(scene, emitters, PlutoSDRProfile(noise_enabled=False),
-                    clocks={'rx0': RadioClock(-20, .8)}, max_depth=0, renderer=renderer)
+                    clocks={'rx0': RadioClock(-20, .8)}, max_depth=0, renderer=renderer,
+                    accumulation=accumulation)
         return receiver.capture(123456789, num_samples=513)['rx0']
     expected, actual = capture('numpy'), capture('direct-llvm')
     np.testing.assert_allclose(actual.input_iq_volts, expected.input_iq_volts, rtol=3e-7, atol=2e-10)

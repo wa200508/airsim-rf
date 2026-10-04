@@ -1,0 +1,409 @@
+{
+  "arguments": {
+    "backend": "llvm",
+    "links": 4,
+    "paths": 1028,
+    "samples": 16667,
+    "sample_rate": 2000000.0,
+    "max_delay_us": 100.0,
+    "max_doppler_hz": 2500.0,
+    "path_tiles": [
+      128,
+      1028
+    ],
+    "sample_tile": 32,
+    "warmup": 2,
+    "iterations": 10,
+    "threads": 2,
+    "seed": 20261004,
+    "output": "research_results/affordable_realtime/accumulation_cpu.json"
+  },
+  "scope": "Standalone FP64 analytic tone/LFM direct renderer; independent directed-link jobs",
+  "includes": [
+    "host phase preparation",
+    "per-link allocation/upload",
+    "synchronized execution/reduction",
+    "per-link output download"
+  ],
+  "excludes": [
+    "arbitrary sampled inputs/interpolation",
+    "propagation",
+    "receiver frontend",
+    "AirSim/AMS",
+    "transport",
+    "queueing"
+  ],
+  "no_transmitter_buffer_sharing": true,
+  "validation_links": 4,
+  "contributions_per_capture": 68534704,
+  "deadline_ms": 8.333333333333334,
+  "first_run_note": "First call for this configuration in this process; existing disk JIT cache is retained",
+  "host": {
+    "cpu_count": 3,
+    "drjit_threads": 2,
+    "cpu_quota": "200000 100000",
+    "peak_rss_mib": 416.58203125
+  },
+  "drjit_version": "1.5.0",
+  "gpu_identity": "nvidia-smi unavailable",
+  "source_sha256": {
+    "src/airsim_rf/rendering.py": "676ba1b1dbeb6c2985b51cbeac96a3592ad7f852e891ac5b4cbcee36d1b02bc5",
+    "benchmarks/benchmark_render_accumulation.py": "c9a248ee5c8a121c11b654120e161df6418f729801fa9086b94836ff9101a9d1"
+  },
+  "source_commit": "63b7680e3ebf4fe4d8a8c9d0d34490d3ec298be7",
+  "source_dirty": true,
+  "cases": [
+    {
+      "waveform": "tone",
+      "accumulation": "partial",
+      "path_tile": 128,
+      "first_run_ms": 203.21370498277247,
+      "timed_ms": [
+        440.07706199772656,
+        252.8572519950103,
+        222.82620900659822,
+        414.61794602219015,
+        452.52408299711533,
+        439.09664600505494,
+        332.8534399915952,
+        211.1195939942263,
+        202.14518599095754,
+        198.89408999006264
+      ],
+      "p50_ms": 292.85534599330276,
+      "p95_ms": 446.9229235473904,
+      "max_ms": 452.52408299711533,
+      "output_checksum_range": [
+        -0.7173418023509617,
+        -0.7173418023509617
+      ],
+      "reference_errors": [
+        {
+          "rms_relative": 3.821936979931106e-13,
+          "max_absolute": 1.878746020174485e-12
+        },
+        {
+          "rms_relative": 6.874189498597388e-13,
+          "max_absolute": 4.163978482828305e-12
+        },
+        {
+          "rms_relative": 6.226307326335288e-13,
+          "max_absolute": 2.560199919818031e-12
+        },
+        {
+          "rms_relative": 1.8031938849215355e-13,
+          "max_absolute": 9.606659276533709e-13
+        }
+      ],
+      "explicit_contribution_buffer_peak_bytes": 34134016
+    },
+    {
+      "waveform": "tone",
+      "accumulation": "local",
+      "path_tile": 128,
+      "first_run_ms": 50.90022599324584,
+      "timed_ms": [
+        51.720154006034136,
+        50.69530400214717,
+        50.304697011597455,
+        50.04889899282716,
+        50.85115399560891,
+        50.09048100328073,
+        51.91091599408537,
+        49.95448101544753,
+        50.211991008836776,
+        50.11376499896869
+      ],
+      "p50_ms": 50.258344010217115,
+      "p95_ms": 51.825073099462315,
+      "max_ms": 51.91091599408537,
+      "output_checksum_range": [
+        -0.7173418023509619,
+        -0.7173418023509619
+      ],
+      "reference_errors": [
+        {
+          "rms_relative": 3.821902737562646e-13,
+          "max_absolute": 1.878984130182387e-12
+        },
+        {
+          "rms_relative": 6.874203496445628e-13,
+          "max_absolute": 4.164405644377651e-12
+        },
+        {
+          "rms_relative": 6.22630474682784e-13,
+          "max_absolute": 2.5602585783912364e-12
+        },
+        {
+          "rms_relative": 1.8031640127708927e-13,
+          "max_absolute": 9.610422048869465e-13
+        }
+      ],
+      "explicit_contribution_buffer_peak_bytes": 0
+    },
+    {
+      "waveform": "tone",
+      "accumulation": "partial",
+      "path_tile": 1028,
+      "first_run_ms": 335.5399629799649,
+      "timed_ms": [
+        333.1876530137379,
+        359.8694430256728,
+        359.0693960140925,
+        371.7082339862827,
+        304.44444197928533,
+        303.7969169963617,
+        302.8027210093569,
+        298.3466870209668,
+        345.6142279901542,
+        292.57428101846017
+      ],
+      "p50_ms": 318.8160474965116,
+      "p95_ms": 366.38077805400826,
+      "max_ms": 371.7082339862827,
+      "output_checksum_range": [
+        -0.7173418023509612,
+        -0.7173418023509612
+      ],
+      "reference_errors": [
+        {
+          "rms_relative": 3.821897657966169e-13,
+          "max_absolute": 1.8790192507491718e-12
+        },
+        {
+          "rms_relative": 6.874198141003449e-13,
+          "max_absolute": 4.163429885724913e-12
+        },
+        {
+          "rms_relative": 6.226276066688947e-13,
+          "max_absolute": 2.560812822086554e-12
+        },
+        {
+          "rms_relative": 1.8031671083179395e-13,
+          "max_absolute": 9.604913570488055e-13
+        }
+      ],
+      "explicit_contribution_buffer_peak_bytes": 274138816
+    },
+    {
+      "waveform": "tone",
+      "accumulation": "local",
+      "path_tile": 1028,
+      "first_run_ms": 47.839645005296916,
+      "timed_ms": [
+        47.96305799391121,
+        47.29569298797287,
+        47.39956700359471,
+        47.13689800701104,
+        47.17043798882514,
+        48.04579998017289,
+        47.367989987833425,
+        47.44424298405647,
+        47.14398999931291,
+        48.25129298842512
+      ],
+      "p50_ms": 47.38377849571407,
+      "p95_ms": 48.158821134711616,
+      "max_ms": 48.25129298842512,
+      "output_checksum_range": [
+        -0.7173418023509619,
+        -0.7173418023509619
+      ],
+      "reference_errors": [
+        {
+          "rms_relative": 3.8219173717147637e-13,
+          "max_absolute": 1.878761630554513e-12
+        },
+        {
+          "rms_relative": 6.874234996283204e-13,
+          "max_absolute": 4.164008846334875e-12
+        },
+        {
+          "rms_relative": 6.22633076913101e-13,
+          "max_absolute": 2.560309653801545e-12
+        },
+        {
+          "rms_relative": 1.8031501496759665e-13,
+          "max_absolute": 9.608547214849517e-13
+        }
+      ],
+      "explicit_contribution_buffer_peak_bytes": 0
+    },
+    {
+      "waveform": "lfm",
+      "accumulation": "partial",
+      "path_tile": 128,
+      "first_run_ms": 187.53418402047828,
+      "timed_ms": [
+        179.05649801832624,
+        181.04475099244155,
+        182.01659398619086,
+        182.5691899866797,
+        182.06959799863398,
+        180.50225998740643,
+        178.41900797793642,
+        189.39330699504353,
+        184.75112799205817,
+        188.51569198886864
+      ],
+      "p50_ms": 182.04309599241242,
+      "p95_ms": 188.99838024226483,
+      "max_ms": 189.39330699504353,
+      "output_checksum_range": [
+        0.5609609840823572,
+        0.5609609840823572
+      ],
+      "reference_errors": [
+        {
+          "rms_relative": 7.904759898825769e-13,
+          "max_absolute": 4.27402225562131e-12
+        },
+        {
+          "rms_relative": 1.060163290680461e-12,
+          "max_absolute": 6.708492367943621e-12
+        },
+        {
+          "rms_relative": 1.467177111910591e-12,
+          "max_absolute": 9.777650313886378e-12
+        },
+        {
+          "rms_relative": 1.3795150098113535e-12,
+          "max_absolute": 8.997112980141945e-12
+        }
+      ],
+      "explicit_contribution_buffer_peak_bytes": 34134016
+    },
+    {
+      "waveform": "lfm",
+      "accumulation": "local",
+      "path_tile": 128,
+      "first_run_ms": 52.144272020086646,
+      "timed_ms": [
+        52.5621680135373,
+        52.20657301833853,
+        52.53145200549625,
+        53.25177000486292,
+        51.08465798548423,
+        52.324105985462666,
+        51.51651499909349,
+        52.96244801138528,
+        52.700511005241424,
+        52.42954200366512
+      ],
+      "p50_ms": 52.480497004580684,
+      "p95_ms": 53.12157510779798,
+      "max_ms": 53.25177000486292,
+      "output_checksum_range": [
+        0.5609609840823575,
+        0.5609609840823575
+      ],
+      "reference_errors": [
+        {
+          "rms_relative": 7.904770322724253e-13,
+          "max_absolute": 4.273860866793901e-12
+        },
+        {
+          "rms_relative": 1.0601663441130047e-12,
+          "max_absolute": 6.708350786193023e-12
+        },
+        {
+          "rms_relative": 1.4671732545120787e-12,
+          "max_absolute": 9.777650313886378e-12
+        },
+        {
+          "rms_relative": 1.3795145297404495e-12,
+          "max_absolute": 8.997012960066765e-12
+        }
+      ],
+      "explicit_contribution_buffer_peak_bytes": 0
+    },
+    {
+      "waveform": "lfm",
+      "accumulation": "partial",
+      "path_tile": 1028,
+      "first_run_ms": 265.36028899136,
+      "timed_ms": [
+        271.0312459967099,
+        273.6478060251102,
+        267.2814140096307,
+        264.91028600139543,
+        265.14592199237086,
+        266.5534999978263,
+        263.8454540283419,
+        271.01893798680976,
+        270.4201849992387,
+        291.6143480106257
+      ],
+      "p50_ms": 268.8507995044347,
+      "p95_ms": 283.5294041171437,
+      "max_ms": 291.6143480106257,
+      "output_checksum_range": [
+        0.5609609840823575,
+        0.5609609840823575
+      ],
+      "reference_errors": [
+        {
+          "rms_relative": 7.904771509581057e-13,
+          "max_absolute": 4.273080861065268e-12
+        },
+        {
+          "rms_relative": 1.0601660795623434e-12,
+          "max_absolute": 6.708113312430946e-12
+        },
+        {
+          "rms_relative": 1.4671811062163443e-12,
+          "max_absolute": 9.777850022600321e-12
+        },
+        {
+          "rms_relative": 1.3795122577712517e-12,
+          "max_absolute": 8.996018067111653e-12
+        }
+      ],
+      "explicit_contribution_buffer_peak_bytes": 274138816
+    },
+    {
+      "waveform": "lfm",
+      "accumulation": "local",
+      "path_tile": 1028,
+      "first_run_ms": 48.23806800413877,
+      "timed_ms": [
+        49.153318017488346,
+        47.832289012148976,
+        48.080948006827384,
+        47.5565750093665,
+        47.38426997209899,
+        48.10578399337828,
+        47.696621011709794,
+        49.29142299806699,
+        47.45927097974345,
+        47.752762999152765
+      ],
+      "p50_ms": 47.79252600565087,
+      "p95_ms": 49.2292757568066,
+      "max_ms": 49.29142299806699,
+      "output_checksum_range": [
+        0.5609609840823575,
+        0.5609609840823575
+      ],
+      "reference_errors": [
+        {
+          "rms_relative": 7.904779308517569e-13,
+          "max_absolute": 4.2738016874888795e-12
+        },
+        {
+          "rms_relative": 1.0601675072466653e-12,
+          "max_absolute": 6.708350786193023e-12
+        },
+        {
+          "rms_relative": 1.4671724826841409e-12,
+          "max_absolute": 9.777650313886378e-12
+        },
+        {
+          "rms_relative": 1.3795159210442164e-12,
+          "max_absolute": 8.997012960066765e-12
+        }
+      ],
+      "explicit_contribution_buffer_peak_bytes": 0
+    }
+  ]
+}

@@ -60,7 +60,8 @@ def _epoch(value):
 def render_paths(coefficients, delays_s, doppler_hz, waveform, *, sample_rate_hz,
                  num_samples, sim_time_ns=0, channel_epoch_ns=None,
                  amplitude_scale=1., time_scale=1., frequency_offset_hz=0., phase_offset_rad=0.,
-                 backend="numpy", path_tile=128, sample_tile=32):
+                 backend="numpy", path_tile=128, sample_tile=32,
+                 accumulation="partial"):
     """Return complex128 envelope; caller supplies sqrt(R*P) voltage scaling.
 
     Waveform time is (physical time - path delay)*time_scale, modeling TX clock
@@ -72,11 +73,17 @@ def render_paths(coefficients, delays_s, doppler_hz, waveform, *, sample_rate_hz
     CUDA requests fail if CUDA is unavailable. No implicit CPU fallback.
     Analytic tone/LFM descriptors are supported; arbitrary callbacks remain
     supported by receiver.synthesize_voltage's existing NumPy implementation.
+    accumulation="local" experimentally pre-reduces within SIMD packets/CUDA
+    warps, then atomically adds to the output. It avoids path/sample buffers
+    but can suffer contention and nondeterministic summation rounding. The
+    default "partial" keeps the original separate contribution/reduction path.
     """
     if not isinstance(waveform, (ToneWaveform, LFMChirpWaveform)):
         raise TypeError("Direct renderer requires ToneWaveform or LFMChirpWaveform")
     if backend not in ("numpy", "llvm", "cuda"):
         raise ValueError("backend must be numpy, llvm or cuda")
+    if accumulation not in ("partial", "local"):
+        raise ValueError("accumulation must be partial or local")
     for value in (num_samples, path_tile, sample_tile):
         if isinstance(value, bool) or not isinstance(value, Integral) or value < 1:
             raise ValueError("Sample counts and tile sizes must be positive integers")
@@ -159,27 +166,36 @@ def render_paths(coefficients, delays_s, doppler_hz, waveform, *, sample_rate_hz
         n0 = Float(base)
         s, c = dr.sincos(p+w*n0+.5*curvature*n0*n0)
         step_s, step_c = dr.sincos(w+curvature*(n0+.5))
-        # Unique writes avoid per-path atomic contention. Only one path tile's
-        # contributions exists at a time, never the full scene's P x N tensor.
-        partial_r = dr.zeros(Float, count*num_samples)
-        partial_i = dr.zeros(Float, count*num_samples)
+        # Local reduction keeps the same paths and recurrence, but combines
+        # neighboring lane values before updating the output. Each link owns
+        # its output; no transmitter data or buffers are shared across calls.
+        partial_r = dr.zeros(Float, count*num_samples) if accumulation == "partial" else out_r
+        partial_i = dr.zeros(Float, count*num_samples) if accumulation == "partial" else out_i
 
         def body(k, c, s, dc, ds, real, imag):
             n = base+k
             active = n < num_samples
             if isinstance(waveform, LFMChirpWaveform):
                 active &= (Float(n) >= first_sample) & (Float(n) < last_sample)
-            # Store zeros outside the pulse; untouched padding also starts zero.
-            dr.scatter(real, g_r*c-g_i*s, n*count+path, active)
-            dr.scatter(imag, g_r*s+g_i*c, n*count+path, active)
+            if accumulation == "partial":
+                dr.scatter(real, g_r*c-g_i*s, n*count+path, active)
+                dr.scatter(imag, g_r*s+g_i*c, n*count+path, active)
+            else:
+                dr.scatter_reduce(dr.ReduceOp.Add, real, g_r*c-g_i*s, n, active,
+                                  mode=dr.ReduceMode.Local)
+                dr.scatter_reduce(dr.ReduceOp.Add, imag, g_r*s+g_i*c, n, active,
+                                  mode=dr.ReduceMode.Local)
             return k+1, c*dc-s*ds, s*dc+c*ds, dc*rot_c-ds*rot_s, ds*rot_c+dc*rot_s, real, imag
 
         _, _, _, _, _, partial_r, partial_i = dr.while_loop(
             (UInt(0), c, s, step_c, step_s, partial_r, partial_i),
             lambda k, *state: k < sample_tile, body, mode="symbolic",
             label="rf_direct_path_recurrence")
-        out_r += dr.block_sum(partial_r, count)
-        out_i += dr.block_sum(partial_i, count)
+        if accumulation == "partial":
+            out_r += dr.block_sum(partial_r, count)
+            out_i += dr.block_sum(partial_i, count)
+        else:
+            out_r, out_i = partial_r, partial_i
         dr.eval(out_r, out_i)  # Bound pending graphs and temporary storage.
     # NumPy export synchronizes execution: timing includes H2D/D2H and reduction.
     return np.asarray(out_r)+1j*np.asarray(out_i)
