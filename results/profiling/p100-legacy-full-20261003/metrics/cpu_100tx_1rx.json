@@ -1,0 +1,1074 @@
+{
+  "arguments": {
+    "tx": 100,
+    "rx": 1,
+    "iterations": 30,
+    "warmup": 5,
+    "samples": 4096,
+    "samples_per_link": 1028,
+    "backend": "cpu",
+    "profile": false,
+    "threads": 2,
+    "output": "/work/results/p100-legacy-full-20261003/metrics/cpu_100tx_1rx.json"
+  },
+  "measurement_mode": "unprofiled_benchmark",
+  "scope": "915 MHz, 2 MS/s, 1 MHz filter, noisy independent-clock Pluto profile; moving mounts over 800-triangle DEM",
+  "timing_includes": "Pose writes, synchronized channel/NumPy export, per-path IQ, per-link diagnostic filters, receive noise/filter and ADC conversion",
+  "timing_excludes": [
+    "AirSim RPC/physics",
+    "transport",
+    "queueing",
+    "storage",
+    "plots",
+    "RF skill processing"
+  ],
+  "initial_tx_positions_m": [
+    [
+      0.0,
+      -25.0,
+      10.0
+    ],
+    [
+      0.0,
+      -24.494949494949495,
+      10.0
+    ],
+    [
+      0.0,
+      -23.98989898989899,
+      10.0
+    ],
+    [
+      0.0,
+      -23.484848484848484,
+      10.0
+    ],
+    [
+      0.0,
+      -22.97979797979798,
+      10.0
+    ],
+    [
+      0.0,
+      -22.474747474747474,
+      10.0
+    ],
+    [
+      0.0,
+      -21.96969696969697,
+      10.0
+    ],
+    [
+      0.0,
+      -21.464646464646464,
+      10.0
+    ],
+    [
+      0.0,
+      -20.95959595959596,
+      10.0
+    ],
+    [
+      0.0,
+      -20.454545454545453,
+      10.0
+    ],
+    [
+      0.0,
+      -19.949494949494948,
+      10.0
+    ],
+    [
+      0.0,
+      -19.444444444444443,
+      10.0
+    ],
+    [
+      0.0,
+      -18.939393939393938,
+      10.0
+    ],
+    [
+      0.0,
+      -18.434343434343432,
+      10.0
+    ],
+    [
+      0.0,
+      -17.929292929292927,
+      10.0
+    ],
+    [
+      0.0,
+      -17.424242424242422,
+      10.0
+    ],
+    [
+      0.0,
+      -16.919191919191917,
+      10.0
+    ],
+    [
+      0.0,
+      -16.41414141414141,
+      10.0
+    ],
+    [
+      0.0,
+      -15.909090909090908,
+      10.0
+    ],
+    [
+      0.0,
+      -15.404040404040403,
+      10.0
+    ],
+    [
+      0.0,
+      -14.898989898989898,
+      10.0
+    ],
+    [
+      0.0,
+      -14.393939393939393,
+      10.0
+    ],
+    [
+      0.0,
+      -13.888888888888888,
+      10.0
+    ],
+    [
+      0.0,
+      -13.383838383838382,
+      10.0
+    ],
+    [
+      0.0,
+      -12.878787878787879,
+      10.0
+    ],
+    [
+      0.0,
+      -12.373737373737374,
+      10.0
+    ],
+    [
+      0.0,
+      -11.868686868686869,
+      10.0
+    ],
+    [
+      0.0,
+      -11.363636363636363,
+      10.0
+    ],
+    [
+      0.0,
+      -10.858585858585858,
+      10.0
+    ],
+    [
+      0.0,
+      -10.353535353535353,
+      10.0
+    ],
+    [
+      0.0,
+      -9.848484848484848,
+      10.0
+    ],
+    [
+      0.0,
+      -9.343434343434343,
+      10.0
+    ],
+    [
+      0.0,
+      -8.838383838383837,
+      10.0
+    ],
+    [
+      0.0,
+      -8.333333333333332,
+      10.0
+    ],
+    [
+      0.0,
+      -7.828282828282827,
+      10.0
+    ],
+    [
+      0.0,
+      -7.323232323232322,
+      10.0
+    ],
+    [
+      0.0,
+      -6.818181818181817,
+      10.0
+    ],
+    [
+      0.0,
+      -6.313131313131311,
+      10.0
+    ],
+    [
+      0.0,
+      -5.808080808080806,
+      10.0
+    ],
+    [
+      0.0,
+      -5.303030303030301,
+      10.0
+    ],
+    [
+      0.0,
+      -4.797979797979796,
+      10.0
+    ],
+    [
+      0.0,
+      -4.292929292929291,
+      10.0
+    ],
+    [
+      0.0,
+      -3.7878787878787854,
+      10.0
+    ],
+    [
+      0.0,
+      -3.28282828282828,
+      10.0
+    ],
+    [
+      0.0,
+      -2.777777777777775,
+      10.0
+    ],
+    [
+      0.0,
+      -2.27272727272727,
+      10.0
+    ],
+    [
+      0.0,
+      -1.7676767676767646,
+      10.0
+    ],
+    [
+      0.0,
+      -1.2626262626262594,
+      10.0
+    ],
+    [
+      0.0,
+      -0.7575757575757578,
+      10.0
+    ],
+    [
+      0.0,
+      -0.2525252525252526,
+      10.0
+    ],
+    [
+      0.0,
+      0.2525252525252526,
+      10.0
+    ],
+    [
+      0.0,
+      0.7575757575757578,
+      10.0
+    ],
+    [
+      0.0,
+      1.262626262626263,
+      10.0
+    ],
+    [
+      0.0,
+      1.7676767676767682,
+      10.0
+    ],
+    [
+      0.0,
+      2.2727272727272734,
+      10.0
+    ],
+    [
+      0.0,
+      2.7777777777777786,
+      10.0
+    ],
+    [
+      0.0,
+      3.2828282828282838,
+      10.0
+    ],
+    [
+      0.0,
+      3.787878787878789,
+      10.0
+    ],
+    [
+      0.0,
+      4.292929292929294,
+      10.0
+    ],
+    [
+      0.0,
+      4.797979797979799,
+      10.0
+    ],
+    [
+      0.0,
+      5.3030303030303045,
+      10.0
+    ],
+    [
+      0.0,
+      5.80808080808081,
+      10.0
+    ],
+    [
+      0.0,
+      6.313131313131315,
+      10.0
+    ],
+    [
+      0.0,
+      6.81818181818182,
+      10.0
+    ],
+    [
+      0.0,
+      7.323232323232325,
+      10.0
+    ],
+    [
+      0.0,
+      7.8282828282828305,
+      10.0
+    ],
+    [
+      0.0,
+      8.333333333333336,
+      10.0
+    ],
+    [
+      0.0,
+      8.838383838383841,
+      10.0
+    ],
+    [
+      0.0,
+      9.343434343434346,
+      10.0
+    ],
+    [
+      0.0,
+      9.848484848484851,
+      10.0
+    ],
+    [
+      0.0,
+      10.353535353535356,
+      10.0
+    ],
+    [
+      0.0,
+      10.858585858585862,
+      10.0
+    ],
+    [
+      0.0,
+      11.363636363636367,
+      10.0
+    ],
+    [
+      0.0,
+      11.868686868686872,
+      10.0
+    ],
+    [
+      0.0,
+      12.373737373737377,
+      10.0
+    ],
+    [
+      0.0,
+      12.878787878787882,
+      10.0
+    ],
+    [
+      0.0,
+      13.383838383838388,
+      10.0
+    ],
+    [
+      0.0,
+      13.888888888888893,
+      10.0
+    ],
+    [
+      0.0,
+      14.393939393939398,
+      10.0
+    ],
+    [
+      0.0,
+      14.898989898989903,
+      10.0
+    ],
+    [
+      0.0,
+      15.404040404040408,
+      10.0
+    ],
+    [
+      0.0,
+      15.909090909090914,
+      10.0
+    ],
+    [
+      0.0,
+      16.41414141414142,
+      10.0
+    ],
+    [
+      0.0,
+      16.919191919191924,
+      10.0
+    ],
+    [
+      0.0,
+      17.42424242424243,
+      10.0
+    ],
+    [
+      0.0,
+      17.929292929292934,
+      10.0
+    ],
+    [
+      0.0,
+      18.43434343434344,
+      10.0
+    ],
+    [
+      0.0,
+      18.939393939393945,
+      10.0
+    ],
+    [
+      0.0,
+      19.44444444444445,
+      10.0
+    ],
+    [
+      0.0,
+      19.949494949494955,
+      10.0
+    ],
+    [
+      0.0,
+      20.45454545454546,
+      10.0
+    ],
+    [
+      0.0,
+      20.959595959595966,
+      10.0
+    ],
+    [
+      0.0,
+      21.46464646464647,
+      10.0
+    ],
+    [
+      0.0,
+      21.969696969696976,
+      10.0
+    ],
+    [
+      0.0,
+      22.47474747474748,
+      10.0
+    ],
+    [
+      0.0,
+      22.979797979797986,
+      10.0
+    ],
+    [
+      0.0,
+      23.484848484848484,
+      10.0
+    ],
+    [
+      0.0,
+      23.98989898989899,
+      10.0
+    ],
+    [
+      0.0,
+      24.494949494949495,
+      10.0
+    ],
+    [
+      0.0,
+      25.0,
+      10.0
+    ]
+  ],
+  "initial_rx_positions_m": [
+    [
+      -30.0,
+      -10.0,
+      14.0
+    ]
+  ],
+  "capture_duration_ms": 2.048,
+  "filter_warmup_samples": 256,
+  "preparation_ms": 136.35825000073964,
+  "first_capture": {
+    "epoch_s": 0.0,
+    "service_ms": 9570.66640100038,
+    "pose_ms": 1.770853000380157,
+    "capture_ms": 9568.894908000402,
+    "channel_ms": 386.6295050002009,
+    "cpu_iq_receiver_ms": 9182.265403000201,
+    "stage_timings": {
+      "legacy_native_solve_export_ms": 381.8238289995861,
+      "host_numpy_sampling_ms": 0.0,
+      "proposal_table_prepare_ms": 0.0
+    },
+    "retained_paths": 47831,
+    "clipping_fraction_max": 0.0
+  },
+  "first_capture_note": "New process with existing on-disk JIT cache; imports excluded; not a cache-cleared cold-start benchmark",
+  "service": {
+    "p50_ms": 9467.511530000138,
+    "p95_ms": 9553.159131799976,
+    "mean_ms": 9471.392059066844,
+    "max_ms": 9561.886131000392
+  },
+  "channel": {
+    "p50_ms": 299.42884499951106,
+    "p95_ms": 307.91853794958115,
+    "mean_ms": 300.2737732998564,
+    "max_ms": 321.81499899979826
+  },
+  "cpu_iq_receiver": {
+    "p50_ms": 9168.536675500036,
+    "p95_ms": 9252.351484150222,
+    "mean_ms": 9169.211192233584,
+    "max_ms": 9269.638958000542
+  },
+  "serial_wall_s": 284.14323925499957,
+  "sustained_updates_hz": 0.10558055183244042,
+  "receiver_blocks_per_second": 0.10558055183244042,
+  "deadline_misses": {
+    "120": 30,
+    "200": 30
+  },
+  "stage_timings": {
+    "legacy_native_solve_export_ms": {
+      "p50_ms": 291.72604550012693,
+      "p95_ms": 299.4752292999692,
+      "mean_ms": 292.46011286668363,
+      "max_ms": 312.9710690000138
+    }
+  },
+  "retained_paths": {
+    "min": 47832,
+    "max": 47835
+  },
+  "host": {
+    "cpu_count": 16,
+    "cpu_quota": "max 100000",
+    "memory_limit_bytes": "max",
+    "drjit_threads": 2,
+    "peak_rss_mib": 989.8828125,
+    "cuda_available": 1
+  },
+  "versions": {
+    "sionna_rt": "0.19.2",
+    "mitsuba": "3.5.2",
+    "drjit": "0.4.6",
+    "backend": "llvm_ad_rgb"
+  },
+  "profile_note": "Profiled serial throughput includes event/history instrumentation; use separate unprofiled runs for performance.",
+  "gpu_note": "Measured legacy service/channel latency. Original custom-solver work-count estimates do not apply.",
+  "samples": [
+    {
+      "epoch_s": 0.03,
+      "service_ms": 9454.589132000365,
+      "pose_ms": 1.9175139996150392,
+      "capture_ms": 9452.671318000284,
+      "channel_ms": 300.2330780000193,
+      "cpu_iq_receiver_ms": 9152.438240000265,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 292.8949320003085,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 47833,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.035,
+      "service_ms": 9427.353389000018,
+      "pose_ms": 1.8544340000516968,
+      "capture_ms": 9425.498664999395,
+      "channel_ms": 297.1089889997529,
+      "cpu_iq_receiver_ms": 9128.389675999642,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 289.53670099963347,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 47833,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.04,
+      "service_ms": 9479.095472999688,
+      "pose_ms": 2.0386050000524847,
+      "capture_ms": 9477.056527999594,
+      "channel_ms": 304.60949999996956,
+      "cpu_iq_receiver_ms": 9172.447027999624,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 293.7465470004099,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 47834,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.045,
+      "service_ms": 9466.2409270004,
+      "pose_ms": 1.7947340002137935,
+      "capture_ms": 9464.445902999614,
+      "channel_ms": 299.8041969995029,
+      "cpu_iq_receiver_ms": 9164.641706000111,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 292.16698900017946,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 47834,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.05,
+      "service_ms": 9400.859793000564,
+      "pose_ms": 1.8344039999647066,
+      "capture_ms": 9399.025089000133,
+      "channel_ms": 297.47544400015613,
+      "cpu_iq_receiver_ms": 9101.549644999977,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 290.5230219994337,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 47834,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.055,
+      "service_ms": 9426.163740000447,
+      "pose_ms": 1.900314000522485,
+      "capture_ms": 9424.263066000094,
+      "channel_ms": 302.29273599979933,
+      "cpu_iq_receiver_ms": 9121.970330000295,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 294.7557380002763,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 47834,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.06,
+      "service_ms": 9423.608491999403,
+      "pose_ms": 1.8160539993914426,
+      "capture_ms": 9421.792127999652,
+      "channel_ms": 301.3787330000923,
+      "cpu_iq_receiver_ms": 9120.41339499956,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 293.9016749996881,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 47834,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.065,
+      "service_ms": 9392.610391000744,
+      "pose_ms": 1.8237940003018593,
+      "capture_ms": 9390.786337000463,
+      "channel_ms": 300.7769619998726,
+      "cpu_iq_receiver_ms": 9090.00937500059,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 293.3537149992844,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 47834,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.07,
+      "service_ms": 9460.007256000608,
+      "pose_ms": 1.853614000538073,
+      "capture_ms": 9458.153382000091,
+      "channel_ms": 295.4283150002084,
+      "cpu_iq_receiver_ms": 9162.725066999883,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 287.57047500039334,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 47834,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.075,
+      "service_ms": 9503.312657000606,
+      "pose_ms": 2.062416000626399,
+      "capture_ms": 9501.250011000593,
+      "channel_ms": 295.85993199998484,
+      "cpu_iq_receiver_ms": 9205.390079000608,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 285.8388750000813,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 47834,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.08,
+      "service_ms": 9462.115061000077,
+      "pose_ms": 2.0318150000093738,
+      "capture_ms": 9460.082936000617,
+      "channel_ms": 299.20473199945263,
+      "cpu_iq_receiver_ms": 9160.878204001165,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 290.3898450003908,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 47834,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.085,
+      "service_ms": 9558.453308000026,
+      "pose_ms": 1.8136340004275553,
+      "capture_ms": 9556.639364000148,
+      "channel_ms": 294.46260999975493,
+      "cpu_iq_receiver_ms": 9262.176754000393,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 286.84179999982007,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 47834,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.09,
+      "service_ms": 9468.782132999877,
+      "pose_ms": 1.8726750004134374,
+      "capture_ms": 9466.909148000013,
+      "channel_ms": 294.4775030000528,
+      "cpu_iq_receiver_ms": 9172.43164499996,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 287.32841800047026,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 47834,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.095,
+      "service_ms": 9465.574644000299,
+      "pose_ms": 2.066345999992336,
+      "capture_ms": 9463.507968000158,
+      "channel_ms": 299.1503630000807,
+      "cpu_iq_receiver_ms": 9164.357605000077,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 291.2231310001516,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 47832,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.1,
+      "service_ms": 9482.655701000112,
+      "pose_ms": 1.8317739995836746,
+      "capture_ms": 9480.823607000275,
+      "channel_ms": 297.32336300003226,
+      "cpu_iq_receiver_ms": 9183.500244000243,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 290.2808779999759,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 47832,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.105,
+      "service_ms": 9492.033685999559,
+      "pose_ms": 1.8356450000283075,
+      "capture_ms": 9490.19773100008,
+      "channel_ms": 295.3587299998617,
+      "cpu_iq_receiver_ms": 9194.839001000219,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 288.50298700035637,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 47832,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.11,
+      "service_ms": 9518.54692300003,
+      "pose_ms": 1.8434249996062135,
+      "capture_ms": 9516.703238000446,
+      "channel_ms": 299.6529579995695,
+      "cpu_iq_receiver_ms": 9217.050280000876,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 292.43637200033845,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 47833,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.115,
+      "service_ms": 9440.24773000001,
+      "pose_ms": 1.9795560001512058,
+      "capture_ms": 9438.26784400062,
+      "channel_ms": 301.35190399960265,
+      "cpu_iq_receiver_ms": 9136.915940001018,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 293.45999299948744,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 47833,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.12,
+      "service_ms": 9406.084698000086,
+      "pose_ms": 2.0433059999049874,
+      "capture_ms": 9404.041081999821,
+      "channel_ms": 298.96903000008024,
+      "cpu_iq_receiver_ms": 9105.072051999741,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 290.6184339999527,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 47833,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.125,
+      "service_ms": 9484.903057999873,
+      "pose_ms": 2.0009059999210876,
+      "capture_ms": 9482.90186200029,
+      "channel_ms": 299.06806300004973,
+      "cpu_iq_receiver_ms": 9183.83379900024,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 291.2851020000744,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 47833,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.13,
+      "service_ms": 9505.222040000262,
+      "pose_ms": 1.8434140001772903,
+      "capture_ms": 9503.378286000043,
+      "channel_ms": 307.9700669995873,
+      "cpu_iq_receiver_ms": 9195.408219000456,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 299.9344840000049,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 47833,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.135,
+      "service_ms": 9500.85493700044,
+      "pose_ms": 2.008086000387266,
+      "capture_ms": 9498.846221000349,
+      "channel_ms": 321.81499899979826,
+      "cpu_iq_receiver_ms": 9177.03122200055,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 312.9710690000138,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 47834,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.14,
+      "service_ms": 9433.698687000287,
+      "pose_ms": 1.815935000195168,
+      "capture_ms": 9431.882421999944,
+      "channel_ms": 302.51007999959256,
+      "cpu_iq_receiver_ms": 9129.372342000352,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 295.2610129996174,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 47834,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.145,
+      "service_ms": 9561.886131000392,
+      "pose_ms": 1.8428749999657157,
+      "capture_ms": 9560.042916000384,
+      "channel_ms": 290.40395799984253,
+      "cpu_iq_receiver_ms": 9269.638958000542,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 283.66419400026643,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 47834,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.15,
+      "service_ms": 9457.789537999815,
+      "pose_ms": 2.2274880002441932,
+      "capture_ms": 9455.561739999212,
+      "channel_ms": 307.85555799957365,
+      "cpu_iq_receiver_ms": 9147.706181999638,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 298.9139179999256,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 47834,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.155,
+      "service_ms": 9482.905849000417,
+      "pose_ms": 1.845185000092897,
+      "capture_ms": 9481.060364000768,
+      "channel_ms": 298.3077859998957,
+      "cpu_iq_receiver_ms": 9182.752578000873,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 291.2424309997732,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 47834,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.16,
+      "service_ms": 9523.667463000493,
+      "pose_ms": 1.8138140003429726,
+      "capture_ms": 9521.853328999896,
+      "channel_ms": 304.62894900028914,
+      "cpu_iq_receiver_ms": 9217.224379999607,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 297.97976600002585,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 47835,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.165,
+      "service_ms": 9530.917371000214,
+      "pose_ms": 1.8426440001348965,
+      "capture_ms": 9529.074377000143,
+      "channel_ms": 295.8973529994182,
+      "cpu_iq_receiver_ms": 9233.177024000724,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 288.22315100023843,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 47835,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.17,
+      "service_ms": 9384.893092000311,
+      "pose_ms": 1.8808350005201646,
+      "capture_ms": 9383.011937000447,
+      "channel_ms": 300.3599610001402,
+      "cpu_iq_receiver_ms": 9082.651976000307,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 292.8961719999279,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 47835,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.175,
+      "service_ms": 9546.688471999914,
+      "pose_ms": 1.867984999989858,
+      "capture_ms": 9544.82016699967,
+      "channel_ms": 304.4773459996577,
+      "cpu_iq_receiver_ms": 9240.342821000013,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 296.06155900000886,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 47834,
+      "clipping_fraction_max": 0.0
+    }
+  ],
+  "legacy_scope": {
+    "stack": {
+      "sionna": "0.19.2",
+      "mitsuba": "3.5.2",
+      "drjit": "0.4.6",
+      "tensorflow": "2.15.1",
+      "python": "3.11"
+    },
+    "propagation": "Legacy native Sionna Fibonacci solver; max_depth=1, LoS/reflection/scattering, scat_keep_prob=1, scat_random_phases=False. 1028 launched rays per TX, shared across receivers. Synthetic single-element arrays. Original terrain mesh and dielectric parameters (epsilon_r=5, conductivity=.01, scattering=.3), converted to legacy scene format; the legacy material has no thickness equivalent.",
+    "receiver": "Original branch SDRNetworkReceiver, waveform synthesis, independent clocks, filtering, noise and ADC; external Paths adapter supplies compact legacy channels and platform Doppler.",
+    "comparison_limit": "Not the profiling/p100 custom first-order sampler or Sionna 2.2 implementation. No numerical equivalence validation. Legacy rays and retained-path counts differ. Published current-solver CPU results and its work-count model are not directly comparable.",
+    "profile_limit": "Dr.Jit histories record its CUDA/OptiX operations only, not TensorFlow CUDA kernels. Inclusive host ranges overlap. Device-event sums are not service critical-path latency.",
+    "sampling_timers": "Original host_numpy_sampling_ms and proposal_table_prepare_ms are adapter compatibility placeholders set to zero; they are not measured stage timings and are excluded from the report.",
+    "cpu_baseline": "CPU cases hide GPUs from TensorFlow and use Mitsuba llvm_ad_rgb. CUDA cases use cuda_ad_rgb and TensorFlow CUDA. Dr.Jit uses two threads; TensorFlow thread defaults are not constrained.",
+    "outputs": "4096 complex samples per capture at 2 MS/s, 915 MHz carrier, 1 MHz receive bandwidth, one receiver per benchmark; example uses two TX and two RX."
+  }
+}

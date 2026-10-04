@@ -1,0 +1,33 @@
+{
+  "gpu": {
+    "command": [
+      "nvidia-smi",
+      "--query-gpu=name,uuid,driver_version,memory.total,compute_cap",
+      "--format=csv"
+    ],
+    "returncode": 0,
+    "stdout": "name, uuid, driver_version, memory.total [MiB], compute_cap\nTesla P100-PCIE-16GB, GPU-0d70be84-560c-cf1e-8d49-c41015f45415, 580.178.04, 16384 MiB, 6.0\n",
+    "stderr": ""
+  },
+  "image": {
+    "command": [
+      "docker",
+      "image",
+      "inspect",
+      "airsim-rf:p100-legacy-metrics"
+    ],
+    "returncode": 0,
+    "stdout": "[\n    {\n        \"Id\": \"sha256:2645377a437637eedb891999dcf6311047eb23f664b6bc640b704140fd5e6363\",\n        \"RepoTags\": [\n            \"airsim-rf:p100-legacy-metrics\"\n        ],\n        \"RepoDigests\": [\n            \"airsim-rf@sha256:2645377a437637eedb891999dcf6311047eb23f664b6bc640b704140fd5e6363\"\n        ],\n        \"Comment\": \"buildkit.dockerfile.v0\",\n        \"Created\": \"2026-10-03T20:59:10.077221564-04:00\",\n        \"Config\": {\n            \"Env\": [\n                \"PATH=/usr/local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin\",\n                \"LANG=C.UTF-8\",\n                \"GPG_KEY=A035C8C19219BA821ECEA86B64E628F8D684696D\",\n                \"PYTHON_VERSION=3.11.17\",\n                \"PYTHON_SHA256=bfb74ad39efae27cda510f134ab408e00f9992c56851cfc0b1cdb5646da11599\",\n                \"PYTHONPATH=/work/harness:/opt/airsim-rf/src\",\n                \"MPLCONFIGDIR=/tmp/matplotlib\",\n                \"MPLBACKEND=Agg\",\n                \"TF_FORCE_GPU_ALLOW_GROWTH=true\",\n                \"TF_CPP_MIN_LOG_LEVEL=2\",\n                \"RF_PROFILE_SOURCE_REV=720c4011522ad25c1e9c5c470bc20f4f34d480c5\",\n                \"RF_PROFILE_SOURCE_DIRTY=false\"\n            ],\n            \"Entrypoint\": [\n                \"python\"\n            ],\n            \"WorkingDir\": \"/opt/airsim-rf\"\n        },\n        \"Architecture\": \"amd64\",\n        \"Os\": \"linux\",\n        \"Size\": 10041220435,\n        \"RootFS\": {\n            \"Type\": \"layers\",\n            \"Layers\": [\n                \"sha256:34467cc93912af891dfee8a3902adf9b4f355a9bca4eaa46f658d1181a21de0d\",\n                \"sha256:c868a373a60dec23674485a015ca034ecb59cab12c4e6d5cecad5272deef8fba\",\n                \"sha256:a313ed48c416cf820dfec3f272ea91db54f0d94258a2148740fc070c34ca0c93\",\n                \"sha256:9b4472240541b61b012c99ffb5489d1e356b5b8d7bcd875c9f5ff63b77258ceb\",\n                \"sha256:23051b405b3a76e8909985473d6d13540a80bdbf5653a31e54a3f1d259657a41\",\n                \"sha256:f8f6c6dac6c373659b13e5e8f85b9393f34f7a34a5f435994108083c9df340a0\",\n                \"sha256:244a8770869dd4bb0bbfd8aa793edb7c26708a44b1107c8086723934cedc732b\",\n                \"sha256:de003e24cfb1582dab9fa12b7034408df81e520601a925d5571b94630dafd339\",\n                \"sha256:e959996bd6bd334695233e44bf02b99906c0da691484e1b6cec8c5b98dc4140b\",\n                \"sha256:46c7ee8ec424d89f39c350054ac3bd1b5d8154f7f6d803e4cfc054533aa09273\",\n                \"sha256:5f70bf18a086007016e948b04aed3b82103a36bea41755b6cddfaf10ace3c6ef\"\n            ]\n        },\n        \"Metadata\": {\n            \"LastTagTime\": \"2026-10-04T00:59:31.417933026Z\"\n        },\n        \"Descriptor\": {\n            \"mediaType\": \"application/vnd.oci.image.index.v1+json\",\n            \"digest\": \"sha256:2645377a437637eedb891999dcf6311047eb23f664b6bc640b704140fd5e6363\",\n            \"size\": 856\n        },\n        \"Identity\": {\n            \"Build\": [\n                {\n                    \"Ref\": \"fgzvoaz6eij285wp49csw5mng\",\n                    \"CreatedAt\": \"2026-10-03T20:59:35.798066205-04:00\"\n                }\n            ]\n        }\n    }\n]\n",
+    "stderr": ""
+  },
+  "source_revision": {
+    "command": [
+      "git",
+      "rev-parse",
+      "HEAD"
+    ],
+    "returncode": 0,
+    "stdout": "720c4011522ad25c1e9c5c470bc20f4f34d480c5\n",
+    "stderr": ""
+  }
+}

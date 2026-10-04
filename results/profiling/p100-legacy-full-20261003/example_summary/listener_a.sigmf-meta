@@ -1,0 +1,20 @@
+{
+  "global": {
+    "core:datatype": "ci16_le",
+    "core:sample_rate": 2000000.0,
+    "core:version": "1.2.6",
+    "core:description": "Simulated Pluto-class signed 12-bit I/Q in int16 containers; not hardware-calibrated",
+    "airsim_rf:adc_bits": 12,
+    "airsim_rf:input_full_scale_dbm": -30.0,
+    "airsim_rf:volts_per_count": 3.452669830012439e-06,
+    "airsim_rf:actual_sample_rate_hz": 2000010.0
+  },
+  "captures": [
+    {
+      "core:sample_start": 0,
+      "core:frequency": 915000000.0,
+      "airsim_rf:sim_time_ns": 5500000000
+    }
+  ],
+  "annotations": []
+}

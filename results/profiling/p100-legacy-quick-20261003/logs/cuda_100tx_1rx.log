@@ -1,0 +1,37 @@
+2026-10-04 01:01:11.200122: E external/local_xla/xla/stream_executor/cuda/cuda_dnn.cc:9261] Unable to register cuDNN factory: Attempting to register factory for plugin cuDNN when one has already been registered
+2026-10-04 01:01:11.200196: E external/local_xla/xla/stream_executor/cuda/cuda_fft.cc:607] Unable to register cuFFT factory: Attempting to register factory for plugin cuFFT when one has already been registered
+2026-10-04 01:01:11.201125: E external/local_xla/xla/stream_executor/cuda/cuda_blas.cc:1515] Unable to register cuBLAS factory: Attempting to register factory for plugin cuBLAS when one has already been registered
+LEGACY P100 ADAPTER: Sionna 0.19.2; native Fibonacci rays; original I/Q receiver chain; backend cuda_ad_rgb
+{
+  "service": {
+    "p50_ms": 9452.523948499902,
+    "p95_ms": 9467.666292350053,
+    "mean_ms": 9452.523948499902,
+    "max_ms": 9469.348775000071
+  },
+  "channel": {
+    "p50_ms": 354.1088844999649,
+    "p95_ms": 354.2528813498393,
+    "mean_ms": 354.1088844999649,
+    "max_ms": 354.26888099982534
+  },
+  "cpu_iq_receiver": {
+    "p50_ms": 9085.608223000008,
+    "p95_ms": 9101.249377899943,
+    "mean_ms": 9085.608223000008,
+    "max_ms": 9102.987283999937
+  },
+  "sustained_updates_hz": 0.10579133384059843,
+  "retained_paths": {
+    "min": 47833,
+    "max": 47833
+  },
+  "host": {
+    "cpu_count": 16,
+    "cpu_quota": "max 100000",
+    "memory_limit_bytes": "max",
+    "drjit_threads": 2,
+    "peak_rss_mib": 1308.10546875,
+    "cuda_available": 1
+  }
+}

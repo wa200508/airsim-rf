@@ -1,0 +1,431 @@
+{
+  "arguments": {
+    "tx": 1000,
+    "rays_per_tx": 1028,
+    "iterations": 10,
+    "warmup": 3,
+    "output": "/work/results/metrics/1000tx.json"
+  },
+  "status": "ok",
+  "measurement": "simultaneous native legacy propagation; no signal rendering, no IQ, no ADC; not transmitter batches",
+  "epochs": [
+    {
+      "trace_ms": 465.80372999960673,
+      "fields_and_fence_ms": 231.36574100044527,
+      "propagation_ms": 697.169471000052,
+      "retained_paths": 478345,
+      "coefficient_shape": [
+        1,
+        1,
+        1,
+        1000,
+        1,
+        483,
+        1
+      ],
+      "coefficient_fence": 1.3152246475219727,
+      "tensorflow_memory": {
+        "current": 145103104,
+        "peak": 619510784
+      },
+      "host_peak_rss_mib": 1478.0859375
+    },
+    {
+      "trace_ms": 469.98002500004077,
+      "fields_and_fence_ms": 285.30465600033494,
+      "propagation_ms": 755.2846810003757,
+      "retained_paths": 478345,
+      "coefficient_shape": [
+        1,
+        1,
+        1,
+        1000,
+        1,
+        483,
+        1
+      ],
+      "coefficient_fence": 1.3152246475219727,
+      "tensorflow_memory": {
+        "current": 147524864,
+        "peak": 619510784
+      },
+      "host_peak_rss_mib": 1478.66796875
+    },
+    {
+      "trace_ms": 468.18987200003903,
+      "fields_and_fence_ms": 237.40138900029706,
+      "propagation_ms": 705.5912610003361,
+      "retained_paths": 478345,
+      "coefficient_shape": [
+        1,
+        1,
+        1,
+        1000,
+        1,
+        483,
+        1
+      ],
+      "coefficient_fence": 1.3152246475219727,
+      "tensorflow_memory": {
+        "current": 147524864,
+        "peak": 619510784
+      },
+      "host_peak_rss_mib": 1478.66796875
+    },
+    {
+      "trace_ms": 468.3302459998231,
+      "fields_and_fence_ms": 224.9109860003955,
+      "propagation_ms": 693.2412320002186,
+      "retained_paths": 478345,
+      "coefficient_shape": [
+        1,
+        1,
+        1,
+        1000,
+        1,
+        483,
+        1
+      ],
+      "coefficient_fence": 1.3152246475219727,
+      "tensorflow_memory": {
+        "current": 147524864,
+        "peak": 619510784
+      },
+      "host_peak_rss_mib": 1480.48046875
+    },
+    {
+      "trace_ms": 462.4696030004998,
+      "fields_and_fence_ms": 276.98827399945003,
+      "propagation_ms": 739.4578769999498,
+      "retained_paths": 478345,
+      "coefficient_shape": [
+        1,
+        1,
+        1,
+        1000,
+        1,
+        483,
+        1
+      ],
+      "coefficient_fence": 1.3152246475219727,
+      "tensorflow_memory": {
+        "current": 147524864,
+        "peak": 619510784
+      },
+      "host_peak_rss_mib": 1480.65625
+    },
+    {
+      "trace_ms": 468.26801899987913,
+      "fields_and_fence_ms": 281.35247499994875,
+      "propagation_ms": 749.6204939998279,
+      "retained_paths": 478345,
+      "coefficient_shape": [
+        1,
+        1,
+        1,
+        1000,
+        1,
+        483,
+        1
+      ],
+      "coefficient_fence": 1.3152246475219727,
+      "tensorflow_memory": {
+        "current": 147524864,
+        "peak": 619510784
+      },
+      "host_peak_rss_mib": 1480.65625
+    },
+    {
+      "trace_ms": 471.9888190002166,
+      "fields_and_fence_ms": 252.21616199996788,
+      "propagation_ms": 724.2049810001845,
+      "retained_paths": 478345,
+      "coefficient_shape": [
+        1,
+        1,
+        1,
+        1000,
+        1,
+        483,
+        1
+      ],
+      "coefficient_fence": 1.3152246475219727,
+      "tensorflow_memory": {
+        "current": 147524864,
+        "peak": 619510784
+      },
+      "host_peak_rss_mib": 1480.65625
+    },
+    {
+      "trace_ms": 480.22054899956856,
+      "fields_and_fence_ms": 283.93276099996,
+      "propagation_ms": 764.1533099995286,
+      "retained_paths": 478345,
+      "coefficient_shape": [
+        1,
+        1,
+        1,
+        1000,
+        1,
+        483,
+        1
+      ],
+      "coefficient_fence": 1.3152246475219727,
+      "tensorflow_memory": {
+        "current": 147524864,
+        "peak": 619510784
+      },
+      "host_peak_rss_mib": 1481.8828125
+    },
+    {
+      "trace_ms": 470.6138980000105,
+      "fields_and_fence_ms": 282.48481299942796,
+      "propagation_ms": 753.0987109994385,
+      "retained_paths": 478345,
+      "coefficient_shape": [
+        1,
+        1,
+        1,
+        1000,
+        1,
+        483,
+        1
+      ],
+      "coefficient_fence": 1.3152246475219727,
+      "tensorflow_memory": {
+        "current": 147524864,
+        "peak": 619510784
+      },
+      "host_peak_rss_mib": 1481.8828125
+    },
+    {
+      "trace_ms": 460.6855470001392,
+      "fields_and_fence_ms": 285.89014600038354,
+      "propagation_ms": 746.5756930005227,
+      "retained_paths": 478345,
+      "coefficient_shape": [
+        1,
+        1,
+        1,
+        1000,
+        1,
+        483,
+        1
+      ],
+      "coefficient_fence": 1.3152246475219727,
+      "tensorflow_memory": {
+        "current": 147524864,
+        "peak": 619510784
+      },
+      "host_peak_rss_mib": 1481.8828125
+    }
+  ],
+  "stage": "complete",
+  "versions": {
+    "sionna": "0.19.2",
+    "mitsuba": "3.5.2",
+    "drjit": "0.4.6",
+    "tensorflow": "2.15.1",
+    "backend": "cuda_ad_rgb"
+  },
+  "host": {
+    "cpu_count": 16,
+    "cpu_quota": "max 100000",
+    "memory_limit": "12884901888"
+  },
+  "ray_count": 1028000,
+  "import_s": 2.0383934190003856,
+  "created_transmitters": 1000,
+  "setup_s": 2.3359650429993053,
+  "first": {
+    "trace_ms": 976.9799320001766,
+    "fields_and_fence_ms": 965.737450999768,
+    "propagation_ms": 1942.7173829999447,
+    "retained_paths": 478345,
+    "coefficient_shape": [
+      1,
+      1,
+      1,
+      1000,
+      1,
+      483,
+      1
+    ],
+    "coefficient_fence": 1.3152246475219727,
+    "tensorflow_memory": {
+      "current": 142564096,
+      "peak": 574948096
+    },
+    "host_peak_rss_mib": 1428.921875
+  },
+  "warmups": [
+    {
+      "trace_ms": 514.6726290004153,
+      "fields_and_fence_ms": 255.70033700023487,
+      "propagation_ms": 770.3729660006502,
+      "retained_paths": 478345,
+      "coefficient_shape": [
+        1,
+        1,
+        1,
+        1000,
+        1,
+        483,
+        1
+      ],
+      "coefficient_fence": 1.3152246475219727,
+      "tensorflow_memory": {
+        "current": 168121600,
+        "peak": 604211712
+      },
+      "host_peak_rss_mib": 1470.484375
+    },
+    {
+      "trace_ms": 463.8226709994342,
+      "fields_and_fence_ms": 235.80163899987383,
+      "propagation_ms": 699.624309999308,
+      "retained_paths": 478345,
+      "coefficient_shape": [
+        1,
+        1,
+        1,
+        1000,
+        1,
+        483,
+        1
+      ],
+      "coefficient_fence": 1.3152246475219727,
+      "tensorflow_memory": {
+        "current": 170481408,
+        "peak": 619510784
+      },
+      "host_peak_rss_mib": 1477.234375
+    },
+    {
+      "trace_ms": 461.55973300028563,
+      "fields_and_fence_ms": 233.84991199964134,
+      "propagation_ms": 695.409644999927,
+      "retained_paths": 478345,
+      "coefficient_shape": [
+        1,
+        1,
+        1,
+        1000,
+        1,
+        483,
+        1
+      ],
+      "coefficient_fence": 1.3152246475219727,
+      "tensorflow_memory": {
+        "current": 160928000,
+        "peak": 619510784
+      },
+      "host_peak_rss_mib": 1477.26953125
+    }
+  ],
+  "profile": {
+    "trace_ms": 470.9447249997538,
+    "fields_and_fence_ms": 296.5281249998952,
+    "propagation_ms": 767.472849999649,
+    "retained_paths": 478345,
+    "coefficient_shape": [
+      1,
+      1,
+      1,
+      1000,
+      1,
+      483,
+      1
+    ],
+    "coefficient_fence": 1.3152246475219727,
+    "tensorflow_memory": {
+      "current": 148017152,
+      "peak": 619510784
+    },
+    "host_peak_rss_mib": 1482.171875,
+    "device_events": [
+      {
+        "backend": "CUDA",
+        "type": "Other",
+        "execution_time": 0.02876799926161766,
+        "codegen_time": 0.0,
+        "backend_time": 0.0
+      },
+      {
+        "backend": "CUDA",
+        "type": "JIT",
+        "execution_time": 0.8168960213661194,
+        "operation_count": 185,
+        "cache_hit": 1,
+        "cache_disk": 0,
+        "codegen_time": 0.08419100940227509,
+        "backend_time": 0.0,
+        "uses_optix": 1
+      },
+      {
+        "backend": "CUDA",
+        "type": "JIT",
+        "execution_time": 0.7958080172538757,
+        "operation_count": 180,
+        "cache_hit": 1,
+        "cache_disk": 0,
+        "codegen_time": 0.07398000359535217,
+        "backend_time": 0.0,
+        "uses_optix": 1
+      },
+      {
+        "backend": "CUDA",
+        "type": "JIT",
+        "execution_time": 0.09344000369310379,
+        "operation_count": 19,
+        "cache_hit": 1,
+        "cache_disk": 0,
+        "codegen_time": 0.005550000350922346,
+        "backend_time": 0.0,
+        "uses_optix": 0
+      },
+      {
+        "backend": "CUDA",
+        "type": "JIT",
+        "execution_time": 0.47222399711608887,
+        "operation_count": 36,
+        "cache_hit": 1,
+        "cache_disk": 0,
+        "codegen_time": 0.04520000144839287,
+        "backend_time": 0.0,
+        "uses_optix": 1
+      },
+      {
+        "backend": "CUDA",
+        "type": "JIT",
+        "execution_time": 0.1366720050573349,
+        "operation_count": 36,
+        "cache_hit": 1,
+        "cache_disk": 0,
+        "codegen_time": 0.02802000194787979,
+        "backend_time": 0.0,
+        "uses_optix": 1
+      },
+      {
+        "backend": "CUDA",
+        "type": "JIT",
+        "execution_time": 0.6192319989204407,
+        "operation_count": 36,
+        "cache_hit": 1,
+        "cache_disk": 0,
+        "codegen_time": 0.035110000520944595,
+        "backend_time": 0.0,
+        "uses_optix": 1
+      }
+    ]
+  },
+  "statistics": {
+    "p50_ms": 743.0167850002363,
+    "p95_ms": 760.1624269499098,
+    "max_ms": 764.1533099995286,
+    "mean_ms": 732.8397711000434,
+    "serial_updates_hz": 1.364554762767488
+  },
+  "wall_s": 16.73378883999976,
+  "host_peak_rss_mib": 1482.171875
+}

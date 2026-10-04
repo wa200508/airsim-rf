@@ -1,0 +1,7 @@
+ - Warning: compute capability of device too low (need >= 7.5), skipping ..
+Dr.Jit: 1.5.0
+Mitsuba: 3.9.1
+CUDA backend available: 0
+Traceback (most recent call last):
+  File "<string>", line 1, in <module>
+ImportError: jit_init_thread_state(): the CUDA backend is inactive because no compatible CUDA devices were found on your system.

@@ -1,0 +1,46 @@
+{
+  "arguments": {
+    "tx": 1000000,
+    "rays_per_tx": 1028,
+    "iterations": 1,
+    "warmup": 0,
+    "output": "/work/results/metrics/1000000tx.json"
+  },
+  "status": "stopped_by_user",
+  "measurement": "simultaneous native legacy propagation; no signal rendering, no IQ, no ADC; not transmitter batches",
+  "epochs": [],
+  "stage": "first_solve",
+  "versions": {
+    "sionna": "0.19.2",
+    "mitsuba": "3.5.2",
+    "drjit": "0.4.6",
+    "tensorflow": "2.15.1",
+    "backend": "cuda_ad_rgb"
+  },
+  "host": {
+    "cpu_count": 16,
+    "cpu_quota": "max 100000",
+    "memory_limit": "12884901888"
+  },
+  "ray_count": 1028000000,
+  "import_s": 2.039399418999892,
+  "created_transmitters": 1000000,
+  "setup_elapsed_s": 148.37136319399997,
+  "setup_s": 148.40728685900012,
+  "termination": {
+    "returncode": 137,
+    "container_state": {
+      "command": [
+        "docker",
+        "inspect",
+        "--format",
+        "{{json .State}}",
+        "p100-legacy-scaling-20261003-1000000"
+      ],
+      "returncode": 0,
+      "stdout": "{\"Status\":\"exited\",\"Running\":false,\"Paused\":false,\"Restarting\":false,\"OOMKilled\":false,\"Dead\":false,\"Pid\":0,\"ExitCode\":137,\"Error\":\"\",\"StartedAt\":\"2026-10-04T01:47:42.880148701Z\",\"FinishedAt\":\"2026-10-04T01:51:12.296928909Z\"}\n",
+      "stderr": ""
+    }
+  },
+  "stop_reason": "User requested no further scaling after 100k reached memory pressure; stopped 1M during first solve after all TX objects were instantiated. Not an observed 1M allocation failure."
+}

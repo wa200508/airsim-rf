@@ -1,0 +1,1074 @@
+{
+  "arguments": {
+    "tx": 100,
+    "rx": 1,
+    "iterations": 30,
+    "warmup": 5,
+    "samples": 4096,
+    "samples_per_link": 1028,
+    "backend": "cuda",
+    "profile": false,
+    "threads": 2,
+    "output": "/work/results/p100-legacy-full-20261003/metrics/cuda_100tx_1rx.json"
+  },
+  "measurement_mode": "unprofiled_benchmark",
+  "scope": "915 MHz, 2 MS/s, 1 MHz filter, noisy independent-clock Pluto profile; moving mounts over 800-triangle DEM",
+  "timing_includes": "Pose writes, synchronized channel/NumPy export, per-path IQ, per-link diagnostic filters, receive noise/filter and ADC conversion",
+  "timing_excludes": [
+    "AirSim RPC/physics",
+    "transport",
+    "queueing",
+    "storage",
+    "plots",
+    "RF skill processing"
+  ],
+  "initial_tx_positions_m": [
+    [
+      0.0,
+      -25.0,
+      10.0
+    ],
+    [
+      0.0,
+      -24.494949494949495,
+      10.0
+    ],
+    [
+      0.0,
+      -23.98989898989899,
+      10.0
+    ],
+    [
+      0.0,
+      -23.484848484848484,
+      10.0
+    ],
+    [
+      0.0,
+      -22.97979797979798,
+      10.0
+    ],
+    [
+      0.0,
+      -22.474747474747474,
+      10.0
+    ],
+    [
+      0.0,
+      -21.96969696969697,
+      10.0
+    ],
+    [
+      0.0,
+      -21.464646464646464,
+      10.0
+    ],
+    [
+      0.0,
+      -20.95959595959596,
+      10.0
+    ],
+    [
+      0.0,
+      -20.454545454545453,
+      10.0
+    ],
+    [
+      0.0,
+      -19.949494949494948,
+      10.0
+    ],
+    [
+      0.0,
+      -19.444444444444443,
+      10.0
+    ],
+    [
+      0.0,
+      -18.939393939393938,
+      10.0
+    ],
+    [
+      0.0,
+      -18.434343434343432,
+      10.0
+    ],
+    [
+      0.0,
+      -17.929292929292927,
+      10.0
+    ],
+    [
+      0.0,
+      -17.424242424242422,
+      10.0
+    ],
+    [
+      0.0,
+      -16.919191919191917,
+      10.0
+    ],
+    [
+      0.0,
+      -16.41414141414141,
+      10.0
+    ],
+    [
+      0.0,
+      -15.909090909090908,
+      10.0
+    ],
+    [
+      0.0,
+      -15.404040404040403,
+      10.0
+    ],
+    [
+      0.0,
+      -14.898989898989898,
+      10.0
+    ],
+    [
+      0.0,
+      -14.393939393939393,
+      10.0
+    ],
+    [
+      0.0,
+      -13.888888888888888,
+      10.0
+    ],
+    [
+      0.0,
+      -13.383838383838382,
+      10.0
+    ],
+    [
+      0.0,
+      -12.878787878787879,
+      10.0
+    ],
+    [
+      0.0,
+      -12.373737373737374,
+      10.0
+    ],
+    [
+      0.0,
+      -11.868686868686869,
+      10.0
+    ],
+    [
+      0.0,
+      -11.363636363636363,
+      10.0
+    ],
+    [
+      0.0,
+      -10.858585858585858,
+      10.0
+    ],
+    [
+      0.0,
+      -10.353535353535353,
+      10.0
+    ],
+    [
+      0.0,
+      -9.848484848484848,
+      10.0
+    ],
+    [
+      0.0,
+      -9.343434343434343,
+      10.0
+    ],
+    [
+      0.0,
+      -8.838383838383837,
+      10.0
+    ],
+    [
+      0.0,
+      -8.333333333333332,
+      10.0
+    ],
+    [
+      0.0,
+      -7.828282828282827,
+      10.0
+    ],
+    [
+      0.0,
+      -7.323232323232322,
+      10.0
+    ],
+    [
+      0.0,
+      -6.818181818181817,
+      10.0
+    ],
+    [
+      0.0,
+      -6.313131313131311,
+      10.0
+    ],
+    [
+      0.0,
+      -5.808080808080806,
+      10.0
+    ],
+    [
+      0.0,
+      -5.303030303030301,
+      10.0
+    ],
+    [
+      0.0,
+      -4.797979797979796,
+      10.0
+    ],
+    [
+      0.0,
+      -4.292929292929291,
+      10.0
+    ],
+    [
+      0.0,
+      -3.7878787878787854,
+      10.0
+    ],
+    [
+      0.0,
+      -3.28282828282828,
+      10.0
+    ],
+    [
+      0.0,
+      -2.777777777777775,
+      10.0
+    ],
+    [
+      0.0,
+      -2.27272727272727,
+      10.0
+    ],
+    [
+      0.0,
+      -1.7676767676767646,
+      10.0
+    ],
+    [
+      0.0,
+      -1.2626262626262594,
+      10.0
+    ],
+    [
+      0.0,
+      -0.7575757575757578,
+      10.0
+    ],
+    [
+      0.0,
+      -0.2525252525252526,
+      10.0
+    ],
+    [
+      0.0,
+      0.2525252525252526,
+      10.0
+    ],
+    [
+      0.0,
+      0.7575757575757578,
+      10.0
+    ],
+    [
+      0.0,
+      1.262626262626263,
+      10.0
+    ],
+    [
+      0.0,
+      1.7676767676767682,
+      10.0
+    ],
+    [
+      0.0,
+      2.2727272727272734,
+      10.0
+    ],
+    [
+      0.0,
+      2.7777777777777786,
+      10.0
+    ],
+    [
+      0.0,
+      3.2828282828282838,
+      10.0
+    ],
+    [
+      0.0,
+      3.787878787878789,
+      10.0
+    ],
+    [
+      0.0,
+      4.292929292929294,
+      10.0
+    ],
+    [
+      0.0,
+      4.797979797979799,
+      10.0
+    ],
+    [
+      0.0,
+      5.3030303030303045,
+      10.0
+    ],
+    [
+      0.0,
+      5.80808080808081,
+      10.0
+    ],
+    [
+      0.0,
+      6.313131313131315,
+      10.0
+    ],
+    [
+      0.0,
+      6.81818181818182,
+      10.0
+    ],
+    [
+      0.0,
+      7.323232323232325,
+      10.0
+    ],
+    [
+      0.0,
+      7.8282828282828305,
+      10.0
+    ],
+    [
+      0.0,
+      8.333333333333336,
+      10.0
+    ],
+    [
+      0.0,
+      8.838383838383841,
+      10.0
+    ],
+    [
+      0.0,
+      9.343434343434346,
+      10.0
+    ],
+    [
+      0.0,
+      9.848484848484851,
+      10.0
+    ],
+    [
+      0.0,
+      10.353535353535356,
+      10.0
+    ],
+    [
+      0.0,
+      10.858585858585862,
+      10.0
+    ],
+    [
+      0.0,
+      11.363636363636367,
+      10.0
+    ],
+    [
+      0.0,
+      11.868686868686872,
+      10.0
+    ],
+    [
+      0.0,
+      12.373737373737377,
+      10.0
+    ],
+    [
+      0.0,
+      12.878787878787882,
+      10.0
+    ],
+    [
+      0.0,
+      13.383838383838388,
+      10.0
+    ],
+    [
+      0.0,
+      13.888888888888893,
+      10.0
+    ],
+    [
+      0.0,
+      14.393939393939398,
+      10.0
+    ],
+    [
+      0.0,
+      14.898989898989903,
+      10.0
+    ],
+    [
+      0.0,
+      15.404040404040408,
+      10.0
+    ],
+    [
+      0.0,
+      15.909090909090914,
+      10.0
+    ],
+    [
+      0.0,
+      16.41414141414142,
+      10.0
+    ],
+    [
+      0.0,
+      16.919191919191924,
+      10.0
+    ],
+    [
+      0.0,
+      17.42424242424243,
+      10.0
+    ],
+    [
+      0.0,
+      17.929292929292934,
+      10.0
+    ],
+    [
+      0.0,
+      18.43434343434344,
+      10.0
+    ],
+    [
+      0.0,
+      18.939393939393945,
+      10.0
+    ],
+    [
+      0.0,
+      19.44444444444445,
+      10.0
+    ],
+    [
+      0.0,
+      19.949494949494955,
+      10.0
+    ],
+    [
+      0.0,
+      20.45454545454546,
+      10.0
+    ],
+    [
+      0.0,
+      20.959595959595966,
+      10.0
+    ],
+    [
+      0.0,
+      21.46464646464647,
+      10.0
+    ],
+    [
+      0.0,
+      21.969696969696976,
+      10.0
+    ],
+    [
+      0.0,
+      22.47474747474748,
+      10.0
+    ],
+    [
+      0.0,
+      22.979797979797986,
+      10.0
+    ],
+    [
+      0.0,
+      23.484848484848484,
+      10.0
+    ],
+    [
+      0.0,
+      23.98989898989899,
+      10.0
+    ],
+    [
+      0.0,
+      24.494949494949495,
+      10.0
+    ],
+    [
+      0.0,
+      25.0,
+      10.0
+    ]
+  ],
+  "initial_rx_positions_m": [
+    [
+      -30.0,
+      -10.0,
+      14.0
+    ]
+  ],
+  "capture_duration_ms": 2.048,
+  "filter_warmup_samples": 256,
+  "preparation_ms": 2006.0338739995132,
+  "first_capture": {
+    "epoch_s": 0.0,
+    "service_ms": 10435.588586999984,
+    "pose_ms": 12.644851000004564,
+    "capture_ms": 10422.942725999746,
+    "channel_ms": 1289.5518020004602,
+    "cpu_iq_receiver_ms": 9133.390923999286,
+    "stage_timings": {
+      "legacy_native_solve_export_ms": 1278.2155710001462,
+      "host_numpy_sampling_ms": 0.0,
+      "proposal_table_prepare_ms": 0.0
+    },
+    "retained_paths": 47831,
+    "clipping_fraction_max": 0.0
+  },
+  "first_capture_note": "New process with existing on-disk JIT cache; imports excluded; not a cache-cleared cold-start benchmark",
+  "service": {
+    "p50_ms": 9480.63214900003,
+    "p95_ms": 9554.353468899944,
+    "mean_ms": 9489.70017156656,
+    "max_ms": 9563.444759000049
+  },
+  "channel": {
+    "p50_ms": 356.305601999793,
+    "p95_ms": 363.3966447000148,
+    "mean_ms": 356.89009310002194,
+    "max_ms": 367.84660600005736
+  },
+  "cpu_iq_receiver": {
+    "p50_ms": 9113.754275500469,
+    "p95_ms": 9187.747624049825,
+    "mean_ms": 9119.900473399897,
+    "max_ms": 9196.364725999956
+  },
+  "serial_wall_s": 284.69238243200016,
+  "sustained_updates_hz": 0.10537689749098085,
+  "receiver_blocks_per_second": 0.10537689749098085,
+  "deadline_misses": {
+    "120": 30,
+    "200": 30
+  },
+  "stage_timings": {
+    "legacy_native_solve_export_ms": {
+      "p50_ms": 341.79230000017924,
+      "p95_ms": 347.2614020502533,
+      "mean_ms": 341.96135599998644,
+      "max_ms": 355.60164599974087
+    }
+  },
+  "retained_paths": {
+    "min": 47832,
+    "max": 47835
+  },
+  "host": {
+    "cpu_count": 16,
+    "cpu_quota": "max 100000",
+    "memory_limit_bytes": "max",
+    "drjit_threads": 2,
+    "peak_rss_mib": 1290.5234375,
+    "cuda_available": 1
+  },
+  "versions": {
+    "sionna_rt": "0.19.2",
+    "mitsuba": "3.5.2",
+    "drjit": "0.4.6",
+    "backend": "cuda_ad_rgb"
+  },
+  "profile_note": "Profiled serial throughput includes event/history instrumentation; use separate unprofiled runs for performance.",
+  "gpu_note": "Measured legacy service/channel latency. Original custom-solver work-count estimates do not apply.",
+  "samples": [
+    {
+      "epoch_s": 0.03,
+      "service_ms": 9453.508491999855,
+      "pose_ms": 12.572751000334392,
+      "capture_ms": 9440.935060999436,
+      "channel_ms": 360.1840709998214,
+      "cpu_iq_receiver_ms": 9080.750989999615,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 342.43103900007554,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 47833,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.035,
+      "service_ms": 9471.79056100049,
+      "pose_ms": 13.10530499995366,
+      "capture_ms": 9458.684436000112,
+      "channel_ms": 361.93698799979757,
+      "cpu_iq_receiver_ms": 9096.747448000315,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 343.2454690000668,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 47833,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.04,
+      "service_ms": 9563.444759000049,
+      "pose_ms": 13.904571999773907,
+      "capture_ms": 9549.538727000254,
+      "channel_ms": 353.1740010002977,
+      "cpu_iq_receiver_ms": 9196.364725999956,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 337.5062249997427,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 47834,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.045,
+      "service_ms": 9474.416245999237,
+      "pose_ms": 12.690161999671545,
+      "capture_ms": 9461.725273999946,
+      "channel_ms": 357.3904280001443,
+      "cpu_iq_receiver_ms": 9104.334845999801,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 339.13678099997924,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 47834,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.05,
+      "service_ms": 9440.803815000436,
+      "pose_ms": 14.015591999850585,
+      "capture_ms": 9426.787262000289,
+      "channel_ms": 361.3279720002538,
+      "cpu_iq_receiver_ms": 9065.459290000035,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 344.3033450002986,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 47834,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.055,
+      "service_ms": 9461.18575699984,
+      "pose_ms": 12.847513999986404,
+      "capture_ms": 9448.337812999853,
+      "channel_ms": 358.8178039999548,
+      "cpu_iq_receiver_ms": 9089.520008999898,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 343.01220799989096,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 47834,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.06,
+      "service_ms": 9513.560325000071,
+      "pose_ms": 13.588128999799665,
+      "capture_ms": 9499.97140600044,
+      "channel_ms": 362.2875950004527,
+      "cpu_iq_receiver_ms": 9137.683810999988,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 344.8204850001275,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 47834,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.065,
+      "service_ms": 9485.2278139997,
+      "pose_ms": 12.749622999763233,
+      "capture_ms": 9472.47777099983,
+      "channel_ms": 351.9805450005151,
+      "cpu_iq_receiver_ms": 9120.497225999316,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 341.11159700023563,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 47834,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.07,
+      "service_ms": 9490.658241999881,
+      "pose_ms": 13.155806000213488,
+      "capture_ms": 9477.501876000133,
+      "channel_ms": 349.1698849993554,
+      "cpu_iq_receiver_ms": 9128.331991000778,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 336.242459999994,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 47833,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.075,
+      "service_ms": 9492.54727099924,
+      "pose_ms": 12.706812000033096,
+      "capture_ms": 9479.839388999608,
+      "channel_ms": 359.58684100023675,
+      "cpu_iq_receiver_ms": 9120.252547999371,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 346.8898379996972,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 47834,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.08,
+      "service_ms": 9437.092445000417,
+      "pose_ms": 12.791793000360485,
+      "capture_ms": 9424.299891999908,
+      "channel_ms": 353.99479799980327,
+      "cpu_iq_receiver_ms": 9070.305094000105,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 335.80716099913843,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 47834,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.085,
+      "service_ms": 9440.700144999937,
+      "pose_ms": 13.201025999478588,
+      "capture_ms": 9427.498689000458,
+      "channel_ms": 356.62741200030723,
+      "cpu_iq_receiver_ms": 9070.871277000151,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 343.07341200019437,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 47834,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.09,
+      "service_ms": 9490.582078999978,
+      "pose_ms": 13.11624599929928,
+      "capture_ms": 9477.46483300034,
+      "channel_ms": 360.55076499997085,
+      "cpu_iq_receiver_ms": 9116.91406800037,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 342.5395899994328,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 47834,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.095,
+      "service_ms": 9457.423228000152,
+      "pose_ms": 12.455940999643644,
+      "capture_ms": 9444.966887000191,
+      "channel_ms": 353.48784000052547,
+      "cpu_iq_receiver_ms": 9091.479046999666,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 341.88132700001006,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 47832,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.1,
+      "service_ms": 9461.006495999754,
+      "pose_ms": 13.533299000300758,
+      "capture_ms": 9447.472797000046,
+      "channel_ms": 355.98379199927876,
+      "cpu_iq_receiver_ms": 9091.489005000767,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 340.8142600001156,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 47832,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.105,
+      "service_ms": 9476.03648400036,
+      "pose_ms": 12.787593000211928,
+      "capture_ms": 9463.248551000106,
+      "channel_ms": 352.6540679995378,
+      "cpu_iq_receiver_ms": 9110.594483000568,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 340.1967069994498,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 47832,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.11,
+      "service_ms": 9467.308360000061,
+      "pose_ms": 11.009679000380856,
+      "capture_ms": 9456.298240999786,
+      "channel_ms": 358.93751099956717,
+      "cpu_iq_receiver_ms": 9097.360730000219,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 347.5654090007083,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 47833,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.115,
+      "service_ms": 9513.187016999836,
+      "pose_ms": 13.720171000386472,
+      "capture_ms": 9499.466425999344,
+      "channel_ms": 355.3204139998343,
+      "cpu_iq_receiver_ms": 9144.14601199951,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 341.7032730003484,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 47833,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.12,
+      "service_ms": 9450.421200999699,
+      "pose_ms": 11.248591999901691,
+      "capture_ms": 9439.172039000368,
+      "channel_ms": 364.3040489996565,
+      "cpu_iq_receiver_ms": 9074.867990000712,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 341.9024869999703,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 47833,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.125,
+      "service_ms": 9545.7514790005,
+      "pose_ms": 12.285349000194401,
+      "capture_ms": 9533.465150000666,
+      "channel_ms": 355.51115900034347,
+      "cpu_iq_receiver_ms": 9177.953991000322,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 343.8574149995475,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 47833,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.13,
+      "service_ms": 9531.254881999303,
+      "pose_ms": 12.9272949998267,
+      "capture_ms": 9518.327126999793,
+      "channel_ms": 355.18616900026245,
+      "cpu_iq_receiver_ms": 9163.14095799953,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 339.8803449999832,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 47833,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.135,
+      "service_ms": 9505.44388399976,
+      "pose_ms": 13.008054999772867,
+      "capture_ms": 9492.435298999226,
+      "channel_ms": 360.06419000023016,
+      "cpu_iq_receiver_ms": 9132.371108998996,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 343.31094400022266,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 47834,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.14,
+      "service_ms": 9543.27725299936,
+      "pose_ms": 12.513851999756298,
+      "capture_ms": 9530.762370999582,
+      "channel_ms": 367.84660600005736,
+      "cpu_iq_receiver_ms": 9162.915764999525,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 355.60164599974087,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 47834,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.145,
+      "service_ms": 9455.222284999763,
+      "pose_ms": 12.553741999909107,
+      "capture_ms": 9442.667942999833,
+      "channel_ms": 355.40583600050013,
+      "cpu_iq_receiver_ms": 9087.262106999333,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 341.2724910003817,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 47834,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.15,
+      "service_ms": 9439.114820999748,
+      "pose_ms": 12.798353999642131,
+      "capture_ms": 9426.315746999535,
+      "channel_ms": 350.6251799999518,
+      "cpu_iq_receiver_ms": 9075.690566999583,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 338.64963199994236,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 47834,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.155,
+      "service_ms": 9497.29950299934,
+      "pose_ms": 13.116916999933892,
+      "capture_ms": 9484.1813059993,
+      "channel_ms": 357.86009000003105,
+      "cpu_iq_receiver_ms": 9126.321215999269,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 341.5378259996942,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 47834,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.16,
+      "service_ms": 9549.521875999744,
+      "pose_ms": 13.290588000018033,
+      "capture_ms": 9536.2306979996,
+      "channel_ms": 350.6786030002331,
+      "cpu_iq_receiver_ms": 9185.552094999366,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 338.7901759997476,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 47835,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.165,
+      "service_ms": 9474.565399000312,
+      "pose_ms": 14.199676000316686,
+      "capture_ms": 9460.365312999784,
+      "channel_ms": 355.5195939998157,
+      "cpu_iq_receiver_ms": 9104.845718999968,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 338.76295700065384,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 47835,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.17,
+      "service_ms": 9554.0569650002,
+      "pose_ms": 12.144449000516033,
+      "capture_ms": 9541.911946000255,
+      "channel_ms": 352.36798000005365,
+      "cpu_iq_receiver_ms": 9189.543966000201,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 337.8841720004857,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 47835,
+      "clipping_fraction_max": 0.0
+    },
+    {
+      "epoch_s": 0.175,
+      "service_ms": 9554.596062999735,
+      "pose_ms": 13.22885799982032,
+      "capture_ms": 9541.366724999534,
+      "channel_ms": 357.92060699986905,
+      "cpu_iq_receiver_ms": 9183.446117999665,
+      "stage_timings": {
+        "legacy_native_solve_export_ms": 345.11000299971784,
+        "host_numpy_sampling_ms": 0.0,
+        "proposal_table_prepare_ms": 0.0
+      },
+      "retained_paths": 47834,
+      "clipping_fraction_max": 0.0
+    }
+  ],
+  "legacy_scope": {
+    "stack": {
+      "sionna": "0.19.2",
+      "mitsuba": "3.5.2",
+      "drjit": "0.4.6",
+      "tensorflow": "2.15.1",
+      "python": "3.11"
+    },
+    "propagation": "Legacy native Sionna Fibonacci solver; max_depth=1, LoS/reflection/scattering, scat_keep_prob=1, scat_random_phases=False. 1028 launched rays per TX, shared across receivers. Synthetic single-element arrays. Original terrain mesh and dielectric parameters (epsilon_r=5, conductivity=.01, scattering=.3), converted to legacy scene format; the legacy material has no thickness equivalent.",
+    "receiver": "Original branch SDRNetworkReceiver, waveform synthesis, independent clocks, filtering, noise and ADC; external Paths adapter supplies compact legacy channels and platform Doppler.",
+    "comparison_limit": "Not the profiling/p100 custom first-order sampler or Sionna 2.2 implementation. No numerical equivalence validation. Legacy rays and retained-path counts differ. Published current-solver CPU results and its work-count model are not directly comparable.",
+    "profile_limit": "Dr.Jit histories record its CUDA/OptiX operations only, not TensorFlow CUDA kernels. Inclusive host ranges overlap. Device-event sums are not service critical-path latency.",
+    "sampling_timers": "Original host_numpy_sampling_ms and proposal_table_prepare_ms are adapter compatibility placeholders set to zero; they are not measured stage timings and are excluded from the report.",
+    "cpu_baseline": "CPU cases hide GPUs from TensorFlow and use Mitsuba llvm_ad_rgb. CUDA cases use cuda_ad_rgb and TensorFlow CUDA. Dr.Jit uses two threads; TensorFlow thread defaults are not constrained.",
+    "outputs": "4096 complex samples per capture at 2 MS/s, 915 MHz carrier, 1 MHz receive bandwidth, one receiver per benchmark; example uses two TX and two RX."
+  }
+}

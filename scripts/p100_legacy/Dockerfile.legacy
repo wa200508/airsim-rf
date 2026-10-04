@@ -1,0 +1,5 @@
+FROM python:3.11-slim-bookworm
+RUN apt-get update && apt-get install -y --no-install-recommends libllvm14 libgl1 libglib2.0-0 && rm -rf /var/lib/apt/lists/*
+RUN python -m pip install --no-cache-dir sionna==0.19.2 mitsuba==3.5.2 drjit==0.4.6 tensorflow==2.15.1
+COPY --from=airsim-rf:p100-profile /opt/airsim-rf/benchmarks/scenes /opt/airsim-rf/benchmarks/scenes
+ENTRYPOINT ["python"]

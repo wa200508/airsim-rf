@@ -1,0 +1,65 @@
+{
+  "schema_version": 1,
+  "run_id": "p100-quick-20261003-2005",
+  "started_utc": "2026-10-04T00:12:49.195248+00:00",
+  "arguments": {
+    "output_root": "/work/results",
+    "run_id": "p100-quick-20261003-2005",
+    "quick": true,
+    "cpu_only": false,
+    "tx": [
+      2,
+      100
+    ],
+    "samples": 4096,
+    "samples_per_link": 1028,
+    "threads": 2,
+    "no_example": false,
+    "no_nsys": false,
+    "no_telemetry": false
+  },
+  "tasks": [
+    {
+      "name": "cuda_preflight",
+      "command": [
+        "/opt/airsim-rf/.venv/bin/python",
+        "/opt/airsim-rf/scripts/gpu_preflight.py",
+        "--output",
+        "/work/results/p100-quick-20261003-2005/profiles/cuda_preflight.json"
+      ],
+      "artifact": "profiles/cuda_preflight.json",
+      "log": "logs/cuda_preflight.log",
+      "required": true,
+      "status": "interrupted",
+      "reason": "Stopped after separate diagnostic established CUDA incompatibility."
+    },
+    {
+      "name": "cuda_compatibility_diagnostic",
+      "status": "failed",
+      "required": true,
+      "log": "logs/cuda_compatibility_diagnostic.log",
+      "returncode": 1,
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "--gpus",
+        "device=0",
+        "-e",
+        "NVIDIA_DRIVER_CAPABILITIES=compute,utility,graphics",
+        "--entrypoint",
+        "python",
+        "airsim-rf:p100-profile",
+        "-u",
+        "-c",
+        "import drjit as dr; import mitsuba as mi; print(\"Dr.Jit:\", dr.__version__); print(\"Mitsuba:\", mi.__version__); print(\"CUDA backend available:\", dr.has_backend(dr.JitBackend.CUDA)); mi.set_variant(\"cuda_ad_mono_polarized\")"
+      ]
+    }
+  ],
+  "gpu_status": "blocked",
+  "complete": false,
+  "telemetry_enabled": true,
+  "error": "Dr.Jit 1.5.0 rejects P100 compute capability 6.0: requires >=7.5. Separate CUDA initialization diagnostic returned no compatible device. Original preflight interrupted after 7 minutes without completion.",
+  "finished_utc": "2026-10-04T00:20:07.981337+00:00",
+  "required_tasks_passed": false
+}

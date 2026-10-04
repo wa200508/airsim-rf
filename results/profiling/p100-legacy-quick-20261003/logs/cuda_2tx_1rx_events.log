@@ -1,0 +1,11 @@
+2026-10-04 01:00:22.587812: E external/local_xla/xla/stream_executor/cuda/cuda_dnn.cc:9261] Unable to register cuDNN factory: Attempting to register factory for plugin cuDNN when one has already been registered
+2026-10-04 01:00:22.587868: E external/local_xla/xla/stream_executor/cuda/cuda_fft.cc:607] Unable to register cuFFT factory: Attempting to register factory for plugin cuFFT when one has already been registered
+2026-10-04 01:00:22.588693: E external/local_xla/xla/stream_executor/cuda/cuda_blas.cc:1515] Unable to register cuBLAS factory: Attempting to register factory for plugin cuBLAS when one has already been registered
+LEGACY P100 ADAPTER: Sionna 0.19.2; native Fibonacci rays; original I/Q receiver chain; backend cuda_ad_rgb
+Traceback (most recent call last):
+  File "/opt/airsim-rf/benchmarks/benchmark_sdr_runtime.py", line 159, in <module>
+    main()
+  File "/opt/airsim-rf/benchmarks/benchmark_sdr_runtime.py", line 144, in main
+    memory_limit_bytes=Path('/sys/fs/cgroup/memory.max').read_text().strip(), drjit_threads=dr.thread_count(),
+                                                                                            ^^^^^^^^^^^^^^^
+AttributeError: module 'drjit' has no attribute 'thread_count'. Did you mean: 'set_thread_count'?

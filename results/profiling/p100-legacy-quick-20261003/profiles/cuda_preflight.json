@@ -1,0 +1,100 @@
+{
+  "backend_requested": "cuda",
+  "status": "ok",
+  "cuda_available": 1,
+  "versions": {
+    "sionna_rt": "0.19.2",
+    "mitsuba": "3.5.2",
+    "drjit": "0.4.6",
+    "backend": "cuda_ad_rgb"
+  },
+  "specular_planes": 800,
+  "retained_paths": 15,
+  "profile": {
+    "records": [
+      {
+        "backend": "CUDA",
+        "type": "Other",
+        "execution_time": 0.007615999784320593,
+        "codegen_time": 0.0,
+        "backend_time": 0.0
+      },
+      {
+        "backend": "CUDA",
+        "type": "JIT",
+        "hash": "2186fdac656ad5df6a682c82122ac90d",
+        "execution_time": 0.06092799827456474,
+        "operation_count": 185,
+        "cache_hit": 0,
+        "cache_disk": 0,
+        "codegen_time": 0.086030013859272,
+        "backend_time": 29.931903839111328,
+        "uses_optix": 1
+      },
+      {
+        "backend": "CUDA",
+        "type": "JIT",
+        "hash": "df5c81b289a537608a25b4ae6289cf7f",
+        "execution_time": 0.06038400158286095,
+        "operation_count": 180,
+        "cache_hit": 0,
+        "cache_disk": 0,
+        "codegen_time": 0.12495101243257523,
+        "backend_time": 22.971405029296875,
+        "uses_optix": 1
+      },
+      {
+        "backend": "CUDA",
+        "type": "JIT",
+        "hash": "a5efba9aed35404559ca230ffb1c1c67",
+        "execution_time": 0.004991999827325344,
+        "operation_count": 19,
+        "cache_hit": 1,
+        "cache_disk": 0,
+        "codegen_time": 0.008870000950992107,
+        "backend_time": 0.0,
+        "uses_optix": 0
+      },
+      {
+        "backend": "CUDA",
+        "type": "JIT",
+        "hash": "bbb37c8863c7d41cc1904c5a31d5caf5",
+        "execution_time": 0.043776001781225204,
+        "operation_count": 36,
+        "cache_hit": 0,
+        "cache_disk": 0,
+        "codegen_time": 0.05248100683093071,
+        "backend_time": 14.713504791259766,
+        "uses_optix": 1
+      },
+      {
+        "backend": "CUDA",
+        "type": "JIT",
+        "hash": "bbb37c8863c7d41cc1904c5a31d5caf5",
+        "execution_time": 0.04758400097489357,
+        "operation_count": 36,
+        "cache_hit": 1,
+        "cache_disk": 0,
+        "codegen_time": 0.029180003330111504,
+        "backend_time": 0.0,
+        "uses_optix": 1
+      },
+      {
+        "backend": "CUDA",
+        "type": "JIT",
+        "hash": "bbb37c8863c7d41cc1904c5a31d5caf5",
+        "execution_time": 0.06067200005054474,
+        "operation_count": 36,
+        "cache_hit": 1,
+        "cache_disk": 0,
+        "codegen_time": 0.05638100579380989,
+        "backend_time": 0.0,
+        "uses_optix": 1
+      }
+    ],
+    "cuda_operation_count": 7,
+    "cuda_event_time_sum_ms": 0.28595200227573514,
+    "optix_kernel_count": 5,
+    "note": "Event-time sum includes recorded CUDA operations; not critical-path latency. IR omitted."
+  }
+}

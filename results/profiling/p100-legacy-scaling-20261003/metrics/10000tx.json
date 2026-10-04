@@ -1,0 +1,243 @@
+{
+  "arguments": {
+    "tx": 10000,
+    "rays_per_tx": 1028,
+    "iterations": 3,
+    "warmup": 1,
+    "output": "/work/results/metrics/10000tx.json"
+  },
+  "status": "ok",
+  "measurement": "simultaneous native legacy propagation; no signal rendering, no IQ, no ADC; not transmitter batches",
+  "epochs": [
+    {
+      "trace_ms": 3421.248960000412,
+      "fields_and_fence_ms": 2588.4944210001777,
+      "propagation_ms": 6009.74338100059,
+      "retained_paths": 4783436,
+      "coefficient_shape": [
+        1,
+        1,
+        1,
+        10000,
+        1,
+        483,
+        1
+      ],
+      "coefficient_fence": 12.974384307861328,
+      "tensorflow_memory": {
+        "current": 1464431872,
+        "peak": 6027813120
+      },
+      "host_peak_rss_mib": 3313.421875
+    },
+    {
+      "trace_ms": 3408.458961999713,
+      "fields_and_fence_ms": 2582.0634419997077,
+      "propagation_ms": 5990.522403999421,
+      "retained_paths": 4783436,
+      "coefficient_shape": [
+        1,
+        1,
+        1,
+        10000,
+        1,
+        483,
+        1
+      ],
+      "coefficient_fence": 12.974384307861328,
+      "tensorflow_memory": {
+        "current": 1490274560,
+        "peak": 6107173120
+      },
+      "host_peak_rss_mib": 3324.31640625
+    },
+    {
+      "trace_ms": 3414.80211399994,
+      "fields_and_fence_ms": 2584.0703409994603,
+      "propagation_ms": 5998.8724549994,
+      "retained_paths": 4783436,
+      "coefficient_shape": [
+        1,
+        1,
+        1,
+        10000,
+        1,
+        483,
+        1
+      ],
+      "coefficient_fence": 12.974384307861328,
+      "tensorflow_memory": {
+        "current": 1471121664,
+        "peak": 6107173120
+      },
+      "host_peak_rss_mib": 3324.31640625
+    }
+  ],
+  "stage": "complete",
+  "versions": {
+    "sionna": "0.19.2",
+    "mitsuba": "3.5.2",
+    "drjit": "0.4.6",
+    "tensorflow": "2.15.1",
+    "backend": "cuda_ad_rgb"
+  },
+  "host": {
+    "cpu_count": 16,
+    "cpu_quota": "max 100000",
+    "memory_limit": "12884901888"
+  },
+  "ray_count": 10280000,
+  "import_s": 2.0934721450003053,
+  "created_transmitters": 10000,
+  "setup_elapsed_s": 3.6384361990003526,
+  "setup_s": 3.6390081809995536,
+  "first": {
+    "trace_ms": 5527.831269000671,
+    "fields_and_fence_ms": 3331.8091359997197,
+    "propagation_ms": 8859.640405000391,
+    "retained_paths": 4783436,
+    "coefficient_shape": [
+      1,
+      1,
+      1,
+      10000,
+      1,
+      483,
+      1
+    ],
+    "coefficient_fence": 12.974384307861328,
+    "tensorflow_memory": {
+      "current": 1512804352,
+      "peak": 5889924864
+    },
+    "host_peak_rss_mib": 3139.98046875
+  },
+  "warmups": [
+    {
+      "trace_ms": 3439.2658879996816,
+      "fields_and_fence_ms": 2599.8009249997267,
+      "propagation_ms": 6039.066812999408,
+      "retained_paths": 4783436,
+      "coefficient_shape": [
+        1,
+        1,
+        1,
+        10000,
+        1,
+        483,
+        1
+      ],
+      "coefficient_fence": 12.974384307861328,
+      "tensorflow_memory": {
+        "current": 1664124928,
+        "peak": 6027813120
+      },
+      "host_peak_rss_mib": 3302.4140625
+    }
+  ],
+  "profile": {
+    "trace_ms": 3426.126330000443,
+    "fields_and_fence_ms": 2657.774003999293,
+    "propagation_ms": 6083.900333999736,
+    "retained_paths": 4783436,
+    "coefficient_shape": [
+      1,
+      1,
+      1,
+      10000,
+      1,
+      483,
+      1
+    ],
+    "coefficient_fence": 12.974384307861328,
+    "tensorflow_memory": {
+      "current": 1502938624,
+      "peak": 6107173120
+    },
+    "host_peak_rss_mib": 3324.31640625,
+    "device_events": [
+      {
+        "backend": "CUDA",
+        "type": "Other",
+        "execution_time": 0.006816000211983919,
+        "codegen_time": 0.0,
+        "backend_time": 0.0
+      },
+      {
+        "backend": "CUDA",
+        "type": "JIT",
+        "execution_time": 7.270016193389893,
+        "operation_count": 185,
+        "cache_hit": 1,
+        "cache_disk": 0,
+        "codegen_time": 0.06701000779867172,
+        "backend_time": 0.0,
+        "uses_optix": 1
+      },
+      {
+        "backend": "CUDA",
+        "type": "JIT",
+        "execution_time": 7.432511806488037,
+        "operation_count": 180,
+        "cache_hit": 1,
+        "cache_disk": 0,
+        "codegen_time": 0.08219000697135925,
+        "backend_time": 0.0,
+        "uses_optix": 1
+      },
+      {
+        "backend": "CUDA",
+        "type": "JIT",
+        "execution_time": 0.9382079839706421,
+        "operation_count": 19,
+        "cache_hit": 1,
+        "cache_disk": 0,
+        "codegen_time": 0.008590000681579113,
+        "backend_time": 0.0,
+        "uses_optix": 0
+      },
+      {
+        "backend": "CUDA",
+        "type": "JIT",
+        "execution_time": 3.8386878967285156,
+        "operation_count": 36,
+        "cache_hit": 1,
+        "cache_disk": 0,
+        "codegen_time": 0.0494300052523613,
+        "backend_time": 0.0,
+        "uses_optix": 1
+      },
+      {
+        "backend": "CUDA",
+        "type": "JIT",
+        "execution_time": 1.0539840459823608,
+        "operation_count": 36,
+        "cache_hit": 1,
+        "cache_disk": 0,
+        "codegen_time": 0.05077000707387924,
+        "backend_time": 0.0,
+        "uses_optix": 1
+      },
+      {
+        "backend": "CUDA",
+        "type": "JIT",
+        "execution_time": 5.806623935699463,
+        "operation_count": 36,
+        "cache_hit": 1,
+        "cache_disk": 0,
+        "codegen_time": 0.03458000347018242,
+        "backend_time": 0.0,
+        "uses_optix": 1
+      }
+    ]
+  },
+  "statistics": {
+    "p50_ms": 5998.8724549994,
+    "p95_ms": 6008.656288400471,
+    "max_ms": 6009.74338100059,
+    "mean_ms": 5999.712746666471,
+    "serial_updates_hz": 0.16667464630796114
+  },
+  "wall_s": 44.82696712500001,
+  "host_peak_rss_mib": 3324.31640625
+}

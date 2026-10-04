@@ -1,0 +1,657 @@
+{
+  "hardware": "ADALM-PLUTO specification-based profile; no hardware calibration",
+  "scope": "Offline moving RF mounts, not a live AirSim flight or distributed ESM worker",
+  "profile": {
+    "carrier_hz": 915000000.0,
+    "sample_rate_hz": 2000000.0,
+    "rf_bandwidth_hz": 1000000.0,
+    "noise_figure_db": 10.0,
+    "input_full_scale_dbm": -30.0,
+    "temperature_k": 290.0,
+    "impedance_ohm": 50.0,
+    "noise_enabled": true
+  },
+  "adc_bits": 12,
+  "epochs_s": [
+    0.0,
+    0.5,
+    1.0,
+    1.5,
+    2.0,
+    2.5,
+    3.0,
+    3.5,
+    4.0,
+    4.5,
+    5.0,
+    5.5
+  ],
+  "nominal_channel_update_hz": 200,
+  "samples_per_capture": 4096,
+  "antennas": "Ideal vertical half-wave dipoles",
+  "clocks": [
+    {
+      "error_ppm": 12,
+      "phase_rad": 0.2
+    },
+    {
+      "error_ppm": -8,
+      "phase_rad": 1.1
+    },
+    {
+      "error_ppm": 5,
+      "phase_rad": -0.7
+    },
+    {
+      "error_ppm": -10,
+      "phase_rad": 0.4
+    }
+  ],
+  "devices": [
+    "beacon_a",
+    "beacon_b",
+    "listener_a",
+    "listener_b"
+  ],
+  "positions_at_start_m": [
+    [
+      -60.0,
+      -30.0,
+      12.0
+    ],
+    [
+      45.0,
+      45.0,
+      18.0
+    ],
+    [
+      -30.0,
+      -10.0,
+      14.0
+    ],
+    [
+      30.0,
+      -50.0,
+      20.0
+    ]
+  ],
+  "velocities_m_s": [
+    [
+      2.0,
+      0.0,
+      0.0
+    ],
+    [
+      -1.0,
+      0.0,
+      0.0
+    ],
+    [
+      3.0,
+      0.0,
+      0.0
+    ],
+    [
+      0.0,
+      3.0,
+      0.0
+    ]
+  ],
+  "emitter_baseband_hz": [
+    150000.0,
+    -200000.0
+  ],
+  "emitter_port_power_dbm": [
+    0.0,
+    -30.0
+  ],
+  "expected_tone_hz_excluding_doppler": [
+    [
+      156406.01796991014,
+      -211892.34053829729
+    ],
+    [
+      170133.50133501334,
+      -198170.38170381702
+    ]
+  ],
+  "propagation": "diffuse",
+  "attempts_per_link": 1028,
+  "records": [
+    {
+      "epoch_s": 0.0,
+      "channel_ms": 1262.8361970000697,
+      "capture_ms": 1561.9460269999763,
+      "receivers": [
+        {
+          "receiver": "listener_a",
+          "link_power_dbm": {
+            "beacon_a": -58.676422168382665,
+            "beacon_b": -96.9182408586575
+          },
+          "thermal_noise_power_dbm": -103.97503294542278,
+          "noise_bandwidth_hz": 1000035.5177307129,
+          "retained_paths": {
+            "beacon_a": 446,
+            "beacon_b": 401
+          },
+          "volts_per_count": 3.452669830012439e-06,
+          "clipping_fraction": 0.0,
+          "adc8_control_clipping_fraction": 0.0,
+          "actual_sample_rate_hz": 2000010.0
+        },
+        {
+          "receiver": "listener_b",
+          "link_power_dbm": {
+            "beacon_a": -67.0991507542425,
+            "beacon_b": -97.64637048039737
+          },
+          "thermal_noise_power_dbm": -103.97509808975795,
+          "noise_bandwidth_hz": 1000020.5172729492,
+          "retained_paths": {
+            "beacon_a": 301,
+            "beacon_b": 420
+          },
+          "volts_per_count": 3.452669830012439e-06,
+          "clipping_fraction": 0.0,
+          "adc8_control_clipping_fraction": 0.0,
+          "actual_sample_rate_hz": 1999980.0
+        }
+      ]
+    },
+    {
+      "epoch_s": 0.5,
+      "channel_ms": 322.4781620001522,
+      "capture_ms": 633.4686809996128,
+      "receivers": [
+        {
+          "receiver": "listener_a",
+          "link_power_dbm": {
+            "beacon_a": -58.59849458557855,
+            "beacon_b": -95.7642213176492
+          },
+          "thermal_noise_power_dbm": -103.97503294542278,
+          "noise_bandwidth_hz": 1000035.5177307129,
+          "retained_paths": {
+            "beacon_a": 446,
+            "beacon_b": 407
+          },
+          "volts_per_count": 3.452669830012439e-06,
+          "clipping_fraction": 0.0,
+          "adc8_control_clipping_fraction": 0.0,
+          "actual_sample_rate_hz": 2000010.0
+        },
+        {
+          "receiver": "listener_b",
+          "link_power_dbm": {
+            "beacon_a": -66.56301157501798,
+            "beacon_b": -96.70111419498119
+          },
+          "thermal_noise_power_dbm": -103.97509808975795,
+          "noise_bandwidth_hz": 1000020.5172729492,
+          "retained_paths": {
+            "beacon_a": 322,
+            "beacon_b": 423
+          },
+          "volts_per_count": 3.452669830012439e-06,
+          "clipping_fraction": 0.0,
+          "adc8_control_clipping_fraction": 0.0,
+          "actual_sample_rate_hz": 1999980.0
+        }
+      ]
+    },
+    {
+      "epoch_s": 1.0,
+      "channel_ms": 317.6153929998691,
+      "capture_ms": 635.9671219997836,
+      "receivers": [
+        {
+          "receiver": "listener_a",
+          "link_power_dbm": {
+            "beacon_a": -58.5384238187817,
+            "beacon_b": -96.23553426389
+          },
+          "thermal_noise_power_dbm": -103.97503294542278,
+          "noise_bandwidth_hz": 1000035.5177307129,
+          "retained_paths": {
+            "beacon_a": 447,
+            "beacon_b": 409
+          },
+          "volts_per_count": 3.452669830012439e-06,
+          "clipping_fraction": 0.0,
+          "adc8_control_clipping_fraction": 0.0,
+          "actual_sample_rate_hz": 2000010.0
+        },
+        {
+          "receiver": "listener_b",
+          "link_power_dbm": {
+            "beacon_a": -65.20103204479517,
+            "beacon_b": -96.69742696396469
+          },
+          "thermal_noise_power_dbm": -103.97509808975795,
+          "noise_bandwidth_hz": 1000020.5172729492,
+          "retained_paths": {
+            "beacon_a": 333,
+            "beacon_b": 423
+          },
+          "volts_per_count": 3.452669830012439e-06,
+          "clipping_fraction": 0.0,
+          "adc8_control_clipping_fraction": 0.0,
+          "actual_sample_rate_hz": 1999980.0
+        }
+      ]
+    },
+    {
+      "epoch_s": 1.5,
+      "channel_ms": 321.6068060000907,
+      "capture_ms": 634.7169809996558,
+      "receivers": [
+        {
+          "receiver": "listener_a",
+          "link_power_dbm": {
+            "beacon_a": -59.388876463467646,
+            "beacon_b": -96.51678804892012
+          },
+          "thermal_noise_power_dbm": -103.97503294542278,
+          "noise_bandwidth_hz": 1000035.5177307129,
+          "retained_paths": {
+            "beacon_a": 448,
+            "beacon_b": 412
+          },
+          "volts_per_count": 3.452669830012439e-06,
+          "clipping_fraction": 0.0,
+          "adc8_control_clipping_fraction": 0.0,
+          "actual_sample_rate_hz": 2000010.0
+        },
+        {
+          "receiver": "listener_b",
+          "link_power_dbm": {
+            "beacon_a": -65.67880771161823,
+            "beacon_b": -96.844296234245
+          },
+          "thermal_noise_power_dbm": -103.97509808975795,
+          "noise_bandwidth_hz": 1000020.5172729492,
+          "retained_paths": {
+            "beacon_a": 338,
+            "beacon_b": 421
+          },
+          "volts_per_count": 3.452669830012439e-06,
+          "clipping_fraction": 0.0,
+          "adc8_control_clipping_fraction": 0.0,
+          "actual_sample_rate_hz": 1999980.0
+        }
+      ]
+    },
+    {
+      "epoch_s": 2.0,
+      "channel_ms": 319.87190099971485,
+      "capture_ms": 637.5927750004848,
+      "receivers": [
+        {
+          "receiver": "listener_a",
+          "link_power_dbm": {
+            "beacon_a": -59.09684558450693,
+            "beacon_b": -96.69459944765083
+          },
+          "thermal_noise_power_dbm": -103.97503294542278,
+          "noise_bandwidth_hz": 1000035.5177307129,
+          "retained_paths": {
+            "beacon_a": 448,
+            "beacon_b": 412
+          },
+          "volts_per_count": 3.452669830012439e-06,
+          "clipping_fraction": 0.0,
+          "adc8_control_clipping_fraction": 0.0,
+          "actual_sample_rate_hz": 2000010.0
+        },
+        {
+          "receiver": "listener_b",
+          "link_power_dbm": {
+            "beacon_a": -66.67084975856896,
+            "beacon_b": -96.33229545793947
+          },
+          "thermal_noise_power_dbm": -103.97509808975795,
+          "noise_bandwidth_hz": 1000020.5172729492,
+          "retained_paths": {
+            "beacon_a": 357,
+            "beacon_b": 421
+          },
+          "volts_per_count": 3.452669830012439e-06,
+          "clipping_fraction": 0.0,
+          "adc8_control_clipping_fraction": 0.0,
+          "actual_sample_rate_hz": 1999980.0
+        }
+      ]
+    },
+    {
+      "epoch_s": 2.5,
+      "channel_ms": 318.1695180001043,
+      "capture_ms": 639.4777909999902,
+      "receivers": [
+        {
+          "receiver": "listener_a",
+          "link_power_dbm": {
+            "beacon_a": -59.37782375413883,
+            "beacon_b": -95.33517725932825
+          },
+          "thermal_noise_power_dbm": -103.97503294542278,
+          "noise_bandwidth_hz": 1000035.5177307129,
+          "retained_paths": {
+            "beacon_a": 448,
+            "beacon_b": 415
+          },
+          "volts_per_count": 3.452669830012439e-06,
+          "clipping_fraction": 0.0,
+          "adc8_control_clipping_fraction": 0.0,
+          "actual_sample_rate_hz": 2000010.0
+        },
+        {
+          "receiver": "listener_b",
+          "link_power_dbm": {
+            "beacon_a": -67.39292728250213,
+            "beacon_b": -96.15931678719971
+          },
+          "thermal_noise_power_dbm": -103.97509808975795,
+          "noise_bandwidth_hz": 1000020.5172729492,
+          "retained_paths": {
+            "beacon_a": 367,
+            "beacon_b": 422
+          },
+          "volts_per_count": 3.452669830012439e-06,
+          "clipping_fraction": 0.0,
+          "adc8_control_clipping_fraction": 0.0,
+          "actual_sample_rate_hz": 1999980.0
+        }
+      ]
+    },
+    {
+      "epoch_s": 3.0,
+      "channel_ms": 324.80927199958387,
+      "capture_ms": 646.5097390000665,
+      "receivers": [
+        {
+          "receiver": "listener_a",
+          "link_power_dbm": {
+            "beacon_a": -59.53234609934886,
+            "beacon_b": -95.5372238356361
+          },
+          "thermal_noise_power_dbm": -103.97503294542278,
+          "noise_bandwidth_hz": 1000035.5177307129,
+          "retained_paths": {
+            "beacon_a": 450,
+            "beacon_b": 411
+          },
+          "volts_per_count": 3.452669830012439e-06,
+          "clipping_fraction": 0.0,
+          "adc8_control_clipping_fraction": 0.0,
+          "actual_sample_rate_hz": 2000010.0
+        },
+        {
+          "receiver": "listener_b",
+          "link_power_dbm": {
+            "beacon_a": -67.57756104401335,
+            "beacon_b": -96.16307984848433
+          },
+          "thermal_noise_power_dbm": -103.97509808975795,
+          "noise_bandwidth_hz": 1000020.5172729492,
+          "retained_paths": {
+            "beacon_a": 374,
+            "beacon_b": 422
+          },
+          "volts_per_count": 3.452669830012439e-06,
+          "clipping_fraction": 0.0,
+          "adc8_control_clipping_fraction": 0.0,
+          "actual_sample_rate_hz": 1999980.0
+        }
+      ]
+    },
+    {
+      "epoch_s": 3.5,
+      "channel_ms": 325.47666800019215,
+      "capture_ms": 646.0392950002642,
+      "receivers": [
+        {
+          "receiver": "listener_a",
+          "link_power_dbm": {
+            "beacon_a": -58.972678856666136,
+            "beacon_b": -95.85831352525582
+          },
+          "thermal_noise_power_dbm": -103.97503294542278,
+          "noise_bandwidth_hz": 1000035.5177307129,
+          "retained_paths": {
+            "beacon_a": 450,
+            "beacon_b": 414
+          },
+          "volts_per_count": 3.452669830012439e-06,
+          "clipping_fraction": 0.0,
+          "adc8_control_clipping_fraction": 0.0,
+          "actual_sample_rate_hz": 2000010.0
+        },
+        {
+          "receiver": "listener_b",
+          "link_power_dbm": {
+            "beacon_a": -66.9793239209437,
+            "beacon_b": -96.27459202997437
+          },
+          "thermal_noise_power_dbm": -103.97509808975795,
+          "noise_bandwidth_hz": 1000020.5172729492,
+          "retained_paths": {
+            "beacon_a": 386,
+            "beacon_b": 423
+          },
+          "volts_per_count": 3.452669830012439e-06,
+          "clipping_fraction": 0.0,
+          "adc8_control_clipping_fraction": 0.0,
+          "actual_sample_rate_hz": 1999980.0
+        }
+      ]
+    },
+    {
+      "epoch_s": 4.0,
+      "channel_ms": 316.9002870008626,
+      "capture_ms": 638.7310650006839,
+      "receivers": [
+        {
+          "receiver": "listener_a",
+          "link_power_dbm": {
+            "beacon_a": -59.828845482220345,
+            "beacon_b": -95.75244208566286
+          },
+          "thermal_noise_power_dbm": -103.97503294542278,
+          "noise_bandwidth_hz": 1000035.5177307129,
+          "retained_paths": {
+            "beacon_a": 452,
+            "beacon_b": 415
+          },
+          "volts_per_count": 3.452669830012439e-06,
+          "clipping_fraction": 0.0,
+          "adc8_control_clipping_fraction": 0.0,
+          "actual_sample_rate_hz": 2000010.0
+        },
+        {
+          "receiver": "listener_b",
+          "link_power_dbm": {
+            "beacon_a": -65.50640825306073,
+            "beacon_b": -96.13492154136203
+          },
+          "thermal_noise_power_dbm": -103.97509808975795,
+          "noise_bandwidth_hz": 1000020.5172729492,
+          "retained_paths": {
+            "beacon_a": 396,
+            "beacon_b": 423
+          },
+          "volts_per_count": 3.452669830012439e-06,
+          "clipping_fraction": 0.0,
+          "adc8_control_clipping_fraction": 0.0,
+          "actual_sample_rate_hz": 1999980.0
+        }
+      ]
+    },
+    {
+      "epoch_s": 4.5,
+      "channel_ms": 325.9874920004222,
+      "capture_ms": 655.8561759993609,
+      "receivers": [
+        {
+          "receiver": "listener_a",
+          "link_power_dbm": {
+            "beacon_a": -59.4328761466949,
+            "beacon_b": -95.34839573190138
+          },
+          "thermal_noise_power_dbm": -103.97503294542278,
+          "noise_bandwidth_hz": 1000035.5177307129,
+          "retained_paths": {
+            "beacon_a": 454,
+            "beacon_b": 417
+          },
+          "volts_per_count": 3.452669830012439e-06,
+          "clipping_fraction": 0.0,
+          "adc8_control_clipping_fraction": 0.0,
+          "actual_sample_rate_hz": 2000010.0
+        },
+        {
+          "receiver": "listener_b",
+          "link_power_dbm": {
+            "beacon_a": -65.01529531442925,
+            "beacon_b": -95.41374244327557
+          },
+          "thermal_noise_power_dbm": -103.97509808975795,
+          "noise_bandwidth_hz": 1000020.5172729492,
+          "retained_paths": {
+            "beacon_a": 408,
+            "beacon_b": 425
+          },
+          "volts_per_count": 3.452669830012439e-06,
+          "clipping_fraction": 0.0,
+          "adc8_control_clipping_fraction": 0.0,
+          "actual_sample_rate_hz": 1999980.0
+        }
+      ]
+    },
+    {
+      "epoch_s": 5.0,
+      "channel_ms": 312.83143400014524,
+      "capture_ms": 640.9545540000181,
+      "receivers": [
+        {
+          "receiver": "listener_a",
+          "link_power_dbm": {
+            "beacon_a": -60.19453654536943,
+            "beacon_b": -94.84173484900894
+          },
+          "thermal_noise_power_dbm": -103.97503294542278,
+          "noise_bandwidth_hz": 1000035.5177307129,
+          "retained_paths": {
+            "beacon_a": 454,
+            "beacon_b": 418
+          },
+          "volts_per_count": 3.452669830012439e-06,
+          "clipping_fraction": 0.0,
+          "adc8_control_clipping_fraction": 0.0,
+          "actual_sample_rate_hz": 2000010.0
+        },
+        {
+          "receiver": "listener_b",
+          "link_power_dbm": {
+            "beacon_a": -64.2124614955796,
+            "beacon_b": -94.91721238303896
+          },
+          "thermal_noise_power_dbm": -103.97509808975795,
+          "noise_bandwidth_hz": 1000020.5172729492,
+          "retained_paths": {
+            "beacon_a": 416,
+            "beacon_b": 425
+          },
+          "volts_per_count": 3.452669830012439e-06,
+          "clipping_fraction": 0.0,
+          "adc8_control_clipping_fraction": 0.0,
+          "actual_sample_rate_hz": 1999980.0
+        }
+      ]
+    },
+    {
+      "epoch_s": 5.5,
+      "channel_ms": 317.25658100003784,
+      "capture_ms": 646.1173670004428,
+      "receivers": [
+        {
+          "receiver": "listener_a",
+          "link_power_dbm": {
+            "beacon_a": -60.20875755134719,
+            "beacon_b": -95.23372763743038
+          },
+          "thermal_noise_power_dbm": -103.97503294542278,
+          "noise_bandwidth_hz": 1000035.5177307129,
+          "retained_paths": {
+            "beacon_a": 454,
+            "beacon_b": 419
+          },
+          "volts_per_count": 3.452669830012439e-06,
+          "clipping_fraction": 0.0,
+          "adc8_control_clipping_fraction": 0.0,
+          "actual_sample_rate_hz": 2000010.0
+        },
+        {
+          "receiver": "listener_b",
+          "link_power_dbm": {
+            "beacon_a": -63.26449923194055,
+            "beacon_b": -94.98351272319127
+          },
+          "thermal_noise_power_dbm": -103.97509808975795,
+          "noise_bandwidth_hz": 1000020.5172729492,
+          "retained_paths": {
+            "beacon_a": 423,
+            "beacon_b": 426
+          },
+          "volts_per_count": 3.452669830012439e-06,
+          "clipping_fraction": 0.0,
+          "adc8_control_clipping_fraction": 0.0,
+          "actual_sample_rate_hz": 1999980.0
+        }
+      ]
+    }
+  ],
+  "adc8_control": "Same analog samples, ideal 8-bit conversion; not a HackRF hardware model",
+  "published_constraints": {
+    "rf_tuning_hz": [
+      325000000.0,
+      3800000000.0
+    ],
+    "max_rf_bandwidth_hz": 20000000.0,
+    "adc_bits": 12,
+    "exposed_tx_channels": 1,
+    "exposed_rx_channels": 1,
+    "source": "https://wiki.analog.com/university/tools/pluto/devs/specs"
+  },
+  "calibration_status": {
+    "noise_figure": "Chosen 10 dB default, configurable; not measured for this frequency/gain",
+    "input_full_scale": "Chosen -30 dBm default, configurable; input-referred manual-gain surrogate",
+    "filter": "Fourth-order Butterworth approximation, not AD9363 filter coefficients",
+    "antenna": "Ideal dipoles, not measured antennas mounted on airframes",
+    "terrain": "Synthetic uniform material, no calibrated persistent diffuse speckle",
+    "transmitter": "Chosen port powers and ideal continuous tones, not a DAC/EVM model",
+    "clock": "Chosen constant errors within published +/-25 ppm initial-accuracy example; no drift/jitter"
+  },
+  "unmodeled": [
+    "AGC dynamics",
+    "RF compression and intermodulation",
+    "LO phase noise and spurs",
+    "DC offset and I/Q imbalance",
+    "USB drops and acquisition start jitter",
+    "drone airframe scattering"
+  ],
+  "budget": {
+    "checked_utc": "2026-10-03",
+    "usd_per_pluto": 349.95,
+    "radios": 4,
+    "radio_subtotal_usd": 1399.8,
+    "source": "https://www.nooelec.com/store/adalm-pluto.html",
+    "excludes": "tax, shipping, antennas, cables, computers, power and drones"
+  },
+  "versions": {
+    "sionna": "0.19.2",
+    "mitsuba": "3.5.2",
+    "drjit": "0.4.6",
+    "backend": "cuda_ad_rgb"
+  }
+}

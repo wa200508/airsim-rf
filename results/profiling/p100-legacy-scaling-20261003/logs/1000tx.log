@@ -1,0 +1,19 @@
+imports
+2026-10-04 01:40:28.680009: E external/local_xla/xla/stream_executor/cuda/cuda_dnn.cc:9261] Unable to register cuDNN factory: Attempting to register factory for plugin cuDNN when one has already been registered
+2026-10-04 01:40:28.680049: E external/local_xla/xla/stream_executor/cuda/cuda_fft.cc:607] Unable to register cuFFT factory: Attempting to register factory for plugin cuFFT when one has already been registered
+2026-10-04 01:40:28.681222: E external/local_xla/xla/stream_executor/cuda/cuda_blas.cc:1515] Unable to register cuBLAS factory: Attempting to register factory for plugin cuBLAS when one has already been registered
+scene_setup
+first_solve
+warmup
+timed
+epoch 1/10: 697.2 ms
+epoch 2/10: 755.3 ms
+epoch 3/10: 705.6 ms
+epoch 4/10: 693.2 ms
+epoch 5/10: 739.5 ms
+epoch 6/10: 749.6 ms
+epoch 7/10: 724.2 ms
+epoch 8/10: 764.2 ms
+epoch 9/10: 753.1 ms
+epoch 10/10: 746.6 ms
+profile

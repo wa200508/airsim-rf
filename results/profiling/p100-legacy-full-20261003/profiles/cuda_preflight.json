@@ -1,0 +1,116 @@
+{
+  "backend_requested": "cuda",
+  "status": "ok",
+  "cuda_available": 1,
+  "versions": {
+    "sionna_rt": "0.19.2",
+    "mitsuba": "3.5.2",
+    "drjit": "0.4.6",
+    "backend": "cuda_ad_rgb"
+  },
+  "specular_planes": 800,
+  "retained_paths": 15,
+  "profile": {
+    "records": [
+      {
+        "backend": "CUDA",
+        "type": "Other",
+        "execution_time": 0.007712000049650669,
+        "codegen_time": 0.0,
+        "backend_time": 0.0
+      },
+      {
+        "backend": "CUDA",
+        "type": "JIT",
+        "hash": "2186fdac656ad5df6a682c82122ac90d",
+        "execution_time": 0.05820799991488457,
+        "operation_count": 185,
+        "cache_hit": 0,
+        "cache_disk": 0,
+        "codegen_time": 0.07525000721216202,
+        "backend_time": 26.16936683654785,
+        "uses_optix": 1
+      },
+      {
+        "backend": "CUDA",
+        "type": "JIT",
+        "hash": "df5c81b289a537608a25b4ae6289cf7f",
+        "execution_time": 0.07126399874687195,
+        "operation_count": 180,
+        "cache_hit": 0,
+        "cache_disk": 0,
+        "codegen_time": 0.10262000560760498,
+        "backend_time": 25.00185775756836,
+        "uses_optix": 1
+      },
+      {
+        "backend": "CUDA",
+        "type": "JIT",
+        "hash": "a5efba9aed35404559ca230ffb1c1c67",
+        "execution_time": 0.005632000043988228,
+        "operation_count": 19,
+        "cache_hit": 1,
+        "cache_disk": 0,
+        "codegen_time": 0.013040001504123211,
+        "backend_time": 0.0,
+        "uses_optix": 0
+      },
+      {
+        "backend": "CUDA",
+        "type": "JIT",
+        "hash": "bbb37c8863c7d41cc1904c5a31d5caf5",
+        "execution_time": 0.044064000248909,
+        "operation_count": 36,
+        "cache_hit": 0,
+        "cache_disk": 0,
+        "codegen_time": 0.03320100158452988,
+        "backend_time": 14.954325675964355,
+        "uses_optix": 1
+      },
+      {
+        "backend": "CUDA",
+        "type": "JIT",
+        "hash": "bbb37c8863c7d41cc1904c5a31d5caf5",
+        "execution_time": 0.04022400081157684,
+        "operation_count": 36,
+        "cache_hit": 1,
+        "cache_disk": 0,
+        "codegen_time": 0.05362100526690483,
+        "backend_time": 0.0,
+        "uses_optix": 1
+      },
+      {
+        "backend": "CUDA",
+        "type": "JIT",
+        "hash": "bbb37c8863c7d41cc1904c5a31d5caf5",
+        "execution_time": 0.050944000482559204,
+        "operation_count": 36,
+        "cache_hit": 1,
+        "cache_disk": 0,
+        "codegen_time": 0.030720002949237823,
+        "backend_time": 0.0,
+        "uses_optix": 1
+      }
+    ],
+    "cuda_operation_count": 7,
+    "cuda_event_time_sum_ms": 0.27804800029844046,
+    "optix_kernel_count": 5,
+    "note": "Event-time sum includes recorded CUDA operations; not critical-path latency. IR omitted."
+  },
+  "legacy_scope": {
+    "stack": {
+      "sionna": "0.19.2",
+      "mitsuba": "3.5.2",
+      "drjit": "0.4.6",
+      "tensorflow": "2.15.1",
+      "python": "3.11"
+    },
+    "propagation": "Legacy native Sionna Fibonacci solver; max_depth=1, LoS/reflection/scattering, scat_keep_prob=1, scat_random_phases=False. 1028 launched rays per TX, shared across receivers. Synthetic single-element arrays. Original terrain mesh and dielectric parameters (epsilon_r=5, conductivity=.01, scattering=.3), converted to legacy scene format; the legacy material has no thickness equivalent.",
+    "receiver": "Original branch SDRNetworkReceiver, waveform synthesis, independent clocks, filtering, noise and ADC; external Paths adapter supplies compact legacy channels and platform Doppler.",
+    "comparison_limit": "Not the profiling/p100 custom first-order sampler or Sionna 2.2 implementation. No numerical equivalence validation. Legacy rays and retained-path counts differ. Published current-solver CPU results and its work-count model are not directly comparable.",
+    "profile_limit": "Dr.Jit histories record its CUDA/OptiX operations only, not TensorFlow CUDA kernels. Inclusive host ranges overlap. Device-event sums are not service critical-path latency.",
+    "sampling_timers": "Original host_numpy_sampling_ms and proposal_table_prepare_ms are adapter compatibility placeholders set to zero; they are not measured stage timings and are excluded from the report.",
+    "cpu_baseline": "CPU cases hide GPUs from TensorFlow and use Mitsuba llvm_ad_rgb. CUDA cases use cuda_ad_rgb and TensorFlow CUDA. Dr.Jit uses two threads; TensorFlow thread defaults are not constrained.",
+    "outputs": "4096 complex samples per capture at 2 MS/s, 915 MHz carrier, 1 MHz receive bandwidth, one receiver per benchmark; example uses two TX and two RX."
+  }
+}
