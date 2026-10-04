@@ -1,0 +1,103 @@
+{
+  "scope": "One real 100-TX terrain link; 8.3335 ms continuous arbitrary periodic bandlimited complex samples; CPU mathematical experiment, not full pipeline benchmark",
+  "paths": 399,
+  "sample_rate_hz": 2000000.0,
+  "num_samples": 16667,
+  "signal_frequency_band_hz": [
+    -480000.0,
+    480000.0
+  ],
+  "doppler_scale": 40.0,
+  "max_doppler_hz": 485.1480484008789,
+  "ideal_fractional_delay_fft_reference_ms": 910.7060249953065,
+  "rows": [
+    {
+      "interpolation_support": 16,
+      "filter_coefficients": 18,
+      "knot_spacing_ms": 0.125,
+      "channel_construction_ms": 0.9654540044721216,
+      "rendering_ms": 6.218332011485472,
+      "nmse_db": -92.44033110751083,
+      "rms_evm_percent": 0.0023877202608977013
+    },
+    {
+      "interpolation_support": 16,
+      "filter_coefficients": 18,
+      "knot_spacing_ms": 0.25,
+      "channel_construction_ms": 0.45638298615813255,
+      "rendering_ms": 5.8575799921527505,
+      "nmse_db": -83.77559031246506,
+      "rms_evm_percent": 0.006474712431380258
+    },
+    {
+      "interpolation_support": 16,
+      "filter_coefficients": 18,
+      "knot_spacing_ms": 0.5,
+      "channel_construction_ms": 0.2680360048543662,
+      "rendering_ms": 6.457495008362457,
+      "nmse_db": -56.38782173468972,
+      "rms_evm_percent": 0.15156848626153152
+    },
+    {
+      "interpolation_support": 32,
+      "filter_coefficients": 34,
+      "knot_spacing_ms": 0.125,
+      "channel_construction_ms": 0.8785859972704202,
+      "rendering_ms": 9.109517006436363,
+      "nmse_db": -94.67561808378342,
+      "rms_evm_percent": 0.0018459464398322624
+    },
+    {
+      "interpolation_support": 32,
+      "filter_coefficients": 34,
+      "knot_spacing_ms": 0.25,
+      "channel_construction_ms": 0.5359409842640162,
+      "rendering_ms": 10.746191022917628,
+      "nmse_db": -84.2228050235761,
+      "rms_evm_percent": 0.006149782393973623
+    },
+    {
+      "interpolation_support": 32,
+      "filter_coefficients": 34,
+      "knot_spacing_ms": 0.5,
+      "channel_construction_ms": 0.31501500052399933,
+      "rendering_ms": 12.552746018627658,
+      "nmse_db": -56.38811690338564,
+      "rms_evm_percent": 0.15156333566508798
+    },
+    {
+      "interpolation_support": 64,
+      "filter_coefficients": 66,
+      "knot_spacing_ms": 0.125,
+      "channel_construction_ms": 1.1247989896219224,
+      "rendering_ms": 19.653258990729228,
+      "nmse_db": -99.46386593184258,
+      "rms_evm_percent": 0.0010636694928660268
+    },
+    {
+      "interpolation_support": 64,
+      "filter_coefficients": 66,
+      "knot_spacing_ms": 0.25,
+      "channel_construction_ms": 0.6063339824322611,
+      "rendering_ms": 20.491556002525613,
+      "nmse_db": -84.3581021340011,
+      "rms_evm_percent": 0.006054731561244353
+    },
+    {
+      "interpolation_support": 64,
+      "filter_coefficients": 66,
+      "knot_spacing_ms": 0.5,
+      "channel_construction_ms": 0.47570199239999056,
+      "rendering_ms": 20.482753025135025,
+      "nmse_db": -56.38894814195553,
+      "rms_evm_percent": 0.15154883176653056
+    }
+  ],
+  "limitations": [
+    "One link only, not 1000 links",
+    "Periodic waveform permits exact FFT fractional-delay reference; production needs streaming overlap/history",
+    "Cubic interpolation tested only for the chosen fixed Dopplers and this delay/gain realization",
+    "FP64 NumPy, not a GPU implementation",
+    "Full sample-expanded h used for validation only, production must fuse coefficient reconstruction and convolution"
+  ]
+}

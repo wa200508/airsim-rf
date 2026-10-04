@@ -19,6 +19,13 @@ It includes a dated hardware budget, plots, recordings, SigMF export and
 an AirSim network-mount bridge. Published device constraints and uncalibrated
 assumptions are listed separately; the distributed ESM protocol remains work.
 
+For continuous arbitrary-waveform reception on a roughly $5,000 university
+compute budget, see [the affordable 120 Hz implementation study](AFFORDABLE_REALTIME_RF.md).
+It compares direct rendering, time-varying channel compression, FFT/SIMD/GPU
+backends, FPGA emulators and shared research infrastructure, with new measured
+channel support and an arbitrary-waveform accuracy experiment. It provides a
+qualification plan rather than a claim of achieved real-time operation.
+
 See [SDR update rate and latency](SDR_RUNTIME.md) for complete channel-to-ADC
 CPU measurements and conditional GPU limits. The [code-derived scaling model](SDR_COMPLEXITY.md)
 compares O(paths × samples) work with measured CPU costs and proposed GPU kernels.

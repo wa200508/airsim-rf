@@ -1,0 +1,26 @@
+{
+  "scope": "100 TX, 1 RX, first epoch of existing terrain benchmark, CPU channel export only",
+  "carrier_hz": 915000000.0,
+  "sample_rate_hz": 2000000.0,
+  "attempts_per_link": 1028,
+  "retained_paths": 42503,
+  "max_path_doppler_hz": 12.16136360168457,
+  "absolute_delay_us": {
+    "min": 0.10095608234405518,
+    "max": 1.016992449760437
+  },
+  "link_delay_spread_us": {
+    "min": 0.5432966645457782,
+    "max": 0.9140387078332424,
+    "median": 0.740256865583433
+  },
+  "max_delay_span_samples_2MSps": 1.8280774156664847,
+  "stage_timings_ms": {
+    "proposal_table_prepare_ms": 28.35684997262433,
+    "host_numpy_sampling_ms": 19.609242997830734
+  },
+  "path_count_per_link": {
+    "min": 376,
+    "max": 454
+  }
+}
