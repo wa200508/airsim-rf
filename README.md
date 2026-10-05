@@ -319,3 +319,11 @@ do not encode the phase information needed to reconstruct those signals.
 
 For processing-step columns, **median ± standard deviation**, and a separate
 **p95** table, see [the consolidated profiling breakdown](RUNTIME_STATUS.md#processing-steps-by-scenario-and-configuration).
+
+[End-to-end RF tests and complete-pipeline collection](END_TO_END.md) on
+`profiling/p100` now exercise moving terrain propagation, continuous I/Q,
+receiver processing, ADC and a network consumer. The measured cloud CPU
+(two-core quota) took **11.99 s/update for 100 TX × ten RX** and
+**620.59 ms/update for ten TX × four RX**. These runs used a trajectory source;
+live AirSim and P100 end-to-end timing remain unmeasured.
+See [all stages and p95](RUNTIME_STATUS.md#end-to-end-rf-pipeline-median--sample-standard-deviation).

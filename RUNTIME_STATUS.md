@@ -146,6 +146,22 @@ These are CUDA-event spans, in ms, from a separate capture. **n = 1; no standard
 | [P100 basis, 4 → 1; 16,667 samples](https://github.com/wa200508/airsim-rf/blob/profiling/p100/results/profiling/p100-basis-optimized-full-20261004/profiles/basis_cuda_4tx_1rx.json) | 1.19 | 1.78 | 2.06 | 1.29 | 1.17 | 0.28 | 0.28 | 8.94 |
 | [P100 basis, 1 → 1; 16,667 samples](https://github.com/wa200508/airsim-rf/blob/profiling/p100/results/profiling/p100-basis-optimized-full-20261004/profiles/basis_cuda_1tx_1rx.json) | 0.38 | 1.71 | 2.09 | 1.17 | 3.81 | 3.65 | 0.18 | 14.15 |
 
+### End-to-end RF pipeline: median ± sample standard deviation
+
+| Complete RF-pipeline configuration | n | Truth advance | Private source generation | Scene propagation | Signal rendering | Noise/filter/ADC | Bridge + other RF work | Delivery + storage | Complete update |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| [100 → 10, basis-cpu; trajectory source](https://github.com/wa200508/airsim-rf/blob/profiling/p100/results/end_to_end/cpu-100tx-10rx-20261005/measurements.json) | 5 | 0.002 ± 0.000 | 54.178 ± 2.301 | 1186.283 ± 108.425 | 10615.410 ± 429.415 | 12.070 ± 0.255 | 88.654 ± 1.960 | 15.093 ± 3.193 | 11986.071 ± 499.771 |
+| [10 → 4, basis-cpu; trajectory source](https://github.com/wa200508/airsim-rf/blob/profiling/p100/results/end_to_end/cpu-10tx-4rx-20261005/measurements.json) | 10 | 0.003 ± 0.000 | 6.085 ± 0.594 | 105.786 ± 32.761 | 493.207 ± 18.241 | 4.571 ± 1.246 | 7.243 ± 0.778 | 6.468 ± 1.211 | 620.592 ± 32.685 |
+
+### End-to-end RF pipeline: p95
+
+| Complete RF-pipeline configuration | n | Truth advance | Private source generation | Scene propagation | Signal rendering | Noise/filter/ADC | Bridge + other RF work | Delivery + storage | Complete update |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| [100 → 10, basis-cpu; trajectory source](https://github.com/wa200508/airsim-rf/blob/profiling/p100/results/end_to_end/cpu-100tx-10rx-20261005/measurements.json) | 5 | 0.002 | 57.731 | 1353.061 | 11108.158 | 12.203 | 89.477 | 20.940 | 12571.095 |
+| [10 → 4, basis-cpu; trajectory source](https://github.com/wa200508/airsim-rf/blob/profiling/p100/results/end_to_end/cpu-10tx-4rx-20261005/measurements.json) | 10 | 0.003 | 7.042 | 126.508 | 520.594 | 6.852 | 8.558 | 8.899 | 654.255 |
+
+These rows include the complete RF scene-to-network-consumer pipeline, with continuous 2 MS/s I/Q at 120 Hz sample accounting. The recorded cloud CPU is AMD EPYC 9V74 with a **two-core cgroup quota**, not the Ryzen/P100 host above. All receivers execute serially. Truth advance uses a deterministic trajectory source; **AirSim physics/RPC and distributed AMS-GRA SDR workers were not run**. Scene propagation uses 1,028 attempts/link; physical retained counts are recorded in JSON. Five- and ten-window runs are short integration measurements, not long-flight or robust tail qualifications. Initialization/first-use/warmup are excluded; the first capture is retained separately. Delivery is loopback HTTP plus consumer write/readback without fsync. See [end-to-end test scope and reproduction](END_TO_END.md).
+
 <!-- END STAGE TIMING TABLES -->
 
 The raw-capture links are the sources for every number. On `profiling/p100`,
@@ -237,8 +253,8 @@ must not be summed into the unprofiled mean or median.
 | 162.85 ms / 80 ms frame, [PERFORMANCE](PERFORMANCE.md) | Sixteen-chirp radar frame | About 2.04× renderer/service work per frame interval, not a 120 Hz continuous network result |
 | 144 retained paths, [single bounce](OPTIMIZATION.md), [per pulse](PER_PULSE_RUNTIME.md) | Small scene's LoS/specular channel; many links but very few paths | Channel-only timing excludes sample rendering and diffuse ground return |
 | 48.6 ms channel, [GPU planning](GPU_RUNTIME.md) | CPU channel/poses/export | No waveform processing; sub-millisecond GPU ray entries elsewhere are hypothetical query-rate arithmetic |
-| 243.25 ms service, [batched renderer](BATCHED_RENDERING.md) | Tone inputs, about 42,500 surviving paths total, 4,096 samples per RX | Only 2.048 ms of output, versus the new 8.3335 ms window; scene-dependent survival reduces path work |
-| 22× CPU speedup, [basis experiment](DOPPLER_BASIS_FFT.md) | Ratio of two algorithms on one/four-link synthetic jobs | Faster than a baseline does not mean faster than real time; original host differs from the P100 collection |
+| 243.25 ms service, [batched renderer](https://github.com/wa200508/airsim-rf/blob/profiling/p100/BATCHED_RENDERING.md) | Tone inputs, about 42,500 surviving paths total, 4,096 samples per RX | Only 2.048 ms of output, versus the new 8.3335 ms window; scene-dependent survival reduces path work |
+| 22× CPU speedup, [basis experiment](https://github.com/wa200508/airsim-rf/blob/profiling/p100/DOPPLER_BASIS_FFT.md) | Ratio of two algorithms on one/four-link synthetic jobs | Faster than a baseline does not mean faster than real time; original host differs from the P100 collection |
 | 122.67 ms P100, [original run](https://github.com/wa200508/airsim-rf/blob/profiling/p100/results/profiling/p100-basis-full-20261004/REPORT.md) | Older gather projection; failed timestamp qualification | Historical diagnostic result; superseded by the qualified 56.17 ms median configuration |
 | Legacy Sionna P100 [results](https://github.com/wa200508/airsim-rf/blob/profiling/p100/results/profiling/README.md) | Older propagation stack and CPU signal rendering | Separate compatibility experiment, not current CuPy renderer or supported current-stack propagation |
 
@@ -257,3 +273,12 @@ new measurements must state hardware, backend, links, valid paths, sample count,
 signal duration, precision, interpolation, delay/Doppler bounds, included work,
 accuracy status, warmups and timing distribution. Publish full-service flight
 measurements separately from renderer-only results.
+
+## End-to-end RF pipeline tests
+
+See [END_TO_END.md](END_TO_END.md) for the real-terrain scene-to-consumer test,
+the direct-renderer integration oracle, and CPU/P100 collection commands.
+The default trajectory source exercises the AirSim bridge contract; it does
+not execute AirSim physics/RPC. Full distributed continuous-SDR coverage is
+still outstanding. New full-pipeline results are distinct from renderer-only
+results and do not replace the qualified synthetic stress workload.
