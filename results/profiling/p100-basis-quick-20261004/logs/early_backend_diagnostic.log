@@ -1,0 +1,45 @@
+jit_init(): could not use "/.drjit" as the kernel cache directory, the disk cache is disabled.
+ - Warning: compute capability of device too low (need >= 7.5), skipping ..
+LLVM 1
+{
+  "backend": "cpu",
+  "summary": {
+    "p50_ms": 18.513616000007005,
+    "p95_ms": 18.553994500013005,
+    "p99_ms": 18.557583700013538,
+    "max_ms": 18.55848100001367,
+    "mean_ms": 18.513616000007005
+  },
+  "captures_per_second": 54.01429952957983,
+  "misses_120hz": 2,
+  "accuracy": {
+    "passed": true,
+    "full_all_jobs_cpu_basis_normalized_rms": 0.0,
+    "direct_checks": [
+      {
+        "receiver": 0,
+        "start_sample": 0,
+        "samples": 128,
+        "paths_checked": 1028,
+        "normalized_rms_error": 1.284650007769044e-12,
+        "max_absolute_error": 4.75673997667605e-12
+      },
+      {
+        "receiver": 0,
+        "start_sample": 16539,
+        "samples": 128,
+        "paths_checked": 1028,
+        "normalized_rms_error": 1.098893892635794e-11,
+        "max_absolute_error": 4.088639111348107e-11
+      },
+      {
+        "receiver": 0,
+        "transmitter": 0,
+        "samples": 16667,
+        "paths_checked": 1028,
+        "normalized_rms_error": 2.0629103218447377e-12,
+        "max_absolute_error": 5.400616369789419e-11
+      }
+    ]
+  }
+}

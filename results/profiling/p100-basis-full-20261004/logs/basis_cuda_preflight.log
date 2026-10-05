@@ -1,0 +1,65 @@
+{
+  "status": "verified_cuda_cupy",
+  "scope": "renderer_cuda_only",
+  "propagation": "not tested; current Dr.Jit rejects P100",
+  "gpu": "Tesla P100-PCIE-16GB",
+  "compute_capability": "6.0",
+  "cupy_version": "13.6.0",
+  "cuda_runtime_version": 12090,
+  "cuda_driver_version": 13000,
+  "metrics": {
+    "total_ms": 5265.567211000075,
+    "backend": "cuda_cupy",
+    "valid_paths": 2,
+    "blocks": [
+      {
+        "jobs": 1,
+        "samples": 256,
+        "degree": 10,
+        "temporal_tail_bound": 2.646838275055734e-11,
+        "coefficient_aliasing_included": true,
+        "delay_coefficients": 233
+      }
+    ],
+    "sum_output": false,
+    "events": [
+      {
+        "name": "basis.host_pack_and_upload",
+        "cuda_ms": 1.3012800216674805
+      },
+      {
+        "name": "basis.delay_map",
+        "cuda_ms": 3225.9716796875
+      },
+      {
+        "name": "basis.temporal_coefficients",
+        "cuda_ms": 1622.0831298828125
+      },
+      {
+        "name": "basis.path_projection",
+        "cuda_ms": 71.2093734741211
+      },
+      {
+        "name": "basis.private_fft_filters",
+        "cuda_ms": 126.39923095703125
+      },
+      {
+        "name": "basis.reconstruction_and_sum",
+        "cuda_ms": 218.00668334960938
+      },
+      {
+        "name": "basis.final_output_export",
+        "cuda_ms": 0.07891199737787247
+      }
+    ],
+    "cuda_event_span_ms": 5265.05028937012,
+    "pool_used_bytes": 162816,
+    "pool_reserved_bytes": 257024,
+    "max_checkpoint_pool_used_bytes": 162816,
+    "pool_measurement_note": "Allocator snapshots include persistent plans/cache; not process-wide peak VRAM",
+    "profile": true,
+    "no_cpu_fallback": true,
+    "precision": "complex128/float64"
+  },
+  "max_absolute_error": 2.3714374201337737e-15
+}

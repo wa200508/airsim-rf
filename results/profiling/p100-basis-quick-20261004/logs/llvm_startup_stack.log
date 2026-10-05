@@ -1,0 +1,25 @@
+jit_init(): could not use "/.drjit" as the kernel cache directory, the disk cache is disabled.
+Timeout (0:00:30)!
+Thread 0x00007ab3cd72f6c0 (most recent call first):
+  <no Python frame>
+
+Thread 0x00007ab4424aa640 (most recent call first):
+  File "/opt/airsim-rf/src/airsim_rf/batched_rendering.py", line 126 in __init__
+  File "/opt/airsim-rf/benchmarks/benchmark_doppler_basis_gpu.py", line 105 in main
+  File "/opt/airsim-rf/benchmarks/benchmark_doppler_basis_gpu.py", line 161 in <module>
+  File "<frozen runpy>", line 88 in _run_code
+  File "<frozen runpy>", line 98 in _run_module_code
+  File "<frozen runpy>", line 287 in run_path
+  File "<string>", line 1 in <module>
+Timeout (0:00:30)!
+Thread 0x00007ab3cd72f6c0 (most recent call first):
+  <no Python frame>
+
+Thread 0x00007ab4424aa640 (most recent call first):
+  File "/opt/airsim-rf/src/airsim_rf/batched_rendering.py", line 126 in __init__
+  File "/opt/airsim-rf/benchmarks/benchmark_doppler_basis_gpu.py", line 105 in main
+  File "/opt/airsim-rf/benchmarks/benchmark_doppler_basis_gpu.py", line 161 in <module>
+  File "<frozen runpy>", line 88 in _run_code
+  File "<frozen runpy>", line 98 in _run_module_code
+  File "<frozen runpy>", line 287 in run_path
+  File "<string>", line 1 in <module>

@@ -1,0 +1,17 @@
+{
+  "INVESTIGATION.md": "c2535246b315de0806546b6e8629b0a55364fe49aecf10888057d872ad87c5a5",
+  "REPORT.md": "96eed6d2f6eed9dc718aee159283a1fa40e97b94d957e41cdc963e00a84cf723",
+  "environment.json": "98b2b5049ec610a4f42710a7f112bde8b2896fb31a9e579ea78da0ba9e62e0a4",
+  "installed_packages.json": "b6f169dbea81ac65861a02f34d05269c31457048aff4f8196f361859eac353bd",
+  "logs/basis_cpu_1tx_1rx.log": "07d6f157524fd7f0dfe77ff8700e88717284f21b150d23ff7130a66baaf8e4e8",
+  "logs/basis_cuda_correctness.log": "dfa3476846ce31adf8b1496b34595fb3f5ca2adf22b6df8ca2264c718b985cd9",
+  "logs/basis_cuda_preflight.log": "dec119a7d157efb42bb2bfb8fcf795200fa09b7334b08036b692af80e1f9645a",
+  "logs/early_backend_diagnostic.log": "0b65134941c5f6d0760c440c0ab19822734240f2c3c33c7fd1f63b6c2fd3fca4",
+  "logs/llvm_startup_stack.log": "07827126b358568bed72dec682e22433b4f5b741959f9f5b595401d4abc989a2",
+  "logs/reproduced_cuda_suite.log": "c75f50035b4bad3a303ae8c5a2ab32d34741b1096ab0d2200b7fc78246572b6d",
+  "manifest.json": "96b2ce6aafba1c41f46bfa1add772cde9e9b09925d0a4f8afa3bb3bd24965b90",
+  "profile_summary.json": "ca3d163bab055381827226140568f3bef7eaac187cebd76878e0b63e9e442356",
+  "profiles/basis_cuda_preflight.json": "dec119a7d157efb42bb2bfb8fcf795200fa09b7334b08036b692af80e1f9645a",
+  "telemetry/gpu_telemetry.csv.gz": "0074fb9f61c52cd4ed562d5ebd2b875bcd47cc4b37eeba62cb7d4a933eb1fff8",
+  "telemetry_summary.json": "28d2b1aebd3ed6802536c8ca7061ccbb32f0a161e69f645a84121fa87704d4be"
+}

@@ -3,6 +3,11 @@
 Branch: **`profiling/p100`**. This branch includes the newer architecture and
 preserves the previously published P100/legacy Sionna results.
 
+The [2026-10-04 P100 collection](results/profiling/p100-basis-full-20261004/REPORT.md)
+completed all six CPU/GPU timing cases, but **failed correctness qualification**:
+six device-suite tests passed and split captures at Unix-scale timestamps failed.
+See [findings and scope](results/profiling/p100-basis-full-20261004/FINDINGS.md).
+
 The updated test uses **CuPy 13.6, CUDA 12.2, FP64/complex128**, and a native
 projection/reconstruction kernel compiled for the actual GPU. The current
 Dr.Jit 1.5/Mitsuba 3.9 stack rejects the P100's SM 6.0, as the existing
@@ -88,10 +93,11 @@ atomic writes. Reconstruction evolves the basis in registers in one kernel.
 No paths or individual Dopplers are dropped or averaged. See
 [the mathematical model and citations](DOPPLER_BASIS_FFT.md).
 
-This workspace has no GPU. The new kernels compile successfully for
-`compute_60` using CUDA 12.2 NVRTC; execution correctness/performance must be
-verified by the P100 run. The scripts explicitly distinguish compilation from
-actual device execution.
+The original development check compiled the kernels for `compute_60` using
+CUDA 12.2 NVRTC without a GPU. The linked P100 collection now verifies actual
+CUDA execution and records performance, while retaining the failed timestamp
+accuracy test. Compilation, execution and complete correctness qualification
+remain separate outcomes.
 
 ## Read and publish the results
 

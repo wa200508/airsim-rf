@@ -18,3 +18,16 @@ The working P100 stack uses Sionna 0.19.2 native propagation; current Sionna
 [legacy harness](../../scripts/p100_legacy/README.md). The full run identifies
 the host I/Q bottleneck; scaling omits I/Q to measure simultaneous propagation
 and memory boundaries. Read each report's scope before comparing results.
+
+## Updated CuPy Doppler-basis renderer on 2026-10-04
+
+- [Initial quick run and startup investigation](p100-basis-quick-20261004/INVESTIGATION.md)
+- [Full 30-window CPU/P100 collection](p100-basis-full-20261004/REPORT.md)
+- [Findings and failed correctness qualification](p100-basis-full-20261004/FINDINGS.md)
+
+CuPy executes FP64/complex128 rendering directly on the P100. No legacy Sionna
+or ray tracing is involved. All six capture-level reference checks passed,
+but the required suite failed its split-capture/Unix-timestamp test (six passes,
+one failure). The overall result is **failed qualification**. At 100 TX the
+observed GPU median was 122.671 ms versus 1593.948 ms on CPU; this diagnostic
+renderer result misses the 8.333 ms target. See the scope and logs before use.

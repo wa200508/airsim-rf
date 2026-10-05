@@ -1,0 +1,50 @@
+......F                                                                  [100%]
+=================================== FAILURES ===================================
+_________ test_real_cuda_split_unix_epoch_cancellation_and_boundaries __________
+
+    def test_real_cuda_split_unix_epoch_cancellation_and_boundaries():
+        gpu()
+        epoch = 1790000000000000000
+        source = replace(linked().waveform, reference_time_ns=epoch-200000)
+        job = PathRenderJob(np.array([1., -1.]), np.array([30e-6, 30e-6]),
+                            np.array([2500., -2500.]), source, frequency_offset_hz=12000.)
+        engine = CudaDopplerBasisRenderer(sample_rate_hz=2e6, max_delay_s=100e-6, max_doppler_hz=2500)
+        full = engine.render([job], num_samples=1025, sim_time_ns=epoch, channel_epoch_ns=epoch)
+        left = engine.render([job], num_samples=137, sim_time_ns=epoch, channel_epoch_ns=epoch)
+        right = engine.render([job], num_samples=888, sim_time_ns=epoch+68500, channel_epoch_ns=epoch)
+>       np.testing.assert_allclose(np.c_[left, right], full, atol=2e-9, rtol=2e-9)
+E       AssertionError: 
+E       Not equal to tolerance rtol=2e-09, atol=2e-09
+E       
+E       Mismatched elements: 886 / 1025 (86.4%)
+E       First 5 mismatches are at indices:
+E        [0, 137]: (0.06575636458795939+2.0468062189250533j) (ACTUAL), (0.09428320244518053+2.045690659678504j) (DESIRED)
+E        [0, 138]: (1.97417896765287-0.38518692401343685j) (ACTUAL), (1.9686174868439101-0.4126702718320648j) (DESIRED)
+E        [0, 139]: (-0.654054942842312-4.563908576816827j) (ACTUAL), (-0.717613942513468-4.554347329223334j) (DESIRED)
+E        [0, 140]: (-0.927891012616899-0.2959248216827771j) (ACTUAL), (-0.9319261482156637-0.2829609260048809j) (DESIRED)
+E        [0, 141]: (1.3971278758688563-2.67479993160439j) (ACTUAL), (1.3597044250653658-2.6940164906645747j) (DESIRED)
+E       Max absolute difference among violations: 0.10147499
+E       Max relative difference among violations: 0.0139407
+E        ACTUAL: array([[-1.312220e-10+7.872029e-11j,  1.109273e-02+6.623442e-03j,
+E                3.246666e-02+4.197030e-02j, ..., -3.264928e+00-1.237604e+00j,
+E                1.886915e+00-8.321711e-01j,  2.423849e-01-4.352902e+00j]],
+E             shape=(1, 1025))
+E        DESIRED: array([[-2.191918e-11+1.315025e-11j,  1.109273e-02+6.623442e-03j,
+E                3.246666e-02+4.197030e-02j, ..., -3.281863e+00-1.191970e+00j,
+E                1.875131e+00-8.583945e-01j,  1.816803e-01-4.355858e+00j]],
+E             shape=(1, 1025))
+
+tests/test_doppler_basis_cuda.py:92: AssertionError
+=============================== warnings summary ===============================
+.venv/lib/python3.12/site-packages/_pytest/cacheprovider.py:469
+  /opt/airsim-rf/.venv/lib/python3.12/site-packages/_pytest/cacheprovider.py:469: PytestCacheWarning: could not create cache path /opt/airsim-rf/.pytest_cache/v/cache/nodeids: [Errno 13] Permission denied: '/opt/airsim-rf/pytest-cache-files-35i1ee0r'
+    config.cache.set("cache/nodeids", sorted(self.cached_nodeids))
+
+.venv/lib/python3.12/site-packages/_pytest/cacheprovider.py:423
+  /opt/airsim-rf/.venv/lib/python3.12/site-packages/_pytest/cacheprovider.py:423: PytestCacheWarning: could not create cache path /opt/airsim-rf/.pytest_cache/v/cache/lastfailed: [Errno 13] Permission denied: '/opt/airsim-rf/pytest-cache-files-qgf3icr9'
+    config.cache.set("cache/lastfailed", self.lastfailed)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/test_doppler_basis_cuda.py::test_real_cuda_split_unix_epoch_cancellation_and_boundaries
+1 failed, 6 passed, 2 warnings in 2.10s

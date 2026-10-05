@@ -1,0 +1,213 @@
+{
+  "utc": "2026-10-04T23:45:00.755475+00:00",
+  "hostname": "e82f85c8866f",
+  "platform": "Linux-7.0.0-38-generic-x86_64-with-glibc2.41",
+  "python": "3.12.14 (main, Sep 19 2026, 01:04:57) [GCC 14.2.0]",
+  "python_executable": "/opt/airsim-rf/.venv/bin/python",
+  "source_revision": "2a33cd27055ecf16f464f857e0af19e034637cf5",
+  "source_dirty": "false",
+  "source_file_sha256": {
+    "benchmarks/analyze_channel_support.py": "6850d8b6aa38fd9f3ae5147ef9a6609c8cb85380e08e504373652f20aa9b13fb",
+    "benchmarks/analyze_sdr_scaling.py": "b29097d2189039d06cd2a122d731e6a7a582edab778739130f8ebe9ad84e9785",
+    "benchmarks/benchmark_batched_rendering.py": "9277706d82f396b3d681f1ceac2d0a591eea98caab1a33e47bfb7101c2cf941c",
+    "benchmarks/benchmark_doppler_basis.py": "51ac942ab033211f625d66a4ec9751910ce856d5be79cc502c589c3ce1bcea48",
+    "benchmarks/benchmark_doppler_basis_gpu.py": "188e1f5936f72427a140541c191f3274e2cf820b4b1b833c3c98b4ec41e37508",
+    "benchmarks/benchmark_network_paths.py": "a4d33c1f99ea4ec3eb4d4d8d0effe7143e9e95c6ce4436871c81bfa90c021943",
+    "benchmarks/benchmark_render_accumulation.py": "c9a248ee5c8a121c11b654120e161df6418f729801fa9086b94836ff9101a9d1",
+    "benchmarks/benchmark_rf.py": "c7c474d415a0a0a4fd21cbf99e4c790369ed9802043e81ffabdb5e0b16425530",
+    "benchmarks/benchmark_scattering.py": "a16f6e04ac23ea620d7f7d5cf233a721fb7e64fbaf1fce0403157327600a6f3e",
+    "benchmarks/benchmark_sdr_runtime.py": "80a4f0dab56ee538d105b3d994ce18ccdb8f14fe756d1ec19121960623a0c477",
+    "benchmarks/benchmark_signal_sum.py": "d23a42439b7ccd73617b11025964436b0bfd4a6fb34eebb2db3a3935ec993eb6",
+    "benchmarks/benchmark_single_bounce.py": "75337b608ea09c5e10db3271c570b6716af9b01c02ab46be41f90ae8d722076f",
+    "benchmarks/generate_rf_waterfalls.py": "045def19d05860e4dc505365e76ad3c1abd379ff63bc50e5e3fff133ff3acfb0",
+    "benchmarks/generate_terrain_signature.py": "608cb1e49d58d57991dbfc974db7e90b9e00c5462e42cb7f1de0830070b961bf",
+    "benchmarks/plot_benchmark.py": "1660bbbda645d48ad1d7c6856e8cf9af6c5cef979393071c8f275fc11bccb9c3",
+    "benchmarks/scattering_scenario.py": "626fde00c4ee375ed894b2ffe247eecfbe49183582a5c90097bf3de17160de09",
+    "benchmarks/terrain_scan.py": "a2463fd7cb245c16ea3f214f3bfce39345490e301098b0de545961e1f5b78df3",
+    "benchmarks/validate_compact_channel.py": "4787df003f4c8f8c0f07b7cab1d667f9457ee1d42feddd74c4dd3e4a61ddf402",
+    "requirements-lock.txt": "7974441aed8a80072d5b3a879b81d3789fa815c8e24ed7550855897238fa1963",
+    "requirements-p100-cuda.txt": "3b28bbf573cc855337a6309dc3769fb4bb71d32a0eda4aad4be10d5f7269b3f8",
+    "scripts/aggregate_gpu_profile.py": "d7d5eb29f441e1c00d41d22b22b234babc65db0b7e85f6ebc34b879a35751d86",
+    "scripts/basis_cuda_preflight.py": "e0987261b8c412f856242fc6b749d43ea72a72a61069e4295476d25e2cb1d9bb",
+    "scripts/basis_launch.py": "da77fef34b846a159e29449ec8290e632ab25009e90196091b90796359c3fa71",
+    "scripts/bootstrap.py": "64d0015cafb2a81f14c7269350f9e96699aacccb010733e7c71e01aba3be7075",
+    "scripts/generate_demo_terrain.py": "9594f0c22e5e453d6ca854f30f5610af9e39bcc3238762c6a8895edbf0360553",
+    "scripts/gpu_preflight.py": "6a104c2308d6c9f65a205d3030afe38e7e821b5f18b537a4bbd0ed221dab9f32",
+    "scripts/p100_legacy/analyze_legacy.py": "8a47df264336d931fdbac9f1112758473996ffe30811bde1433c07a3da2ca884",
+    "scripts/p100_legacy/analyze_scaling.py": "74019a3745f0f9bffa8bd7c753e339dbce7df79b5e8cbe27fc7c5267787dc23b",
+    "scripts/p100_legacy/benchmark_propagation.py": "e9f580a93f6fd49f433a4e46874ff2f295b53aa32c56ce84620de247c789a359",
+    "scripts/p100_legacy/launch.py": "eaec13064dd78671e3adc0a705431e2dd4a65246db09e04bc4f32ba0636fe809",
+    "scripts/p100_legacy/run_scaling.py": "f1ad89cc59754353e35773fb5fada2d00c8a6864820a2709a7a35ea2166d277f",
+    "scripts/p100_legacy/sitecustomize.py": "30fbf8ada526b87651b95fe84c3e6841411e1ca55cd0b8aa7cbf374496f64ae4",
+    "scripts/publish_gpu_results.py": "b33b652fbe22bb50f33e9a2fb6b1ecab17dc54345d5057cdfac7dd7872b1084b",
+    "scripts/run_doppler_basis_profile.py": "81b67edb5fc04e255a172bc35bebe60091e7b16bf8d188b772376d441340febb",
+    "scripts/run_gpu_profile.py": "16ec6a61b0dfe280f033f00c94b9161041edc238edc0958f3d3b5a5868c55643",
+    "scripts/verify_ams_mel.py": "28326ffdd48288adb88ffc7f6e09986411ce96f967db035ed589c419d4044f2f",
+    "sources.json": "322b604261a63ca59384e681516f2a9156645223bf1e323742acb85e8a5cfe15",
+    "src/airsim_rf/__init__.py": "00a2bf9a7cd62640967f381c7bc767f9bf98fc0b7c9b316f7bd99eae6e69fdb5",
+    "src/airsim_rf/ams/__init__.py": "7532dc116cd165a6ef9014d8e29017c822115eba0d0bb04ddb9a66bad05ee439",
+    "src/airsim_rf/ams/backend.py": "1aefedf2f9a299b6c404d3d4c65f2ceead14bf06a9df24c187e7c5967233dd66",
+    "src/airsim_rf/ams/dis.py": "23999ea7c91717a78ec5cd47dcc3f2174a953b572ea73680004ea4e854b302f3",
+    "src/airsim_rf/ams/squall_rf_pb2.py": "bb0e4a05388af2cf622648a5daba2961c420ac3d84801dd0a0109c71103963b1",
+    "src/airsim_rf/ams/squall_rf_pb2_grpc.py": "3227b2dcdb0826381e8ac1db11a0f41b99ae245908c9c13083657b1376f04983",
+    "src/airsim_rf/batched_rendering.py": "56589719ddfd1f49f416b3835f23b327aa4812fcbdefc4f3b58922309a94da59",
+    "src/airsim_rf/bridge.py": "033551b392959aa53de9b3d33c3af1a75efd05c7adcfdab4e93b99ffc1dfde6b",
+    "src/airsim_rf/distributed/__init__.py": "7cc439aa67284e96d79f7a7e771fef9f6c89534c0f5967a516defd84beb1aaa0",
+    "src/airsim_rf/distributed/client.py": "c344388bfb7b5a1ee59cf1f05ffbca14a17481ac5cc03dc94513a6d6dd41a32a",
+    "src/airsim_rf/distributed/coordinator.py": "2032a7801089786f7fb9206c7cb373c1c3736a53164c44fcd69f95a8a2c844c8",
+    "src/airsim_rf/distributed/protocol.py": "95b44c995135b062d0a7c2d7270bab7947ff296ecc50a4227e8e27143f19d4dd",
+    "src/airsim_rf/distributed/worker.py": "16c53eeb747102448cdf9035a7f15648907e7b17ace5c1619f09228c7bd68a77",
+    "src/airsim_rf/fmcw.py": "bb8d8b88774a0a5439b3c11a4c4159327da6b8c69687e8098f7b6b9a428005b2",
+    "src/airsim_rf/profiling.py": "ad84fc0c315c9cf6fc99c21c5b42aa5abae105da910eb99a28e8edf55a325069",
+    "src/airsim_rf/radar.py": "8aa2985a96ff9a791c44a6bd2473748de74e3470482c592e9c9f3fdad26a3da2",
+    "src/airsim_rf/receiver.py": "e0af225a5e88b8b422301fad30f69c0dc656e2ce23b2cb436c4529b20d8a3667",
+    "src/airsim_rf/rendering.py": "676ba1b1dbeb6c2985b51cbeac96a3592ad7f852e891ac5b4cbcee36d1b02bc5",
+    "src/airsim_rf/research/__init__.py": "9855b59e6768489d1ea568c81fb20a9c40d11e52ca717de10bae20be959834c6",
+    "src/airsim_rf/research/doppler_basis.py": "2a0eb9cb8a1598af14c9b3af488d9f2a23dc4a44b464f7b82148f347963956f8",
+    "src/airsim_rf/research/doppler_basis_cuda.py": "9d0ea5512562b338a26442b9a9830ae2ee4bb072d9f535eca20ec641dcdc45fb",
+    "src/airsim_rf/runtime_metrics.py": "1dc7420e7bd2cd75b5107e2b98d2a17e028c648c5402dbf13e73cd9aafb0bab7",
+    "src/airsim_rf/sampled_waveform.py": "bd762a283bc984ef11f502c02f4b384fa7863be878a1803521ba1f9f808ae5ab",
+    "src/airsim_rf/scattering.py": "8e9504f70f4138af52521a51bbb72b8bce0cba0a3268e317b2cb81ebefc91d0a",
+    "src/airsim_rf/sdr.py": "aee9ac6dbce3135ebde4d86f80b12bbe88444ca7e7efc3e3770031d5570bb856",
+    "src/airsim_rf/sdr_bridge.py": "e59c80cad7c7f3ced6c137eff2178d0a582395e1050cf670fd38ff3a00600499",
+    "src/airsim_rf/single_bounce.py": "2fd19a806a5489e8f63e3e6181596e76844cf87f85615d5e91eb8e1665ec37cd",
+    "src/airsim_rf/terrain.py": "1bd196a1c7cf354d4d5f6064ea680ba97cad77e9c0a7eaddb23e699996e00e48"
+  },
+  "sources": {
+    "projectairsim": {
+      "url": "https://github.com/iamaisim/ProjectAirSim.git",
+      "commit": "cfb865f29f255b15ef28ec8fdcfaa01a6b66497f",
+      "nearest_tag": "v1.1.0",
+      "python_client": "1.1.0"
+    },
+    "sionna_rt": {
+      "url": "https://github.com/NVlabs/sionna-rt.git",
+      "commit": "15b5ee036917a4c2a9b6420e05570b77717e2fcc",
+      "package_version": "2.2.0"
+    },
+    "tested_python": "3.12",
+    "ams_gra": {
+      "starter_kit": {
+        "group_url": "https://gitlab.com/open-arsenal/ams-gra/hello-world-sk",
+        "getting_started_docs": "https://open-arsenal.gitlab.io/ams-gra/hello-world-sk/getting-started/",
+        "release_tag": "v2026.09.01",
+        "github_mirror_snapshot": {
+          "url": "https://github.com/open-arsenal/ams-gra-hello-world-sk.git",
+          "commit": "994ea81de70b20a195297b208b7fe480631471c1"
+        }
+      },
+      "squall": {
+        "url": "https://gitlab.com/open-arsenal/ams-gra/hello-world-sk/sensors/squall.git",
+        "commit": "b3d4aa780de954e39bf2c6dbd7b0121f699822b4"
+      },
+      "rf_mel": {
+        "url": "https://gitlab.com/open-arsenal/ams-gra/hello-world-sk/interfaces/rf-mel.git",
+        "commit": "762ce84c5555dd0f3ea66f36b321fecf8839b89f"
+      },
+      "common_mel": {
+        "url": "https://gitlab.com/open-arsenal/ams-gra/hello-world-sk/interfaces/common-mel.git",
+        "commit": "f6908437d8fd2f7fb69896f9eb9cfd272d10c439"
+      },
+      "ams_vita": {
+        "url": "https://gitlab.com/open-arsenal/ams-gra/hello-world-sk/libraries/ams-vita.git",
+        "commit": "8e12a4cd7ac8ea8776d40b9d0b22fc4a22adaad8"
+      },
+      "ams_math": {
+        "url": "https://gitlab.com/open-arsenal/ams-gra/hello-world-sk/libraries/ams-math.git",
+        "commit": "00be45190f0e47d268cece8b8c2f8fb58b5418d2"
+      },
+      "couloir_image": "registry.gitlab.com/open-arsenal/ams-gra/hello-world-sk/sensors/squall/couloir@sha256:1bfcfdb9b7df511db0fa84e475099321e0d0f2b3e4bece49d20b975e86527690",
+      "oms_rf_adapter_image": "registry.gitlab.com/open-arsenal/ams-gra/hello-world-sk/sensors/squall/oms-rf-adapter@sha256:34e2593a35b47799cc740c98176de0bffe72e39147ad27c65630f3ecf4bedbb3",
+      "getting_started": {
+        "url": "https://gitlab.com/open-arsenal/ams-gra/hello-world-sk/getting-started.git",
+        "commit": "1d516818b9d33cc4a1d7d5b8b82f3ca41b2f4cce"
+      },
+      "supercell": {
+        "url": "https://gitlab.com/open-arsenal/ams-gra/hello-world-sk/sim/supercell.git",
+        "commit": "d46e0819f425faf09feecd453093c6f0d094a6e5"
+      },
+      "graupel": {
+        "url": "https://gitlab.com/open-arsenal/ams-gra/hello-world-sk/viz/graupel.git",
+        "commit": "0f4cec71674ffa32bf808596d374272da282b96f"
+      },
+      "worldview": {
+        "url": "https://gitlab.com/open-arsenal/ams-gra/hello-world-sk/viz/worldview.git",
+        "commit": "efedd54301c76bde6795d3c4ec07ed55fe61dec1"
+      },
+      "sleet": {
+        "url": "https://gitlab.com/open-arsenal/ams-gra/hello-world-sk/infra/sleet.git",
+        "commit": "e3c2d798a229766571ed7be1f5b28d2dcdb51868"
+      },
+      "ir_search_and_track": {
+        "url": "https://gitlab.com/open-arsenal/ams-gra/hello-world-sk/skills/ir-search-and-track.git",
+        "commit": "334a2a8ca9b3bdda525bdc342c0d4e2d0165b604"
+      },
+      "rf_fm_demod": {
+        "url": "https://gitlab.com/open-arsenal/ams-gra/hello-world-sk/skills/rf-fm-demod.git",
+        "commit": "bc0077e11f58b9a148acfd07e39fd1b808de1004"
+      },
+      "canonical_audit": {
+        "checked_date": "2026-10-03",
+        "squall_files_sha256": {
+          "crates/rf/proto/squall_rf.proto": "f5096ec47bcb7808cb7a04b4a4ce6735cd542f405ee34942745e9da6c43480df",
+          "interfaces/squall-rf-mel-impl/src/SquallDataMEL.cc": "8f919121076305f76bc6dc3fb6e114a40f7f0c7f5d3164abc65ab93e24fb7e18",
+          "interfaces/squall-rf-mel-impl/src/SquallGrpcClient.cc": "7dc011fe2c10e32665a82e82e0e7b7470f868850c9e039b960626359fd16a9f8",
+          "interfaces/squall-rf-mel-impl/src/SquallC2MEL.cc": "f7f8ea0760a9bbaadffc18f916974e01ab2c9363a757fa187b4e214b3161625e",
+          "interfaces/squall-rf-mel-impl/src/SquallVADB.h": "1109b5a3a68926a0b034902573d3fff3578caba0afe976bd8b1bdf163ddec198",
+          "compose.yaml": "eb22d2b33759671f60e3e08c8496251113d718bdd6341a3d3f4aac0841ce4743",
+          "config/couloir.toml": "bc6ee985c84c562458db5574756ec85adfb8864c6ddf8d18516ee60abb61c997",
+          "config/squall-rf-mel-profile.json": "b3fd93c9122a941d1f6ad906c3cb050435fded4b790d5c57b744307c369f0d13"
+        },
+        "rf_contract_matches_tested_github_snapshot": true
+      }
+    }
+  },
+  "cpu_count": 16,
+  "cpu_quota": "max 100000",
+  "memory_limit": "max",
+  "runtime_environment": {
+    "CUDA_VISIBLE_DEVICES": "0",
+    "NVIDIA_VISIBLE_DEVICES": "void",
+    "NVIDIA_DRIVER_CAPABILITIES": "compute,utility,graphics",
+    "CUDA_LAUNCH_BLOCKING": null,
+    "OMP_NUM_THREADS": null,
+    "OPENBLAS_NUM_THREADS": null,
+    "MKL_NUM_THREADS": null
+  },
+  "gpu": {
+    "command": [
+      "nvidia-smi",
+      "--query-gpu=index,uuid,name,driver_version,memory.total,compute_cap",
+      "--format=csv"
+    ],
+    "returncode": 0,
+    "stdout": "index, uuid, name, driver_version, memory.total [MiB], compute_cap\n0, GPU-0d70be84-560c-cf1e-8d49-c41015f45415, Tesla P100-PCIE-16GB, 580.178.04, 16384 MiB, 6.0\n",
+    "stderr": ""
+  },
+  "gpu_detail": {
+    "command": [
+      "nvidia-smi",
+      "-q"
+    ],
+    "returncode": 0,
+    "stdout": "\n==============NVSMI LOG==============\n\nTimestamp                                              : Sun Oct  4 23:45:00 2026\nDriver Version                                         : 580.178.04\nCUDA Version                                           : 13.0\n\nAttached GPUs                                          : 1\nGPU 00000000:01:00.0\n    Product Name                                       : Tesla P100-PCIE-16GB\n    Product Brand                                      : Tesla\n    Product Architecture                               : Pascal\n    Display Mode                                       : Requested functionality has been deprecated\n    Display Attached                                   : No\n    Display Active                                     : Disabled\n    Persistence Mode                                   : Enabled\n    Addressing Mode                                    : N/A\n    MIG Mode\n        Current                                        : N/A\n        Pending                                        : N/A\n    Accounting Mode                                    : Disabled\n    Accounting Mode Buffer Size                        : 4000\n    Driver Model\n        Current                                        : N/A\n        Pending                                        : N/A\n    Serial Number                                      : 0322817097869\n    GPU UUID                                           : GPU-0d70be84-560c-cf1e-8d49-c41015f45415\n    GPU PDI                                            : 0x55f54bc1f731\n    Minor Number                                       : 0\n    VBIOS Version                                      : 86.00.41.00.06\n    MultiGPU Board                                     : No\n    Board ID                                           : 0x100\n    Board Part Number                                  : 900-2H400-0000-000\n    GPU Part Number                                    : 15F8-892-A1\n    FRU Part Number                                    : N/A\n    Platform Info\n        Chassis Serial Number                          : N/A\n        Slot Number                                    : N/A\n        Tray Index                                     : N/A\n        Host ID                                        : N/A\n        Peer Type                                      : N/A\n        Module Id                                      : 1\n        GPU Fabric GUID                                : N/A\n    Inforom Version\n        Image Version                                  : H400.0201.00.08\n        OEM Object                                     : 1.1\n        ECC Object                                     : 4.1\n        Power Management Object                        : N/A\n    Inforom BBX Object Flush\n        Latest Timestamp                               : N/A\n        Latest Duration                                : N/A\n    GPU Operation Mode\n        Current                                        : N/A\n        Pending                                        : N/A\n    GPU C2C Mode                                       : N/A\n    GPU Virtualization Mode\n        Virtualization Mode                            : None\n        Host VGPU Mode                                 : N/A\n        vGPU Heterogeneous Mode                        : N/A\n    GPU Recovery Action                                : None\n    GSP Firmware Version                               : N/A\n    IBMNPU\n        Relaxed Ordering Mode                          : N/A\n    PCI\n        Bus                                            : 0x01\n        Device                                         : 0x00\n        Domain                                         : 0x0000\n        Base Classcode                                 : 0x3\n        Sub Classcode                                  : 0x2\n        Device Id                                      : 0x15F810DE\n        Bus Id                                         : 00000000:01:00.0\n        Sub System Id                                  : 0x118F10DE\n        GPU Link Info\n            PCIe Generation\n                Max                                    : 3\n                Current                                : 3\n                Device Current                         : 3\n                Device Max                             : 3\n                Host Max                               : 4\n            Link Width\n                Max                                    : 16x\n                Current                                : 8x\n        Bridge Chip\n            Type                                       : N/A\n            Firmware                                   : N/A\n        Replays Since Reset                            : 0\n        Replay Number Rollovers                        : 0\n        Tx Throughput                                  : 48 KB/s\n        Rx Throughput                                  : 209711781 KB/s\n        Atomic Caps Outbound                           : N/A\n        Atomic Caps Inbound                            : N/A\n    Fan Speed                                          : N/A\n    Performance State                                  : P0\n    Clocks Event Reasons\n        Idle                                           : Not Active\n        Applications Clocks Setting                    : Not Active\n        SW Power Cap                                   : Not Active\n        HW Slowdown                                    : Not Active\n            HW Thermal Slowdown                        : Not Active\n            HW Power Brake Slowdown                    : Not Active\n        Sync Boost                                     : Not Active\n        SW Thermal Slowdown                            : Not Active\n        Display Clock Setting                          : Not Active\n    Clocks Event Reasons Counters\n        SW Power Capping                               : 503473 us\n        Sync Boost                                     : 0 us\n        SW Thermal Slowdown                            : N/A\n        HW Thermal Slowdown                            : 0 us\n        HW Power Braking                               : 0 us\n    Sparse Operation Mode                              : N/A\n    FB Memory Usage\n        Total                                          : 16384 MiB\n        Reserved                                       : 115 MiB\n        Used                                           : 263 MiB\n        Free                                           : 16007 MiB\n    BAR1 Memory Usage\n        Total                                          : 16384 MiB\n        Used                                           : 2 MiB\n        Free                                           : 16382 MiB\n    Conf Compute Protected Memory Usage\n        Total                                          : 0 MiB\n        Used                                           : 0 MiB\n        Free                                           : 0 MiB\n    Compute Mode                                       : Default\n    Utilization\n        GPU                                            : 0 %\n        Memory                                         : 0 %\n        Encoder                                        : 0 %\n        Decoder                                        : 0 %\n        JPEG                                           : N/A\n        OFA                                            : N/A\n    Encoder Stats\n        Active Sessions                                : 0\n        Average FPS                                    : 0\n        Average Latency                                : 0\n    FBC Stats\n        Active Sessions                                : 0\n        Average FPS                                    : 0\n        Average Latency                                : 0\n    DRAM Encryption Mode\n        Current                                        : N/A\n        Pending                                        : N/A\n    ECC Mode\n        Current                                        : Enabled\n        Pending                                        : Enabled\n    ECC Errors\n        Volatile\n            Single Bit            \n                Device Memory                          : 0\n                Register File                          : 0\n                L1 Cache                               : N/A\n                L2 Cache                               : 0\n                Texture Memory                         : 0\n                Texture Shared                         : 0\n                CBU                                    : N/A\n                Total                                  : 0\n            Double Bit            \n                Device Memory                          : 0\n                Register File                          : 0\n                L1 Cache                               : N/A\n                L2 Cache                               : 0\n                Texture Memory                         : 0\n                Texture Shared                         : 0\n                CBU                                    : N/A\n                Total                                  : 0\n        Aggregate\n            Single Bit            \n                Device Memory                          : 0\n                Register File                          : 0\n                L1 Cache                               : N/A\n                L2 Cache                               : 0\n                Texture Memory                         : 0\n                Texture Shared                         : 0\n                CBU                                    : N/A\n                Total                                  : 0\n            Double Bit            \n                Device Memory                          : 0\n                Register File                          : 0\n                L1 Cache                               : N/A\n                L2 Cache                               : 0\n                Texture Memory                         : 0\n                Texture Shared                         : 0\n                CBU                                    : N/A\n                Total                                  : 0\n    Retired Pages\n        Single Bit ECC                                 : 0\n        Double Bit ECC                                 : 0\n        Pending Page Blacklist                         : No\n    Remapped Rows                                      : N/A\n    Temperature\n        GPU Current Temp                               : 30 C\n        GPU T.Limit Temp                               : N/A\n        GPU Shutdown Temp                              : 85 C\n        GPU Slowdown Temp                              : 82 C\n        GPU Max Operating Temp                         : N/A\n        GPU Target Temperature                         : N/A\n        Memory Current Temp                            : N/A\n        Memory Max Operating Temp                      : N/A\n    GPU Power Readings\n        Average Power Draw                             : N/A\n        Instantaneous Power Draw                       : 30.14 W\n        Current Power Limit                            : 250.00 W\n        Requested Power Limit                          : 250.00 W\n        Default Power Limit                            : 250.00 W\n        Min Power Limit                                : 125.00 W\n        Max Power Limit                                : 250.00 W\n    GPU Memory Power Readings \n        Average Power Draw                             : N/A\n        Instantaneous Power Draw                       : N/A\n    Module Power Readings\n        Average Power Draw                             : N/A\n        Instantaneous Power Draw                       : N/A\n        Current Power Limit                            : N/A\n        Requested Power Limit                          : N/A\n        Default Power Limit                            : N/A\n        Min Power Limit                                : N/A\n        Max Power Limit                                : N/A\n    Power Smoothing                                    : N/A\n    Workload Power Profiles\n        Requested Profiles                             : N/A\n        Enforced Profiles                              : N/A\n    Clocks\n        Graphics                                       : 1189 MHz\n        SM                                             : 1189 MHz\n        Memory                                         : 715 MHz\n        Video                                          : 1075 MHz\n    Applications Clocks\n        Graphics                                       : 1189 MHz\n        Memory                                         : 715 MHz\n    Default Applications Clocks\n        Graphics                                       : 1189 MHz\n        Memory                                         : 715 MHz\n    Deferred Clocks\n        Memory                                         : N/A\n    Max Clocks\n        Graphics                                       : 1328 MHz\n        SM                                             : 1328 MHz\n        Memory                                         : 715 MHz\n        Video                                          : 1328 MHz\n    Max Customer Boost Clocks\n        Graphics                                       : 1328 MHz\n    Clock Policy\n        Auto Boost                                     : N/A\n        Auto Boost Default                             : N/A\n    Fabric\n        State                                          : N/A\n        Status                                         : N/A\n        CliqueId                                       : N/A\n        ClusterUUID                                    : N/A\n        Health\n            Summary                                    : N/A\n            Bandwidth                                  : N/A\n            Route Recovery in progress                 : N/A\n            Route Unhealthy                            : N/A\n            Access Timeout Recovery                    : N/A\n            Incorrect Configuration                    : N/A\n            Partition Assigned                         : N/A\n    Processes\n        GPU instance ID                   : N/A\n        Compute instance ID               : N/A\n        Process ID                        : 3021\n            Type                          : C\n            Name                          : \n            Used GPU Memory               : 256 MiB\n        GPU instance ID                   : N/A\n        Compute instance ID               : N/A\n        Process ID                        : 3926\n            Type                          : G\n            Name                          : \n            Used GPU Memory               : 4 MiB\n    Capabilities\n        EGM                                            : disabled\n\n",
+    "stderr": ""
+  },
+  "cpu": {
+    "command": [
+      "lscpu",
+      "--json"
+    ],
+    "returncode": 0,
+    "stdout": "{\n   \"lscpu\": [\n      {\n         \"field\": \"Architecture:\",\n         \"data\": \"x86_64\"\n      },{\n         \"field\": \"CPU op-mode(s):\",\n         \"data\": \"32-bit, 64-bit\"\n      },{\n         \"field\": \"Address sizes:\",\n         \"data\": \"48 bits physical, 48 bits virtual\"\n      },{\n         \"field\": \"Byte Order:\",\n         \"data\": \"Little Endian\"\n      },{\n         \"field\": \"CPU(s):\",\n         \"data\": \"16\"\n      },{\n         \"field\": \"On-line CPU(s) list:\",\n         \"data\": \"0-15\"\n      },{\n         \"field\": \"Vendor ID:\",\n         \"data\": \"AuthenticAMD\"\n      },{\n         \"field\": \"Model name:\",\n         \"data\": \"AMD Ryzen 7 8700G w/ Radeon 780M Graphics\"\n      },{\n         \"field\": \"CPU family:\",\n         \"data\": \"25\"\n      },{\n         \"field\": \"Model:\",\n         \"data\": \"117\"\n      },{\n         \"field\": \"Thread(s) per core:\",\n         \"data\": \"2\"\n      },{\n         \"field\": \"Core(s) per socket:\",\n         \"data\": \"8\"\n      },{\n         \"field\": \"Socket(s):\",\n         \"data\": \"1\"\n      },{\n         \"field\": \"Stepping:\",\n         \"data\": \"2\"\n      },{\n         \"field\": \"Frequency boost:\",\n         \"data\": \"enabled\"\n      },{\n         \"field\": \"CPU(s) scaling MHz:\",\n         \"data\": \"69%\"\n      },{\n         \"field\": \"CPU max MHz:\",\n         \"data\": \"5177.3589\"\n      },{\n         \"field\": \"CPU min MHz:\",\n         \"data\": \"422.6420\"\n      },{\n         \"field\": \"BogoMIPS:\",\n         \"data\": \"8400.58\"\n      },{\n         \"field\": \"Flags:\",\n         \"data\": \"fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush mmx fxsr sse sse2 ht syscall nx mmxext fxsr_opt pdpe1gb rdtscp lm constant_tsc rep_good amd_lbr_v2 nopl xtopology nonstop_tsc cpuid extd_apicid aperfmperf rapl pni pclmulqdq monitor ssse3 fma cx16 sse4_1 sse4_2 movbe popcnt aes xsave avx f16c rdrand lahf_lm cmp_legacy svm extapic cr8_legacy abm sse4a misalignsse 3dnowprefetch osvw ibs skinit wdt tce topoext perfctr_core perfctr_nb bpext perfctr_llc mwaitx cpuid_fault cpb cat_l3 cdp_l3 hw_pstate ssbd mba perfmon_v2 ibrs ibpb stibp ibrs_enhanced vmmcall fsgsbase bmi1 avx2 smep bmi2 erms invpcid cqm rdt_a avx512f avx512dq rdseed adx smap avx512ifma clflushopt clwb avx512cd sha_ni avx512bw avx512vl xsaveopt xsavec xgetbv1 xsaves cqm_llc cqm_occup_llc cqm_mbm_total cqm_mbm_local user_shstk avx512_bf16 clzero irperf xsaveerptr rdpru wbnoinvd cppc arat npt lbrv svm_lock nrip_save tsc_scale vmcb_clean flushbyasid decodeassists pausefilter pfthreshold avic vgif x2avic v_spec_ctrl vnmi avx512vbmi umip pku ospke avx512_vbmi2 gfni vaes vpclmulqdq avx512_vnni avx512_bitalg avx512_vpopcntdq rdpid overflow_recov succor smca fsrm flush_l1d\"\n      },{\n         \"field\": \"Virtualization:\",\n         \"data\": \"AMD-V\"\n      },{\n         \"field\": \"L1d cache:\",\n         \"data\": \"256 KiB (8 instances)\"\n      },{\n         \"field\": \"L1i cache:\",\n         \"data\": \"256 KiB (8 instances)\"\n      },{\n         \"field\": \"L2 cache:\",\n         \"data\": \"8 MiB (8 instances)\"\n      },{\n         \"field\": \"L3 cache:\",\n         \"data\": \"16 MiB (1 instance)\"\n      },{\n         \"field\": \"NUMA node(s):\",\n         \"data\": \"1\"\n      },{\n         \"field\": \"NUMA node0 CPU(s):\",\n         \"data\": \"0-15\"\n      },{\n         \"field\": \"Vulnerability Gather data sampling:\",\n         \"data\": \"Not affected\"\n      },{\n         \"field\": \"Vulnerability Ghostwrite:\",\n         \"data\": \"Not affected\"\n      },{\n         \"field\": \"Vulnerability Indirect target selection:\",\n         \"data\": \"Not affected\"\n      },{\n         \"field\": \"Vulnerability Itlb multihit:\",\n         \"data\": \"Not affected\"\n      },{\n         \"field\": \"Vulnerability L1tf:\",\n         \"data\": \"Not affected\"\n      },{\n         \"field\": \"Vulnerability Mds:\",\n         \"data\": \"Not affected\"\n      },{\n         \"field\": \"Vulnerability Meltdown:\",\n         \"data\": \"Not affected\"\n      },{\n         \"field\": \"Vulnerability Mmio stale data:\",\n         \"data\": \"Not affected\"\n      },{\n         \"field\": \"Vulnerability Old microcode:\",\n         \"data\": \"Not affected\"\n      },{\n         \"field\": \"Vulnerability Reg file data sampling:\",\n         \"data\": \"Not affected\"\n      },{\n         \"field\": \"Vulnerability Retbleed:\",\n         \"data\": \"Not affected\"\n      },{\n         \"field\": \"Vulnerability Spec rstack overflow:\",\n         \"data\": \"Mitigation; Safe RET\"\n      },{\n         \"field\": \"Vulnerability Spec store bypass:\",\n         \"data\": \"Mitigation; Speculative Store Bypass disabled via prctl\"\n      },{\n         \"field\": \"Vulnerability Spectre v1:\",\n         \"data\": \"Mitigation; usercopy/swapgs barriers and __user pointer sanitization\"\n      },{\n         \"field\": \"Vulnerability Spectre v2:\",\n         \"data\": \"Mitigation; Enhanced / Automatic IBRS; IBPB conditional; STIBP always-on; PBRSB-eIBRS Not affected; BHI Not affected\"\n      },{\n         \"field\": \"Vulnerability Srbds:\",\n         \"data\": \"Not affected\"\n      },{\n         \"field\": \"Vulnerability Tsa:\",\n         \"data\": \"Mitigation; Clear CPU buffers\"\n      },{\n         \"field\": \"Vulnerability Tsx async abort:\",\n         \"data\": \"Not affected\"\n      },{\n         \"field\": \"Vulnerability Vmscape:\",\n         \"data\": \"Mitigation; IBPB before exit to userspace\"\n      }\n   ]\n}\n",
+    "stderr": ""
+  },
+  "nsys": {
+    "command": [
+      "nsys",
+      "--version"
+    ],
+    "returncode": null,
+    "error": "[Errno 2] No such file or directory: 'nsys'"
+  }
+}

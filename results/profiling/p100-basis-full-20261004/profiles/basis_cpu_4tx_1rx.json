@@ -1,0 +1,2269 @@
+{
+  "scope": "doppler_basis_receiver_rendering",
+  "measurement_mode": "unprofiled_basis_benchmark",
+  "utc": "2026-10-04T23:59:48.417145+00:00",
+  "arguments": {
+    "backend": "cpu",
+    "tx": 4,
+    "rx": 1,
+    "paths": 1028,
+    "samples": 16667,
+    "sample_rate": 2000000.0,
+    "max_delay_us": 100.0,
+    "max_doppler_hz": 2500.0,
+    "taps": 32,
+    "block_samples": 2048,
+    "batch_links": 8,
+    "tolerance": 1e-10,
+    "iterations": 30,
+    "warmup": 3,
+    "threads": 2,
+    "profile_only": false,
+    "output": "/work/results/p100-basis-full-20261004/profiles/basis_cpu_4tx_1rx.json"
+  },
+  "backend": "cpu",
+  "precision": "complex128/float64",
+  "no_cpu_fallback": true,
+  "valid_paths": 4112,
+  "private_source_bytes": 1087680,
+  "source_generation_ms": 4.870315999824015,
+  "first_ms": 83.00269400001525,
+  "rows": [
+    {
+      "total_ms": 82.63884799998777,
+      "receiver_metrics": [
+        {
+          "preparation_ms": 4.469531000040661,
+          "channel_construction_ms": 46.39325200014355,
+          "fft_and_reconstruction_ms": 29.069719999824883,
+          "total_ms": 82.25282299986247,
+          "blocks": [
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 283,
+              "degree": 10,
+              "temporal_tail_bound": 8.082681397874134e-11
+            }
+          ],
+          "valid_paths": 4112,
+          "delay_coefficients": [
+            233,
+            233,
+            233,
+            233
+          ],
+          "temporal_only_absolute_error_bound": [
+            3.154866462108401e-08,
+            2.6293820170266893e-08,
+            2.3661528143992725e-08,
+            2.3812721150078118e-08
+          ]
+        }
+      ],
+      "channel_epoch_index": 4
+    },
+    {
+      "total_ms": 82.1264250000695,
+      "receiver_metrics": [
+        {
+          "preparation_ms": 4.549159999896801,
+          "channel_construction_ms": 45.99256100004823,
+          "fft_and_reconstruction_ms": 29.06890599911094,
+          "total_ms": 81.72775999992155,
+          "blocks": [
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 283,
+              "degree": 10,
+              "temporal_tail_bound": 8.082681397874134e-11
+            }
+          ],
+          "valid_paths": 4112,
+          "delay_coefficients": [
+            233,
+            233,
+            233,
+            233
+          ],
+          "temporal_only_absolute_error_bound": [
+            3.09680551208498e-08,
+            2.6509541400616703e-08,
+            2.3525901026207537e-08,
+            2.387054879836656e-08
+          ]
+        }
+      ],
+      "channel_epoch_index": 5
+    },
+    {
+      "total_ms": 79.05977499990513,
+      "receiver_metrics": [
+        {
+          "preparation_ms": 4.30014299990944,
+          "channel_construction_ms": 44.696191999719304,
+          "fft_and_reconstruction_ms": 27.999117998888323,
+          "total_ms": 78.67500999986987,
+          "blocks": [
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 283,
+              "degree": 10,
+              "temporal_tail_bound": 8.082681397874134e-11
+            }
+          ],
+          "valid_paths": 4112,
+          "delay_coefficients": [
+            233,
+            233,
+            233,
+            233
+          ],
+          "temporal_only_absolute_error_bound": [
+            3.0643834614049626e-08,
+            2.6619141303665233e-08,
+            2.3047286888277906e-08,
+            2.389608074519793e-08
+          ]
+        }
+      ],
+      "channel_epoch_index": 6
+    },
+    {
+      "total_ms": 79.04697599997235,
+      "receiver_metrics": [
+        {
+          "preparation_ms": 4.165055000157736,
+          "channel_construction_ms": 46.376786001019354,
+          "fft_and_reconstruction_ms": 25.704019999921,
+          "total_ms": 78.33670500008338,
+          "blocks": [
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 283,
+              "degree": 10,
+              "temporal_tail_bound": 8.082681397874134e-11
+            }
+          ],
+          "valid_paths": 4112,
+          "delay_coefficients": [
+            233,
+            233,
+            233,
+            233
+          ],
+          "temporal_only_absolute_error_bound": [
+            3.0812177228671564e-08,
+            2.69300905728879e-08,
+            2.303541695658291e-08,
+            2.3646850100593297e-08
+          ]
+        }
+      ],
+      "channel_epoch_index": 7
+    },
+    {
+      "total_ms": 75.15663599997424,
+      "receiver_metrics": [
+        {
+          "preparation_ms": 4.525980999915191,
+          "channel_construction_ms": 45.16874499950063,
+          "fft_and_reconstruction_ms": 23.225798999874314,
+          "total_ms": 74.7763209999448,
+          "blocks": [
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 283,
+              "degree": 10,
+              "temporal_tail_bound": 8.082681397874134e-11
+            }
+          ],
+          "valid_paths": 4112,
+          "delay_coefficients": [
+            233,
+            233,
+            233,
+            233
+          ],
+          "temporal_only_absolute_error_bound": [
+            3.144302785104673e-08,
+            2.6414987330981295e-08,
+            2.321335058505323e-08,
+            2.3571949789775933e-08
+          ]
+        }
+      ],
+      "channel_epoch_index": 8
+    },
+    {
+      "total_ms": 75.12356699999145,
+      "receiver_metrics": [
+        {
+          "preparation_ms": 4.319863999853624,
+          "channel_construction_ms": 44.87107499994636,
+          "fft_and_reconstruction_ms": 23.516150999967067,
+          "total_ms": 74.50439499984896,
+          "blocks": [
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 283,
+              "degree": 10,
+              "temporal_tail_bound": 8.082681397874134e-11
+            }
+          ],
+          "valid_paths": 4112,
+          "delay_coefficients": [
+            233,
+            233,
+            233,
+            233
+          ],
+          "temporal_only_absolute_error_bound": [
+            3.1548664621083996e-08,
+            2.629382017026688e-08,
+            2.3661528143992715e-08,
+            2.3812721150078125e-08
+          ]
+        }
+      ],
+      "channel_epoch_index": 9
+    },
+    {
+      "total_ms": 80.68092400003479,
+      "receiver_metrics": [
+        {
+          "preparation_ms": 4.523990000052436,
+          "channel_construction_ms": 46.43740400024399,
+          "fft_and_reconstruction_ms": 27.2246649999488,
+          "total_ms": 80.22280000000137,
+          "blocks": [
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 283,
+              "degree": 10,
+              "temporal_tail_bound": 8.082681397874134e-11
+            }
+          ],
+          "valid_paths": 4112,
+          "delay_coefficients": [
+            233,
+            233,
+            233,
+            233
+          ],
+          "temporal_only_absolute_error_bound": [
+            3.096805512084983e-08,
+            2.6509541400616693e-08,
+            2.3525901026207533e-08,
+            2.3870548798366564e-08
+          ]
+        }
+      ],
+      "channel_epoch_index": 10
+    },
+    {
+      "total_ms": 75.86666700012756,
+      "receiver_metrics": [
+        {
+          "preparation_ms": 4.523919999883219,
+          "channel_construction_ms": 45.32962999996926,
+          "fft_and_reconstruction_ms": 23.620238000830795,
+          "total_ms": 75.36521299994092,
+          "blocks": [
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 283,
+              "degree": 10,
+              "temporal_tail_bound": 8.082681397874134e-11
+            }
+          ],
+          "valid_paths": 4112,
+          "delay_coefficients": [
+            233,
+            233,
+            233,
+            233
+          ],
+          "temporal_only_absolute_error_bound": [
+            3.064383461404963e-08,
+            2.6619141303665223e-08,
+            2.3047286888277923e-08,
+            2.3896080745197948e-08
+          ]
+        }
+      ],
+      "channel_epoch_index": 11
+    },
+    {
+      "total_ms": 73.94821200000479,
+      "receiver_metrics": [
+        {
+          "preparation_ms": 4.242095000108748,
+          "channel_construction_ms": 44.521221000422884,
+          "fft_and_reconstruction_ms": 23.053805999779797,
+          "total_ms": 73.48075800018705,
+          "blocks": [
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 283,
+              "degree": 10,
+              "temporal_tail_bound": 8.082681397874134e-11
+            }
+          ],
+          "valid_paths": 4112,
+          "delay_coefficients": [
+            233,
+            233,
+            233,
+            233
+          ],
+          "temporal_only_absolute_error_bound": [
+            3.081217722867155e-08,
+            2.693009057288789e-08,
+            2.303541695658293e-08,
+            2.3646850100593297e-08
+          ]
+        }
+      ],
+      "channel_epoch_index": 12
+    },
+    {
+      "total_ms": 77.4005359999137,
+      "receiver_metrics": [
+        {
+          "preparation_ms": 4.467990999955873,
+          "channel_construction_ms": 44.980710000345425,
+          "fft_and_reconstruction_ms": 25.548818999595824,
+          "total_ms": 76.89500300011787,
+          "blocks": [
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 283,
+              "degree": 10,
+              "temporal_tail_bound": 8.082681397874134e-11
+            }
+          ],
+          "valid_paths": 4112,
+          "delay_coefficients": [
+            233,
+            233,
+            233,
+            233
+          ],
+          "temporal_only_absolute_error_bound": [
+            3.1443027851046736e-08,
+            2.641498733098131e-08,
+            2.321335058505323e-08,
+            2.357194978977594e-08
+          ]
+        }
+      ],
+      "channel_epoch_index": 13
+    },
+    {
+      "total_ms": 75.36691300015264,
+      "receiver_metrics": [
+        {
+          "preparation_ms": 4.33859300005679,
+          "channel_construction_ms": 44.46631399969192,
+          "fft_and_reconstruction_ms": 24.33629500023926,
+          "total_ms": 74.9797779999426,
+          "blocks": [
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 283,
+              "degree": 10,
+              "temporal_tail_bound": 8.082681397874134e-11
+            }
+          ],
+          "valid_paths": 4112,
+          "delay_coefficients": [
+            233,
+            233,
+            233,
+            233
+          ],
+          "temporal_only_absolute_error_bound": [
+            3.154866462108398e-08,
+            2.6293820170266876e-08,
+            2.366152814399272e-08,
+            2.3812721150078128e-08
+          ]
+        }
+      ],
+      "channel_epoch_index": 14
+    },
+    {
+      "total_ms": 77.68254299980981,
+      "receiver_metrics": [
+        {
+          "preparation_ms": 4.237783999997191,
+          "channel_construction_ms": 44.65946300047108,
+          "fft_and_reconstruction_ms": 26.411895000592267,
+          "total_ms": 77.04232099990804,
+          "blocks": [
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 283,
+              "degree": 10,
+              "temporal_tail_bound": 8.082681397874134e-11
+            }
+          ],
+          "valid_paths": 4112,
+          "delay_coefficients": [
+            233,
+            233,
+            233,
+            233
+          ],
+          "temporal_only_absolute_error_bound": [
+            3.096805512084983e-08,
+            2.6509541400616686e-08,
+            2.352590102620755e-08,
+            2.387054879836652e-08
+          ]
+        }
+      ],
+      "channel_epoch_index": 15
+    },
+    {
+      "total_ms": 76.4609789998758,
+      "receiver_metrics": [
+        {
+          "preparation_ms": 4.65754900005777,
+          "channel_construction_ms": 44.68681799994556,
+          "fft_and_reconstruction_ms": 24.941891000707983,
+          "total_ms": 76.03381500007345,
+          "blocks": [
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 283,
+              "degree": 10,
+              "temporal_tail_bound": 8.082681397874134e-11
+            }
+          ],
+          "valid_paths": 4112,
+          "delay_coefficients": [
+            233,
+            233,
+            233,
+            233
+          ],
+          "temporal_only_absolute_error_bound": [
+            3.064383461404964e-08,
+            2.661914130366523e-08,
+            2.3047286888277923e-08,
+            2.3896080745197965e-08
+          ]
+        }
+      ],
+      "channel_epoch_index": 16
+    },
+    {
+      "total_ms": 73.82688300003792,
+      "receiver_metrics": [
+        {
+          "preparation_ms": 4.222414999958346,
+          "channel_construction_ms": 44.40062500043496,
+          "fft_and_reconstruction_ms": 22.977594000394674,
+          "total_ms": 73.4271080000326,
+          "blocks": [
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 283,
+              "degree": 10,
+              "temporal_tail_bound": 8.082681397874134e-11
+            }
+          ],
+          "valid_paths": 4112,
+          "delay_coefficients": [
+            233,
+            233,
+            233,
+            233
+          ],
+          "temporal_only_absolute_error_bound": [
+            3.081217722867153e-08,
+            2.6930090572887907e-08,
+            2.3035416956582945e-08,
+            2.3646850100593297e-08
+          ]
+        }
+      ],
+      "channel_epoch_index": 17
+    },
+    {
+      "total_ms": 74.81407000000218,
+      "receiver_metrics": [
+        {
+          "preparation_ms": 4.2699240000274585,
+          "channel_construction_ms": 44.21819399999549,
+          "fft_and_reconstruction_ms": 24.167161999457676,
+          "total_ms": 74.30499699989923,
+          "blocks": [
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 283,
+              "degree": 10,
+              "temporal_tail_bound": 8.082681397874134e-11
+            }
+          ],
+          "valid_paths": 4112,
+          "delay_coefficients": [
+            233,
+            233,
+            233,
+            233
+          ],
+          "temporal_only_absolute_error_bound": [
+            3.1443027851046736e-08,
+            2.6414987330981305e-08,
+            2.3213350585053234e-08,
+            2.357194978977593e-08
+          ]
+        }
+      ],
+      "channel_epoch_index": 18
+    },
+    {
+      "total_ms": 76.42385899998771,
+      "receiver_metrics": [
+        {
+          "preparation_ms": 4.414221999923029,
+          "channel_construction_ms": 44.85179899961622,
+          "fft_and_reconstruction_ms": 24.735171000202172,
+          "total_ms": 75.87682700000187,
+          "blocks": [
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 283,
+              "degree": 10,
+              "temporal_tail_bound": 8.082681397874134e-11
+            }
+          ],
+          "valid_paths": 4112,
+          "delay_coefficients": [
+            233,
+            233,
+            233,
+            233
+          ],
+          "temporal_only_absolute_error_bound": [
+            3.154866462108399e-08,
+            2.6293820170266886e-08,
+            2.3661528143992715e-08,
+            2.381272115007813e-08
+          ]
+        }
+      ],
+      "channel_epoch_index": 19
+    },
+    {
+      "total_ms": 77.25920800021413,
+      "receiver_metrics": [
+        {
+          "preparation_ms": 4.336492999982511,
+          "channel_construction_ms": 44.566076999444704,
+          "fft_and_reconstruction_ms": 26.105618999508806,
+          "total_ms": 76.8701530000726,
+          "blocks": [
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 283,
+              "degree": 10,
+              "temporal_tail_bound": 8.082681397874134e-11
+            }
+          ],
+          "valid_paths": 4112,
+          "delay_coefficients": [
+            233,
+            233,
+            233,
+            233
+          ],
+          "temporal_only_absolute_error_bound": [
+            3.096805512084982e-08,
+            2.650954140061668e-08,
+            2.3525901026207543e-08,
+            2.3870548798366528e-08
+          ]
+        }
+      ],
+      "channel_epoch_index": 20
+    },
+    {
+      "total_ms": 75.1004369999464,
+      "receiver_metrics": [
+        {
+          "preparation_ms": 4.3452729998989525,
+          "channel_construction_ms": 44.739354000057574,
+          "fft_and_reconstruction_ms": 23.873235999417375,
+          "total_ms": 74.63652299998103,
+          "blocks": [
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 283,
+              "degree": 10,
+              "temporal_tail_bound": 8.082681397874134e-11
+            }
+          ],
+          "valid_paths": 4112,
+          "delay_coefficients": [
+            233,
+            233,
+            233,
+            233
+          ],
+          "temporal_only_absolute_error_bound": [
+            3.064383461404963e-08,
+            2.6619141303665236e-08,
+            2.3047286888277942e-08,
+            2.3896080745197958e-08
+          ]
+        }
+      ],
+      "channel_epoch_index": 21
+    },
+    {
+      "total_ms": 72.74194700016778,
+      "receiver_metrics": [
+        {
+          "preparation_ms": 4.609398999946279,
+          "channel_construction_ms": 44.15036299997155,
+          "fft_and_reconstruction_ms": 21.85813200026132,
+          "total_ms": 72.22584400005871,
+          "blocks": [
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 283,
+              "degree": 10,
+              "temporal_tail_bound": 8.082681397874134e-11
+            }
+          ],
+          "valid_paths": 4112,
+          "delay_coefficients": [
+            233,
+            233,
+            233,
+            233
+          ],
+          "temporal_only_absolute_error_bound": [
+            3.0812177228671524e-08,
+            2.6930090572887924e-08,
+            2.3035416956582945e-08,
+            2.3646850100593324e-08
+          ]
+        }
+      ],
+      "channel_epoch_index": 22
+    },
+    {
+      "total_ms": 74.30539699998917,
+      "receiver_metrics": [
+        {
+          "preparation_ms": 4.28344399983871,
+          "channel_construction_ms": 44.465976999845225,
+          "fft_and_reconstruction_ms": 23.129297001332816,
+          "total_ms": 73.74574400000711,
+          "blocks": [
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 283,
+              "degree": 10,
+              "temporal_tail_bound": 8.082681397874134e-11
+            }
+          ],
+          "valid_paths": 4112,
+          "delay_coefficients": [
+            233,
+            233,
+            233,
+            233
+          ],
+          "temporal_only_absolute_error_bound": [
+            3.1443027851046736e-08,
+            2.641498733098131e-08,
+            2.321335058505323e-08,
+            2.357194978977592e-08
+          ]
+        }
+      ],
+      "channel_epoch_index": 23
+    },
+    {
+      "total_ms": 74.5166640001571,
+      "receiver_metrics": [
+        {
+          "preparation_ms": 4.560979999951087,
+          "channel_construction_ms": 44.49528000009195,
+          "fft_and_reconstruction_ms": 23.313602999223804,
+          "total_ms": 74.05713999992258,
+          "blocks": [
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 283,
+              "degree": 10,
+              "temporal_tail_bound": 8.082681397874134e-11
+            }
+          ],
+          "valid_paths": 4112,
+          "delay_coefficients": [
+            233,
+            233,
+            233,
+            233
+          ],
+          "temporal_only_absolute_error_bound": [
+            3.1548664621083996e-08,
+            2.6293820170266883e-08,
+            2.3661528143992705e-08,
+            2.3812721150078128e-08
+          ]
+        }
+      ],
+      "channel_epoch_index": 24
+    },
+    {
+      "total_ms": 75.12052600009156,
+      "receiver_metrics": [
+        {
+          "preparation_ms": 4.4090330000017275,
+          "channel_construction_ms": 44.61147599931792,
+          "fft_and_reconstruction_ms": 23.709091000455373,
+          "total_ms": 74.49356400002216,
+          "blocks": [
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 283,
+              "degree": 10,
+              "temporal_tail_bound": 8.082681397874134e-11
+            }
+          ],
+          "valid_paths": 4112,
+          "delay_coefficients": [
+            233,
+            233,
+            233,
+            233
+          ],
+          "temporal_only_absolute_error_bound": [
+            3.096805512084982e-08,
+            2.650954140061667e-08,
+            2.3525901026207547e-08,
+            2.3870548798366534e-08
+          ]
+        }
+      ],
+      "channel_epoch_index": 25
+    },
+    {
+      "total_ms": 73.97319100005006,
+      "receiver_metrics": [
+        {
+          "preparation_ms": 4.2854040000293026,
+          "channel_construction_ms": 44.05699400035701,
+          "fft_and_reconstruction_ms": 23.2156149995717,
+          "total_ms": 73.44497799999772,
+          "blocks": [
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 283,
+              "degree": 10,
+              "temporal_tail_bound": 8.082681397874134e-11
+            }
+          ],
+          "valid_paths": 4112,
+          "delay_coefficients": [
+            233,
+            233,
+            233,
+            233
+          ],
+          "temporal_only_absolute_error_bound": [
+            3.064383461404962e-08,
+            2.6619141303665243e-08,
+            2.304728688827792e-08,
+            2.3896080745197955e-08
+          ]
+        }
+      ],
+      "channel_epoch_index": 26
+    },
+    {
+      "total_ms": 74.75200099997892,
+      "receiver_metrics": [
+        {
+          "preparation_ms": 4.2829340000025695,
+          "channel_construction_ms": 44.40376699994886,
+          "fft_and_reconstruction_ms": 23.836380000375357,
+          "total_ms": 74.17106899993087,
+          "blocks": [
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 283,
+              "degree": 10,
+              "temporal_tail_bound": 8.082681397874134e-11
+            }
+          ],
+          "valid_paths": 4112,
+          "delay_coefficients": [
+            233,
+            233,
+            233,
+            233
+          ],
+          "temporal_only_absolute_error_bound": [
+            3.081217722867152e-08,
+            2.693009057288791e-08,
+            2.3035416956582945e-08,
+            2.3646850100593327e-08
+          ]
+        }
+      ],
+      "channel_epoch_index": 27
+    },
+    {
+      "total_ms": 76.8244630000936,
+      "receiver_metrics": [
+        {
+          "preparation_ms": 4.6068489998560835,
+          "channel_construction_ms": 45.37831800053027,
+          "fft_and_reconstruction_ms": 24.67187599859244,
+          "total_ms": 76.30627000003187,
+          "blocks": [
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 283,
+              "degree": 10,
+              "temporal_tail_bound": 8.082681397874134e-11
+            }
+          ],
+          "valid_paths": 4112,
+          "delay_coefficients": [
+            233,
+            233,
+            233,
+            233
+          ],
+          "temporal_only_absolute_error_bound": [
+            3.144302785104672e-08,
+            2.6414987330981295e-08,
+            2.321335058505322e-08,
+            2.3571949789775913e-08
+          ]
+        }
+      ],
+      "channel_epoch_index": 28
+    },
+    {
+      "total_ms": 74.45567499985373,
+      "receiver_metrics": [
+        {
+          "preparation_ms": 4.32574299998123,
+          "channel_construction_ms": 44.845254000620116,
+          "fft_and_reconstruction_ms": 23.068466999802695,
+          "total_ms": 74.05506000009154,
+          "blocks": [
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 283,
+              "degree": 10,
+              "temporal_tail_bound": 8.082681397874134e-11
+            }
+          ],
+          "valid_paths": 4112,
+          "delay_coefficients": [
+            233,
+            233,
+            233,
+            233
+          ],
+          "temporal_only_absolute_error_bound": [
+            3.154866462108399e-08,
+            2.6293820170266876e-08,
+            2.3661528143992718e-08,
+            2.3812721150078118e-08
+          ]
+        }
+      ],
+      "channel_epoch_index": 29
+    },
+    {
+      "total_ms": 74.64023200009251,
+      "receiver_metrics": [
+        {
+          "preparation_ms": 4.263003999994908,
+          "channel_construction_ms": 44.515774999126734,
+          "fft_and_reconstruction_ms": 23.67035400061468,
+          "total_ms": 74.20706799985055,
+          "blocks": [
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 283,
+              "degree": 10,
+              "temporal_tail_bound": 8.082681397874134e-11
+            }
+          ],
+          "valid_paths": 4112,
+          "delay_coefficients": [
+            233,
+            233,
+            233,
+            233
+          ],
+          "temporal_only_absolute_error_bound": [
+            3.0968055120849795e-08,
+            2.650954140061672e-08,
+            2.3525901026207547e-08,
+            2.3870548798366554e-08
+          ]
+        }
+      ],
+      "channel_epoch_index": 30
+    },
+    {
+      "total_ms": 78.15216599988162,
+      "receiver_metrics": [
+        {
+          "preparation_ms": 4.399742000032347,
+          "channel_construction_ms": 45.78067200100122,
+          "fft_and_reconstruction_ms": 25.716103999684492,
+          "total_ms": 77.70896200008792,
+          "blocks": [
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 283,
+              "degree": 10,
+              "temporal_tail_bound": 8.082681397874134e-11
+            }
+          ],
+          "valid_paths": 4112,
+          "delay_coefficients": [
+            233,
+            233,
+            233,
+            233
+          ],
+          "temporal_only_absolute_error_bound": [
+            3.0643834614049626e-08,
+            2.6619141303665223e-08,
+            2.3047286888277923e-08,
+            2.3896080745197938e-08
+          ]
+        }
+      ],
+      "channel_epoch_index": 31
+    },
+    {
+      "total_ms": 74.79476999992585,
+      "receiver_metrics": [
+        {
+          "preparation_ms": 4.303862999904595,
+          "channel_construction_ms": 44.96601700043357,
+          "fft_and_reconstruction_ms": 23.29544799999894,
+          "total_ms": 74.35972500002208,
+          "blocks": [
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 283,
+              "degree": 10,
+              "temporal_tail_bound": 8.082681397874134e-11
+            }
+          ],
+          "valid_paths": 4112,
+          "delay_coefficients": [
+            233,
+            233,
+            233,
+            233
+          ],
+          "temporal_only_absolute_error_bound": [
+            3.0812177228671505e-08,
+            2.6930090572887927e-08,
+            2.3035416956582932e-08,
+            2.3646850100593314e-08
+          ]
+        }
+      ],
+      "channel_epoch_index": 32
+    },
+    {
+      "total_ms": 74.95077899989155,
+      "receiver_metrics": [
+        {
+          "preparation_ms": 4.429132000041136,
+          "channel_construction_ms": 44.804966999890894,
+          "fft_and_reconstruction_ms": 23.249401999692054,
+          "total_ms": 74.24447800008238,
+          "blocks": [
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 2048,
+              "degree": 25,
+              "temporal_tail_bound": 5.408764163575253e-11
+            },
+            {
+              "samples": 283,
+              "degree": 10,
+              "temporal_tail_bound": 8.082681397874134e-11
+            }
+          ],
+          "valid_paths": 4112,
+          "delay_coefficients": [
+            233,
+            233,
+            233,
+            233
+          ],
+          "temporal_only_absolute_error_bound": [
+            3.144302785104673e-08,
+            2.6414987330981308e-08,
+            2.3213350585053217e-08,
+            2.3571949789775917e-08
+          ]
+        }
+      ],
+      "channel_epoch_index": 33
+    }
+  ],
+  "summary": {
+    "p50_ms": 75.14010149998285,
+    "p95_ms": 81.47594955005388,
+    "p99_ms": 82.49024533001148,
+    "max_ms": 82.63884799998777,
+    "mean_ms": 76.24037563333938
+  },
+  "captures_per_second": 13.11640966735619,
+  "output_samples_per_second_per_receiver": 218611.1999258256,
+  "deadline_ms": 8.333333333333334,
+  "sample_window_ms": 8.3335,
+  "misses_120hz": 30,
+  "required_speedup_to_120hz": 9.148845076000725,
+  "accuracy": {
+    "passed": true,
+    "full_all_jobs_cpu_basis_normalized_rms": 0.0,
+    "direct_checks": [
+      {
+        "receiver": 0,
+        "start_sample": 0,
+        "samples": 128,
+        "paths_checked": 4112,
+        "normalized_rms_error": 1.7081499690457144e-12,
+        "max_absolute_error": 1.2035011121117409e-11
+      },
+      {
+        "receiver": 0,
+        "start_sample": 16539,
+        "samples": 128,
+        "paths_checked": 4112,
+        "normalized_rms_error": 1.2050199984452532e-11,
+        "max_absolute_error": 8.558966532206147e-11
+      },
+      {
+        "receiver": 0,
+        "transmitter": 0,
+        "samples": 16667,
+        "paths_checked": 1028,
+        "normalized_rms_error": 2.0655543745078266e-12,
+        "max_absolute_error": 3.7969996608532055e-11
+      },
+      {
+        "receiver": 0,
+        "transmitter": 3,
+        "samples": 16667,
+        "paths_checked": 1028,
+        "normalized_rms_error": 2.1945977734236158e-12,
+        "max_absolute_error": 6.841940578833789e-11
+      }
+    ]
+  },
+  "profile_receivers": [],
+  "includes": [
+    "private input copies/uploads",
+    "fresh delay map and GPU temporal construction",
+    "all paths and intra-block Doppler",
+    "private FFTs",
+    "coherent receiver sum",
+    "synchronized final receiver output export"
+  ],
+  "excludes": [
+    "source generation",
+    "scene propagation",
+    "sample-clock resampling",
+    "noise/filter/ADC",
+    "AirSim",
+    "transport/queues"
+  ],
+  "scope_note": "Synthetic changing channels; equal clocks; entire-window synchronized renderer service, not a continuous receiver pipeline",
+  "cpu_quota": "max 100000",
+  "source_sha256": {
+    "src/airsim_rf/research/doppler_basis_cuda.py": "9d0ea5512562b338a26442b9a9830ae2ee4bb072d9f535eca20ec641dcdc45fb",
+    "src/airsim_rf/research/doppler_basis.py": "2a0eb9cb8a1598af14c9b3af488d9f2a23dc4a44b464f7b82148f347963956f8",
+    "benchmarks/benchmark_doppler_basis_gpu.py": "188e1f5936f72427a140541c191f3274e2cf820b4b1b833c3c98b4ec41e37508",
+    "requirements-p100-cuda.txt": "3b28bbf573cc855337a6309dc3769fb4bb71d32a0eda4aad4be10d5f7269b3f8"
+  }
+}
