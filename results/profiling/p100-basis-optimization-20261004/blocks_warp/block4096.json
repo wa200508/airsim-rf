@@ -1,0 +1,926 @@
+{
+  "scope": "doppler_basis_receiver_rendering",
+  "measurement_mode": "unprofiled_basis_benchmark",
+  "utc": "2026-10-05T01:21:34.263106+00:00",
+  "arguments": {
+    "backend": "cuda",
+    "tx": 100,
+    "rx": 1,
+    "paths": 1028,
+    "samples": 16667,
+    "sample_rate": 2000000.0,
+    "max_delay_us": 100.0,
+    "max_doppler_hz": 2500.0,
+    "taps": 32,
+    "block_samples": 4096,
+    "batch_links": 100,
+    "projection": "warp",
+    "delay_map": "double",
+    "fft_inplace": false,
+    "tolerance": 1e-10,
+    "iterations": 10,
+    "warmup": 3,
+    "threads": 2,
+    "profile_only": false,
+    "output": "/work/results/blocks_warp/block4096.json"
+  },
+  "backend": "cuda",
+  "precision": "complex128/float64",
+  "no_cpu_fallback": true,
+  "valid_paths": 102800,
+  "private_source_bytes": 27192000,
+  "source_generation_ms": 114.52007299976685,
+  "first_ms": 211.90573500007304,
+  "rows": [
+    {
+      "total_ms": 85.86818999992829,
+      "receiver_metrics": [
+        {
+          "total_ms": 85.74769299957552,
+          "backend": "cuda_cupy",
+          "projection": "warp",
+          "delay_map": "double",
+          "fft_inplace": false,
+          "valid_paths": 102800,
+          "blocks": [
+            {
+              "jobs": 100,
+              "samples": 4096,
+              "degree": 39,
+              "temporal_tail_bound": 2.4007501686972983e-11,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            },
+            {
+              "jobs": 100,
+              "samples": 4096,
+              "degree": 39,
+              "temporal_tail_bound": 2.4007501686972983e-11,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            },
+            {
+              "jobs": 100,
+              "samples": 4096,
+              "degree": 39,
+              "temporal_tail_bound": 2.4007501686972983e-11,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            },
+            {
+              "jobs": 100,
+              "samples": 4096,
+              "degree": 39,
+              "temporal_tail_bound": 2.4007501686972983e-11,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            },
+            {
+              "jobs": 100,
+              "samples": 283,
+              "degree": 11,
+              "temporal_tail_bound": 3.708400517018929e-12,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            }
+          ],
+          "sum_output": true,
+          "events": [],
+          "cuda_event_span_ms": null,
+          "pool_used_bytes": 524356608,
+          "pool_reserved_bytes": 2074331136,
+          "max_checkpoint_pool_used_bytes": null,
+          "pool_measurement_note": "Allocator snapshots include persistent plans/cache; not process-wide peak VRAM",
+          "profile": false,
+          "no_cpu_fallback": true,
+          "precision": "complex128/float64"
+        }
+      ],
+      "channel_epoch_index": 4
+    },
+    {
+      "total_ms": 81.29138200001762,
+      "receiver_metrics": [
+        {
+          "total_ms": 81.16549399983342,
+          "backend": "cuda_cupy",
+          "projection": "warp",
+          "delay_map": "double",
+          "fft_inplace": false,
+          "valid_paths": 102800,
+          "blocks": [
+            {
+              "jobs": 100,
+              "samples": 4096,
+              "degree": 39,
+              "temporal_tail_bound": 2.4007501686972983e-11,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            },
+            {
+              "jobs": 100,
+              "samples": 4096,
+              "degree": 39,
+              "temporal_tail_bound": 2.4007501686972983e-11,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            },
+            {
+              "jobs": 100,
+              "samples": 4096,
+              "degree": 39,
+              "temporal_tail_bound": 2.4007501686972983e-11,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            },
+            {
+              "jobs": 100,
+              "samples": 4096,
+              "degree": 39,
+              "temporal_tail_bound": 2.4007501686972983e-11,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            },
+            {
+              "jobs": 100,
+              "samples": 283,
+              "degree": 11,
+              "temporal_tail_bound": 3.708400517018929e-12,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            }
+          ],
+          "sum_output": true,
+          "events": [],
+          "cuda_event_span_ms": null,
+          "pool_used_bytes": 524356608,
+          "pool_reserved_bytes": 2074331136,
+          "max_checkpoint_pool_used_bytes": null,
+          "pool_measurement_note": "Allocator snapshots include persistent plans/cache; not process-wide peak VRAM",
+          "profile": false,
+          "no_cpu_fallback": true,
+          "precision": "complex128/float64"
+        }
+      ],
+      "channel_epoch_index": 5
+    },
+    {
+      "total_ms": 83.15980899988062,
+      "receiver_metrics": [
+        {
+          "total_ms": 83.06702100071561,
+          "backend": "cuda_cupy",
+          "projection": "warp",
+          "delay_map": "double",
+          "fft_inplace": false,
+          "valid_paths": 102800,
+          "blocks": [
+            {
+              "jobs": 100,
+              "samples": 4096,
+              "degree": 39,
+              "temporal_tail_bound": 2.4007501686972983e-11,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            },
+            {
+              "jobs": 100,
+              "samples": 4096,
+              "degree": 39,
+              "temporal_tail_bound": 2.4007501686972983e-11,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            },
+            {
+              "jobs": 100,
+              "samples": 4096,
+              "degree": 39,
+              "temporal_tail_bound": 2.4007501686972983e-11,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            },
+            {
+              "jobs": 100,
+              "samples": 4096,
+              "degree": 39,
+              "temporal_tail_bound": 2.4007501686972983e-11,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            },
+            {
+              "jobs": 100,
+              "samples": 283,
+              "degree": 11,
+              "temporal_tail_bound": 3.708400517018929e-12,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            }
+          ],
+          "sum_output": true,
+          "events": [],
+          "cuda_event_span_ms": null,
+          "pool_used_bytes": 524356608,
+          "pool_reserved_bytes": 2074331136,
+          "max_checkpoint_pool_used_bytes": null,
+          "pool_measurement_note": "Allocator snapshots include persistent plans/cache; not process-wide peak VRAM",
+          "profile": false,
+          "no_cpu_fallback": true,
+          "precision": "complex128/float64"
+        }
+      ],
+      "channel_epoch_index": 6
+    },
+    {
+      "total_ms": 80.5353659998218,
+      "receiver_metrics": [
+        {
+          "total_ms": 80.45446799951605,
+          "backend": "cuda_cupy",
+          "projection": "warp",
+          "delay_map": "double",
+          "fft_inplace": false,
+          "valid_paths": 102800,
+          "blocks": [
+            {
+              "jobs": 100,
+              "samples": 4096,
+              "degree": 39,
+              "temporal_tail_bound": 2.4007501686972983e-11,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            },
+            {
+              "jobs": 100,
+              "samples": 4096,
+              "degree": 39,
+              "temporal_tail_bound": 2.4007501686972983e-11,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            },
+            {
+              "jobs": 100,
+              "samples": 4096,
+              "degree": 39,
+              "temporal_tail_bound": 2.4007501686972983e-11,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            },
+            {
+              "jobs": 100,
+              "samples": 4096,
+              "degree": 39,
+              "temporal_tail_bound": 2.4007501686972983e-11,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            },
+            {
+              "jobs": 100,
+              "samples": 283,
+              "degree": 11,
+              "temporal_tail_bound": 3.708400517018929e-12,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            }
+          ],
+          "sum_output": true,
+          "events": [],
+          "cuda_event_span_ms": null,
+          "pool_used_bytes": 524356608,
+          "pool_reserved_bytes": 2074331136,
+          "max_checkpoint_pool_used_bytes": null,
+          "pool_measurement_note": "Allocator snapshots include persistent plans/cache; not process-wide peak VRAM",
+          "profile": false,
+          "no_cpu_fallback": true,
+          "precision": "complex128/float64"
+        }
+      ],
+      "channel_epoch_index": 7
+    },
+    {
+      "total_ms": 80.94213900039904,
+      "receiver_metrics": [
+        {
+          "total_ms": 80.84747999964748,
+          "backend": "cuda_cupy",
+          "projection": "warp",
+          "delay_map": "double",
+          "fft_inplace": false,
+          "valid_paths": 102800,
+          "blocks": [
+            {
+              "jobs": 100,
+              "samples": 4096,
+              "degree": 39,
+              "temporal_tail_bound": 2.4007501686972983e-11,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            },
+            {
+              "jobs": 100,
+              "samples": 4096,
+              "degree": 39,
+              "temporal_tail_bound": 2.4007501686972983e-11,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            },
+            {
+              "jobs": 100,
+              "samples": 4096,
+              "degree": 39,
+              "temporal_tail_bound": 2.4007501686972983e-11,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            },
+            {
+              "jobs": 100,
+              "samples": 4096,
+              "degree": 39,
+              "temporal_tail_bound": 2.4007501686972983e-11,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            },
+            {
+              "jobs": 100,
+              "samples": 283,
+              "degree": 11,
+              "temporal_tail_bound": 3.708400517018929e-12,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            }
+          ],
+          "sum_output": true,
+          "events": [],
+          "cuda_event_span_ms": null,
+          "pool_used_bytes": 524356608,
+          "pool_reserved_bytes": 2074331136,
+          "max_checkpoint_pool_used_bytes": null,
+          "pool_measurement_note": "Allocator snapshots include persistent plans/cache; not process-wide peak VRAM",
+          "profile": false,
+          "no_cpu_fallback": true,
+          "precision": "complex128/float64"
+        }
+      ],
+      "channel_epoch_index": 8
+    },
+    {
+      "total_ms": 80.99168799981271,
+      "receiver_metrics": [
+        {
+          "total_ms": 80.85398000002897,
+          "backend": "cuda_cupy",
+          "projection": "warp",
+          "delay_map": "double",
+          "fft_inplace": false,
+          "valid_paths": 102800,
+          "blocks": [
+            {
+              "jobs": 100,
+              "samples": 4096,
+              "degree": 39,
+              "temporal_tail_bound": 2.4007501686972983e-11,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            },
+            {
+              "jobs": 100,
+              "samples": 4096,
+              "degree": 39,
+              "temporal_tail_bound": 2.4007501686972983e-11,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            },
+            {
+              "jobs": 100,
+              "samples": 4096,
+              "degree": 39,
+              "temporal_tail_bound": 2.4007501686972983e-11,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            },
+            {
+              "jobs": 100,
+              "samples": 4096,
+              "degree": 39,
+              "temporal_tail_bound": 2.4007501686972983e-11,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            },
+            {
+              "jobs": 100,
+              "samples": 283,
+              "degree": 11,
+              "temporal_tail_bound": 3.708400517018929e-12,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            }
+          ],
+          "sum_output": true,
+          "events": [],
+          "cuda_event_span_ms": null,
+          "pool_used_bytes": 524356608,
+          "pool_reserved_bytes": 2074331136,
+          "max_checkpoint_pool_used_bytes": null,
+          "pool_measurement_note": "Allocator snapshots include persistent plans/cache; not process-wide peak VRAM",
+          "profile": false,
+          "no_cpu_fallback": true,
+          "precision": "complex128/float64"
+        }
+      ],
+      "channel_epoch_index": 9
+    },
+    {
+      "total_ms": 83.09011100027419,
+      "receiver_metrics": [
+        {
+          "total_ms": 82.98854199983907,
+          "backend": "cuda_cupy",
+          "projection": "warp",
+          "delay_map": "double",
+          "fft_inplace": false,
+          "valid_paths": 102800,
+          "blocks": [
+            {
+              "jobs": 100,
+              "samples": 4096,
+              "degree": 39,
+              "temporal_tail_bound": 2.4007501686972983e-11,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            },
+            {
+              "jobs": 100,
+              "samples": 4096,
+              "degree": 39,
+              "temporal_tail_bound": 2.4007501686972983e-11,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            },
+            {
+              "jobs": 100,
+              "samples": 4096,
+              "degree": 39,
+              "temporal_tail_bound": 2.4007501686972983e-11,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            },
+            {
+              "jobs": 100,
+              "samples": 4096,
+              "degree": 39,
+              "temporal_tail_bound": 2.4007501686972983e-11,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            },
+            {
+              "jobs": 100,
+              "samples": 283,
+              "degree": 11,
+              "temporal_tail_bound": 3.708400517018929e-12,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            }
+          ],
+          "sum_output": true,
+          "events": [],
+          "cuda_event_span_ms": null,
+          "pool_used_bytes": 524356608,
+          "pool_reserved_bytes": 2074331136,
+          "max_checkpoint_pool_used_bytes": null,
+          "pool_measurement_note": "Allocator snapshots include persistent plans/cache; not process-wide peak VRAM",
+          "profile": false,
+          "no_cpu_fallback": true,
+          "precision": "complex128/float64"
+        }
+      ],
+      "channel_epoch_index": 10
+    },
+    {
+      "total_ms": 80.9019599992098,
+      "receiver_metrics": [
+        {
+          "total_ms": 80.82141100021545,
+          "backend": "cuda_cupy",
+          "projection": "warp",
+          "delay_map": "double",
+          "fft_inplace": false,
+          "valid_paths": 102800,
+          "blocks": [
+            {
+              "jobs": 100,
+              "samples": 4096,
+              "degree": 39,
+              "temporal_tail_bound": 2.4007501686972983e-11,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            },
+            {
+              "jobs": 100,
+              "samples": 4096,
+              "degree": 39,
+              "temporal_tail_bound": 2.4007501686972983e-11,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            },
+            {
+              "jobs": 100,
+              "samples": 4096,
+              "degree": 39,
+              "temporal_tail_bound": 2.4007501686972983e-11,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            },
+            {
+              "jobs": 100,
+              "samples": 4096,
+              "degree": 39,
+              "temporal_tail_bound": 2.4007501686972983e-11,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            },
+            {
+              "jobs": 100,
+              "samples": 283,
+              "degree": 11,
+              "temporal_tail_bound": 3.708400517018929e-12,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            }
+          ],
+          "sum_output": true,
+          "events": [],
+          "cuda_event_span_ms": null,
+          "pool_used_bytes": 524356608,
+          "pool_reserved_bytes": 2074331136,
+          "max_checkpoint_pool_used_bytes": null,
+          "pool_measurement_note": "Allocator snapshots include persistent plans/cache; not process-wide peak VRAM",
+          "profile": false,
+          "no_cpu_fallback": true,
+          "precision": "complex128/float64"
+        }
+      ],
+      "channel_epoch_index": 11
+    },
+    {
+      "total_ms": 81.32370200019068,
+      "receiver_metrics": [
+        {
+          "total_ms": 81.22593400003097,
+          "backend": "cuda_cupy",
+          "projection": "warp",
+          "delay_map": "double",
+          "fft_inplace": false,
+          "valid_paths": 102800,
+          "blocks": [
+            {
+              "jobs": 100,
+              "samples": 4096,
+              "degree": 39,
+              "temporal_tail_bound": 2.4007501686972983e-11,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            },
+            {
+              "jobs": 100,
+              "samples": 4096,
+              "degree": 39,
+              "temporal_tail_bound": 2.4007501686972983e-11,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            },
+            {
+              "jobs": 100,
+              "samples": 4096,
+              "degree": 39,
+              "temporal_tail_bound": 2.4007501686972983e-11,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            },
+            {
+              "jobs": 100,
+              "samples": 4096,
+              "degree": 39,
+              "temporal_tail_bound": 2.4007501686972983e-11,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            },
+            {
+              "jobs": 100,
+              "samples": 283,
+              "degree": 11,
+              "temporal_tail_bound": 3.708400517018929e-12,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            }
+          ],
+          "sum_output": true,
+          "events": [],
+          "cuda_event_span_ms": null,
+          "pool_used_bytes": 524356608,
+          "pool_reserved_bytes": 2074331136,
+          "max_checkpoint_pool_used_bytes": null,
+          "pool_measurement_note": "Allocator snapshots include persistent plans/cache; not process-wide peak VRAM",
+          "profile": false,
+          "no_cpu_fallback": true,
+          "precision": "complex128/float64"
+        }
+      ],
+      "channel_epoch_index": 12
+    },
+    {
+      "total_ms": 80.94681900001888,
+      "receiver_metrics": [
+        {
+          "total_ms": 80.81064100042568,
+          "backend": "cuda_cupy",
+          "projection": "warp",
+          "delay_map": "double",
+          "fft_inplace": false,
+          "valid_paths": 102800,
+          "blocks": [
+            {
+              "jobs": 100,
+              "samples": 4096,
+              "degree": 39,
+              "temporal_tail_bound": 2.4007501686972983e-11,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            },
+            {
+              "jobs": 100,
+              "samples": 4096,
+              "degree": 39,
+              "temporal_tail_bound": 2.4007501686972983e-11,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            },
+            {
+              "jobs": 100,
+              "samples": 4096,
+              "degree": 39,
+              "temporal_tail_bound": 2.4007501686972983e-11,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            },
+            {
+              "jobs": 100,
+              "samples": 4096,
+              "degree": 39,
+              "temporal_tail_bound": 2.4007501686972983e-11,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            },
+            {
+              "jobs": 100,
+              "samples": 283,
+              "degree": 11,
+              "temporal_tail_bound": 3.708400517018929e-12,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            }
+          ],
+          "sum_output": true,
+          "events": [],
+          "cuda_event_span_ms": null,
+          "pool_used_bytes": 524356608,
+          "pool_reserved_bytes": 2074331136,
+          "max_checkpoint_pool_used_bytes": null,
+          "pool_measurement_note": "Allocator snapshots include persistent plans/cache; not process-wide peak VRAM",
+          "profile": false,
+          "no_cpu_fallback": true,
+          "precision": "complex128/float64"
+        }
+      ],
+      "channel_epoch_index": 13
+    }
+  ],
+  "summary": {
+    "p50_ms": 81.14153499991517,
+    "p95_ms": 84.64941854990684,
+    "p99_ms": 85.624435709924,
+    "max_ms": 85.86818999992829,
+    "mean_ms": 81.90511659995536
+  },
+  "captures_per_second": 12.209249452439519,
+  "output_samples_per_second_per_receiver": 203491.56062380946,
+  "deadline_ms": 8.333333333333334,
+  "sample_window_ms": 8.3335,
+  "misses_120hz": 10,
+  "required_speedup_to_120hz": 9.828613991994644,
+  "accuracy": {
+    "passed": true,
+    "full_all_jobs_cpu_basis_normalized_rms": 1.365136512442522e-12,
+    "direct_checks": [
+      {
+        "receiver": 0,
+        "start_sample": 0,
+        "samples": 128,
+        "paths_checked": 102800,
+        "normalized_rms_error": 7.989872788302977e-14,
+        "max_absolute_error": 2.8383030697110107e-12
+      },
+      {
+        "receiver": 0,
+        "start_sample": 16539,
+        "samples": 128,
+        "paths_checked": 102800,
+        "normalized_rms_error": 4.1747364101321765e-12,
+        "max_absolute_error": 1.3979078495764807e-10
+      },
+      {
+        "receiver": 0,
+        "transmitter": 0,
+        "samples": 16667,
+        "paths_checked": 1028,
+        "normalized_rms_error": 7.699796665749377e-13,
+        "max_absolute_error": 8.89339442102901e-12
+      },
+      {
+        "receiver": 0,
+        "transmitter": 99,
+        "samples": 16667,
+        "paths_checked": 1028,
+        "normalized_rms_error": 7.453337518683048e-13,
+        "max_absolute_error": 9.65924868333238e-12
+      }
+    ]
+  },
+  "profile_receivers": [
+    {
+      "total_ms": 86.58241800003452,
+      "backend": "cuda_cupy",
+      "projection": "warp",
+      "delay_map": "double",
+      "fft_inplace": false,
+      "valid_paths": 102800,
+      "blocks": [
+        {
+          "jobs": 100,
+          "samples": 4096,
+          "degree": 39,
+          "temporal_tail_bound": 2.4007501686972983e-11,
+          "coefficient_aliasing_included": true,
+          "delay_coefficients": 233
+        },
+        {
+          "jobs": 100,
+          "samples": 4096,
+          "degree": 39,
+          "temporal_tail_bound": 2.4007501686972983e-11,
+          "coefficient_aliasing_included": true,
+          "delay_coefficients": 233
+        },
+        {
+          "jobs": 100,
+          "samples": 4096,
+          "degree": 39,
+          "temporal_tail_bound": 2.4007501686972983e-11,
+          "coefficient_aliasing_included": true,
+          "delay_coefficients": 233
+        },
+        {
+          "jobs": 100,
+          "samples": 4096,
+          "degree": 39,
+          "temporal_tail_bound": 2.4007501686972983e-11,
+          "coefficient_aliasing_included": true,
+          "delay_coefficients": 233
+        },
+        {
+          "jobs": 100,
+          "samples": 283,
+          "degree": 11,
+          "temporal_tail_bound": 3.708400517018929e-12,
+          "coefficient_aliasing_included": true,
+          "delay_coefficients": 233
+        }
+      ],
+      "sum_output": true,
+      "events": [
+        {
+          "name": "basis.host_pack_and_upload",
+          "cuda_ms": 14.530400276184082
+        },
+        {
+          "name": "basis.delay_map",
+          "cuda_ms": 4.186495780944824
+        },
+        {
+          "name": "basis.temporal_coefficients",
+          "cuda_ms": 3.85699200630188
+        },
+        {
+          "name": "basis.path_projection",
+          "cuda_ms": 3.058687925338745
+        },
+        {
+          "name": "basis.private_fft_filters",
+          "cuda_ms": 11.341535568237305
+        },
+        {
+          "name": "basis.reconstruction_and_sum",
+          "cuda_ms": 0.535647988319397
+        },
+        {
+          "name": "basis.temporal_coefficients",
+          "cuda_ms": 0.2975359857082367
+        },
+        {
+          "name": "basis.path_projection",
+          "cuda_ms": 3.061216115951538
+        },
+        {
+          "name": "basis.private_fft_filters",
+          "cuda_ms": 11.286751747131348
+        },
+        {
+          "name": "basis.reconstruction_and_sum",
+          "cuda_ms": 0.5333120226860046
+        },
+        {
+          "name": "basis.temporal_coefficients",
+          "cuda_ms": 0.29580798745155334
+        },
+        {
+          "name": "basis.path_projection",
+          "cuda_ms": 3.0608959197998047
+        },
+        {
+          "name": "basis.private_fft_filters",
+          "cuda_ms": 11.301504135131836
+        },
+        {
+          "name": "basis.reconstruction_and_sum",
+          "cuda_ms": 0.5352960228919983
+        },
+        {
+          "name": "basis.temporal_coefficients",
+          "cuda_ms": 0.2961280047893524
+        },
+        {
+          "name": "basis.path_projection",
+          "cuda_ms": 3.063904047012329
+        },
+        {
+          "name": "basis.private_fft_filters",
+          "cuda_ms": 11.297439575195312
+        },
+        {
+          "name": "basis.reconstruction_and_sum",
+          "cuda_ms": 0.543071985244751
+        },
+        {
+          "name": "basis.temporal_coefficients",
+          "cuda_ms": 1.296288013458252
+        },
+        {
+          "name": "basis.path_projection",
+          "cuda_ms": 1.3231359720230103
+        },
+        {
+          "name": "basis.private_fft_filters",
+          "cuda_ms": 0.29468798637390137
+        },
+        {
+          "name": "basis.reconstruction_and_sum",
+          "cuda_ms": 0.028351999819278717
+        },
+        {
+          "name": "basis.final_output_export",
+          "cuda_ms": 0.11740799993276596
+        }
+      ],
+      "cuda_event_span_ms": 86.1424950659275,
+      "pool_used_bytes": 527249408,
+      "pool_reserved_bytes": 2074331136,
+      "max_checkpoint_pool_used_bytes": 844938240,
+      "pool_measurement_note": "Allocator snapshots include persistent plans/cache; not process-wide peak VRAM",
+      "profile": true,
+      "no_cpu_fallback": true,
+      "precision": "complex128/float64"
+    }
+  ],
+  "includes": [
+    "private input copies/uploads",
+    "fresh delay map and GPU temporal construction",
+    "all paths and intra-block Doppler",
+    "private FFTs",
+    "coherent receiver sum",
+    "synchronized final receiver output export"
+  ],
+  "excludes": [
+    "source generation",
+    "scene propagation",
+    "sample-clock resampling",
+    "noise/filter/ADC",
+    "AirSim",
+    "transport/queues"
+  ],
+  "scope_note": "Synthetic changing channels; equal clocks; entire-window synchronized renderer service, not a continuous receiver pipeline",
+  "cpu_quota": "max 100000",
+  "source_sha256": {
+    "src/airsim_rf/research/doppler_basis_cuda.py": "75997dbd56786eda52f8702b45ba0aed509a438bb6e7ffb4ac468d658280c27d",
+    "src/airsim_rf/research/doppler_basis.py": "ddf980df84d6f001a7c9232ecac88cc5ea009550f76dad7b848a3d5785538f1c",
+    "benchmarks/benchmark_doppler_basis_gpu.py": "7b90edd707c885248ea5029fec6fd2ca7d988b368d921098954b8ae82b4fe0d0",
+    "requirements-p100-cuda.txt": "13d2db69a2da0d35eb91efd7a79e3cade7ab16d17e87e85c75cdfdc96cca5ed1"
+  }
+}

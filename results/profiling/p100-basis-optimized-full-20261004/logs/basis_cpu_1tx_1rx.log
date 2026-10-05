@@ -1,0 +1,43 @@
+jit_find_library(): Unable to load "/tmp/disabled-drjit-cuda.so": /tmp/disabled-drjit-cuda.so: cannot open shared object file: No such file or directory!
+{
+  "backend": "cpu",
+  "summary": {
+    "p50_ms": 21.871267500500835,
+    "p95_ms": 23.054070549733297,
+    "p99_ms": 23.331794189625725,
+    "max_ms": 23.355280999567185,
+    "mean_ms": 22.0384408665268
+  },
+  "captures_per_second": 45.37526071178907,
+  "misses_120hz": 30,
+  "accuracy": {
+    "passed": true,
+    "full_all_jobs_cpu_basis_normalized_rms": 0.0,
+    "direct_checks": [
+      {
+        "receiver": 0,
+        "start_sample": 0,
+        "samples": 128,
+        "paths_checked": 1028,
+        "normalized_rms_error": 1.277716112125713e-12,
+        "max_absolute_error": 4.577518713623152e-12
+      },
+      {
+        "receiver": 0,
+        "start_sample": 16539,
+        "samples": 128,
+        "paths_checked": 1028,
+        "normalized_rms_error": 1.194530013791625e-11,
+        "max_absolute_error": 3.2821296968471e-11
+      },
+      {
+        "receiver": 0,
+        "transmitter": 0,
+        "samples": 16667,
+        "paths_checked": 1028,
+        "normalized_rms_error": 2.065554501992686e-12,
+        "max_absolute_error": 3.7969996608532055e-11
+      }
+    ]
+  }
+}

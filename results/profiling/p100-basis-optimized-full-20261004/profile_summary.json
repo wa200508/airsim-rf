@@ -1,0 +1,758 @@
+{
+  "basis_cpu_100tx_1rx.json": [],
+  "basis_cpu_1tx_1rx.json": [],
+  "basis_cpu_4tx_1rx.json": [],
+  "basis_cuda_100tx_1rx.json": [
+    {
+      "total_ms": 69.36475000020437,
+      "backend": "cuda_cupy",
+      "projection": "warp",
+      "delay_map": "double",
+      "fft_inplace": false,
+      "valid_paths": 102800,
+      "blocks": [
+        {
+          "jobs": 100,
+          "samples": 2048,
+          "degree": 26,
+          "temporal_tail_bound": 7.832447350943754e-12,
+          "coefficient_aliasing_included": true,
+          "delay_coefficients": 233
+        },
+        {
+          "jobs": 100,
+          "samples": 2048,
+          "degree": 26,
+          "temporal_tail_bound": 7.832447350943754e-12,
+          "coefficient_aliasing_included": true,
+          "delay_coefficients": 233
+        },
+        {
+          "jobs": 100,
+          "samples": 2048,
+          "degree": 26,
+          "temporal_tail_bound": 7.832447350943754e-12,
+          "coefficient_aliasing_included": true,
+          "delay_coefficients": 233
+        },
+        {
+          "jobs": 100,
+          "samples": 2048,
+          "degree": 26,
+          "temporal_tail_bound": 7.832447350943754e-12,
+          "coefficient_aliasing_included": true,
+          "delay_coefficients": 233
+        },
+        {
+          "jobs": 100,
+          "samples": 2048,
+          "degree": 26,
+          "temporal_tail_bound": 7.832447350943754e-12,
+          "coefficient_aliasing_included": true,
+          "delay_coefficients": 233
+        },
+        {
+          "jobs": 100,
+          "samples": 2048,
+          "degree": 26,
+          "temporal_tail_bound": 7.832447350943754e-12,
+          "coefficient_aliasing_included": true,
+          "delay_coefficients": 233
+        },
+        {
+          "jobs": 100,
+          "samples": 2048,
+          "degree": 26,
+          "temporal_tail_bound": 7.832447350943754e-12,
+          "coefficient_aliasing_included": true,
+          "delay_coefficients": 233
+        },
+        {
+          "jobs": 100,
+          "samples": 2048,
+          "degree": 26,
+          "temporal_tail_bound": 7.832447350943754e-12,
+          "coefficient_aliasing_included": true,
+          "delay_coefficients": 233
+        },
+        {
+          "jobs": 100,
+          "samples": 283,
+          "degree": 11,
+          "temporal_tail_bound": 3.708400517018929e-12,
+          "coefficient_aliasing_included": true,
+          "delay_coefficients": 233
+        }
+      ],
+      "sum_output": true,
+      "events": [
+        {
+          "name": "basis.host_pack_and_upload",
+          "cuda_ms": 23.72870445251465
+        },
+        {
+          "name": "basis.delay_map",
+          "cuda_ms": 5.111328125
+        },
+        {
+          "name": "basis.temporal_coefficients",
+          "cuda_ms": 2.7485439777374268
+        },
+        {
+          "name": "basis.path_projection",
+          "cuda_ms": 2.0523838996887207
+        },
+        {
+          "name": "basis.private_fft_filters",
+          "cuda_ms": 1.8688960075378418
+        },
+        {
+          "name": "basis.reconstruction_and_sum",
+          "cuda_ms": 0.20899200439453125
+        },
+        {
+          "name": "basis.temporal_coefficients",
+          "cuda_ms": 0.2126079946756363
+        },
+        {
+          "name": "basis.path_projection",
+          "cuda_ms": 2.048352003097534
+        },
+        {
+          "name": "basis.private_fft_filters",
+          "cuda_ms": 1.8596160411834717
+        },
+        {
+          "name": "basis.reconstruction_and_sum",
+          "cuda_ms": 0.20684799551963806
+        },
+        {
+          "name": "basis.temporal_coefficients",
+          "cuda_ms": 0.21484799683094025
+        },
+        {
+          "name": "basis.path_projection",
+          "cuda_ms": 2.0404160022735596
+        },
+        {
+          "name": "basis.private_fft_filters",
+          "cuda_ms": 1.833184003829956
+        },
+        {
+          "name": "basis.reconstruction_and_sum",
+          "cuda_ms": 0.20668800175189972
+        },
+        {
+          "name": "basis.temporal_coefficients",
+          "cuda_ms": 0.21663999557495117
+        },
+        {
+          "name": "basis.path_projection",
+          "cuda_ms": 2.047327995300293
+        },
+        {
+          "name": "basis.private_fft_filters",
+          "cuda_ms": 1.8432320356369019
+        },
+        {
+          "name": "basis.reconstruction_and_sum",
+          "cuda_ms": 0.20652799308300018
+        },
+        {
+          "name": "basis.temporal_coefficients",
+          "cuda_ms": 0.21292799711227417
+        },
+        {
+          "name": "basis.path_projection",
+          "cuda_ms": 2.0623040199279785
+        },
+        {
+          "name": "basis.private_fft_filters",
+          "cuda_ms": 1.8424320220947266
+        },
+        {
+          "name": "basis.reconstruction_and_sum",
+          "cuda_ms": 0.2069759964942932
+        },
+        {
+          "name": "basis.temporal_coefficients",
+          "cuda_ms": 0.21385599672794342
+        },
+        {
+          "name": "basis.path_projection",
+          "cuda_ms": 2.046976089477539
+        },
+        {
+          "name": "basis.private_fft_filters",
+          "cuda_ms": 1.852128028869629
+        },
+        {
+          "name": "basis.reconstruction_and_sum",
+          "cuda_ms": 0.2072640061378479
+        },
+        {
+          "name": "basis.temporal_coefficients",
+          "cuda_ms": 0.21279999613761902
+        },
+        {
+          "name": "basis.path_projection",
+          "cuda_ms": 2.052639961242676
+        },
+        {
+          "name": "basis.private_fft_filters",
+          "cuda_ms": 1.8513280153274536
+        },
+        {
+          "name": "basis.reconstruction_and_sum",
+          "cuda_ms": 0.20825600624084473
+        },
+        {
+          "name": "basis.temporal_coefficients",
+          "cuda_ms": 0.21273599565029144
+        },
+        {
+          "name": "basis.path_projection",
+          "cuda_ms": 2.0631039142608643
+        },
+        {
+          "name": "basis.private_fft_filters",
+          "cuda_ms": 1.8447999954223633
+        },
+        {
+          "name": "basis.reconstruction_and_sum",
+          "cuda_ms": 0.20614400506019592
+        },
+        {
+          "name": "basis.temporal_coefficients",
+          "cuda_ms": 1.268928050994873
+        },
+        {
+          "name": "basis.path_projection",
+          "cuda_ms": 1.2542400360107422
+        },
+        {
+          "name": "basis.private_fft_filters",
+          "cuda_ms": 0.28649601340293884
+        },
+        {
+          "name": "basis.reconstruction_and_sum",
+          "cuda_ms": 0.02879999950528145
+        },
+        {
+          "name": "basis.final_output_export",
+          "cuda_ms": 0.10735999792814255
+        }
+      ],
+      "cuda_event_span_ms": 68.89763266965747,
+      "pool_used_bytes": 217302016,
+      "pool_reserved_bytes": 901671936,
+      "max_checkpoint_pool_used_bytes": 322951168,
+      "pool_measurement_note": "Allocator snapshots include persistent plans/cache; not process-wide peak VRAM",
+      "profile": true,
+      "no_cpu_fallback": true,
+      "precision": "complex128/float64"
+    }
+  ],
+  "basis_cuda_1tx_1rx.json": [
+    {
+      "total_ms": 14.153296000586124,
+      "backend": "cuda_cupy",
+      "projection": "warp",
+      "delay_map": "double",
+      "fft_inplace": false,
+      "valid_paths": 1028,
+      "blocks": [
+        {
+          "jobs": 1,
+          "samples": 2048,
+          "degree": 26,
+          "temporal_tail_bound": 7.832447350943754e-12,
+          "coefficient_aliasing_included": true,
+          "delay_coefficients": 233
+        },
+        {
+          "jobs": 1,
+          "samples": 2048,
+          "degree": 26,
+          "temporal_tail_bound": 7.832447350943754e-12,
+          "coefficient_aliasing_included": true,
+          "delay_coefficients": 233
+        },
+        {
+          "jobs": 1,
+          "samples": 2048,
+          "degree": 26,
+          "temporal_tail_bound": 7.832447350943754e-12,
+          "coefficient_aliasing_included": true,
+          "delay_coefficients": 233
+        },
+        {
+          "jobs": 1,
+          "samples": 2048,
+          "degree": 26,
+          "temporal_tail_bound": 7.832447350943754e-12,
+          "coefficient_aliasing_included": true,
+          "delay_coefficients": 233
+        },
+        {
+          "jobs": 1,
+          "samples": 2048,
+          "degree": 26,
+          "temporal_tail_bound": 7.832447350943754e-12,
+          "coefficient_aliasing_included": true,
+          "delay_coefficients": 233
+        },
+        {
+          "jobs": 1,
+          "samples": 2048,
+          "degree": 26,
+          "temporal_tail_bound": 7.832447350943754e-12,
+          "coefficient_aliasing_included": true,
+          "delay_coefficients": 233
+        },
+        {
+          "jobs": 1,
+          "samples": 2048,
+          "degree": 26,
+          "temporal_tail_bound": 7.832447350943754e-12,
+          "coefficient_aliasing_included": true,
+          "delay_coefficients": 233
+        },
+        {
+          "jobs": 1,
+          "samples": 2048,
+          "degree": 26,
+          "temporal_tail_bound": 7.832447350943754e-12,
+          "coefficient_aliasing_included": true,
+          "delay_coefficients": 233
+        },
+        {
+          "jobs": 1,
+          "samples": 283,
+          "degree": 11,
+          "temporal_tail_bound": 3.708400517018929e-12,
+          "coefficient_aliasing_included": true,
+          "delay_coefficients": 233
+        }
+      ],
+      "sum_output": true,
+      "events": [
+        {
+          "name": "basis.host_pack_and_upload",
+          "cuda_ms": 0.3802559971809387
+        },
+        {
+          "name": "basis.delay_map",
+          "cuda_ms": 1.7111680507659912
+        },
+        {
+          "name": "basis.temporal_coefficients",
+          "cuda_ms": 0.5517759919166565
+        },
+        {
+          "name": "basis.path_projection",
+          "cuda_ms": 0.14815999567508698
+        },
+        {
+          "name": "basis.private_fft_filters",
+          "cuda_ms": 3.1137919425964355
+        },
+        {
+          "name": "basis.reconstruction_and_sum",
+          "cuda_ms": 0.12758399546146393
+        },
+        {
+          "name": "basis.temporal_coefficients",
+          "cuda_ms": 0.14371199905872345
+        },
+        {
+          "name": "basis.path_projection",
+          "cuda_ms": 0.1475840061903
+        },
+        {
+          "name": "basis.private_fft_filters",
+          "cuda_ms": 0.08355200290679932
+        },
+        {
+          "name": "basis.reconstruction_and_sum",
+          "cuda_ms": 0.05052800104022026
+        },
+        {
+          "name": "basis.temporal_coefficients",
+          "cuda_ms": 0.14374400675296783
+        },
+        {
+          "name": "basis.path_projection",
+          "cuda_ms": 0.13228799402713776
+        },
+        {
+          "name": "basis.private_fft_filters",
+          "cuda_ms": 0.07049600034952164
+        },
+        {
+          "name": "basis.reconstruction_and_sum",
+          "cuda_ms": 0.07411199808120728
+        },
+        {
+          "name": "basis.temporal_coefficients",
+          "cuda_ms": 0.13977600634098053
+        },
+        {
+          "name": "basis.path_projection",
+          "cuda_ms": 0.12323199957609177
+        },
+        {
+          "name": "basis.private_fft_filters",
+          "cuda_ms": 0.06883200258016586
+        },
+        {
+          "name": "basis.reconstruction_and_sum",
+          "cuda_ms": 0.07248000055551529
+        },
+        {
+          "name": "basis.temporal_coefficients",
+          "cuda_ms": 0.13763199746608734
+        },
+        {
+          "name": "basis.path_projection",
+          "cuda_ms": 0.1303360015153885
+        },
+        {
+          "name": "basis.private_fft_filters",
+          "cuda_ms": 0.08694399893283844
+        },
+        {
+          "name": "basis.reconstruction_and_sum",
+          "cuda_ms": 0.07731200009584427
+        },
+        {
+          "name": "basis.temporal_coefficients",
+          "cuda_ms": 0.1395840048789978
+        },
+        {
+          "name": "basis.path_projection",
+          "cuda_ms": 0.11744000017642975
+        },
+        {
+          "name": "basis.private_fft_filters",
+          "cuda_ms": 0.08086399734020233
+        },
+        {
+          "name": "basis.reconstruction_and_sum",
+          "cuda_ms": 3.08841609954834
+        },
+        {
+          "name": "basis.temporal_coefficients",
+          "cuda_ms": 0.1454080045223236
+        },
+        {
+          "name": "basis.path_projection",
+          "cuda_ms": 0.11894399672746658
+        },
+        {
+          "name": "basis.private_fft_filters",
+          "cuda_ms": 0.08553600311279297
+        },
+        {
+          "name": "basis.reconstruction_and_sum",
+          "cuda_ms": 0.0676800012588501
+        },
+        {
+          "name": "basis.temporal_coefficients",
+          "cuda_ms": 0.13596799969673157
+        },
+        {
+          "name": "basis.path_projection",
+          "cuda_ms": 0.10735999792814255
+        },
+        {
+          "name": "basis.private_fft_filters",
+          "cuda_ms": 0.08819200098514557
+        },
+        {
+          "name": "basis.reconstruction_and_sum",
+          "cuda_ms": 0.0764160007238388
+        },
+        {
+          "name": "basis.temporal_coefficients",
+          "cuda_ms": 0.5536640286445618
+        },
+        {
+          "name": "basis.path_projection",
+          "cuda_ms": 0.14131200313568115
+        },
+        {
+          "name": "basis.private_fft_filters",
+          "cuda_ms": 0.1292160004377365
+        },
+        {
+          "name": "basis.reconstruction_and_sum",
+          "cuda_ms": 0.016095999628305435
+        },
+        {
+          "name": "basis.final_output_export",
+          "cuda_ms": 0.18038399517536163
+        }
+      ],
+      "cuda_event_span_ms": 12.98777612298727,
+      "pool_used_bytes": 2446336,
+      "pool_reserved_bytes": 9288192,
+      "max_checkpoint_pool_used_bytes": 3502080,
+      "pool_measurement_note": "Allocator snapshots include persistent plans/cache; not process-wide peak VRAM",
+      "profile": true,
+      "no_cpu_fallback": true,
+      "precision": "complex128/float64"
+    }
+  ],
+  "basis_cuda_4tx_1rx.json": [
+    {
+      "total_ms": 8.944029999838676,
+      "backend": "cuda_cupy",
+      "projection": "warp",
+      "delay_map": "double",
+      "fft_inplace": false,
+      "valid_paths": 4112,
+      "blocks": [
+        {
+          "jobs": 4,
+          "samples": 2048,
+          "degree": 26,
+          "temporal_tail_bound": 7.832447350943754e-12,
+          "coefficient_aliasing_included": true,
+          "delay_coefficients": 233
+        },
+        {
+          "jobs": 4,
+          "samples": 2048,
+          "degree": 26,
+          "temporal_tail_bound": 7.832447350943754e-12,
+          "coefficient_aliasing_included": true,
+          "delay_coefficients": 233
+        },
+        {
+          "jobs": 4,
+          "samples": 2048,
+          "degree": 26,
+          "temporal_tail_bound": 7.832447350943754e-12,
+          "coefficient_aliasing_included": true,
+          "delay_coefficients": 233
+        },
+        {
+          "jobs": 4,
+          "samples": 2048,
+          "degree": 26,
+          "temporal_tail_bound": 7.832447350943754e-12,
+          "coefficient_aliasing_included": true,
+          "delay_coefficients": 233
+        },
+        {
+          "jobs": 4,
+          "samples": 2048,
+          "degree": 26,
+          "temporal_tail_bound": 7.832447350943754e-12,
+          "coefficient_aliasing_included": true,
+          "delay_coefficients": 233
+        },
+        {
+          "jobs": 4,
+          "samples": 2048,
+          "degree": 26,
+          "temporal_tail_bound": 7.832447350943754e-12,
+          "coefficient_aliasing_included": true,
+          "delay_coefficients": 233
+        },
+        {
+          "jobs": 4,
+          "samples": 2048,
+          "degree": 26,
+          "temporal_tail_bound": 7.832447350943754e-12,
+          "coefficient_aliasing_included": true,
+          "delay_coefficients": 233
+        },
+        {
+          "jobs": 4,
+          "samples": 2048,
+          "degree": 26,
+          "temporal_tail_bound": 7.832447350943754e-12,
+          "coefficient_aliasing_included": true,
+          "delay_coefficients": 233
+        },
+        {
+          "jobs": 4,
+          "samples": 283,
+          "degree": 11,
+          "temporal_tail_bound": 3.708400517018929e-12,
+          "coefficient_aliasing_included": true,
+          "delay_coefficients": 233
+        }
+      ],
+      "sum_output": true,
+      "events": [
+        {
+          "name": "basis.host_pack_and_upload",
+          "cuda_ms": 1.1867519617080688
+        },
+        {
+          "name": "basis.delay_map",
+          "cuda_ms": 1.7798080444335938
+        },
+        {
+          "name": "basis.temporal_coefficients",
+          "cuda_ms": 0.5636159777641296
+        },
+        {
+          "name": "basis.path_projection",
+          "cuda_ms": 0.16636799275875092
+        },
+        {
+          "name": "basis.private_fft_filters",
+          "cuda_ms": 0.12755200266838074
+        },
+        {
+          "name": "basis.reconstruction_and_sum",
+          "cuda_ms": 0.06835199892520905
+        },
+        {
+          "name": "basis.temporal_coefficients",
+          "cuda_ms": 0.14767999947071075
+        },
+        {
+          "name": "basis.path_projection",
+          "cuda_ms": 0.15324799716472626
+        },
+        {
+          "name": "basis.private_fft_filters",
+          "cuda_ms": 0.11414399743080139
+        },
+        {
+          "name": "basis.reconstruction_and_sum",
+          "cuda_ms": 0.024320000782608986
+        },
+        {
+          "name": "basis.temporal_coefficients",
+          "cuda_ms": 0.14575999975204468
+        },
+        {
+          "name": "basis.path_projection",
+          "cuda_ms": 0.14086399972438812
+        },
+        {
+          "name": "basis.private_fft_filters",
+          "cuda_ms": 0.10550399869680405
+        },
+        {
+          "name": "basis.reconstruction_and_sum",
+          "cuda_ms": 0.028704000636935234
+        },
+        {
+          "name": "basis.temporal_coefficients",
+          "cuda_ms": 0.14259199798107147
+        },
+        {
+          "name": "basis.path_projection",
+          "cuda_ms": 0.1380160003900528
+        },
+        {
+          "name": "basis.private_fft_filters",
+          "cuda_ms": 0.11494400352239609
+        },
+        {
+          "name": "basis.reconstruction_and_sum",
+          "cuda_ms": 0.024447999894618988
+        },
+        {
+          "name": "basis.temporal_coefficients",
+          "cuda_ms": 0.14182400703430176
+        },
+        {
+          "name": "basis.path_projection",
+          "cuda_ms": 0.13737599551677704
+        },
+        {
+          "name": "basis.private_fft_filters",
+          "cuda_ms": 0.1143999993801117
+        },
+        {
+          "name": "basis.reconstruction_and_sum",
+          "cuda_ms": 0.024320000782608986
+        },
+        {
+          "name": "basis.temporal_coefficients",
+          "cuda_ms": 0.1459520012140274
+        },
+        {
+          "name": "basis.path_projection",
+          "cuda_ms": 0.1337919980287552
+        },
+        {
+          "name": "basis.private_fft_filters",
+          "cuda_ms": 0.12352000176906586
+        },
+        {
+          "name": "basis.reconstruction_and_sum",
+          "cuda_ms": 0.024064000695943832
+        },
+        {
+          "name": "basis.temporal_coefficients",
+          "cuda_ms": 0.1420159935951233
+        },
+        {
+          "name": "basis.path_projection",
+          "cuda_ms": 0.13631999492645264
+        },
+        {
+          "name": "basis.private_fft_filters",
+          "cuda_ms": 0.11475200206041336
+        },
+        {
+          "name": "basis.reconstruction_and_sum",
+          "cuda_ms": 0.01865600049495697
+        },
+        {
+          "name": "basis.temporal_coefficients",
+          "cuda_ms": 0.14508800208568573
+        },
+        {
+          "name": "basis.path_projection",
+          "cuda_ms": 0.13648000359535217
+        },
+        {
+          "name": "basis.private_fft_filters",
+          "cuda_ms": 0.2516480088233948
+        },
+        {
+          "name": "basis.reconstruction_and_sum",
+          "cuda_ms": 0.042208001017570496
+        },
+        {
+          "name": "basis.temporal_coefficients",
+          "cuda_ms": 0.4888960123062134
+        },
+        {
+          "name": "basis.path_projection",
+          "cuda_ms": 0.14368000626564026
+        },
+        {
+          "name": "basis.private_fft_filters",
+          "cuda_ms": 0.10847999900579453
+        },
+        {
+          "name": "basis.reconstruction_and_sum",
+          "cuda_ms": 0.021856000646948814
+        },
+        {
+          "name": "basis.final_output_export",
+          "cuda_ms": 0.284960001707077
+        }
+      ],
+      "cuda_event_span_ms": 8.052960004657507,
+      "pool_used_bytes": 8990208,
+      "pool_reserved_bytes": 36327936,
+      "max_checkpoint_pool_used_bytes": 13215744,
+      "pool_measurement_note": "Allocator snapshots include persistent plans/cache; not process-wide peak VRAM",
+      "profile": true,
+      "no_cpu_fallback": true,
+      "precision": "complex128/float64"
+    }
+  ]
+}

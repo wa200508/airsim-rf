@@ -1,0 +1,9 @@
+........................................................................ [ 94%]
+....                                                                     [100%]
+=============================== warnings summary ===============================
+../opt/airsim-rf/.venv/lib/python3.12/site-packages/_pytest/cacheprovider.py:469
+  /opt/airsim-rf/.venv/lib/python3.12/site-packages/_pytest/cacheprovider.py:469: PytestCacheWarning: could not create cache path /work/repo/.pytest_cache/v/cache/nodeids: [Errno 30] Read-only file system: '/work/repo/pytest-cache-files-vxgng4pi'
+    config.cache.set("cache/nodeids", sorted(self.cached_nodeids))
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+76 passed, 1 warning in 11.43s

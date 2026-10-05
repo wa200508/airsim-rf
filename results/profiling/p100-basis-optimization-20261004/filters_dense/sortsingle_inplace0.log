@@ -1,0 +1,51 @@
+jit_find_library(): Unable to load "/tmp/disabled-drjit-cuda.so": /tmp/disabled-drjit-cuda.so: cannot open shared object file: No such file or directory!
+{
+  "backend": "cuda",
+  "summary": {
+    "p50_ms": 55.5918280001606,
+    "p95_ms": 59.211398199749965,
+    "p99_ms": 60.10933323950667,
+    "max_ms": 60.333816999445844,
+    "mean_ms": 56.209959799980425
+  },
+  "captures_per_second": 17.790441472622227,
+  "misses_120hz": 10,
+  "accuracy": {
+    "passed": true,
+    "full_all_jobs_cpu_basis_normalized_rms": 1.9335397206171226e-12,
+    "direct_checks": [
+      {
+        "receiver": 0,
+        "start_sample": 0,
+        "samples": 128,
+        "paths_checked": 102800,
+        "normalized_rms_error": 2.1817573296066378e-13,
+        "max_absolute_error": 9.749913632124005e-12
+      },
+      {
+        "receiver": 0,
+        "start_sample": 16539,
+        "samples": 128,
+        "paths_checked": 102800,
+        "normalized_rms_error": 4.17477351730147e-12,
+        "max_absolute_error": 1.397883208923082e-10
+      },
+      {
+        "receiver": 0,
+        "transmitter": 0,
+        "samples": 16667,
+        "paths_checked": 1028,
+        "normalized_rms_error": 7.893365195701704e-13,
+        "max_absolute_error": 9.000453499139402e-12
+      },
+      {
+        "receiver": 0,
+        "transmitter": 99,
+        "samples": 16667,
+        "paths_checked": 1028,
+        "normalized_rms_error": 7.749227520517344e-13,
+        "max_absolute_error": 9.788119784993544e-12
+      }
+    ]
+  }
+}

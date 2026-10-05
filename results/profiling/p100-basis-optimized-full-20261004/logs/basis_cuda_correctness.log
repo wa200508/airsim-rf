@@ -1,0 +1,9 @@
+........................................................................ [ 94%]
+....                                                                     [100%]
+=============================== warnings summary ===============================
+.venv/lib/python3.12/site-packages/_pytest/cacheprovider.py:469
+  /opt/airsim-rf/.venv/lib/python3.12/site-packages/_pytest/cacheprovider.py:469: PytestCacheWarning: could not create cache path /opt/airsim-rf/.pytest_cache/v/cache/nodeids: [Errno 13] Permission denied: '/opt/airsim-rf/pytest-cache-files-nrgpj4tq'
+    config.cache.set("cache/nodeids", sorted(self.cached_nodeids))
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+76 passed, 1 warning in 6.10s

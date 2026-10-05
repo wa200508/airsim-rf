@@ -3,6 +3,27 @@
 Branch: **`profiling/p100`**. This branch includes the newer architecture and
 preserves the previously published P100/legacy Sionna results.
 
+The [full optimized collection](results/profiling/p100-basis-optimized-full-20261004/FINDINGS.md)
+passed all required checks: 100-TX median 56.167 ms over 30 windows, versus
+122.671 ms previously. The oscillator phase bug has now been fixed and the extended CUDA qualification
+passes all 76 tests. [Projection and filter experiments](results/profiling/p100-basis-optimization-20261004/README.md)
+retain the original failed runs and document the qualified replacements. Warp
+projection with 100 links per batch reduces the 100-TX renderer call from about
+122 ms to 55 ms in ten-window comparisons, with all paths and FP64/complex128
+precision retained. Sorting/FFT ablations and five block sizes did not improve
+on this configuration. Defaults retain the original gather control; select the
+qualified faster configuration explicitly:
+
+```bash
+bash scripts/run_p100_docker.sh --doppler-basis --projection warp \
+  --batch-links 100 --block-samples 2048 --run-id p100-basis-optimized-full
+```
+
+The optional `--delay-map single` skips redundant sorting (dense projection
+requires no path sorting), and `--fft-inplace` overwrites disposable FFT buffers.
+These pass correctness checks but have no demonstrated throughput gain on this
+P100 workload. `nvidia-cublas-cu12` supplies the alternate dense FP64 projection.
+
 The [2026-10-04 P100 collection](results/profiling/p100-basis-full-20261004/REPORT.md)
 completed all six CPU/GPU timing cases, but **failed correctness qualification**:
 six device-suite tests passed and split captures at Unix-scale timestamps failed.

@@ -1,0 +1,2174 @@
+{
+  "scope": "doppler_basis_receiver_rendering",
+  "measurement_mode": "unprofiled_basis_benchmark",
+  "utc": "2026-10-05T01:21:24.129860+00:00",
+  "arguments": {
+    "backend": "cuda",
+    "tx": 100,
+    "rx": 1,
+    "paths": 1028,
+    "samples": 16667,
+    "sample_rate": 2000000.0,
+    "max_delay_us": 100.0,
+    "max_doppler_hz": 2500.0,
+    "taps": 32,
+    "block_samples": 1024,
+    "batch_links": 100,
+    "projection": "warp",
+    "delay_map": "double",
+    "fft_inplace": false,
+    "tolerance": 1e-10,
+    "iterations": 10,
+    "warmup": 3,
+    "threads": 2,
+    "profile_only": false,
+    "output": "/work/results/blocks_warp/block1024.json"
+  },
+  "backend": "cuda",
+  "precision": "complex128/float64",
+  "no_cpu_fallback": true,
+  "valid_paths": 102800,
+  "private_source_bytes": 27192000,
+  "source_generation_ms": 111.80306100050075,
+  "first_ms": 209.4624470000781,
+  "rows": [
+    {
+      "total_ms": 62.97317299959104,
+      "receiver_metrics": [
+        {
+          "total_ms": 62.87433399938891,
+          "backend": "cuda_cupy",
+          "projection": "warp",
+          "delay_map": "double",
+          "fft_inplace": false,
+          "valid_paths": 102800,
+          "blocks": [
+            {
+              "jobs": 100,
+              "samples": 1024,
+              "degree": 18,
+              "temporal_tail_bound": 1.2726795506090159e-11,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            },
+            {
+              "jobs": 100,
+              "samples": 1024,
+              "degree": 18,
+              "temporal_tail_bound": 1.2726795506090159e-11,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            },
+            {
+              "jobs": 100,
+              "samples": 1024,
+              "degree": 18,
+              "temporal_tail_bound": 1.2726795506090159e-11,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            },
+            {
+              "jobs": 100,
+              "samples": 1024,
+              "degree": 18,
+              "temporal_tail_bound": 1.2726795506090159e-11,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            },
+            {
+              "jobs": 100,
+              "samples": 1024,
+              "degree": 18,
+              "temporal_tail_bound": 1.2726795506090159e-11,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            },
+            {
+              "jobs": 100,
+              "samples": 1024,
+              "degree": 18,
+              "temporal_tail_bound": 1.2726795506090159e-11,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            },
+            {
+              "jobs": 100,
+              "samples": 1024,
+              "degree": 18,
+              "temporal_tail_bound": 1.2726795506090159e-11,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            },
+            {
+              "jobs": 100,
+              "samples": 1024,
+              "degree": 18,
+              "temporal_tail_bound": 1.2726795506090159e-11,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            },
+            {
+              "jobs": 100,
+              "samples": 1024,
+              "degree": 18,
+              "temporal_tail_bound": 1.2726795506090159e-11,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            },
+            {
+              "jobs": 100,
+              "samples": 1024,
+              "degree": 18,
+              "temporal_tail_bound": 1.2726795506090159e-11,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            },
+            {
+              "jobs": 100,
+              "samples": 1024,
+              "degree": 18,
+              "temporal_tail_bound": 1.2726795506090159e-11,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            },
+            {
+              "jobs": 100,
+              "samples": 1024,
+              "degree": 18,
+              "temporal_tail_bound": 1.2726795506090159e-11,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            },
+            {
+              "jobs": 100,
+              "samples": 1024,
+              "degree": 18,
+              "temporal_tail_bound": 1.2726795506090159e-11,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            },
+            {
+              "jobs": 100,
+              "samples": 1024,
+              "degree": 18,
+              "temporal_tail_bound": 1.2726795506090159e-11,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            },
+            {
+              "jobs": 100,
+              "samples": 1024,
+              "degree": 18,
+              "temporal_tail_bound": 1.2726795506090159e-11,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            },
+            {
+              "jobs": 100,
+              "samples": 1024,
+              "degree": 18,
+              "temporal_tail_bound": 1.2726795506090159e-11,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            },
+            {
+              "jobs": 100,
+              "samples": 283,
+              "degree": 11,
+              "temporal_tail_bound": 3.708400517018929e-12,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            }
+          ],
+          "sum_output": true,
+          "events": [],
+          "cuda_event_span_ms": null,
+          "pool_used_bytes": 327454720,
+          "pool_reserved_bytes": 748660736,
+          "max_checkpoint_pool_used_bytes": null,
+          "pool_measurement_note": "Allocator snapshots include persistent plans/cache; not process-wide peak VRAM",
+          "profile": false,
+          "no_cpu_fallback": true,
+          "precision": "complex128/float64"
+        }
+      ],
+      "channel_epoch_index": 4
+    },
+    {
+      "total_ms": 59.85087800036126,
+      "receiver_metrics": [
+        {
+          "total_ms": 59.768071000689815,
+          "backend": "cuda_cupy",
+          "projection": "warp",
+          "delay_map": "double",
+          "fft_inplace": false,
+          "valid_paths": 102800,
+          "blocks": [
+            {
+              "jobs": 100,
+              "samples": 1024,
+              "degree": 18,
+              "temporal_tail_bound": 1.2726795506090159e-11,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            },
+            {
+              "jobs": 100,
+              "samples": 1024,
+              "degree": 18,
+              "temporal_tail_bound": 1.2726795506090159e-11,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            },
+            {
+              "jobs": 100,
+              "samples": 1024,
+              "degree": 18,
+              "temporal_tail_bound": 1.2726795506090159e-11,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            },
+            {
+              "jobs": 100,
+              "samples": 1024,
+              "degree": 18,
+              "temporal_tail_bound": 1.2726795506090159e-11,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            },
+            {
+              "jobs": 100,
+              "samples": 1024,
+              "degree": 18,
+              "temporal_tail_bound": 1.2726795506090159e-11,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            },
+            {
+              "jobs": 100,
+              "samples": 1024,
+              "degree": 18,
+              "temporal_tail_bound": 1.2726795506090159e-11,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            },
+            {
+              "jobs": 100,
+              "samples": 1024,
+              "degree": 18,
+              "temporal_tail_bound": 1.2726795506090159e-11,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            },
+            {
+              "jobs": 100,
+              "samples": 1024,
+              "degree": 18,
+              "temporal_tail_bound": 1.2726795506090159e-11,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            },
+            {
+              "jobs": 100,
+              "samples": 1024,
+              "degree": 18,
+              "temporal_tail_bound": 1.2726795506090159e-11,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            },
+            {
+              "jobs": 100,
+              "samples": 1024,
+              "degree": 18,
+              "temporal_tail_bound": 1.2726795506090159e-11,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            },
+            {
+              "jobs": 100,
+              "samples": 1024,
+              "degree": 18,
+              "temporal_tail_bound": 1.2726795506090159e-11,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            },
+            {
+              "jobs": 100,
+              "samples": 1024,
+              "degree": 18,
+              "temporal_tail_bound": 1.2726795506090159e-11,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            },
+            {
+              "jobs": 100,
+              "samples": 1024,
+              "degree": 18,
+              "temporal_tail_bound": 1.2726795506090159e-11,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            },
+            {
+              "jobs": 100,
+              "samples": 1024,
+              "degree": 18,
+              "temporal_tail_bound": 1.2726795506090159e-11,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            },
+            {
+              "jobs": 100,
+              "samples": 1024,
+              "degree": 18,
+              "temporal_tail_bound": 1.2726795506090159e-11,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            },
+            {
+              "jobs": 100,
+              "samples": 1024,
+              "degree": 18,
+              "temporal_tail_bound": 1.2726795506090159e-11,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            },
+            {
+              "jobs": 100,
+              "samples": 283,
+              "degree": 11,
+              "temporal_tail_bound": 3.708400517018929e-12,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            }
+          ],
+          "sum_output": true,
+          "events": [],
+          "cuda_event_span_ms": null,
+          "pool_used_bytes": 327454720,
+          "pool_reserved_bytes": 748660736,
+          "max_checkpoint_pool_used_bytes": null,
+          "pool_measurement_note": "Allocator snapshots include persistent plans/cache; not process-wide peak VRAM",
+          "profile": false,
+          "no_cpu_fallback": true,
+          "precision": "complex128/float64"
+        }
+      ],
+      "channel_epoch_index": 5
+    },
+    {
+      "total_ms": 59.55568500030495,
+      "receiver_metrics": [
+        {
+          "total_ms": 59.46846599999844,
+          "backend": "cuda_cupy",
+          "projection": "warp",
+          "delay_map": "double",
+          "fft_inplace": false,
+          "valid_paths": 102800,
+          "blocks": [
+            {
+              "jobs": 100,
+              "samples": 1024,
+              "degree": 18,
+              "temporal_tail_bound": 1.2726795506090159e-11,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            },
+            {
+              "jobs": 100,
+              "samples": 1024,
+              "degree": 18,
+              "temporal_tail_bound": 1.2726795506090159e-11,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            },
+            {
+              "jobs": 100,
+              "samples": 1024,
+              "degree": 18,
+              "temporal_tail_bound": 1.2726795506090159e-11,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            },
+            {
+              "jobs": 100,
+              "samples": 1024,
+              "degree": 18,
+              "temporal_tail_bound": 1.2726795506090159e-11,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            },
+            {
+              "jobs": 100,
+              "samples": 1024,
+              "degree": 18,
+              "temporal_tail_bound": 1.2726795506090159e-11,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            },
+            {
+              "jobs": 100,
+              "samples": 1024,
+              "degree": 18,
+              "temporal_tail_bound": 1.2726795506090159e-11,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            },
+            {
+              "jobs": 100,
+              "samples": 1024,
+              "degree": 18,
+              "temporal_tail_bound": 1.2726795506090159e-11,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            },
+            {
+              "jobs": 100,
+              "samples": 1024,
+              "degree": 18,
+              "temporal_tail_bound": 1.2726795506090159e-11,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            },
+            {
+              "jobs": 100,
+              "samples": 1024,
+              "degree": 18,
+              "temporal_tail_bound": 1.2726795506090159e-11,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            },
+            {
+              "jobs": 100,
+              "samples": 1024,
+              "degree": 18,
+              "temporal_tail_bound": 1.2726795506090159e-11,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            },
+            {
+              "jobs": 100,
+              "samples": 1024,
+              "degree": 18,
+              "temporal_tail_bound": 1.2726795506090159e-11,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            },
+            {
+              "jobs": 100,
+              "samples": 1024,
+              "degree": 18,
+              "temporal_tail_bound": 1.2726795506090159e-11,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            },
+            {
+              "jobs": 100,
+              "samples": 1024,
+              "degree": 18,
+              "temporal_tail_bound": 1.2726795506090159e-11,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            },
+            {
+              "jobs": 100,
+              "samples": 1024,
+              "degree": 18,
+              "temporal_tail_bound": 1.2726795506090159e-11,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            },
+            {
+              "jobs": 100,
+              "samples": 1024,
+              "degree": 18,
+              "temporal_tail_bound": 1.2726795506090159e-11,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            },
+            {
+              "jobs": 100,
+              "samples": 1024,
+              "degree": 18,
+              "temporal_tail_bound": 1.2726795506090159e-11,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            },
+            {
+              "jobs": 100,
+              "samples": 283,
+              "degree": 11,
+              "temporal_tail_bound": 3.708400517018929e-12,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            }
+          ],
+          "sum_output": true,
+          "events": [],
+          "cuda_event_span_ms": null,
+          "pool_used_bytes": 327454720,
+          "pool_reserved_bytes": 748660736,
+          "max_checkpoint_pool_used_bytes": null,
+          "pool_measurement_note": "Allocator snapshots include persistent plans/cache; not process-wide peak VRAM",
+          "profile": false,
+          "no_cpu_fallback": true,
+          "precision": "complex128/float64"
+        }
+      ],
+      "channel_epoch_index": 6
+    },
+    {
+      "total_ms": 59.56224400051724,
+      "receiver_metrics": [
+        {
+          "total_ms": 59.418867000204045,
+          "backend": "cuda_cupy",
+          "projection": "warp",
+          "delay_map": "double",
+          "fft_inplace": false,
+          "valid_paths": 102800,
+          "blocks": [
+            {
+              "jobs": 100,
+              "samples": 1024,
+              "degree": 18,
+              "temporal_tail_bound": 1.2726795506090159e-11,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            },
+            {
+              "jobs": 100,
+              "samples": 1024,
+              "degree": 18,
+              "temporal_tail_bound": 1.2726795506090159e-11,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            },
+            {
+              "jobs": 100,
+              "samples": 1024,
+              "degree": 18,
+              "temporal_tail_bound": 1.2726795506090159e-11,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            },
+            {
+              "jobs": 100,
+              "samples": 1024,
+              "degree": 18,
+              "temporal_tail_bound": 1.2726795506090159e-11,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            },
+            {
+              "jobs": 100,
+              "samples": 1024,
+              "degree": 18,
+              "temporal_tail_bound": 1.2726795506090159e-11,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            },
+            {
+              "jobs": 100,
+              "samples": 1024,
+              "degree": 18,
+              "temporal_tail_bound": 1.2726795506090159e-11,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            },
+            {
+              "jobs": 100,
+              "samples": 1024,
+              "degree": 18,
+              "temporal_tail_bound": 1.2726795506090159e-11,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            },
+            {
+              "jobs": 100,
+              "samples": 1024,
+              "degree": 18,
+              "temporal_tail_bound": 1.2726795506090159e-11,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            },
+            {
+              "jobs": 100,
+              "samples": 1024,
+              "degree": 18,
+              "temporal_tail_bound": 1.2726795506090159e-11,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            },
+            {
+              "jobs": 100,
+              "samples": 1024,
+              "degree": 18,
+              "temporal_tail_bound": 1.2726795506090159e-11,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            },
+            {
+              "jobs": 100,
+              "samples": 1024,
+              "degree": 18,
+              "temporal_tail_bound": 1.2726795506090159e-11,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            },
+            {
+              "jobs": 100,
+              "samples": 1024,
+              "degree": 18,
+              "temporal_tail_bound": 1.2726795506090159e-11,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            },
+            {
+              "jobs": 100,
+              "samples": 1024,
+              "degree": 18,
+              "temporal_tail_bound": 1.2726795506090159e-11,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            },
+            {
+              "jobs": 100,
+              "samples": 1024,
+              "degree": 18,
+              "temporal_tail_bound": 1.2726795506090159e-11,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            },
+            {
+              "jobs": 100,
+              "samples": 1024,
+              "degree": 18,
+              "temporal_tail_bound": 1.2726795506090159e-11,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            },
+            {
+              "jobs": 100,
+              "samples": 1024,
+              "degree": 18,
+              "temporal_tail_bound": 1.2726795506090159e-11,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            },
+            {
+              "jobs": 100,
+              "samples": 283,
+              "degree": 11,
+              "temporal_tail_bound": 3.708400517018929e-12,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            }
+          ],
+          "sum_output": true,
+          "events": [],
+          "cuda_event_span_ms": null,
+          "pool_used_bytes": 327454720,
+          "pool_reserved_bytes": 748660736,
+          "max_checkpoint_pool_used_bytes": null,
+          "pool_measurement_note": "Allocator snapshots include persistent plans/cache; not process-wide peak VRAM",
+          "profile": false,
+          "no_cpu_fallback": true,
+          "precision": "complex128/float64"
+        }
+      ],
+      "channel_epoch_index": 7
+    },
+    {
+      "total_ms": 60.04258599932655,
+      "receiver_metrics": [
+        {
+          "total_ms": 59.94859800011909,
+          "backend": "cuda_cupy",
+          "projection": "warp",
+          "delay_map": "double",
+          "fft_inplace": false,
+          "valid_paths": 102800,
+          "blocks": [
+            {
+              "jobs": 100,
+              "samples": 1024,
+              "degree": 18,
+              "temporal_tail_bound": 1.2726795506090159e-11,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            },
+            {
+              "jobs": 100,
+              "samples": 1024,
+              "degree": 18,
+              "temporal_tail_bound": 1.2726795506090159e-11,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            },
+            {
+              "jobs": 100,
+              "samples": 1024,
+              "degree": 18,
+              "temporal_tail_bound": 1.2726795506090159e-11,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            },
+            {
+              "jobs": 100,
+              "samples": 1024,
+              "degree": 18,
+              "temporal_tail_bound": 1.2726795506090159e-11,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            },
+            {
+              "jobs": 100,
+              "samples": 1024,
+              "degree": 18,
+              "temporal_tail_bound": 1.2726795506090159e-11,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            },
+            {
+              "jobs": 100,
+              "samples": 1024,
+              "degree": 18,
+              "temporal_tail_bound": 1.2726795506090159e-11,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            },
+            {
+              "jobs": 100,
+              "samples": 1024,
+              "degree": 18,
+              "temporal_tail_bound": 1.2726795506090159e-11,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            },
+            {
+              "jobs": 100,
+              "samples": 1024,
+              "degree": 18,
+              "temporal_tail_bound": 1.2726795506090159e-11,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            },
+            {
+              "jobs": 100,
+              "samples": 1024,
+              "degree": 18,
+              "temporal_tail_bound": 1.2726795506090159e-11,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            },
+            {
+              "jobs": 100,
+              "samples": 1024,
+              "degree": 18,
+              "temporal_tail_bound": 1.2726795506090159e-11,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            },
+            {
+              "jobs": 100,
+              "samples": 1024,
+              "degree": 18,
+              "temporal_tail_bound": 1.2726795506090159e-11,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            },
+            {
+              "jobs": 100,
+              "samples": 1024,
+              "degree": 18,
+              "temporal_tail_bound": 1.2726795506090159e-11,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            },
+            {
+              "jobs": 100,
+              "samples": 1024,
+              "degree": 18,
+              "temporal_tail_bound": 1.2726795506090159e-11,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            },
+            {
+              "jobs": 100,
+              "samples": 1024,
+              "degree": 18,
+              "temporal_tail_bound": 1.2726795506090159e-11,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            },
+            {
+              "jobs": 100,
+              "samples": 1024,
+              "degree": 18,
+              "temporal_tail_bound": 1.2726795506090159e-11,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            },
+            {
+              "jobs": 100,
+              "samples": 1024,
+              "degree": 18,
+              "temporal_tail_bound": 1.2726795506090159e-11,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            },
+            {
+              "jobs": 100,
+              "samples": 283,
+              "degree": 11,
+              "temporal_tail_bound": 3.708400517018929e-12,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            }
+          ],
+          "sum_output": true,
+          "events": [],
+          "cuda_event_span_ms": null,
+          "pool_used_bytes": 327454720,
+          "pool_reserved_bytes": 748660736,
+          "max_checkpoint_pool_used_bytes": null,
+          "pool_measurement_note": "Allocator snapshots include persistent plans/cache; not process-wide peak VRAM",
+          "profile": false,
+          "no_cpu_fallback": true,
+          "precision": "complex128/float64"
+        }
+      ],
+      "channel_epoch_index": 8
+    },
+    {
+      "total_ms": 59.52359499951854,
+      "receiver_metrics": [
+        {
+          "total_ms": 59.42143700031011,
+          "backend": "cuda_cupy",
+          "projection": "warp",
+          "delay_map": "double",
+          "fft_inplace": false,
+          "valid_paths": 102800,
+          "blocks": [
+            {
+              "jobs": 100,
+              "samples": 1024,
+              "degree": 18,
+              "temporal_tail_bound": 1.2726795506090159e-11,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            },
+            {
+              "jobs": 100,
+              "samples": 1024,
+              "degree": 18,
+              "temporal_tail_bound": 1.2726795506090159e-11,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            },
+            {
+              "jobs": 100,
+              "samples": 1024,
+              "degree": 18,
+              "temporal_tail_bound": 1.2726795506090159e-11,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            },
+            {
+              "jobs": 100,
+              "samples": 1024,
+              "degree": 18,
+              "temporal_tail_bound": 1.2726795506090159e-11,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            },
+            {
+              "jobs": 100,
+              "samples": 1024,
+              "degree": 18,
+              "temporal_tail_bound": 1.2726795506090159e-11,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            },
+            {
+              "jobs": 100,
+              "samples": 1024,
+              "degree": 18,
+              "temporal_tail_bound": 1.2726795506090159e-11,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            },
+            {
+              "jobs": 100,
+              "samples": 1024,
+              "degree": 18,
+              "temporal_tail_bound": 1.2726795506090159e-11,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            },
+            {
+              "jobs": 100,
+              "samples": 1024,
+              "degree": 18,
+              "temporal_tail_bound": 1.2726795506090159e-11,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            },
+            {
+              "jobs": 100,
+              "samples": 1024,
+              "degree": 18,
+              "temporal_tail_bound": 1.2726795506090159e-11,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            },
+            {
+              "jobs": 100,
+              "samples": 1024,
+              "degree": 18,
+              "temporal_tail_bound": 1.2726795506090159e-11,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            },
+            {
+              "jobs": 100,
+              "samples": 1024,
+              "degree": 18,
+              "temporal_tail_bound": 1.2726795506090159e-11,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            },
+            {
+              "jobs": 100,
+              "samples": 1024,
+              "degree": 18,
+              "temporal_tail_bound": 1.2726795506090159e-11,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            },
+            {
+              "jobs": 100,
+              "samples": 1024,
+              "degree": 18,
+              "temporal_tail_bound": 1.2726795506090159e-11,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            },
+            {
+              "jobs": 100,
+              "samples": 1024,
+              "degree": 18,
+              "temporal_tail_bound": 1.2726795506090159e-11,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            },
+            {
+              "jobs": 100,
+              "samples": 1024,
+              "degree": 18,
+              "temporal_tail_bound": 1.2726795506090159e-11,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            },
+            {
+              "jobs": 100,
+              "samples": 1024,
+              "degree": 18,
+              "temporal_tail_bound": 1.2726795506090159e-11,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            },
+            {
+              "jobs": 100,
+              "samples": 283,
+              "degree": 11,
+              "temporal_tail_bound": 3.708400517018929e-12,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            }
+          ],
+          "sum_output": true,
+          "events": [],
+          "cuda_event_span_ms": null,
+          "pool_used_bytes": 327454720,
+          "pool_reserved_bytes": 748660736,
+          "max_checkpoint_pool_used_bytes": null,
+          "pool_measurement_note": "Allocator snapshots include persistent plans/cache; not process-wide peak VRAM",
+          "profile": false,
+          "no_cpu_fallback": true,
+          "precision": "complex128/float64"
+        }
+      ],
+      "channel_epoch_index": 9
+    },
+    {
+      "total_ms": 63.59001100008754,
+      "receiver_metrics": [
+        {
+          "total_ms": 63.488963000054355,
+          "backend": "cuda_cupy",
+          "projection": "warp",
+          "delay_map": "double",
+          "fft_inplace": false,
+          "valid_paths": 102800,
+          "blocks": [
+            {
+              "jobs": 100,
+              "samples": 1024,
+              "degree": 18,
+              "temporal_tail_bound": 1.2726795506090159e-11,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            },
+            {
+              "jobs": 100,
+              "samples": 1024,
+              "degree": 18,
+              "temporal_tail_bound": 1.2726795506090159e-11,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            },
+            {
+              "jobs": 100,
+              "samples": 1024,
+              "degree": 18,
+              "temporal_tail_bound": 1.2726795506090159e-11,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            },
+            {
+              "jobs": 100,
+              "samples": 1024,
+              "degree": 18,
+              "temporal_tail_bound": 1.2726795506090159e-11,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            },
+            {
+              "jobs": 100,
+              "samples": 1024,
+              "degree": 18,
+              "temporal_tail_bound": 1.2726795506090159e-11,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            },
+            {
+              "jobs": 100,
+              "samples": 1024,
+              "degree": 18,
+              "temporal_tail_bound": 1.2726795506090159e-11,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            },
+            {
+              "jobs": 100,
+              "samples": 1024,
+              "degree": 18,
+              "temporal_tail_bound": 1.2726795506090159e-11,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            },
+            {
+              "jobs": 100,
+              "samples": 1024,
+              "degree": 18,
+              "temporal_tail_bound": 1.2726795506090159e-11,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            },
+            {
+              "jobs": 100,
+              "samples": 1024,
+              "degree": 18,
+              "temporal_tail_bound": 1.2726795506090159e-11,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            },
+            {
+              "jobs": 100,
+              "samples": 1024,
+              "degree": 18,
+              "temporal_tail_bound": 1.2726795506090159e-11,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            },
+            {
+              "jobs": 100,
+              "samples": 1024,
+              "degree": 18,
+              "temporal_tail_bound": 1.2726795506090159e-11,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            },
+            {
+              "jobs": 100,
+              "samples": 1024,
+              "degree": 18,
+              "temporal_tail_bound": 1.2726795506090159e-11,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            },
+            {
+              "jobs": 100,
+              "samples": 1024,
+              "degree": 18,
+              "temporal_tail_bound": 1.2726795506090159e-11,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            },
+            {
+              "jobs": 100,
+              "samples": 1024,
+              "degree": 18,
+              "temporal_tail_bound": 1.2726795506090159e-11,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            },
+            {
+              "jobs": 100,
+              "samples": 1024,
+              "degree": 18,
+              "temporal_tail_bound": 1.2726795506090159e-11,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            },
+            {
+              "jobs": 100,
+              "samples": 1024,
+              "degree": 18,
+              "temporal_tail_bound": 1.2726795506090159e-11,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            },
+            {
+              "jobs": 100,
+              "samples": 283,
+              "degree": 11,
+              "temporal_tail_bound": 3.708400517018929e-12,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            }
+          ],
+          "sum_output": true,
+          "events": [],
+          "cuda_event_span_ms": null,
+          "pool_used_bytes": 327454720,
+          "pool_reserved_bytes": 748660736,
+          "max_checkpoint_pool_used_bytes": null,
+          "pool_measurement_note": "Allocator snapshots include persistent plans/cache; not process-wide peak VRAM",
+          "profile": false,
+          "no_cpu_fallback": true,
+          "precision": "complex128/float64"
+        }
+      ],
+      "channel_epoch_index": 10
+    },
+    {
+      "total_ms": 63.36050600020826,
+      "receiver_metrics": [
+        {
+          "total_ms": 63.25538700002653,
+          "backend": "cuda_cupy",
+          "projection": "warp",
+          "delay_map": "double",
+          "fft_inplace": false,
+          "valid_paths": 102800,
+          "blocks": [
+            {
+              "jobs": 100,
+              "samples": 1024,
+              "degree": 18,
+              "temporal_tail_bound": 1.2726795506090159e-11,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            },
+            {
+              "jobs": 100,
+              "samples": 1024,
+              "degree": 18,
+              "temporal_tail_bound": 1.2726795506090159e-11,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            },
+            {
+              "jobs": 100,
+              "samples": 1024,
+              "degree": 18,
+              "temporal_tail_bound": 1.2726795506090159e-11,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            },
+            {
+              "jobs": 100,
+              "samples": 1024,
+              "degree": 18,
+              "temporal_tail_bound": 1.2726795506090159e-11,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            },
+            {
+              "jobs": 100,
+              "samples": 1024,
+              "degree": 18,
+              "temporal_tail_bound": 1.2726795506090159e-11,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            },
+            {
+              "jobs": 100,
+              "samples": 1024,
+              "degree": 18,
+              "temporal_tail_bound": 1.2726795506090159e-11,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            },
+            {
+              "jobs": 100,
+              "samples": 1024,
+              "degree": 18,
+              "temporal_tail_bound": 1.2726795506090159e-11,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            },
+            {
+              "jobs": 100,
+              "samples": 1024,
+              "degree": 18,
+              "temporal_tail_bound": 1.2726795506090159e-11,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            },
+            {
+              "jobs": 100,
+              "samples": 1024,
+              "degree": 18,
+              "temporal_tail_bound": 1.2726795506090159e-11,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            },
+            {
+              "jobs": 100,
+              "samples": 1024,
+              "degree": 18,
+              "temporal_tail_bound": 1.2726795506090159e-11,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            },
+            {
+              "jobs": 100,
+              "samples": 1024,
+              "degree": 18,
+              "temporal_tail_bound": 1.2726795506090159e-11,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            },
+            {
+              "jobs": 100,
+              "samples": 1024,
+              "degree": 18,
+              "temporal_tail_bound": 1.2726795506090159e-11,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            },
+            {
+              "jobs": 100,
+              "samples": 1024,
+              "degree": 18,
+              "temporal_tail_bound": 1.2726795506090159e-11,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            },
+            {
+              "jobs": 100,
+              "samples": 1024,
+              "degree": 18,
+              "temporal_tail_bound": 1.2726795506090159e-11,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            },
+            {
+              "jobs": 100,
+              "samples": 1024,
+              "degree": 18,
+              "temporal_tail_bound": 1.2726795506090159e-11,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            },
+            {
+              "jobs": 100,
+              "samples": 1024,
+              "degree": 18,
+              "temporal_tail_bound": 1.2726795506090159e-11,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            },
+            {
+              "jobs": 100,
+              "samples": 283,
+              "degree": 11,
+              "temporal_tail_bound": 3.708400517018929e-12,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            }
+          ],
+          "sum_output": true,
+          "events": [],
+          "cuda_event_span_ms": null,
+          "pool_used_bytes": 327454720,
+          "pool_reserved_bytes": 748660736,
+          "max_checkpoint_pool_used_bytes": null,
+          "pool_measurement_note": "Allocator snapshots include persistent plans/cache; not process-wide peak VRAM",
+          "profile": false,
+          "no_cpu_fallback": true,
+          "precision": "complex128/float64"
+        }
+      ],
+      "channel_epoch_index": 11
+    },
+    {
+      "total_ms": 59.54618500072684,
+      "receiver_metrics": [
+        {
+          "total_ms": 59.44349699984741,
+          "backend": "cuda_cupy",
+          "projection": "warp",
+          "delay_map": "double",
+          "fft_inplace": false,
+          "valid_paths": 102800,
+          "blocks": [
+            {
+              "jobs": 100,
+              "samples": 1024,
+              "degree": 18,
+              "temporal_tail_bound": 1.2726795506090159e-11,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            },
+            {
+              "jobs": 100,
+              "samples": 1024,
+              "degree": 18,
+              "temporal_tail_bound": 1.2726795506090159e-11,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            },
+            {
+              "jobs": 100,
+              "samples": 1024,
+              "degree": 18,
+              "temporal_tail_bound": 1.2726795506090159e-11,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            },
+            {
+              "jobs": 100,
+              "samples": 1024,
+              "degree": 18,
+              "temporal_tail_bound": 1.2726795506090159e-11,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            },
+            {
+              "jobs": 100,
+              "samples": 1024,
+              "degree": 18,
+              "temporal_tail_bound": 1.2726795506090159e-11,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            },
+            {
+              "jobs": 100,
+              "samples": 1024,
+              "degree": 18,
+              "temporal_tail_bound": 1.2726795506090159e-11,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            },
+            {
+              "jobs": 100,
+              "samples": 1024,
+              "degree": 18,
+              "temporal_tail_bound": 1.2726795506090159e-11,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            },
+            {
+              "jobs": 100,
+              "samples": 1024,
+              "degree": 18,
+              "temporal_tail_bound": 1.2726795506090159e-11,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            },
+            {
+              "jobs": 100,
+              "samples": 1024,
+              "degree": 18,
+              "temporal_tail_bound": 1.2726795506090159e-11,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            },
+            {
+              "jobs": 100,
+              "samples": 1024,
+              "degree": 18,
+              "temporal_tail_bound": 1.2726795506090159e-11,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            },
+            {
+              "jobs": 100,
+              "samples": 1024,
+              "degree": 18,
+              "temporal_tail_bound": 1.2726795506090159e-11,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            },
+            {
+              "jobs": 100,
+              "samples": 1024,
+              "degree": 18,
+              "temporal_tail_bound": 1.2726795506090159e-11,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            },
+            {
+              "jobs": 100,
+              "samples": 1024,
+              "degree": 18,
+              "temporal_tail_bound": 1.2726795506090159e-11,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            },
+            {
+              "jobs": 100,
+              "samples": 1024,
+              "degree": 18,
+              "temporal_tail_bound": 1.2726795506090159e-11,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            },
+            {
+              "jobs": 100,
+              "samples": 1024,
+              "degree": 18,
+              "temporal_tail_bound": 1.2726795506090159e-11,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            },
+            {
+              "jobs": 100,
+              "samples": 1024,
+              "degree": 18,
+              "temporal_tail_bound": 1.2726795506090159e-11,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            },
+            {
+              "jobs": 100,
+              "samples": 283,
+              "degree": 11,
+              "temporal_tail_bound": 3.708400517018929e-12,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            }
+          ],
+          "sum_output": true,
+          "events": [],
+          "cuda_event_span_ms": null,
+          "pool_used_bytes": 327454720,
+          "pool_reserved_bytes": 748660736,
+          "max_checkpoint_pool_used_bytes": null,
+          "pool_measurement_note": "Allocator snapshots include persistent plans/cache; not process-wide peak VRAM",
+          "profile": false,
+          "no_cpu_fallback": true,
+          "precision": "complex128/float64"
+        }
+      ],
+      "channel_epoch_index": 12
+    },
+    {
+      "total_ms": 60.102634000031685,
+      "receiver_metrics": [
+        {
+          "total_ms": 60.007135999512684,
+          "backend": "cuda_cupy",
+          "projection": "warp",
+          "delay_map": "double",
+          "fft_inplace": false,
+          "valid_paths": 102800,
+          "blocks": [
+            {
+              "jobs": 100,
+              "samples": 1024,
+              "degree": 18,
+              "temporal_tail_bound": 1.2726795506090159e-11,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            },
+            {
+              "jobs": 100,
+              "samples": 1024,
+              "degree": 18,
+              "temporal_tail_bound": 1.2726795506090159e-11,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            },
+            {
+              "jobs": 100,
+              "samples": 1024,
+              "degree": 18,
+              "temporal_tail_bound": 1.2726795506090159e-11,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            },
+            {
+              "jobs": 100,
+              "samples": 1024,
+              "degree": 18,
+              "temporal_tail_bound": 1.2726795506090159e-11,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            },
+            {
+              "jobs": 100,
+              "samples": 1024,
+              "degree": 18,
+              "temporal_tail_bound": 1.2726795506090159e-11,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            },
+            {
+              "jobs": 100,
+              "samples": 1024,
+              "degree": 18,
+              "temporal_tail_bound": 1.2726795506090159e-11,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            },
+            {
+              "jobs": 100,
+              "samples": 1024,
+              "degree": 18,
+              "temporal_tail_bound": 1.2726795506090159e-11,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            },
+            {
+              "jobs": 100,
+              "samples": 1024,
+              "degree": 18,
+              "temporal_tail_bound": 1.2726795506090159e-11,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            },
+            {
+              "jobs": 100,
+              "samples": 1024,
+              "degree": 18,
+              "temporal_tail_bound": 1.2726795506090159e-11,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            },
+            {
+              "jobs": 100,
+              "samples": 1024,
+              "degree": 18,
+              "temporal_tail_bound": 1.2726795506090159e-11,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            },
+            {
+              "jobs": 100,
+              "samples": 1024,
+              "degree": 18,
+              "temporal_tail_bound": 1.2726795506090159e-11,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            },
+            {
+              "jobs": 100,
+              "samples": 1024,
+              "degree": 18,
+              "temporal_tail_bound": 1.2726795506090159e-11,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            },
+            {
+              "jobs": 100,
+              "samples": 1024,
+              "degree": 18,
+              "temporal_tail_bound": 1.2726795506090159e-11,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            },
+            {
+              "jobs": 100,
+              "samples": 1024,
+              "degree": 18,
+              "temporal_tail_bound": 1.2726795506090159e-11,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            },
+            {
+              "jobs": 100,
+              "samples": 1024,
+              "degree": 18,
+              "temporal_tail_bound": 1.2726795506090159e-11,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            },
+            {
+              "jobs": 100,
+              "samples": 1024,
+              "degree": 18,
+              "temporal_tail_bound": 1.2726795506090159e-11,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            },
+            {
+              "jobs": 100,
+              "samples": 283,
+              "degree": 11,
+              "temporal_tail_bound": 3.708400517018929e-12,
+              "coefficient_aliasing_included": true,
+              "delay_coefficients": 233
+            }
+          ],
+          "sum_output": true,
+          "events": [],
+          "cuda_event_span_ms": null,
+          "pool_used_bytes": 327454720,
+          "pool_reserved_bytes": 748660736,
+          "max_checkpoint_pool_used_bytes": null,
+          "pool_measurement_note": "Allocator snapshots include persistent plans/cache; not process-wide peak VRAM",
+          "profile": false,
+          "no_cpu_fallback": true,
+          "precision": "complex128/float64"
+        }
+      ],
+      "channel_epoch_index": 13
+    }
+  ],
+  "summary": {
+    "p50_ms": 59.946731999843905,
+    "p95_ms": 63.486733750141866,
+    "p99_ms": 63.56935555009841,
+    "max_ms": 63.59001100008754,
+    "mean_ms": 60.81074970006739
+  },
+  "captures_per_second": 16.4444609700132,
+  "output_samples_per_second_per_receiver": 274079.83098721,
+  "deadline_ms": 8.333333333333334,
+  "sample_window_ms": 8.3335,
+  "misses_120hz": 10,
+  "required_speedup_to_120hz": 7.297289964008086,
+  "accuracy": {
+    "passed": true,
+    "full_all_jobs_cpu_basis_normalized_rms": 1.365136326071161e-12,
+    "direct_checks": [
+      {
+        "receiver": 0,
+        "start_sample": 0,
+        "samples": 128,
+        "paths_checked": 102800,
+        "normalized_rms_error": 8.907151118447484e-13,
+        "max_absolute_error": 4.714811146007416e-11
+      },
+      {
+        "receiver": 0,
+        "start_sample": 16539,
+        "samples": 128,
+        "paths_checked": 102800,
+        "normalized_rms_error": 4.1747160549009695e-12,
+        "max_absolute_error": 1.3979156871898013e-10
+      },
+      {
+        "receiver": 0,
+        "transmitter": 0,
+        "samples": 16667,
+        "paths_checked": 1028,
+        "normalized_rms_error": 1.1443379832130922e-12,
+        "max_absolute_error": 8.403591632018737e-12
+      },
+      {
+        "receiver": 0,
+        "transmitter": 99,
+        "samples": 16667,
+        "paths_checked": 1028,
+        "normalized_rms_error": 1.2015916794916518e-12,
+        "max_absolute_error": 9.918785286540789e-12
+      }
+    ]
+  },
+  "profile_receivers": [
+    {
+      "total_ms": 63.52117300048121,
+      "backend": "cuda_cupy",
+      "projection": "warp",
+      "delay_map": "double",
+      "fft_inplace": false,
+      "valid_paths": 102800,
+      "blocks": [
+        {
+          "jobs": 100,
+          "samples": 1024,
+          "degree": 18,
+          "temporal_tail_bound": 1.2726795506090159e-11,
+          "coefficient_aliasing_included": true,
+          "delay_coefficients": 233
+        },
+        {
+          "jobs": 100,
+          "samples": 1024,
+          "degree": 18,
+          "temporal_tail_bound": 1.2726795506090159e-11,
+          "coefficient_aliasing_included": true,
+          "delay_coefficients": 233
+        },
+        {
+          "jobs": 100,
+          "samples": 1024,
+          "degree": 18,
+          "temporal_tail_bound": 1.2726795506090159e-11,
+          "coefficient_aliasing_included": true,
+          "delay_coefficients": 233
+        },
+        {
+          "jobs": 100,
+          "samples": 1024,
+          "degree": 18,
+          "temporal_tail_bound": 1.2726795506090159e-11,
+          "coefficient_aliasing_included": true,
+          "delay_coefficients": 233
+        },
+        {
+          "jobs": 100,
+          "samples": 1024,
+          "degree": 18,
+          "temporal_tail_bound": 1.2726795506090159e-11,
+          "coefficient_aliasing_included": true,
+          "delay_coefficients": 233
+        },
+        {
+          "jobs": 100,
+          "samples": 1024,
+          "degree": 18,
+          "temporal_tail_bound": 1.2726795506090159e-11,
+          "coefficient_aliasing_included": true,
+          "delay_coefficients": 233
+        },
+        {
+          "jobs": 100,
+          "samples": 1024,
+          "degree": 18,
+          "temporal_tail_bound": 1.2726795506090159e-11,
+          "coefficient_aliasing_included": true,
+          "delay_coefficients": 233
+        },
+        {
+          "jobs": 100,
+          "samples": 1024,
+          "degree": 18,
+          "temporal_tail_bound": 1.2726795506090159e-11,
+          "coefficient_aliasing_included": true,
+          "delay_coefficients": 233
+        },
+        {
+          "jobs": 100,
+          "samples": 1024,
+          "degree": 18,
+          "temporal_tail_bound": 1.2726795506090159e-11,
+          "coefficient_aliasing_included": true,
+          "delay_coefficients": 233
+        },
+        {
+          "jobs": 100,
+          "samples": 1024,
+          "degree": 18,
+          "temporal_tail_bound": 1.2726795506090159e-11,
+          "coefficient_aliasing_included": true,
+          "delay_coefficients": 233
+        },
+        {
+          "jobs": 100,
+          "samples": 1024,
+          "degree": 18,
+          "temporal_tail_bound": 1.2726795506090159e-11,
+          "coefficient_aliasing_included": true,
+          "delay_coefficients": 233
+        },
+        {
+          "jobs": 100,
+          "samples": 1024,
+          "degree": 18,
+          "temporal_tail_bound": 1.2726795506090159e-11,
+          "coefficient_aliasing_included": true,
+          "delay_coefficients": 233
+        },
+        {
+          "jobs": 100,
+          "samples": 1024,
+          "degree": 18,
+          "temporal_tail_bound": 1.2726795506090159e-11,
+          "coefficient_aliasing_included": true,
+          "delay_coefficients": 233
+        },
+        {
+          "jobs": 100,
+          "samples": 1024,
+          "degree": 18,
+          "temporal_tail_bound": 1.2726795506090159e-11,
+          "coefficient_aliasing_included": true,
+          "delay_coefficients": 233
+        },
+        {
+          "jobs": 100,
+          "samples": 1024,
+          "degree": 18,
+          "temporal_tail_bound": 1.2726795506090159e-11,
+          "coefficient_aliasing_included": true,
+          "delay_coefficients": 233
+        },
+        {
+          "jobs": 100,
+          "samples": 1024,
+          "degree": 18,
+          "temporal_tail_bound": 1.2726795506090159e-11,
+          "coefficient_aliasing_included": true,
+          "delay_coefficients": 233
+        },
+        {
+          "jobs": 100,
+          "samples": 283,
+          "degree": 11,
+          "temporal_tail_bound": 3.708400517018929e-12,
+          "coefficient_aliasing_included": true,
+          "delay_coefficients": 233
+        }
+      ],
+      "sum_output": true,
+      "events": [
+        {
+          "name": "basis.host_pack_and_upload",
+          "cuda_ms": 14.300415992736816
+        },
+        {
+          "name": "basis.delay_map",
+          "cuda_ms": 3.2369918823242188
+        },
+        {
+          "name": "basis.temporal_coefficients",
+          "cuda_ms": 2.551232099533081
+        },
+        {
+          "name": "basis.path_projection",
+          "cuda_ms": 1.512063980102539
+        },
+        {
+          "name": "basis.private_fft_filters",
+          "cuda_ms": 0.7645120024681091
+        },
+        {
+          "name": "basis.reconstruction_and_sum",
+          "cuda_ms": 0.09401600062847137
+        },
+        {
+          "name": "basis.temporal_coefficients",
+          "cuda_ms": 0.16355200111865997
+        },
+        {
+          "name": "basis.path_projection",
+          "cuda_ms": 1.5101120471954346
+        },
+        {
+          "name": "basis.private_fft_filters",
+          "cuda_ms": 0.7232319712638855
+        },
+        {
+          "name": "basis.reconstruction_and_sum",
+          "cuda_ms": 0.0942080020904541
+        },
+        {
+          "name": "basis.temporal_coefficients",
+          "cuda_ms": 0.16521599888801575
+        },
+        {
+          "name": "basis.path_projection",
+          "cuda_ms": 1.5234559774398804
+        },
+        {
+          "name": "basis.private_fft_filters",
+          "cuda_ms": 0.7639679908752441
+        },
+        {
+          "name": "basis.reconstruction_and_sum",
+          "cuda_ms": 0.09356799721717834
+        },
+        {
+          "name": "basis.temporal_coefficients",
+          "cuda_ms": 0.16371199488639832
+        },
+        {
+          "name": "basis.path_projection",
+          "cuda_ms": 1.5219839811325073
+        },
+        {
+          "name": "basis.private_fft_filters",
+          "cuda_ms": 0.7379199862480164
+        },
+        {
+          "name": "basis.reconstruction_and_sum",
+          "cuda_ms": 0.0981760025024414
+        },
+        {
+          "name": "basis.temporal_coefficients",
+          "cuda_ms": 0.16364799439907074
+        },
+        {
+          "name": "basis.path_projection",
+          "cuda_ms": 1.50873601436615
+        },
+        {
+          "name": "basis.private_fft_filters",
+          "cuda_ms": 0.7361279726028442
+        },
+        {
+          "name": "basis.reconstruction_and_sum",
+          "cuda_ms": 0.09331200271844864
+        },
+        {
+          "name": "basis.temporal_coefficients",
+          "cuda_ms": 0.16415999829769135
+        },
+        {
+          "name": "basis.path_projection",
+          "cuda_ms": 1.5086079835891724
+        },
+        {
+          "name": "basis.private_fft_filters",
+          "cuda_ms": 0.7306240200996399
+        },
+        {
+          "name": "basis.reconstruction_and_sum",
+          "cuda_ms": 0.09296000003814697
+        },
+        {
+          "name": "basis.temporal_coefficients",
+          "cuda_ms": 0.16335999965667725
+        },
+        {
+          "name": "basis.path_projection",
+          "cuda_ms": 1.5166399478912354
+        },
+        {
+          "name": "basis.private_fft_filters",
+          "cuda_ms": 0.7275840044021606
+        },
+        {
+          "name": "basis.reconstruction_and_sum",
+          "cuda_ms": 0.09651199728250504
+        },
+        {
+          "name": "basis.temporal_coefficients",
+          "cuda_ms": 0.16380800306797028
+        },
+        {
+          "name": "basis.path_projection",
+          "cuda_ms": 1.5099519491195679
+        },
+        {
+          "name": "basis.private_fft_filters",
+          "cuda_ms": 0.7338879704475403
+        },
+        {
+          "name": "basis.reconstruction_and_sum",
+          "cuda_ms": 0.09737599641084671
+        },
+        {
+          "name": "basis.temporal_coefficients",
+          "cuda_ms": 0.1642879992723465
+        },
+        {
+          "name": "basis.path_projection",
+          "cuda_ms": 1.5101120471954346
+        },
+        {
+          "name": "basis.private_fft_filters",
+          "cuda_ms": 0.730239987373352
+        },
+        {
+          "name": "basis.reconstruction_and_sum",
+          "cuda_ms": 0.09705600142478943
+        },
+        {
+          "name": "basis.temporal_coefficients",
+          "cuda_ms": 0.16409599781036377
+        },
+        {
+          "name": "basis.path_projection",
+          "cuda_ms": 1.5177600383758545
+        },
+        {
+          "name": "basis.private_fft_filters",
+          "cuda_ms": 0.7283200025558472
+        },
+        {
+          "name": "basis.reconstruction_and_sum",
+          "cuda_ms": 0.09484799951314926
+        },
+        {
+          "name": "basis.temporal_coefficients",
+          "cuda_ms": 0.16524800658226013
+        },
+        {
+          "name": "basis.path_projection",
+          "cuda_ms": 1.4999359846115112
+        },
+        {
+          "name": "basis.private_fft_filters",
+          "cuda_ms": 0.7307199835777283
+        },
+        {
+          "name": "basis.reconstruction_and_sum",
+          "cuda_ms": 0.0984639972448349
+        },
+        {
+          "name": "basis.temporal_coefficients",
+          "cuda_ms": 0.16527999937534332
+        },
+        {
+          "name": "basis.path_projection",
+          "cuda_ms": 1.5116480588912964
+        },
+        {
+          "name": "basis.private_fft_filters",
+          "cuda_ms": 0.7280960083007812
+        },
+        {
+          "name": "basis.reconstruction_and_sum",
+          "cuda_ms": 0.09391999989748001
+        },
+        {
+          "name": "basis.temporal_coefficients",
+          "cuda_ms": 0.16368000209331512
+        },
+        {
+          "name": "basis.path_projection",
+          "cuda_ms": 1.5139520168304443
+        },
+        {
+          "name": "basis.private_fft_filters",
+          "cuda_ms": 0.7264000177383423
+        },
+        {
+          "name": "basis.reconstruction_and_sum",
+          "cuda_ms": 0.09398400038480759
+        },
+        {
+          "name": "basis.temporal_coefficients",
+          "cuda_ms": 0.1650879979133606
+        },
+        {
+          "name": "basis.path_projection",
+          "cuda_ms": 1.5091520547866821
+        },
+        {
+          "name": "basis.private_fft_filters",
+          "cuda_ms": 0.7337279915809631
+        },
+        {
+          "name": "basis.reconstruction_and_sum",
+          "cuda_ms": 0.09350399672985077
+        },
+        {
+          "name": "basis.temporal_coefficients",
+          "cuda_ms": 0.16460800170898438
+        },
+        {
+          "name": "basis.path_projection",
+          "cuda_ms": 1.5137920379638672
+        },
+        {
+          "name": "basis.private_fft_filters",
+          "cuda_ms": 0.7322559952735901
+        },
+        {
+          "name": "basis.reconstruction_and_sum",
+          "cuda_ms": 0.09059199690818787
+        },
+        {
+          "name": "basis.temporal_coefficients",
+          "cuda_ms": 0.16521599888801575
+        },
+        {
+          "name": "basis.path_projection",
+          "cuda_ms": 1.5066560506820679
+        },
+        {
+          "name": "basis.private_fft_filters",
+          "cuda_ms": 0.7311040163040161
+        },
+        {
+          "name": "basis.reconstruction_and_sum",
+          "cuda_ms": 0.09603200107812881
+        },
+        {
+          "name": "basis.temporal_coefficients",
+          "cuda_ms": 1.2711039781570435
+        },
+        {
+          "name": "basis.path_projection",
+          "cuda_ms": 1.258239984512329
+        },
+        {
+          "name": "basis.private_fft_filters",
+          "cuda_ms": 0.28563201427459717
+        },
+        {
+          "name": "basis.reconstruction_and_sum",
+          "cuda_ms": 0.02812799997627735
+        },
+        {
+          "name": "basis.final_output_export",
+          "cuda_ms": 0.11670400202274323
+        }
+      ],
+      "cuda_event_span_ms": 62.98521603085101,
+      "pool_used_bytes": 328723968,
+      "pool_reserved_bytes": 748660736,
+      "max_checkpoint_pool_used_bytes": 361918976,
+      "pool_measurement_note": "Allocator snapshots include persistent plans/cache; not process-wide peak VRAM",
+      "profile": true,
+      "no_cpu_fallback": true,
+      "precision": "complex128/float64"
+    }
+  ],
+  "includes": [
+    "private input copies/uploads",
+    "fresh delay map and GPU temporal construction",
+    "all paths and intra-block Doppler",
+    "private FFTs",
+    "coherent receiver sum",
+    "synchronized final receiver output export"
+  ],
+  "excludes": [
+    "source generation",
+    "scene propagation",
+    "sample-clock resampling",
+    "noise/filter/ADC",
+    "AirSim",
+    "transport/queues"
+  ],
+  "scope_note": "Synthetic changing channels; equal clocks; entire-window synchronized renderer service, not a continuous receiver pipeline",
+  "cpu_quota": "max 100000",
+  "source_sha256": {
+    "src/airsim_rf/research/doppler_basis_cuda.py": "75997dbd56786eda52f8702b45ba0aed509a438bb6e7ffb4ac468d658280c27d",
+    "src/airsim_rf/research/doppler_basis.py": "ddf980df84d6f001a7c9232ecac88cc5ea009550f76dad7b848a3d5785538f1c",
+    "benchmarks/benchmark_doppler_basis_gpu.py": "7b90edd707c885248ea5029fec6fd2ca7d988b368d921098954b8ae82b4fe0d0",
+    "requirements-p100-cuda.txt": "13d2db69a2da0d35eb91efd7a79e3cade7ab16d17e87e85c75cdfdc96cca5ed1"
+  }
+}
