@@ -152,7 +152,8 @@ class SDRNetworkReceiver:
                  max_depth=1, samples_per_link=1028, seed=42, renderer="numpy",
                  path_tile=128, sample_tile=32, accumulation="partial",
                  replay=True, max_render_lanes=1_000_000, link_diagnostics=True,
-                 batch_reduction="auto"):
+                 batch_reduction="auto", continuous=False, max_delay_s=100e-6,
+                 max_doppler_hz=2500., block_samples=2048, fft_workers=2):
         if not emitters or set(emitters) != set(scene.transmitters):
             raise ValueError("Supply one emitter for every scene transmitter")
         if not scene.receivers:
@@ -161,7 +162,7 @@ class SDRNetworkReceiver:
             raise ValueError("At most one surface interaction is supported")
         if isinstance(samples_per_link, bool) or not isinstance(samples_per_link, int) or samples_per_link < 2:
             raise ValueError("At least two attempted samples per link required")
-        if renderer not in ("numpy", "direct-llvm", "direct-cuda", "batched-llvm", "batched-cuda"):
+        if renderer not in ("numpy", "direct-llvm", "direct-cuda", "batched-llvm", "batched-cuda", "basis-cpu", "basis-cuda"):
             raise ValueError("Unknown renderer")
         if accumulation not in ("partial", "local"):
             raise ValueError("accumulation must be partial or local")
@@ -169,7 +170,12 @@ class SDRNetworkReceiver:
         if renderer != "numpy":
             from .rendering import ToneWaveform, LFMChirpWaveform
             from .sampled_waveform import SampledWaveform
-            allowed = (ToneWaveform, LFMChirpWaveform, SampledWaveform) if renderer.startswith('batched-') else (ToneWaveform, LFMChirpWaveform)
+            if renderer.startswith('basis-'):
+                allowed = (SampledWaveform,)
+            elif renderer.startswith('batched-'):
+                allowed = (ToneWaveform, LFMChirpWaveform, SampledWaveform)
+            else:
+                allowed = (ToneWaveform, LFMChirpWaveform)
             if any(not isinstance(e.waveform, allowed) for e in emitters.values()):
                 raise TypeError("Renderer requires supported waveform descriptors for every emitter")
         for size in (path_tile, sample_tile):
@@ -185,12 +191,32 @@ class SDRNetworkReceiver:
             self.batched_renderer = BatchedPathRenderer(backend=renderer.removeprefix("batched-"),
                 path_tile=path_tile, sample_tile=sample_tile, replay=replay, max_lanes=max_render_lanes,
                 reduction=batch_reduction)
+        self.basis_renderer = None
+        if renderer.startswith("basis-"):
+            if any(e.clock.error_ppm != 0 for e in emitters.values()):
+                raise ValueError("Basis renderer requires equal nominal source and receiver clocks")
+            options = dict(sample_rate_hz=profile.sample_rate_hz, max_delay_s=max_delay_s,
+                           max_doppler_hz=max_doppler_hz, block_samples=block_samples)
+            if renderer == "basis-cuda":
+                from .research.doppler_basis_cuda import CudaDopplerBasisRenderer
+                self.basis_renderer = CudaDopplerBasisRenderer(**options, batch_links=len(emitters), projection="warp")
+            else:
+                from .research.doppler_basis import DopplerBasisRenderer
+                self.basis_renderer = DopplerBasisRenderer(**options, fft_workers=fft_workers)
+        if not isinstance(continuous, bool):
+            raise ValueError("continuous must be boolean")
+        self.continuous = continuous
+        self._next_time_ns = None
         self.scene, self.profile, self.seed = scene, profile, seed
         self.tx_names, self.rx_names = tuple(scene.transmitters), tuple(scene.receivers)
         self.emitters = dict(emitters)
         self.clocks = {name: RadioClock() for name in self.rx_names} if clocks is None else dict(clocks)
         if set(self.clocks) != set(self.rx_names):
             raise ValueError("Supply one clock for every scene receiver")
+        if self.basis_renderer is not None and any(c.error_ppm != 0 for c in self.clocks.values()):
+            raise ValueError("Basis renderer requires equal nominal source and receiver clocks")
+        if self.continuous and len({c.rate_scale for c in self.clocks.values()}) != 1:
+            raise ValueError("Continuous multi-receiver capture requires equal sample rates")
         # The filter approximation is only valid for inputs already inside the
         # ADC Nyquist interval. Do not silently alias an out-of-band blocker.
         for clock in self.clocks.values():
@@ -217,6 +243,8 @@ class SDRNetworkReceiver:
         self.noise_bandwidth_fraction = float(np.mean(np.abs(response)**2))
         self.rngs = {name: np.random.default_rng(child) for name, child in
                      zip(self.rx_names, np.random.SeedSequence(seed).spawn(len(self.rx_names)))}
+        self.filter_states = {name: np.zeros((len(self.sos), 2), dtype=np.complex128) for name in self.rx_names}
+        self.last_receiver_ms = 0.
         self.last_channel_ms = 0.
         self.last_render_ms = 0.
         self.last_render_metrics = []
@@ -228,6 +256,8 @@ class SDRNetworkReceiver:
             raise ValueError("sim_time_ns must be an integer")
         if tuple(self.scene.transmitters) != self.tx_names or tuple(self.scene.receivers) != self.rx_names:
             raise ValueError("Devices changed after receiver construction")
+        if self.continuous and self._next_time_ns is not None and abs(sim_time_ns-self._next_time_ns) > .51:
+            raise ValueError("Continuous capture requires consecutive sample-aligned windows")
         start = perf_counter()
         with profile_range("rf.channel"):
             with profile_range("rf.channel.solve"):
@@ -247,7 +277,8 @@ class SDRNetworkReceiver:
         captures = {}
         self.last_render_ms = 0.
         self.last_render_metrics = []
-        warmup = 256
+        warmup = 0 if self.continuous else 256
+        self.last_receiver_ms = 0.
         for ri, rx_name in enumerate(self.rx_names):
             clock = self.clocks[rx_name]
             actual_rate = self.profile.sample_rate_hz * clock.rate_scale
@@ -260,7 +291,7 @@ class SDRNetworkReceiver:
             total = np.zeros(num_samples+warmup, dtype=np.complex128)
             link_power, retained = {}, {}
             batched_signals = None
-            if self.batched_renderer is not None:
+            if self.batched_renderer is not None or self.basis_renderer is not None:
                 from .batched_rendering import PathRenderJob
                 jobs = [PathRenderJob(a[ri, ti], tau[ri, ti], doppler[ri, ti], emitter.waveform,
                             amplitude_scale=np.sqrt(self.profile.impedance_ohm*emitter.transmit_power_w),
@@ -268,13 +299,35 @@ class SDRNetworkReceiver:
                             frequency_offset_hz=self.profile.carrier_hz*emitter.clock.error_ppm*1e-6,
                             phase_offset_rad=emitter.clock.phase_rad)
                         for ti, emitter in enumerate(self.emitters[name] for name in self.tx_names)]
+                if self.basis_renderer is not None:
+                    from .sampled_waveform import SampledWaveform
+                    # Every directed link pays for a private sampled source allocation.
+                    # Sionna pads absent paths with delay -1. Remove only padding;
+                    # every physical path, including zero-gain paths, is retained.
+                    jobs = [PathRenderJob(j.coefficients[j.delays_s >= 0], j.delays_s[j.delays_s >= 0],
+                                j.doppler_hz[j.delays_s >= 0], SampledWaveform(j.waveform.samples, j.waveform.sample_rate_hz,
+                                    j.waveform.reference_time_ns, j.waveform.interpolation_taps, j.waveform.boundary),
+                                amplitude_scale=j.amplitude_scale, frequency_offset_hz=j.frequency_offset_hz,
+                                phase_offset_rad=j.phase_offset_rad) for j in jobs]
                 with profile_range("rf.iq.waveforms"):
                     render_start = perf_counter()
-                    batched_signals = self.batched_renderer.render(jobs, sample_rate_hz=actual_rate,
-                        num_samples=num_samples+warmup, sim_time_ns=warmup_ns,
-                        channel_epoch_ns=sim_time_ns, sum_output=not self.link_diagnostics)
+                    if self.basis_renderer is not None:
+                        if self.renderer == "basis-cuda":
+                            batched_signals = self.basis_renderer.render(jobs, num_samples=num_samples+warmup,
+                                sim_time_ns=warmup_ns, channel_epoch_ns=sim_time_ns, sum_output=not self.link_diagnostics)
+                        else:
+                            batched_signals = self.basis_renderer.render(jobs, num_samples=num_samples+warmup,
+                                sim_time_ns=warmup_ns, channel_epoch_ns=sim_time_ns)
+                            if not self.link_diagnostics:
+                                batched_signals = batched_signals.sum(axis=0)
+                        self.last_render_metrics.append(dict(self.basis_renderer.last_metrics))
+                    else:
+                        batched_signals = self.batched_renderer.render(jobs, sample_rate_hz=actual_rate,
+                            num_samples=num_samples+warmup, sim_time_ns=warmup_ns,
+                            channel_epoch_ns=sim_time_ns, sum_output=not self.link_diagnostics)
                     self.last_render_ms += 1000*(perf_counter()-render_start)
-                    self.last_render_metrics.append(dict(self.batched_renderer.last_metrics))
+                    if self.batched_renderer is not None:
+                        self.last_render_metrics.append(dict(self.batched_renderer.last_metrics))
                 if not self.link_diagnostics:
                     total = batched_signals*lo
             for ti, tx_name in enumerate(self.tx_names):
@@ -316,6 +369,7 @@ class SDRNetworkReceiver:
                 with profile_range("rf.iq.link_diagnostics"):
                     filtered_link = sosfilt(self.sos, signal)[warmup:]
                     link_power[tx_name] = float(np.mean(np.abs(filtered_link)**2)/self.profile.impedance_ohm)
+            receiver_started = perf_counter()
             with profile_range("rf.receiver.noise_filter_adc"):
                 noise_bandwidth = actual_rate * self.noise_bandwidth_fraction
                 noise_power = BOLTZMANN * self.profile.temperature_k * noise_bandwidth * 10**(self.profile.noise_figure_db/10)
@@ -325,11 +379,18 @@ class SDRNetworkReceiver:
                     total += np.sqrt(variance/2)*(rng.standard_normal(total.size)+1j*rng.standard_normal(total.size))
                 else:
                     noise_power = 0.
-                analog = sosfilt(self.sos, total)[warmup:].astype(np.complex64)
+                if self.continuous:
+                    filtered, self.filter_states[rx_name] = sosfilt(self.sos, total, zi=self.filter_states[rx_name])
+                    analog = filtered.astype(np.complex64)
+                else:
+                    analog = sosfilt(self.sos, total)[warmup:].astype(np.complex64)
                 codes, digital, step, clipping = quantize_iq(analog,
                         full_scale_dbm=self.profile.input_full_scale_dbm,
                         impedance_ohm=self.profile.impedance_ohm, bits=self.profile.adc_bits)
                 captures[rx_name] = SDRCapture(analog, digital, codes, sim_time_ns,
                         self.profile.sample_rate_hz, actual_rate, step, clipping, link_power,
                         float(noise_power), noise_bandwidth, retained)
+            self.last_receiver_ms += 1000*(perf_counter()-receiver_started)
+        if self.continuous:
+            self._next_time_ns = sim_time_ns+num_samples/(self.profile.sample_rate_hz*self.clocks[self.rx_names[0]].rate_scale)*1e9
         return captures

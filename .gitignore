@@ -12,3 +12,6 @@ research/
 recordings/
 # Keep large GPU profiler traces / IQ local; commit Markdown + small JSON/logs.
 results/profiling/*/raw/
+
+# End-to-end receiver recordings are regenerated locally.
+results/end_to_end/*/captures/

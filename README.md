@@ -313,3 +313,7 @@ do not encode the phase information needed to reconstruct those signals.
 
 For processing-step columns, **median ± standard deviation**, and a separate
 **p95** table, see [the consolidated profiling breakdown](RUNTIME_STATUS.md#processing-steps-by-scenario-and-configuration).
+
+[End-to-end RF tests and complete-pipeline collection](END_TO_END.md) connect
+the basis renderer to moving terrain propagation, continuous receiver filtering,
+ADC and a network consumer. Live AirSim and distributed SDR coverage are described explicitly.

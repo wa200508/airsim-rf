@@ -257,3 +257,12 @@ new measurements must state hardware, backend, links, valid paths, sample count,
 signal duration, precision, interpolation, delay/Doppler bounds, included work,
 accuracy status, warmups and timing distribution. Publish full-service flight
 measurements separately from renderer-only results.
+
+## End-to-end RF pipeline tests
+
+See [END_TO_END.md](END_TO_END.md) for the real-terrain scene-to-consumer test,
+the direct-renderer integration oracle, and CPU/P100 collection commands.
+The default trajectory source exercises the AirSim bridge contract; it does
+not execute AirSim physics/RPC. Full distributed continuous-SDR coverage is
+still outstanding. New full-pipeline results are distinct from renderer-only
+results and do not replace the qualified synthetic stress workload.
