@@ -1,0 +1,208 @@
+......F....FF......FFF                                                   [100%]
+=================================== FAILURES ===================================
+__________________ test_real_cuda_high_rank_projection[dense] __________________
+
+projection = 'dense'
+
+    @pytest.mark.parametrize('projection', ['gather', 'warp', 'dense'])
+    def test_real_cuda_high_rank_projection(projection):
+        gpu()
+        jobs = [replace(linked(42, 103), doppler_hz=linked(42, 103).doppler_hz*10), linked(53, 8)]
+        cfg = dict(sample_rate_hz=2e6, max_delay_s=100e-6, max_doppler_hz=25000, block_samples=512)
+        engine = CudaDopplerBasisRenderer(**cfg, projection=projection)
+>       actual = engine.render(jobs, num_samples=1025)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+repo/tests/test_doppler_basis_cuda.py:59: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+repo/src/airsim_rf/research/doppler_basis_cuda.py:305: in render
+    kernels.real[:] = cp.matmul(cp.ascontiguousarray(coeff.real), dense)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/opt/airsim-rf/.venv/lib/python3.12/site-packages/cupy/_core/_gufuncs.py:683: in __call__
+    self._apply_func_to_inputs(
+/opt/airsim-rf/.venv/lib/python3.12/site-packages/cupy/_core/_gufuncs.py:397: in _apply_func_to_inputs
+    func(*args, out=outs)
+cupy/_core/_routines_linalg.pyx:809: in cupy._core._routines_linalg.matmul
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+>   ???
+E   ImportError: libcublas.so.12: cannot open shared object file: No such file or directory
+
+cupy/_core/_routines_linalg.pyx:830: ImportError
+_________ test_real_cuda_private_jobs_all_paths_and_new_data[dense-1] __________
+
+batch_links = 1, projection = 'dense'
+
+    @pytest.mark.parametrize('batch_links', [1, 3])
+    @pytest.mark.parametrize('projection', ['gather', 'warp', 'dense'])
+    def test_real_cuda_private_jobs_all_paths_and_new_data(batch_links, projection):
+        gpu()
+        jobs = [linked(42, 64), linked(53, 103), linked(7, 8, taps=16), linked(11, 19)]
+        engine = CudaDopplerBasisRenderer(sample_rate_hz=2e6, max_delay_s=100e-6,
+                                          max_doppler_hz=2500, block_samples=256, batch_links=batch_links,
+                                          projection=projection)
+        kw = dict(num_samples=1025, channel_epoch_ns=-123000)
+>       output = engine.render(jobs, profile=True, **kw)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+repo/tests/test_doppler_basis_cuda.py:85: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+repo/src/airsim_rf/research/doppler_basis_cuda.py:305: in render
+    kernels.real[:] = cp.matmul(cp.ascontiguousarray(coeff.real), dense)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/opt/airsim-rf/.venv/lib/python3.12/site-packages/cupy/_core/_gufuncs.py:683: in __call__
+    self._apply_func_to_inputs(
+/opt/airsim-rf/.venv/lib/python3.12/site-packages/cupy/_core/_gufuncs.py:397: in _apply_func_to_inputs
+    func(*args, out=outs)
+cupy/_core/_routines_linalg.pyx:809: in cupy._core._routines_linalg.matmul
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+>   ???
+E   ImportError: libcublas.so.12: cannot open shared object file: No such file or directory
+
+cupy/_core/_routines_linalg.pyx:830: ImportError
+_________ test_real_cuda_private_jobs_all_paths_and_new_data[dense-3] __________
+
+batch_links = 3, projection = 'dense'
+
+    @pytest.mark.parametrize('batch_links', [1, 3])
+    @pytest.mark.parametrize('projection', ['gather', 'warp', 'dense'])
+    def test_real_cuda_private_jobs_all_paths_and_new_data(batch_links, projection):
+        gpu()
+        jobs = [linked(42, 64), linked(53, 103), linked(7, 8, taps=16), linked(11, 19)]
+        engine = CudaDopplerBasisRenderer(sample_rate_hz=2e6, max_delay_s=100e-6,
+                                          max_doppler_hz=2500, block_samples=256, batch_links=batch_links,
+                                          projection=projection)
+        kw = dict(num_samples=1025, channel_epoch_ns=-123000)
+>       output = engine.render(jobs, profile=True, **kw)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+repo/tests/test_doppler_basis_cuda.py:85: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+repo/src/airsim_rf/research/doppler_basis_cuda.py:305: in render
+    kernels.real[:] = cp.matmul(cp.ascontiguousarray(coeff.real), dense)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/opt/airsim-rf/.venv/lib/python3.12/site-packages/cupy/_core/_gufuncs.py:683: in __call__
+    self._apply_func_to_inputs(
+/opt/airsim-rf/.venv/lib/python3.12/site-packages/cupy/_core/_gufuncs.py:397: in _apply_func_to_inputs
+    func(*args, out=outs)
+cupy/_core/_routines_linalg.pyx:809: in cupy._core._routines_linalg.matmul
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+>   ???
+E   ImportError: libcublas.so.12: cannot open shared object file: No such file or directory
+
+cupy/_core/_routines_linalg.pyx:830: ImportError
+__ test_real_cuda_split_unix_epoch_cancellation_and_boundaries[dense-12000.0] __
+
+offset = 12000.0, projection = 'dense'
+
+    @pytest.mark.parametrize('offset', [12000., 12000.1234567, -12000.125])
+    @pytest.mark.parametrize('projection', ['gather', 'warp', 'dense'])
+    def test_real_cuda_split_unix_epoch_cancellation_and_boundaries(offset, projection):
+        gpu()
+        epoch = 1790000000000000000
+        source = replace(linked().waveform, reference_time_ns=epoch-200000)
+        job = PathRenderJob(np.array([1., -1.]), np.array([30e-6, 30e-6]),
+                            np.array([2500., -2500.]), source, frequency_offset_hz=offset)
+        engine = CudaDopplerBasisRenderer(sample_rate_hz=2e6, max_delay_s=100e-6, max_doppler_hz=2500,
+                                          projection=projection)
+>       full = engine.render([job], num_samples=1025, sim_time_ns=epoch, channel_epoch_ns=epoch)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+repo/tests/test_doppler_basis_cuda.py:106: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+repo/src/airsim_rf/research/doppler_basis_cuda.py:305: in render
+    kernels.real[:] = cp.matmul(cp.ascontiguousarray(coeff.real), dense)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/opt/airsim-rf/.venv/lib/python3.12/site-packages/cupy/_core/_gufuncs.py:683: in __call__
+    self._apply_func_to_inputs(
+/opt/airsim-rf/.venv/lib/python3.12/site-packages/cupy/_core/_gufuncs.py:397: in _apply_func_to_inputs
+    func(*args, out=outs)
+cupy/_core/_routines_linalg.pyx:809: in cupy._core._routines_linalg.matmul
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+>   ???
+E   ImportError: libcublas.so.12: cannot open shared object file: No such file or directory
+
+cupy/_core/_routines_linalg.pyx:830: ImportError
+_ test_real_cuda_split_unix_epoch_cancellation_and_boundaries[dense-12000.1234567] _
+
+offset = 12000.1234567, projection = 'dense'
+
+    @pytest.mark.parametrize('offset', [12000., 12000.1234567, -12000.125])
+    @pytest.mark.parametrize('projection', ['gather', 'warp', 'dense'])
+    def test_real_cuda_split_unix_epoch_cancellation_and_boundaries(offset, projection):
+        gpu()
+        epoch = 1790000000000000000
+        source = replace(linked().waveform, reference_time_ns=epoch-200000)
+        job = PathRenderJob(np.array([1., -1.]), np.array([30e-6, 30e-6]),
+                            np.array([2500., -2500.]), source, frequency_offset_hz=offset)
+        engine = CudaDopplerBasisRenderer(sample_rate_hz=2e6, max_delay_s=100e-6, max_doppler_hz=2500,
+                                          projection=projection)
+>       full = engine.render([job], num_samples=1025, sim_time_ns=epoch, channel_epoch_ns=epoch)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+repo/tests/test_doppler_basis_cuda.py:106: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+repo/src/airsim_rf/research/doppler_basis_cuda.py:305: in render
+    kernels.real[:] = cp.matmul(cp.ascontiguousarray(coeff.real), dense)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/opt/airsim-rf/.venv/lib/python3.12/site-packages/cupy/_core/_gufuncs.py:683: in __call__
+    self._apply_func_to_inputs(
+/opt/airsim-rf/.venv/lib/python3.12/site-packages/cupy/_core/_gufuncs.py:397: in _apply_func_to_inputs
+    func(*args, out=outs)
+cupy/_core/_routines_linalg.pyx:809: in cupy._core._routines_linalg.matmul
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+>   ???
+E   ImportError: libcublas.so.12: cannot open shared object file: No such file or directory
+
+cupy/_core/_routines_linalg.pyx:830: ImportError
+_ test_real_cuda_split_unix_epoch_cancellation_and_boundaries[dense--12000.125] _
+
+offset = -12000.125, projection = 'dense'
+
+    @pytest.mark.parametrize('offset', [12000., 12000.1234567, -12000.125])
+    @pytest.mark.parametrize('projection', ['gather', 'warp', 'dense'])
+    def test_real_cuda_split_unix_epoch_cancellation_and_boundaries(offset, projection):
+        gpu()
+        epoch = 1790000000000000000
+        source = replace(linked().waveform, reference_time_ns=epoch-200000)
+        job = PathRenderJob(np.array([1., -1.]), np.array([30e-6, 30e-6]),
+                            np.array([2500., -2500.]), source, frequency_offset_hz=offset)
+        engine = CudaDopplerBasisRenderer(sample_rate_hz=2e6, max_delay_s=100e-6, max_doppler_hz=2500,
+                                          projection=projection)
+>       full = engine.render([job], num_samples=1025, sim_time_ns=epoch, channel_epoch_ns=epoch)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+repo/tests/test_doppler_basis_cuda.py:106: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+repo/src/airsim_rf/research/doppler_basis_cuda.py:305: in render
+    kernels.real[:] = cp.matmul(cp.ascontiguousarray(coeff.real), dense)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/opt/airsim-rf/.venv/lib/python3.12/site-packages/cupy/_core/_gufuncs.py:683: in __call__
+    self._apply_func_to_inputs(
+/opt/airsim-rf/.venv/lib/python3.12/site-packages/cupy/_core/_gufuncs.py:397: in _apply_func_to_inputs
+    func(*args, out=outs)
+cupy/_core/_routines_linalg.pyx:809: in cupy._core._routines_linalg.matmul
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+>   ???
+E   ImportError: libcublas.so.12: cannot open shared object file: No such file or directory
+
+cupy/_core/_routines_linalg.pyx:830: ImportError
+=========================== short test summary info ============================
+FAILED repo/tests/test_doppler_basis_cuda.py::test_real_cuda_high_rank_projection[dense]
+FAILED repo/tests/test_doppler_basis_cuda.py::test_real_cuda_private_jobs_all_paths_and_new_data[dense-1]
+FAILED repo/tests/test_doppler_basis_cuda.py::test_real_cuda_private_jobs_all_paths_and_new_data[dense-3]
+FAILED repo/tests/test_doppler_basis_cuda.py::test_real_cuda_split_unix_epoch_cancellation_and_boundaries[dense-12000.0]
+FAILED repo/tests/test_doppler_basis_cuda.py::test_real_cuda_split_unix_epoch_cancellation_and_boundaries[dense-12000.1234567]
+FAILED repo/tests/test_doppler_basis_cuda.py::test_real_cuda_split_unix_epoch_cancellation_and_boundaries[dense--12000.125]
+6 failed, 16 passed in 9.43s
