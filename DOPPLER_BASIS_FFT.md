@@ -292,6 +292,15 @@ this experiment.
 
 ## Related basis-emulation work
 
+The [channel-to-I/Q implementation review](IQ_RENDERING_REFERENCES.md) gives
+source-level comparisons with Sionna PHY, GNU Radio, NVIDIA's CUDA emulator,
+ACHEM/CHEM and HermesPy. It adds Kaltenberger et al. (2007) and Hofer, Xu and
+Zemen (2017) as delay/Doppler subspace precedents. Their reconstruction cost
+can be independent of physical path count after projection; their coefficient
+construction still depends on paths and basis dimensions. Their DPS bases,
+accuracy targets and tested delay support are not this prototype's Chebyshev
+derivation or a prediction of our speedup.
+
 [Hofer et al., *Real-Time Geometry-Based Wireless Channel Emulation*, IEEE TVT
 68(2), 2019, DOI 10.1109/TVT.2018.2888914](https://thomaszemen.org/papers/Hofer19-IEEETVT-paper.pdf)
 separates physical path generation from time-varying basis reconstruction.

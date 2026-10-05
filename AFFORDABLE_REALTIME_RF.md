@@ -197,6 +197,12 @@ reconstruction, overlap/history, stateful clocks and receiver filters.
 
 ### Concrete open implementations and publications
 
+The [2026-10-05 channel-to-I/Q review](IQ_RENDERING_REFERENCES.md) supplements
+these references with the Sionna PHY sample operator, ACHEM/CHEM and HermesPy,
+additional reduced-rank papers and a SimART comparison. It traces what the
+code actually filters and distinguishes sample-evolving Doppler from
+symbol-static taps or a common link frequency shift.
+
 1. **Hofer et al., “Real-Time Geometry-Based Wireless Channel Emulation,” IEEE
    TVT 68(2), 2019, DOI 10.1109/TVT.2018.2888914.**
    [Author PDF](https://thomaszemen.org/papers/Hofer19-IEEETVT-paper.pdf),

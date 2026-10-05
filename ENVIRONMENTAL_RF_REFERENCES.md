@@ -8,6 +8,13 @@ Documentation pages, executable examples, technical reports and conference
 presentations are identified separately below. A vendor demonstration establishes
 that a workflow exists; it does not independently validate our implementation.
 
+For the downstream waveform step, the **2026-10-05**
+[channel-to-I/Q implementation review](IQ_RENDERING_REFERENCES.md) adds inspected
+sample-processing code from Sionna PHY, GNU Radio, NVIDIA Sionna Research Kit,
+ACHEM/CHEM and HermesPy, plus reduced-rank channel-emulation papers and the
+SimART comparison. It documents fractional-delay and Doppler assumptions
+separately from the environmental modeling in this review.
+
 **The architecture has strong precedents.** MathWorks publishes site-specific
 bistatic terrain clutter that produces I/Q. RadarSimPy publishes a moving
 terrain radar-altimeter example with complex samples and an altitude waterfall.

@@ -44,8 +44,12 @@ continuous 120 Hz target remain unverified.
 For an architectural change, [Doppler-basis FFT rendering](DOPPLER_BASIS_FFT.md)
 demonstrates about 22 times faster CPU rendering of arbitrary private sampled
 I/Q with 1,028 valid paths/link and time-evolving Doppler. It is an equal-clock
-research prototype with explicit numerical bounds; GPU and full receiver
-qualification remain work.
+research prototype with explicit numerical bounds. The
+[qualified P100 measurements](results/profiling/p100-basis-optimized-full-20261004/REPORT.md)
+now record 56.17 ms median for 100 independent TX inputs into one RX, with
+the timestamp phase fix and 76 CUDA correctness tests passing. The remaining
+mean renderer gap to 120 Hz is about 6.80 times; full receiver qualification
+remains work.
 
 See [SDR update rate and latency](SDR_RUNTIME.md) for complete channel-to-ADC
 CPU measurements and conditional GPU limits. The [code-derived scaling model](SDR_COMPLEXITY.md)
@@ -87,6 +91,15 @@ the terrain relief, with a flat-ground control, a bandwidth comparison and raw
 complex samples to inspect.
 
 ## Published environmental RF precedents
+
+The [channel-to-I/Q implementation review](IQ_RENDERING_REFERENCES.md) traces
+sample rendering in Sionna PHY, GNU Radio, NVIDIA's CUDA channel emulator,
+ACHEM/CHEM and HermesPy, with citations to inspected code and reduced-rank
+delay/Doppler research. It explains which implementations preserve per-sample
+evolution, which freeze or simplify channels, and how they relate to our
+projection bottleneck. SimART is compared as a scene/channel integration
+platform; its inspected main runner evaluates link metrics rather than
+rendering continuous receiver I/Q.
 
 The [detailed comparison with published implementations](ENVIRONMENTAL_RF_REFERENCES.md)
 documents how this project relates to MathWorks terrain-clutter I/Q examples,
