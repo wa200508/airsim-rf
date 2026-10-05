@@ -1,5 +1,7 @@
 # Distributed AirSim RF simulation and AMS-GRA
 
+**Runtime context (2026-10-05):** Deployment architecture and protocol/CPU checks do not qualify full moving-scene runtime or multi-GPU scaling. See [current runtime and wall-clock costs](RUNTIME_STATUS.md) for comparable measurements, hardware, exclusions and ten-minute estimates.
+
 AirSim is the physics/time authority. One persistent Sionna RT process computes
 each receiver's monostatic FMCW echoes. Assign one NVIDIA GPU to each receiver;
 workers can run on one host or separate LAN hosts. The coordinator itself needs

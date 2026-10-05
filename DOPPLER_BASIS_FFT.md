@@ -1,5 +1,7 @@
 # Change the rendering architecture: all-path Doppler basis and FFTs
 
+**Runtime context (2026-10-05):** The 22× figure below compares two CPU algorithms on an earlier host and small link counts. It is not a real-time ratio or fleet speedup. Qualified P100 results are now available separately. See [current runtime and wall-clock costs](RUNTIME_STATUS.md) for comparable measurements, hardware, exclusions and ten-minute estimates.
+
 The batched direct renderer is useful as a reference, but its dominant work
 still scales with physical paths times output samples times interpolation
 support. A 10–15% capture improvement does not resolve the target workload.
@@ -10,7 +12,8 @@ The new, opt-in CPU research implementation is
 [matched benchmark](benchmarks/benchmark_doppler_basis.py). It is separate from
 the receiver backends. It demonstrates approximately **22 times faster
 sampled-I/Q rendering** for the declared synthetic workload below. It does
-not demonstrate complete 120 Hz service, GPU performance or the $5,000 target.
+not demonstrate complete 120 Hz service or the $5,000 target. This initial CPU
+experiment predates the [qualified P100 renderer collection](RUNTIME_STATUS.md).
 
 ## Physical model retained
 

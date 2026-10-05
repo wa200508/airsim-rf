@@ -1,5 +1,7 @@
 # A practical route to continuous 120 Hz RF simulation
 
+**Runtime context (2026-10-05):** Architecture research and conditional sizing, not a demonstrated $5,000 real-time deployment. Later P100 measurements supersede statements about unmeasured GPU rendering, not the study’s historical data. See [current runtime and wall-clock costs](RUNTIME_STATUS.md) for comparable measurements, hardware, exclusions and ten-minute estimates.
+
 Research date: 2026-10-04. Target supplied by the user: approximately **$5,000
 for total compute**, 100 transmitters, 10 receivers, continuous ESM/comms I/Q,
 moving platforms, and first-order environmental multipath. The initial sample

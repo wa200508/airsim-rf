@@ -1,5 +1,7 @@
 # Optimizations with independent transmitter data
 
+**Runtime context (2026-10-05):** Historical direct-renderer accumulation experiments and bandwidth accounting; preserve independent buffers, but use the current qualified basis measurements for achieved throughput. See [current runtime and wall-clock costs](RUNTIME_STATUS.md) for comparable measurements, hardware, exclusions and ten-minute estimates.
+
 The target remains 100 independent transmitters, 10 receivers, continuous
 2 MS/s I/Q and 120 Hz channel updates, retaining full first-order path coverage
 and individual narrowband Doppler evolution. The compute ceiling is $5,000.

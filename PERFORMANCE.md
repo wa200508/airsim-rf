@@ -1,5 +1,7 @@
 # RF timing versus a 120 Hz simulation
 
+**Runtime context (2026-10-05):** Historical small point-target radar/chirp measurements, not continuous multi-emitter I/Q or full environmental multipath. See [current runtime and wall-clock costs](RUNTIME_STATUS.md) for comparable measurements, hardware, exclusions and ten-minute estimates.
+
 The current accepted assumptions and updated results are in
 [PER_PULSE_RUNTIME.md](PER_PULSE_RUNTIME.md): one channel epoch per pulse and
 at most one scene interaction, with compact coefficients and analytic Doppler.

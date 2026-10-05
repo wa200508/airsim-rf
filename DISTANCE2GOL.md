@@ -1,5 +1,7 @@
 # Off-the-shelf radar profile: Infineon Distance2GoL
 
+**Runtime context (2026-10-05):** A small scheduled radar hardware profile, not the arbitrary-waveform continuous network workload. See [current runtime and wall-clock costs](RUNTIME_STATUS.md) for comparable measurements, hardware, exclusions and ten-minute estimates.
+
 The new default hardware profile is based on the purchasable
 [Infineon DEMO DISTANCE2GOL kit](https://www.infineon.com/evaluation-board/DEMO-DISTANCE2GOL)
 (order code `DEMODISTANCE2GOLTOBO1`). It combines the BGT24LTR11 RF shield and

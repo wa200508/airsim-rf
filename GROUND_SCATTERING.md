@@ -1,5 +1,7 @@
 # First-order ground scattering: both TX and RX antenna coverage
 
+**Runtime context (2026-10-05):** This guide measures channel generation and scene-dependent surviving paths. Sampling attempts are not guaranteed valid paths, and channel timing excludes continuous sample rendering. See [current runtime and wall-clock costs](RUNTIME_STATUS.md) for comparable measurements, hardware, exclusions and ten-minute estimates.
+
 For primary-source comparisons with MathWorks, Ansys, Remcom, NVIDIA and
 RadarSimPy, see [published environmental RF precedents](ENVIRONMENTAL_RF_REFERENCES.md).
 The report covers terrain reflectivity, phase consistency, coherent I/Q

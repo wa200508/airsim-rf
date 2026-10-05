@@ -1,5 +1,7 @@
 # Canonical AMS-GRA starter-kit compatibility
 
+**Runtime context (2026-10-05):** Protocol/model compatibility is separate from real-time execution and complete distributed flight qualification. See [current runtime and wall-clock costs](RUNTIME_STATUS.md) for comparable measurements, hardware, exclusions and ten-minute estimates.
+
 Checked on 2026-10-03 against the sources supplied for this integration:
 
 - Documentation: https://open-arsenal.gitlab.io/ams-gra/hello-world-sk/getting-started/

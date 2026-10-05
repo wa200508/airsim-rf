@@ -1,5 +1,7 @@
 # Updated P100 test: Doppler-basis FFT rendering
 
+**Runtime context (2026-10-05):** Collection instructions and renderer-only qualification. GPU compatibility and 120 Hz capacity must be read with the tested workload and excluded stages. See [current runtime and wall-clock costs](RUNTIME_STATUS.md) for comparable measurements, hardware, exclusions and ten-minute estimates.
+
 Branch: **`profiling/p100`**. This branch includes the newer architecture and
 preserves the previously published P100/legacy Sionna results.
 

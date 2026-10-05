@@ -1,5 +1,7 @@
 # Runtime assessment: 100 transmitters, 10 receivers
 
+**Runtime context (2026-10-05):** Historical depth-three propagation sizing and conditional GPU query arithmetic; not a current continuous-I/Q service benchmark. See [current runtime and wall-clock costs](RUNTIME_STATUS.md) for comparable measurements, hardware, exclusions and ten-minute estimates.
+
 **Updated baseline:** [PER_PULSE_RUNTIME.md](PER_PULSE_RUNTIME.md) applies the
 accepted one-solve-per-pulse, depth-one model, compact coefficients and new
 measurements. This document preserves the original depth-three assessment.

@@ -1,5 +1,7 @@
 # Run and publish P100 profiling measurements
 
+**Runtime context (2026-10-05):** The older current-stack/legacy collectors have separate propagation and renderer scopes. Use the optimized basis collection for the current comparable continuous-I/Q timing. See [current runtime and wall-clock costs](RUNTIME_STATUS.md) for comparable measurements, hardware, exclusions and ten-minute estimates.
+
 For the **updated Doppler-basis FFT test on `profiling/p100`**, use
 [the CuPy/CUDA 12.2 P100 guide](P100_BASIS_PROFILING.md). Its one-command run
 measures 100 private transmitter streams, all-valid paths and complete 120 Hz

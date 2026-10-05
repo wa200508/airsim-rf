@@ -1,5 +1,7 @@
 # Runtime metrics for one GPU per receiver
 
+**Runtime context (2026-10-05):** Historical channel-only CPU measurements and hypothetical GPU query rates. Sub-millisecond ray arithmetic is not complete GPU renderer latency. See [current runtime and wall-clock costs](RUNTIME_STATUS.md) for comparable measurements, hardware, exclusions and ten-minute estimates.
+
 See [the code-derived scaling model](SDR_COMPLEXITY.md) for stage-by-stage
 complexity, CPU prediction checks and explicit GPU implementation estimates.
 
@@ -87,8 +89,9 @@ worker latency = host preparation + proposals + scene queries + RF fields
                + compaction + device/host transfers + IQ synthesis + transport
 ```
 
-Only the channel portion is currently benchmarked. GPU-resident proposals and
-IQ synthesis are future work. A 120 Hz physics tick can advance poses while RF
+Only the channel portion was benchmarked in this historical study. GPU-resident
+proposals and a complete scene-to-ADC pipeline remain work; the separate
+basis I/Q renderer now has qualified P100 measurements. A 120 Hz physics tick can advance poses while RF
 workers schedule pulse epochs separately; this does not remove the required RF
 throughput or establish acceptable latency. Neither a specific GPU model nor a
 minimum VRAM capacity is validated yet. CUDA capability and compatibility with

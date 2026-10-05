@@ -1,5 +1,7 @@
 # SDR runtime: update rate and latency
 
+**Runtime context (2026-10-05):** Historical scene-to-ADC tone captures contain only 4,096 output samples (2.048 ms at 2 MS/s), with scene-dependent surviving paths. Later arbitrary-I/Q GPU rendering is measured separately. See [current runtime and wall-clock costs](RUNTIME_STATUS.md) for comparable measurements, hardware, exclusions and ten-minute estimates.
+
 See [the code-derived scaling model](SDR_COMPLEXITY.md) for stage-by-stage
 complexity, CPU prediction checks and explicit GPU implementation estimates.
 
@@ -7,8 +9,9 @@ Measured 2026-10-03 against the Pluto-class receiver introduced in commit
 279787aa181172fe5d95c14aaa5f61c729e9f701. These measurements include finished ADC
 I/Q. Earlier propagation-only reports do not measure this complete pipeline.
 **The present CPU implementation is suitable for offline simulation. Selecting
-CUDA alone cannot make its CPU I/Q synthesis run at 120 or 200 Hz.** A fully
-GPU-resident implementation has not been benchmarked or implemented here.
+CUDA alone cannot make its CPU I/Q synthesis run at 120 or 200 Hz.** This older scene-to-ADC pipeline has not been fully ported to GPU.
+The separate basis renderer now has qualified P100 measurements; see
+[RUNTIME_STATUS.md](RUNTIME_STATUS.md).
 
 ## What the two numbers mean
 

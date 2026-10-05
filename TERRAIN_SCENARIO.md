@@ -1,5 +1,7 @@
 # Flat ground and DEM terrain: tested RF scenarios
 
+**Runtime context (2026-10-05):** Offline selected epochs and waveform plots demonstrate terrain effects, not a continuously advancing 120 Hz end-to-end flight. See [current runtime and wall-clock costs](RUNTIME_STATUS.md) for comparable measurements, hardware, exclusions and ten-minute estimates.
+
 For a clear view of individual terrain features in I/Q, see the
 [focused beam scan and bandwidth comparison](TERRAIN_SIGNATURE.md). The
 aggregate scenario below tests many links; it is not a terrain imaging scan.

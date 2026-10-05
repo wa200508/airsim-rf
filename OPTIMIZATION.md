@@ -1,5 +1,7 @@
 # Exhaustive single-bounce optimization
 
+**Runtime context (2026-10-05):** Historical tiny-scene LoS/specular optimization with 144 surviving paths. Channel timing excludes I/Q generation and distributed diffuse clutter. See [current runtime and wall-clock costs](RUNTIME_STATUS.md) for comparable measurements, hardware, exclusions and ten-minute estimates.
+
 **Scope correction:** the 144-path benchmark below measures retained LoS and
 specular paths in a tiny scene. It has no distributed diffuse ground return and
 does not establish clutter coverage. Both antenna patterns weight its fields;

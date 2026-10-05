@@ -1,5 +1,7 @@
 # Direct path I/Q rendering
 
+**Runtime context (2026-10-05):** Direct-path reference and earlier implementation measurements, not the current qualified basis-renderer capacity. See [current runtime and wall-clock costs](RUNTIME_STATUS.md) for comparable measurements, hardware, exclusions and ten-minute estimates.
+
 Branch: `optimization/direct-path-renderer`, based on `profiling/p100`.
 
 The renderer retains every valid channel path separately. It does not convert

@@ -1,5 +1,7 @@
 # Batched private-transmitter rendering
 
+**Runtime context (2026-10-05):** Historical CPU optimization. The 243 ms service case uses tones, about 42,500 surviving paths and 2.048 ms of output; it is not the newer all-valid-path continuous-window GPU case. See [current runtime and wall-clock costs](RUNTIME_STATUS.md) for comparable measurements, hardware, exclusions and ten-minute estimates.
+
 Branch: `optimization/direct-path-renderer`. The new `batched-llvm` and
 `batched-cuda` SDR backends batch independent link jobs and replay compiled
 execution. They also accept arbitrary sampled I/Q. Existing renderer defaults
