@@ -13,6 +13,8 @@ parser.add_argument('--output', type=Path, required=True)
 parser.add_argument('--stage', choices=('projections', 'filters', 'blocks'), required=True)
 parser.add_argument('--projection', choices=('gather', 'warp', 'dense'), default='warp')
 parser.add_argument('--batch-links', type=int, default=8)
+parser.add_argument('--delay-map', choices=('double', 'single'), default='double')
+parser.add_argument('--fft-inplace', action='store_true')
 parser.add_argument('--iterations', type=int, default=10)
 args = parser.parse_args()
 out = args.output.resolve()
@@ -29,8 +31,8 @@ elif args.stage == 'filters':
              for sort, inplace in [('double', False), ('single', False), ('double', True), ('single', True)]]
 else:
     cases = [(f'block{block}', ['--projection', args.projection,
-              '--batch-links', str(args.batch_links), '--delay-map', 'single', '--fft-inplace',
-              '--block-samples', str(block)]) for block in [512, 1024, 2048, 4096, 8192]]
+              '--batch-links', str(args.batch_links), '--delay-map', args.delay_map,
+              '--block-samples', str(block)] + (['--fft-inplace'] if args.fft_inplace else [])) for block in [512, 1024, 2048, 4096, 8192]]
 manifest = dict(stage=args.stage, started_utc=datetime.now(timezone.utc).isoformat(),
     source_revision=subprocess.check_output(['git', '-C', str(ROOT), 'rev-parse', 'HEAD'], text=True).strip(),
     workload='100 independent TX / 1 RX, 1028 paths/link, 16667 samples, FP64/complex128; no concurrent GPU throughput runs',
