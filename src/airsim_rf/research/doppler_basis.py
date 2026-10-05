@@ -15,7 +15,7 @@ from scipy.special import gammaln, jv
 
 from ..batched_rendering import PathRenderJob
 from ..sampled_waveform import SampledWaveform
-from ..rendering import _epoch
+from ..rendering import _epoch, _oscillator_cycles
 
 
 def doppler_degree(max_doppler_hz, duration_s, tolerance):
@@ -168,7 +168,7 @@ class DopplerBasisRenderer:
                 first = link.max_lag-link.min_lag
                 result = np.sum(filtered[:, first:first+count]*basis, axis=0)
                 # Oscillator offsets are separate from physical Doppler rank.
-                oscillator_cycles = np.remainder(link.job.frequency_offset_hz*(int(sim_time_ns)*1e-9), 1.)
+                oscillator_cycles = _oscillator_cycles(link.job.frequency_offset_hz, sim_time_ns)
                 oscillator_cycles += link.job.frequency_offset_hz*(start+np.arange(count))/self.fs
                 result *= np.exp(2j*np.pi*np.remainder(oscillator_cycles, 1.))
                 output[j, start:start+count] = result

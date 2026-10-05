@@ -12,7 +12,7 @@ from scipy.fft import next_fast_len
 
 from .doppler_basis import DopplerBasisRenderer, doppler_degree
 from ..sampled_waveform import SampledWaveform
-from ..rendering import _epoch
+from ..rendering import _epoch, _oscillator_cycles
 
 
 def temporal_coefficients(xp, z, degree):
@@ -67,6 +67,50 @@ extern "C" __global__ void project(
 }
 '''
 
+# Each warp owns one lag and up to 32 basis coefficients. A weight is loaded
+# once and broadcast; the transposed coefficient layout makes rank lanes
+# contiguous. Every contributing path is retained in the original order.
+_PROJECT_WARP = r'''
+extern "C" __global__ void project_warp(
+    const int* starts, const double* interp, const double* coeff,
+    double* kernels, int paths, int taps, int rank, int support,
+    int min_lag, long long entries) {
+    long long thread = (long long)blockDim.x*blockIdx.x+threadIdx.x;
+    long long warp = thread/32;
+    int lane = thread%32, tiles = (rank+31)/32;
+    long long jobs = entries/((long long)rank*support);
+    if (warp >= jobs*support*tiles) return;
+    int k = warp%support, q = ((warp/support)%tiles)*32+lane;
+    int job = warp/((long long)support*tiles), lag = min_lag+k;
+    const int* row = starts+(long long)job*paths;
+    int first=0, last=0;
+    if (lane==0) {
+        int lo=0, hi=paths;
+        while (lo<hi) { int mid=(lo+hi)/2;
+            if (row[mid]<lag-taps+1) lo=mid+1; else hi=mid; }
+        first=lo; lo=0; hi=paths;
+        while (lo<hi) { int mid=(lo+hi)/2;
+            if (row[mid]<=lag) lo=mid+1; else hi=mid; }
+        last=lo;
+    }
+    first=__shfl_sync(0xffffffffu,first,0);
+    last=__shfl_sync(0xffffffffu,last,0);
+    double real=0., imag=0.;
+    for (int p=first; p<last; ++p) {
+        double w=lane==0 ? interp[((long long)job*paths+p)*taps+lag-row[p]] : 0.;
+        w=__shfl_sync(0xffffffffu,w,0);
+        if (q<rank) {
+            long long c=((long long)job*paths+p)*rank+q;
+            real+=w*coeff[2*c]; imag+=w*coeff[2*c+1];
+        }
+    }
+    if (q<rank) {
+        long long index=((long long)job*rank+q)*support+k;
+        kernels[2*index]=real; kernels[2*index+1]=imag;
+    }
+}
+'''
+
 _RECONSTRUCT = r'''
 extern "C" __global__ void reconstruct(
     const double* filtered, const double* offsets, const double* base_cycles,
@@ -97,13 +141,16 @@ extern "C" __global__ void reconstruct(
 
 class CudaDopplerBasisRenderer:
     def __init__(self, *, sample_rate_hz, max_delay_s, max_doppler_hz,
-                 block_samples=2048, temporal_tolerance=1e-10, batch_links=8):
+                 block_samples=2048, temporal_tolerance=1e-10, batch_links=8,
+                 projection='gather'):
         # Reuse parameter guards, but not CPU channel construction.
         self.config = DopplerBasisRenderer(sample_rate_hz=sample_rate_hz,
             max_delay_s=max_delay_s, max_doppler_hz=max_doppler_hz,
             block_samples=block_samples, temporal_tolerance=temporal_tolerance)
         if isinstance(batch_links, bool) or not isinstance(batch_links, int) or batch_links < 1:
             raise ValueError('Positive integer batch_links required')
+        if projection not in ('gather', 'warp', 'dense'):
+            raise ValueError('Projection must be gather, warp or dense')
         try:
             import cupy as cp
             if cp.cuda.runtime.getDeviceCount() < 1:
@@ -112,7 +159,10 @@ class CudaDopplerBasisRenderer:
         except Exception as exc:
             raise RuntimeError('CuPy CUDA unavailable; no CPU fallback') from exc
         self.cp, self.batch_links = cp, batch_links
-        self.project = cp.RawKernel(_PROJECT, 'project', options=('--std=c++11',))
+        self.projection = projection
+        self.project = cp.RawKernel(_PROJECT_WARP if projection == 'warp' else _PROJECT,
+                                   'project_warp' if projection == 'warp' else 'project',
+                                   options=('--std=c++11',))
         self.reconstruct = cp.RawKernel(_RECONSTRUCT, 'reconstruct', options=('--std=c++11',))
         self.last_metrics = {}
 
@@ -130,6 +180,7 @@ class CudaDopplerBasisRenderer:
         valid = np.zeros((count, paths), bool)
         private_input = np.zeros((count, num_samples+max_lag-min_lag), complex)
         offsets = np.empty(count)
+        base_cycles = np.empty(count)
         for j, job in enumerate(jobs):
             wave = job.waveform
             if wave.sample_rate_hz != cfg.fs or job.time_scale != 1.:
@@ -157,9 +208,10 @@ class CudaDopplerBasisRenderer:
             a[j, :n] = arrays[0]*job.amplitude_scale*np.exp(1j*job.phase_offset_rad)
             d[j, :n], fd[j, :n], valid[j, :n] = arrays[1], arrays[2], True
             offsets[j] = job.frequency_offset_hz
+            base_cycles[j] = _oscillator_cycles(job.frequency_offset_hz, sim_time_ns)
         # These transfers copy every private stream, even for equal descriptors.
         return dict(a=cp.asarray(a), d=cp.asarray(d), fd=cp.asarray(fd), valid=cp.asarray(valid),
-                    source=cp.asarray(private_input), offsets=cp.asarray(offsets),
+                    source=cp.asarray(private_input), offsets=cp.asarray(offsets), base_cycles=cp.asarray(base_cycles),
                     count=count, paths=paths, half=half, min_lag=min_lag, max_lag=max_lag)
 
     def render(self, jobs, *, num_samples, sim_time_ns=0, channel_epoch_ns=None,
@@ -226,7 +278,14 @@ class CudaDopplerBasisRenderer:
                     norm = interp.sum(axis=-1, keepdims=True)
                     interp = cp.where(data['valid'][..., None], interp/cp.where(norm == 0, 1., norm), 0.)
                     gains = data['a']*cp.exp(-2j*np.pi*data['offsets'][:, None]*data['d'])
-                    base_cycles = cp.remainder(data['offsets']*(int(sim_time_ns)*1e-9), 1.)
+                    base_cycles = data['base_cycles']
+                    if self.projection == 'dense':
+                        # A private interpolation matrix per link; no path or
+                        # waveform sharing. Construct fresh on every capture.
+                        dense = cp.zeros((count, paths, support), cp.float64)
+                        indices = cp.where(data['valid'][..., None], lag-data['min_lag'], 0)
+                        dense[cp.arange(count)[:, None, None],
+                              cp.arange(paths)[None, :, None], indices] = interp
                 cache = {}
                 for start in range(0, num_samples, cfg.block_samples):
                     n = min(cfg.block_samples, num_samples-start)
@@ -242,9 +301,19 @@ class CudaDopplerBasisRenderer:
                     with stage('basis.path_projection'):
                         kernels = cp.empty((count, rank, support), cp.complex128)
                         entries = kernels.size
-                        self.project(((entries+127)//128,), (128,), (starts, interp, coeff, kernels,
-                            np.int32(paths), np.int32(2*half), np.int32(rank), np.int32(support),
-                            np.int32(data['min_lag']), np.int64(entries)))
+                        if self.projection == 'dense':
+                            kernels.real[:] = cp.matmul(cp.ascontiguousarray(coeff.real), dense)
+                            kernels.imag[:] = cp.matmul(cp.ascontiguousarray(coeff.imag), dense)
+                        else:
+                            if self.projection == 'warp':
+                                coeff = cp.ascontiguousarray(coeff.transpose(0, 2, 1))
+                                warps = count*support*((rank+31)//32)
+                                grid = ((warps+3)//4,)
+                            else:
+                                grid = ((entries+127)//128,)
+                            self.project(grid, (128,), (starts, interp, coeff, kernels,
+                                np.int32(paths), np.int32(2*half), np.int32(rank), np.int32(support),
+                                np.int32(data['min_lag']), np.int64(entries)))
                     with stage('basis.private_fft_filters'):
                         source = data['source'][:, start:start+n+support-1]
                         size = next_fast_len(source.shape[1])
@@ -271,6 +340,7 @@ class CudaDopplerBasisRenderer:
         cp.cuda.get_current_stream().synchronize()
         event_ms = [{ 'name': name, 'cuda_ms': float(cp.cuda.get_elapsed_time(a, b)) } for name, a, b in events]
         self.last_metrics = dict(total_ms=(perf_counter()-started)*1000, backend='cuda_cupy',
+            projection=self.projection,
             valid_paths=sum(len(job.coefficients) for job in jobs), blocks=blocks, sum_output=sum_output,
             events=event_ms, cuda_event_span_ms=sum(v['cuda_ms'] for v in event_ms) if profile else None,
             pool_used_bytes=cp.get_default_memory_pool().used_bytes(),

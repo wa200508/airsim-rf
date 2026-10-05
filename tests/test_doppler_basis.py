@@ -60,17 +60,21 @@ def test_rebuild_and_private_inputs():
     assert engine.last_metrics['valid_paths'] == 64
 
 
-def test_unix_epoch_keeps_sample_phase_precision():
+@pytest.mark.parametrize('offset', [12000., 12000.1234567, -12000.125])
+def test_unix_epoch_keeps_sample_phase_precision(offset):
     from dataclasses import replace
     linked = job()
     epoch = 1_790_000_000_000_000_000
     wave = replace(linked.waveform, reference_time_ns=epoch-200_000)
-    linked = replace(linked, waveform=wave)
+    linked = replace(linked, waveform=wave, frequency_offset_hz=offset)
     engine = DopplerBasisRenderer(sample_rate_hz=2e6, max_delay_s=100e-6, max_doppler_hz=2500)
     kw = dict(num_samples=1025, sim_time_ns=epoch, channel_epoch_ns=epoch-123_000)
     output = engine.render([linked], **kw)
     reference = BatchedPathRenderer().render([linked], sample_rate_hz=2e6, **kw)
     np.testing.assert_allclose(output, reference, atol=2e-9, rtol=2e-9)
+    left = engine.render([linked], num_samples=137, sim_time_ns=epoch, channel_epoch_ns=epoch-123_000)
+    right = engine.render([linked], num_samples=888, sim_time_ns=epoch+68_500, channel_epoch_ns=epoch-123_000)
+    np.testing.assert_allclose(np.c_[left, right], output, atol=2e-9, rtol=2e-9)
 
 
 def test_reject_unqualified_clock_and_channel_range():

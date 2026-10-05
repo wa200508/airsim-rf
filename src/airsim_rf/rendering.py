@@ -57,6 +57,17 @@ def _epoch(value):
         raise ValueError("Epoch must be integer nanoseconds")
 
 
+def _oscillator_cycles(frequency_hz, time_ns):
+    """Reduce absolute LO phase exactly before converting to binary64.
+
+    Treat the supplied binary64 frequency as its exact integer ratio. Integer
+    nanoseconds never pass through large floating-point seconds or cycles.
+    """
+    numerator, denominator = float(frequency_hz).as_integer_ratio()
+    modulus = denominator * 1_000_000_000
+    return ((int(time_ns) * numerator) % modulus) / modulus
+
+
 def render_paths(coefficients, delays_s, doppler_hz, waveform, *, sample_rate_hz,
                  num_samples, sim_time_ns=0, channel_epoch_ns=None,
                  amplitude_scale=1., time_scale=1., frequency_offset_hz=0., phase_offset_rad=0.,
@@ -110,7 +121,7 @@ def render_paths(coefficients, delays_s, doppler_hz, waveform, *, sample_rate_hz
     local_s = (int(sim_time_ns)-int(waveform.reference_time_ns))*1e-9
     u = local_s + epoch_s*(time_scale-1.) - tau*time_scale
     delta = (int(sim_time_ns)-int(channel_epoch_ns))*1e-9
-    lo_phase = 2*np.pi*np.remainder(frequency_offset_hz*epoch_s, 1.) + phase_offset_rad
+    lo_phase = 2*np.pi*_oscillator_cycles(frequency_offset_hz, sim_time_ns) + phase_offset_rad
     if isinstance(waveform, ToneWaveform):
         slope = 0.
         initial_phase = 2*np.pi*np.remainder(waveform.frequency_hz*u, 1.) + waveform.phase_rad

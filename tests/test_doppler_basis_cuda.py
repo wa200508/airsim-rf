@@ -39,8 +39,8 @@ def test_pascal_kernels_compile_without_claiming_gpu_execution():
         cp.cuda.nvrtc.getVersion()
     except Exception as exc:
         pytest.skip(f'CUDA 12 NVRTC unavailable: {exc}')
-    from airsim_rf.research.doppler_basis_cuda import _PROJECT, _RECONSTRUCT
-    for name,source in [('projection',_PROJECT),('reconstruction',_RECONSTRUCT)]:
+    from airsim_rf.research.doppler_basis_cuda import _PROJECT, _PROJECT_WARP, _RECONSTRUCT
+    for name,source in [('projection',_PROJECT),('projection_warp',_PROJECT_WARP),('reconstruction',_RECONSTRUCT)]:
         program=cp.cuda.nvrtc.createProgram(source,name+'.cu',(),())
         try:
             cp.cuda.nvrtc.compileProgram(program,('--gpu-architecture=compute_60','--std=c++11'))
@@ -48,6 +48,18 @@ def test_pascal_kernels_compile_without_claiming_gpu_execution():
             pytest.fail(cp.cuda.nvrtc.getProgramLog(program))
         finally:
             cp.cuda.nvrtc.destroyProgram(program)
+
+
+@pytest.mark.parametrize('projection', ['gather', 'warp', 'dense'])
+def test_real_cuda_high_rank_projection(projection):
+    gpu()
+    jobs = [replace(linked(42, 103), doppler_hz=linked(42, 103).doppler_hz*10), linked(53, 8)]
+    cfg = dict(sample_rate_hz=2e6, max_delay_s=100e-6, max_doppler_hz=25000, block_samples=512)
+    engine = CudaDopplerBasisRenderer(**cfg, projection=projection)
+    actual = engine.render(jobs, num_samples=1025)
+    expected = DopplerBasisRenderer(**cfg).render(jobs, num_samples=1025)
+    assert max(b['degree'] for b in engine.last_metrics['blocks']) >= 32
+    np.testing.assert_allclose(actual, expected, atol=2e-9, rtol=2e-9)
 
 
 def linked(seed=42, paths=64, taps=32):
@@ -62,11 +74,13 @@ def linked(seed=42, paths=64, taps=32):
 
 
 @pytest.mark.parametrize('batch_links', [1, 3])
-def test_real_cuda_private_jobs_all_paths_and_new_data(batch_links):
+@pytest.mark.parametrize('projection', ['gather', 'warp', 'dense'])
+def test_real_cuda_private_jobs_all_paths_and_new_data(batch_links, projection):
     gpu()
     jobs = [linked(42, 64), linked(53, 103), linked(7, 8, taps=16), linked(11, 19)]
     engine = CudaDopplerBasisRenderer(sample_rate_hz=2e6, max_delay_s=100e-6,
-                                      max_doppler_hz=2500, block_samples=256, batch_links=batch_links)
+                                      max_doppler_hz=2500, block_samples=256, batch_links=batch_links,
+                                      projection=projection)
     kw = dict(num_samples=1025, channel_epoch_ns=-123000)
     output = engine.render(jobs, profile=True, **kw)
     reference = BatchedPathRenderer(backend='llvm').render(jobs, sample_rate_hz=2e6, **kw)
@@ -79,13 +93,16 @@ def test_real_cuda_private_jobs_all_paths_and_new_data(batch_links):
     np.testing.assert_allclose(actual, expected, atol=2e-9, rtol=2e-9)
 
 
-def test_real_cuda_split_unix_epoch_cancellation_and_boundaries():
+@pytest.mark.parametrize('offset', [12000., 12000.1234567, -12000.125])
+@pytest.mark.parametrize('projection', ['gather', 'warp', 'dense'])
+def test_real_cuda_split_unix_epoch_cancellation_and_boundaries(offset, projection):
     gpu()
     epoch = 1790000000000000000
     source = replace(linked().waveform, reference_time_ns=epoch-200000)
     job = PathRenderJob(np.array([1., -1.]), np.array([30e-6, 30e-6]),
-                        np.array([2500., -2500.]), source, frequency_offset_hz=12000.)
-    engine = CudaDopplerBasisRenderer(sample_rate_hz=2e6, max_delay_s=100e-6, max_doppler_hz=2500)
+                        np.array([2500., -2500.]), source, frequency_offset_hz=offset)
+    engine = CudaDopplerBasisRenderer(sample_rate_hz=2e6, max_delay_s=100e-6, max_doppler_hz=2500,
+                                      projection=projection)
     full = engine.render([job], num_samples=1025, sim_time_ns=epoch, channel_epoch_ns=epoch)
     left = engine.render([job], num_samples=137, sim_time_ns=epoch, channel_epoch_ns=epoch)
     right = engine.render([job], num_samples=888, sim_time_ns=epoch+68500, channel_epoch_ns=epoch)

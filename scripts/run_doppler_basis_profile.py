@@ -26,6 +26,7 @@ def main():
     p.add_argument('--paths',type=int,default=1028)
     p.add_argument('--block-samples',type=int,default=2048)
     p.add_argument('--batch-links',type=int,default=8)
+    p.add_argument('--projection',choices=('gather','warp','dense'),default='gather')
     p.add_argument('--max-delay-us',type=float,default=100.)
     p.add_argument('--max-doppler-hz',type=float,default=2500.)
     p.add_argument('--tolerance',type=float,default=1e-10)
@@ -99,7 +100,7 @@ def main():
                                         ROOT/'tests/test_doppler_basis_cuda.py','-q'])
         for tx in dict.fromkeys(args.tx):
             common=['--tx',str(tx),'--rx',str(args.rx),'--samples',str(args.samples),'--paths',str(args.paths),
-                    '--block-samples',str(args.block_samples),'--batch-links',str(args.batch_links),
+                    '--block-samples',str(args.block_samples),'--batch-links',str(args.batch_links),'--projection',args.projection,
                     '--max-delay-us',str(args.max_delay_us),'--max-doppler-hz',str(args.max_doppler_hz),
                     '--tolerance',str(args.tolerance),'--taps',str(args.taps),'--threads',str(args.threads)]
             for backend in (['cpu','cuda'] if available else ['cpu']):

@@ -6,7 +6,7 @@ import sysconfig
 
 os.environ['PYTHONUTF8'] = '1'
 root = Path(sysconfig.get_paths()['purelib'])/'nvidia'
-libraries = [root/name/'lib' for name in ('cuda_runtime', 'cuda_nvrtc', 'cufft')]
+libraries = [root/name/'lib' for name in ('cuda_runtime', 'cuda_nvrtc', 'cufft', 'cublas')]
 paths = [str(p) for p in libraries if p.is_dir()]
 if paths:
     os.environ['LD_LIBRARY_PATH'] = ':'.join(paths+[os.environ.get('LD_LIBRARY_PATH', '')])

@@ -28,6 +28,7 @@ def main():
     p.add_argument('--taps', type=int, default=32)
     p.add_argument('--block-samples', type=int, default=2048)
     p.add_argument('--batch-links', type=int, default=8)
+    p.add_argument('--projection', choices=('gather', 'warp', 'dense'), default='gather')
     p.add_argument('--tolerance', type=float, default=1e-10)
     p.add_argument('--iterations', type=int, default=30)
     p.add_argument('--warmup', type=int, default=3)
@@ -40,7 +41,7 @@ def main():
     cfg = dict(sample_rate_hz=args.sample_rate, max_delay_s=args.max_delay_us*1e-6,
                max_doppler_hz=args.max_doppler_hz, block_samples=args.block_samples,
                temporal_tolerance=args.tolerance)
-    engine = CudaDopplerBasisRenderer(**cfg, batch_links=args.batch_links) if args.backend == 'cuda' else DopplerBasisRenderer(**cfg, fft_workers=args.threads)
+    engine = CudaDopplerBasisRenderer(**cfg, batch_links=args.batch_links, projection=args.projection) if args.backend == 'cuda' else DopplerBasisRenderer(**cfg, fft_workers=args.threads)
     rng = np.random.default_rng(20261004)
     tick = perf_counter()
     guard = args.taps+32

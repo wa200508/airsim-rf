@@ -5,6 +5,18 @@ import pytest
 from airsim_rf.rendering import LFMChirpWaveform, ToneWaveform, render_paths
 
 
+@pytest.mark.parametrize('frequency', [12000., 12000.1234567, -12000.125, 0.])
+@pytest.mark.parametrize('epoch', [1790000000000068500, -1790000000000068500])
+def test_absolute_oscillator_phase_matches_high_precision_decimal(frequency, epoch):
+    from decimal import Decimal, localcontext
+    from airsim_rf.rendering import _oscillator_cycles
+    with localcontext() as ctx:
+        ctx.prec = 80
+        cycles = Decimal.from_float(frequency) * Decimal(epoch) / Decimal(1_000_000_000)
+        expected = float((cycles % 1 + 1) % 1)
+    assert _oscillator_cycles(frequency, epoch) == expected
+
+
 @pytest.fixture(autouse=True)
 def require_cuda_for_cuda_cases(request):
     if getattr(request.node, 'callspec', None) and request.node.callspec.params.get('backend') == 'cuda':

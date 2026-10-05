@@ -9,7 +9,7 @@ from time import perf_counter
 
 import numpy as np
 
-from .rendering import LFMChirpWaveform, ToneWaveform, _epoch, _finite
+from .rendering import LFMChirpWaveform, ToneWaveform, _epoch, _finite, _oscillator_cycles
 from .sampled_waveform import SampledWaveform
 
 
@@ -57,7 +57,7 @@ def _prepare(job, fs, count, sim_time_ns, channel_epoch_ns):
     local_s = (int(sim_time_ns)-int(wave.reference_time_ns))*1e-9
     u = local_s+epoch_s*(job.time_scale-1.)-tau*job.time_scale
     delta = (int(sim_time_ns)-int(channel_epoch_ns))*1e-9
-    lo_phase = 2*np.pi*np.remainder(job.frequency_offset_hz*epoch_s, 1.)+job.phase_offset_rad
+    lo_phase = 2*np.pi*_oscillator_cycles(job.frequency_offset_hz, sim_time_ns)+job.phase_offset_rad
     if isinstance(wave, SampledWaveform):
         slope = 0.
         initial_phase = np.zeros(a.size)
