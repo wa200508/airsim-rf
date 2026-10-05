@@ -92,7 +92,42 @@ def tables():
             events[event['name']] = events.get(event['name'], 0.) + event['cuda_ms']
         lines.append('| ' + ' | '.join([f'[{label}]({path.as_posix()})', *[f'{events[key]:.2f}' for key in keys], f'{profile["total_ms"]:.2f}']) + ' |')
     sections.append('\n'.join(lines))
+    sections.extend(end_to_end_tables())
     return '\n\n'.join(sections)
+
+
+
+def end_to_end_tables():
+    records = []
+    for path in sorted((ROOT/'results/end_to_end').glob('*/measurements.json')):
+        data = json.loads(path.read_text())
+        assert data['scope'] in ('rf_pipeline_end_to_end', 'live_airsim_rf_end_to_end')
+        records.append((path.relative_to(ROOT), data))
+    if not records:
+        return []
+    keys = ['advance_ms','source_ms','channel_ms','rendering_ms','receiver_ms','other_rf_ms','delivery_storage_ms','total_ms']
+    headings = ['Complete RF-pipeline configuration', 'n', 'Truth advance', 'Private source generation', 'Scene propagation', 'Signal rendering', 'Noise/filter/ADC', 'Bridge + other RF work', 'Delivery + storage', 'Complete update']
+    sections = []
+    for p95 in (False, True):
+        title = 'End-to-end RF pipeline: ' + ('p95' if p95 else 'median ± sample standard deviation')
+        lines = ['### '+title, '', '| '+' | '.join(headings)+' |', '| '+' | '.join(['---','---:']+['---:']*len(keys))+' |']
+        for path, data in records:
+            args = data['arguments']
+            label = f"{args['tx']} → {args['rx']}, {data['rendering_backend']}"
+            label += '; live AirSim' if data['scope']=='live_airsim_rf_end_to_end' else '; trajectory source'
+            cells = []
+            for key in keys:
+                values = [row[key] for row in data['samples']]
+                if p95:
+                    cells.append(f'{percentile(values,.95):.3f}')
+                elif len(values)>1:
+                    cells.append(f'{statistics.median(values):.3f} ± {statistics.stdev(values):.3f}')
+                else:
+                    cells.append(f'{values[0]:.3f} (n=1)')
+            lines.append('| '+' | '.join([f'[{label}]({path.as_posix()})',str(len(data['samples'])),*cells])+' |')
+        sections.append('\n'.join(lines))
+    sections.append('These rows include the complete RF scene-to-network-consumer pipeline, with continuous 2 MS/s I/Q at 120 Hz sample accounting. The recorded cloud CPU is AMD EPYC 9V74 with a **two-core cgroup quota**, not the Ryzen/P100 host above. All receivers execute serially. Truth advance uses a deterministic trajectory source; **AirSim physics/RPC and distributed AMS-GRA SDR workers were not run**. Scene propagation uses 1,028 attempts/link; physical retained counts are recorded in JSON. Five- and ten-window runs are short integration measurements, not long-flight or robust tail qualifications. Initialization/first-use/warmup are excluded; the first capture is retained separately. Delivery is loopback HTTP plus consumer write/readback without fsync. See [end-to-end test scope and reproduction](END_TO_END.md).')
+    return sections
 
 
 def main():

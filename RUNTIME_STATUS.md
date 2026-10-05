@@ -146,6 +146,22 @@ These are CUDA-event spans, in ms, from a separate capture. **n = 1; no standard
 | [P100 basis, 4 → 1; 16,667 samples](results/profiling/p100-basis-optimized-full-20261004/profiles/basis_cuda_4tx_1rx.json) | 1.19 | 1.78 | 2.06 | 1.29 | 1.17 | 0.28 | 0.28 | 8.94 |
 | [P100 basis, 1 → 1; 16,667 samples](results/profiling/p100-basis-optimized-full-20261004/profiles/basis_cuda_1tx_1rx.json) | 0.38 | 1.71 | 2.09 | 1.17 | 3.81 | 3.65 | 0.18 | 14.15 |
 
+### End-to-end RF pipeline: median ± sample standard deviation
+
+| Complete RF-pipeline configuration | n | Truth advance | Private source generation | Scene propagation | Signal rendering | Noise/filter/ADC | Bridge + other RF work | Delivery + storage | Complete update |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| [100 → 10, basis-cpu; trajectory source](results/end_to_end/cpu-100tx-10rx-20261005/measurements.json) | 5 | 0.002 ± 0.000 | 54.178 ± 2.301 | 1186.283 ± 108.425 | 10615.410 ± 429.415 | 12.070 ± 0.255 | 88.654 ± 1.960 | 15.093 ± 3.193 | 11986.071 ± 499.771 |
+| [10 → 4, basis-cpu; trajectory source](results/end_to_end/cpu-10tx-4rx-20261005/measurements.json) | 10 | 0.003 ± 0.000 | 6.085 ± 0.594 | 105.786 ± 32.761 | 493.207 ± 18.241 | 4.571 ± 1.246 | 7.243 ± 0.778 | 6.468 ± 1.211 | 620.592 ± 32.685 |
+
+### End-to-end RF pipeline: p95
+
+| Complete RF-pipeline configuration | n | Truth advance | Private source generation | Scene propagation | Signal rendering | Noise/filter/ADC | Bridge + other RF work | Delivery + storage | Complete update |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| [100 → 10, basis-cpu; trajectory source](results/end_to_end/cpu-100tx-10rx-20261005/measurements.json) | 5 | 0.002 | 57.731 | 1353.061 | 11108.158 | 12.203 | 89.477 | 20.940 | 12571.095 |
+| [10 → 4, basis-cpu; trajectory source](results/end_to_end/cpu-10tx-4rx-20261005/measurements.json) | 10 | 0.003 | 7.042 | 126.508 | 520.594 | 6.852 | 8.558 | 8.899 | 654.255 |
+
+These rows include the complete RF scene-to-network-consumer pipeline, with continuous 2 MS/s I/Q at 120 Hz sample accounting. The recorded cloud CPU is AMD EPYC 9V74 with a **two-core cgroup quota**, not the Ryzen/P100 host above. All receivers execute serially. Truth advance uses a deterministic trajectory source; **AirSim physics/RPC and distributed AMS-GRA SDR workers were not run**. Scene propagation uses 1,028 attempts/link; physical retained counts are recorded in JSON. Five- and ten-window runs are short integration measurements, not long-flight or robust tail qualifications. Initialization/first-use/warmup are excluded; the first capture is retained separately. Delivery is loopback HTTP plus consumer write/readback without fsync. See [end-to-end test scope and reproduction](END_TO_END.md).
+
 <!-- END STAGE TIMING TABLES -->
 
 The raw-capture links are the sources for every number. On `profiling/p100`,

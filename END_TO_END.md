@@ -29,6 +29,22 @@ suite stands in for a live AirSim + distributed continuous-SDR fleet test.
 
 ## Collect complete RF-pipeline timings
 
+One command runs the integration suite and all three fleet sizes (2×2, 10×4,
+100×10), saving logs and Markdown/JSON results:
+
+```bash
+.venv/bin/python scripts/run_end_to_end_profile.py \
+  --backend both --iterations 30 --warmup 3 \
+  --output results/end_to_end/p100-complete
+```
+
+Use `--backend cpu` in a CPU-only environment, or `--backend cuda` to collect
+only hybrid CPU-propagation/CUDA-rendering runs. The default `both` collection
+fails at preflight if a working CuPy device is unavailable. CUDA integration
+checks run against the direct scene-derived oracle when that device is present.
+
+The standalone commands below select a single configuration:
+
 ```bash
 # Complete requested fleet: 100 independent TX, ten RX; CPU propagation/rendering.
 .venv/bin/python benchmarks/benchmark_end_to_end.py \
@@ -127,3 +143,17 @@ An end-to-end distributed AirSim/AMS-GRA continuous-I/Q demonstration still
 requires those live scheduling and SDR-worker integrations. This document names
 that remaining scope rather than calling the automated RF test a completed
 simulation-plane deployment.
+
+## Recorded cloud CPU integration runs
+
+[The central timing document](RUNTIME_STATUS.md#end-to-end-rf-pipeline-median--sample-standard-deviation)
+contains the complete-stage median ± standard deviation and p95 tables for:
+
+- [100 TX / ten RX, five measured windows](results/end_to_end/cpu-100tx-10rx-20261005/REPORT.md).
+- [Ten TX / four RX, ten measured windows](results/end_to_end/cpu-10tx-4rx-20261005/REPORT.md).
+
+Both use an AMD EPYC 9V74 host with a two-core cgroup quota, CPU propagation and
+CPU rendering. These short scene-to-consumer measurements are not Ryzen or P100
+measurements, nor ten-minute flight tests. The environment record is
+[environment.json](results/end_to_end/environment.json). The raw SC16 captures
+stay local; the recorded reports/JSON are committed for reproduction.

@@ -317,3 +317,9 @@ For processing-step columns, **median ± standard deviation**, and a separate
 [End-to-end RF tests and complete-pipeline collection](END_TO_END.md) connect
 the basis renderer to moving terrain propagation, continuous receiver filtering,
 ADC and a network consumer. Live AirSim and distributed SDR coverage are described explicitly.
+
+The new **scene-to-consumer CPU measurements** are 11.99 s/update for
+100 TX × ten RX and 620.59 ms/update for ten TX × four RX, on a cloud CPU
+with a two-core quota. Those are complete RF-pipeline timings with a trajectory
+source, CPU propagation/rendering and serial receivers; live AirSim and the
+P100 end-to-end run remain unmeasured. See [all stages and p95](RUNTIME_STATUS.md#end-to-end-rf-pipeline-median--sample-standard-deviation).

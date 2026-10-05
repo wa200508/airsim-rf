@@ -1,0 +1,8 @@
+{
+  "cpu": "AMD EPYC 9V74 80-Core Processor",
+  "cpu_quota": "200000 100000",
+  "memory_limit": "8589934592",
+  "platform": "Linux-6.18.44-x86_64-with-glibc2.41",
+  "source_revision": "86e7ffe3d140d4872479e684ddfca0f6285ee02a",
+  "note": "Both recorded CPU runs used this clean implementation; machine context recorded separately after collection."
+}

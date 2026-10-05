@@ -233,7 +233,7 @@ def run(*, output, tx=100, rx=10, iterations=30, warmup=3, renderer='basis-cpu',
     simulated_ms = sum(row['samples'] for row in rows)/FS*1000
     wall_ratio = sum(row['total_ms'] for row in rows)/simulated_ms
     result = dict(scope='rf_pipeline_end_to_end' if airsim_config is None else 'live_airsim_rf_end_to_end',
-        hardware=dict(cpu=platform.processor(), cpu_count=os.cpu_count(), cpu_quota=Path('/sys/fs/cgroup/cpu.max').read_text().strip(),
+        hardware=dict(cpu=next(line.split(':',1)[1].strip() for line in Path('/proc/cpuinfo').read_text().splitlines() if line.startswith('model name')), cpu_count=os.cpu_count(), cpu_quota=Path('/sys/fs/cgroup/cpu.max').read_text().strip(),
                       platform=platform.platform(), sionna_rt=rt.__version__),
         source_revision=subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip(),
         source_dirty=bool(subprocess.check_output(['git','status','--porcelain','--untracked-files=no'],cwd=ROOT,text=True).strip()),

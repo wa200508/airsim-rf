@@ -32,8 +32,17 @@ def terrain_receiver(renderer, *, continuous=True):
         renderer=renderer, samples_per_link=1028, continuous=continuous, link_diagnostics=False)
 
 
-def test_moving_scene_basis_matches_direct_all_path_oracle_across_epochs():
-    basis = terrain_receiver('basis-cpu')
+@pytest.mark.parametrize('renderer', ['basis-cpu','basis-cuda'])
+def test_moving_scene_basis_matches_direct_all_path_oracle_across_epochs(renderer):
+    if renderer == 'basis-cuda':
+        cp = pytest.importorskip('cupy')
+        try:
+            available = cp.cuda.runtime.getDeviceCount()
+        except cp.cuda.runtime.CUDARuntimeError as exc:
+            pytest.skip(f'CUDA runtime unavailable: {exc}')
+        if not available:
+            pytest.skip('CUDA device unavailable')
+    basis = terrain_receiver(renderer)
     direct = terrain_receiver('batched-llvm')
     for index in range(3):
         for receiver in (basis, direct):
@@ -94,3 +103,16 @@ def test_rolling_sources_keep_history_identical_and_transmitters_independent():
     np.testing.assert_array_equal(a['tx0'].samples[offset:], b['tx0'].samples[:overlap])
     assert not np.array_equal(a['tx0'].samples,a['tx1'].samples)
     assert not np.shares_memory(a['tx0'].samples,b['tx0'].samples)
+
+
+def test_continuous_timestamps_keep_integer_nanoseconds_at_large_epochs():
+    receiver = terrain_receiver('basis-cpu')
+    epoch = 1_700_000_000_000_000_001
+    for name, emitter in receiver.emitters.items():
+        from dataclasses import replace
+        receiver.emitters[name] = replace(emitter, waveform=replace(emitter.waveform,
+            reference_time_ns=emitter.waveform.reference_time_ns+epoch))
+    receiver.capture(epoch, num_samples=256)
+    assert receiver._next_time_ns == epoch+128000
+    receiver.capture(epoch+128000, num_samples=256)
+    assert receiver._next_time_ns == epoch+256000

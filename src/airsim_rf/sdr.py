@@ -282,7 +282,7 @@ class SDRNetworkReceiver:
         for ri, rx_name in enumerate(self.rx_names):
             clock = self.clocks[rx_name]
             actual_rate = self.profile.sample_rate_hz * clock.rate_scale
-            warmup_ns = round(sim_time_ns - warmup/actual_rate * 1e9)
+            warmup_ns = sim_time_ns - round(warmup/actual_rate * 1e9)
             delta_epoch = (warmup_ns-sim_time_ns)*1e-9
             relative_time = np.arange(num_samples+warmup)/actual_rate
             true_time = warmup_ns*1e-9 + relative_time
@@ -392,5 +392,5 @@ class SDRNetworkReceiver:
                         float(noise_power), noise_bandwidth, retained)
             self.last_receiver_ms += 1000*(perf_counter()-receiver_started)
         if self.continuous:
-            self._next_time_ns = sim_time_ns+num_samples/(self.profile.sample_rate_hz*self.clocks[self.rx_names[0]].rate_scale)*1e9
+            self._next_time_ns = sim_time_ns+round(num_samples/(self.profile.sample_rate_hz*self.clocks[self.rx_names[0]].rate_scale)*1e9)
         return captures
