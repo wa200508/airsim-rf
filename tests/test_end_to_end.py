@@ -121,8 +121,11 @@ def test_continuous_timestamps_keep_integer_nanoseconds_at_large_epochs():
 def test_container_build_provenance_does_not_require_git_checkout(tmp_path,monkeypatch):
     monkeypatch.setenv('RF_PROFILE_SOURCE_REV','container-build-revision')
     monkeypatch.setenv('RF_PROFILE_SOURCE_DIRTY','false')
-    def no_git(*args,**kwargs):
-        raise AssertionError('Container benchmark must use build provenance, not .git')
+    original = e2e.subprocess.check_output
+    def no_git(command,*args,**kwargs):
+        if command[0] == 'git':
+            raise AssertionError('Container benchmark must use build provenance, not .git')
+        return original(command,*args,**kwargs)
     monkeypatch.setattr(e2e.subprocess,'check_output',no_git)
     result=e2e.run(output=tmp_path/'container',tx=1,rx=1,iterations=2,warmup=0)
     assert result['source_revision']=='container-build-revision'
