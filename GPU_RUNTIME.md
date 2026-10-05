@@ -1,5 +1,7 @@
 # Runtime metrics for one GPU per receiver
 
+**Runtime context (2026-10-05):** Historical channel-only CPU measurements and hypothetical GPU query rates. Sub-millisecond ray arithmetic is not complete GPU renderer latency. See [current runtime and wall-clock costs](RUNTIME_STATUS.md) for comparable measurements, hardware, exclusions and ten-minute estimates.
+
 See [the code-derived scaling model](SDR_COMPLEXITY.md) for stage-by-stage
 complexity, CPU prediction checks and explicit GPU implementation estimates.
 

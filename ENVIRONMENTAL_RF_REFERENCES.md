@@ -1,5 +1,7 @@
 # Published precedents for environmental RF and terrain I/Q simulation
 
+For actual sample rendering, see the [channel-to-I/Q source review](IQ_RENDERING_REFERENCES.md) and [current runtime context](RUNTIME_STATUS.md). These distinguish channels, short radar captures and continuous receiver output.
+
 This review compares published implementations with airsim-rf's environmental
 propagation and terrain demonstrations. Sources were inspected on **2026-10-03**;
 the implementation baseline is commit

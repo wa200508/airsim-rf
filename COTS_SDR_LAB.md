@@ -1,5 +1,7 @@
 # A COTS SDR starter lab: four drones, two emitters, two listeners
 
+**Runtime context (2026-10-05):** The plotted COTS lab uses short scheduled captures; sensor sample rate and configured update rate do not establish continuous wall-clock real-time operation. See [current runtime and wall-clock costs](RUNTIME_STATUS.md) for comparable measurements, hardware, exclusions and ten-minute estimates.
+
 The first SDR target is **Analog Devices ADALM-PLUTO (PlutoSDR)**. The new
 example puts four radio mounts in the same RF terrain scene: two emit known
 beacons and two listen passively. Each listener receives the coherent sum of

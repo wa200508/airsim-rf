@@ -1,58 +1,103 @@
 # airsim-rf
 
-Start with [home setup](REPRODUCE.md) and the measured
-[120 Hz timing report](PERFORMANCE.md). This standalone repository contains the
-radar models, I/Q generation, Python AirSim adapter, tests and benchmarks.
-ProjectAirSim and Sionna RT are pinned external dependencies downloaded by setup.
+A standalone RF simulation project using ProjectAirSim scene truth and Sionna
+propagation, with radar/SDR models, complex I/Q rendering and receiver-worker
+integration for AMS-GRA.
 
-For a university hardware starter, see the
-[PlutoSDR-class COTS lab](COTS_SDR_LAB.md): two moving beacon drones and two
-passive receiver drones in one RF terrain scene, with multi-emitter I/Q,
-independent clocks, noise, receive filtering and signed 12-bit samples.
-It includes a dated hardware budget, plots, recordings, SigMF export and
-an AirSim network-mount bridge. Published device constraints and uncalibrated
-assumptions are listed separately; the distributed ESM protocol remains work.
+## How close are we to real time?
 
-See [SDR update rate and latency](SDR_RUNTIME.md) for complete channel-to-ADC
-CPU measurements and conditional GPU limits. The [code-derived scaling model](SDR_COMPLEXITY.md)
-compares O(paths × samples) work with measured CPU costs and proposed GPU kernels.
+**Branch scope:** the latest basis renderer and its measurements are on
+[`profiling/p100`](https://github.com/wa200508/airsim-rf/tree/profiling/p100).
+They are opt-in research code and are not yet merged into `main` or the default
+container. The older receiver pipeline on `main` has different performance.
+Switch to that branch before using its profiling commands.
 
-```bash
-.venv/bin/python examples/pluto_esm_drones.py --output-dir recordings/pluto_esm
-```
+**The complete moving-scene RF simulation has not been demonstrated at real
+time.** The latest qualified **100-transmitter/one-receiver renderer** is
+**6.80× slower than real time on a P100** and **194× slower on the measured CPU**.
+The much smaller one-/four-transmitter P100 cases meet the renderer's budget;
+that does not qualify the complete scene-to-receiver service.
 
-The [distributed simulation guide](DISTRIBUTED.md) adds one receiver worker per
-GPU, an AirSim clock coordinator, and an AMS-GRA starter-kit RF MEL backend plus
-DIS scene truth. It includes CPU container tests and per-GPU deployment files.
+All rows below render **16,667 samples at 2 MS/s per receiver**, with **1,028
+valid paths per directed link**, private arbitrary-waveform inputs, per-sample
+narrowband Doppler, FP64/complex128, 32-tap interpolation, 100 µs declared delay
+support and ±2,500 Hz physical Doppler. They use 120 updates/s and an **8.33 ms
+service budget**. These are comparable continuous-I/Q renderer measurements.
 
-The [100-transmitter / 10-receiver runtime assessment](NETWORK_RUNTIME.md)
-audits the work needed for a general AMS-GRA RF plane and provides reproducible
-network propagation benchmarks, scaling arithmetic and GPU sizing assumptions.
-The [accepted per-pulse, single-interaction model](PER_PULSE_RUNTIME.md) updates
-that baseline with compact channels, new measurements and current limitations.
-The [single-bounce optimization report](OPTIMIZATION.md) adds exhaustive one-way
-reflection candidates for ESM/comms channels, with paired timings and physical
-validation. Enable it with `RFReceiver(..., path_solver="single-bounce")`.
-For distributed ground return, use the separate
-[TX/RX-aware first-order scattering mode](GROUND_SCATTERING.md). Its per-link
-sampling budget covers both antenna patterns and preserves sidelobe support;
-the 144-path specular benchmark does not measure ground-clutter fidelity.
+<!-- BEGIN MEASURED RUNTIME TABLE -->
 
-[GPU runtime planning](GPU_RUNTIME.md) separates measured CPU costs from
-conditional per-GPU work estimates for the 100-TX/10-RX deployment. Host proposal
-sampling is timed separately; GPU deadlines and VRAM require target measurements.
+| Backend / TX → RX | Median window latency | p95 | Wall time / simulated time | Rendering cost for 10 simulated minutes |
+| --- | ---: | ---: | ---: | ---: |
+| [CPU, 100 → 1](https://github.com/wa200508/airsim-rf/blob/profiling/p100/results/profiling/p100-basis-optimized-full-20261004/profiles/basis_cpu_100tx_1rx.json) | 1610.09 ms | 1700.36 ms | 194.06× | 32.34 h |
+| [P100 CUDA, 100 → 1](https://github.com/wa200508/airsim-rf/blob/profiling/p100/results/profiling/p100-basis-optimized-full-20261004/profiles/basis_cuda_100tx_1rx.json) | 56.17 ms | 59.65 ms | 6.80× | 68.00 min |
+| [CPU, 4 → 1](https://github.com/wa200508/airsim-rf/blob/profiling/p100/results/profiling/p100-basis-optimized-full-20261004/profiles/basis_cpu_4tx_1rx.json) | 78.49 ms | 84.62 ms | 9.45× | 94.49 min |
+| [P100 CUDA, 4 → 1](https://github.com/wa200508/airsim-rf/blob/profiling/p100/results/profiling/p100-basis-optimized-full-20261004/profiles/basis_cuda_4tx_1rx.json) | 5.68 ms | 6.05 ms | 0.69× | 6.87 min |
+| [CPU, 1 → 1](https://github.com/wa200508/airsim-rf/blob/profiling/p100/results/profiling/p100-basis-optimized-full-20261004/profiles/basis_cpu_1tx_1rx.json) | 21.87 ms | 23.05 ms | 2.64× | 26.45 min |
+| [P100 CUDA, 1 → 1](https://github.com/wa200508/airsim-rf/blob/profiling/p100/results/profiling/p100-basis-optimized-full-20261004/profiles/basis_cuda_1tx_1rx.json) | 5.51 ms | 6.14 ms | 0.67× | 6.69 min |
 
-The [tested terrain scenario and waterfall plots](TERRAIN_SCENARIO.md) compare
-flat ground with a simple DEM containing hills, slopes and a drainage swale.
-It includes delay/Doppler waterfalls, coherent LFM responses, received-I/Q
-spectrograms, saved data and commands to reproduce them in the container.
+<!-- END MEASURED RUNTIME TABLE -->
 
-To see individual hills and the swale in the received data, start with the
-[focused terrain scan](TERRAIN_SIGNATURE.md). Its pulse-compressed I/Q follows
-the terrain relief, with a flat-ground control, a bandwidth comparison and raw
-complex samples to inspect.
+Ratios and ten-minute costs use the **mean** of 30 warmed windows, not the
+median or an algorithm speedup. Costs are extrapolated renderer work, not
+measured ten-minute flights. A ratio below 1 means renderer throughput headroom.
+The CPU host was **Ryzen 7 8700G**, with two FFT workers configured and no CPU
+quota; its Radeon 780M was unused. The GPU was **P100-PCIE-16GB**. The current
+CUDA renderer cannot use an AMD integrated GPU.
+
+**Your 10-moving-TX/four-moving-RX case:** approximately **13–16 hours of CPU
+rendering for ten simulated minutes** (about 78–94× slower), from a serial
+40-link extrapolation. This is not a benchmark of that workload or the
+unidentified “Ryzen 7100.” Random-flight propagation, AirSim, receiver DSP,
+clock resampling, queues and recording add unmeasured work, so **complete
+flight completion time remains unknown**. No unmeasured receiver parallelism
+or transmitter sharing is credited.
+
+For the original **100-TX/10-RX** goal, these GPU rows cover one receiver only.
+One P100 processing ten receivers serially would imply about 11.33 hours of
+rendering per ten simulated minutes; ten independent P100s could ideally
+approach 68 minutes in parallel. Both are extrapolations, not fleet tests.
+Current Sionna RT/Dr.Jit CUDA propagation is unsupported on P100; these results
+qualify the separate CuPy renderer, not an integrated P100 simulation.
+
+See [runtime context and historical comparisons](RUNTIME_STATUS.md) for included
+stages, delivery latency, formulas and why older short-burst/channel-only numbers
+appear faster. The [qualified report](https://github.com/wa200508/airsim-rf/blob/profiling/p100/results/profiling/p100-basis-optimized-full-20261004/REPORT.md)
+and [optimization findings](https://github.com/wa200508/airsim-rf/blob/profiling/p100/results/profiling/p100-basis-optimized-full-20261004/FINDINGS.md)
+preserve the raw evidence. Required CUDA qualification passed 76 tests.
+
+## Run and explore
+
+- [Home setup](REPRODUCE.md) and [container tests](CONTAINER.md).
+- [P100 GPU collection](https://github.com/wa200508/airsim-rf/blob/profiling/p100/P100_BASIS_PROFILING.md): use the qualified warp
+  configuration on `profiling/p100`:
+  `bash scripts/run_p100_docker.sh --doppler-basis --projection warp --batch-links 100 --block-samples 2048 --run-id p100-basis-optimized-full`.
+- [Doppler-basis rendering](https://github.com/wa200508/airsim-rf/blob/profiling/p100/DOPPLER_BASIS_FFT.md), [direct reference](https://github.com/wa200508/airsim-rf/blob/profiling/p100/DIRECT_PATH_RENDERING.md)
+  and [historical batched rendering](https://github.com/wa200508/airsim-rf/blob/profiling/p100/BATCHED_RENDERING.md).
+- [PlutoSDR-class COTS lab](COTS_SDR_LAB.md): moving emitters/listeners, receiver
+  processing, recordings and SigMF export. Run
+  `.venv/bin/python examples/pluto_esm_drones.py --output-dir recordings/pluto_esm`.
+- [Distributed workers](DISTRIBUTED.md) and [AMS-GRA compatibility](AMS_GRA_COMPATIBILITY.md):
+  architecture and CPU validation; live end-to-end runtime remains unqualified.
+- [TX/RX-aware ground scattering](GROUND_SCATTERING.md), [DEM/waterfalls](TERRAIN_SCENARIO.md)
+  and [focused terrain signatures](TERRAIN_SIGNATURE.md).
+- [Historical small-radar timing](PERFORMANCE.md), [per-pulse model](PER_PULSE_RUNTIME.md),
+  [single-bounce work](OPTIMIZATION.md), [network planning](NETWORK_RUNTIME.md),
+  [GPU planning](GPU_RUNTIME.md), [older SDR timing](SDR_RUNTIME.md),
+  [scaling analysis](SDR_COMPLEXITY.md), [affordable architecture study](https://github.com/wa200508/airsim-rf/blob/profiling/p100/AFFORDABLE_REALTIME_RF.md)
+  and [independent-input optimization](https://github.com/wa200508/airsim-rf/blob/profiling/p100/INDEPENDENT_TX_OPTIMIZATION.md).
+  These have different workloads or assumed GPU rates; use the summary above
+  for current measured renderer capacity.
 
 ## Published environmental RF precedents
+
+The [channel-to-I/Q implementation review](IQ_RENDERING_REFERENCES.md) traces
+sample rendering in Sionna PHY, GNU Radio, NVIDIA's CUDA channel emulator,
+ACHEM/CHEM and HermesPy, with citations to inspected code and reduced-rank
+delay/Doppler research. It explains which implementations preserve per-sample
+evolution, which freeze or simplify channels, and how they relate to our
+projection bottleneck. SimART is compared as a scene/channel integration
+platform; its inspected main runner evaluates link metrics rather than
+rendering continuous receiver I/Q.
 
 The [detailed comparison with published implementations](ENVIRONMENTAL_RF_REFERENCES.md)
 documents how this project relates to MathWorks terrain-clutter I/Q examples,

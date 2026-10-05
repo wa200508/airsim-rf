@@ -1,5 +1,7 @@
 # SDR runtime: update rate and latency
 
+**Runtime context (2026-10-05):** Historical scene-to-ADC tone captures contain only 4,096 output samples (2.048 ms at 2 MS/s), with scene-dependent surviving paths. Later arbitrary-I/Q GPU rendering is measured separately. See [current runtime and wall-clock costs](RUNTIME_STATUS.md) for comparable measurements, hardware, exclusions and ten-minute estimates.
+
 See [the code-derived scaling model](SDR_COMPLEXITY.md) for stage-by-stage
 complexity, CPU prediction checks and explicit GPU implementation estimates.
 

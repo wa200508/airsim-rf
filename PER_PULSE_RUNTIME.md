@@ -1,5 +1,7 @@
 # Accepted model: one channel solve per pulse, one interaction
 
+**Runtime context (2026-10-05):** Historical single-interaction channel-only timings and compact-tone microbenchmarks; the 144-path scene is not the all-valid-path stress workload. See [current runtime and wall-clock costs](RUNTIME_STATUS.md) for comparable measurements, hardware, exclusions and ten-minute estimates.
+
 Updated 2026-10-03. This supersedes the depth-three planning baseline in
 [NETWORK_RUNTIME.md](NETWORK_RUNTIME.md); its older results remain available
 for comparison. Sionna/Mitsuba/Dr.Jit versions remain 2.2.0/3.9.1/1.5.0.

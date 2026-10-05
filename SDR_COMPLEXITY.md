@@ -1,5 +1,7 @@
 # Code-derived CPU and GPU runtime model
 
+**Runtime context (2026-10-05):** Historical code model and conditional GPU estimates for the older tone/short-capture pipeline. Do not use these forecasts as current GPU measurements. See [current runtime and wall-clock costs](RUNTIME_STATUS.md) for comparable measurements, hardware, exclusions and ten-minute estimates.
+
 This analysis uses the current Pluto-class SDR path, the code in main as of
 4e29528, and [the recorded CPU benchmarks](SDR_RUNTIME.md). The benchmark
 waveforms are continuous tones. LFM recurrence is a proposed extension, not a

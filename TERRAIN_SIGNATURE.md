@@ -1,5 +1,7 @@
 # Seeing terrain features in received I/Q
 
+**Runtime context (2026-10-05):** Offline focused terrain/radar demonstration, not a continuous multi-emitter runtime benchmark. See [current runtime and wall-clock costs](RUNTIME_STATUS.md) for comparable measurements, hardware, exclusions and ten-minute estimates.
+
 Start with this focused scan to see how the existing DEM changes RF data. The
 bright ridge below is calculated from **received complex voltage**, using LFM
 pulse compression. The first hill, drainage swale and second hill are visible
