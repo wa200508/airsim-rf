@@ -27,6 +27,8 @@ def main():
     p.add_argument('--block-samples',type=int,default=2048)
     p.add_argument('--batch-links',type=int,default=8)
     p.add_argument('--projection',choices=('gather','warp','dense'),default='gather')
+    p.add_argument('--delay-map', choices=('double','single'), default='double')
+    p.add_argument('--fft-inplace', action='store_true')
     p.add_argument('--max-delay-us',type=float,default=100.)
     p.add_argument('--max-doppler-hz',type=float,default=2500.)
     p.add_argument('--tolerance',type=float,default=1e-10)
@@ -102,7 +104,9 @@ def main():
             common=['--tx',str(tx),'--rx',str(args.rx),'--samples',str(args.samples),'--paths',str(args.paths),
                     '--block-samples',str(args.block_samples),'--batch-links',str(args.batch_links),'--projection',args.projection,
                     '--max-delay-us',str(args.max_delay_us),'--max-doppler-hz',str(args.max_doppler_hz),
-                    '--tolerance',str(args.tolerance),'--taps',str(args.taps),'--threads',str(args.threads)]
+                    '--tolerance',str(args.tolerance),'--taps',str(args.taps),'--threads',str(args.threads),'--delay-map',args.delay_map]
+            if args.fft_inplace:
+                common.append('--fft-inplace')
             for backend in (['cpu','cuda'] if available else ['cpu']):
                 name=f'basis_{backend}_{tx}tx_{args.rx}rx'
                 artifact=output/'profiles'/f'{name}.json'

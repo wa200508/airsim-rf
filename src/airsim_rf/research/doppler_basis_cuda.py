@@ -142,7 +142,7 @@ extern "C" __global__ void reconstruct(
 class CudaDopplerBasisRenderer:
     def __init__(self, *, sample_rate_hz, max_delay_s, max_doppler_hz,
                  block_samples=2048, temporal_tolerance=1e-10, batch_links=8,
-                 projection='gather'):
+                 projection='gather', delay_map='double', fft_inplace=False):
         # Reuse parameter guards, but not CPU channel construction.
         self.config = DopplerBasisRenderer(sample_rate_hz=sample_rate_hz,
             max_delay_s=max_delay_s, max_doppler_hz=max_doppler_hz,
@@ -151,6 +151,12 @@ class CudaDopplerBasisRenderer:
             raise ValueError('Positive integer batch_links required')
         if projection not in ('gather', 'warp', 'dense'):
             raise ValueError('Projection must be gather, warp or dense')
+        if delay_map not in ('double', 'single'):
+            raise ValueError('Delay map must be double or single')
+        self.delay_map, self.fft_inplace = delay_map, bool(fft_inplace)
+        if self.fft_inplace:
+            from cupyx.scipy import fft
+            self.inplace_fft = fft
         try:
             import cupy as cp
             if cp.cuda.runtime.getDeviceCount() < 1:
@@ -262,16 +268,18 @@ class CudaDopplerBasisRenderer:
                 count, paths, half = data['count'], data['paths'], data['half']
                 support = data['max_lag']-data['min_lag']+1
                 with stage('basis.delay_map'):
-                    order = cp.argsort(data['d'], axis=1)
-                    for key in ('a', 'd', 'fd', 'valid'):
-                        data[key] = cp.take_along_axis(data[key], order, axis=1)
+                    if self.delay_map == 'double':
+                        order = cp.argsort(data['d'], axis=1)
+                        for key in ('a', 'd', 'fd', 'valid'):
+                            data[key] = cp.take_along_axis(data[key], order, axis=1)
                     starts = cp.ceil(data['d']*cfg.fs).astype(cp.int32)-half
                     starts = cp.where(data['valid'], starts, np.iinfo(np.int32).max).astype(cp.int32)
                     # Sort invalid lanes after real paths, including zero-delay paths.
-                    order = cp.argsort(starts, axis=1)
-                    for key in ('a', 'd', 'fd', 'valid'):
-                        data[key] = cp.take_along_axis(data[key], order, axis=1)
-                    starts = cp.take_along_axis(starts, order, axis=1)
+                    if self.delay_map == 'double' or self.projection != 'dense':
+                        order = cp.argsort(starts, axis=1)
+                        for key in ('a', 'd', 'fd', 'valid'):
+                            data[key] = cp.take_along_axis(data[key], order, axis=1)
+                        starts = cp.take_along_axis(starts, order, axis=1)
                     lag = starts[..., None]+cp.arange(2*half)
                     distance = lag-data['d'][..., None]*cfg.fs
                     interp = cp.sinc(distance)*cp.sinc(distance/half)
@@ -318,7 +326,14 @@ class CudaDopplerBasisRenderer:
                         source = data['source'][:, start:start+n+support-1]
                         size = next_fast_len(source.shape[1])
                         private_fft = cp.fft.fft(source, size, axis=-1)
-                        filtered = cp.fft.ifft(cp.fft.fft(kernels, size, axis=-1)*private_fft[:, None, :], axis=-1)
+                        if self.fft_inplace:
+                            # Only disposable filter buffers may be overwritten.
+                            # Source windows overlap and must remain intact.
+                            transformed = self.inplace_fft.fft(kernels, size, axis=-1, overwrite_x=True)
+                            transformed *= private_fft[:, None, :]
+                            filtered = self.inplace_fft.ifft(transformed, axis=-1, overwrite_x=True)
+                        else:
+                            filtered = cp.fft.ifft(cp.fft.fft(kernels, size, axis=-1)*private_fft[:, None, :], axis=-1)
                     with stage('basis.reconstruction_and_sum'):
                         # One kernel evolves the basis in registers, combines
                         # filters and applies the oscillator. No rank-many
@@ -340,7 +355,7 @@ class CudaDopplerBasisRenderer:
         cp.cuda.get_current_stream().synchronize()
         event_ms = [{ 'name': name, 'cuda_ms': float(cp.cuda.get_elapsed_time(a, b)) } for name, a, b in events]
         self.last_metrics = dict(total_ms=(perf_counter()-started)*1000, backend='cuda_cupy',
-            projection=self.projection,
+            projection=self.projection, delay_map=self.delay_map, fft_inplace=self.fft_inplace,
             valid_paths=sum(len(job.coefficients) for job in jobs), blocks=blocks, sum_output=sum_output,
             events=event_ms, cuda_event_span_ms=sum(v['cuda_ms'] for v in event_ms) if profile else None,
             pool_used_bytes=cp.get_default_memory_pool().used_bytes(),
