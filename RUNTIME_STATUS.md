@@ -63,6 +63,99 @@ batch, 2,048-sample blocks, double-sort delay mapping and ordinary FFTs. The
 mandatory CUDA suite passed 76 tests. Each timing case's final window passed
 the reference comparisons; the suite did not compare every timed window.
 
+## Processing steps by scenario and configuration
+
+All stage timings below are **milliseconds per measured call**. The first table
+shows **median ± sample standard deviation**, calculated from the individual
+warmed captures (n−1 denominator). The ± value describes observed variability;
+it is not a confidence interval, accuracy tolerance or deadline guarantee.
+The second table uses the same captures and columns for **p95**, with linear
+percentile interpolation. Startup and warmup captures are excluded.
+
+**— means unavailable or outside the measured scope, never zero.** GPU totals
+have 30 captures, but detailed GPU steps have only one separate instrumented
+capture. Those observations appear in their own table below.
+
+Read the columns from left to right:
+
+- **Pose update:** write moving-platform positions into the propagation scene.
+- **Scene propagation:** trace/evaluate paths and export the channel to NumPy.
+- **Render preparation:** validate inputs, construct fractional-delay maps and apply link gains.
+- **Basis/filter construction:** compute temporal coefficients, evolve path phase and project paths into delay filters.
+- **FFT + reconstruction:** private source/filter transforms, convolution, per-sample basis reconstruction and oscillator phase.
+- **Other rendering work:** same-capture residual outside those three CPU timers, including basis setup, bookkeeping, error bounds and wrapper summation.
+- **Signal rendering subtotal:** complete timed renderer call, including its internal steps. **Do not add this subtotal to those steps again.**
+- **Receiver processing:** noise, receiver filters, diagnostics and ADC conversion. Historical direct-SDR rows include rendering in this column because those captures did not time rendering separately.
+- **Measured call total:** outer synchronized wall timer. For basis tests this is renderer-only; for historical SDR/LLVM tests it includes poses, propagation and receiver processing.
+
+Stage medians and p95 values need not sum to the call median or p95: each column
+is summarized independently. AirSim physics/RPC, transport, queueing, storage and
+RF-skill processing were not measured in any of these rows.
+
+The six basis rows use the qualified Ryzen 7 8700G/P100 setup and 1,028 valid
+paths per link described above. Historical SDR/LLVM rows use an earlier CPU
+container with a two-core quota, tones, independent receiver clocks and an
+800-triangle terrain scene; surviving path counts vary with capture. Their
+4,096 samples represent **2.048 ms**, plus 256 filter-warmup samples, rather
+than the basis workload’s 8.3335 ms. They provide historical pipeline context,
+not a matched speed comparison or a full simulation runtime prediction.
+
+<!-- BEGIN STAGE TIMING TABLES -->
+
+### Median ± sample standard deviation
+
+| Configuration / raw captures | n | Pose update | Scene propagation | Render preparation | Basis/filter construction | FFT + reconstruction | Other rendering work | Signal rendering subtotal | Receiver processing | Measured call total |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| [CPU basis, 100 → 1; 16,667 samples](https://github.com/wa200508/airsim-rf/blob/profiling/p100/results/profiling/p100-basis-optimized-full-20261004/profiles/basis_cpu_100tx_1rx.json) | 30 | — | — | 90.54 ± 5.73 | 1106.72 ± 16.29 | 397.92 ± 16.77 | 12.31 ± 1.76 | 1610.09 ± 36.60 | — | 1610.09 ± 36.60 |
+| [P100 basis, 100 → 1; 16,667 samples](https://github.com/wa200508/airsim-rf/blob/profiling/p100/results/profiling/p100-basis-optimized-full-20261004/profiles/basis_cuda_100tx_1rx.json) | 30 | — | — | — | — | — | — | 56.17 ± 2.13 | — | 56.17 ± 2.13 |
+| [CPU basis, 4 → 1; 16,667 samples](https://github.com/wa200508/airsim-rf/blob/profiling/p100/results/profiling/p100-basis-optimized-full-20261004/profiles/basis_cpu_4tx_1rx.json) | 30 | — | — | 4.54 ± 0.27 | 45.69 ± 1.11 | 25.57 ± 2.41 | 2.61 ± 0.29 | 78.49 ± 3.38 | — | 78.49 ± 3.38 |
+| [P100 basis, 4 → 1; 16,667 samples](https://github.com/wa200508/airsim-rf/blob/profiling/p100/results/profiling/p100-basis-optimized-full-20261004/profiles/basis_cuda_4tx_1rx.json) | 30 | — | — | — | — | — | — | 5.68 ± 0.18 | — | 5.68 ± 0.18 |
+| [CPU basis, 1 → 1; 16,667 samples](https://github.com/wa200508/airsim-rf/blob/profiling/p100/results/profiling/p100-basis-optimized-full-20261004/profiles/basis_cpu_1tx_1rx.json) | 30 | — | — | 1.01 ± 0.05 | 11.96 ± 0.15 | 7.64 ± 0.34 | 1.30 ± 0.10 | 21.87 ± 0.51 | — | 21.87 ± 0.51 |
+| [P100 basis, 1 → 1; 16,667 samples](https://github.com/wa200508/airsim-rf/blob/profiling/p100/results/profiling/p100-basis-optimized-full-20261004/profiles/basis_cuda_1tx_1rx.json) | 30 | — | — | — | — | — | — | 5.51 ± 0.29 | — | 5.51 ± 0.29 |
+| [CPU direct SDR, 2 → 1; 4,096 samples (historical)](https://github.com/wa200508/airsim-rf/blob/profiling/p100/benchmarks/results/sdr_cpu_2tx_1rx.json) | 30 | 0.04 ± 0.01 | 23.11 ± 2.16 | — | — | — | — | — | 217.74 ± 13.78 | 240.86 ± 14.10 |
+| [CPU direct SDR, 2 → 2; 4,096 samples (historical)](https://github.com/wa200508/airsim-rf/blob/profiling/p100/benchmarks/results/sdr_cpu_2tx_2rx.json) | 30 | 0.05 ± 0.01 | 19.59 ± 1.55 | — | — | — | — | — | 389.74 ± 18.89 | 410.42 ± 19.08 |
+| [CPU direct SDR, 100 → 1; 4,096 samples (historical)](https://github.com/wa200508/airsim-rf/blob/profiling/p100/benchmarks/results/sdr_cpu_100tx_1rx.json) | 10 | 0.32 ± 0.04 | 681.65 ± 25.46 | — | — | — | — | — | 10846.50 ± 121.42 | 11522.77 ± 131.40 |
+| [CPU LLVM per-link, 100 → 1; 4,096 samples (historical)](https://github.com/wa200508/airsim-rf/blob/profiling/p100/research_results/batched_renderer_cpu/per_link_local.json) | 10 | 0.25 ± 0.04 | 65.20 ± 7.19 | — | — | — | — | 189.40 ± 10.82 | 16.04 ± 1.51 | 274.03 ± 16.89 |
+| [CPU LLVM tile 32, 100 → 1; 4,096 samples (historical)](https://github.com/wa200508/airsim-rf/blob/profiling/p100/research_results/batched_renderer_cpu/batched_32.json) | 10 | 0.29 ± 0.02 | 60.71 ± 3.23 | — | — | — | — | 170.32 ± 7.00 | 11.00 ± 0.47 | 247.32 ± 7.65 |
+| [CPU LLVM tile 128, 100 → 1; 4,096 samples (historical)](https://github.com/wa200508/airsim-rf/blob/profiling/p100/research_results/batched_renderer_cpu/batched_128.json) | 10 | 0.29 ± 0.01 | 61.25 ± 2.53 | — | — | — | — | 169.87 ± 11.05 | 10.50 ± 0.54 | 243.25 ± 12.94 |
+
+### 95th percentile
+
+| Configuration / raw captures | n | Pose update | Scene propagation | Render preparation | Basis/filter construction | FFT + reconstruction | Other rendering work | Signal rendering subtotal | Receiver processing | Measured call total |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| [CPU basis, 100 → 1; 16,667 samples](https://github.com/wa200508/airsim-rf/blob/profiling/p100/results/profiling/p100-basis-optimized-full-20261004/profiles/basis_cpu_100tx_1rx.json) | 30 | — | — | 99.11 | 1143.81 | 439.91 | 16.47 | 1700.36 | — | 1700.36 |
+| [P100 basis, 100 → 1; 16,667 samples](https://github.com/wa200508/airsim-rf/blob/profiling/p100/results/profiling/p100-basis-optimized-full-20261004/profiles/basis_cuda_100tx_1rx.json) | 30 | — | — | — | — | — | — | 59.65 | — | 59.65 |
+| [CPU basis, 4 → 1; 16,667 samples](https://github.com/wa200508/airsim-rf/blob/profiling/p100/results/profiling/p100-basis-optimized-full-20261004/profiles/basis_cpu_4tx_1rx.json) | 30 | — | — | 4.84 | 48.20 | 29.37 | 3.12 | 84.62 | — | 84.62 |
+| [P100 basis, 4 → 1; 16,667 samples](https://github.com/wa200508/airsim-rf/blob/profiling/p100/results/profiling/p100-basis-optimized-full-20261004/profiles/basis_cuda_4tx_1rx.json) | 30 | — | — | — | — | — | — | 6.05 | — | 6.05 |
+| [CPU basis, 1 → 1; 16,667 samples](https://github.com/wa200508/airsim-rf/blob/profiling/p100/results/profiling/p100-basis-optimized-full-20261004/profiles/basis_cpu_1tx_1rx.json) | 30 | — | — | 1.12 | 12.23 | 8.37 | 1.42 | 23.05 | — | 23.05 |
+| [P100 basis, 1 → 1; 16,667 samples](https://github.com/wa200508/airsim-rf/blob/profiling/p100/results/profiling/p100-basis-optimized-full-20261004/profiles/basis_cuda_1tx_1rx.json) | 30 | — | — | — | — | — | — | 6.14 | — | 6.14 |
+| [CPU direct SDR, 2 → 1; 4,096 samples (historical)](https://github.com/wa200508/airsim-rf/blob/profiling/p100/benchmarks/results/sdr_cpu_2tx_1rx.json) | 30 | 0.05 | 25.16 | — | — | — | — | — | 237.02 | 259.32 |
+| [CPU direct SDR, 2 → 2; 4,096 samples (historical)](https://github.com/wa200508/airsim-rf/blob/profiling/p100/benchmarks/results/sdr_cpu_2tx_2rx.json) | 30 | 0.07 | 23.02 | — | — | — | — | — | 427.63 | 446.71 |
+| [CPU direct SDR, 100 → 1; 4,096 samples (historical)](https://github.com/wa200508/airsim-rf/blob/profiling/p100/benchmarks/results/sdr_cpu_100tx_1rx.json) | 10 | 0.39 | 733.15 | — | — | — | — | — | 11017.94 | 11729.99 |
+| [CPU LLVM per-link, 100 → 1; 4,096 samples (historical)](https://github.com/wa200508/airsim-rf/blob/profiling/p100/research_results/batched_renderer_cpu/per_link_local.json) | 10 | 0.32 | 78.09 | — | — | — | — | 211.45 | 18.89 | 302.43 |
+| [CPU LLVM tile 32, 100 → 1; 4,096 samples (historical)](https://github.com/wa200508/airsim-rf/blob/profiling/p100/research_results/batched_renderer_cpu/batched_32.json) | 10 | 0.31 | 67.66 | — | — | — | — | 183.58 | 11.82 | 256.45 |
+| [CPU LLVM tile 128, 100 → 1; 4,096 samples (historical)](https://github.com/wa200508/airsim-rf/blob/profiling/p100/research_results/batched_renderer_cpu/batched_128.json) | 10 | 0.31 | 66.05 | — | — | — | — | 196.07 | 11.09 | 272.31 |
+
+### GPU stage observations: one instrumented capture per configuration
+
+These are CUDA-event spans, in ms, from a separate capture. **n = 1; no standard deviation or p95 is available.** They include dispatch gaps and profiling overhead, and must not be added to the unprofiled median above.
+
+| Configuration | Pack + upload | Delay map | Temporal coefficients | Path → filter projection | Private FFT filters | Reconstruction + sum | Output export | Instrumented wall total |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| [P100 basis, 100 → 1; 16,667 samples](https://github.com/wa200508/airsim-rf/blob/profiling/p100/results/profiling/p100-basis-optimized-full-20261004/profiles/basis_cuda_100tx_1rx.json) | 23.73 | 5.11 | 5.51 | 17.67 | 15.08 | 1.69 | 0.11 | 69.36 |
+| [P100 basis, 4 → 1; 16,667 samples](https://github.com/wa200508/airsim-rf/blob/profiling/p100/results/profiling/p100-basis-optimized-full-20261004/profiles/basis_cuda_4tx_1rx.json) | 1.19 | 1.78 | 2.06 | 1.29 | 1.17 | 0.28 | 0.28 | 8.94 |
+| [P100 basis, 1 → 1; 16,667 samples](https://github.com/wa200508/airsim-rf/blob/profiling/p100/results/profiling/p100-basis-optimized-full-20261004/profiles/basis_cuda_1tx_1rx.json) | 0.38 | 1.71 | 2.09 | 1.17 | 3.81 | 3.65 | 0.18 | 14.15 |
+
+<!-- END STAGE TIMING TABLES -->
+
+The raw-capture links are the sources for every number. On `profiling/p100`,
+regenerate these tables with `python scripts/update_profiling_breakdown.py`,
+or verify them with `python scripts/update_profiling_breakdown.py --check`.
+For repeated GPU stage distributions, run the basis benchmark with
+`--profile-only --iterations 30`; its instrumented results must remain separate
+from unprofiled throughput measurements. No repeated GPU stage results are
+claimed here.
+
 ## Your ten-minute flight: 10 moving TX and four moving RX
 
 This is **40 independent directed links**, rather than the 100-link case in
@@ -144,8 +237,8 @@ must not be summed into the unprofiled mean or median.
 | 162.85 ms / 80 ms frame, [PERFORMANCE](PERFORMANCE.md) | Sixteen-chirp radar frame | About 2.04× renderer/service work per frame interval, not a 120 Hz continuous network result |
 | 144 retained paths, [single bounce](OPTIMIZATION.md), [per pulse](PER_PULSE_RUNTIME.md) | Small scene's LoS/specular channel; many links but very few paths | Channel-only timing excludes sample rendering and diffuse ground return |
 | 48.6 ms channel, [GPU planning](GPU_RUNTIME.md) | CPU channel/poses/export | No waveform processing; sub-millisecond GPU ray entries elsewhere are hypothetical query-rate arithmetic |
-| 243.25 ms service, [batched renderer](https://github.com/wa200508/airsim-rf/blob/profiling/p100/BATCHED_RENDERING.md) | Tone inputs, about 42,500 surviving paths total, 4,096 samples per RX | Only 2.048 ms of output, versus the new 8.3335 ms window; scene-dependent survival reduces path work |
-| 22× CPU speedup, [basis experiment](https://github.com/wa200508/airsim-rf/blob/profiling/p100/DOPPLER_BASIS_FFT.md) | Ratio of two algorithms on one/four-link synthetic jobs | Faster than a baseline does not mean faster than real time; original host differs from the P100 collection |
+| 243.25 ms service, [batched renderer](BATCHED_RENDERING.md) | Tone inputs, about 42,500 surviving paths total, 4,096 samples per RX | Only 2.048 ms of output, versus the new 8.3335 ms window; scene-dependent survival reduces path work |
+| 22× CPU speedup, [basis experiment](DOPPLER_BASIS_FFT.md) | Ratio of two algorithms on one/four-link synthetic jobs | Faster than a baseline does not mean faster than real time; original host differs from the P100 collection |
 | 122.67 ms P100, [original run](https://github.com/wa200508/airsim-rf/blob/profiling/p100/results/profiling/p100-basis-full-20261004/REPORT.md) | Older gather projection; failed timestamp qualification | Historical diagnostic result; superseded by the qualified 56.17 ms median configuration |
 | Legacy Sionna P100 [results](https://github.com/wa200508/airsim-rf/blob/profiling/p100/results/profiling/README.md) | Older propagation stack and CPU signal rendering | Separate compatibility experiment, not current CuPy renderer or supported current-stack propagation |
 
@@ -156,11 +249,6 @@ Short bursts also cannot be compared with continuous output solely by updates/s.
 Historical GPU forecasts are sensitivity calculations, not measured capacity.
 
 ## Keep the summary reproducible
-
-The renderer, source artifacts and regeneration script are on
-[`profiling/p100`](https://github.com/wa200508/airsim-rf/tree/profiling/p100).
-Switch to that branch before running the commands below. The main-branch
-summary is a documentation copy; it does not merge the experimental renderer.
 
 Run `python3 scripts/update_runtime_docs.py` after selecting a new qualified
 collection in that script, or `python3 scripts/update_runtime_docs.py --check`

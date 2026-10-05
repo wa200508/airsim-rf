@@ -316,3 +316,6 @@ target returns, and the hardware profile adds FMCW dechirping and IF/ADC
 simulation. Mesh target scattering and multipath radar echoes remain future
 extensions. AirSim's existing radar detections/tracks
 do not encode the phase information needed to reconstruct those signals.
+
+For processing-step columns, **median ± standard deviation**, and a separate
+**p95** table, see [the consolidated profiling breakdown](RUNTIME_STATUS.md#processing-steps-by-scenario-and-configuration).
