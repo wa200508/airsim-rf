@@ -15,3 +15,6 @@ results/profiling/*/raw/
 
 # End-to-end receiver recordings are regenerated locally.
 results/end_to_end/*/captures/
+
+# Nested end-to-end captures in profiling bundles stay local.
+results/profiling/**/captures/

@@ -31,7 +31,9 @@ def main():
     selected=[bundle/name for name in ('REPORT.md','manifest.json','environment.json','installed_packages.json',
         'profile_summary.json','telemetry_summary.json','checksums.json') if (bundle/name).is_file()]
     for directory,pattern in (('metrics','*.json'),('profiles','*.json'),('logs','*.log')):
-        selected.extend(sorted((bundle/directory).glob(pattern)))
+        selected.extend(sorted((bundle/directory).rglob(pattern)))
+    if manifest.get('scope')=='rf_pipeline_end_to_end_collection':
+        selected.extend(sorted((bundle/'profiles').rglob('REPORT.md')))
     if any(path.is_symlink() for path in selected): p.error('Symlink artifacts are not supported')
     if any(path.stat().st_size>20*1024*1024 for path in selected):
         p.error('A git artifact exceeds 20 MiB; keep large profiler output in raw/')

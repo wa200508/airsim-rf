@@ -148,29 +148,31 @@ These are CUDA-event spans, in ms, from a separate capture. **n = 1; no standard
 
 ### End-to-end RF pipeline: median ± sample standard deviation
 
-| Complete RF-pipeline configuration | n | Truth advance | Private source generation | Scene propagation | Signal rendering | Noise/filter/ADC | Bridge + other RF work | Delivery + storage | Complete update |
+| Configuration / raw captures | n | Truth advance | Private sources | Scene propagation | Signal rendering | Noise/filter/ADC | Bridge + other RF work | Delivery + storage | Complete update |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
-| [100 → 10, basis-cpu; trajectory source](results/end_to_end/cpu-100tx-10rx-20261005/measurements.json) | 5 | 0.002 ± 0.000 | 54.178 ± 2.301 | 1186.283 ± 108.425 | 10615.410 ± 429.415 | 12.070 ± 0.255 | 88.654 ± 1.960 | 15.093 ± 3.193 | 11986.071 ± 499.771 |
-| [10 → 4, basis-cpu; trajectory source](results/end_to_end/cpu-10tx-4rx-20261005/measurements.json) | 10 | 0.003 ± 0.000 | 6.085 ± 0.594 | 105.786 ± 32.761 | 493.207 ± 18.241 | 4.571 ± 1.246 | 7.243 ± 0.778 | 6.468 ± 1.211 | 620.592 ± 32.685 |
+| [100 → 10, basis-cpu; AMD EPYC 9V74 80-Core Processor](results/end_to_end/cpu-100tx-10rx-20261005/measurements.json) | 5 | 0.002 ± 0.000 | 54.178 ± 2.301 | 1186.283 ± 108.425 | 10615.410 ± 429.415 | 12.070 ± 0.255 | 88.654 ± 1.960 | 15.093 ± 3.193 | 11986.071 ± 499.771 |
+| [10 → 4, basis-cpu; AMD EPYC 9V74 80-Core Processor](results/end_to_end/cpu-10tx-4rx-20261005/measurements.json) | 10 | 0.003 ± 0.000 | 6.085 ± 0.594 | 105.786 ± 32.761 | 493.207 ± 18.241 | 4.571 ± 1.246 | 7.243 ± 0.778 | 6.468 ± 1.211 | 620.592 ± 32.685 |
 
 ### End-to-end RF pipeline: p95
 
-| Complete RF-pipeline configuration | n | Truth advance | Private source generation | Scene propagation | Signal rendering | Noise/filter/ADC | Bridge + other RF work | Delivery + storage | Complete update |
+| Configuration / raw captures | n | Truth advance | Private sources | Scene propagation | Signal rendering | Noise/filter/ADC | Bridge + other RF work | Delivery + storage | Complete update |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
-| [100 → 10, basis-cpu; trajectory source](results/end_to_end/cpu-100tx-10rx-20261005/measurements.json) | 5 | 0.002 | 57.731 | 1353.061 | 11108.158 | 12.203 | 89.477 | 20.940 | 12571.095 |
-| [10 → 4, basis-cpu; trajectory source](results/end_to_end/cpu-10tx-4rx-20261005/measurements.json) | 10 | 0.003 | 7.042 | 126.508 | 520.594 | 6.852 | 8.558 | 8.899 | 654.255 |
+| [100 → 10, basis-cpu; AMD EPYC 9V74 80-Core Processor](results/end_to_end/cpu-100tx-10rx-20261005/measurements.json) | 5 | 0.002 | 57.731 | 1353.061 | 11108.158 | 12.203 | 89.477 | 20.940 | 12571.095 |
+| [10 → 4, basis-cpu; AMD EPYC 9V74 80-Core Processor](results/end_to_end/cpu-10tx-4rx-20261005/measurements.json) | 10 | 0.003 | 7.042 | 126.508 | 520.594 | 6.852 | 8.558 | 8.899 | 654.255 |
 
-These rows include the complete RF scene-to-network-consumer pipeline, with continuous 2 MS/s I/Q at 120 Hz sample accounting. The recorded cloud CPU is AMD EPYC 9V74 with a **two-core cgroup quota**, not the Ryzen/P100 host above. All receivers execute serially. Truth advance uses a deterministic trajectory source; **AirSim physics/RPC and distributed AMS-GRA SDR workers were not run**. Scene propagation uses 1,028 attempts/link; physical retained counts are recorded in JSON. Five- and ten-window runs are short integration measurements, not long-flight or robust tail qualifications. Initialization/first-use/warmup are excluded; the first capture is retained separately. Delivery is loopback HTTP plus consumer write/readback without fsync. See [end-to-end test scope and reproduction](END_TO_END.md).
+All timings are ms per fleet update. Source generation, propagation, continuous receiver filtering/noise/ADC, loopback HTTP delivery and consumer file readback are included. Sionna propagation is LLVM CPU even with CuPy rendering. Receivers execute serially. The default truth source implements the AirSim contract; it does not run live AirSim physics/RPC or AMS-GRA distributed SDR workers. Startup/warmup are excluded from these tables, physical path counts and hardware/quota are in the linked JSON, and five-/ten-window historical runs do not qualify long-run tail latency.
 
 <!-- END STAGE TIMING TABLES -->
 
 The raw-capture links are the sources for every number. On `profiling/p100`,
 regenerate these tables with `python scripts/update_profiling_breakdown.py`,
 or verify them with `python scripts/update_profiling_breakdown.py --check`.
-For repeated GPU stage distributions, run the basis benchmark with
-`--profile-only --iterations 30`; its instrumented results must remain separate
-from unprofiled throughput measurements. No repeated GPU stage results are
-claimed here.
+The historical renderer-only GPU captures above have just one instrumented
+observation. For repeated full-pipeline wall timings and CUDA stage distributions,
+use the [P100 end-to-end collector](P100_BASIS_PROFILING.md#complete-rf-pipeline-fill-every-stage-row).
+It imports only validated complete bundles and keeps instrumented GPU event
+statistics separate from unprofiled latency. No new P100 measurements are
+claimed until such a bundle is collected and published.
 
 ## Your ten-minute flight: 10 moving TX and four moving RX
 

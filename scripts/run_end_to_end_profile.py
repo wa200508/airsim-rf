@@ -1,64 +1,115 @@
-"""Run the complete RF integration suite and CPU/P100 scene-to-consumer scenarios."""
+"""Collect validated complete RF-pipeline CPU/P100 rows and repeated CUDA stages."""
 import argparse
+from datetime import datetime, timezone
+import json
 from pathlib import Path
+import re
 import subprocess
 import sys
 from time import monotonic
+
+from aggregate_end_to_end_profile import aggregate
+from run_gpu_profile import environment
 
 ROOT = Path(__file__).resolve().parents[1]
 
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--output', type=Path, required=True)
+    parser.add_argument('--output', type=Path, help='Exact new output directory')
+    parser.add_argument('--output-root', type=Path, default=ROOT/'results/profiling')
+    parser.add_argument('--run-id', default='p100-end-to-end-'+datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%SZ'))
     parser.add_argument('--backend', choices=('cpu','cuda','both'), default='both')
+    parser.add_argument('--cpu-only', action='store_true', help='Equivalent to --backend cpu')
     parser.add_argument('--iterations', type=int, default=30)
     parser.add_argument('--warmup', type=int, default=3)
+    parser.add_argument('--scenarios', nargs='+', default=['2x2','10x4','100x10'], help='TXxRX counts; budgets/cadence unchanged')
     args = parser.parse_args()
-    if args.iterations < 1 or args.warmup < 0:
-        parser.error('Positive iteration count and nonnegative warmup required')
-    args.output = args.output.resolve()
-    args.output.mkdir(parents=True, exist_ok=False)
+    if args.iterations < 2 or args.warmup < 0:
+        parser.error('At least two timed captures for SD and nonnegative warmup required')
+    if args.cpu_only:
+        args.backend='cpu'
+    if not re.fullmatch(r'[A-Za-z0-9][A-Za-z0-9_.-]{0,100}',args.run_id):
+        parser.error('Use a filename-safe run-id')
+    scenarios=[]
+    for value in args.scenarios:
+        match=re.fullmatch(r'([1-9][0-9]*)x([1-9][0-9]*)',value)
+        if not match:
+            parser.error('Scenarios must be TXxRX counts, e.g. 100x10')
+        scenarios.append(tuple(map(int,match.groups())))
+    if len(set(scenarios))!=len(scenarios):
+        parser.error('Duplicate scenario')
+    output=(args.output or args.output_root/args.run_id).resolve()
+    output.mkdir(parents=True, exist_ok=False)
+    (output/'logs').mkdir()
+    (output/'profiles').mkdir()
+    backends = ['cpu','cuda'] if args.backend == 'both' else [args.backend]
+    manifest=dict(run_id=output.name,scope='rf_pipeline_end_to_end_collection',complete=False,
+                  iterations=args.iterations,warmup=args.warmup,scenarios=scenarios,backends=backends,tasks=[])
+    def save():
+        (output/'manifest.json').write_text(json.dumps(manifest,indent=2)+'\n')
+    save()
+    (output/'environment.json').write_text(json.dumps(environment(),indent=2)+'\n')
     launcher = [sys.executable, str(ROOT/'scripts/basis_launch.py')]
 
-    def execute(name, command):
+    def execute(name, command, artifact=None):
+        task=dict(name=name,command=command,status='running',artifact=artifact)
+        manifest['tasks'].append(task);save()
         print(f'{name}: starting', flush=True)
         started = monotonic()
-        with (args.output/(name+'.log')).open('w') as stream:
-            with subprocess.Popen(command, cwd=ROOT, stdout=stream, stderr=subprocess.STDOUT) as child:
-                try:
-                    while True:
-                        try:
-                            code = child.wait(timeout=15)
-                            break
-                        except subprocess.TimeoutExpired:
-                            print(f'{name}: running for {monotonic()-started:.0f}s', flush=True)
-                except BaseException:
-                    child.terminate()
+        try:
+            with (output/'logs'/(name+'.log')).open('w') as stream:
+                with subprocess.Popen(command, cwd=ROOT, stdout=stream, stderr=subprocess.STDOUT) as child:
                     try:
-                        child.wait(timeout=10)
-                    except subprocess.TimeoutExpired:
-                        child.kill()
-                    raise
-        if code:
-            raise SystemExit(f'{name} failed (exit {code}); see {args.output/(name+".log")}')
+                        while True:
+                            try:
+                                code = child.wait(timeout=15)
+                                break
+                            except subprocess.TimeoutExpired:
+                                print(f'{name}: running for {monotonic()-started:.0f}s', flush=True)
+                    except BaseException:
+                        child.terminate()
+                        try:
+                            child.wait(timeout=10)
+                        except subprocess.TimeoutExpired:
+                            child.kill()
+                        raise
+            task.update(returncode=code,status='ok' if code==0 and (artifact is None or (output/artifact).is_file()) else 'failed')
+        except BaseException:
+            task['status']='failed';save();raise
+        task['wall_seconds']=monotonic()-started;save()
+        if task['status']!='ok':
+            raise SystemExit(f'{name} failed; see {output/"logs"/(name+".log")}')
         print(f'{name}: passed', flush=True)
 
-    if args.backend in ('cuda','both'):
-        # Import/runtime failures are fatal: no CPU fallback or skipped GPU claim.
-        execute('cuda_preflight', launcher+['-c',
-            'import cupy as cp; assert cp.cuda.runtime.getDeviceCount()>0; cp.arange(8).sum().get()'])
+    if 'cuda' in backends:
+        execute('cuda_preflight', launcher+[str(ROOT/'scripts/basis_cuda_preflight.py'),
+                '--output',str(output/'profiles/cuda_preflight.json')], 'profiles/cuda_preflight.json')
     execute('integration_tests', launcher+['-m','pytest','tests/test_end_to_end.py',
-        'tests/test_sdr.py','tests/test_distributed.py','-q'])
-    backends = ('cpu','cuda') if args.backend == 'both' else (args.backend,)
+        'tests/test_sdr.py','tests/test_distributed.py','tests/test_end_to_end_profiling.py','-q'])
     for backend in backends:
-        for tx, rx in ((2,2),(10,4),(100,10)):
-            name = f'{backend}-{tx}tx-{rx}rx'
-            execute(name, launcher+[str(ROOT/'benchmarks/benchmark_end_to_end.py'),
-                '--renderer',f'basis-{backend}','--tx',str(tx),'--rx',str(rx),
-                '--iterations',str(args.iterations),'--warmup',str(args.warmup),
-                '--output',str(args.output/name)])
-    print(f'Completed end-to-end collection: {args.output}', flush=True)
+        for tx, rx in scenarios:
+            modes = ('unprofiled','instrumented') if backend=='cuda' else ('unprofiled',)
+            for mode in modes:
+                name = f'{backend}-{tx}tx-{rx}rx-{mode}'
+                relative=f'profiles/{name}/measurements.json'
+                command=launcher+[str(ROOT/'benchmarks/benchmark_end_to_end.py'),
+                    '--renderer',f'basis-{backend}','--tx',str(tx),'--rx',str(rx),
+                    '--iterations',str(args.iterations),'--warmup',str(args.warmup),
+                    '--output',str(output/'profiles'/name)]
+                if mode=='instrumented':
+                    command.append('--profile-rendering')
+                execute(name,command,relative)
+    manifest['complete']=True;save()
+    try:
+        aggregate(output)
+    except BaseException:
+        manifest['complete']=False;save();raise
+    print(f'Completed and validated collection: {output/"REPORT.md"}', flush=True)
+    if output.parent == ROOT/'results/profiling':
+        print(f'Publish: python scripts/publish_gpu_results.py {output} --push', flush=True)
+    else:
+        print('To publish, copy this bundle into the checkout at results/profiling/<run-id>.', flush=True)
 
 
 if __name__ == '__main__':

@@ -183,5 +183,72 @@ The renderer exports a whole preloaded window. Live input accumulation can add
 up to the window duration (8.3335 ms by default), plus interpolation lookahead
 (up to 8 microseconds), processing and transport. A sustained renderer rate of
 120 Hz is a necessary milestone, not complete simulation-plane qualification
-or an established live-stream delivery latency. Persistent receiver state and
-clock resampling remain implementation work.
+or an established live-stream delivery latency. Persistent receiver state is exercised by the end-to-end collector below;
+clock-rate resampling remains unqualified.
+
+## Complete RF pipeline: fill every stage row
+
+Use the updated `profiling/p100` branch and the new end-to-end Docker mode:
+
+```bash
+git switch profiling/p100
+git pull --ff-only
+bash scripts/run_p100_docker.sh --end-to-end --run-id p100-end-to-end-full
+cat results/profiling/p100-end-to-end-full/REPORT.md
+```
+
+This is the **scene-to-consumer RF test**, including the moving-platform mount
+bridge, private continuous arbitrary input samples, terrain multipath, Doppler
+rendering, persistent filtering/noise/ADC, actual loopback HTTP delivery and
+consumer write/readback. It uses a deterministic trajectory source, not live
+AirSim physics or AMS-GRA distributed SDR workers. Sionna tracing is **LLVM
+CPU** on the P100; rendering uses CuPy. Receivers execute serially on one device.
+
+The collector runs **2 TX / 2 RX, 10 TX / 4 RX and 100 TX / 10 RX** on both
+CPU and CUDA, with 30 timed windows and three warmups each. GPU scenarios run
+a second, separate full-pipeline capture series with repeated CUDA-event
+profiling. Both series retain all scene paths, 1,028 diffuse attempts per
+link, 2 MS/s and 120 Hz contiguous sample accounting. There is no synthetic
+path padding, sharing of link transforms, or favorable-workload shortcut.
+
+One `REPORT.md` contains configuration rows and processing-step columns:
+
+- Unprofiled full-pipeline median ± sample standard deviation and p95.
+- Separate instrumented full-pipeline wall-time tables.
+- Repeated GPU stage median ± standard deviation and p95 for packing/upload,
+  delay mapping, temporal coefficients, path-to-filter projection, private
+  FFT filtering, reconstruction/sum and output download.
+
+GPU event spans include dispatch gaps; they are not pure kernel times. They
+are summed across blocks/batches/receivers within each window before statistics
+are computed. Instrumented measurements never enter the unprofiled throughput
+rows. Every required scenario, capture count, pipeline timing and CUDA stage
+is validated. A missing step or failed CUDA preflight leaves the collection
+incomplete instead of filling a cell with zero or declaring success.
+
+For a sandbox that already exposes the P100:
+
+```bash
+.venv/bin/python scripts/basis_launch.py scripts/run_end_to_end_profile.py \
+  --run-id p100-end-to-end-full
+```
+
+Use `--backend cuda` to collect only the hybrid CPU-tracing/CUDA-rendering
+rows, or `--scenarios 100x10` to select the full target fleet. These select
+configurations without changing path attempts, sample rate or cadence. At
+least two timed captures are required to report standard deviation; 30 is the
+default. This fleet run can take several minutes, especially the CPU comparison.
+
+Publish the combined report, nested measurement JSON, logs, environment record
+and checksums using the updated publisher; large SC16 captures stay local:
+
+```bash
+python3 scripts/publish_gpu_results.py \
+  results/profiling/p100-end-to-end-full --push
+```
+
+The result branch is `profiling/results/p100-end-to-end-full`. After importing
+the published results, `python3 scripts/update_profiling_breakdown.py` discovers
+nested complete-pipeline JSON and fills the corresponding tables in
+`RUNTIME_STATUS.md` automatically. It preserves the actual hardware labels
+and keeps instrumented GPU events separate from unprofiled latency.

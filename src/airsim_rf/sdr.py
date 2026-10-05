@@ -153,7 +153,7 @@ class SDRNetworkReceiver:
                  path_tile=128, sample_tile=32, accumulation="partial",
                  replay=True, max_render_lanes=1_000_000, link_diagnostics=True,
                  batch_reduction="auto", continuous=False, max_delay_s=100e-6,
-                 max_doppler_hz=2500., block_samples=2048, fft_workers=2):
+                 max_doppler_hz=2500., block_samples=2048, fft_workers=2, profile_rendering=False):
         if not emitters or set(emitters) != set(scene.transmitters):
             raise ValueError("Supply one emitter for every scene transmitter")
         if not scene.receivers:
@@ -191,6 +191,9 @@ class SDRNetworkReceiver:
             self.batched_renderer = BatchedPathRenderer(backend=renderer.removeprefix("batched-"),
                 path_tile=path_tile, sample_tile=sample_tile, replay=replay, max_lanes=max_render_lanes,
                 reduction=batch_reduction)
+        if not isinstance(profile_rendering, bool) or (profile_rendering and renderer != "basis-cuda"):
+            raise ValueError("Repeated rendering event profiling requires basis-cuda")
+        self.profile_rendering = profile_rendering
         self.basis_renderer = None
         if renderer.startswith("basis-"):
             if any(e.clock.error_ppm != 0 for e in emitters.values()):
@@ -314,7 +317,8 @@ class SDRNetworkReceiver:
                     if self.basis_renderer is not None:
                         if self.renderer == "basis-cuda":
                             batched_signals = self.basis_renderer.render(jobs, num_samples=num_samples+warmup,
-                                sim_time_ns=warmup_ns, channel_epoch_ns=sim_time_ns, sum_output=not self.link_diagnostics)
+                                sim_time_ns=warmup_ns, channel_epoch_ns=sim_time_ns, sum_output=not self.link_diagnostics,
+                                profile=self.profile_rendering)
                         else:
                             batched_signals = self.basis_renderer.render(jobs, num_samples=num_samples+warmup,
                                 sim_time_ns=warmup_ns, channel_epoch_ns=sim_time_ns)

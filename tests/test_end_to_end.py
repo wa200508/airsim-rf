@@ -116,3 +116,15 @@ def test_continuous_timestamps_keep_integer_nanoseconds_at_large_epochs():
     assert receiver._next_time_ns == epoch+128000
     receiver.capture(epoch+128000, num_samples=256)
     assert receiver._next_time_ns == epoch+256000
+
+
+def test_container_build_provenance_does_not_require_git_checkout(tmp_path,monkeypatch):
+    monkeypatch.setenv('RF_PROFILE_SOURCE_REV','container-build-revision')
+    monkeypatch.setenv('RF_PROFILE_SOURCE_DIRTY','false')
+    def no_git(*args,**kwargs):
+        raise AssertionError('Container benchmark must use build provenance, not .git')
+    monkeypatch.setattr(e2e.subprocess,'check_output',no_git)
+    result=e2e.run(output=tmp_path/'container',tx=1,rx=1,iterations=2,warmup=0)
+    assert result['source_revision']=='container-build-revision'
+    assert result['source_dirty'] is False
+    assert result['measurement_mode']=='unprofiled_end_to_end_benchmark'

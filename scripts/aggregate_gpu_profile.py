@@ -142,6 +142,10 @@ def main():
     p.add_argument('bundle',type=Path)
     args=p.parse_args();root=args.bundle.resolve()
     manifest=load(root/'manifest.json');env=load(root/'environment.json')
+    if manifest.get('scope')=='rf_pipeline_end_to_end_collection':
+        from aggregate_end_to_end_profile import aggregate
+        aggregate(root)
+        return
     if manifest.get('scope')=='doppler_basis_renderer':
         basis_report(root,manifest,env)
         return

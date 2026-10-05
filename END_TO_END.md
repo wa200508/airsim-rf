@@ -30,17 +30,22 @@ suite stands in for a live AirSim + distributed continuous-SDR fleet test.
 ## Collect complete RF-pipeline timings
 
 One command runs the integration suite and all three fleet sizes (2×2, 10×4,
-100×10), saving logs and Markdown/JSON results:
+100×10), saving one combined report, a validation manifest, environment record,
+checksums, logs and nested Markdown/JSON results:
 
 ```bash
 .venv/bin/python scripts/run_end_to_end_profile.py \
   --backend both --iterations 30 --warmup 3 \
-  --output results/end_to_end/p100-complete
+  --run-id p100-end-to-end-full
 ```
 
 Use `--backend cpu` in a CPU-only environment, or `--backend cuda` to collect
 only hybrid CPU-propagation/CUDA-rendering runs. The default `both` collection
-fails at preflight if a working CuPy device is unavailable. CUDA integration
+fails at preflight if a working CuPy device is unavailable. Every GPU scenario
+also gets a separate 30-window instrumented run, which fills all seven internal
+CUDA stage columns with median ± standard deviation and p95. Those statistics
+are kept separate from unprofiled full-pipeline throughput. Missing stages or
+scenario rows make aggregation fail. CUDA integration
 checks run against the direct scene-derived oracle when that device is present.
 
 The standalone commands below select a single configuration:
@@ -67,6 +72,10 @@ appropriate. Run the P100 command with the container entrypoint overridden to
 `python` and `--gpus all`, using the existing CUDA-enabled profiling image setup
 in [P100_BASIS_PROFILING.md](P100_BASIS_PROFILING.md). The selected rendering
 backend fails explicitly if CUDA is unavailable; it never silently falls back.
+
+The suite writes `results/profiling/<run-id>` by default. Use
+`bash scripts/run_p100_docker.sh --end-to-end --run-id p100-end-to-end-full`
+for the Docker version; see [P100 collection details](P100_BASIS_PROFILING.md#complete-rf-pipeline-fill-every-stage-row).
 
 Each output directory must be new. It contains `measurements.json`, `REPORT.md`,
 and local `captures/*.sc16` files. Publish the JSON and Markdown, rather than

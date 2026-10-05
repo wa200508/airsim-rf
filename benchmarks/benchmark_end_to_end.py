@@ -138,7 +138,7 @@ def stats(values):
 
 
 def run(*, output, tx=100, rx=10, iterations=30, warmup=3, renderer='basis-cpu',
-        samples_per_link=1028, airsim_config=None):
+        samples_per_link=1028, airsim_config=None, profile_rendering=False):
     import sionna.rt as rt
     output = Path(output)
     output.mkdir(parents=True, exist_ok=False)
@@ -173,7 +173,8 @@ def run(*, output, tx=100, rx=10, iterations=30, warmup=3, renderer='basis-cpu',
     emitters = {name: SDREmitter(wave, transmit_power_w=1e-4,
                     baseband_frequency_bounds_hz=(-999999., 999999.)) for name, wave in initial.items()}
     receiver = SDRNetworkReceiver(scene, emitters, PlutoSDRProfile(), renderer=renderer,
-        continuous=True, samples_per_link=samples_per_link, link_diagnostics=False)
+        continuous=True, samples_per_link=samples_per_link, link_diagnostics=False,
+        profile_rendering=profile_rendering)
     bridge = AirSimSDRBridge(world, robots, receiver)
     consumer = Consumer(output/'captures')
     rows = []
@@ -232,14 +233,30 @@ def run(*, output, tx=100, rx=10, iterations=30, warmup=3, renderer='basis-cpu',
     summary = {key: stats([row[key] for row in rows]) for key in keys}
     simulated_ms = sum(row['samples'] for row in rows)/FS*1000
     wall_ratio = sum(row['total_ms'] for row in rows)/simulated_ms
-    result = dict(scope='rf_pipeline_end_to_end' if airsim_config is None else 'live_airsim_rf_end_to_end',
+    # Docker overlays omit .git; use build provenance supplied by the wrapper.
+    def git_metadata(*args):
+        try:
+            return subprocess.check_output(['git',*args], cwd=ROOT, text=True, stderr=subprocess.DEVNULL).strip()
+        except (OSError, subprocess.CalledProcessError):
+            return None
+    revision = os.environ.get('RF_PROFILE_SOURCE_REV') or git_metadata('rev-parse','HEAD')
+    dirty_env = os.environ.get('RF_PROFILE_SOURCE_DIRTY')
+    dirty = (dirty_env.lower() == 'true' if dirty_env.lower() in ('true','false') else None) if dirty_env is not None else (bool(git_metadata('status','--porcelain','--untracked-files=no')) if revision else None)
+    gpu = None
+    if renderer == 'basis-cuda':
+        import cupy as cp
+        props = cp.cuda.runtime.getDeviceProperties(cp.cuda.Device().id)
+        gpu = dict(name=props['name'].decode() if isinstance(props['name'], bytes) else props['name'],
+                   compute_capability=f"{props['major']}.{props['minor']}", total_memory_bytes=props['totalGlobalMem'],
+                   cupy_version=cp.__version__)
+    result = dict(measurement_mode='instrumented_end_to_end_profile' if profile_rendering else 'unprofiled_end_to_end_benchmark',
+        scope='rf_pipeline_end_to_end' if airsim_config is None else 'live_airsim_rf_end_to_end',
         hardware=dict(cpu=next(line.split(':',1)[1].strip() for line in Path('/proc/cpuinfo').read_text().splitlines() if line.startswith('model name')), cpu_count=os.cpu_count(), cpu_quota=Path('/sys/fs/cgroup/cpu.max').read_text().strip(),
-                      platform=platform.platform(), sionna_rt=rt.__version__),
-        source_revision=subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip(),
-        source_dirty=bool(subprocess.check_output(['git','status','--porcelain','--untracked-files=no'],cwd=ROOT,text=True).strip()),
+                      platform=platform.platform(), sionna_rt=rt.__version__, gpu=gpu),
+        source_revision=revision, source_dirty=dirty,
         pose_source='deterministic AirSim-contract trajectory; physics/RPC not exercised' if airsim_config is None else 'live ProjectAirSim physics/RPC',
         propagation_backend='Sionna RT LLVM CPU', rendering_backend=renderer,
-        arguments=dict(tx=tx,rx=rx,iterations=iterations,warmup=warmup,samples_per_link=samples_per_link),
+        arguments=dict(tx=tx,rx=rx,iterations=iterations,warmup=warmup,samples_per_link=samples_per_link,profile_rendering=profile_rendering),
         timing_includes=['physics advance (live only)', 'snapshot/mount mapping', 'private waveform generation/copies',
             'scene multipath tracing/export', 'all-path I/Q rendering', 'persistent receive filter/noise/ADC',
             'SC16 serialization', 'loopback HTTP delivery/acknowledgement', 'consumer file write/readback (no fsync)'],
@@ -255,6 +272,7 @@ def run(*, output, tx=100, rx=10, iterations=30, warmup=3, renderer='basis-cpu',
     label=f'{tx} TX × {rx} RX, {renderer}; '+('live AirSim' if airsim_config else 'trajectory source')
     lines=['# End-to-end RF pipeline result', '', result['pose_source']+'.', '',
         '**All stages are in milliseconds per complete fleet update.**', '',
+        f'Measurement mode: {result["measurement_mode"]}. Instrumented runs are separate from throughput results.', '',
         '| '+' | '.join(headings)+' |', '| '+' | '.join(['---']+['---:']*len(keys))+' |',
         '| '+label+' | '+' | '.join(f'{summary[k]["median_ms"]:.2f} ± {summary[k]["std_ms"]:.2f}' if summary[k]['std_ms'] is not None else f'{summary[k]["median_ms"]:.2f} (n=1)' for k in keys)+' |', '',
         '## p95', '', '| '+' | '.join(headings)+' |', '| '+' | '.join(['---']+['---:']*len(keys))+' |',
@@ -279,6 +297,7 @@ def main():
     parser.add_argument('--renderer', choices=('basis-cpu','basis-cuda'), default='basis-cpu')
     parser.add_argument('--samples-per-link', type=int, default=1028)
     parser.add_argument('--airsim-config', type=Path)
+    parser.add_argument('--profile-rendering', action='store_true', help='Separate instrumented GPU-event run; never enters unprofiled throughput')
     args = parser.parse_args()
     if min(args.tx,args.rx,args.iterations,args.samples_per_link)<1 or args.warmup<0:
         parser.error('Positive counts and nonnegative warmup required')

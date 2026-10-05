@@ -4,14 +4,21 @@ set -euo pipefail
 profile_repo_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$profile_repo_root"
 profile_basis=false
+profile_e2e=false
 profile_args=()
 for profile_arg in "$@"; do
   if [[ "$profile_arg" == --doppler-basis ]]; then profile_basis=true;
+  elif [[ "$profile_arg" == --end-to-end ]]; then profile_e2e=true;
   else profile_args+=("$profile_arg"); fi
 done
+if [[ "$profile_basis" == true && "$profile_e2e" == true ]]; then
+  echo 'Select either --end-to-end or --doppler-basis.' >&2
+  exit 2
+fi
 for profile_arg in "$@"; do
   if [[ "$profile_arg" == --help || "$profile_arg" == -h ]]; then
-    if [[ "$profile_basis" == true ]]; then python3 scripts/run_doppler_basis_profile.py --help;
+    if [[ "$profile_e2e" == true ]]; then python3 scripts/run_end_to_end_profile.py --help;
+    elif [[ "$profile_basis" == true ]]; then python3 scripts/run_doppler_basis_profile.py --help;
     else python3 scripts/run_gpu_profile.py --help; fi
     exit 0
   fi
@@ -23,7 +30,7 @@ if ! git diff --quiet || ! git diff --cached --quiet; then profile_dirty=true; f
 profile_build=(docker build -f Dockerfile.profiling -t "$profile_image"
   --build-arg "PROFILE_SOURCE_REV=$profile_revision"
   --build-arg "PROFILE_SOURCE_DIRTY=$profile_dirty")
-if [[ "$profile_basis" == true ]]; then profile_build+=(--build-arg PROFILE_BASIS_CUDA=1); fi
+if [[ "$profile_basis" == true || "$profile_e2e" == true ]]; then profile_build+=(--build-arg PROFILE_BASIS_CUDA=1); fi
 if [[ -n "${CODEX_PROXY_CERT:-}" ]]; then
   profile_build+=(--secret "id=proxy_ca,src=$CODEX_PROXY_CERT")
 fi
@@ -32,15 +39,18 @@ mkdir -p results/profiling
 profile_run=(docker run --rm --user "$(id -u):$(id -g)"
   -v "$profile_repo_root/results/profiling:/work/results"
   -e MPLCONFIGDIR=/tmp/matplotlib)
-if [[ "$profile_basis" == true ]]; then
+if [[ "$profile_basis" == true || "$profile_e2e" == true ]]; then
   profile_run+=(--entrypoint python -e CUPY_CACHE_DIR=/tmp/cupy-kernel-cache
     -e CUDA_CACHE_PATH=/tmp/cuda-kernel-cache
     -e DRJIT_CACHE_DIR=/tmp/drjit-cache
     -e DRJIT_LIBCUDA_PATH=/tmp/disabled-drjit-cuda.so)
 fi
 profile_cpu_only=false
+profile_previous_arg=""
 for profile_arg in "$@"; do
-  if [[ "$profile_arg" == --cpu-only ]]; then profile_cpu_only=true; fi
+  if [[ "$profile_arg" == --cpu-only || "$profile_arg" == --backend=cpu ]]; then profile_cpu_only=true; fi
+  if [[ "$profile_arg" == cpu && "$profile_previous_arg" == --backend ]]; then profile_cpu_only=true; fi
+  profile_previous_arg="$profile_arg"
 done
 if [[ "$profile_cpu_only" == false ]]; then
   profile_run+=(--gpus "device=${RF_PROFILE_GPU:-0}"
@@ -61,7 +71,10 @@ if [[ -n "$profile_nsys" ]]; then
     profile_run+=(-v "$profile_nsys_root:$profile_nsys_root:ro" -e "NSYS_BIN=$profile_nsys")
   fi
 fi
-if [[ "$profile_basis" == true ]]; then
+if [[ "$profile_e2e" == true ]]; then
+  "${profile_run[@]}" "$profile_image" /opt/airsim-rf/scripts/basis_launch.py \
+    /opt/airsim-rf/scripts/run_end_to_end_profile.py --output-root /work/results "${profile_args[@]}"
+elif [[ "$profile_basis" == true ]]; then
   "${profile_run[@]}" "$profile_image" /opt/airsim-rf/scripts/basis_launch.py \
     /opt/airsim-rf/scripts/run_doppler_basis_profile.py --output-root /work/results "${profile_args[@]}"
 else
