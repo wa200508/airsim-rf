@@ -1,0 +1,8 @@
+{
+  "phase_error_rad": 0.013940817400304305,
+  "predicted_relative_complex_error": 0.013940704511098032,
+  "observed_relative_rms": 0.013940704511098967,
+  "residual_after_predicted_phase_rotation": 6.19839107808912e-12,
+  "zero_oscillator_offset_relative_rms": 6.198363172984544e-12,
+  "no_renderer_code_changes": true
+}

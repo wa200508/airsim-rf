@@ -31,3 +31,8 @@ but the required suite failed its split-capture/Unix-timestamp test (six passes,
 one failure). The overall result is **failed qualification**. At 100 TX the
 observed GPU median was 122.671 ms versus 1593.948 ms on CPU; this diagnostic
 renderer result misses the 8.333 ms target. See the scope and logs before use.
+
+The [follow-up investigation](p100-basis-investigation-20261004/REPORT.md)
+confirms substantial projection-kernel cost, finds no benefit from larger
+link groups, and isolates the Unix-timestamp failure to oscillator-phase
+rounding. It retains all workload budgets and applies no numerical repair.

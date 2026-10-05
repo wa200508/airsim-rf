@@ -1,0 +1,952 @@
+{
+  "kernels": {
+    "project": {
+      "launches": 117,
+      "sum_event_ms": 67.51712045073509
+    },
+    "reconstruct": {
+      "launches": 117,
+      "sum_event_ms": 2.727743993513286
+    }
+  },
+  "events": [
+    {
+      "kernel": "project",
+      "cuda_event_ms": 0.6974400281906128
+    },
+    {
+      "kernel": "reconstruct",
+      "cuda_event_ms": 0.02691200003027916
+    },
+    {
+      "kernel": "project",
+      "cuda_event_ms": 0.6902080178260803
+    },
+    {
+      "kernel": "reconstruct",
+      "cuda_event_ms": 0.024224000051617622
+    },
+    {
+      "kernel": "project",
+      "cuda_event_ms": 0.6551039814949036
+    },
+    {
+      "kernel": "reconstruct",
+      "cuda_event_ms": 0.02425600029528141
+    },
+    {
+      "kernel": "project",
+      "cuda_event_ms": 0.6630079746246338
+    },
+    {
+      "kernel": "reconstruct",
+      "cuda_event_ms": 0.026208000257611275
+    },
+    {
+      "kernel": "project",
+      "cuda_event_ms": 0.6561920046806335
+    },
+    {
+      "kernel": "reconstruct",
+      "cuda_event_ms": 0.025599999353289604
+    },
+    {
+      "kernel": "project",
+      "cuda_event_ms": 0.6678400039672852
+    },
+    {
+      "kernel": "reconstruct",
+      "cuda_event_ms": 0.024768000468611717
+    },
+    {
+      "kernel": "project",
+      "cuda_event_ms": 0.6567040085792542
+    },
+    {
+      "kernel": "reconstruct",
+      "cuda_event_ms": 0.024831999093294144
+    },
+    {
+      "kernel": "project",
+      "cuda_event_ms": 0.6626880168914795
+    },
+    {
+      "kernel": "reconstruct",
+      "cuda_event_ms": 0.023871999233961105
+    },
+    {
+      "kernel": "project",
+      "cuda_event_ms": 0.2693760097026825
+    },
+    {
+      "kernel": "reconstruct",
+      "cuda_event_ms": 0.02454400062561035
+    },
+    {
+      "kernel": "project",
+      "cuda_event_ms": 0.6780800223350525
+    },
+    {
+      "kernel": "reconstruct",
+      "cuda_event_ms": 0.025728000327944756
+    },
+    {
+      "kernel": "project",
+      "cuda_event_ms": 0.6739519834518433
+    },
+    {
+      "kernel": "reconstruct",
+      "cuda_event_ms": 0.02425600029528141
+    },
+    {
+      "kernel": "project",
+      "cuda_event_ms": 0.6755840182304382
+    },
+    {
+      "kernel": "reconstruct",
+      "cuda_event_ms": 0.024032000452280045
+    },
+    {
+      "kernel": "project",
+      "cuda_event_ms": 0.6777920126914978
+    },
+    {
+      "kernel": "reconstruct",
+      "cuda_event_ms": 0.024768000468611717
+    },
+    {
+      "kernel": "project",
+      "cuda_event_ms": 0.6711040139198303
+    },
+    {
+      "kernel": "reconstruct",
+      "cuda_event_ms": 0.02409599907696247
+    },
+    {
+      "kernel": "project",
+      "cuda_event_ms": 0.6779199838638306
+    },
+    {
+      "kernel": "reconstruct",
+      "cuda_event_ms": 0.025248000398278236
+    },
+    {
+      "kernel": "project",
+      "cuda_event_ms": 0.6683520078659058
+    },
+    {
+      "kernel": "reconstruct",
+      "cuda_event_ms": 0.02409599907696247
+    },
+    {
+      "kernel": "project",
+      "cuda_event_ms": 0.6702719926834106
+    },
+    {
+      "kernel": "reconstruct",
+      "cuda_event_ms": 0.02502400055527687
+    },
+    {
+      "kernel": "project",
+      "cuda_event_ms": 0.24463999271392822
+    },
+    {
+      "kernel": "reconstruct",
+      "cuda_event_ms": 0.017535999417304993
+    },
+    {
+      "kernel": "project",
+      "cuda_event_ms": 0.6892799735069275
+    },
+    {
+      "kernel": "reconstruct",
+      "cuda_event_ms": 0.025631999596953392
+    },
+    {
+      "kernel": "project",
+      "cuda_event_ms": 0.666208028793335
+    },
+    {
+      "kernel": "reconstruct",
+      "cuda_event_ms": 0.024480000138282776
+    },
+    {
+      "kernel": "project",
+      "cuda_event_ms": 0.6669120192527771
+    },
+    {
+      "kernel": "reconstruct",
+      "cuda_event_ms": 0.02396799996495247
+    },
+    {
+      "kernel": "project",
+      "cuda_event_ms": 0.6681600213050842
+    },
+    {
+      "kernel": "reconstruct",
+      "cuda_event_ms": 0.024768000468611717
+    },
+    {
+      "kernel": "project",
+      "cuda_event_ms": 0.6673920154571533
+    },
+    {
+      "kernel": "reconstruct",
+      "cuda_event_ms": 0.024447999894618988
+    },
+    {
+      "kernel": "project",
+      "cuda_event_ms": 0.6666560173034668
+    },
+    {
+      "kernel": "reconstruct",
+      "cuda_event_ms": 0.024800000712275505
+    },
+    {
+      "kernel": "project",
+      "cuda_event_ms": 0.6674879789352417
+    },
+    {
+      "kernel": "reconstruct",
+      "cuda_event_ms": 0.025439999997615814
+    },
+    {
+      "kernel": "project",
+      "cuda_event_ms": 0.6674240231513977
+    },
+    {
+      "kernel": "reconstruct",
+      "cuda_event_ms": 0.024639999493956566
+    },
+    {
+      "kernel": "project",
+      "cuda_event_ms": 0.2536320090293884
+    },
+    {
+      "kernel": "reconstruct",
+      "cuda_event_ms": 0.020287999883294106
+    },
+    {
+      "kernel": "project",
+      "cuda_event_ms": 0.6731520295143127
+    },
+    {
+      "kernel": "reconstruct",
+      "cuda_event_ms": 0.026464000344276428
+    },
+    {
+      "kernel": "project",
+      "cuda_event_ms": 0.6552640199661255
+    },
+    {
+      "kernel": "reconstruct",
+      "cuda_event_ms": 0.02364799939095974
+    },
+    {
+      "kernel": "project",
+      "cuda_event_ms": 0.6495040059089661
+    },
+    {
+      "kernel": "reconstruct",
+      "cuda_event_ms": 0.024927999824285507
+    },
+    {
+      "kernel": "project",
+      "cuda_event_ms": 0.6559039950370789
+    },
+    {
+      "kernel": "reconstruct",
+      "cuda_event_ms": 0.024480000138282776
+    },
+    {
+      "kernel": "project",
+      "cuda_event_ms": 0.6507200002670288
+    },
+    {
+      "kernel": "reconstruct",
+      "cuda_event_ms": 0.025119999423623085
+    },
+    {
+      "kernel": "project",
+      "cuda_event_ms": 0.6572800278663635
+    },
+    {
+      "kernel": "reconstruct",
+      "cuda_event_ms": 0.024191999807953835
+    },
+    {
+      "kernel": "project",
+      "cuda_event_ms": 0.6496000289916992
+    },
+    {
+      "kernel": "reconstruct",
+      "cuda_event_ms": 0.024512000381946564
+    },
+    {
+      "kernel": "project",
+      "cuda_event_ms": 0.6607040166854858
+    },
+    {
+      "kernel": "reconstruct",
+      "cuda_event_ms": 0.024000000208616257
+    },
+    {
+      "kernel": "project",
+      "cuda_event_ms": 0.2516480088233948
+    },
+    {
+      "kernel": "reconstruct",
+      "cuda_event_ms": 0.02067199908196926
+    },
+    {
+      "kernel": "project",
+      "cuda_event_ms": 0.6789439916610718
+    },
+    {
+      "kernel": "reconstruct",
+      "cuda_event_ms": 0.025855999439954758
+    },
+    {
+      "kernel": "project",
+      "cuda_event_ms": 0.6543999910354614
+    },
+    {
+      "kernel": "reconstruct",
+      "cuda_event_ms": 0.02470399998128414
+    },
+    {
+      "kernel": "project",
+      "cuda_event_ms": 0.6497920155525208
+    },
+    {
+      "kernel": "reconstruct",
+      "cuda_event_ms": 0.024639999493956566
+    },
+    {
+      "kernel": "project",
+      "cuda_event_ms": 0.654591977596283
+    },
+    {
+      "kernel": "reconstruct",
+      "cuda_event_ms": 0.024960000067949295
+    },
+    {
+      "kernel": "project",
+      "cuda_event_ms": 0.6520320177078247
+    },
+    {
+      "kernel": "reconstruct",
+      "cuda_event_ms": 0.024992000311613083
+    },
+    {
+      "kernel": "project",
+      "cuda_event_ms": 0.6568639874458313
+    },
+    {
+      "kernel": "reconstruct",
+      "cuda_event_ms": 0.02470399998128414
+    },
+    {
+      "kernel": "project",
+      "cuda_event_ms": 0.6495040059089661
+    },
+    {
+      "kernel": "reconstruct",
+      "cuda_event_ms": 0.024288000538945198
+    },
+    {
+      "kernel": "project",
+      "cuda_event_ms": 0.6554239988327026
+    },
+    {
+      "kernel": "reconstruct",
+      "cuda_event_ms": 0.025087999179959297
+    },
+    {
+      "kernel": "project",
+      "cuda_event_ms": 0.25836798548698425
+    },
+    {
+      "kernel": "reconstruct",
+      "cuda_event_ms": 0.020479999482631683
+    },
+    {
+      "kernel": "project",
+      "cuda_event_ms": 0.6682239770889282
+    },
+    {
+      "kernel": "reconstruct",
+      "cuda_event_ms": 0.026335999369621277
+    },
+    {
+      "kernel": "project",
+      "cuda_event_ms": 0.6472640037536621
+    },
+    {
+      "kernel": "reconstruct",
+      "cuda_event_ms": 0.024607999250292778
+    },
+    {
+      "kernel": "project",
+      "cuda_event_ms": 0.6393600106239319
+    },
+    {
+      "kernel": "reconstruct",
+      "cuda_event_ms": 0.024447999894618988
+    },
+    {
+      "kernel": "project",
+      "cuda_event_ms": 0.6509760022163391
+    },
+    {
+      "kernel": "reconstruct",
+      "cuda_event_ms": 0.0244159996509552
+    },
+    {
+      "kernel": "project",
+      "cuda_event_ms": 0.6387519836425781
+    },
+    {
+      "kernel": "reconstruct",
+      "cuda_event_ms": 0.024351999163627625
+    },
+    {
+      "kernel": "project",
+      "cuda_event_ms": 0.6482560038566589
+    },
+    {
+      "kernel": "reconstruct",
+      "cuda_event_ms": 0.024159999564290047
+    },
+    {
+      "kernel": "project",
+      "cuda_event_ms": 0.6389120221138
+    },
+    {
+      "kernel": "reconstruct",
+      "cuda_event_ms": 0.025119999423623085
+    },
+    {
+      "kernel": "project",
+      "cuda_event_ms": 0.6461759805679321
+    },
+    {
+      "kernel": "reconstruct",
+      "cuda_event_ms": 0.024351999163627625
+    },
+    {
+      "kernel": "project",
+      "cuda_event_ms": 0.2537600100040436
+    },
+    {
+      "kernel": "reconstruct",
+      "cuda_event_ms": 0.010400000028312206
+    },
+    {
+      "kernel": "project",
+      "cuda_event_ms": 0.7021440267562866
+    },
+    {
+      "kernel": "reconstruct",
+      "cuda_event_ms": 0.03379200026392937
+    },
+    {
+      "kernel": "project",
+      "cuda_event_ms": 0.6730560064315796
+    },
+    {
+      "kernel": "reconstruct",
+      "cuda_event_ms": 0.025248000398278236
+    },
+    {
+      "kernel": "project",
+      "cuda_event_ms": 0.6756160259246826
+    },
+    {
+      "kernel": "reconstruct",
+      "cuda_event_ms": 0.024032000452280045
+    },
+    {
+      "kernel": "project",
+      "cuda_event_ms": 0.6772800087928772
+    },
+    {
+      "kernel": "reconstruct",
+      "cuda_event_ms": 0.02470399998128414
+    },
+    {
+      "kernel": "project",
+      "cuda_event_ms": 0.6695680022239685
+    },
+    {
+      "kernel": "reconstruct",
+      "cuda_event_ms": 0.02425600029528141
+    },
+    {
+      "kernel": "project",
+      "cuda_event_ms": 0.6804479956626892
+    },
+    {
+      "kernel": "reconstruct",
+      "cuda_event_ms": 0.024927999824285507
+    },
+    {
+      "kernel": "project",
+      "cuda_event_ms": 0.6700159907341003
+    },
+    {
+      "kernel": "reconstruct",
+      "cuda_event_ms": 0.02412799932062626
+    },
+    {
+      "kernel": "project",
+      "cuda_event_ms": 0.6751360297203064
+    },
+    {
+      "kernel": "reconstruct",
+      "cuda_event_ms": 0.024671999737620354
+    },
+    {
+      "kernel": "project",
+      "cuda_event_ms": 0.24288000166416168
+    },
+    {
+      "kernel": "reconstruct",
+      "cuda_event_ms": 0.020608000457286835
+    },
+    {
+      "kernel": "project",
+      "cuda_event_ms": 0.6613759994506836
+    },
+    {
+      "kernel": "reconstruct",
+      "cuda_event_ms": 0.02611199952661991
+    },
+    {
+      "kernel": "project",
+      "cuda_event_ms": 0.6539520025253296
+    },
+    {
+      "kernel": "reconstruct",
+      "cuda_event_ms": 0.025087999179959297
+    },
+    {
+      "kernel": "project",
+      "cuda_event_ms": 0.6537280082702637
+    },
+    {
+      "kernel": "reconstruct",
+      "cuda_event_ms": 0.02454400062561035
+    },
+    {
+      "kernel": "project",
+      "cuda_event_ms": 0.6595519781112671
+    },
+    {
+      "kernel": "reconstruct",
+      "cuda_event_ms": 0.02319999970495701
+    },
+    {
+      "kernel": "project",
+      "cuda_event_ms": 0.6475520133972168
+    },
+    {
+      "kernel": "reconstruct",
+      "cuda_event_ms": 0.0244159996509552
+    },
+    {
+      "kernel": "project",
+      "cuda_event_ms": 0.6503040194511414
+    },
+    {
+      "kernel": "reconstruct",
+      "cuda_event_ms": 0.023871999233961105
+    },
+    {
+      "kernel": "project",
+      "cuda_event_ms": 0.6441599726676941
+    },
+    {
+      "kernel": "reconstruct",
+      "cuda_event_ms": 0.024927999824285507
+    },
+    {
+      "kernel": "project",
+      "cuda_event_ms": 0.656607985496521
+    },
+    {
+      "kernel": "reconstruct",
+      "cuda_event_ms": 0.02409599907696247
+    },
+    {
+      "kernel": "project",
+      "cuda_event_ms": 0.22617599368095398
+    },
+    {
+      "kernel": "reconstruct",
+      "cuda_event_ms": 0.009503999724984169
+    },
+    {
+      "kernel": "project",
+      "cuda_event_ms": 0.6449599862098694
+    },
+    {
+      "kernel": "reconstruct",
+      "cuda_event_ms": 0.025280000641942024
+    },
+    {
+      "kernel": "project",
+      "cuda_event_ms": 0.630623996257782
+    },
+    {
+      "kernel": "reconstruct",
+      "cuda_event_ms": 0.023455999791622162
+    },
+    {
+      "kernel": "project",
+      "cuda_event_ms": 0.6229760050773621
+    },
+    {
+      "kernel": "reconstruct",
+      "cuda_event_ms": 0.023584000766277313
+    },
+    {
+      "kernel": "project",
+      "cuda_event_ms": 0.6290879845619202
+    },
+    {
+      "kernel": "reconstruct",
+      "cuda_event_ms": 0.025087999179959297
+    },
+    {
+      "kernel": "project",
+      "cuda_event_ms": 0.6187840104103088
+    },
+    {
+      "kernel": "reconstruct",
+      "cuda_event_ms": 0.023871999233961105
+    },
+    {
+      "kernel": "project",
+      "cuda_event_ms": 0.6266239881515503
+    },
+    {
+      "kernel": "reconstruct",
+      "cuda_event_ms": 0.023360000923275948
+    },
+    {
+      "kernel": "project",
+      "cuda_event_ms": 0.6175360083580017
+    },
+    {
+      "kernel": "reconstruct",
+      "cuda_event_ms": 0.02332800067961216
+    },
+    {
+      "kernel": "project",
+      "cuda_event_ms": 0.6245120167732239
+    },
+    {
+      "kernel": "reconstruct",
+      "cuda_event_ms": 0.023615999147295952
+    },
+    {
+      "kernel": "project",
+      "cuda_event_ms": 0.23590399324893951
+    },
+    {
+      "kernel": "reconstruct",
+      "cuda_event_ms": 0.010304000228643417
+    },
+    {
+      "kernel": "project",
+      "cuda_event_ms": 0.6268799901008606
+    },
+    {
+      "kernel": "reconstruct",
+      "cuda_event_ms": 0.026815999299287796
+    },
+    {
+      "kernel": "project",
+      "cuda_event_ms": 0.6193919777870178
+    },
+    {
+      "kernel": "reconstruct",
+      "cuda_event_ms": 0.023455999791622162
+    },
+    {
+      "kernel": "project",
+      "cuda_event_ms": 0.6106560230255127
+    },
+    {
+      "kernel": "reconstruct",
+      "cuda_event_ms": 0.024288000538945198
+    },
+    {
+      "kernel": "project",
+      "cuda_event_ms": 0.6192960143089294
+    },
+    {
+      "kernel": "reconstruct",
+      "cuda_event_ms": 0.023520000278949738
+    },
+    {
+      "kernel": "project",
+      "cuda_event_ms": 0.6091520190238953
+    },
+    {
+      "kernel": "reconstruct",
+      "cuda_event_ms": 0.023360000923275948
+    },
+    {
+      "kernel": "project",
+      "cuda_event_ms": 0.621504008769989
+    },
+    {
+      "kernel": "reconstruct",
+      "cuda_event_ms": 0.02380800060927868
+    },
+    {
+      "kernel": "project",
+      "cuda_event_ms": 0.603007972240448
+    },
+    {
+      "kernel": "reconstruct",
+      "cuda_event_ms": 0.023552000522613525
+    },
+    {
+      "kernel": "project",
+      "cuda_event_ms": 0.6170560121536255
+    },
+    {
+      "kernel": "reconstruct",
+      "cuda_event_ms": 0.024383999407291412
+    },
+    {
+      "kernel": "project",
+      "cuda_event_ms": 0.22752000391483307
+    },
+    {
+      "kernel": "reconstruct",
+      "cuda_event_ms": 0.01142400037497282
+    },
+    {
+      "kernel": "project",
+      "cuda_event_ms": 0.6316480040550232
+    },
+    {
+      "kernel": "reconstruct",
+      "cuda_event_ms": 0.02412799932062626
+    },
+    {
+      "kernel": "project",
+      "cuda_event_ms": 0.6252800226211548
+    },
+    {
+      "kernel": "reconstruct",
+      "cuda_event_ms": 0.023903999477624893
+    },
+    {
+      "kernel": "project",
+      "cuda_event_ms": 0.6289920210838318
+    },
+    {
+      "kernel": "reconstruct",
+      "cuda_event_ms": 0.02316799946129322
+    },
+    {
+      "kernel": "project",
+      "cuda_event_ms": 0.6283519864082336
+    },
+    {
+      "kernel": "reconstruct",
+      "cuda_event_ms": 0.023840000852942467
+    },
+    {
+      "kernel": "project",
+      "cuda_event_ms": 0.6287360191345215
+    },
+    {
+      "kernel": "reconstruct",
+      "cuda_event_ms": 0.022624000906944275
+    },
+    {
+      "kernel": "project",
+      "cuda_event_ms": 0.6273919939994812
+    },
+    {
+      "kernel": "reconstruct",
+      "cuda_event_ms": 0.024032000452280045
+    },
+    {
+      "kernel": "project",
+      "cuda_event_ms": 0.6267840266227722
+    },
+    {
+      "kernel": "reconstruct",
+      "cuda_event_ms": 0.02364799939095974
+    },
+    {
+      "kernel": "project",
+      "cuda_event_ms": 0.6297280192375183
+    },
+    {
+      "kernel": "reconstruct",
+      "cuda_event_ms": 0.02332800067961216
+    },
+    {
+      "kernel": "project",
+      "cuda_event_ms": 0.23155200481414795
+    },
+    {
+      "kernel": "reconstruct",
+      "cuda_event_ms": 0.019231999292969704
+    },
+    {
+      "kernel": "project",
+      "cuda_event_ms": 0.6492159962654114
+    },
+    {
+      "kernel": "reconstruct",
+      "cuda_event_ms": 0.02921600081026554
+    },
+    {
+      "kernel": "project",
+      "cuda_event_ms": 0.6268479824066162
+    },
+    {
+      "kernel": "reconstruct",
+      "cuda_event_ms": 0.02364799939095974
+    },
+    {
+      "kernel": "project",
+      "cuda_event_ms": 0.6291840076446533
+    },
+    {
+      "kernel": "reconstruct",
+      "cuda_event_ms": 0.023552000522613525
+    },
+    {
+      "kernel": "project",
+      "cuda_event_ms": 0.6230400204658508
+    },
+    {
+      "kernel": "reconstruct",
+      "cuda_event_ms": 0.02304000034928322
+    },
+    {
+      "kernel": "project",
+      "cuda_event_ms": 0.6287040114402771
+    },
+    {
+      "kernel": "reconstruct",
+      "cuda_event_ms": 0.02364799939095974
+    },
+    {
+      "kernel": "project",
+      "cuda_event_ms": 0.6262080073356628
+    },
+    {
+      "kernel": "reconstruct",
+      "cuda_event_ms": 0.024288000538945198
+    },
+    {
+      "kernel": "project",
+      "cuda_event_ms": 0.6289920210838318
+    },
+    {
+      "kernel": "reconstruct",
+      "cuda_event_ms": 0.023455999791622162
+    },
+    {
+      "kernel": "project",
+      "cuda_event_ms": 0.628607988357544
+    },
+    {
+      "kernel": "reconstruct",
+      "cuda_event_ms": 0.023520000278949738
+    },
+    {
+      "kernel": "project",
+      "cuda_event_ms": 0.23084799945354462
+    },
+    {
+      "kernel": "reconstruct",
+      "cuda_event_ms": 0.010143999941647053
+    },
+    {
+      "kernel": "project",
+      "cuda_event_ms": 0.266975998878479
+    },
+    {
+      "kernel": "reconstruct",
+      "cuda_event_ms": 0.020864000543951988
+    },
+    {
+      "kernel": "project",
+      "cuda_event_ms": 0.26867198944091797
+    },
+    {
+      "kernel": "reconstruct",
+      "cuda_event_ms": 0.012799999676644802
+    },
+    {
+      "kernel": "project",
+      "cuda_event_ms": 0.24639999866485596
+    },
+    {
+      "kernel": "reconstruct",
+      "cuda_event_ms": 0.019551999866962433
+    },
+    {
+      "kernel": "project",
+      "cuda_event_ms": 0.23868800699710846
+    },
+    {
+      "kernel": "reconstruct",
+      "cuda_event_ms": 0.021247999742627144
+    },
+    {
+      "kernel": "project",
+      "cuda_event_ms": 0.2452480047941208
+    },
+    {
+      "kernel": "reconstruct",
+      "cuda_event_ms": 0.021215999498963356
+    },
+    {
+      "kernel": "project",
+      "cuda_event_ms": 0.24371199309825897
+    },
+    {
+      "kernel": "reconstruct",
+      "cuda_event_ms": 0.013055999763309956
+    },
+    {
+      "kernel": "project",
+      "cuda_event_ms": 0.24607999622821808
+    },
+    {
+      "kernel": "reconstruct",
+      "cuda_event_ms": 0.021056000143289566
+    },
+    {
+      "kernel": "project",
+      "cuda_event_ms": 0.23881599307060242
+    },
+    {
+      "kernel": "reconstruct",
+      "cuda_event_ms": 0.02115200087428093
+    },
+    {
+      "kernel": "project",
+      "cuda_event_ms": 0.1526080071926117
+    },
+    {
+      "kernel": "reconstruct",
+      "cuda_event_ms": 0.021376000717282295
+    }
+  ],
+  "note": "Events immediately surround warmed raw-kernel calls; excludes array allocation and surrounding stage work. Small host dispatch gaps may remain. Separate instrumented capture, not throughput timing.",
+  "profile_wall_ms": 140.641523000113
+}

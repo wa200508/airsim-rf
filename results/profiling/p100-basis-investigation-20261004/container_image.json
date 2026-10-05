@@ -1,0 +1,80 @@
+[
+    {
+        "Id": "sha256:1f69eb310160c14a99721375526024638eef8d097aa076657073f3dec20cb257",
+        "RepoTags": [
+            "airsim-rf:p100-profile"
+        ],
+        "RepoDigests": [
+            "airsim-rf@sha256:1f69eb310160c14a99721375526024638eef8d097aa076657073f3dec20cb257"
+        ],
+        "Comment": "buildkit.dockerfile.v0",
+        "Created": "2026-10-04T19:59:17.727118549-04:00",
+        "Config": {
+            "User": "rf",
+            "Env": [
+                "PATH=/opt/airsim-rf/.venv/bin:/usr/local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+                "LANG=C.UTF-8",
+                "GPG_KEY=7169605F62C751356D054A26A821E680E5FA6305",
+                "PYTHON_VERSION=3.12.14",
+                "PYTHON_SHA256=5c8462af5790baf43a321a1559dbe0db06d1be4300fb85fb53c40060668e548a",
+                "PYTHONDONTWRITEBYTECODE=1",
+                "PYTHONUNBUFFERED=1",
+                "PIP_DISABLE_PIP_VERSION_CHECK=1",
+                "MPLBACKEND=Agg",
+                "MPLCONFIGDIR=/tmp/matplotlib",
+                "RF_PROFILE_SOURCE_REV=b4d48f5e432b5610eb3fedfa854bf9d5347cd2cb",
+                "RF_PROFILE_SOURCE_DIRTY=false"
+            ],
+            "Entrypoint": [
+                "python",
+                "/opt/airsim-rf/scripts/run_gpu_profile.py"
+            ],
+            "WorkingDir": "/work",
+            "Labels": {
+                "org.opencontainers.image.description": "AirSim RF profiling harness; CUDA runtime supplied by NVIDIA Container Toolkit",
+                "org.opencontainers.image.licenses": "MIT",
+                "org.opencontainers.image.source": "https://github.com/wa200508/airsim-rf"
+            },
+            "ArgsEscaped": true
+        },
+        "Architecture": "amd64",
+        "Os": "linux",
+        "Size": 2851097185,
+        "RootFS": {
+            "Type": "layers",
+            "Layers": [
+                "sha256:a6dc765193a52cbaede3c93a9ff48b9540948dd0774bbe7031fcb5847606f9ac",
+                "sha256:7ca599ccfc97fa428fcf941eda7c2d643f066feb947020dcdbbf913cec34d5dc",
+                "sha256:b54011271bdbf69ae643cb5a4af6a5bc2f834ae8bc0833b736b52bbd2396e99f",
+                "sha256:c321a426ca693e386f4df5f198d7f32c2da49e29f53ff77d695ceb02dfb0a421",
+                "sha256:bf9aaf2d691fa1b2fcb3dbd9d7ed7783cbe6047cecbbff0ff64d79fed09390fc",
+                "sha256:7b574725e36fc596e72014ba3edccf2beabf44c77791125b6fc107a560d86f65",
+                "sha256:5a0e0caef5f07a0747356e1b68e8653d33133a679c31d9a2b32275ed2bad6784",
+                "sha256:4877363628aa424759aca1f231839c0c01d71d607e07d517b9b2a01eefa22786",
+                "sha256:320631c628d96d5e87b5ee88dc50bbb6b300382b60c81638aacb62d3d555a0ac",
+                "sha256:d988762e486438163b95bae1aae528997af65de3541c3fc2503ca88e304531c5",
+                "sha256:42dc355cc5b79277f840bbdc0f93a08608febd2f75cc516544077e7c41e633ae",
+                "sha256:5f70bf18a086007016e948b04aed3b82103a36bea41755b6cddfaf10ace3c6ef",
+                "sha256:82fe8567d4ff5e01c816cfba7b2930605749460af6c06913916be4857e73f8fe",
+                "sha256:cc32d4caa157fd8000dbf05b2d1f9a2ad026db26e37a6b0269e53fe211af73cf",
+                "sha256:5f70bf18a086007016e948b04aed3b82103a36bea41755b6cddfaf10ace3c6ef"
+            ]
+        },
+        "Metadata": {
+            "LastTagTime": "2026-10-04T23:59:27.114002056Z"
+        },
+        "Descriptor": {
+            "mediaType": "application/vnd.oci.image.index.v1+json",
+            "digest": "sha256:1f69eb310160c14a99721375526024638eef8d097aa076657073f3dec20cb257",
+            "size": 856
+        },
+        "Identity": {
+            "Build": [
+                {
+                    "Ref": "7dv6ls63ek39ayuc1yyuixp7x",
+                    "CreatedAt": "2026-10-04T19:59:28.641727731-04:00"
+                }
+            ]
+        }
+    }
+]

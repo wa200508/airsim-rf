@@ -1,0 +1,33 @@
+{
+  "scope": "Diagnostic investigation of unchanged CuPy renderer; known suite qualification failure remains",
+  "measured_image_source_revision": "b4d48f5e432b5610eb3fedfa854bf9d5347cd2cb",
+  "projection_contributions_per_window": 750028800,
+  "batch_sweep": [
+    {
+      "batch_links": 8,
+      "p50_ms": 123.32850200004941,
+      "p95_ms": 124.4999813998902,
+      "capture_checks_passed": true
+    },
+    {
+      "batch_links": 16,
+      "p50_ms": 136.3932389999718,
+      "p95_ms": 138.08112930001926,
+      "capture_checks_passed": true
+    },
+    {
+      "batch_links": 32,
+      "p50_ms": 135.34955799991621,
+      "p95_ms": 138.75891070003945,
+      "capture_checks_passed": true
+    },
+    {
+      "batch_links": 100,
+      "p50_ms": 138.00229599996783,
+      "p95_ms": 143.12818240005072,
+      "capture_checks_passed": true
+    }
+  ],
+  "kernel_capture_instrumented_separately": true,
+  "timestamp_cause_confirmed": true
+}
