@@ -1,0 +1,60 @@
+...F........                                                             [100%]
+=================================== FAILURES ===================================
+__ test_uniform_mixture_power_matches_native_and_does_not_grow_with_ray_count __
+
+    def test_uniform_mixture_power_matches_native_and_does_not_grow_with_ray_count():
+        import sionna.rt as rt
+        scene = ground_scene(colocated=True)
+        solver = FirstOrderScatteringPathSolver(uniform_fraction=1)
+        powers = []
+        for count in (4096, 16384):
+            paths = solver(scene, samples_per_src=count, max_num_paths_per_src=count,
+                           los=False, specular_reflection=False)
+            a, _, diffuse = path_data(paths)
+            powers.append(float(np.sum(np.abs(a[diffuse])**2)))
+        assert powers[1] == pytest.approx(powers[0], rel=.08)
+>       native = rt.PathSolver(deterministic=True)(scene, max_depth=1, samples_per_src=16384,
+                 max_num_paths_per_src=16384, los=False, specular_reflection=False,
+                 diffuse_reflection=True, refraction=False)
+
+repo/tests/test_scattering.py:76: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/opt/airsim-rf/.deps/sionna-rt/src/sionna/rt/path_solvers/path_solver.py:260: in __call__
+    paths_buffer = self._candidate_generator(
+/opt/airsim-rf/.deps/sionna-rt/src/sionna/rt/path_solvers/sb_candidate_generator.py:137: in __call__
+    self._shoot_and_bounce(mi_scene, src_positions, tgt_positions,
+/opt/airsim-rf/.deps/sionna-rt/src/sionna/rt/path_solvers/sb_deterministic.py:158: in _shoot_and_bounce
+    self._shoot_and_bounce_loop(
+/opt/airsim-rf/.deps/sionna-rt/src/sionna/rt/path_solvers/sb_deterministic.py:337: in _shoot_and_bounce_loop
+    ray = spawn_ray_from_sources(fibonacci_lattice, samples_per_src, src_positions)
+      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/opt/airsim-rf/.deps/sionna-rt/src/sionna/rt/utils/ray_tracing.py:38: in spawn_ray_from_sources
+    samples_on_square = lattice(samples_per_src)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+num_points = 16384
+
+    def fibonacci_lattice(num_points: int) -> mi.Point2f:
+        r"""
+        Generates a Fibonacci lattice of size ``num_points`` on the unit square
+        :math:`[0, 1] \times [0, 1]`
+    
+        :param num_points: Positive integer defining the size of the lattice
+        """
+    
+        if isinstance(num_points, bool) or not isinstance(num_points, Integral):
+            raise TypeError("`num_points` must be an integer")
+        if num_points < 1:
+            raise ValueError("`num_points` must be greater than or equal to one")
+        if num_points == 1:
+            return mi.Point2f(0.5, 0.5)
+    
+>       if dr.backend_v(mi.Float) == dr.JitBackend.Metal:
+                                     ^^^^^^^^^^^^^^^^^^^
+E       AttributeError: type object 'JitBackend' has no attribute 'Metal'
+
+/opt/airsim-rf/.deps/sionna-rt/src/sionna/rt/utils/fibonacci.py:118: AttributeError
+=========================== short test summary info ============================
+FAILED repo/tests/test_scattering.py::test_uniform_mixture_power_matches_native_and_does_not_grow_with_ray_count
+1 failed, 11 passed in 10.67s

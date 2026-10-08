@@ -1,0 +1,313 @@
+..FFFFFF.FFF                                                             [100%]
+=================================== FAILURES ===================================
+______________ test_both_antenna_patterns_change_surface_coverage ______________
+
+    def test_both_antenna_patterns_change_surface_coverage():
+        solver = FirstOrderScatteringPathSolver()
+        scene = ground_scene(tx_pattern="tr38901", rx_pattern="tr38901")
+>       paths = solver(scene, samples_per_src=1028, max_num_paths_per_src=1100,
+                       los=False, specular_reflection=False)
+
+repo/tests/test_scattering.py:46: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+repo/src/airsim_rf/scattering.py:269: in __call__
+    return self._solver(scene, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/opt/airsim-rf/.deps/sionna-rt/src/sionna/rt/path_solvers/path_solver.py:314: in __call__
+    paths = Paths(
+/opt/airsim-rf/.deps/sionna-rt/src/sionna/rt/path_solvers/paths.py:123: in __init__
+    self._path_ind = dr.scatter_inc(num_paths, src_tgt_id)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+target = [0], index = [0, 0, 0, .. 961 skipped .., 0, 0, 0], active = True
+
+    def scatter_inc(target, index, active=True):
+>       if not dr.is_cuda_v(type(target)):
+               ^^^^^^^^^^^^
+E       AttributeError: module 'drjit' has no attribute 'is_cuda_v'
+
+repo/src/airsim_rf/p100_compat.py:28: AttributeError
+__ test_uniform_mixture_power_matches_native_and_does_not_grow_with_ray_count __
+
+    def test_uniform_mixture_power_matches_native_and_does_not_grow_with_ray_count():
+        import sionna.rt as rt
+        scene = ground_scene(colocated=True)
+        solver = FirstOrderScatteringPathSolver(uniform_fraction=1)
+        powers = []
+        for count in (4096, 16384):
+>           paths = solver(scene, samples_per_src=count, max_num_paths_per_src=count,
+                           los=False, specular_reflection=False)
+
+repo/tests/test_scattering.py:71: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+repo/src/airsim_rf/scattering.py:269: in __call__
+    return self._solver(scene, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/opt/airsim-rf/.deps/sionna-rt/src/sionna/rt/path_solvers/path_solver.py:314: in __call__
+    paths = Paths(
+/opt/airsim-rf/.deps/sionna-rt/src/sionna/rt/path_solvers/paths.py:123: in __init__
+    self._path_ind = dr.scatter_inc(num_paths, src_tgt_id)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+target = [0], index = [0, 0, 0, .. 1905 skipped .., 0, 0, 0], active = True
+
+    def scatter_inc(target, index, active=True):
+>       if not dr.is_cuda_v(type(target)):
+               ^^^^^^^^^^^^
+E       AttributeError: module 'drjit' has no attribute 'is_cuda_v'
+
+repo/src/airsim_rf/p100_compat.py:28: AttributeError
+_______ test_importance_sampling_preserves_power_at_displaced_endpoints ________
+
+    def test_importance_sampling_preserves_power_at_displaced_endpoints():
+        scene = ground_scene(tx_pattern="tr38901", rx_pattern="tr38901")
+        powers = []
+        for fraction in (.1, 1):
+            solver = FirstOrderScatteringPathSolver(uniform_fraction=fraction)
+>           paths = solver(scene, samples_per_src=32768, max_num_paths_per_src=32768,
+                           los=False, specular_reflection=False)
+
+repo/tests/test_scattering.py:88: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+repo/src/airsim_rf/scattering.py:269: in __call__
+    return self._solver(scene, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/opt/airsim-rf/.deps/sionna-rt/src/sionna/rt/path_solvers/path_solver.py:314: in __call__
+    paths = Paths(
+/opt/airsim-rf/.deps/sionna-rt/src/sionna/rt/path_solvers/paths.py:123: in __init__
+    self._path_ind = dr.scatter_inc(num_paths, src_tgt_id)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+target = [0], index = [0, 0, 0, .. 30754 skipped .., 0, 0, 0], active = True
+
+    def scatter_inc(target, index, active=True):
+>       if not dr.is_cuda_v(type(target)):
+               ^^^^^^^^^^^^
+E       AttributeError: module 'drjit' has no attribute 'is_cuda_v'
+
+repo/src/airsim_rf/p100_compat.py:28: AttributeError
+_______ test_scattered_delay_and_doppler_use_both_independent_endpoints ________
+
+    def test_scattered_delay_and_doppler_use_both_independent_endpoints():
+        scene = ground_scene()
+>       paths = FirstOrderScatteringPathSolver()(scene, samples_per_src=1028,
+                      max_num_paths_per_src=1100, los=False, specular_reflection=False)
+
+repo/tests/test_scattering.py:98: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+repo/src/airsim_rf/scattering.py:269: in __call__
+    return self._solver(scene, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/opt/airsim-rf/.deps/sionna-rt/src/sionna/rt/path_solvers/path_solver.py:314: in __call__
+    paths = Paths(
+/opt/airsim-rf/.deps/sionna-rt/src/sionna/rt/path_solvers/paths.py:123: in __init__
+    self._path_ind = dr.scatter_inc(num_paths, src_tgt_id)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+target = [0], index = [0, 0, 0, .. 471 skipped .., 0, 0, 0], active = True
+
+    def scatter_inc(target, index, active=True):
+>       if not dr.is_cuda_v(type(target)):
+               ^^^^^^^^^^^^
+E       AttributeError: module 'drjit' has no attribute 'is_cuda_v'
+
+repo/src/airsim_rf/p100_compat.py:28: AttributeError
+_________ test_zero_scattering_material_does_not_invent_ground_clutter _________
+
+    def test_zero_scattering_material_does_not_invent_ground_clutter():
+        scene = ground_scene()
+        for material in scene.radio_materials.values():
+            material.scattering_coefficient = 0
+>       _, _, diffuse = path_data(FirstOrderScatteringPathSolver()(scene,
+                          samples_per_src=1028, max_num_paths_per_src=1100))
+
+repo/tests/test_scattering.py:117: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+repo/src/airsim_rf/scattering.py:269: in __call__
+    return self._solver(scene, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/opt/airsim-rf/.deps/sionna-rt/src/sionna/rt/path_solvers/path_solver.py:314: in __call__
+    paths = Paths(
+/opt/airsim-rf/.deps/sionna-rt/src/sionna/rt/path_solvers/paths.py:123: in __init__
+    self._path_ind = dr.scatter_inc(num_paths, src_tgt_id)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+target = [0], index = [0, 0], active = True
+
+    def scatter_inc(target, index, active=True):
+>       if not dr.is_cuda_v(type(target)):
+               ^^^^^^^^^^^^
+E       AttributeError: module 'drjit' has no attribute 'is_cuda_v'
+
+repo/src/airsim_rf/p100_compat.py:28: AttributeError
+____________ test_receiver_can_generate_iq_from_scattering_channel _____________
+
+    def test_receiver_can_generate_iq_from_scattering_channel():
+        scene = ground_scene()
+        receiver = RFReceiver(scene, ReceiverConfig(num_samples=32), path_solver="first-order-scattering",
+                              samples_per_src=1028, max_num_paths_per_src=1100)
+>       block = receiver.capture(lambda t: np.exp(2j*np.pi*1000*t), 12300000)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+repo/tests/test_scattering.py:126: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+repo/src/airsim_rf/receiver.py:156: in capture
+    paths = self.solver(self.scene, max_depth=self.max_depth,
+repo/src/airsim_rf/scattering.py:269: in __call__
+    return self._solver(scene, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/opt/airsim-rf/.deps/sionna-rt/src/sionna/rt/path_solvers/path_solver.py:314: in __call__
+    paths = Paths(
+/opt/airsim-rf/.deps/sionna-rt/src/sionna/rt/path_solvers/paths.py:123: in __init__
+    self._path_ind = dr.scatter_inc(num_paths, src_tgt_id)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+target = [0], index = [0, 0, 0, .. 473 skipped .., 0, 0, 0], active = True
+
+    def scatter_inc(target, index, active=True):
+>       if not dr.is_cuda_v(type(target)):
+               ^^^^^^^^^^^^
+E       AttributeError: module 'drjit' has no attribute 'is_cuda_v'
+
+repo/src/airsim_rf/p100_compat.py:28: AttributeError
+___ test_cached_draws_preserve_moving_paths_and_invalidate_seed_and_patterns ___
+
+    def test_cached_draws_preserve_moving_paths_and_invalidate_seed_and_patterns():
+        import sionna.rt as rt
+        scene = ground_scene()
+        cached = FirstOrderScatteringPathSolver(cache_sampling=True)
+        fresh = FirstOrderScatteringPathSolver(cache_sampling=False)
+        for index, seed in enumerate([42, 42, 99, 99]):
+            scene.transmitters['tx'].position = [-5+.2*index, 0, 10]
+            scene.receivers['rx'].orientation = [0, np.pi/2+.05*index, 0]
+            if index == 3:
+                scene.rx_array = rt.PlanarArray(num_rows=1, num_cols=1, pattern='tr38901', polarization='V')
+            options = dict(samples_per_src=1028, max_num_paths_per_src=1100, seed=seed)
+>           a, tau, diffuse = path_data(cached(scene, **options))
+                                        ^^^^^^^^^^^^^^^^^^^^^^^^
+
+repo/tests/test_scattering.py:151: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+repo/src/airsim_rf/scattering.py:269: in __call__
+    return self._solver(scene, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/opt/airsim-rf/.deps/sionna-rt/src/sionna/rt/path_solvers/path_solver.py:314: in __call__
+    paths = Paths(
+/opt/airsim-rf/.deps/sionna-rt/src/sionna/rt/path_solvers/paths.py:123: in __init__
+    self._path_ind = dr.scatter_inc(num_paths, src_tgt_id)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+target = [0], index = [0, 0, 0, .. 473 skipped .., 0, 0, 0], active = True
+
+    def scatter_inc(target, index, active=True):
+>       if not dr.is_cuda_v(type(target)):
+               ^^^^^^^^^^^^
+E       AttributeError: module 'drjit' has no attribute 'is_cuda_v'
+
+repo/src/airsim_rf/p100_compat.py:28: AttributeError
+_ test_moving_scene_basis_matches_direct_all_path_oracle_across_epochs[basis-cpu] _
+
+renderer = 'basis-cpu'
+
+    @pytest.mark.parametrize('renderer', ['basis-cpu','basis-cuda'])
+    def test_moving_scene_basis_matches_direct_all_path_oracle_across_epochs(renderer):
+        if renderer == 'basis-cuda':
+            cp = pytest.importorskip('cupy')
+            try:
+                available = cp.cuda.runtime.getDeviceCount()
+            except cp.cuda.runtime.CUDARuntimeError as exc:
+                pytest.skip(f'CUDA runtime unavailable: {exc}')
+            if not available:
+                pytest.skip('CUDA device unavailable')
+        basis = terrain_receiver(renderer)
+        direct = terrain_receiver('batched-llvm')
+        for index in range(3):
+            for receiver in (basis, direct):
+                receiver.scene.receivers['rx0'].position = [30+.1*index, -50, 30]
+>           actual = basis.capture(index*128000, num_samples=256)['rx0']
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+repo/tests/test_end_to_end.py:50: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+repo/src/airsim_rf/sdr.py:268: in capture
+    paths = self.solver(self.scene, max_depth=self.max_depth, seed=self.seed,
+repo/src/airsim_rf/scattering.py:269: in __call__
+    return self._solver(scene, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/opt/airsim-rf/.deps/sionna-rt/src/sionna/rt/path_solvers/path_solver.py:314: in __call__
+    paths = Paths(
+/opt/airsim-rf/.deps/sionna-rt/src/sionna/rt/path_solvers/paths.py:123: in __init__
+    self._path_ind = dr.scatter_inc(num_paths, src_tgt_id)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+target = [0, 0], index = [0, 1, 0, .. 625 skipped .., 1, 1, 1], active = True
+
+    def scatter_inc(target, index, active=True):
+>       if not dr.is_cuda_v(type(target)):
+               ^^^^^^^^^^^^
+E       AttributeError: module 'drjit' has no attribute 'is_cuda_v'
+
+repo/src/airsim_rf/p100_compat.py:28: AttributeError
+_ test_moving_scene_basis_matches_direct_all_path_oracle_across_epochs[basis-cuda] _
+
+renderer = 'basis-cuda'
+
+    @pytest.mark.parametrize('renderer', ['basis-cpu','basis-cuda'])
+    def test_moving_scene_basis_matches_direct_all_path_oracle_across_epochs(renderer):
+        if renderer == 'basis-cuda':
+            cp = pytest.importorskip('cupy')
+            try:
+                available = cp.cuda.runtime.getDeviceCount()
+            except cp.cuda.runtime.CUDARuntimeError as exc:
+                pytest.skip(f'CUDA runtime unavailable: {exc}')
+            if not available:
+                pytest.skip('CUDA device unavailable')
+        basis = terrain_receiver(renderer)
+        direct = terrain_receiver('batched-llvm')
+        for index in range(3):
+            for receiver in (basis, direct):
+                receiver.scene.receivers['rx0'].position = [30+.1*index, -50, 30]
+>           actual = basis.capture(index*128000, num_samples=256)['rx0']
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+repo/tests/test_end_to_end.py:50: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+repo/src/airsim_rf/sdr.py:268: in capture
+    paths = self.solver(self.scene, max_depth=self.max_depth, seed=self.seed,
+repo/src/airsim_rf/scattering.py:269: in __call__
+    return self._solver(scene, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/opt/airsim-rf/.deps/sionna-rt/src/sionna/rt/path_solvers/path_solver.py:314: in __call__
+    paths = Paths(
+/opt/airsim-rf/.deps/sionna-rt/src/sionna/rt/path_solvers/paths.py:123: in __init__
+    self._path_ind = dr.scatter_inc(num_paths, src_tgt_id)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+target = [0, 0], index = [0, 1, 0, .. 625 skipped .., 1, 1, 1], active = True
+
+    def scatter_inc(target, index, active=True):
+>       if not dr.is_cuda_v(type(target)):
+               ^^^^^^^^^^^^
+E       AttributeError: module 'drjit' has no attribute 'is_cuda_v'
+
+repo/src/airsim_rf/p100_compat.py:28: AttributeError
+=========================== short test summary info ============================
+FAILED repo/tests/test_scattering.py::test_both_antenna_patterns_change_surface_coverage
+FAILED repo/tests/test_scattering.py::test_uniform_mixture_power_matches_native_and_does_not_grow_with_ray_count
+FAILED repo/tests/test_scattering.py::test_importance_sampling_preserves_power_at_displaced_endpoints
+FAILED repo/tests/test_scattering.py::test_scattered_delay_and_doppler_use_both_independent_endpoints
+FAILED repo/tests/test_scattering.py::test_zero_scattering_material_does_not_invent_ground_clutter
+FAILED repo/tests/test_scattering.py::test_receiver_can_generate_iq_from_scattering_channel
+FAILED repo/tests/test_scattering.py::test_cached_draws_preserve_moving_paths_and_invalidate_seed_and_patterns
+FAILED repo/tests/test_end_to_end.py::test_moving_scene_basis_matches_direct_all_path_oracle_across_epochs[basis-cpu]
+FAILED repo/tests/test_end_to_end.py::test_moving_scene_basis_matches_direct_all_path_oracle_across_epochs[basis-cuda]
+9 failed, 3 passed in 4.02s

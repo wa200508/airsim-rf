@@ -1,0 +1,147 @@
+................FF....F............s                                     [100%]
+=================================== FAILURES ===================================
+_____________________ test_native_rf_control_udp_and_retry _____________________
+
+receiver = (<airsim_rf.distributed.worker.ReceiverWorker object at 0x7ce2b1cebf50>, <airsim_rf.distributed.client.WorkerClient object at 0x7ce2b1c755e0>, <airsim_rf.ams.squall_rf_pb2_grpc.SquallRfControlStub object at 0x7ce2b1cdb290>)
+
+    def test_native_rf_control_udp_and_retry(receiver):
+        worker, client, control = receiver
+        status = control.GetStatus(pb.GetStatusRequest(), timeout=1)
+        assert status.ready and status.rf_status.center_frequency_hz == 24_125_000_000
+        assert status.rf_status.sample_rate == 100000 and status.rf_status.block_size == 128
+        assert status.rf_status.source_type == "rf_environment"
+        assert not control.TuneRf(pb.TuneRfRequest(center_frequency_hz=915000000), timeout=1).success
+        assert not control.TuneRf(pb.TuneRfRequest(agc=True), timeout=1).success
+        assert control.TuneRf(pb.TuneRfRequest(center_frequency_hz=24_125_000_000), timeout=1).success
+        with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as udp:
+            udp.bind(("127.0.0.1", 0))
+            udp.settimeout(0.1)
+            assert control.AddDataDestination(pb.AddDataDestinationRequest(
+                client_id="native-mel-0", udp_destination=f"127.0.0.1:{udp.getsockname()[1]}"), timeout=1).success
+            run = str(uuid.uuid4())
+            client.session(run)
+            first = request(run)
+>           payload = client.request("/v1/capture", first.to_dict())
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+repo/tests/test_distributed.py:58: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <airsim_rf.distributed.client.WorkerClient object at 0x7ce2b1c755e0>
+path = '/v1/capture'
+value = {'protocol_version': 1, 'run_id': 'fc7d7294-abac-4590-976f-41f8c5da4a01', 'receiver_id': 'rx0', 'sequence': 0, ...}
+timeout_s = None
+
+    def request(self, path, value=None, *, timeout_s=None):
+        connection_type = http.client.HTTPSConnection if self.parsed.scheme == "https" else http.client.HTTPConnection
+        connection = connection_type(self.parsed.hostname, self.parsed.port, timeout=timeout_s or self.timeout_s)
+        try:
+            body = None if value is None else json.dumps(value, allow_nan=False).encode()
+            connection.request("GET" if value is None else "POST", path, body,
+                               {} if body is None else {"Content-Type": "application/json"})
+            response = connection.getresponse()
+            result = response.read(MAX_RESPONSE_BYTES + 1)
+            if len(result) > MAX_RESPONSE_BYTES:
+                raise WorkerError("Worker response exceeds size limit")
+            if response.status != 200:
+>               raise WorkerError(f"{self.receiver_id}: HTTP {response.status}: {result.decode(errors='replace')}")
+E               airsim_rf.distributed.client.WorkerError: rx0: HTTP 500: {"error": "drjit.select(<drjit.llvm.ad.Bool>): Incompatible arguments."}
+
+repo/src/airsim_rf/distributed/client.py:38: WorkerError
+___________________ test_network_barrier_and_recorded_epochs ___________________
+
+receiver = (<airsim_rf.distributed.worker.ReceiverWorker object at 0x7ce2b1cedd00>, <airsim_rf.distributed.client.WorkerClient object at 0x7ce2b1b70560>, <airsim_rf.ams.squall_rf_pb2_grpc.SquallRfControlStub object at 0x7ce2b1b70f80>)
+tmp_path = PosixPath('/tmp/pytest-of-unknown/pytest-0/test_network_barrier_and_recor0')
+
+    def test_network_barrier_and_recorded_epochs(receiver, tmp_path):
+        _, client, _ = receiver
+        with CaptureBarrier([client]) as barrier:
+            source = DemoSource([{"receiver_id": "rx0"}], [{"name": "t", "position_ned_m": [12, 0, 0], "rcs_m2": 1}])
+>           summary = run_simulation(source, barrier, duration_ns=20_000_000, output=tmp_path)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+repo/tests/test_distributed.py:94: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+repo/src/airsim_rf/distributed/coordinator.py:89: in run_simulation
+    capture(start, previous, previous)
+repo/src/airsim_rf/distributed/coordinator.py:72: in capture
+    results = barrier.capture(epoch, poses, targets)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+repo/src/airsim_rf/distributed/client.py:109: in capture
+    results = [future.result() for future in futures]
+               ^^^^^^^^^^^^^^^
+/usr/local/lib/python3.12/concurrent/futures/_base.py:449: in result
+    return self.__get_result()
+           ^^^^^^^^^^^^^^^^^^^
+/usr/local/lib/python3.12/concurrent/futures/_base.py:401: in __get_result
+    raise self._exception
+/usr/local/lib/python3.12/concurrent/futures/thread.py:59: in run
+    result = self.fn(*self.args, **self.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+repo/src/airsim_rf/distributed/client.py:59: in capture
+    payload = self.request("/v1/capture", request.to_dict(), timeout_s=min(self.timeout_s, remaining))
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <airsim_rf.distributed.client.WorkerClient object at 0x7ce2b1b70560>
+path = '/v1/capture'
+value = {'protocol_version': 1, 'run_id': 'd134e6d4-c4e1-4366-ba85-f907c3fdd4c6', 'receiver_id': 'rx0', 'sequence': 0, ...}
+timeout_s = 29.999885411999912
+
+    def request(self, path, value=None, *, timeout_s=None):
+        connection_type = http.client.HTTPSConnection if self.parsed.scheme == "https" else http.client.HTTPConnection
+        connection = connection_type(self.parsed.hostname, self.parsed.port, timeout=timeout_s or self.timeout_s)
+        try:
+            body = None if value is None else json.dumps(value, allow_nan=False).encode()
+            connection.request("GET" if value is None else "POST", path, body,
+                               {} if body is None else {"Content-Type": "application/json"})
+            response = connection.getresponse()
+            result = response.read(MAX_RESPONSE_BYTES + 1)
+            if len(result) > MAX_RESPONSE_BYTES:
+                raise WorkerError("Worker response exceeds size limit")
+            if response.status != 200:
+>               raise WorkerError(f"{self.receiver_id}: HTTP {response.status}: {result.decode(errors='replace')}")
+E               airsim_rf.distributed.client.WorkerError: rx0: HTTP 500: {"error": "drjit.select(<drjit.llvm.ad.Bool>): Incompatible arguments."}
+
+repo/src/airsim_rf/distributed/client.py:38: WorkerError
+______________ test_worker_response_cannot_change_requested_epoch ______________
+
+receiver = (<airsim_rf.distributed.worker.ReceiverWorker object at 0x7ce2b014c9e0>, <airsim_rf.distributed.client.WorkerClient object at 0x7ce2b014f110>, <airsim_rf.ams.squall_rf_pb2_grpc.SquallRfControlStub object at 0x7ce2b014f170>)
+
+    def test_worker_response_cannot_change_requested_epoch(receiver):
+        _, client, _ = receiver
+        run = str(uuid.uuid4())
+        client.session(run)
+        first = request(run, epoch=123456789)
+>       payload = client.request("/v1/capture", first.to_dict())
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+repo/tests/test_distributed.py:189: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <airsim_rf.distributed.client.WorkerClient object at 0x7ce2b014f110>
+path = '/v1/capture'
+value = {'protocol_version': 1, 'run_id': '58205fb7-4174-4cc9-b3ab-325258d83338', 'receiver_id': 'rx0', 'sequence': 0, ...}
+timeout_s = None
+
+    def request(self, path, value=None, *, timeout_s=None):
+        connection_type = http.client.HTTPSConnection if self.parsed.scheme == "https" else http.client.HTTPConnection
+        connection = connection_type(self.parsed.hostname, self.parsed.port, timeout=timeout_s or self.timeout_s)
+        try:
+            body = None if value is None else json.dumps(value, allow_nan=False).encode()
+            connection.request("GET" if value is None else "POST", path, body,
+                               {} if body is None else {"Content-Type": "application/json"})
+            response = connection.getresponse()
+            result = response.read(MAX_RESPONSE_BYTES + 1)
+            if len(result) > MAX_RESPONSE_BYTES:
+                raise WorkerError("Worker response exceeds size limit")
+            if response.status != 200:
+>               raise WorkerError(f"{self.receiver_id}: HTTP {response.status}: {result.decode(errors='replace')}")
+E               airsim_rf.distributed.client.WorkerError: rx0: HTTP 500: {"error": "drjit.select(<drjit.llvm.ad.Bool>): Incompatible arguments."}
+
+repo/src/airsim_rf/distributed/client.py:38: WorkerError
+=========================== short test summary info ============================
+FAILED repo/tests/test_distributed.py::test_native_rf_control_udp_and_retry
+FAILED repo/tests/test_distributed.py::test_network_barrier_and_recorded_epochs
+FAILED repo/tests/test_distributed.py::test_worker_response_cannot_change_requested_epoch
+3 failed, 32 passed, 1 skipped in 13.75s

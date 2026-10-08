@@ -1,0 +1,337 @@
+{
+  "scope": "rf_pipeline_optimization_comparison",
+  "source_revision": "a90c70a83f5654d7c52a942abc0283ae184d162a",
+  "started_utc": "2026-10-08T00:54:51.425750+00:00",
+  "iterations": 10,
+  "tasks": [
+    {
+      "name": "baseline_cuda",
+      "threads": 2,
+      "optimized": false,
+      "fused": false,
+      "command": [
+        "/opt/airsim-rf/.venv/bin/python",
+        "/work/repo/scripts/basis_launch.py",
+        "/work/repo/benchmarks/benchmark_end_to_end.py",
+        "--renderer",
+        "basis-cuda",
+        "--propagation-backend",
+        "cuda",
+        "--pascal-compat",
+        "--tx",
+        "100",
+        "--rx",
+        "10",
+        "--iterations",
+        "10",
+        "--warmup",
+        "3",
+        "--threads",
+        "2",
+        "--output",
+        "/work/results/comparison_shapes/baseline_cuda",
+        "--no-optimizations"
+      ],
+      "status": "ok",
+      "returncode": 0,
+      "wall_s": 29.000280992999706,
+      "summary": {
+        "advance_ms": {
+          "median_ms": 0.001314999963142327,
+          "std_ms": 0.00024779917659039963,
+          "p95_ms": 0.0018364999277764582,
+          "mean_ms": 0.0014060000012250384
+        },
+        "source_ms": {
+          "median_ms": 37.8978730000199,
+          "std_ms": 0.5782602325998191,
+          "p95_ms": 38.920145949964535,
+          "mean_ms": 37.9643064999982
+        },
+        "channel_ms": {
+          "median_ms": 851.5367190000234,
+          "std_ms": 11.981163294680233,
+          "p95_ms": 870.5769958999781,
+          "mean_ms": 851.2826127000608
+        },
+        "rendering_ms": {
+          "median_ms": 427.3397470001328,
+          "std_ms": 6.385656910816182,
+          "p95_ms": 434.70175649920293,
+          "mean_ms": 426.06241149997004
+        },
+        "receiver_ms": {
+          "median_ms": 8.486523500550902,
+          "std_ms": 0.7267959374418568,
+          "p95_ms": 9.571925900513632,
+          "mean_ms": 8.500117000403407
+        },
+        "other_rf_ms": {
+          "median_ms": 66.02858300016123,
+          "std_ms": 2.7746359852017197,
+          "p95_ms": 69.88762659857457,
+          "mean_ms": 66.17070879947278
+        },
+        "delivery_storage_ms": {
+          "median_ms": 7.060942999942199,
+          "std_ms": 0.3256229223569567,
+          "p95_ms": 7.751197999959913,
+          "mean_ms": 7.222853799930817
+        },
+        "total_ms": {
+          "median_ms": 1397.3516780001773,
+          "std_ms": 15.787559552846426,
+          "p95_ms": 1421.65247490002,
+          "mean_ms": 1397.207806300048
+        }
+      }
+    },
+    {
+      "name": "persistent_cuda",
+      "threads": 2,
+      "optimized": true,
+      "fused": false,
+      "command": [
+        "/opt/airsim-rf/.venv/bin/python",
+        "/work/repo/scripts/basis_launch.py",
+        "/work/repo/benchmarks/benchmark_end_to_end.py",
+        "--renderer",
+        "basis-cuda",
+        "--propagation-backend",
+        "cuda",
+        "--pascal-compat",
+        "--tx",
+        "100",
+        "--rx",
+        "10",
+        "--iterations",
+        "10",
+        "--warmup",
+        "3",
+        "--threads",
+        "2",
+        "--output",
+        "/work/results/comparison_shapes/persistent_cuda"
+      ],
+      "status": "ok",
+      "returncode": 0,
+      "wall_s": 11.033933671999876,
+      "summary": {
+        "advance_ms": {
+          "median_ms": 0.0012549999155453406,
+          "std_ms": 0.0004900159290406835,
+          "p95_ms": 0.002338500075893535,
+          "mean_ms": 0.0014559999726770911
+        },
+        "source_ms": {
+          "median_ms": 37.56120199977886,
+          "std_ms": 0.5418592400250961,
+          "p95_ms": 38.23780729971986,
+          "mean_ms": 37.55217009984335
+        },
+        "channel_ms": {
+          "median_ms": 47.92139899996073,
+          "std_ms": 1.4504455303655084,
+          "p95_ms": 50.37670585002161,
+          "mean_ms": 48.32738019995304
+        },
+        "rendering_ms": {
+          "median_ms": 395.3744469999947,
+          "std_ms": 8.269468357284254,
+          "p95_ms": 408.90313979984967,
+          "mean_ms": 396.1007267998866
+        },
+        "receiver_ms": {
+          "median_ms": 7.980793000342601,
+          "std_ms": 0.9283039938477552,
+          "p95_ms": 9.791135500222481,
+          "mean_ms": 8.33548730010989
+        },
+        "other_rf_ms": {
+          "median_ms": 63.81494600032056,
+          "std_ms": 4.0155892256882835,
+          "p95_ms": 69.74167765017683,
+          "mean_ms": 64.50523680005062
+        },
+        "delivery_storage_ms": {
+          "median_ms": 7.122300999981235,
+          "std_ms": 0.7762380057469296,
+          "p95_ms": 8.820569399790656,
+          "mean_ms": 7.39710679995369
+        },
+        "total_ms": {
+          "median_ms": 562.2693259999778,
+          "std_ms": 8.16766737254322,
+          "p95_ms": 574.7253544001069,
+          "mean_ms": 562.2231159000421
+        }
+      }
+    },
+    {
+      "name": "fused_cuda",
+      "threads": 2,
+      "optimized": true,
+      "fused": true,
+      "command": [
+        "/opt/airsim-rf/.venv/bin/python",
+        "/work/repo/scripts/basis_launch.py",
+        "/work/repo/benchmarks/benchmark_end_to_end.py",
+        "--renderer",
+        "basis-cuda",
+        "--propagation-backend",
+        "cuda",
+        "--pascal-compat",
+        "--tx",
+        "100",
+        "--rx",
+        "10",
+        "--iterations",
+        "10",
+        "--warmup",
+        "3",
+        "--threads",
+        "2",
+        "--output",
+        "/work/results/comparison_shapes/fused_cuda",
+        "--fused-projection"
+      ],
+      "status": "ok",
+      "returncode": 0,
+      "wall_s": 11.144458794999991,
+      "summary": {
+        "advance_ms": {
+          "median_ms": 0.0013750000107393134,
+          "std_ms": 0.0003522688079415098,
+          "p95_ms": 0.0020010000071124523,
+          "mean_ms": 0.0014939999800844816
+        },
+        "source_ms": {
+          "median_ms": 37.71864850000384,
+          "std_ms": 0.5438502167186307,
+          "p95_ms": 38.60563344999264,
+          "mean_ms": 37.84603580011208
+        },
+        "channel_ms": {
+          "median_ms": 46.93388449982194,
+          "std_ms": 1.333124989050435,
+          "p95_ms": 49.15141829997083,
+          "mean_ms": 47.42666319993987
+        },
+        "rendering_ms": {
+          "median_ms": 394.6017130003838,
+          "std_ms": 6.084759212154456,
+          "p95_ms": 404.95670660034193,
+          "mean_ms": 395.34672019990467
+        },
+        "receiver_ms": {
+          "median_ms": 8.453396500271992,
+          "std_ms": 0.7783437469164647,
+          "p95_ms": 9.708248900255965,
+          "mean_ms": 8.554407700057709
+        },
+        "other_rf_ms": {
+          "median_ms": 64.5338410010936,
+          "std_ms": 3.311722516931041,
+          "p95_ms": 68.39454404978369,
+          "mean_ms": 64.6418498001367
+        },
+        "delivery_storage_ms": {
+          "median_ms": 7.207588000255782,
+          "std_ms": 0.36761189953125084,
+          "p95_ms": 7.833774000050653,
+          "mean_ms": 7.271617100013827
+        },
+        "total_ms": {
+          "median_ms": 560.4063974999463,
+          "std_ms": 7.667724864435362,
+          "p95_ms": 571.7905991998123,
+          "mean_ms": 561.0920136999539
+        }
+      }
+    },
+    {
+      "name": "baseline_cuda_repeat",
+      "threads": 2,
+      "optimized": false,
+      "fused": false,
+      "command": [
+        "/opt/airsim-rf/.venv/bin/python",
+        "/work/repo/scripts/basis_launch.py",
+        "/work/repo/benchmarks/benchmark_end_to_end.py",
+        "--renderer",
+        "basis-cuda",
+        "--propagation-backend",
+        "cuda",
+        "--pascal-compat",
+        "--tx",
+        "100",
+        "--rx",
+        "10",
+        "--iterations",
+        "10",
+        "--warmup",
+        "3",
+        "--threads",
+        "2",
+        "--output",
+        "/work/results/comparison_shapes/baseline_cuda_repeat",
+        "--no-optimizations"
+      ],
+      "status": "ok",
+      "returncode": 0,
+      "wall_s": 12.618449117000182,
+      "summary": {
+        "advance_ms": {
+          "median_ms": 0.0013049998415226582,
+          "std_ms": 0.0008116212298055811,
+          "p95_ms": 0.003094000135206441,
+          "mean_ms": 0.0016479999885632424
+        },
+        "source_ms": {
+          "median_ms": 37.96344449983735,
+          "std_ms": 0.4971064429301255,
+          "p95_ms": 38.47495900004105,
+          "mean_ms": 37.86573600000338
+        },
+        "channel_ms": {
+          "median_ms": 155.6338405000588,
+          "std_ms": 2.6671988274697487,
+          "p95_ms": 160.15485760003685,
+          "mean_ms": 156.06066320001446
+        },
+        "rendering_ms": {
+          "median_ms": 422.8623644999061,
+          "std_ms": 4.247377799203203,
+          "p95_ms": 427.6912490498262,
+          "mean_ms": 422.6677375000236
+        },
+        "receiver_ms": {
+          "median_ms": 8.526993500936442,
+          "std_ms": 0.828311632037356,
+          "p95_ms": 9.989059800864196,
+          "mean_ms": 8.774531600238333
+        },
+        "other_rf_ms": {
+          "median_ms": 64.78302099867506,
+          "std_ms": 2.2842494625212346,
+          "p95_ms": 67.67081590046473,
+          "mean_ms": 64.37305629970069
+        },
+        "delivery_storage_ms": {
+          "median_ms": 7.327080499862859,
+          "std_ms": 0.40263445279167026,
+          "p95_ms": 8.100082900205052,
+          "mean_ms": 7.481039200047235
+        },
+        "total_ms": {
+          "median_ms": 699.2004665003151,
+          "std_ms": 6.402183893811406,
+          "p95_ms": 705.0951245499164,
+          "mean_ms": 697.228143700022
+        }
+      }
+    }
+  ],
+  "complete": true,
+  "propagation_backend": "Sionna RT CUDA/OptiX"
+}

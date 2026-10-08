@@ -1,0 +1,49 @@
+#0 building with "default" instance using docker driver
+
+#1 [internal] load build definition from p100-modern-gpu.Dockerfile
+#1 transferring dockerfile: 205B done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/library/airsim-rf:p100-profile
+#2 DONE 0.0s
+
+#3 [internal] load .dockerignore
+#3 transferring context: 2B done
+#3 DONE 0.0s
+
+#4 [1/2] FROM docker.io/library/airsim-rf:p100-profile@sha256:211f8791811ed0f25efa61ac48a0ac712cbd417e849ae38db568a854b996c088
+#4 resolve docker.io/library/airsim-rf:p100-profile@sha256:211f8791811ed0f25efa61ac48a0ac712cbd417e849ae38db568a854b996c088 done
+#4 DONE 0.0s
+
+#5 [2/2] RUN /opt/airsim-rf/.venv/bin/python -m pip install --no-deps --no-cache-dir mitsuba==3.8.0 drjit==1.3.1
+#5 0.926 Collecting mitsuba==3.8.0
+#5 1.031   Downloading mitsuba-3.8.0-cp312-cp312-manylinux_2_28_x86_64.whl.metadata (6.9 kB)
+#5 1.110 Collecting drjit==1.3.1
+#5 1.155   Downloading drjit-1.3.1-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl.metadata (7.1 kB)
+#5 1.234 Downloading mitsuba-3.8.0-cp312-cp312-manylinux_2_28_x86_64.whl (63.0 MB)
+#5 4.669    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 63.0/63.0 MB 18.7 MB/s eta 0:00:00
+#5 4.748 Downloading drjit-1.3.1-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl (4.5 MB)
+#5 4.921    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 4.5/4.5 MB 25.8 MB/s eta 0:00:00
+#5 4.960 Installing collected packages: mitsuba, drjit
+#5 4.960   Attempting uninstall: mitsuba
+#5 4.962     Found existing installation: mitsuba 3.9.1
+#5 4.980     Uninstalling mitsuba-3.9.1:
+#5 5.270       Successfully uninstalled mitsuba-3.9.1
+#5 5.836   Attempting uninstall: drjit
+#5 5.839     Found existing installation: drjit 1.5.0
+#5 5.845     Uninstalling drjit-1.5.0:
+#5 5.891       Successfully uninstalled drjit-1.5.0
+#5 5.974 Successfully installed drjit-1.3.1 mitsuba-3.8.0
+#5 DONE 6.1s
+
+#6 exporting to image
+#6 exporting layers
+#6 exporting layers 4.7s done
+#6 exporting manifest sha256:3380146df26716a9f1c8e5bd17a5a83402c1f385b1236726d7bf65bbfeb46450 done
+#6 exporting config sha256:9b7366e4d88a034320702257f91b2fcc3dc7f1fb0529c5ccc06c724a311e52fc done
+#6 exporting attestation manifest sha256:b618c0ede6589fb2a9eb1bf31d29197a18a093aa78be76d9444f09c7d337cef7 done
+#6 exporting manifest list sha256:3a5a918bd059469dc5e4a55a1b347c8b97917e2d4450e352478ab5179d7950f5 done
+#6 naming to docker.io/library/airsim-rf:p100-modern-gpu done
+#6 unpacking to docker.io/library/airsim-rf:p100-modern-gpu
+#6 unpacking to docker.io/library/airsim-rf:p100-modern-gpu 0.5s done
+#6 DONE 5.2s

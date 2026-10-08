@@ -1,0 +1,410 @@
+[
+  {
+    "path": "profiles/cuda-100tx-10rx-instrumented/measurements.json",
+    "measurement_mode": "instrumented_end_to_end_profile",
+    "arguments": {
+      "tx": 100,
+      "rx": 10,
+      "iterations": 30,
+      "warmup": 3,
+      "samples_per_link": 1028,
+      "profile_rendering": true,
+      "reuse_render_buffers": true,
+      "cache_scattering_samples": true,
+      "fused_projection": false,
+      "threads": 2,
+      "propagation_backend": "cuda",
+      "pascal_compat": true
+    },
+    "summary": {
+      "advance_ms": {
+        "median_ms": 0.0015599998732795939,
+        "std_ms": 0.00043004949357830545,
+        "p95_ms": 0.002412000185358919,
+        "mean_ms": 0.0016533000386213341
+      },
+      "source_ms": {
+        "median_ms": 38.230645499879756,
+        "std_ms": 1.8732894315192306,
+        "p95_ms": 42.550298150194976,
+        "mean_ms": 38.97913480004718
+      },
+      "channel_ms": {
+        "median_ms": 51.53077300019504,
+        "std_ms": 1.736536888499092,
+        "p95_ms": 54.65379160016255,
+        "mean_ms": 51.847858333379314
+      },
+      "rendering_ms": {
+        "median_ms": 401.01348350026456,
+        "std_ms": 4.933411286920487,
+        "p95_ms": 406.99297624969404,
+        "mean_ms": 401.959168933278
+      },
+      "receiver_ms": {
+        "median_ms": 8.78934050024327,
+        "std_ms": 0.9559607503624632,
+        "p95_ms": 10.951699950055627,
+        "mean_ms": 9.02521683321235
+      },
+      "other_rf_ms": {
+        "median_ms": 68.28150249975806,
+        "std_ms": 3.2765748227831706,
+        "p95_ms": 73.13383040063854,
+        "mean_ms": 68.23651843346852
+      },
+      "delivery_storage_ms": {
+        "median_ms": 7.323090499994578,
+        "std_ms": 0.692773492868562,
+        "p95_ms": 8.710105950035539,
+        "mean_ms": 7.468867100002778
+      },
+      "total_ms": {
+        "median_ms": 575.8044935000726,
+        "std_ms": 8.679484805996383,
+        "p95_ms": 591.2783369500175,
+        "mean_ms": 577.5222516666569
+      }
+    }
+  },
+  {
+    "path": "profiles/cuda-100tx-10rx-unprofiled/measurements.json",
+    "measurement_mode": "unprofiled_end_to_end_benchmark",
+    "arguments": {
+      "tx": 100,
+      "rx": 10,
+      "iterations": 30,
+      "warmup": 3,
+      "samples_per_link": 1028,
+      "profile_rendering": false,
+      "reuse_render_buffers": true,
+      "cache_scattering_samples": true,
+      "fused_projection": false,
+      "threads": 2,
+      "propagation_backend": "cuda",
+      "pascal_compat": true
+    },
+    "summary": {
+      "advance_ms": {
+        "median_ms": 0.0014199999895936344,
+        "std_ms": 0.00037354614795738543,
+        "p95_ms": 0.002140499941560847,
+        "mean_ms": 0.0015169666312431218
+      },
+      "source_ms": {
+        "median_ms": 37.91700849978952,
+        "std_ms": 0.5337225253780126,
+        "p95_ms": 39.05245549999563,
+        "mean_ms": 38.053683833383424
+      },
+      "channel_ms": {
+        "median_ms": 740.8848950001357,
+        "std_ms": 28.565750770242747,
+        "p95_ms": 806.4288638501466,
+        "mean_ms": 745.5452651999925
+      },
+      "rendering_ms": {
+        "median_ms": 395.6593004995739,
+        "std_ms": 5.840703238295362,
+        "p95_ms": 407.10397279967765,
+        "mean_ms": 397.30756359993694
+      },
+      "receiver_ms": {
+        "median_ms": 9.114125999985845,
+        "std_ms": 1.0530399302686824,
+        "p95_ms": 11.331580699902586,
+        "mean_ms": 9.160161500130926
+      },
+      "other_rf_ms": {
+        "median_ms": 67.3710589996972,
+        "std_ms": 3.631236538723932,
+        "p95_ms": 73.49679464994097,
+        "mean_ms": 67.13047966662391
+      },
+      "delivery_storage_ms": {
+        "median_ms": 6.94497250015047,
+        "std_ms": 0.5022011912165396,
+        "p95_ms": 7.893665599976884,
+        "mean_ms": 6.997704066679944
+      },
+      "total_ms": {
+        "median_ms": 1259.1698409999026,
+        "std_ms": 29.524505159386674,
+        "p95_ms": 1319.8327531998984,
+        "mean_ms": 1264.1997694999798
+      }
+    }
+  },
+  {
+    "path": "profiles/cuda-10tx-4rx-instrumented/measurements.json",
+    "measurement_mode": "instrumented_end_to_end_profile",
+    "arguments": {
+      "tx": 10,
+      "rx": 4,
+      "iterations": 30,
+      "warmup": 3,
+      "samples_per_link": 1028,
+      "profile_rendering": true,
+      "reuse_render_buffers": true,
+      "cache_scattering_samples": true,
+      "fused_projection": false,
+      "threads": 2,
+      "propagation_backend": "cuda",
+      "pascal_compat": true
+    },
+    "summary": {
+      "advance_ms": {
+        "median_ms": 0.0012600000900420127,
+        "std_ms": 0.00034355628184833814,
+        "p95_ms": 0.0018764999595077825,
+        "mean_ms": 0.0013536667059573422
+      },
+      "source_ms": {
+        "median_ms": 4.292234000104145,
+        "std_ms": 0.29596302039424177,
+        "p95_ms": 4.804410999963693,
+        "mean_ms": 4.367470400014402
+      },
+      "channel_ms": {
+        "median_ms": 13.014290999990408,
+        "std_ms": 0.7282029967602557,
+        "p95_ms": 14.233201899924097,
+        "mean_ms": 13.081826633363866
+      },
+      "rendering_ms": {
+        "median_ms": 36.64369600005557,
+        "std_ms": 0.5794359335685841,
+        "p95_ms": 37.44131084974924,
+        "mean_ms": 36.69073983331449
+      },
+      "receiver_ms": {
+        "median_ms": 3.146452999999383,
+        "std_ms": 0.16343278753217036,
+        "p95_ms": 3.441584899974259,
+        "mean_ms": 3.1456930332903235
+      },
+      "other_rf_ms": {
+        "median_ms": 4.8692124998979125,
+        "std_ms": 0.25199413906407014,
+        "p95_ms": 5.270354949811917,
+        "mean_ms": 4.887971599994974
+      },
+      "delivery_storage_ms": {
+        "median_ms": 3.1195935000596364,
+        "std_ms": 0.2734462261283473,
+        "p95_ms": 3.6943409501645874,
+        "mean_ms": 3.221235599994543
+      },
+      "total_ms": {
+        "median_ms": 65.25828450003246,
+        "std_ms": 1.0257640916815822,
+        "p95_ms": 66.99030590011716,
+        "mean_ms": 65.39891566664362
+      }
+    }
+  },
+  {
+    "path": "profiles/cuda-10tx-4rx-unprofiled/measurements.json",
+    "measurement_mode": "unprofiled_end_to_end_benchmark",
+    "arguments": {
+      "tx": 10,
+      "rx": 4,
+      "iterations": 30,
+      "warmup": 3,
+      "samples_per_link": 1028,
+      "profile_rendering": false,
+      "reuse_render_buffers": true,
+      "cache_scattering_samples": true,
+      "fused_projection": false,
+      "threads": 2,
+      "propagation_backend": "cuda",
+      "pascal_compat": true
+    },
+    "summary": {
+      "advance_ms": {
+        "median_ms": 0.0013050002962700091,
+        "std_ms": 0.00040800382284457914,
+        "p95_ms": 0.0022279999257079903,
+        "mean_ms": 0.0014853333292800623
+      },
+      "source_ms": {
+        "median_ms": 3.903225499925611,
+        "std_ms": 0.2982726547662633,
+        "p95_ms": 4.701811500126496,
+        "mean_ms": 4.010172799992991
+      },
+      "channel_ms": {
+        "median_ms": 91.39262550002059,
+        "std_ms": 3.386485529444091,
+        "p95_ms": 98.28387410004778,
+        "mean_ms": 92.11439056669708
+      },
+      "rendering_ms": {
+        "median_ms": 36.9507835002878,
+        "std_ms": 0.7020355708706475,
+        "p95_ms": 38.19109915023091,
+        "mean_ms": 37.01992023338789
+      },
+      "receiver_ms": {
+        "median_ms": 3.0780734996369574,
+        "std_ms": 0.23936922791586746,
+        "p95_ms": 3.6173308002389595,
+        "mean_ms": 3.1468496998816895
+      },
+      "other_rf_ms": {
+        "median_ms": 5.139435500041145,
+        "std_ms": 0.39022133695891903,
+        "p95_ms": 5.828040949427304,
+        "mean_ms": 5.173626700055441
+      },
+      "delivery_storage_ms": {
+        "median_ms": 3.231121999988318,
+        "std_ms": 0.3442999577635275,
+        "p95_ms": 3.97560590017747,
+        "mean_ms": 3.315775899985359
+      },
+      "total_ms": {
+        "median_ms": 143.6983829999008,
+        "std_ms": 4.045486468199992,
+        "p95_ms": 152.49916070008567,
+        "mean_ms": 144.7849014999671
+      }
+    }
+  },
+  {
+    "path": "profiles/cuda-2tx-2rx-instrumented/measurements.json",
+    "measurement_mode": "instrumented_end_to_end_profile",
+    "arguments": {
+      "tx": 2,
+      "rx": 2,
+      "iterations": 30,
+      "warmup": 3,
+      "samples_per_link": 1028,
+      "profile_rendering": true,
+      "reuse_render_buffers": true,
+      "cache_scattering_samples": true,
+      "fused_projection": false,
+      "threads": 2,
+      "propagation_backend": "cuda",
+      "pascal_compat": true
+    },
+    "summary": {
+      "advance_ms": {
+        "median_ms": 0.0013700000636163168,
+        "std_ms": 0.0006143576809843351,
+        "p95_ms": 0.002038000116044713,
+        "mean_ms": 0.0015419666700230057
+      },
+      "source_ms": {
+        "median_ms": 0.8365164997030661,
+        "std_ms": 0.09365044476320393,
+        "p95_ms": 1.0197624499141962,
+        "mean_ms": 0.8698977999453442
+      },
+      "channel_ms": {
+        "median_ms": 9.55864349998592,
+        "std_ms": 0.5959670782996824,
+        "p95_ms": 10.713138800019806,
+        "mean_ms": 9.692248433354203
+      },
+      "rendering_ms": {
+        "median_ms": 12.55817449987262,
+        "std_ms": 0.3581213539786052,
+        "p95_ms": 13.440212400018936,
+        "mean_ms": 12.71992836662624
+      },
+      "receiver_ms": {
+        "median_ms": 1.4364219996423344,
+        "std_ms": 0.09706204882714436,
+        "p95_ms": 1.6133510501731507,
+        "mean_ms": 1.434587599972777
+      },
+      "other_rf_ms": {
+        "median_ms": 1.4030264997018094,
+        "std_ms": 0.12262163407978237,
+        "p95_ms": 1.6489059002424253,
+        "mean_ms": 1.4251710000432165
+      },
+      "delivery_storage_ms": {
+        "median_ms": 1.767265999887968,
+        "std_ms": 0.2897523866868331,
+        "p95_ms": 2.3893649998854016,
+        "mean_ms": 1.8960968332673171
+      },
+      "total_ms": {
+        "median_ms": 27.97946700002285,
+        "std_ms": 1.0290691203603777,
+        "p95_ms": 30.131077450050725,
+        "mean_ms": 28.041669333272996
+      }
+    }
+  },
+  {
+    "path": "profiles/cuda-2tx-2rx-unprofiled/measurements.json",
+    "measurement_mode": "unprofiled_end_to_end_benchmark",
+    "arguments": {
+      "tx": 2,
+      "rx": 2,
+      "iterations": 30,
+      "warmup": 3,
+      "samples_per_link": 1028,
+      "profile_rendering": false,
+      "reuse_render_buffers": true,
+      "cache_scattering_samples": true,
+      "fused_projection": false,
+      "threads": 2,
+      "propagation_backend": "cuda",
+      "pascal_compat": true
+    },
+    "summary": {
+      "advance_ms": {
+        "median_ms": 0.0011700001323333709,
+        "std_ms": 0.0003250755714392617,
+        "p95_ms": 0.002010000116570154,
+        "mean_ms": 0.0013156333958856219
+      },
+      "source_ms": {
+        "median_ms": 0.8349909999196825,
+        "std_ms": 0.18152232757628353,
+        "p95_ms": 1.3801249499920232,
+        "mean_ms": 0.9119384666216016
+      },
+      "channel_ms": {
+        "median_ms": 26.621670000167796,
+        "std_ms": 1.1615475605204453,
+        "p95_ms": 29.19379694997133,
+        "mean_ms": 26.866448333278942
+      },
+      "rendering_ms": {
+        "median_ms": 11.880035500325903,
+        "std_ms": 0.3515799289105073,
+        "p95_ms": 12.60013695005,
+        "mean_ms": 12.008532666671575
+      },
+      "receiver_ms": {
+        "median_ms": 1.3789120000637922,
+        "std_ms": 0.11808177810341745,
+        "p95_ms": 1.6633847998264166,
+        "mean_ms": 1.4160825332661868
+      },
+      "other_rf_ms": {
+        "median_ms": 1.4105755003583909,
+        "std_ms": 0.09348099380115552,
+        "p95_ms": 1.5968383499512127,
+        "mean_ms": 1.4125462001023454
+      },
+      "delivery_storage_ms": {
+        "median_ms": 1.8208799999683833,
+        "std_ms": 0.27580321455907814,
+        "p95_ms": 2.326100900063466,
+        "mean_ms": 1.9275618333722377
+      },
+      "total_ms": {
+        "median_ms": 44.419459499977165,
+        "std_ms": 1.151941304551601,
+        "p95_ms": 46.30438080012027,
+        "mean_ms": 44.54665726669494
+      }
+    }
+  }
+]

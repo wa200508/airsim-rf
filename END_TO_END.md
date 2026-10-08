@@ -1,3 +1,5 @@
+For P100 CUDA/OptiX propagation and CuPy rendering, see [the explicit GPU pipeline](P100_GPU_PIPELINE.md). Historical rows below use their recorded LLVM propagation backend.
+
 # End-to-end RF tests
 
 On `profiling/p100`, the optimized CPU/CUDA basis renderer is connected to

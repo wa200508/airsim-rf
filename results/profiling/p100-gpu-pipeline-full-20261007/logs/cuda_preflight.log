@@ -1,0 +1,95 @@
+{
+  "status": "verified_cuda_cupy",
+  "scope": "renderer_cuda_only",
+  "propagation": "not tested; current Dr.Jit rejects P100",
+  "gpu": "Tesla P100-PCIE-16GB",
+  "compute_capability": "6.0",
+  "cupy_version": "13.6.0",
+  "cuda_runtime_version": 12090,
+  "cuda_driver_version": 13000,
+  "metrics": {
+    "total_ms": 5301.467814000262,
+    "backend": "cuda_cupy",
+    "projection": "gather",
+    "delay_map": "double",
+    "fft_inplace": false,
+    "reuse_buffers": false,
+    "fused_projection": false,
+    "packing": [
+      {
+        "cpu_prepare_ms": 0.15233699969030567,
+        "upload_submission_ms": 1.1736510000446287,
+        "uploaded_bytes": 7890,
+        "uploaded_keys": [
+          "a",
+          "d",
+          "fd",
+          "valid",
+          "source",
+          "offsets",
+          "base_cycles"
+        ],
+        "buffers_reused": false,
+        "channel_reused": false,
+        "upload_cuda_span_ms": 1.1646720170974731
+      }
+    ],
+    "projection_calls": [
+      {
+        "name": "basis.projection_call",
+        "cuda_ms": 67.58092498779297
+      }
+    ],
+    "valid_paths": 2,
+    "blocks": [
+      {
+        "jobs": 1,
+        "samples": 256,
+        "degree": 10,
+        "temporal_tail_bound": 2.646838275055734e-11,
+        "coefficient_aliasing_included": true,
+        "delay_coefficients": 233
+      }
+    ],
+    "sum_output": false,
+    "events": [
+      {
+        "name": "basis.host_pack_and_upload",
+        "cuda_ms": 1.3344639539718628
+      },
+      {
+        "name": "basis.delay_map",
+        "cuda_ms": 3135.60400390625
+      },
+      {
+        "name": "basis.temporal_coefficients",
+        "cuda_ms": 1746.16552734375
+      },
+      {
+        "name": "basis.path_projection",
+        "cuda_ms": 67.64173126220703
+      },
+      {
+        "name": "basis.private_fft_filters",
+        "cuda_ms": 130.23890686035156
+      },
+      {
+        "name": "basis.reconstruction_and_sum",
+        "cuda_ms": 219.8850860595703
+      },
+      {
+        "name": "basis.final_output_export",
+        "cuda_ms": 0.07718399912118912
+      }
+    ],
+    "cuda_event_span_ms": 5300.946903385222,
+    "pool_used_bytes": 164864,
+    "pool_reserved_bytes": 257024,
+    "max_checkpoint_pool_used_bytes": 164864,
+    "pool_measurement_note": "Allocator snapshots include persistent plans/cache; not process-wide peak VRAM",
+    "profile": true,
+    "no_cpu_fallback": true,
+    "precision": "complex128/float64"
+  },
+  "max_absolute_error": 2.3714374201337737e-15
+}

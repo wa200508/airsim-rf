@@ -1,0 +1,101 @@
+mi 3.8.0
+cuda initialized
+rt imported
+scene loaded
+devices created
+
+Dr.Jit encountered an unrecoverable error and will now shut
+down. Please re-run your program in debug mode to check for
+out-of-bounds reads, writes, and other sources of undefined
+behavior. You can do so by calling
+
+   dr.set_flag(dr.JitFlag.Debug, True)
+
+at the beginning of the program. If these additional checks
+fail to pinpoint the problem, then you have likely found a
+bug. We are happy to help investigate and fix the problem if
+you can you create a self-contained reproducer and submit it
+at https://github.com/mitsuba-renderer/drjit.
+
+The error message of this specific failure is as follows:
+>>> jit_cuda_compile(): compilation failed. Please see the PTX assembly listing and error message below:
+
+.version 9.0
+.target sm_60
+.address_size 64
+
+.entry drjit_6ff40904206b6663e20423395b7b3264(.param .align 8 .b8 params[40]) {
+    .reg.b8  %b <11>; .reg.b16  %w<11>; .reg.b32 %r<11>;
+    .reg.b64 %rd<11>; .reg.f16  %h<11>; .reg.f32 %f<11>;
+    .reg.f64 %d <11>; .reg.pred %p<11>;
+
+    mov.u32 %r0, %ctaid.x;
+    mov.u32 %r1, %ntid.x;
+    mov.u32 %r2, %tid.x;
+    mad.lo.u32 %r0, %r0, %r1, %r2;
+    ld.param.u32 %r2, [params];
+    setp.ge.u32 %p0, %r0, %r2;
+    @%p0 ret;
+
+body: // sm_60
+    ld.param.u64 %rd4, [params+8];
+    ld.param.u64 %rd5, [params+16];
+    ld.param.u64 %rd0, [params+24];
+    mad.wide.u32 %rd0, %r0, 4, %rd0;
+    ld.global.cs.b32 %r6, [%rd0];
+    mov.pred %p7, 0x1;
+    mad.wide.u32 %rd3, %r6, 4, %rd5;
+    ld.global.nc.b32 %r8, [%rd3];
+    mad.wide.u32 %rd3, %r8, 4, %rd4;
+    {
+        .func (.param .u32 rv) reduce_inc_u32 (.param .u64 ptr);
+        call.uni (%r9), reduce_inc_u32, (%rd3);
+    }
+    ld.param.u64 %rd0, [params+32];
+    mad.wide.u32 %rd0, %r0, 4, %rd0;
+    st.global.cs.b32 [%rd0], %r9;
+    ret;
+}
+
+.func (.param .u32 rv) reduce_inc_u32 (.param .u64 ptr) {
+    .reg .b64 %ptr, %ptr_shift;
+    .reg .b32 %active, %ptr_id, %active_p, %active_p_rev,
+              %leader_idx, %lt_mask, %lt_active_p, %lt_ct,
+              %active_p_ct, %prev, %leader_val, %rv;
+    .reg .pred %leader;
+
+    ld.param.u64 %ptr, [ptr];
+    activemask.b32 %active;
+    shl.b64 %ptr_shift, %ptr, 2;
+    cvt.u32.u64 %ptr_id, %ptr_shift;
+    match.any.sync.b32 %active_p, %ptr_id, %active;
+    brev.b32 %active_p_rev, %active_p;
+    clz.b32 %leader_idx, %active_p_rev;
+    mov.u32 %lt_mask, %lanemask_lt;
+    and.b32 %lt_active_p, %lt_mask, %active_p;
+    setp.eq.u32 %leader, %lt_active_p, 0;
+    @!%leader bra fetch_from_leader;
+
+    popc.b32 %active_p_ct, %active_p;
+    atom.global.add.u32 %prev, [%ptr], %active_p_ct;
+
+fetch_from_leader:
+    shfl.sync.idx.b32 %leader_val, %prev, %leader_idx, 31, %active;
+    popc.b32 %lt_ct, %lt_active_p;
+    add.u32 %rv, %lt_ct, %leader_val;
+    st.param.u32 [rv], %rv;
+    ret;
+}
+
+
+ptxas application ptx input, line 49; error   : Instruction 'match' requires .target sm_70 or higher
+ptxas fatal   : Ptx assembly aborted due to errors
+Fatal Python error: Aborted
+
+Current thread 0x0000766809fb8380 (most recent call first):
+  File "/opt/airsim-rf/.deps/sionna-rt/src/sionna/rt/path_solvers/paths.py", line 124 in __init__
+  File "/opt/airsim-rf/.deps/sionna-rt/src/sionna/rt/path_solvers/path_solver.py", line 314 in __call__
+  File "/work/repo/src/airsim_rf/scattering.py", line 269 in __call__
+  File "<string>", line 1 in <module>
+
+Extension modules: numpy._core._multiarray_umath, numpy.linalg._umath_linalg, _cyutility, scipy._cyutility, scipy._lib._ccallback_c, charset_normalizer.md, charset_normalizer.cd, numpy.random._common, numpy.random.bit_generator, numpy.random._bounded_integers, numpy.random._pcg64, numpy.random._generator, numpy.random._mt19937, numpy.random._philox, numpy.random._sfc64, numpy.random.mtrand, PIL._imaging, kiwisolver._cext (total: 18)

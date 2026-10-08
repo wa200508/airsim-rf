@@ -2,6 +2,16 @@
 
 **Runtime context (2026-10-05):** Collection instructions and renderer-only qualification. GPU compatibility and 120 Hz capacity must be read with the tested workload and excluded stages. See [current runtime and wall-clock costs](RUNTIME_STATUS.md) for comparable measurements, hardware, exclusions and ten-minute estimates.
 
+For actual P100 CUDA/OptiX propagation plus GPU rendering, use the
+[new explicit GPU pipeline mode](P100_GPU_PIPELINE.md):
+
+```bash
+bash scripts/run_p100_docker.sh --end-to-end --p100-gpu --run-id p100-gpu-full
+```
+
+The original commands below retain their documented renderer-only or hybrid
+scope.
+
 Branch: **`profiling/p100`**. This branch includes the newer architecture and
 preserves the previously published P100/legacy Sionna results.
 

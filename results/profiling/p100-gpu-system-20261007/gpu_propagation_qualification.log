@@ -1,0 +1,16 @@
+
+Dr.Jit encountered an unrecoverable error and will now shut
+down. Please re-run your program in debug mode to check for
+out-of-bounds reads, writes, and other sources of undefined
+behavior. You can do so by calling
+
+   dr.set_flag(dr.JitFlag.Debug, True)
+
+at the beginning of the program. If these additional checks
+fail to pinpoint the problem, then you have likely found a
+bug. We are happy to help investigate and fix the problem if
+you can you create a self-contained reproducer and submit it
+at https://github.com/mitsuba-renderer/drjit.
+
+The error message of this specific failure is as follows:
+>>> jit_init(): creation of directory "//.drjit" failed: Permission denied

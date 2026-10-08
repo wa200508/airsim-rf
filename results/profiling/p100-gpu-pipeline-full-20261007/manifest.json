@@ -1,0 +1,246 @@
+{
+  "run_id": "p100-gpu-pipeline-full-20261007",
+  "scope": "rf_pipeline_end_to_end_collection",
+  "complete": true,
+  "iterations": 30,
+  "warmup": 3,
+  "threads": 2,
+  "propagation_backend": "cuda",
+  "pascal_compat": true,
+  "scenarios": [
+    [
+      2,
+      2
+    ],
+    [
+      10,
+      4
+    ],
+    [
+      100,
+      10
+    ]
+  ],
+  "backends": [
+    "cuda"
+  ],
+  "tasks": [
+    {
+      "name": "cuda_preflight",
+      "command": [
+        "/opt/airsim-rf/.venv/bin/python",
+        "/work/repo/scripts/basis_launch.py",
+        "/work/repo/scripts/basis_cuda_preflight.py",
+        "--output",
+        "/work/results/p100-gpu-pipeline-full-20261007/profiles/cuda_preflight.json"
+      ],
+      "status": "ok",
+      "artifact": "profiles/cuda_preflight.json",
+      "returncode": 0,
+      "wall_seconds": 6.177318453000225
+    },
+    {
+      "name": "integration_tests",
+      "command": [
+        "/opt/airsim-rf/.venv/bin/python",
+        "/work/repo/scripts/basis_launch.py",
+        "-c",
+        "import mitsuba as mi; mi.set_variant('cuda_ad_mono_polarized'); from airsim_rf.p100_compat import enable_pascal_compat; enable_pascal_compat(); import pytest; raise SystemExit(pytest.main(['tests/test_end_to_end.py', 'tests/test_sdr.py', 'tests/test_end_to_end_profiling.py', 'tests/test_p100_compat.py', '-q', '-o', 'cache_dir=/tmp/pytest-cache']))"
+      ],
+      "status": "ok",
+      "artifact": null,
+      "returncode": 0,
+      "wall_seconds": 9.989210655000079
+    },
+    {
+      "name": "worker_protocol_tests",
+      "command": [
+        "/opt/airsim-rf/.venv/bin/python",
+        "/work/repo/scripts/basis_launch.py",
+        "-c",
+        "import mitsuba as mi; import drjit as dr; mi.set_variant('llvm_ad_mono_polarized'); setattr(dr.JitBackend,'Metal',None) if not hasattr(dr.JitBackend,'Metal') else None; import pytest; raise SystemExit(pytest.main(['tests/test_distributed.py','-q','-o','cache_dir=/tmp/pytest-cache']))"
+      ],
+      "status": "ok",
+      "artifact": null,
+      "returncode": 0,
+      "wall_seconds": 4.175648766999984
+    },
+    {
+      "name": "cuda-2tx-2rx-unprofiled",
+      "command": [
+        "/opt/airsim-rf/.venv/bin/python",
+        "/work/repo/scripts/basis_launch.py",
+        "/work/repo/benchmarks/benchmark_end_to_end.py",
+        "--renderer",
+        "basis-cuda",
+        "--tx",
+        "2",
+        "--rx",
+        "2",
+        "--iterations",
+        "30",
+        "--warmup",
+        "3",
+        "--threads",
+        "2",
+        "--propagation-backend",
+        "cuda",
+        "--output",
+        "/work/results/p100-gpu-pipeline-full-20261007/profiles/cuda-2tx-2rx-unprofiled",
+        "--pascal-compat"
+      ],
+      "status": "ok",
+      "artifact": "profiles/cuda-2tx-2rx-unprofiled/measurements.json",
+      "returncode": 0,
+      "wall_seconds": 4.373595794000266
+    },
+    {
+      "name": "cuda-2tx-2rx-instrumented",
+      "command": [
+        "/opt/airsim-rf/.venv/bin/python",
+        "/work/repo/scripts/basis_launch.py",
+        "/work/repo/benchmarks/benchmark_end_to_end.py",
+        "--renderer",
+        "basis-cuda",
+        "--tx",
+        "2",
+        "--rx",
+        "2",
+        "--iterations",
+        "30",
+        "--warmup",
+        "3",
+        "--threads",
+        "2",
+        "--propagation-backend",
+        "cuda",
+        "--output",
+        "/work/results/p100-gpu-pipeline-full-20261007/profiles/cuda-2tx-2rx-instrumented",
+        "--pascal-compat",
+        "--profile-rendering"
+      ],
+      "status": "ok",
+      "artifact": "profiles/cuda-2tx-2rx-instrumented/measurements.json",
+      "returncode": 0,
+      "wall_seconds": 3.7735845980000704
+    },
+    {
+      "name": "cuda-10tx-4rx-unprofiled",
+      "command": [
+        "/opt/airsim-rf/.venv/bin/python",
+        "/work/repo/scripts/basis_launch.py",
+        "/work/repo/benchmarks/benchmark_end_to_end.py",
+        "--renderer",
+        "basis-cuda",
+        "--tx",
+        "10",
+        "--rx",
+        "4",
+        "--iterations",
+        "30",
+        "--warmup",
+        "3",
+        "--threads",
+        "2",
+        "--propagation-backend",
+        "cuda",
+        "--output",
+        "/work/results/p100-gpu-pipeline-full-20261007/profiles/cuda-10tx-4rx-unprofiled",
+        "--pascal-compat"
+      ],
+      "status": "ok",
+      "artifact": "profiles/cuda-10tx-4rx-unprofiled/measurements.json",
+      "returncode": 0,
+      "wall_seconds": 7.87979958599999
+    },
+    {
+      "name": "cuda-10tx-4rx-instrumented",
+      "command": [
+        "/opt/airsim-rf/.venv/bin/python",
+        "/work/repo/scripts/basis_launch.py",
+        "/work/repo/benchmarks/benchmark_end_to_end.py",
+        "--renderer",
+        "basis-cuda",
+        "--tx",
+        "10",
+        "--rx",
+        "4",
+        "--iterations",
+        "30",
+        "--warmup",
+        "3",
+        "--threads",
+        "2",
+        "--propagation-backend",
+        "cuda",
+        "--output",
+        "/work/results/p100-gpu-pipeline-full-20261007/profiles/cuda-10tx-4rx-instrumented",
+        "--pascal-compat",
+        "--profile-rendering"
+      ],
+      "status": "ok",
+      "artifact": "profiles/cuda-10tx-4rx-instrumented/measurements.json",
+      "returncode": 0,
+      "wall_seconds": 5.124591337000311
+    },
+    {
+      "name": "cuda-100tx-10rx-unprofiled",
+      "command": [
+        "/opt/airsim-rf/.venv/bin/python",
+        "/work/repo/scripts/basis_launch.py",
+        "/work/repo/benchmarks/benchmark_end_to_end.py",
+        "--renderer",
+        "basis-cuda",
+        "--tx",
+        "100",
+        "--rx",
+        "10",
+        "--iterations",
+        "30",
+        "--warmup",
+        "3",
+        "--threads",
+        "2",
+        "--propagation-backend",
+        "cuda",
+        "--output",
+        "/work/results/p100-gpu-pipeline-full-20261007/profiles/cuda-100tx-10rx-unprofiled",
+        "--pascal-compat"
+      ],
+      "status": "ok",
+      "artifact": "profiles/cuda-100tx-10rx-unprofiled/measurements.json",
+      "returncode": 0,
+      "wall_seconds": 46.36707765999972
+    },
+    {
+      "name": "cuda-100tx-10rx-instrumented",
+      "command": [
+        "/opt/airsim-rf/.venv/bin/python",
+        "/work/repo/scripts/basis_launch.py",
+        "/work/repo/benchmarks/benchmark_end_to_end.py",
+        "--renderer",
+        "basis-cuda",
+        "--tx",
+        "100",
+        "--rx",
+        "10",
+        "--iterations",
+        "30",
+        "--warmup",
+        "3",
+        "--threads",
+        "2",
+        "--propagation-backend",
+        "cuda",
+        "--output",
+        "/work/results/p100-gpu-pipeline-full-20261007/profiles/cuda-100tx-10rx-instrumented",
+        "--pascal-compat",
+        "--profile-rendering"
+      ],
+      "status": "ok",
+      "artifact": "profiles/cuda-100tx-10rx-instrumented/measurements.json",
+      "returncode": 0,
+      "wall_seconds": 23.07936533300017
+    }
+  ]
+}

@@ -1,0 +1,10 @@
+Traceback (most recent call last):
+  File "<string>", line 1, in <module>
+  File "/work/repo/src/airsim_rf/p100_compat.py", line 29, in enable_pascal_compat
+    _bucket_path_storage()
+  File "/work/repo/src/airsim_rf/p100_compat.py", line 76, in _bucket_path_storage
+    exec(compile(source, inspect.getsourcefile(original), 'exec'), original.__globals__, namespace)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/airsim-rf/.deps/sionna-rt/src/sionna/rt/path_solvers/paths.py", line 94
+    self._eff_rx_array_size = self._rx_array.array_size
+IndentationError: unexpected indent
