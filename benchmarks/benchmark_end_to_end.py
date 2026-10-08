@@ -150,6 +150,8 @@ def run(*, output, tx=100, rx=10, iterations=30, warmup=3, renderer='basis-cpu',
     import sionna.rt as rt
     import drjit as dr
     dr.set_thread_count(threads)
+    if profile_rendering and propagation_backend == 'cuda':
+        dr.set_flag(dr.JitFlag.KernelHistory, True)
     output = Path(output)
     output.mkdir(parents=True, exist_ok=False)
     scene = rt.load_scene(str(ROOT/'benchmarks/scenes/terrain.xml'))
@@ -221,6 +223,10 @@ def run(*, output, tx=100, rx=10, iterations=30, warmup=3, renderer='basis-cpu',
                 consumer.deliver(index, ri, cap.adc_codes)
             delivery_ms = (perf_counter()-tick)*1000
             total_ms = (perf_counter()-started)*1000
+            history = dr.kernel_history() if profile_rendering and propagation_backend == 'cuda' else []
+            device_history = dict(events=len(history),
+                optix_events=sum('optix' in str(v.get('type','')).lower() for v in history),
+                execution_ms=sum(float(v.get('execution_time',0)) for v in history))
             row = dict(sequence=index, sim_time_ns=origin_ns+sample_start*500, samples=count,
                 advance_ms=pose_ms, source_ms=source_ms, channel_ms=receiver.last_channel_ms,
                 rendering_ms=receiver.last_render_ms, receiver_ms=receiver.last_receiver_ms,
@@ -230,7 +236,8 @@ def run(*, output, tx=100, rx=10, iterations=30, warmup=3, renderer='basis-cpu',
                 clipped_fraction_max=max(cap.clipped_component_fraction for cap in captures.values()),
                 receiver_render_metrics=receiver.last_render_metrics,
                 channel_sampling_metrics=getattr(receiver.solver, 'stage_timings', {}),
-                channel_sampling=getattr(receiver.solver, 'sampling', {}))
+                channel_sampling=getattr(receiver.solver, 'sampling', {}),
+                propagation_device_history=device_history)
             if index == 0:
                 first = row
             elif index > warmup:
@@ -265,7 +272,7 @@ def run(*, output, tx=100, rx=10, iterations=30, warmup=3, renderer='basis-cpu',
     result = dict(measurement_mode='instrumented_end_to_end_profile' if profile_rendering else 'unprofiled_end_to_end_benchmark',
         scope='rf_pipeline_end_to_end' if airsim_config is None else 'live_airsim_rf_end_to_end',
         hardware=dict(cpu=next(line.split(':',1)[1].strip() for line in Path('/proc/cpuinfo').read_text().splitlines() if line.startswith('model name')), cpu_count=os.cpu_count(), cpu_quota=Path('/sys/fs/cgroup/cpu.max').read_text().strip(),
-                      platform=platform.platform(), sionna_rt=rt.__version__, gpu=gpu),
+                      platform=platform.platform(), sionna_rt=rt.__version__, mitsuba=mi.__version__, drjit=dr.__version__, jit_variant=mi.variant(), gpu=gpu),
         source_revision=revision, source_dirty=dirty,
         pose_source='deterministic AirSim-contract trajectory; physics/RPC not exercised' if airsim_config is None else 'live ProjectAirSim physics/RPC',
         propagation_backend='Sionna RT CUDA/OptiX' if propagation_backend == 'cuda' else 'Sionna RT LLVM CPU', rendering_backend=renderer,
