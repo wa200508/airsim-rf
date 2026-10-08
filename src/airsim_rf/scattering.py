@@ -223,7 +223,7 @@ class FirstOrderScatteringPathSolver:
     Uses Sionna's diffuse ray-tube model, with density-corrected sampling. It
     does not introduce an independently calibrated roughness/speckle law.
     """
-    def __init__(self, *, candidate_limit=2_000_000, uniform_fraction=.1, cache_sampling=True):
+    def __init__(self, *, candidate_limit=2_000_000, uniform_fraction=.1, cache_sampling=True, opaque_poses=True):
         import sionna.rt as rt
         if rt.__version__ != "2.2.0":
             raise RuntimeError("Scattering adapter requires Sionna RT 2.2.0 private API")
@@ -231,6 +231,7 @@ class FirstOrderScatteringPathSolver:
             raise ValueError("uniform_fraction must be in (0,1] to preserve all-direction support")
         if isinstance(candidate_limit, bool) or not isinstance(candidate_limit, int) or candidate_limit < 1:
             raise ValueError("candidate_limit must be a positive integer")
+        self.opaque_poses = opaque_poses
         self._solver = rt.PathSolver(deterministic=True)
         self._candidates = _ScatteringCandidates(candidate_limit, uniform_fraction, cache_sampling)
         self._solver._candidate_generator = self._candidates
@@ -260,6 +261,13 @@ class FirstOrderScatteringPathSolver:
         return self._candidates.plane_count
 
     def __call__(self, scene, **kwargs):
+        import mitsuba as mi
+        if self.opaque_poses and mi.variant().startswith('cuda'):
+            import drjit as dr
+            for device in [*scene.transmitters.values(), *scene.receivers.values()]:
+                # Current values remain unchanged and are never cached. Only
+                # compiler constant propagation is disabled for moving poses.
+                dr.make_opaque(device.position, device.velocity, device.orientation)
         kwargs.setdefault("max_depth", 1)
         kwargs.setdefault("refraction", False)
         kwargs.setdefault("diffuse_reflection", kwargs["max_depth"] == 1)

@@ -233,7 +233,7 @@ class SDRNetworkReceiver:
         self.max_depth, self.samples_per_link = max_depth, samples_per_link
         if path_solver == "first-order-scattering":
             from .scattering import FirstOrderScatteringPathSolver
-            self.solver = FirstOrderScatteringPathSolver(cache_sampling=cache_scattering_samples)
+            self.solver = FirstOrderScatteringPathSolver(cache_sampling=cache_scattering_samples, opaque_poses=cache_scattering_samples)
         elif path_solver == "single-bounce":
             from .single_bounce import SingleBouncePathSolver
             self.solver = SingleBouncePathSolver()

@@ -141,7 +141,7 @@ def test_cached_draws_preserve_moving_paths_and_invalidate_seed_and_patterns():
     import sionna.rt as rt
     scene = ground_scene()
     cached = FirstOrderScatteringPathSolver(cache_sampling=True)
-    fresh = FirstOrderScatteringPathSolver(cache_sampling=False)
+    fresh = FirstOrderScatteringPathSolver(cache_sampling=False, opaque_poses=False)
     for index, seed in enumerate([42, 42, 99, 99]):
         scene.transmitters['tx'].position = [-5+.2*index, 0, 10]
         scene.receivers['rx'].orientation = [0, np.pi/2+.05*index, 0]

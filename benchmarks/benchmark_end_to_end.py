@@ -225,7 +225,10 @@ def run(*, output, tx=100, rx=10, iterations=30, warmup=3, renderer='basis-cpu',
             total_ms = (perf_counter()-started)*1000
             history = dr.kernel_history() if profile_rendering and propagation_backend == 'cuda' else []
             device_history = dict(events=len(history),
-                optix_events=sum('optix' in str(v.get('type','')).lower() for v in history),
+                optix_events=sum(bool(v.get('uses_optix')) or 'optix' in str(v.get('type','')).lower() for v in history),
+                codegen_ms=sum(float(v.get('codegen_time',0)) for v in history),
+                backend_ms=sum(float(v.get('backend_time',0)) for v in history),
+                cache_misses=sum(not bool(v.get('cache_hit',False)) for v in history),
                 execution_ms=sum(float(v.get('execution_time',0)) for v in history))
             row = dict(sequence=index, sim_time_ns=origin_ns+sample_start*500, samples=count,
                 advance_ms=pose_ms, source_ms=source_ms, channel_ms=receiver.last_channel_ms,
