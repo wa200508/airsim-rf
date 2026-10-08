@@ -153,7 +153,7 @@ class SDRNetworkReceiver:
                  path_tile=128, sample_tile=32, accumulation="partial",
                  replay=True, max_render_lanes=1_000_000, link_diagnostics=True,
                  batch_reduction="auto", continuous=False, max_delay_s=100e-6,
-                 max_doppler_hz=2500., block_samples=2048, fft_workers=2, profile_rendering=False):
+                 max_doppler_hz=2500., block_samples=2048, fft_workers=2, profile_rendering=False, reuse_render_buffers=True, cache_scattering_samples=True, fused_projection=False):
         if not emitters or set(emitters) != set(scene.transmitters):
             raise ValueError("Supply one emitter for every scene transmitter")
         if not scene.receivers:
@@ -202,7 +202,8 @@ class SDRNetworkReceiver:
                            max_doppler_hz=max_doppler_hz, block_samples=block_samples)
             if renderer == "basis-cuda":
                 from .research.doppler_basis_cuda import CudaDopplerBasisRenderer
-                self.basis_renderer = CudaDopplerBasisRenderer(**options, batch_links=len(emitters), projection="warp")
+                self.basis_renderer = CudaDopplerBasisRenderer(**options, batch_links=len(emitters), projection="warp",
+                reuse_buffers=reuse_render_buffers, fused_projection=fused_projection)
             else:
                 from .research.doppler_basis import DopplerBasisRenderer
                 self.basis_renderer = DopplerBasisRenderer(**options, fft_workers=fft_workers)
@@ -232,7 +233,7 @@ class SDRNetworkReceiver:
         self.max_depth, self.samples_per_link = max_depth, samples_per_link
         if path_solver == "first-order-scattering":
             from .scattering import FirstOrderScatteringPathSolver
-            self.solver = FirstOrderScatteringPathSolver()
+            self.solver = FirstOrderScatteringPathSolver(cache_sampling=cache_scattering_samples)
         elif path_solver == "single-bounce":
             from .single_bounce import SingleBouncePathSolver
             self.solver = SingleBouncePathSolver()

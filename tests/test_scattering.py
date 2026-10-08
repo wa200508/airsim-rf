@@ -135,3 +135,23 @@ def test_budget_rejects_sample_truncation_and_missing_endpoint():
         FirstOrderScatteringPathSolver()(scene, max_num_paths_per_src=1000)
     with pytest.raises(ValueError, match="both TX and RX"):
         FirstOrderScatteringPathSolver()(scene, samples_per_src=1)
+
+
+def test_cached_draws_preserve_moving_paths_and_invalidate_seed_and_patterns():
+    import sionna.rt as rt
+    scene = ground_scene()
+    cached = FirstOrderScatteringPathSolver(cache_sampling=True)
+    fresh = FirstOrderScatteringPathSolver(cache_sampling=False)
+    for index, seed in enumerate([42, 42, 99, 99]):
+        scene.transmitters['tx'].position = [-5+.2*index, 0, 10]
+        scene.receivers['rx'].orientation = [0, np.pi/2+.05*index, 0]
+        if index == 3:
+            scene.rx_array = rt.PlanarArray(num_rows=1, num_cols=1, pattern='tr38901', polarization='V')
+        options = dict(samples_per_src=1028, max_num_paths_per_src=1100, seed=seed)
+        a, tau, diffuse = path_data(cached(scene, **options))
+        expected_a, expected_tau, expected_diffuse = path_data(fresh(scene, **options))
+        order, expected_order = np.argsort(tau), np.argsort(expected_tau)
+        np.testing.assert_array_equal(diffuse[order], expected_diffuse[expected_order])
+        np.testing.assert_allclose(a[order], expected_a[expected_order], atol=1e-12, rtol=1e-6)
+        np.testing.assert_allclose(tau[order], expected_tau[expected_order], atol=1e-12, rtol=0)
+        assert cached.sampling['sampling_cache_hit'] == (index == 1)

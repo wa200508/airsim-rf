@@ -138,8 +138,10 @@ def stats(values):
 
 
 def run(*, output, tx=100, rx=10, iterations=30, warmup=3, renderer='basis-cpu',
-        samples_per_link=1028, airsim_config=None, profile_rendering=False):
+        samples_per_link=1028, airsim_config=None, profile_rendering=False, optimizations=True, fused_projection=False, threads=2):
     import sionna.rt as rt
+    import drjit as dr
+    dr.set_thread_count(threads)
     output = Path(output)
     output.mkdir(parents=True, exist_ok=False)
     scene = rt.load_scene(str(ROOT/'benchmarks/scenes/terrain.xml'))
@@ -174,7 +176,8 @@ def run(*, output, tx=100, rx=10, iterations=30, warmup=3, renderer='basis-cpu',
                     baseband_frequency_bounds_hz=(-999999., 999999.)) for name, wave in initial.items()}
     receiver = SDRNetworkReceiver(scene, emitters, PlutoSDRProfile(), renderer=renderer,
         continuous=True, samples_per_link=samples_per_link, link_diagnostics=False,
-        profile_rendering=profile_rendering)
+        profile_rendering=profile_rendering, reuse_render_buffers=optimizations,
+        cache_scattering_samples=optimizations, fused_projection=fused_projection)
     bridge = AirSimSDRBridge(world, robots, receiver)
     consumer = Consumer(output/'captures')
     rows = []
@@ -217,7 +220,9 @@ def run(*, output, tx=100, rx=10, iterations=30, warmup=3, renderer='basis-cpu',
                 delivery_storage_ms=delivery_ms, total_ms=total_ms,
                 retained_paths={name: cap.retained_paths for name, cap in captures.items()},
                 clipped_fraction_max=max(cap.clipped_component_fraction for cap in captures.values()),
-                receiver_render_metrics=receiver.last_render_metrics)
+                receiver_render_metrics=receiver.last_render_metrics,
+                channel_sampling_metrics=getattr(receiver.solver, 'stage_timings', {}),
+                channel_sampling=getattr(receiver.solver, 'sampling', {}))
             if index == 0:
                 first = row
             elif index > warmup:
@@ -256,7 +261,8 @@ def run(*, output, tx=100, rx=10, iterations=30, warmup=3, renderer='basis-cpu',
         source_revision=revision, source_dirty=dirty,
         pose_source='deterministic AirSim-contract trajectory; physics/RPC not exercised' if airsim_config is None else 'live ProjectAirSim physics/RPC',
         propagation_backend='Sionna RT LLVM CPU', rendering_backend=renderer,
-        arguments=dict(tx=tx,rx=rx,iterations=iterations,warmup=warmup,samples_per_link=samples_per_link,profile_rendering=profile_rendering),
+        arguments=dict(tx=tx,rx=rx,iterations=iterations,warmup=warmup,samples_per_link=samples_per_link,profile_rendering=profile_rendering, reuse_render_buffers=optimizations,
+        cache_scattering_samples=optimizations, fused_projection=fused_projection, threads=threads),
         timing_includes=['physics advance (live only)', 'snapshot/mount mapping', 'private waveform generation/copies',
             'scene multipath tracing/export', 'all-path I/Q rendering', 'persistent receive filter/noise/ADC',
             'SC16 serialization', 'loopback HTTP delivery/acknowledgement', 'consumer file write/readback (no fsync)'],
@@ -297,13 +303,16 @@ def main():
     parser.add_argument('--renderer', choices=('basis-cpu','basis-cuda'), default='basis-cpu')
     parser.add_argument('--samples-per-link', type=int, default=1028)
     parser.add_argument('--airsim-config', type=Path)
+    parser.add_argument('--threads', type=int, default=2, help='LLVM propagation worker threads')
+    parser.add_argument('--no-optimizations', dest='optimizations', action='store_false')
+    parser.add_argument('--fused-projection', action='store_true')
     parser.add_argument('--profile-rendering', action='store_true', help='Separate instrumented GPU-event run; never enters unprofiled throughput')
     args = parser.parse_args()
-    if min(args.tx,args.rx,args.iterations,args.samples_per_link)<1 or args.warmup<0:
+    if min(args.tx,args.rx,args.iterations,args.samples_per_link,args.threads)<1 or args.warmup<0:
         parser.error('Positive counts and nonnegative warmup required')
     import drjit as dr
     import mitsuba as mi
-    dr.set_thread_count(2)
+    dr.set_thread_count(args.threads)
     mi.set_variant('llvm_ad_mono_polarized')
     result = run(**vars(args))
     print(json.dumps(result['summary'], indent=2))

@@ -62,9 +62,11 @@ class _AngularProposal:
 
 
 class _ScatteringCandidates(_PlanarCandidates):
-    def __init__(self, candidate_limit, uniform_fraction):
+    def __init__(self, candidate_limit, uniform_fraction, cache_sampling=True):
         super().__init__(candidate_limit)
         self.uniform_fraction = uniform_fraction
+        self.cache_sampling = cache_sampling
+        self._draw_cache = None
         self.scene = None
         self.synthetic_array = True
         self.last_sampling = {}
@@ -122,12 +124,23 @@ class _ScatteringCandidates(_PlanarCandidates):
         proposal_ms = (perf_counter()-proposal_start)*1000
         sampling_start = perf_counter()
         with profile_range("rf.channel.host_proposal_draws"):
-            rng = np.random.default_rng(kwargs["seed"])
             tx_count, rx_count = (samples+1)//2, samples//2
             pairs = sources*targets
-            local = np.empty((3, pairs, samples))
-            local[:, :, :tx_count] = tx_proposal.draw(rng, pairs*tx_count).reshape(3, pairs, tx_count)
-            local[:, :, tx_count:] = rx_proposal.draw(rng, pairs*rx_count).reshape(3, pairs, rx_count)
+            # Evaluate both patterns each call: mutable antenna closures must
+            # invalidate sampling too. Poses are applied afresh below.
+            key = (sources, targets, samples, kwargs['seed'],
+                   tx_proposal.probability.tobytes(), rx_proposal.probability.tobytes())
+            hit = self.cache_sampling and self._draw_cache is not None and self._draw_cache[0] == key
+            if hit:
+                local = self._draw_cache[1]
+            else:
+                rng = np.random.default_rng(kwargs['seed'])
+                local = np.empty((3, pairs, samples))
+                local[:, :, :tx_count] = tx_proposal.draw(rng, pairs*tx_count).reshape(3, pairs, tx_count)
+                local[:, :, tx_count:] = rx_proposal.draw(rng, pairs*rx_count).reshape(3, pairs, rx_count)
+                if self.cache_sampling:
+                    local.flags.writeable = False
+                    self._draw_cache = (key, local)
             # This region is strictly NumPy/host work, even with a CUDA backend.
             # Table preparation above includes backend evaluation and host export.
         sampling_ms = (perf_counter()-sampling_start)*1000
@@ -195,7 +208,7 @@ class _ScatteringCandidates(_PlanarCandidates):
         paths.advance_paths_counter(count)
         self.last_sampling = {"samples_per_link": samples, "diffuse_launches": width,
                               "tx_launches": pairs*tx_count, "rx_launches": pairs*rx_count,
-                              "uniform_fraction": self.uniform_fraction}
+                              "uniform_fraction": self.uniform_fraction, "sampling_cache_hit": hit}
         self.last_timings = {"proposal_table_prepare_ms": proposal_ms,
                              "host_numpy_sampling_ms": sampling_ms}
         return paths
@@ -210,7 +223,7 @@ class FirstOrderScatteringPathSolver:
     Uses Sionna's diffuse ray-tube model, with density-corrected sampling. It
     does not introduce an independently calibrated roughness/speckle law.
     """
-    def __init__(self, *, candidate_limit=2_000_000, uniform_fraction=.1):
+    def __init__(self, *, candidate_limit=2_000_000, uniform_fraction=.1, cache_sampling=True):
         import sionna.rt as rt
         if rt.__version__ != "2.2.0":
             raise RuntimeError("Scattering adapter requires Sionna RT 2.2.0 private API")
@@ -219,7 +232,7 @@ class FirstOrderScatteringPathSolver:
         if isinstance(candidate_limit, bool) or not isinstance(candidate_limit, int) or candidate_limit < 1:
             raise ValueError("candidate_limit must be a positive integer")
         self._solver = rt.PathSolver(deterministic=True)
-        self._candidates = _ScatteringCandidates(candidate_limit, uniform_fraction)
+        self._candidates = _ScatteringCandidates(candidate_limit, uniform_fraction, cache_sampling)
         self._solver._candidate_generator = self._candidates
         self._solver._image_method = _VisibleImageMethod(self._solver._image_method, self._candidates)
 

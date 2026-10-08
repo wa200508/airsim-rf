@@ -22,10 +22,11 @@ def main():
     parser.add_argument('--backend', choices=('cpu','cuda','both'), default='both')
     parser.add_argument('--cpu-only', action='store_true', help='Equivalent to --backend cpu')
     parser.add_argument('--iterations', type=int, default=30)
+    parser.add_argument('--threads', type=int, default=2)
     parser.add_argument('--warmup', type=int, default=3)
     parser.add_argument('--scenarios', nargs='+', default=['2x2','10x4','100x10'], help='TXxRX counts; budgets/cadence unchanged')
     args = parser.parse_args()
-    if args.iterations < 2 or args.warmup < 0:
+    if args.iterations < 2 or args.warmup < 0 or args.threads < 1:
         parser.error('At least two timed captures for SD and nonnegative warmup required')
     if args.cpu_only:
         args.backend='cpu'
@@ -45,7 +46,7 @@ def main():
     (output/'profiles').mkdir()
     backends = ['cpu','cuda'] if args.backend == 'both' else [args.backend]
     manifest=dict(run_id=output.name,scope='rf_pipeline_end_to_end_collection',complete=False,
-                  iterations=args.iterations,warmup=args.warmup,scenarios=scenarios,backends=backends,tasks=[])
+                  iterations=args.iterations,warmup=args.warmup,threads=args.threads,scenarios=scenarios,backends=backends,tasks=[])
     def save():
         (output/'manifest.json').write_text(json.dumps(manifest,indent=2)+'\n')
     save()
@@ -95,7 +96,7 @@ def main():
                 relative=f'profiles/{name}/measurements.json'
                 command=launcher+[str(ROOT/'benchmarks/benchmark_end_to_end.py'),
                     '--renderer',f'basis-{backend}','--tx',str(tx),'--rx',str(rx),
-                    '--iterations',str(args.iterations),'--warmup',str(args.warmup),
+                    '--iterations',str(args.iterations),'--warmup',str(args.warmup),'--threads',str(args.threads),
                     '--output',str(output/'profiles'/name)]
                 if mode=='instrumented':
                     command.append('--profile-rendering')

@@ -119,3 +119,57 @@ def test_real_cuda_split_unix_epoch_cancellation_and_boundaries(offset, projecti
     impulse = PathRenderJob(np.array([1.+0j]), np.array([0.]), np.array([0.]), finite)
     out = engine.render([impulse], num_samples=128)[0]
     np.testing.assert_allclose(out, np.r_[2.+1j, np.zeros(127)], atol=1e-12)
+
+
+@pytest.mark.parametrize('projection,fused', [('gather', False), ('dense', False), ('warp', False), ('warp', True)])
+@pytest.mark.parametrize('fft_inplace', [False, True])
+def test_real_cuda_persistent_channel_sources_times_and_invalidation(projection, fused, fft_inplace):
+    gpu()
+    epoch = 1790000000000000000
+    jobs = [linked(42, 64), linked(53, 103), linked(7, 8, taps=16)]
+    jobs = [replace(job, waveform=replace(job.waveform, reference_time_ns=epoch-200000)) for job in jobs]
+    cfg = dict(sample_rate_hz=2e6, max_delay_s=100e-6, max_doppler_hz=2500, block_samples=256)
+    engine = CudaDopplerBasisRenderer(**cfg, batch_links=2, projection=projection,
+        reuse_buffers=True, fused_projection=fused, fft_inplace=fft_inplace)
+    oracle = DopplerBasisRenderer(**cfg)
+    kw = dict(num_samples=1025, sim_time_ns=epoch, channel_epoch_ns=epoch)
+    first = engine.render(jobs, channel_revision=0, **kw)
+    np.testing.assert_allclose(first, oracle.render(jobs, **kw), atol=2e-9, rtol=2e-9)
+    assert not any(v['channel_reused'] for v in engine.last_metrics['packing'])
+    private = [replace(job, waveform=replace(job.waveform, samples=job.waveform.samples*(.4+.7j))) for job in jobs]
+    kw.update(num_samples=513, sim_time_ns=epoch+68500)
+    second = engine.render(private, channel_revision=0, profile=True, **kw)
+    np.testing.assert_allclose(second, oracle.render(private, **kw), atol=2e-9, rtol=2e-9)
+    assert all(v['channel_reused'] for v in engine.last_metrics['packing'])
+    assert all(v['uploaded_bytes'] == (vjob*(513+support)*16+vjob*8)
+               for v,vjob,support in zip(engine.last_metrics['packing'], [2,1], [232,216]))
+    # Device source-buffer shape changes while the prepared channel stays valid.
+    assert not any(v['buffers_reused'] for v in engine.last_metrics['packing'])
+    again = engine.render(private, channel_revision=0, **kw)
+    np.testing.assert_allclose(again, second, atol=2e-9, rtol=2e-9)
+    assert all(v['buffers_reused'] for v in engine.last_metrics['packing'])
+    changed = [replace(private[0], coefficients=private[0].coefficients*(.9+.1j)), *private[1:]]
+    with pytest.raises(ValueError, match='channel_revision'):
+        engine.render(changed, channel_revision=0, **kw)
+    np.testing.assert_allclose(engine.render(changed, channel_revision=1, **kw),
+                               oracle.render(changed, **kw), atol=2e-9, rtol=2e-9)
+    # Untagged changing-channel calls invalidate retained channel state.
+    np.testing.assert_allclose(engine.render(private, **kw), oracle.render(private, **kw), atol=2e-9, rtol=2e-9)
+    np.testing.assert_allclose(engine.render(changed, channel_revision=1, **kw), oracle.render(changed, **kw), atol=2e-9, rtol=2e-9)
+    assert not any(v['channel_reused'] for v in engine.last_metrics['packing'])
+    engine.clear_cache()
+    assert not engine._buffers and not engine._channels
+
+
+def test_real_cuda_fused_projection_high_rank_and_empty_channels():
+    gpu()
+    jobs = [replace(linked(42, 103), doppler_hz=linked(42, 103).doppler_hz*10)]
+    cfg = dict(sample_rate_hz=2e6, max_delay_s=100e-6, max_doppler_hz=25000, block_samples=512)
+    engine = CudaDopplerBasisRenderer(**cfg, projection='warp', fused_projection=True, reuse_buffers=True)
+    oracle = DopplerBasisRenderer(**cfg)
+    for revision in [0,0,1]:
+        actual = engine.render(jobs, num_samples=1025, channel_revision=revision)
+        np.testing.assert_allclose(actual, oracle.render(jobs, num_samples=1025), atol=2e-9, rtol=2e-9)
+    assert max(b['degree'] for b in engine.last_metrics['blocks']) >= 32
+    empty = replace(jobs[0], coefficients=np.array([],complex), delays_s=np.array([]), doppler_hz=np.array([]))
+    np.testing.assert_array_equal(engine.render([empty], num_samples=32), np.zeros((1,32)))

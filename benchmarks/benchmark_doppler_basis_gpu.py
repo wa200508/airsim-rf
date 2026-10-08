@@ -31,6 +31,10 @@ def main():
     p.add_argument('--projection', choices=('gather', 'warp', 'dense'), default='gather')
     p.add_argument('--delay-map', choices=('double', 'single'), default='double')
     p.add_argument('--fft-inplace', action='store_true')
+    p.add_argument('--reuse-buffers', action='store_true')
+    p.add_argument('--fused-projection', action='store_true')
+    p.add_argument('--channel-update-every', type=int, default=1)
+    p.add_argument('--fresh-source-every-window', action='store_true')
     p.add_argument('--tolerance', type=float, default=1e-10)
     p.add_argument('--iterations', type=int, default=30)
     p.add_argument('--warmup', type=int, default=3)
@@ -38,12 +42,14 @@ def main():
     p.add_argument('--profile-only', action='store_true', help='Instrumented timings never enter throughput table')
     p.add_argument('--output', type=Path, required=True)
     args = p.parse_args()
-    if min(args.tx,args.rx,args.paths,args.samples,args.block_samples,args.batch_links,args.iterations,args.threads) < 1 or args.warmup < 0:
+    if min(args.tx,args.rx,args.paths,args.samples,args.block_samples,args.batch_links,args.iterations,args.threads,args.channel_update_every) < 1 or args.warmup < 0:
         p.error('Positive counts and nonnegative warmup required')
+    if args.backend == 'cuda' and args.channel_update_every > 1 and not args.reuse_buffers:
+        p.error('Channel reuse requires --reuse-buffers')
     cfg = dict(sample_rate_hz=args.sample_rate, max_delay_s=args.max_delay_us*1e-6,
                max_doppler_hz=args.max_doppler_hz, block_samples=args.block_samples,
                temporal_tolerance=args.tolerance)
-    engine = CudaDopplerBasisRenderer(**cfg, batch_links=args.batch_links, projection=args.projection, delay_map=args.delay_map, fft_inplace=args.fft_inplace) if args.backend == 'cuda' else DopplerBasisRenderer(**cfg, fft_workers=args.threads)
+    engine = CudaDopplerBasisRenderer(**cfg, batch_links=args.batch_links, projection=args.projection, delay_map=args.delay_map, fft_inplace=args.fft_inplace, reuse_buffers=args.reuse_buffers, fused_projection=args.fused_projection) if args.backend == 'cuda' else DopplerBasisRenderer(**cfg, fft_workers=args.threads)
     rng = np.random.default_rng(20261004)
     tick = perf_counter()
     guard = args.taps+32
@@ -67,21 +73,25 @@ def main():
         jobs.append(private)
     generation_ms = (perf_counter()-tick)*1000
 
-    def evolving(epoch):
+    def evolving(capture_index):
+        epoch = capture_index//args.channel_update_every
         # Synthetic channel epochs change ALL path arrays while remaining in
         # the declared ranges. These are not scene or pose-derived channels.
         return [[replace(job,
+            waveform=replace(job.waveform, samples=job.waveform.samples*np.exp(1j*.009*capture_index))
+                if args.fresh_source_every_window else job.waveform,
             coefficients=job.coefficients*np.exp(1j*.017*epoch),
             delays_s=np.remainder(job.delays_s+epoch*cfg['max_delay_s']*.001, cfg['max_delay_s'])
                 if cfg['max_delay_s'] else job.delays_s,
             doppler_hz=np.clip(job.doppler_hz+args.max_doppler_hz*.0003*np.sin(epoch),
                                -args.max_doppler_hz,args.max_doppler_hz)) for job in private] for private in jobs]
 
-    def capture(selected, profile=False):
+    def capture(selected, profile=False, revision=None):
         output, metrics = [], []
-        for private in selected:
+        for receiver, private in enumerate(selected):
             if args.backend == 'cuda':
-                signal = engine.render(private, num_samples=args.samples, sum_output=True, profile=profile)
+                signal = engine.render(private, num_samples=args.samples, sum_output=True, profile=profile,
+                    channel_revision=(receiver, revision) if args.channel_update_every > 1 else None)
             else:
                 signal = engine.render(private, num_samples=args.samples).sum(axis=0)
             output.append(signal)
@@ -89,17 +99,18 @@ def main():
         return np.asarray(output), metrics
 
     tick = perf_counter()
-    capture(evolving(0))
+    capture(evolving(0), revision=0)
     first_ms = (perf_counter()-tick)*1000
     for i in range(args.warmup):
-        capture(evolving(i+1))
+        capture(evolving(i+1), revision=(i+1)//args.channel_update_every)
     rows = []
     for i in range(args.iterations):
         selected = evolving(i+args.warmup+1)
         tick = perf_counter()
-        actual, metrics = capture(selected, profile=args.profile_only)
+        revision = (i+args.warmup+1)//args.channel_update_every
+        actual, metrics = capture(selected, profile=args.profile_only, revision=revision)
         rows.append(dict(total_ms=(perf_counter()-tick)*1000, receiver_metrics=metrics,
-                         channel_epoch_index=i+args.warmup+1))
+                         channel_epoch_index=revision, capture_index=i+args.warmup+1))
     # Full all-job/all-sample comparison to the CPU basis oracle. Separate
     # finite direct checks validate the basis rather than merely itself.
     expected = np.asarray([DopplerBasisRenderer(**cfg, fft_workers=args.threads).render(private,
@@ -127,7 +138,7 @@ def main():
                 max_absolute_error=float(np.max(abs(error)))))
     passed = rms < max(1e-8,args.tolerance*100) and all(c['normalized_rms_error'] < max(1e-8,args.tolerance*100) for c in direct_checks)
     # Instrumented stage spans are collected independently from throughput.
-    _, profile = capture(selected, profile=True) if args.backend == 'cuda' else (None, [])
+    _, profile = capture(selected, profile=True, revision=revision) if args.backend == 'cuda' else (None, [])
     times = [r['total_ms'] for r in rows]
     mean = float(np.mean(times))
     deadline = 1000/120
@@ -148,7 +159,7 @@ def main():
         includes=['private input copies/uploads','fresh delay map and GPU temporal construction','all paths and intra-block Doppler',
                   'private FFTs','coherent receiver sum','synchronized final receiver output export'],
         excludes=['source generation','scene propagation','sample-clock resampling','noise/filter/ADC','AirSim','transport/queues'],
-        scope_note='Synthetic changing channels; equal clocks; entire-window synchronized renderer service, not a continuous receiver pipeline',
+        scope_note='Synthetic channels with explicit update cadence; sources are always privately uploaded and transformed;  equal clocks; entire-window synchronized renderer service, not a continuous receiver pipeline',
         cpu_quota=Path('/sys/fs/cgroup/cpu.max').read_text().strip(),
         source_sha256={name:hashlib.sha256((root/name).read_bytes()).hexdigest() for name in
             ('src/airsim_rf/research/doppler_basis_cuda.py','src/airsim_rf/research/doppler_basis.py',
