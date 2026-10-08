@@ -1,0 +1,8 @@
+{
+  "samples": 364,
+  "max_sampled_memory_mib": 1253.0,
+  "max_sampled_utilization_percent": 72.0,
+  "max_sampled_power_w": 139.2,
+  "max_sampled_temperature_c": 47.0,
+  "note": "One-second whole-device samples across CPU and GPU scenarios; may miss peaks and include other resident processes. Sampled maxima are not sustained utilization or exact allocator peaks."
+}

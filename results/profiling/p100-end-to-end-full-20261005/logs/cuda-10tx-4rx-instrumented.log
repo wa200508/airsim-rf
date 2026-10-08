@@ -1,0 +1,81 @@
+jit_find_library(): Unable to load "/tmp/disabled-drjit-cuda.so": /tmp/disabled-drjit-cuda.so: cannot open shared object file: No such file or directory!
+1/30: 66.44 ms, 16666 samples/RX
+2/30: 67.54 ms, 16667 samples/RX
+3/30: 66.35 ms, 16667 samples/RX
+4/30: 67.31 ms, 16666 samples/RX
+5/30: 69.10 ms, 16667 samples/RX
+6/30: 67.38 ms, 16667 samples/RX
+7/30: 65.38 ms, 16666 samples/RX
+8/30: 65.35 ms, 16667 samples/RX
+9/30: 66.98 ms, 16667 samples/RX
+10/30: 69.04 ms, 16666 samples/RX
+11/30: 65.91 ms, 16667 samples/RX
+12/30: 71.36 ms, 16667 samples/RX
+13/30: 65.72 ms, 16666 samples/RX
+14/30: 66.57 ms, 16667 samples/RX
+15/30: 67.31 ms, 16667 samples/RX
+16/30: 65.95 ms, 16666 samples/RX
+17/30: 67.95 ms, 16667 samples/RX
+18/30: 68.74 ms, 16667 samples/RX
+19/30: 67.62 ms, 16666 samples/RX
+20/30: 65.90 ms, 16667 samples/RX
+21/30: 68.13 ms, 16667 samples/RX
+22/30: 65.10 ms, 16666 samples/RX
+23/30: 66.07 ms, 16667 samples/RX
+24/30: 66.42 ms, 16667 samples/RX
+25/30: 67.33 ms, 16666 samples/RX
+26/30: 65.55 ms, 16667 samples/RX
+27/30: 66.80 ms, 16667 samples/RX
+28/30: 66.31 ms, 16666 samples/RX
+29/30: 66.58 ms, 16667 samples/RX
+30/30: 68.63 ms, 16667 samples/RX
+{
+  "advance_ms": {
+    "median_ms": 0.0013700000636163168,
+    "std_ms": 0.00021573673326177994,
+    "p95_ms": 0.0017539500220209443,
+    "mean_ms": 0.0014089333414328091
+  },
+  "source_ms": {
+    "median_ms": 4.1978239999593825,
+    "std_ms": 0.2834728820995786,
+    "p95_ms": 4.774377399962759,
+    "mean_ms": 4.2759130333403546
+  },
+  "channel_ms": {
+    "median_ms": 17.647866499999054,
+    "std_ms": 0.8142153118514815,
+    "p95_ms": 19.16688025001463,
+    "mean_ms": 17.808614733341226
+  },
+  "rendering_ms": {
+    "median_ms": 33.59500300001628,
+    "std_ms": 0.8455713402240371,
+    "p95_ms": 35.2979152999751,
+    "mean_ms": 33.82422253331091
+  },
+  "receiver_ms": {
+    "median_ms": 3.0179165000276953,
+    "std_ms": 0.17275227985104144,
+    "p95_ms": 3.3442535499489168,
+    "mean_ms": 3.0524646999917118
+  },
+  "other_rf_ms": {
+    "median_ms": 4.787112499968771,
+    "std_ms": 0.24560919019146082,
+    "p95_ms": 5.231629450042874,
+    "mean_ms": 4.819203433358628
+  },
+  "delivery_storage_ms": {
+    "median_ms": 3.156853000064075,
+    "std_ms": 0.3233831067716014,
+    "p95_ms": 4.09763385006272,
+    "mean_ms": 3.2433280666775013
+  },
+  "total_ms": {
+    "median_ms": 66.69158250002738,
+    "std_ms": 1.3832613780635863,
+    "p95_ms": 69.06988274998866,
+    "mean_ms": 67.02775909999825
+  }
+}

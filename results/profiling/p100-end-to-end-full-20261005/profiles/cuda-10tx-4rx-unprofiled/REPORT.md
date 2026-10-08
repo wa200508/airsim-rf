@@ -1,0 +1,29 @@
+# End-to-end RF pipeline result
+
+deterministic AirSim-contract trajectory; physics/RPC not exercised.
+
+**All stages are in milliseconds per complete fleet update.**
+
+Measurement mode: unprofiled_end_to_end_benchmark. Instrumented runs are separate from throughput results.
+
+| Configuration / stage (ms) | advance_ms | source_ms | channel_ms | rendering_ms | receiver_ms | other_rf_ms | delivery_storage_ms | total_ms |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| 10 TX × 4 RX, basis-cuda; trajectory source | 0.00 ± 0.00 | 3.93 ± 0.20 | 17.57 ± 1.01 | 32.26 ± 0.91 | 2.96 ± 0.20 | 4.84 ± 0.24 | 3.26 ± 0.30 | 65.19 ± 1.25 |
+
+## p95
+
+| Configuration / stage (ms) | advance_ms | source_ms | channel_ms | rendering_ms | receiver_ms | other_rf_ms | delivery_storage_ms | total_ms |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| 10 TX × 4 RX, basis-cuda; trajectory source | 0.00 | 4.32 | 19.82 | 33.88 | 3.36 | 5.33 | 3.82 | 67.90 |
+
+Measured windows: 30; simulated duration: 250.0000 ms.
+
+Wall time / simulated time: **7.85×**. Deadline misses: 30/30.
+
+Scene propagation is CPU even when rendering uses CUDA. Paths are physical scene returns, not the synthetic 1028-valid-path stress workload.
+
+Initialization is excluded from steady-state tables; the first complete capture is recorded separately in JSON.
+
+Receivers execute serially; delivery uses loopback HTTP, not the AMS-GRA native worker protocol. Consumer writes are read back but not fsync-ed.
+
+[Raw captures and per-step measurements](measurements.json).

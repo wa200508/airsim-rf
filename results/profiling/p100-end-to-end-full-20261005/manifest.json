@@ -1,0 +1,278 @@
+{
+  "run_id": "p100-end-to-end-full-20261005",
+  "scope": "rf_pipeline_end_to_end_collection",
+  "complete": true,
+  "iterations": 30,
+  "warmup": 3,
+  "scenarios": [
+    [
+      2,
+      2
+    ],
+    [
+      10,
+      4
+    ],
+    [
+      100,
+      10
+    ]
+  ],
+  "backends": [
+    "cpu",
+    "cuda"
+  ],
+  "tasks": [
+    {
+      "name": "cuda_preflight",
+      "command": [
+        "/opt/airsim-rf/.venv/bin/python",
+        "/opt/airsim-rf/scripts/basis_launch.py",
+        "/opt/airsim-rf/scripts/basis_cuda_preflight.py",
+        "--output",
+        "/work/results/p100-end-to-end-full-20261005/profiles/cuda_preflight.json"
+      ],
+      "status": "ok",
+      "artifact": "profiles/cuda_preflight.json",
+      "returncode": 0,
+      "wall_seconds": 6.428386834999969
+    },
+    {
+      "name": "integration_tests",
+      "command": [
+        "/opt/airsim-rf/.venv/bin/python",
+        "/opt/airsim-rf/scripts/basis_launch.py",
+        "-m",
+        "pytest",
+        "tests/test_end_to_end.py",
+        "tests/test_sdr.py",
+        "tests/test_distributed.py",
+        "tests/test_end_to_end_profiling.py",
+        "-q"
+      ],
+      "status": "ok",
+      "artifact": null,
+      "returncode": 0,
+      "wall_seconds": 11.055384636999975
+    },
+    {
+      "name": "cpu-2tx-2rx-unprofiled",
+      "command": [
+        "/opt/airsim-rf/.venv/bin/python",
+        "/opt/airsim-rf/scripts/basis_launch.py",
+        "/opt/airsim-rf/benchmarks/benchmark_end_to_end.py",
+        "--renderer",
+        "basis-cpu",
+        "--tx",
+        "2",
+        "--rx",
+        "2",
+        "--iterations",
+        "30",
+        "--warmup",
+        "3",
+        "--output",
+        "/work/results/p100-end-to-end-full-20261005/profiles/cpu-2tx-2rx-unprofiled"
+      ],
+      "status": "ok",
+      "artifact": "profiles/cpu-2tx-2rx-unprofiled/measurements.json",
+      "returncode": 0,
+      "wall_seconds": 4.824761820999981
+    },
+    {
+      "name": "cpu-10tx-4rx-unprofiled",
+      "command": [
+        "/opt/airsim-rf/.venv/bin/python",
+        "/opt/airsim-rf/scripts/basis_launch.py",
+        "/opt/airsim-rf/benchmarks/benchmark_end_to_end.py",
+        "--renderer",
+        "basis-cpu",
+        "--tx",
+        "10",
+        "--rx",
+        "4",
+        "--iterations",
+        "30",
+        "--warmup",
+        "3",
+        "--output",
+        "/work/results/p100-end-to-end-full-20261005/profiles/cpu-10tx-4rx-unprofiled"
+      ],
+      "status": "ok",
+      "artifact": "profiles/cpu-10tx-4rx-unprofiled/measurements.json",
+      "returncode": 0,
+      "wall_seconds": 15.214217442000006
+    },
+    {
+      "name": "cpu-100tx-10rx-unprofiled",
+      "command": [
+        "/opt/airsim-rf/.venv/bin/python",
+        "/opt/airsim-rf/scripts/basis_launch.py",
+        "/opt/airsim-rf/benchmarks/benchmark_end_to_end.py",
+        "--renderer",
+        "basis-cpu",
+        "--tx",
+        "100",
+        "--rx",
+        "10",
+        "--iterations",
+        "30",
+        "--warmup",
+        "3",
+        "--output",
+        "/work/results/p100-end-to-end-full-20261005/profiles/cpu-100tx-10rx-unprofiled"
+      ],
+      "status": "ok",
+      "artifact": "profiles/cpu-100tx-10rx-unprofiled/measurements.json",
+      "returncode": 0,
+      "wall_seconds": 253.74554295699994
+    },
+    {
+      "name": "cuda-2tx-2rx-unprofiled",
+      "command": [
+        "/opt/airsim-rf/.venv/bin/python",
+        "/opt/airsim-rf/scripts/basis_launch.py",
+        "/opt/airsim-rf/benchmarks/benchmark_end_to_end.py",
+        "--renderer",
+        "basis-cuda",
+        "--tx",
+        "2",
+        "--rx",
+        "2",
+        "--iterations",
+        "30",
+        "--warmup",
+        "3",
+        "--output",
+        "/work/results/p100-end-to-end-full-20261005/profiles/cuda-2tx-2rx-unprofiled"
+      ],
+      "status": "ok",
+      "artifact": "profiles/cuda-2tx-2rx-unprofiled/measurements.json",
+      "returncode": 0,
+      "wall_seconds": 3.622375087000023
+    },
+    {
+      "name": "cuda-2tx-2rx-instrumented",
+      "command": [
+        "/opt/airsim-rf/.venv/bin/python",
+        "/opt/airsim-rf/scripts/basis_launch.py",
+        "/opt/airsim-rf/benchmarks/benchmark_end_to_end.py",
+        "--renderer",
+        "basis-cuda",
+        "--tx",
+        "2",
+        "--rx",
+        "2",
+        "--iterations",
+        "30",
+        "--warmup",
+        "3",
+        "--output",
+        "/work/results/p100-end-to-end-full-20261005/profiles/cuda-2tx-2rx-instrumented",
+        "--profile-rendering"
+      ],
+      "status": "ok",
+      "artifact": "profiles/cuda-2tx-2rx-instrumented/measurements.json",
+      "returncode": 0,
+      "wall_seconds": 3.57332571500001
+    },
+    {
+      "name": "cuda-10tx-4rx-unprofiled",
+      "command": [
+        "/opt/airsim-rf/.venv/bin/python",
+        "/opt/airsim-rf/scripts/basis_launch.py",
+        "/opt/airsim-rf/benchmarks/benchmark_end_to_end.py",
+        "--renderer",
+        "basis-cuda",
+        "--tx",
+        "10",
+        "--rx",
+        "4",
+        "--iterations",
+        "30",
+        "--warmup",
+        "3",
+        "--output",
+        "/work/results/p100-end-to-end-full-20261005/profiles/cuda-10tx-4rx-unprofiled"
+      ],
+      "status": "ok",
+      "artifact": "profiles/cuda-10tx-4rx-unprofiled/measurements.json",
+      "returncode": 0,
+      "wall_seconds": 4.925941759000011
+    },
+    {
+      "name": "cuda-10tx-4rx-instrumented",
+      "command": [
+        "/opt/airsim-rf/.venv/bin/python",
+        "/opt/airsim-rf/scripts/basis_launch.py",
+        "/opt/airsim-rf/benchmarks/benchmark_end_to_end.py",
+        "--renderer",
+        "basis-cuda",
+        "--tx",
+        "10",
+        "--rx",
+        "4",
+        "--iterations",
+        "30",
+        "--warmup",
+        "3",
+        "--output",
+        "/work/results/p100-end-to-end-full-20261005/profiles/cuda-10tx-4rx-instrumented",
+        "--profile-rendering"
+      ],
+      "status": "ok",
+      "artifact": "profiles/cuda-10tx-4rx-instrumented/measurements.json",
+      "returncode": 0,
+      "wall_seconds": 5.1256524299999455
+    },
+    {
+      "name": "cuda-100tx-10rx-unprofiled",
+      "command": [
+        "/opt/airsim-rf/.venv/bin/python",
+        "/opt/airsim-rf/scripts/basis_launch.py",
+        "/opt/airsim-rf/benchmarks/benchmark_end_to_end.py",
+        "--renderer",
+        "basis-cuda",
+        "--tx",
+        "100",
+        "--rx",
+        "10",
+        "--iterations",
+        "30",
+        "--warmup",
+        "3",
+        "--output",
+        "/work/results/p100-end-to-end-full-20261005/profiles/cuda-100tx-10rx-unprofiled"
+      ],
+      "status": "ok",
+      "artifact": "profiles/cuda-100tx-10rx-unprofiled/measurements.json",
+      "returncode": 0,
+      "wall_seconds": 31.56748100300001
+    },
+    {
+      "name": "cuda-100tx-10rx-instrumented",
+      "command": [
+        "/opt/airsim-rf/.venv/bin/python",
+        "/opt/airsim-rf/scripts/basis_launch.py",
+        "/opt/airsim-rf/benchmarks/benchmark_end_to_end.py",
+        "--renderer",
+        "basis-cuda",
+        "--tx",
+        "100",
+        "--rx",
+        "10",
+        "--iterations",
+        "30",
+        "--warmup",
+        "3",
+        "--output",
+        "/work/results/p100-end-to-end-full-20261005/profiles/cuda-100tx-10rx-instrumented",
+        "--profile-rendering"
+      ],
+      "status": "ok",
+      "artifact": "profiles/cuda-100tx-10rx-instrumented/measurements.json",
+      "returncode": 0,
+      "wall_seconds": 31.51739987999997
+    }
+  ]
+}

@@ -1,0 +1,560 @@
+[
+  {
+    "path": "profiles/cpu-100tx-10rx-unprofiled/measurements.json",
+    "measurement_mode": "unprofiled_end_to_end_benchmark",
+    "arguments": {
+      "tx": 100,
+      "rx": 10,
+      "iterations": 30,
+      "warmup": 3,
+      "samples_per_link": 1028,
+      "profile_rendering": false
+    },
+    "summary": {
+      "advance_ms": {
+        "median_ms": 0.001194999981635192,
+        "std_ms": 0.00022255669904500746,
+        "p95_ms": 0.0017060000288893198,
+        "mean_ms": 0.001270966663469153
+      },
+      "source_ms": {
+        "median_ms": 37.66836800002693,
+        "std_ms": 0.694894392035701,
+        "p95_ms": 38.53581165004698,
+        "mean_ms": 37.83489473333551
+      },
+      "channel_ms": {
+        "median_ms": 801.3059679999515,
+        "std_ms": 31.740203961617965,
+        "p95_ms": 874.1837226499568,
+        "mean_ms": 807.677390733329
+      },
+      "rendering_ms": {
+        "median_ms": 6429.467403500098,
+        "std_ms": 79.604175598236,
+        "p95_ms": 6536.351398450102,
+        "mean_ms": 6448.833431633314
+      },
+      "receiver_ms": {
+        "median_ms": 7.502597999859972,
+        "std_ms": 0.43945344690742943,
+        "p95_ms": 8.245920650017524,
+        "mean_ms": 7.61144890000196
+      },
+      "other_rf_ms": {
+        "median_ms": 60.30488299984427,
+        "std_ms": 1.8446922542561262,
+        "p95_ms": 63.81714310003872,
+        "mean_ms": 60.49187440002015
+      },
+      "delivery_storage_ms": {
+        "median_ms": 7.182044500041229,
+        "std_ms": 0.3520575865446182,
+        "p95_ms": 7.789826249961606,
+        "mean_ms": 7.154472666680552
+      },
+      "total_ms": {
+        "median_ms": 7348.740089499984,
+        "std_ms": 100.04436739037453,
+        "p95_ms": 7476.706220299968,
+        "mean_ms": 7369.60790493332
+      }
+    }
+  },
+  {
+    "path": "profiles/cpu-10tx-4rx-unprofiled/measurements.json",
+    "measurement_mode": "unprofiled_end_to_end_benchmark",
+    "arguments": {
+      "tx": 10,
+      "rx": 4,
+      "iterations": 30,
+      "warmup": 3,
+      "samples_per_link": 1028,
+      "profile_rendering": false
+    },
+    "summary": {
+      "advance_ms": {
+        "median_ms": 0.001255000000810469,
+        "std_ms": 0.0003918510428934828,
+        "p95_ms": 0.0021489999937784883,
+        "mean_ms": 0.0014009999953638423
+      },
+      "source_ms": {
+        "median_ms": 3.933689999996659,
+        "std_ms": 0.24152479189185022,
+        "p95_ms": 4.538106450004875,
+        "mean_ms": 4.012512533328542
+      },
+      "channel_ms": {
+        "median_ms": 77.21279899996603,
+        "std_ms": 4.134627290848956,
+        "p95_ms": 83.05944494998982,
+        "mean_ms": 77.62311136665971
+      },
+      "rendering_ms": {
+        "median_ms": 283.47908949999123,
+        "std_ms": 6.2832917723721025,
+        "p95_ms": 294.7986603999766,
+        "mean_ms": 284.65350330000473
+      },
+      "receiver_ms": {
+        "median_ms": 2.85614750001173,
+        "std_ms": 0.10509243762757767,
+        "p95_ms": 3.008723149983439,
+        "mean_ms": 2.8705625333429907
+      },
+      "other_rf_ms": {
+        "median_ms": 4.485442000031981,
+        "std_ms": 0.23362619843769822,
+        "p95_ms": 4.949308599995561,
+        "mean_ms": 4.562226233326783
+      },
+      "delivery_storage_ms": {
+        "median_ms": 3.1450950000078137,
+        "std_ms": 0.30313031832927606,
+        "p95_ms": 3.6901980000038748,
+        "mean_ms": 3.253090633336342
+      },
+      "total_ms": {
+        "median_ms": 375.55108600002995,
+        "std_ms": 8.503438742674794,
+        "p95_ms": 391.1908256999965,
+        "mean_ms": 376.9789882666733
+      }
+    }
+  },
+  {
+    "path": "profiles/cpu-2tx-2rx-unprofiled/measurements.json",
+    "measurement_mode": "unprofiled_end_to_end_benchmark",
+    "arguments": {
+      "tx": 2,
+      "rx": 2,
+      "iterations": 30,
+      "warmup": 3,
+      "samples_per_link": 1028,
+      "profile_rendering": false
+    },
+    "summary": {
+      "advance_ms": {
+        "median_ms": 0.001384999990250435,
+        "std_ms": 0.000362176686333786,
+        "p95_ms": 0.0022115000064104598,
+        "mean_ms": 0.0015006666671979474
+      },
+      "source_ms": {
+        "median_ms": 0.8617350000008628,
+        "std_ms": 0.1447853849348238,
+        "p95_ms": 1.222710000010352,
+        "mean_ms": 0.9270711333366913
+      },
+      "channel_ms": {
+        "median_ms": 21.99156300000027,
+        "std_ms": 9.15650928544015,
+        "p95_ms": 45.93668170001308,
+        "mean_ms": 26.126768099999254
+      },
+      "rendering_ms": {
+        "median_ms": 43.42697700002418,
+        "std_ms": 3.683707648479612,
+        "p95_ms": 50.07261909997566,
+        "mean_ms": 44.5180192666669
+      },
+      "receiver_ms": {
+        "median_ms": 1.5556704999823978,
+        "std_ms": 0.21736688924493924,
+        "p95_ms": 1.8475254500145861,
+        "mean_ms": 1.5982492333326566
+      },
+      "other_rf_ms": {
+        "median_ms": 1.4327060000027814,
+        "std_ms": 0.17342825535250173,
+        "p95_ms": 1.8074924500638188,
+        "mean_ms": 1.4609420000075108
+      },
+      "delivery_storage_ms": {
+        "median_ms": 1.7586195000092175,
+        "std_ms": 0.25928910258016047,
+        "p95_ms": 2.387136400014355,
+        "mean_ms": 1.8558700000066135
+      },
+      "total_ms": {
+        "median_ms": 72.21715750000612,
+        "std_ms": 11.835879983865242,
+        "p95_ms": 95.08808324997915,
+        "mean_ms": 76.49081136666685
+      }
+    }
+  },
+  {
+    "path": "profiles/cuda-100tx-10rx-instrumented/measurements.json",
+    "measurement_mode": "instrumented_end_to_end_profile",
+    "arguments": {
+      "tx": 100,
+      "rx": 10,
+      "iterations": 30,
+      "warmup": 3,
+      "samples_per_link": 1028,
+      "profile_rendering": true
+    },
+    "summary": {
+      "advance_ms": {
+        "median_ms": 0.001335000035851408,
+        "std_ms": 0.00047471031227447964,
+        "p95_ms": 0.0024725000173475556,
+        "mean_ms": 0.001558666675312755
+      },
+      "source_ms": {
+        "median_ms": 38.01316650003628,
+        "std_ms": 2.0224246100854364,
+        "p95_ms": 39.317445550005914,
+        "mean_ms": 38.32228313333417
+      },
+      "channel_ms": {
+        "median_ms": 326.5502705000358,
+        "std_ms": 4.5064889245731745,
+        "p95_ms": 334.4655933499439,
+        "mean_ms": 327.7749882999918
+      },
+      "rendering_ms": {
+        "median_ms": 396.2080824999248,
+        "std_ms": 5.901125259719154,
+        "p95_ms": 403.7637748500572,
+        "mean_ms": 395.9556421666586
+      },
+      "receiver_ms": {
+        "median_ms": 8.998701499933759,
+        "std_ms": 1.0391478647410566,
+        "p95_ms": 11.10652610019542,
+        "mean_ms": 9.074759200037382
+      },
+      "other_rf_ms": {
+        "median_ms": 66.09014600007868,
+        "std_ms": 3.106877425396364,
+        "p95_ms": 70.55913560001272,
+        "mean_ms": 66.16012036665022
+      },
+      "delivery_storage_ms": {
+        "median_ms": 7.357212499982779,
+        "std_ms": 0.5065645158082411,
+        "p95_ms": 8.091404950016567,
+        "mean_ms": 7.350728466659954
+      },
+      "total_ms": {
+        "median_ms": 843.8861099999713,
+        "std_ms": 8.037355268011527,
+        "p95_ms": 857.8639646999534,
+        "mean_ms": 844.6434365666656
+      }
+    }
+  },
+  {
+    "path": "profiles/cuda-100tx-10rx-unprofiled/measurements.json",
+    "measurement_mode": "unprofiled_end_to_end_benchmark",
+    "arguments": {
+      "tx": 100,
+      "rx": 10,
+      "iterations": 30,
+      "warmup": 3,
+      "samples_per_link": 1028,
+      "profile_rendering": false
+    },
+    "summary": {
+      "advance_ms": {
+        "median_ms": 0.0013394999314186862,
+        "std_ms": 0.0003021403229750147,
+        "p95_ms": 0.0020830000607929833,
+        "mean_ms": 0.001418299999992693
+      },
+      "source_ms": {
+        "median_ms": 37.847790499995426,
+        "std_ms": 0.6071918492308427,
+        "p95_ms": 39.11993510002958,
+        "mean_ms": 37.95403840001654
+      },
+      "channel_ms": {
+        "median_ms": 330.46883050002407,
+        "std_ms": 8.64079724466122,
+        "p95_ms": 347.2574593500041,
+        "mean_ms": 331.1617641000036
+      },
+      "rendering_ms": {
+        "median_ms": 392.76186249992406,
+        "std_ms": 6.548951651475589,
+        "p95_ms": 403.7042572499274,
+        "mean_ms": 393.5924556666312
+      },
+      "receiver_ms": {
+        "median_ms": 8.555518000036955,
+        "std_ms": 0.822950504213018,
+        "p95_ms": 9.821122400177273,
+        "mean_ms": 8.590254299997468
+      },
+      "other_rf_ms": {
+        "median_ms": 66.54964000017571,
+        "std_ms": 2.9360558538998003,
+        "p95_ms": 70.94558100006907,
+        "mean_ms": 66.44288163336871
+      },
+      "delivery_storage_ms": {
+        "median_ms": 7.41025349998381,
+        "std_ms": 0.6673805925579718,
+        "p95_ms": 8.891282849975823,
+        "mean_ms": 7.52747819999892
+      },
+      "total_ms": {
+        "median_ms": 843.630201499991,
+        "std_ms": 11.426019960504801,
+        "p95_ms": 860.180995599984,
+        "mean_ms": 845.2735641000004
+      }
+    }
+  },
+  {
+    "path": "profiles/cuda-10tx-4rx-instrumented/measurements.json",
+    "measurement_mode": "instrumented_end_to_end_profile",
+    "arguments": {
+      "tx": 10,
+      "rx": 4,
+      "iterations": 30,
+      "warmup": 3,
+      "samples_per_link": 1028,
+      "profile_rendering": true
+    },
+    "summary": {
+      "advance_ms": {
+        "median_ms": 0.0013700000636163168,
+        "std_ms": 0.00021573673326177994,
+        "p95_ms": 0.0017539500220209443,
+        "mean_ms": 0.0014089333414328091
+      },
+      "source_ms": {
+        "median_ms": 4.1978239999593825,
+        "std_ms": 0.2834728820995786,
+        "p95_ms": 4.774377399962759,
+        "mean_ms": 4.2759130333403546
+      },
+      "channel_ms": {
+        "median_ms": 17.647866499999054,
+        "std_ms": 0.8142153118514815,
+        "p95_ms": 19.16688025001463,
+        "mean_ms": 17.808614733341226
+      },
+      "rendering_ms": {
+        "median_ms": 33.59500300001628,
+        "std_ms": 0.8455713402240371,
+        "p95_ms": 35.2979152999751,
+        "mean_ms": 33.82422253331091
+      },
+      "receiver_ms": {
+        "median_ms": 3.0179165000276953,
+        "std_ms": 0.17275227985104144,
+        "p95_ms": 3.3442535499489168,
+        "mean_ms": 3.0524646999917118
+      },
+      "other_rf_ms": {
+        "median_ms": 4.787112499968771,
+        "std_ms": 0.24560919019146082,
+        "p95_ms": 5.231629450042874,
+        "mean_ms": 4.819203433358628
+      },
+      "delivery_storage_ms": {
+        "median_ms": 3.156853000064075,
+        "std_ms": 0.3233831067716014,
+        "p95_ms": 4.09763385006272,
+        "mean_ms": 3.2433280666775013
+      },
+      "total_ms": {
+        "median_ms": 66.69158250002738,
+        "std_ms": 1.3832613780635863,
+        "p95_ms": 69.06988274998866,
+        "mean_ms": 67.02775909999825
+      }
+    }
+  },
+  {
+    "path": "profiles/cuda-10tx-4rx-unprofiled/measurements.json",
+    "measurement_mode": "unprofiled_end_to_end_benchmark",
+    "arguments": {
+      "tx": 10,
+      "rx": 4,
+      "iterations": 30,
+      "warmup": 3,
+      "samples_per_link": 1028,
+      "profile_rendering": false
+    },
+    "summary": {
+      "advance_ms": {
+        "median_ms": 0.0013399999829744047,
+        "std_ms": 0.0005087083665075236,
+        "p95_ms": 0.0019485000052554822,
+        "mean_ms": 0.0014923000018522241
+      },
+      "source_ms": {
+        "median_ms": 3.9318569999977626,
+        "std_ms": 0.20235032009672826,
+        "p95_ms": 4.323234949998778,
+        "mean_ms": 3.9892129666706446
+      },
+      "channel_ms": {
+        "median_ms": 17.570458999955463,
+        "std_ms": 1.0073646461414412,
+        "p95_ms": 19.82063335001385,
+        "mean_ms": 17.82853580000771
+      },
+      "rendering_ms": {
+        "median_ms": 32.25737050001953,
+        "std_ms": 0.9072450558169819,
+        "p95_ms": 33.87630559996069,
+        "mean_ms": 32.33285120002165
+      },
+      "receiver_ms": {
+        "median_ms": 2.959651499963911,
+        "std_ms": 0.198349777743703,
+        "p95_ms": 3.3634063000022247,
+        "mean_ms": 3.017825066660862
+      },
+      "other_rf_ms": {
+        "median_ms": 4.839541999956509,
+        "std_ms": 0.23773508314450822,
+        "p95_ms": 5.328781449856024,
+        "mean_ms": 4.8756416333124735
+      },
+      "delivery_storage_ms": {
+        "median_ms": 3.260200999989138,
+        "std_ms": 0.2994123898717724,
+        "p95_ms": 3.81974424992677,
+        "mean_ms": 3.3281016999959925
+      },
+      "total_ms": {
+        "median_ms": 65.19224700002724,
+        "std_ms": 1.249619607028835,
+        "p95_ms": 67.89709154995194,
+        "mean_ms": 65.37630496665845
+      }
+    }
+  },
+  {
+    "path": "profiles/cuda-2tx-2rx-instrumented/measurements.json",
+    "measurement_mode": "instrumented_end_to_end_profile",
+    "arguments": {
+      "tx": 2,
+      "rx": 2,
+      "iterations": 30,
+      "warmup": 3,
+      "samples_per_link": 1028,
+      "profile_rendering": true
+    },
+    "summary": {
+      "advance_ms": {
+        "median_ms": 0.0013499999909072358,
+        "std_ms": 0.0002908688762965498,
+        "p95_ms": 0.0019574999612359534,
+        "mean_ms": 0.0014876666530957057
+      },
+      "source_ms": {
+        "median_ms": 0.8531529999800114,
+        "std_ms": 0.1289502697276254,
+        "p95_ms": 1.1713424499646405,
+        "mean_ms": 0.8896806666712109
+      },
+      "channel_ms": {
+        "median_ms": 7.043810000027406,
+        "std_ms": 3.2615727430337524,
+        "p95_ms": 8.28552744998774,
+        "mean_ms": 7.766573799983689
+      },
+      "rendering_ms": {
+        "median_ms": 12.985401999912938,
+        "std_ms": 0.6809910044980937,
+        "p95_ms": 14.482113800050909,
+        "mean_ms": 13.063659500005542
+      },
+      "receiver_ms": {
+        "median_ms": 1.3762835000079576,
+        "std_ms": 0.12491530520401536,
+        "p95_ms": 1.6569477999496482,
+        "mean_ms": 1.4140834333299306
+      },
+      "other_rf_ms": {
+        "median_ms": 1.328638999893883,
+        "std_ms": 0.12298850245134062,
+        "p95_ms": 1.6048690000104668,
+        "mean_ms": 1.3667029000165105
+      },
+      "delivery_storage_ms": {
+        "median_ms": 1.770139999962339,
+        "std_ms": 0.17679138711583767,
+        "p95_ms": 2.1406974500280285,
+        "mean_ms": 1.8346346333184254
+      },
+      "total_ms": {
+        "median_ms": 25.58717199997318,
+        "std_ms": 3.5757885448706,
+        "p95_ms": 27.775994450047392,
+        "mean_ms": 26.339132866659536
+      }
+    }
+  },
+  {
+    "path": "profiles/cuda-2tx-2rx-unprofiled/measurements.json",
+    "measurement_mode": "unprofiled_end_to_end_benchmark",
+    "arguments": {
+      "tx": 2,
+      "rx": 2,
+      "iterations": 30,
+      "warmup": 3,
+      "samples_per_link": 1028,
+      "profile_rendering": false
+    },
+    "summary": {
+      "advance_ms": {
+        "median_ms": 0.0015050000001792796,
+        "std_ms": 0.0003928376088140792,
+        "p95_ms": 0.0022700000442910095,
+        "mean_ms": 0.0016639999936766496
+      },
+      "source_ms": {
+        "median_ms": 0.8201685000130965,
+        "std_ms": 0.11391676082533632,
+        "p95_ms": 1.0827869500587894,
+        "mean_ms": 0.8758327666669175
+      },
+      "channel_ms": {
+        "median_ms": 7.094822999988537,
+        "std_ms": 0.4855031414749945,
+        "p95_ms": 8.208403149973263,
+        "mean_ms": 7.246027300004698
+      },
+      "rendering_ms": {
+        "median_ms": 11.518279000028997,
+        "std_ms": 0.5829134212290147,
+        "p95_ms": 12.913690799990718,
+        "mean_ms": 11.779667633334157
+      },
+      "receiver_ms": {
+        "median_ms": 1.3453729999355346,
+        "std_ms": 0.07127051290540047,
+        "p95_ms": 1.4949065000223525,
+        "mean_ms": 1.3658916666789385
+      },
+      "other_rf_ms": {
+        "median_ms": 1.2977595000052133,
+        "std_ms": 0.0660882948225364,
+        "p95_ms": 1.429482899965251,
+        "mean_ms": 1.3074391333285955
+      },
+      "delivery_storage_ms": {
+        "median_ms": 1.7242805000137196,
+        "std_ms": 0.28279715732982746,
+        "p95_ms": 2.1834493000085327,
+        "mean_ms": 1.8427048000072925
+      },
+      "total_ms": {
+        "median_ms": 24.044683499994335,
+        "std_ms": 1.0501927999263894,
+        "p95_ms": 26.47986044998447,
+        "mean_ms": 24.421878633328713
+      }
+    }
+  }
+]

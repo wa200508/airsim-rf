@@ -1,0 +1,125 @@
+#0 building with "default" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile.profiling
+#1 transferring dockerfile: 1.11kB done
+#1 DONE 0.0s
+
+#2 resolve image config for docker-image://docker.io/docker/dockerfile:1
+#2 DONE 0.4s
+
+#3 docker-image://docker.io/docker/dockerfile:1@sha256:4edf897a3ffa55b89f906fc8cc78afdb3f1834cc9c7083565e611a8a7d5fe99e
+#3 resolve docker.io/docker/dockerfile:1@sha256:4edf897a3ffa55b89f906fc8cc78afdb3f1834cc9c7083565e611a8a7d5fe99e done
+#3 CACHED
+
+#4 [internal] load metadata for ghcr.io/wa200508/airsim-rf:sha-8138f878dd35f3b22742fe54956b74f4e9576e36
+#4 DONE 0.5s
+
+#5 [internal] load .dockerignore
+#5 transferring context: 273B done
+#5 DONE 0.0s
+
+#6 [internal] load build context
+#6 transferring context: 1.24MB 0.0s done
+#6 DONE 0.0s
+
+#7 [stage-0 1/4] FROM ghcr.io/wa200508/airsim-rf:sha-8138f878dd35f3b22742fe54956b74f4e9576e36@sha256:a0a8a3980e18f8b7fe0085a94bc7adb8f37589e0d65f38d3948956ecbdbd85fa
+#7 resolve ghcr.io/wa200508/airsim-rf:sha-8138f878dd35f3b22742fe54956b74f4e9576e36@sha256:a0a8a3980e18f8b7fe0085a94bc7adb8f37589e0d65f38d3948956ecbdbd85fa done
+#7 CACHED
+
+#8 [stage-0 2/4] COPY --chmod=755 . /opt/airsim-rf/
+#8 DONE 0.1s
+
+#9 [stage-0 3/4] RUN --mount=type=secret,id=proxy_ca     set -eu;     if [ -f /run/secrets/proxy_ca ]; then export PIP_CERT=/run/secrets/proxy_ca; fi;     /opt/airsim-rf/.venv/bin/python -m pip install --no-deps nvtx==0.2.13;     if [ "1" = 1 ]; then       /opt/airsim-rf/.venv/bin/python -m pip install --no-cache-dir -r /opt/airsim-rf/requirements-p100-cuda.txt;     fi
+#9 0.954 Collecting nvtx==0.2.13
+#9 1.142   Downloading nvtx-0.2.13-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (2.6 kB)
+#9 1.229 Downloading nvtx-0.2.13-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (545 kB)
+#9 1.405    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 545.6/545.6 kB 6.6 MB/s eta 0:00:00
+#9 1.408 Installing collected packages: nvtx
+#9 1.422 Successfully installed nvtx-0.2.13
+#9 2.104 Collecting cupy-cuda12x==13.6.0 (from -r /opt/airsim-rf/requirements-p100-cuda.txt (line 2))
+#9 2.207   Downloading cupy_cuda12x-13.6.0-cp312-cp312-manylinux2014_x86_64.whl.metadata (2.4 kB)
+#9 2.269 Collecting fastrlock==0.8.3 (from -r /opt/airsim-rf/requirements-p100-cuda.txt (line 3))
+#9 2.302   Downloading fastrlock-0.8.3-cp312-cp312-manylinux_2_5_x86_64.manylinux1_x86_64.manylinux_2_28_x86_64.whl.metadata (7.7 kB)
+#9 2.346 Collecting nvidia-cuda-runtime-cu12==12.2.140 (from -r /opt/airsim-rf/requirements-p100-cuda.txt (line 4))
+#9 2.378   Downloading nvidia_cuda_runtime_cu12-12.2.140-py3-none-manylinux1_x86_64.whl.metadata (1.5 kB)
+#9 2.422 Collecting nvidia-cuda-nvrtc-cu12==12.2.140 (from -r /opt/airsim-rf/requirements-p100-cuda.txt (line 5))
+#9 2.455   Downloading nvidia_cuda_nvrtc_cu12-12.2.140-py3-none-manylinux1_x86_64.whl.metadata (1.5 kB)
+#9 2.499 Collecting nvidia-cufft-cu12==11.0.8.103 (from -r /opt/airsim-rf/requirements-p100-cuda.txt (line 6))
+#9 2.530   Downloading nvidia_cufft_cu12-11.0.8.103-py3-none-manylinux1_x86_64.whl.metadata (1.5 kB)
+#9 2.575 Collecting nvidia-cublas-cu12==12.2.5.6 (from -r /opt/airsim-rf/requirements-p100-cuda.txt (line 7))
+#9 2.610   Downloading nvidia_cublas_cu12-12.2.5.6-py3-none-manylinux1_x86_64.whl.metadata (1.5 kB)
+#9 2.612 Requirement already satisfied: numpy<2.6,>=1.22 in /opt/airsim-rf/.venv/lib/python3.12/site-packages (from cupy-cuda12x==13.6.0->-r /opt/airsim-rf/requirements-p100-cuda.txt (line 2)) (2.5.3)
+#9 2.646 Downloading cupy_cuda12x-13.6.0-cp312-cp312-manylinux2014_x86_64.whl (112.9 MB)
+#9 5.764    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 112.9/112.9 MB 37.0 MB/s eta 0:00:00
+#9 5.797 Downloading fastrlock-0.8.3-cp312-cp312-manylinux_2_5_x86_64.manylinux1_x86_64.manylinux_2_28_x86_64.whl (53 kB)
+#9 5.871 Downloading nvidia_cuda_runtime_cu12-12.2.140-py3-none-manylinux1_x86_64.whl (845 kB)
+#9 5.892    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 845.8/845.8 kB 42.4 MB/s eta 0:00:00
+#9 5.923 Downloading nvidia_cuda_nvrtc_cu12-12.2.140-py3-none-manylinux1_x86_64.whl (23.4 MB)
+#9 6.495    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 23.4/23.4 MB 41.0 MB/s eta 0:00:00
+#9 6.560 Downloading nvidia_cufft_cu12-11.0.8.103-py3-none-manylinux1_x86_64.whl (98.6 MB)
+#9 8.944    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 98.6/98.6 MB 41.4 MB/s eta 0:00:00
+#9 8.974 Downloading nvidia_cublas_cu12-12.2.5.6-py3-none-manylinux1_x86_64.whl (417.8 MB)
+#9 19.41    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 417.8/417.8 MB 39.3 MB/s eta 0:00:00
+#9 19.81 Installing collected packages: fastrlock, nvidia-cufft-cu12, nvidia-cuda-runtime-cu12, nvidia-cuda-nvrtc-cu12, nvidia-cublas-cu12, cupy-cuda12x
+#9 24.22 Successfully installed cupy-cuda12x-13.6.0 fastrlock-0.8.3 nvidia-cublas-cu12-12.2.5.6 nvidia-cuda-nvrtc-cu12-12.2.140 nvidia-cuda-runtime-cu12-12.2.140 nvidia-cufft-cu12-11.0.8.103
+#9 DONE 24.6s
+
+#10 [stage-0 4/4] WORKDIR /work
+#10 DONE 0.0s
+
+#11 exporting to image
+#11 exporting layers
+#11 exporting layers 20.5s done
+#11 exporting manifest sha256:6d4b378335d53a62bb5fdcaad4009b5b22fc493d5b668e4e76b5c519fd0e7f4b done
+#11 exporting config sha256:f4605fd9b04a4eeccab54967e2f83241c7be20c1606dccea101c31102dae5684 done
+#11 exporting attestation manifest sha256:8f7bf44eca3cf036212275e47079fcc298aeabf6dbeec0c8e9acf0cb559747f5 done
+#11 exporting manifest list sha256:211f8791811ed0f25efa61ac48a0ac712cbd417e849ae38db568a854b996c088 done
+#11 naming to docker.io/library/airsim-rf:p100-profile done
+#11 unpacking to docker.io/library/airsim-rf:p100-profile
+#11 unpacking to docker.io/library/airsim-rf:p100-profile 3.4s done
+#11 DONE 23.9s
+cuda_preflight: starting
+cuda_preflight: passed
+integration_tests: starting
+integration_tests: passed
+cpu-2tx-2rx-unprofiled: starting
+cpu-2tx-2rx-unprofiled: passed
+cpu-10tx-4rx-unprofiled: starting
+cpu-10tx-4rx-unprofiled: running for 15s
+cpu-10tx-4rx-unprofiled: passed
+cpu-100tx-10rx-unprofiled: starting
+cpu-100tx-10rx-unprofiled: running for 15s
+cpu-100tx-10rx-unprofiled: running for 30s
+cpu-100tx-10rx-unprofiled: running for 45s
+cpu-100tx-10rx-unprofiled: running for 60s
+cpu-100tx-10rx-unprofiled: running for 75s
+cpu-100tx-10rx-unprofiled: running for 90s
+cpu-100tx-10rx-unprofiled: running for 105s
+cpu-100tx-10rx-unprofiled: running for 120s
+cpu-100tx-10rx-unprofiled: running for 135s
+cpu-100tx-10rx-unprofiled: running for 150s
+cpu-100tx-10rx-unprofiled: running for 165s
+cpu-100tx-10rx-unprofiled: running for 180s
+cpu-100tx-10rx-unprofiled: running for 195s
+cpu-100tx-10rx-unprofiled: running for 210s
+cpu-100tx-10rx-unprofiled: running for 225s
+cpu-100tx-10rx-unprofiled: running for 240s
+cpu-100tx-10rx-unprofiled: passed
+cuda-2tx-2rx-unprofiled: starting
+cuda-2tx-2rx-unprofiled: passed
+cuda-2tx-2rx-instrumented: starting
+cuda-2tx-2rx-instrumented: passed
+cuda-10tx-4rx-unprofiled: starting
+cuda-10tx-4rx-unprofiled: passed
+cuda-10tx-4rx-instrumented: starting
+cuda-10tx-4rx-instrumented: passed
+cuda-100tx-10rx-unprofiled: starting
+cuda-100tx-10rx-unprofiled: running for 15s
+cuda-100tx-10rx-unprofiled: running for 30s
+cuda-100tx-10rx-unprofiled: passed
+cuda-100tx-10rx-instrumented: starting
+cuda-100tx-10rx-instrumented: running for 15s
+cuda-100tx-10rx-instrumented: running for 30s
+cuda-100tx-10rx-instrumented: passed
+Completed and validated collection: /work/results/p100-end-to-end-full-20261005/REPORT.md
+To publish, copy this bundle into the checkout at results/profiling/<run-id>.
