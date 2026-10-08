@@ -11,7 +11,7 @@ extern "C" __global__ void counter(unsigned int* target, const unsigned int* ind
 '''
 
 
-def enable_pascal_compat():
+def enable_pascal_compat(*, stable_shapes=True):
     import cupy as cp
     import drjit as dr
     import mitsuba as mi
@@ -25,6 +25,8 @@ def enable_pascal_compat():
     # A sentinel preserves the false branch on CUDA/LLVM in older Dr.Jit.
     if not hasattr(dr.JitBackend, 'Metal'):
         dr.JitBackend.Metal = None
+    if stable_shapes:
+        _bucket_path_storage()
     native = dr.scatter_inc
     kernel = cp.RawKernel(_COUNTER, 'counter')
 
@@ -52,3 +54,26 @@ def enable_pascal_compat():
     # Evaluated loops keep arithmetic/traversal on GPU while permitting the
     # zero-copy CuPy counter operation between iterations.
     dr.set_flag(dr.JitFlag.SymbolicLoops, False)
+
+
+def _bucket_path_storage():
+    """Pad storage to a power of two; never add or remove physical paths."""
+    import inspect
+    import textwrap
+    import sionna.rt as rt
+    from sionna.rt.path_solvers.paths import Paths
+    if rt.__version__ != '2.2.0':
+        raise RuntimeError('Path storage compatibility requires Sionna RT 2.2.0')
+    original = Paths.__init__
+    if getattr(original, '_p100_bucketed', False):
+        return
+    source = textwrap.dedent(inspect.getsource(original))
+    needle = 'self._max_num_paths = dr.max(num_paths)[0]'
+    if source.count(needle) != 1:
+        raise RuntimeError('Unsupported Sionna path constructor layout')
+    source = source.replace(needle, needle+'\n    self._max_num_paths = 1 << (int(self._max_num_paths)-1).bit_length()')
+    namespace = {}
+    exec(compile(source, inspect.getsourcefile(original), 'exec'), original.__globals__, namespace)
+    replacement = namespace['__init__']
+    replacement._p100_bucketed = True
+    Paths.__init__ = replacement

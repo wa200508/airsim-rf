@@ -146,7 +146,7 @@ def run(*, output, tx=100, rx=10, iterations=30, warmup=3, renderer='basis-cpu',
         raise RuntimeError('Requested propagation backend was not initialized before importing Sionna')
     if pascal_compat:
         from airsim_rf.p100_compat import enable_pascal_compat
-        enable_pascal_compat()
+        enable_pascal_compat(stable_shapes=optimizations)
     import sionna.rt as rt
     import drjit as dr
     dr.set_thread_count(threads)
