@@ -5,15 +5,24 @@ profile_repo_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$profile_repo_root"
 profile_basis=false
 profile_e2e=false
+profile_gpu_propagation=false
 profile_args=()
 for profile_arg in "$@"; do
   if [[ "$profile_arg" == --doppler-basis ]]; then profile_basis=true;
   elif [[ "$profile_arg" == --end-to-end ]]; then profile_e2e=true;
+  elif [[ "$profile_arg" == --p100-gpu ]]; then profile_gpu_propagation=true;
   else profile_args+=("$profile_arg"); fi
 done
 if [[ "$profile_basis" == true && "$profile_e2e" == true ]]; then
   echo 'Select either --end-to-end or --doppler-basis.' >&2
   exit 2
+fi
+if [[ "$profile_gpu_propagation" == true && "$profile_e2e" != true ]]; then
+  echo '--p100-gpu requires --end-to-end.' >&2
+  exit 2
+fi
+if [[ "$profile_gpu_propagation" == true ]]; then
+  profile_args=(--backend cuda --propagation-backend cuda --pascal-compat "${profile_args[@]}")
 fi
 for profile_arg in "$@"; do
   if [[ "$profile_arg" == --help || "$profile_arg" == -h ]]; then
@@ -35,6 +44,10 @@ if [[ -n "${CODEX_PROXY_CERT:-}" ]]; then
   profile_build+=(--secret "id=proxy_ca,src=$CODEX_PROXY_CERT")
 fi
 "${profile_build[@]}" .
+if [[ "$profile_gpu_propagation" == true ]]; then
+  docker build -f Dockerfile.p100-gpu --build-arg "PROFILE_BASE_IMAGE=$profile_image" -t "$profile_image-gpu" .
+  profile_image="$profile_image-gpu"
+fi
 mkdir -p results/profiling
 profile_run=(docker run --rm --user "$(id -u):$(id -g)"
   -v "$profile_repo_root/results/profiling:/work/results"
@@ -42,8 +55,12 @@ profile_run=(docker run --rm --user "$(id -u):$(id -g)"
 if [[ "$profile_basis" == true || "$profile_e2e" == true ]]; then
   profile_run+=(--entrypoint python -e CUPY_CACHE_DIR=/tmp/cupy-kernel-cache
     -e CUDA_CACHE_PATH=/tmp/cuda-kernel-cache
-    -e DRJIT_CACHE_DIR=/tmp/drjit-cache
-    -e DRJIT_LIBCUDA_PATH=/tmp/disabled-drjit-cuda.so)
+    -e DRJIT_CACHE_DIR=/tmp/drjit-cache)
+  if [[ "$profile_gpu_propagation" == true ]]; then
+    profile_run+=(--tmpfs /.drjit:rw,mode=1777)
+  else
+    profile_run+=(-e DRJIT_LIBCUDA_PATH=/tmp/disabled-drjit-cuda.so)
+  fi
 fi
 profile_cpu_only=false
 profile_previous_arg=""
@@ -52,6 +69,10 @@ for profile_arg in "$@"; do
   if [[ "$profile_arg" == cpu && "$profile_previous_arg" == --backend ]]; then profile_cpu_only=true; fi
   profile_previous_arg="$profile_arg"
 done
+if [[ "$profile_cpu_only" == true && "$profile_gpu_propagation" == true ]]; then
+  echo 'GPU propagation cannot run with --cpu-only or --backend cpu.' >&2
+  exit 2
+fi
 if [[ "$profile_cpu_only" == false ]]; then
   profile_run+=(--gpus "device=${RF_PROFILE_GPU:-0}"
     -e NVIDIA_DRIVER_CAPABILITIES=compute,utility,graphics -e CUDA_VISIBLE_DEVICES=0)

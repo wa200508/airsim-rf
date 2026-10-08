@@ -88,13 +88,20 @@ def main():
     if 'cuda' in backends:
         execute('cuda_preflight', launcher+[str(ROOT/'scripts/basis_cuda_preflight.py'),
                 '--output',str(output/'profiles/cuda_preflight.json')], 'profiles/cuda_preflight.json')
-    test_paths = ['tests/test_end_to_end.py','tests/test_sdr.py','tests/test_distributed.py',
+    test_paths = ['tests/test_end_to_end.py','tests/test_sdr.py',
                   'tests/test_end_to_end_profiling.py','tests/test_p100_compat.py']
     prelude = "import mitsuba as mi; mi.set_variant(%r); " % (args.propagation_backend+'_ad_mono_polarized')
     if args.pascal_compat:
         prelude += 'from airsim_rf.p100_compat import enable_pascal_compat; enable_pascal_compat(); '
     prelude += "import pytest; raise SystemExit(pytest.main(%r))" % (test_paths+['-q','-o','cache_dir=/tmp/pytest-cache'])
     execute('integration_tests',launcher+['-c',prelude])
+    # Worker fixtures select LLVM and must not switch Mitsuba variants inside
+    # a process whose Sionna symbols were initialized for CUDA.
+    worker_prelude = "import mitsuba as mi; import drjit as dr; mi.set_variant('llvm_ad_mono_polarized'); "
+    if args.pascal_compat:
+        worker_prelude += "setattr(dr.JitBackend,'Metal',None) if not hasattr(dr.JitBackend,'Metal') else None; "
+    worker_prelude += "import pytest; raise SystemExit(pytest.main(['tests/test_distributed.py','-q','-o','cache_dir=/tmp/pytest-cache']))"
+    execute('worker_protocol_tests',launcher+['-c',worker_prelude])
     for backend in backends:
         for tx, rx in scenarios:
             modes = ('unprofiled','instrumented') if backend=='cuda' else ('unprofiled',)
