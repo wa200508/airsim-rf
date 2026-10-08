@@ -319,7 +319,7 @@ class SDRNetworkReceiver:
                         if self.renderer == "basis-cuda":
                             batched_signals = self.basis_renderer.render(jobs, num_samples=num_samples+warmup,
                                 sim_time_ns=warmup_ns, channel_epoch_ns=sim_time_ns, sum_output=not self.link_diagnostics,
-                                profile=self.profile_rendering)
+                                profile=self.profile_rendering, workspace_id=rx_name)
                         else:
                             batched_signals = self.basis_renderer.render(jobs, num_samples=num_samples+warmup,
                                 sim_time_ns=warmup_ns, channel_epoch_ns=sim_time_ns)

@@ -138,7 +138,15 @@ def stats(values):
 
 
 def run(*, output, tx=100, rx=10, iterations=30, warmup=3, renderer='basis-cpu',
-        samples_per_link=1028, airsim_config=None, profile_rendering=False, optimizations=True, fused_projection=False, threads=2):
+        samples_per_link=1028, airsim_config=None, profile_rendering=False, optimizations=True, fused_projection=False, threads=2, propagation_backend=None, pascal_compat=False):
+    import mitsuba as mi
+    if propagation_backend is None:
+        propagation_backend = 'cuda' if mi.variant().startswith('cuda') else 'llvm'
+    if not mi.variant().startswith(propagation_backend):
+        raise RuntimeError('Requested propagation backend was not initialized before importing Sionna')
+    if pascal_compat:
+        from airsim_rf.p100_compat import enable_pascal_compat
+        enable_pascal_compat()
     import sionna.rt as rt
     import drjit as dr
     dr.set_thread_count(threads)
@@ -260,9 +268,9 @@ def run(*, output, tx=100, rx=10, iterations=30, warmup=3, renderer='basis-cpu',
                       platform=platform.platform(), sionna_rt=rt.__version__, gpu=gpu),
         source_revision=revision, source_dirty=dirty,
         pose_source='deterministic AirSim-contract trajectory; physics/RPC not exercised' if airsim_config is None else 'live ProjectAirSim physics/RPC',
-        propagation_backend='Sionna RT LLVM CPU', rendering_backend=renderer,
+        propagation_backend='Sionna RT CUDA/OptiX' if propagation_backend == 'cuda' else 'Sionna RT LLVM CPU', rendering_backend=renderer,
         arguments=dict(tx=tx,rx=rx,iterations=iterations,warmup=warmup,samples_per_link=samples_per_link,profile_rendering=profile_rendering, reuse_render_buffers=optimizations,
-        cache_scattering_samples=optimizations, fused_projection=fused_projection, threads=threads),
+        cache_scattering_samples=optimizations, fused_projection=fused_projection, threads=threads, propagation_backend=propagation_backend, pascal_compat=pascal_compat),
         timing_includes=['physics advance (live only)', 'snapshot/mount mapping', 'private waveform generation/copies',
             'scene multipath tracing/export', 'all-path I/Q rendering', 'persistent receive filter/noise/ADC',
             'SC16 serialization', 'loopback HTTP delivery/acknowledgement', 'consumer file write/readback (no fsync)'],
@@ -285,7 +293,7 @@ def run(*, output, tx=100, rx=10, iterations=30, warmup=3, renderer='basis-cpu',
         '| '+label+' | '+' | '.join(f'{summary[k]["p95_ms"]:.2f}' for k in keys)+' |', '',
         f'Measured windows: {iterations}; simulated duration: {simulated_ms:.4f} ms.', '',
         f'Wall time / simulated time: **{wall_ratio:.2f}×**. Deadline misses: {result["deadline_misses"]}/{iterations}.', '',
-        'Scene propagation is CPU even when rendering uses CUDA. Paths are physical scene returns, not the synthetic 1028-valid-path stress workload.', '',
+        f'Propagation backend: {result["propagation_backend"]}. Paths are physical scene returns, not the synthetic 1028-valid-path stress workload.', '',
         'Initialization is excluded from steady-state tables; the first complete capture is recorded separately in JSON.', '',
         'Receivers execute serially; delivery uses loopback HTTP, not the AMS-GRA native worker protocol. Consumer writes are read back but not fsync-ed.', '',
         '[Raw captures and per-step measurements](measurements.json).']
@@ -303,6 +311,8 @@ def main():
     parser.add_argument('--renderer', choices=('basis-cpu','basis-cuda'), default='basis-cpu')
     parser.add_argument('--samples-per-link', type=int, default=1028)
     parser.add_argument('--airsim-config', type=Path)
+    parser.add_argument('--pascal-compat', action='store_true')
+    parser.add_argument('--propagation-backend', choices=('llvm','cuda'), default='llvm')
     parser.add_argument('--threads', type=int, default=2, help='LLVM propagation worker threads')
     parser.add_argument('--no-optimizations', dest='optimizations', action='store_false')
     parser.add_argument('--fused-projection', action='store_true')
@@ -313,7 +323,7 @@ def main():
     import drjit as dr
     import mitsuba as mi
     dr.set_thread_count(args.threads)
-    mi.set_variant('llvm_ad_mono_polarized')
+    mi.set_variant(args.propagation_backend+'_ad_mono_polarized')
     result = run(**vars(args))
     print(json.dumps(result['summary'], indent=2))
 

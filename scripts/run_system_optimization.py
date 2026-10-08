@@ -23,7 +23,7 @@ def save():
 def run(name, threads, optimized, fused=False):
     output = a.output/name
     command = [sys.executable, str(ROOT/'scripts/basis_launch.py'), str(ROOT/'benchmarks/benchmark_end_to_end.py'),
-        '--renderer','basis-cuda','--tx','100','--rx','10','--iterations',str(a.iterations),
+        '--renderer','basis-cuda','--propagation-backend','cuda','--pascal-compat','--tx','100','--rx','10','--iterations',str(a.iterations),
         '--warmup','3','--threads',str(threads),'--output',str(output)]
     if not optimized:
         command.append('--no-optimizations')
@@ -43,10 +43,9 @@ def run(name, threads, optimized, fused=False):
         raise SystemExit(code)
     return task
 save()
-run('baseline_2',2,False)
-choices=[run('optimized_'+str(t),t,True) for t in [2,4,8,16]]
-best=min(choices,key=lambda t:t['summary']['total_ms']['median_ms'])
-run('fused_'+str(best['threads']),best['threads'],True,True)
-run('baseline_2_repeat',2,False)
-manifest.update(complete=True,best_unfused_threads=best['threads'])
+run('baseline_cuda',2,False)
+run('persistent_cuda',2,True)
+run('fused_cuda',2,True,True)
+run('baseline_cuda_repeat',2,False)
+manifest.update(complete=True,propagation_backend='Sionna RT CUDA/OptiX')
 save()

@@ -200,9 +200,16 @@ class CudaDopplerBasisRenderer:
             raise ValueError('Declared delay support exceeds research resource limit')
         paths = max(len(job.coefficients) for job in jobs)
         count = len(jobs)
+        # Small capacity buckets avoid reallocating as physical path counts
+        # and 120 Hz integer sample windows vary. Padding is never a path.
+        if self.reuse_buffers:
+            paths = ((paths+31)//32)*32
+        source_width = num_samples+max_lag-min_lag
+        if self.reuse_buffers:
+            source_width = ((source_width+255)//256)*256
         shapes = dict(a=((count, paths), np.complex128), d=((count, paths), np.float64),
                       fd=((count, paths), np.float64), valid=((count, paths), np.bool_),
-                      source=((count, num_samples+max_lag-min_lag), np.complex128),
+                      source=((count, source_width), np.complex128),
                       offsets=((count,), np.float64), base_cycles=((count,), np.float64))
         buffered = self._buffers.get(slot) if self.reuse_buffers else None
         buffers_reused = buffered is not None and buffered['shapes'] == shapes
@@ -270,10 +277,12 @@ class CudaDopplerBasisRenderer:
         if profile:
             upload_start.record()
         uploaded_bytes = 0
+        uploaded_keys = []
         for key, array in host.items():
             if channel_reused and key in channel_keys:
                 continue
             uploaded_bytes += array.nbytes
+            uploaded_keys.append(key)
             if self.reuse_buffers:
                 device[key].set(array, stream=cp.cuda.get_current_stream())
             else:
@@ -282,7 +291,7 @@ class CudaDopplerBasisRenderer:
             upload_end.record()
         self._pack_stats.append(dict(cpu_prepare_ms=prepared_ms,
             upload_submission_ms=(perf_counter()-submission_started)*1000,
-            uploaded_bytes=uploaded_bytes, buffers_reused=buffers_reused,
+            uploaded_bytes=uploaded_bytes, uploaded_keys=uploaded_keys, buffers_reused=buffers_reused,
             channel_reused=channel_reused))
         if profile:
             self._upload_events.append((upload_start, upload_end))
@@ -293,7 +302,7 @@ class CudaDopplerBasisRenderer:
         return data
 
     def render(self, jobs, *, num_samples, sim_time_ns=0, channel_epoch_ns=None,
-               sum_output=False, profile=False, channel_revision=None):
+               sum_output=False, profile=False, channel_revision=None, workspace_id=None):
         if isinstance(num_samples, bool) or not isinstance(num_samples, int) or num_samples < 1:
             raise ValueError('Positive integer num_samples required')
         if not isinstance(sum_output, bool) or not isinstance(profile, bool):
@@ -305,6 +314,7 @@ class CudaDopplerBasisRenderer:
             if not self.reuse_buffers:
                 raise ValueError('Channel reuse requires reuse_buffers')
             hash(channel_revision)
+        hash(workspace_id)
         cfg, cp = self.config, self.cp
         started = perf_counter()
         self._pack_stats, self._upload_events = [], []
@@ -342,7 +352,7 @@ class CudaDopplerBasisRenderer:
                     continue
                 with stage('basis.host_pack_and_upload'):
                     data = self._pack([job for _, job in batch], sim_time_ns, num_samples,
-                                      (batch[0][1].waveform.interpolation_taps, begin), channel_revision, profile)
+                                      (workspace_id, batch[0][1].waveform.interpolation_taps, begin), channel_revision, profile)
                 count, paths, half = data['count'], data['paths'], data['half']
                 support = data['max_lag']-data['min_lag']+1
                 if not data['channel_reused']:

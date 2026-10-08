@@ -1,0 +1,6 @@
+# First build the pinned CuPy profiling image with Dockerfile.profiling.
+FROM airsim-rf:p100-profile
+USER root
+COPY requirements-p100-propagation.txt /tmp/requirements-p100-propagation.txt
+RUN /opt/airsim-rf/.venv/bin/python -m pip install --no-deps --no-cache-dir -r /tmp/requirements-p100-propagation.txt
+USER rf

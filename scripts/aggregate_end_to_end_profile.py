@@ -105,7 +105,7 @@ def tables(records, *, link_root):
             extra=json.loads(legacy.read_text()) if legacy.is_file() else {}
             device=extra.get('cpu') if isinstance(extra.get('cpu'),str) else None
         device=device or 'see hardware record'
-        name=f"{args['tx']} → {args['rx']}, {data['rendering_backend']}; {device}"
+        name=f"{args['tx']} → {args['rx']}, {data['rendering_backend']}; {device}; {data.get('propagation_backend','Sionna RT LLVM CPU')}"
         return f'[{name}]({path.relative_to(link_root).as_posix()})'
 
     def render(title, selected, keys, get_values):
@@ -140,7 +140,7 @@ def tables(records, *, link_root):
             return {key:[row[key] for row in windows] for key in EVENTS}
         render('Repeated CUDA rendering event spans',profiled,EVENTS,event_columns)
         sections.append('CUDA event spans sum each named stage across all blocks/batches and receivers **within each window**, then summarize those window totals. They include host dispatch gaps and are not pure kernel execution times. They come from separate instrumented full-pipeline runs; do not mix them into unprofiled throughput or add their medians to wall-time medians.')
-    sections.append('All timings are ms per fleet update. Source generation, propagation, continuous receiver filtering/noise/ADC, loopback HTTP delivery and consumer file readback are included. Sionna propagation is LLVM CPU even with CuPy rendering. Receivers execute serially. The default truth source implements the AirSim contract; it does not run live AirSim physics/RPC or AMS-GRA distributed SDR workers. Startup/warmup are excluded from these tables, physical path counts and hardware/quota are in the linked JSON, and five-/ten-window historical runs do not qualify long-run tail latency.')
+    sections.append('All timings are ms per fleet update. Source generation, propagation, continuous receiver filtering/noise/ADC, loopback HTTP delivery and consumer file readback are included. The propagation backend is recorded per row: historical runs used LLVM CPU; explicit CUDA/OptiX runs use GPU ray tracing and fields. Receivers execute serially. The default truth source implements the AirSim contract; it does not run live AirSim physics/RPC or AMS-GRA distributed SDR workers. Startup/warmup are excluded from these tables, physical path counts and hardware/quota are in the linked JSON, and five-/ten-window historical runs do not qualify long-run tail latency.')
     return '\n\n'.join(sections)
 
 

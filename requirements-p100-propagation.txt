@@ -1,0 +1,3 @@
+# Explicit P100 CUDA/OptiX compatibility layer; Sionna RT remains 2.2.0.
+mitsuba==3.8.0
+drjit==1.3.1

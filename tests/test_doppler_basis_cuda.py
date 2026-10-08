@@ -141,8 +141,7 @@ def test_real_cuda_persistent_channel_sources_times_and_invalidation(projection,
     second = engine.render(private, channel_revision=0, profile=True, **kw)
     np.testing.assert_allclose(second, oracle.render(private, **kw), atol=2e-9, rtol=2e-9)
     assert all(v['channel_reused'] for v in engine.last_metrics['packing'])
-    assert all(v['uploaded_bytes'] == (vjob*(513+support)*16+vjob*8)
-               for v,vjob,support in zip(engine.last_metrics['packing'], [2,1], [232,216]))
+    assert all(v['uploaded_keys'] == ['source', 'base_cycles'] for v in engine.last_metrics['packing'])
     # Device source-buffer shape changes while the prepared channel stays valid.
     assert not any(v['buffers_reused'] for v in engine.last_metrics['packing'])
     again = engine.render(private, channel_revision=0, **kw)

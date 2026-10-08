@@ -22,6 +22,8 @@ def main():
     parser.add_argument('--backend', choices=('cpu','cuda','both'), default='both')
     parser.add_argument('--cpu-only', action='store_true', help='Equivalent to --backend cpu')
     parser.add_argument('--iterations', type=int, default=30)
+    parser.add_argument('--propagation-backend', choices=('llvm','cuda'), default='llvm')
+    parser.add_argument('--pascal-compat', action='store_true')
     parser.add_argument('--threads', type=int, default=2)
     parser.add_argument('--warmup', type=int, default=3)
     parser.add_argument('--scenarios', nargs='+', default=['2x2','10x4','100x10'], help='TXxRX counts; budgets/cadence unchanged')
@@ -46,7 +48,7 @@ def main():
     (output/'profiles').mkdir()
     backends = ['cpu','cuda'] if args.backend == 'both' else [args.backend]
     manifest=dict(run_id=output.name,scope='rf_pipeline_end_to_end_collection',complete=False,
-                  iterations=args.iterations,warmup=args.warmup,threads=args.threads,scenarios=scenarios,backends=backends,tasks=[])
+                  iterations=args.iterations,warmup=args.warmup,threads=args.threads,propagation_backend=args.propagation_backend,pascal_compat=args.pascal_compat,scenarios=scenarios,backends=backends,tasks=[])
     def save():
         (output/'manifest.json').write_text(json.dumps(manifest,indent=2)+'\n')
     save()
@@ -86,8 +88,13 @@ def main():
     if 'cuda' in backends:
         execute('cuda_preflight', launcher+[str(ROOT/'scripts/basis_cuda_preflight.py'),
                 '--output',str(output/'profiles/cuda_preflight.json')], 'profiles/cuda_preflight.json')
-    execute('integration_tests', launcher+['-m','pytest','tests/test_end_to_end.py',
-        'tests/test_sdr.py','tests/test_distributed.py','tests/test_end_to_end_profiling.py','-q'])
+    test_paths = ['tests/test_end_to_end.py','tests/test_sdr.py','tests/test_distributed.py',
+                  'tests/test_end_to_end_profiling.py','tests/test_p100_compat.py']
+    prelude = "import mitsuba as mi; mi.set_variant(%r); " % (args.propagation_backend+'_ad_mono_polarized')
+    if args.pascal_compat:
+        prelude += 'from airsim_rf.p100_compat import enable_pascal_compat; enable_pascal_compat(); '
+    prelude += "import pytest; raise SystemExit(pytest.main(%r))" % (test_paths+['-q','-o','cache_dir=/tmp/pytest-cache'])
+    execute('integration_tests',launcher+['-c',prelude])
     for backend in backends:
         for tx, rx in scenarios:
             modes = ('unprofiled','instrumented') if backend=='cuda' else ('unprofiled',)
@@ -96,8 +103,10 @@ def main():
                 relative=f'profiles/{name}/measurements.json'
                 command=launcher+[str(ROOT/'benchmarks/benchmark_end_to_end.py'),
                     '--renderer',f'basis-{backend}','--tx',str(tx),'--rx',str(rx),
-                    '--iterations',str(args.iterations),'--warmup',str(args.warmup),'--threads',str(args.threads),
+                    '--iterations',str(args.iterations),'--warmup',str(args.warmup),'--threads',str(args.threads),'--propagation-backend',args.propagation_backend,
                     '--output',str(output/'profiles'/name)]
+                if args.pascal_compat:
+                    command.append('--pascal-compat')
                 if mode=='instrumented':
                     command.append('--profile-rendering')
                 execute(name,command,relative)
