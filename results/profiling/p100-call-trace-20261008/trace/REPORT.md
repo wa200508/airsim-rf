@@ -28,14 +28,4 @@ Receivers execute serially; delivery uses loopback HTTP, not the AMS-GRA native 
 
 [Raw captures and per-step measurements](measurements.json).
 
-<!-- BEGIN SIGNAL TIME CONTEXT -->
-
-**Simulation-time reference:** wall seconds per simulated signal second = total measured wall service / total output signal duration per receiver. Receiver durations are concurrent, not added across receivers. This is a processing-cost ratio for the named scope; it is not a whole-flight measurement. Instrumented costs are diagnostic.
-
-| Raw case / timed scope | Mode | Calls | Signal ms/call (mean) | Measured signal seconds | Measured wall seconds | Wall seconds / signal second |
-| --- | --- | ---: | ---: | ---: | ---: | ---: |
-| [results/profiling/p100-call-trace-20261008/trace/measurements.json](measurements.json) — RF fleet update | instrumented_end_to_end_profile | 10 | 8.333300 | 0.083333 | 5.920980 | 71.052 |
-
-The measured signal seconds column totals processed windows. Synthetic and historical short-capture jobs may reuse epochs or leave gaps; this total does not assert a continuous simulation timeline. First-use/warmup are excluded where the recorded harness excludes them. Stage milliseconds elsewhere use the same signal duration as their parent call; stage median / signal-ms is a median cost ratio, while the final column above uses sums (equivalently mean costs for fixed-duration calls).
-
-<!-- END SIGNAL TIME CONTEXT -->
+Measurement units and scope: [timing definitions](../../../../docs/timing.md); [wall cost per simulated signal second](../../../../docs/measurements.md). Historical and instrumented records retain their original qualification.

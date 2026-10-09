@@ -23,6 +23,8 @@ jobs:
       packages: write
     steps:
       - uses: actions/checkout@v4
+      - name: Check maintained documentation links
+        run: python3 scripts/check_docs.py
       - uses: docker/setup-buildx-action@v3
       - name: Build CPU image
         uses: docker/build-push-action@v6

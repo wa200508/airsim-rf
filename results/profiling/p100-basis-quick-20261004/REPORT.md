@@ -1,14 +1,6 @@
 # Doppler-basis renderer profiling: p100-basis-quick-20261004
 
-**Timing scope:** Renderer-call wall service or separately labeled projection/kernel-call experiment; excludes propagation and receiver processing. [Common measurement definitions](../../../TIMING_CONVENTIONS.md) apply to units, statistics, cache state, ratios and comparisons. Historical measurements and estimates are not current fleet-update qualification.
-
-<!-- BEGIN SIGNAL TIME CONTEXT -->
-
-**Simulation-time reference:** use **wall seconds per simulated signal second**, not an unlabeled whole-run time. For fixed windows, divide mean service milliseconds by samples/sample-rate × 1,000. Stage costs use their parent window denominator. Geometry-only solves and analytic operation counts have no generated signal duration; a signal-time ratio is **not applicable**, unless an explicit update interval is assumed and labeled as a scheduling estimate. Unrecorded flight costs remain unknown. See [recorded normalized cases](../../../SIGNAL_TIME_RESULTS.md).
-
-<!-- END SIGNAL TIME CONTEXT -->
-
-
+**Timing scope:** Renderer-call wall service or separately labeled projection/kernel-call experiment; excludes propagation and receiver processing. [Common measurement definitions](../../../docs/timing.md#timing-conventions) apply to units, statistics, cache state, ratios and comparisons. Historical measurements and estimates are not current fleet-update qualification.
 Status: **FAILED / INCOMPLETE**.
 
 **Interrupted diagnostic run:** no completed performance cases. See [startup investigation](INVESTIGATION.md) and the subsequent [full collection](../p100-basis-full-20261004/REPORT.md).
@@ -75,3 +67,5 @@ Run error: KeyboardInterrupt:
 One P100 normally tests one receiver with 100 private TX inputs. `--rx 10` measures ten receivers sequentially on this GPU; it is not a ten-GPU fleet measurement. A renderer meeting the deadline still leaves propagation and mandatory receiver processing to qualify.
 
 Large Nsight traces remain in ignored raw/. Small reports/JSON/logs can be published with scripts/publish_gpu_results.py.
+
+Measurement units and scope: [timing definitions](../../../docs/timing.md); [wall cost per simulated signal second](../../../docs/measurements.md). Historical and instrumented records retain their original qualification.

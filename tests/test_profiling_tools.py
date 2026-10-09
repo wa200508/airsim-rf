@@ -83,6 +83,7 @@ def test_basis_report_excludes_instrumented_runs_and_marks_invalid_accuracy(tmp_
     report=(bundle/'REPORT.md').read_text()
     assert 'FAILED / INCOMPLETE' in report and 'INVALID' in report
     assert '10.000 ms' in report and '999.000 ms' not in report
+    assert '| — | — | — | — | 2/2 | INVALID |' in report
     assert 'not a ten-GPU fleet measurement' in report
 
 
@@ -95,3 +96,20 @@ def test_basis_cuda_failure_writes_a_blocked_preflight(tmp_path):
     else:
         assert data['status']=='blocked' and data['error']
         assert result.returncode==20
+
+
+
+def test_basis_report_normalizes_actual_duration_without_median_substitution(tmp_path):
+    bundle=write_bundle(tmp_path)
+    manifest=json.loads((bundle/'manifest.json').read_text())
+    manifest.update(scope='doppler_basis_renderer',required_tasks_passed=True,gpu_status='verified_cuda_cupy')
+    (bundle/'manifest.json').write_text(json.dumps(manifest))
+    data=dict(scope='doppler_basis_receiver_rendering',measurement_mode='unprofiled_basis_benchmark',
+        backend='cuda',arguments=dict(tx=100,rx=1,paths=1028,samples=1000,sample_rate=2e6),
+        summary=dict(p50_ms=5.,p95_ms=7.8,p99_ms=7.96,max_ms=8.),captures_per_second=100.,
+        misses_120hz=0,rows=[dict(total_ms=4.),dict(total_ms=8.)],accuracy=dict(passed=False),profile_receivers=[])
+    (bundle/'profiles/basis.json').write_text(json.dumps(data))
+    subprocess.run([sys.executable,ROOT/'scripts/aggregate_gpu_profile.py',bundle],check=True,capture_output=True)
+    report=(bundle/'REPORT.md').read_text()
+    # Mean service = 6 ms; actual signal = .5 ms/call. Median is deliberately 5.
+    assert '| 12.000 | 0.500000 | 0.001000 | 0.012000 |' in report

@@ -1,25 +1,6 @@
 # Optimized P100 GPU RF pipeline findings
 
-**Timing scope:** RF fleet-update wall service; serial receivers; trajectory source and loopback consumer. [Common measurement definitions](../../../TIMING_CONVENTIONS.md) apply to units, statistics, cache state, ratios and comparisons. Historical measurements and estimates are not current fleet-update qualification.
-
-<!-- BEGIN SIGNAL TIME CONTEXT -->
-
-**Simulation-time reference:** wall seconds per simulated signal second = total measured wall service / total output signal duration per receiver. Receiver durations are concurrent, not added across receivers. This is a processing-cost ratio for the named scope; it is not a whole-flight measurement. Instrumented costs are diagnostic.
-
-| Raw case / timed scope | Mode | Calls | Signal ms/call (mean) | Measured signal seconds | Measured wall seconds | Wall seconds / signal second |
-| --- | --- | ---: | ---: | ---: | ---: | ---: |
-| [results/profiling/p100-gpu-pipeline-opaque-full-20261007/profiles/cuda-100tx-10rx-instrumented/measurements.json](profiles/cuda-100tx-10rx-instrumented/measurements.json) — RF fleet update | instrumented_end_to_end_profile | 30 | 8.333333 | 0.250000 | 16.872901 | 67.492 |
-| [results/profiling/p100-gpu-pipeline-opaque-full-20261007/profiles/cuda-100tx-10rx-unprofiled/measurements.json](profiles/cuda-100tx-10rx-unprofiled/measurements.json) — RF fleet update | unprofiled_end_to_end_benchmark | 30 | 8.333333 | 0.250000 | 16.589912 | 66.360 |
-| [results/profiling/p100-gpu-pipeline-opaque-full-20261007/profiles/cuda-10tx-4rx-instrumented/measurements.json](profiles/cuda-10tx-4rx-instrumented/measurements.json) — RF fleet update | instrumented_end_to_end_profile | 30 | 8.333333 | 0.250000 | 1.921751 | 7.687 |
-| [results/profiling/p100-gpu-pipeline-opaque-full-20261007/profiles/cuda-10tx-4rx-unprofiled/measurements.json](profiles/cuda-10tx-4rx-unprofiled/measurements.json) — RF fleet update | unprofiled_end_to_end_benchmark | 30 | 8.333333 | 0.250000 | 1.851779 | 7.407 |
-| [results/profiling/p100-gpu-pipeline-opaque-full-20261007/profiles/cuda-2tx-2rx-instrumented/measurements.json](profiles/cuda-2tx-2rx-instrumented/measurements.json) — RF fleet update | instrumented_end_to_end_profile | 30 | 8.333333 | 0.250000 | 0.855329 | 3.421 |
-| [results/profiling/p100-gpu-pipeline-opaque-full-20261007/profiles/cuda-2tx-2rx-unprofiled/measurements.json](profiles/cuda-2tx-2rx-unprofiled/measurements.json) — RF fleet update | unprofiled_end_to_end_benchmark | 30 | 8.333333 | 0.250000 | 0.808956 | 3.236 |
-
-The measured signal seconds column totals processed windows. Synthetic and historical short-capture jobs may reuse epochs or leave gaps; this total does not assert a continuous simulation timeline. First-use/warmup are excluded where the recorded harness excludes them. Stage milliseconds elsewhere use the same signal duration as their parent call; stage median / signal-ms is a median cost ratio, while the final column above uses sums (equivalently mean costs for fixed-duration calls).
-
-<!-- END SIGNAL TIME CONTEXT -->
-
-
+**Timing scope:** RF fleet-update wall service; serial receivers; trajectory source and loopback consumer. [Common measurement definitions](../../../docs/timing.md#timing-conventions) apply to units, statistics, cache state, ratios and comparisons. Historical measurements and estimates are not current fleet-update qualification.
 Measured source: `6cc6707`; clean code mounted read-only over the isolated compatibility image. Propagation and signal rendering both execute on the P100. All required collector tasks and all six 30-window CUDA series passed. Initialization, the first capture and three warmups are excluded from steady-state tables; each measured series contains 250 ms of simulated signal. No CPU-only end-to-end timing run was added.
 
 | TX / RX | Fleet-update wall median ms | p95 ms | Propagation wall median ms | Renderer-call wall median ms |
@@ -45,3 +26,5 @@ bash scripts/run_p100_docker.sh --end-to-end --p100-gpu --run-id p100-gpu-full
 ```
 
 The launcher builds the pinned profiling image, applies only the explicit Mitsuba/Dr.Jit compatibility wheels, provides writable old-Dr.Jit cache storage, and requests CUDA propagation without fallback. Raw SC16 captures remain local and ignored. Ollama was restored after profiling.
+
+Measurement units and scope: [timing definitions](../../../docs/timing.md); [wall cost per simulated signal second](../../../docs/measurements.md). Historical and instrumented records retain their original qualification.

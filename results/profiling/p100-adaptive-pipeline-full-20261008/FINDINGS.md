@@ -1,7 +1,5 @@
 # Qualified adaptive P100 CUDA RF pipeline
 
-**Timing scope:** one RF fleet update generates 16,666 or 16,667 samples at 2 MS/s (~8.333 ms signal) per receiver. All receivers run sequentially on one P100. Each series processes 30 updates, **0.250 simulated seconds per receiver**, after first use and three warmups. These are trajectory-source RF stages through loopback HTTP acknowledgement/SC16 write/readback, not a live AirSim flight or WAN deployment.
-
 | TX × RX | Simulated signal s | Measured wall s | Wall s / simulated signal s | Median wall ms/update | p95 wall ms/update |
 | --- | ---: | ---: | ---: | ---: | ---: |
 | [100 × 10](profiles/cuda-100tx-10rx-unprofiled/measurements.json) | 0.250000 | 11.169603 | 44.678 | 371.859 | 384.061 |
@@ -20,21 +18,6 @@ Adaptive rank and automatic projection groups are enabled for `SDRNetworkReceive
 
 Tracing identifies FFT filtering, projection, host waveform copies/packing and GPU-queue waits as the major costs. The final target still uploads about 286.6 MB of private input/channel data per update; its host PCIe link reports Gen3 ×8. Device-resident/private ingestion and overlapping preparation are candidates for the next investigation, requiring explicit traffic accounting and correctness checks.
 
-[Call trace and diagnostic evidence](../p100-call-trace-20261008/README.md) · [Complete stage distributions](REPORT.md) · [Timing definitions](../../../TIMING_CONVENTIONS.md).
+[Call trace and diagnostic evidence](../p100-call-trace-20261008/README.md) · [Complete stage distributions](REPORT.md) · [Timing definitions](../../../docs/timing.md#timing-conventions).
 
-<!-- BEGIN SIGNAL TIME CONTEXT -->
-
-**Simulation-time reference:** wall seconds per simulated signal second = total measured wall service / total output signal duration per receiver. Receiver durations are concurrent, not added across receivers. This is a processing-cost ratio for the named scope; it is not a whole-flight measurement. Instrumented costs are diagnostic.
-
-| Raw case / timed scope | Mode | Calls | Signal ms/call (mean) | Measured signal seconds | Measured wall seconds | Wall seconds / signal second |
-| --- | --- | ---: | ---: | ---: | ---: | ---: |
-| [results/profiling/p100-adaptive-pipeline-full-20261008/profiles/cuda-100tx-10rx-instrumented/measurements.json](profiles/cuda-100tx-10rx-instrumented/measurements.json) — RF fleet update | instrumented_end_to_end_profile | 30 | 8.333333 | 0.250000 | 11.405662 | 45.623 |
-| [results/profiling/p100-adaptive-pipeline-full-20261008/profiles/cuda-100tx-10rx-unprofiled/measurements.json](profiles/cuda-100tx-10rx-unprofiled/measurements.json) — RF fleet update | unprofiled_end_to_end_benchmark | 30 | 8.333333 | 0.250000 | 11.169603 | 44.678 |
-| [results/profiling/p100-adaptive-pipeline-full-20261008/profiles/cuda-10tx-4rx-instrumented/measurements.json](profiles/cuda-10tx-4rx-instrumented/measurements.json) — RF fleet update | instrumented_end_to_end_profile | 30 | 8.333333 | 0.250000 | 1.682882 | 6.732 |
-| [results/profiling/p100-adaptive-pipeline-full-20261008/profiles/cuda-10tx-4rx-unprofiled/measurements.json](profiles/cuda-10tx-4rx-unprofiled/measurements.json) — RF fleet update | unprofiled_end_to_end_benchmark | 30 | 8.333333 | 0.250000 | 1.608367 | 6.433 |
-| [results/profiling/p100-adaptive-pipeline-full-20261008/profiles/cuda-2tx-2rx-instrumented/measurements.json](profiles/cuda-2tx-2rx-instrumented/measurements.json) — RF fleet update | instrumented_end_to_end_profile | 30 | 8.333333 | 0.250000 | 0.801219 | 3.205 |
-| [results/profiling/p100-adaptive-pipeline-full-20261008/profiles/cuda-2tx-2rx-unprofiled/measurements.json](profiles/cuda-2tx-2rx-unprofiled/measurements.json) — RF fleet update | unprofiled_end_to_end_benchmark | 30 | 8.333333 | 0.250000 | 0.763550 | 3.054 |
-
-The measured signal seconds column totals processed windows. Synthetic and historical short-capture jobs may reuse epochs or leave gaps; this total does not assert a continuous simulation timeline. First-use/warmup are excluded where the recorded harness excludes them. Stage milliseconds elsewhere use the same signal duration as their parent call; stage median / signal-ms is a median cost ratio, while the final column above uses sums (equivalently mean costs for fixed-duration calls).
-
-<!-- END SIGNAL TIME CONTEXT -->
+Measurement units and scope: [timing definitions](../../../docs/timing.md); [wall cost per simulated signal second](../../../docs/measurements.md). Historical and instrumented records retain their original qualification.

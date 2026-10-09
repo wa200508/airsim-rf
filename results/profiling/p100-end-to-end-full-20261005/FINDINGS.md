@@ -1,28 +1,6 @@
 # P100 complete RF pipeline findings
 
-**Timing scope:** RF fleet-update wall service; serial receivers; trajectory source and loopback consumer. [Common measurement definitions](../../../TIMING_CONVENTIONS.md) apply to units, statistics, cache state, ratios and comparisons. Historical measurements and estimates are not current fleet-update qualification.
-
-<!-- BEGIN SIGNAL TIME CONTEXT -->
-
-**Simulation-time reference:** wall seconds per simulated signal second = total measured wall service / total output signal duration per receiver. Receiver durations are concurrent, not added across receivers. This is a processing-cost ratio for the named scope; it is not a whole-flight measurement. Instrumented costs are diagnostic.
-
-| Raw case / timed scope | Mode | Calls | Signal ms/call (mean) | Measured signal seconds | Measured wall seconds | Wall seconds / signal second |
-| --- | --- | ---: | ---: | ---: | ---: | ---: |
-| [results/profiling/p100-end-to-end-full-20261005/profiles/cpu-100tx-10rx-unprofiled/measurements.json](profiles/cpu-100tx-10rx-unprofiled/measurements.json) — RF fleet update | unprofiled_end_to_end_benchmark | 30 | 8.333333 | 0.250000 | 221.088237 | 884.353 |
-| [results/profiling/p100-end-to-end-full-20261005/profiles/cpu-10tx-4rx-unprofiled/measurements.json](profiles/cpu-10tx-4rx-unprofiled/measurements.json) — RF fleet update | unprofiled_end_to_end_benchmark | 30 | 8.333333 | 0.250000 | 11.309370 | 45.237 |
-| [results/profiling/p100-end-to-end-full-20261005/profiles/cpu-2tx-2rx-unprofiled/measurements.json](profiles/cpu-2tx-2rx-unprofiled/measurements.json) — RF fleet update | unprofiled_end_to_end_benchmark | 30 | 8.333333 | 0.250000 | 2.294724 | 9.179 |
-| [results/profiling/p100-end-to-end-full-20261005/profiles/cuda-100tx-10rx-instrumented/measurements.json](profiles/cuda-100tx-10rx-instrumented/measurements.json) — RF fleet update | instrumented_end_to_end_profile | 30 | 8.333333 | 0.250000 | 25.339303 | 101.357 |
-| [results/profiling/p100-end-to-end-full-20261005/profiles/cuda-100tx-10rx-unprofiled/measurements.json](profiles/cuda-100tx-10rx-unprofiled/measurements.json) — RF fleet update | unprofiled_end_to_end_benchmark | 30 | 8.333333 | 0.250000 | 25.358207 | 101.433 |
-| [results/profiling/p100-end-to-end-full-20261005/profiles/cuda-10tx-4rx-instrumented/measurements.json](profiles/cuda-10tx-4rx-instrumented/measurements.json) — RF fleet update | instrumented_end_to_end_profile | 30 | 8.333333 | 0.250000 | 2.010833 | 8.043 |
-| [results/profiling/p100-end-to-end-full-20261005/profiles/cuda-10tx-4rx-unprofiled/measurements.json](profiles/cuda-10tx-4rx-unprofiled/measurements.json) — RF fleet update | unprofiled_end_to_end_benchmark | 30 | 8.333333 | 0.250000 | 1.961289 | 7.845 |
-| [results/profiling/p100-end-to-end-full-20261005/profiles/cuda-2tx-2rx-instrumented/measurements.json](profiles/cuda-2tx-2rx-instrumented/measurements.json) — RF fleet update | instrumented_end_to_end_profile | 30 | 8.333333 | 0.250000 | 0.790174 | 3.161 |
-| [results/profiling/p100-end-to-end-full-20261005/profiles/cuda-2tx-2rx-unprofiled/measurements.json](profiles/cuda-2tx-2rx-unprofiled/measurements.json) — RF fleet update | unprofiled_end_to_end_benchmark | 30 | 8.333333 | 0.250000 | 0.732656 | 2.931 |
-
-The measured signal seconds column totals processed windows. Synthetic and historical short-capture jobs may reuse epochs or leave gaps; this total does not assert a continuous simulation timeline. First-use/warmup are excluded where the recorded harness excludes them. Stage milliseconds elsewhere use the same signal duration as their parent call; stage median / signal-ms is a median cost ratio, while the final column above uses sums (equivalently mean costs for fixed-duration calls).
-
-<!-- END SIGNAL TIME CONTEXT -->
-
-
+**Timing scope:** RF fleet-update wall service; serial receivers; trajectory source and loopback consumer. [Common measurement definitions](../../../docs/timing.md#timing-conventions) apply to units, statistics, cache state, ratios and comparisons. Historical measurements and estimates are not current fleet-update qualification.
 Measured source: `b70637d4cdec31edbd051c71b85f15b758b087e4`, clean build. All 11 required tasks passed: CUDA preflight, 35 integration tests, three CPU unprofiled series, three CUDA unprofiled series, and three separate CUDA instrumented series. Every series has 30 timed windows after first use and three warmups, representing 250 ms of simulated signal. This is not a sustained real-time or long-flight qualification.
 
 | TX / RX | CPU median ms | P100 hybrid median ms | CPU / hybrid ratio | Hybrid p95 ms |
@@ -42,3 +20,5 @@ Repeated instrumented target-fleet event spans have medians: pack/upload 119.437
 The pipeline includes fresh private continuous I/Q, the pose/mount bridge, terrain multipath, persistent filtering/noise/12-bit ADC, loopback HTTP acknowledgements, and consumer file write/readback. Deterministic trajectories implement the AirSim interface; live AirSim physics/RPC, WAN/AMS-GRA workers, clock-rate resampling and fsync durability remain outside this qualification. Integration tests compare moving-scene basis rendering to the direct all-path oracle and test receiver continuity. Benchmark windows check sample accounting, shapes/finiteness, retained paths, ADC payload limits, hashes and file readback; they do not each run a full-fleet direct numerical oracle.
 
 The unfinished persistent-buffer/fused-projection experiment was saved in Git stash before updating the branch. It is not part of the measured source or these results. Raw SC16 captures remain local and ignored; reports, measurements, logs, hardware/source metadata, and compressed telemetry are published.
+
+Measurement units and scope: [timing definitions](../../../docs/timing.md); [wall cost per simulated signal second](../../../docs/measurements.md). Historical and instrumented records retain their original qualification.

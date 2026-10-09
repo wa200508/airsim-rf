@@ -1,7 +1,5 @@
 # P100 GPU execution controls: p100-support-sweep-20261008
 
-**Timing scope:** 100 TX × 10 RX, sequential receivers on one P100, CUDA/OptiX propagation and CUDA rendering. Every trial processes 30 updates covering **0.250 simulated signal seconds per receiver**. Each update produces about 8.333 ms of signal. Startup/first capture/three warmups are excluded; host preparation, rendering, receiver processing and loopback HTTP/file readback remain included. No live AirSim physics/RPC or WAN workers.
-
 | Trial / raw data | Measured signal s | Measured wall s | Wall s / simulated signal s | Renderer mean ms/update | Source revision |
 | --- | ---: | ---: | ---: | ---: | --- |
 | [fixed_before](fixed_before/measurements.json) | 0.250000 | 16.197047 | 64.788 | 384.940 | `518a31937c5e4a44bdcca0d08472c3f3707ada54` |
@@ -21,23 +19,6 @@ Decision: enable adaptive rank and automatic 8/16/32-lane projection groups in t
 
 The first aborted temporal sweep used a placeholder revision label and was excluded; its diagnostic files remain under `/tmp/p100-temporal-sweep-metadata-diagnostic-20261008`. Published trials explicitly identify their actual source revision. Ollama was paused and restored afterward. SC16 captures remain local/ignored.
 
-[Full qualified outcome](../p100-adaptive-pipeline-full-20261008/FINDINGS.md) · [Measurement definitions](../../../TIMING_CONVENTIONS.md).
+[Full qualified outcome](../p100-adaptive-pipeline-full-20261008/FINDINGS.md) · [Measurement definitions](../../../docs/timing.md#timing-conventions).
 
-<!-- BEGIN SIGNAL TIME CONTEXT -->
-
-**Simulation-time reference:** wall seconds per simulated signal second = total measured wall service / total output signal duration per receiver. Receiver durations are concurrent, not added across receivers. This is a processing-cost ratio for the named scope; it is not a whole-flight measurement. Instrumented costs are diagnostic.
-
-| Raw case / timed scope | Mode | Calls | Signal ms/call (mean) | Measured signal seconds | Measured wall seconds | Wall seconds / signal second |
-| --- | --- | ---: | ---: | ---: | ---: | ---: |
-| [results/profiling/p100-support-sweep-20261008/adaptive/measurements.json](adaptive/measurements.json) — RF fleet update | unprofiled_end_to_end_benchmark | 30 | 8.333333 | 0.250000 | 12.168287 | 48.673 |
-| [results/profiling/p100-support-sweep-20261008/adaptive_fused/measurements.json](adaptive_fused/measurements.json) — RF fleet update | unprofiled_end_to_end_benchmark | 30 | 8.333333 | 0.250000 | 12.153854 | 48.615 |
-| [results/profiling/p100-support-sweep-20261008/adaptive_single/measurements.json](adaptive_single/measurements.json) — RF fleet update | unprofiled_end_to_end_benchmark | 30 | 8.333333 | 0.250000 | 11.996262 | 47.985 |
-| [results/profiling/p100-support-sweep-20261008/adaptive_trim/measurements.json](adaptive_trim/measurements.json) — RF fleet update | unprofiled_end_to_end_benchmark | 30 | 8.333333 | 0.250000 | 13.304801 | 53.219 |
-| [results/profiling/p100-support-sweep-20261008/fixed_after/measurements.json](fixed_after/measurements.json) — RF fleet update | unprofiled_end_to_end_benchmark | 30 | 8.333333 | 0.250000 | 16.193799 | 64.775 |
-| [results/profiling/p100-support-sweep-20261008/fixed_before/measurements.json](fixed_before/measurements.json) — RF fleet update | unprofiled_end_to_end_benchmark | 30 | 8.333333 | 0.250000 | 16.197047 | 64.788 |
-| [results/profiling/p100-support-sweep-20261008/fixed_single/measurements.json](fixed_single/measurements.json) — RF fleet update | unprofiled_end_to_end_benchmark | 30 | 8.333333 | 0.250000 | 15.967329 | 63.869 |
-| [results/profiling/p100-support-sweep-20261008/fixed_trim/measurements.json](fixed_trim/measurements.json) — RF fleet update | unprofiled_end_to_end_benchmark | 30 | 8.333333 | 0.250000 | 20.714566 | 82.858 |
-
-The measured signal seconds column totals processed windows. Synthetic and historical short-capture jobs may reuse epochs or leave gaps; this total does not assert a continuous simulation timeline. First-use/warmup are excluded where the recorded harness excludes them. Stage milliseconds elsewhere use the same signal duration as their parent call; stage median / signal-ms is a median cost ratio, while the final column above uses sums (equivalently mean costs for fixed-duration calls).
-
-<!-- END SIGNAL TIME CONTEXT -->
+Measurement units and scope: [timing definitions](../../../docs/timing.md); [wall cost per simulated signal second](../../../docs/measurements.md). Historical and instrumented records retain their original qualification.

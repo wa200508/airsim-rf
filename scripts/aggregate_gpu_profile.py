@@ -102,7 +102,17 @@ def basis_report(root, manifest, env):
     for path,data in measurements:
         a=data['arguments'];s=data['summary'];qualified=data['accuracy']['passed']
         if data['backend']=='cuda' and not gpu_valid:qualified=False
-        lines.append(f"| [{data['backend']}](profiles/{path.name}) | {a['tx']} × {a['rx']} | {a['paths']} | {a['samples']} | {s['p50_ms']:.3f} ms | {s['p95_ms']:.3f} ms | {s['p99_ms']:.3f} ms | {s['max_ms']:.3f} ms | {data['captures_per_second']:.3f} | {s['mean_ms']/(a['samples']/a['sample_rate']*1000):.3f} | {a['samples']/a['sample_rate']*1000:.6f} | {len(data['rows'])*a['samples']/a['sample_rate']:.6f} | {sum(r['total_ms'] for r in data['rows'])/1000:.6f} | {data['misses_120hz']}/{len(data['rows'])} | {'PASS' if qualified else 'INVALID'} |")
+        # Historical/incomplete records must remain reportable without
+        # inventing a sample rate or using a median as a mean.
+        signal_ms = a['samples']/a['sample_rate']*1000 if a.get('sample_rate',0)>0 else None
+        count = len(data['rows'])
+        wall_ms = (sum(r['total_ms'] for r in data['rows'])
+                   if count and all('total_ms' in r for r in data['rows']) else
+                   s.get('mean_ms')*count if s.get('mean_ms') is not None else None)
+        def measured(value, digits=6):
+            return '—' if value is None else f'{value:.{digits}f}'
+        normalized = measured(wall_ms/(count*signal_ms) if wall_ms is not None and signal_ms is not None and count else None,3)
+        lines.append(f"| [{data['backend']}](profiles/{path.name}) | {a['tx']} × {a['rx']} | {a['paths']} | {a['samples']} | {s['p50_ms']:.3f} ms | {s['p95_ms']:.3f} ms | {s['p99_ms']:.3f} ms | {s['max_ms']:.3f} ms | {data['captures_per_second']:.3f} | {normalized} | {measured(signal_ms)} | {measured(count*signal_ms/1000 if signal_ms is not None else None)} | {measured(wall_ms/1000 if wall_ms is not None else None)} | {data['misses_120hz']}/{len(data['rows'])} | {'PASS' if qualified else 'INVALID'} |")
         key=tuple(a.get(k) for k in ('tx','rx','paths','samples','sample_rate','max_delay_us','max_doppler_hz','taps','block_samples','tolerance'))
         if qualified:pairs.setdefault(key,{})[data['backend']]=data
     if not measurements:lines.append('| No successful measurements | — | — | — | — | — | — | — | — | — | — |')

@@ -1,25 +1,6 @@
 # P100 legacy Sionna profiling results
 
-**Timing scope:** Historical local RF service; model/backend and timed region are specified below. [Common measurement definitions](../../../TIMING_CONVENTIONS.md) apply to units, statistics, cache state, ratios and comparisons. Historical measurements and estimates are not current fleet-update qualification.
-
-<!-- BEGIN SIGNAL TIME CONTEXT -->
-
-**Simulation-time reference:** wall seconds per simulated signal second = total measured wall service / total output signal duration per receiver. Receiver durations are concurrent, not added across receivers. This is a processing-cost ratio for the named scope; it is not a whole-flight measurement. Instrumented costs are diagnostic.
-
-| Raw case / timed scope | Mode | Calls | Signal ms/call (mean) | Measured signal seconds | Measured wall seconds | Wall seconds / signal second |
-| --- | --- | ---: | ---: | ---: | ---: | ---: |
-| [results/profiling/p100-legacy-full-20261003/metrics/cpu_100tx_1rx.json](metrics/cpu_100tx_1rx.json) — Local RF service | unprofiled_benchmark | 30 | 2.048000 | 0.061440 | 284.141762 | 4624.703 |
-| [results/profiling/p100-legacy-full-20261003/metrics/cpu_2tx_1rx.json](metrics/cpu_2tx_1rx.json) — Local RF service | unprofiled_benchmark | 200 | 2.048000 | 0.409600 | 74.521771 | 181.938 |
-| [results/profiling/p100-legacy-full-20261003/metrics/cuda_100tx_1rx.json](metrics/cuda_100tx_1rx.json) — Local RF service | unprofiled_benchmark | 30 | 2.048000 | 0.061440 | 284.691005 | 4633.643 |
-| [results/profiling/p100-legacy-full-20261003/metrics/cuda_2tx_1rx.json](metrics/cuda_2tx_1rx.json) — Local RF service | unprofiled_benchmark | 200 | 2.048000 | 0.409600 | 97.838452 | 238.863 |
-| [results/profiling/p100-legacy-full-20261003/profiles/cuda_100tx_1rx_events.json](profiles/cuda_100tx_1rx_events.json) — Local RF service | instrumented_profile | 5 | 2.048000 | 0.010240 | 47.512632 | 4639.906 |
-| [results/profiling/p100-legacy-full-20261003/profiles/cuda_2tx_1rx_events.json](profiles/cuda_2tx_1rx_events.json) — Local RF service | instrumented_profile | 5 | 2.048000 | 0.010240 | 2.427662 | 237.076 |
-
-The measured signal seconds column totals processed windows. Synthetic and historical short-capture jobs may reuse epochs or leave gaps; this total does not assert a continuous simulation timeline. First-use/warmup are excluded where the recorded harness excludes them. Stage milliseconds elsewhere use the same signal duration as their parent call; stage median / signal-ms is a median cost ratio, while the final column above uses sums (equivalently mean costs for fixed-duration calls).
-
-<!-- END SIGNAL TIME CONTEXT -->
-
-
+**Timing scope:** Historical local RF service; model/backend and timed region are specified below. [Common measurement definitions](../../../docs/timing.md#timing-conventions) apply to units, statistics, cache state, ratios and comparisons. Historical measurements and estimates are not current fleet-update qualification.
 Status: **COMPLETE — required collection tasks passed**.
 
 **These results measure Sionna 0.19.2 native propagation plus the branch’s original I/Q/receiver chain. They do not measure the unchanged `profiling/p100` propagation solver.**
@@ -126,3 +107,5 @@ The two-beacon/two-receiver example captures and plots are in `raw/example/`. No
 [Manifest](manifest.json) · [Scope](legacy_scope.json) · [Profile summary](profile_summary.json) · [Checksums](checksums.json)
 
 Sampled telemetry is preserved in `telemetry/gpu_telemetry.csv.gz`; example plots, metadata and JSON summary are preserved in `example_summary/`. Binary I/Q captures remain local in `raw/example/`.
+
+Measurement units and scope: [timing definitions](../../../docs/timing.md); [wall cost per simulated signal second](../../../docs/measurements.md). Historical and instrumented records retain their original qualification.

@@ -1,3 +1,5 @@
+<a id="timing-conventions"></a>
+
 # Timing and measurement conventions
 
 A time must name its **operation, clock, workload, backend, statistic and sample count**. A GPU backend label identifies where a stage executes; its synchronized wall time also includes host preparation, dispatch, synchronization and transfers. It is not a GPU kernel time or a median across the test suite.
@@ -13,7 +15,7 @@ A time must name its **operation, clock, workload, backend, statistic and sample
 
 The exact harness/JSON defines boundaries when it differs from this table. A report must state that difference. “End-to-end” means the listed RF stages, never an implicit live simulator, long flight or distributed deployment.
 
-For the latest 100-TX × 10-RX P100 measurement, **553.685 ms is the unprofiled median synchronized wall service time for one RF fleet update**. Each receiver gets 16,666 or 16,667 complex samples at 2 MS/s (~8.333 ms signal). Ten receivers execute sequentially on one P100; their simulated durations are concurrent and must not be summed as ten times the signal duration. Thirty timed updates span 250 ms of simulated signal, after a first capture and three warmups. Sources, poses and physical channels change each update. Sionna RT 2.2.0 / Mitsuba 3.8.0 / Dr.Jit 1.3.1 use CUDA/OptiX propagation; CuPy renders on CUDA. Host stages remain included. The previous **843.630 ms** result is a separate LLVM-propagation/CUDA-rendering configuration with Mitsuba 3.9.1 / Dr.Jit 1.5.0. Their numerical difference is a **cross-configuration comparison**, not an isolated optimization gain.
+For the latest 100-TX × 10-RX P100 measurement, **371.859 ms is the unprofiled median synchronized wall service time for one RF fleet update**, generating about 8.333 ms of signal per receiver. Thirty measured updates cover 0.250 signal seconds per receiver and consume 11.1696 wall seconds: **44.678 wall seconds per signal second**. Ten receiver jobs execute serially, but their signal durations are concurrent and count once. These are warmed trajectory-source RF updates, not a live AirSim flight. [Current scope, stack and qualification](performance.md). The earlier 553.685 ms median used the same GPU dependency stack and is a matched workload control. The 843.630 ms result used LLVM propagation and different dependencies; that comparison cannot isolate an optimization gain.
 
 Report wall times in **ms per named operation**. State TX/RX, output samples/rate, attempts versus actual valid paths, precision, declared delay/Doppler support and tolerance, hardware, dependency versions, worker limits and source revision. A configured update frequency or RF sample rate does not prove wall-clock throughput. Synthetic 1,028 valid paths/link are a different workload from 1,028 diffuse attempts/link producing variable scene returns.
 
@@ -27,4 +29,4 @@ Claim an optimization gain only from a matched control: same scene epochs, sampl
 
 Correctness qualification is separate from speed. Distinguish final-window numerical reference checks, per-update continuity/hash/range checks, solver/integration tests and untested live deployment. Telemetry is sampled whole-device utilization/memory and can miss short activity; 0% sampled utilization does not establish zero GPU execution.
 
-Regenerate normalized context with `python3 scripts/update_timing_context.py`; verify it with `--check`. The runtime and stage table generators have their own `--check` commands. Normalization reads recorded samples and never reruns or changes numerical measurements.
+Regenerate the single measurement index with `python3 scripts/update_timing_context.py`; verify it with `--check`. The runtime and stage table generators have their own `--check` commands. Normalization reads recorded samples and never reruns or changes numerical measurements.

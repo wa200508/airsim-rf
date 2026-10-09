@@ -63,41 +63,10 @@ def main():
     for directory in ('results', 'research_results', 'benchmarks/results'):
         for path in sorted((ROOT / directory).rglob('*.json')):
             records.extend(measurements(path))
-    by_path = {}
-    for r in records:
-        by_path.setdefault(r[0], []).append(r)
     changed = []
-    catalog = ROOT / 'SIGNAL_TIME_RESULTS.md'
-    contents = '# Recorded wall time per simulated signal second\n\nThis index preserves historical configurations and failed qualification labels; a listed timing is not automatically a qualified result. For scope, qualification and hardware follow each raw case and its original report. [Definitions](TIMING_CONVENTIONS.md).\n\n' + context(records, ROOT) + '\n'
+    catalog = ROOT / 'docs/measurements.md'
+    contents = '<a id="signal-time-results"></a>\n\n# Recorded wall time per simulated signal second\n\nHistorical configurations and failed qualification remain in this index. Follow each raw case for scope, hardware and qualification. [Definitions](timing.md).\n\n' + context(records, catalog.parent) + '\n'
     targets = {catalog: contents}
-    for path in sorted(ROOT.rglob('*.md')):
-        if '.git' in path.parts or '.venv' in path.parts or path.name in ('SIGNAL_TIME_RESULTS.md', 'TIMING_AUDIT.md', 'TIMING_CONVENTIONS.md'):
-            continue
-        original = path.read_text()
-        if '**Timing scope:**' not in original and not re.search(r'(?i)\b(?:timings?|latency|throughput|speedup|wall time|service time|median)\b', original):
-            continue
-        selected = set()
-        for match in re.finditer(r'(?:\]\(|`)([^\s)`]+\.json)(?:\)|`)', original):
-            name = match.group(1)
-            for candidate in (path.parent/name, ROOT/name):
-                candidate = candidate.resolve()
-                if candidate in by_path:
-                    selected.add(candidate)
-        if path.name in ('REPORT.md', 'FINDINGS.md', 'README.md') and path.is_relative_to(ROOT/'results'):
-            selected.update(p for p in by_path if p.is_relative_to(path.parent))
-        selected.update(p for p in by_path if path.is_relative_to(ROOT/'research_results') and p.parent == path.parent)
-        local = [r for r in records if r[0] in selected]
-        # Every timing-bearing document states units/denominator, even if it only contains planning estimates.
-        fallback = ('**Simulation-time reference:** use **wall seconds per simulated signal second**, not an unlabeled whole-run time. For fixed windows, divide mean service milliseconds by samples/sample-rate × 1,000. Stage costs use their parent window denominator. Geometry-only solves and analytic operation counts have no generated signal duration; a signal-time ratio is **not applicable**, unless an explicit update interval is assumed and labeled as a scheduling estimate. Unrecorded flight costs remain unknown. See [recorded normalized cases](' + os.path.relpath(catalog, path.parent) + ').')
-        block = context(local, path.parent) if local else BEGIN+'\n\n'+fallback+'\n\n'+END
-        if BEGIN in original:
-            before, rest = original.split(BEGIN, 1)
-            _, after = rest.split(END, 1)
-            updated = before+block+after
-        else:
-            # Place denominator before detailed claims/tables, after title and scope note.
-            updated = original.rstrip()+'\n\n'+block+'\n'
-        targets[path] = updated
     for path, updated in targets.items():
         if not path.exists() or path.read_text() != updated:
             changed.append(str(path.relative_to(ROOT)))

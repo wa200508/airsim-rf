@@ -116,12 +116,12 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--check', action='store_true')
     args = parser.parse_args()
-    path = ROOT / 'RUNTIME_STATUS.md'
+    path = ROOT / 'docs/archive/runtime.md'
     current = path.read_text()
     assert current.count(BEGIN) == current.count(END) == 1
     before, rest = current.split(BEGIN)
     _, after = rest.split(END)
-    updated = before + BEGIN + '\n\n' + tables() + '\n\n' + END + after
+    updated = before + BEGIN + '\n\n' + tables().replace('](results/', '](../../results/').replace('](benchmarks/', '](../../benchmarks/').replace('](research_results/', '](../../research_results/') + '\n\n' + END + after
     if args.check and updated != current:
         raise SystemExit('Stage timing tables differ from raw captures.')
     if not args.check:

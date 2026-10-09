@@ -44,13 +44,13 @@ def main():
     parser.add_argument('--check', action='store_true', help='Fail if documentation differs from source JSON')
     args = parser.parse_args()
     stale = []
-    for name in ('README.md', 'RUNTIME_STATUS.md'):
+    for name in ('docs/archive/runtime.md',):
         path = ROOT / name
         current = path.read_text()
         assert current.count(BEGIN) == current.count(END) == 1
         before, rest = current.split(BEGIN)
         _, after = rest.split(END)
-        updated = before + BEGIN + '\n\n' + table() + '\n\n' + END + after
+        updated = before + BEGIN + '\n\n' + table().replace('](results/', '](../../results/') + '\n\n' + END + after
         if updated != current:
             stale.append(name)
             if not args.check:

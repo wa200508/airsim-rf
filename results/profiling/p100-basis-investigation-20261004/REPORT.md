@@ -1,24 +1,6 @@
 # P100 renderer latency and timestamp investigation
 
-**Timing scope:** Renderer-call wall service or separately labeled projection/kernel-call experiment; excludes propagation and receiver processing. [Common measurement definitions](../../../TIMING_CONVENTIONS.md) apply to units, statistics, cache state, ratios and comparisons. Historical measurements and estimates are not current fleet-update qualification.
-
-<!-- BEGIN SIGNAL TIME CONTEXT -->
-
-**Simulation-time reference:** wall seconds per simulated signal second = total measured wall service / total output signal duration per receiver. Receiver durations are concurrent, not added across receivers. This is a processing-cost ratio for the named scope; it is not a whole-flight measurement. Instrumented costs are diagnostic.
-
-| Raw case / timed scope | Mode | Calls | Signal ms/call (mean) | Measured signal seconds | Measured wall seconds | Wall seconds / signal second |
-| --- | --- | ---: | ---: | ---: | ---: | ---: |
-| [results/profiling/p100-basis-investigation-20261004/batch100.json](batch100.json) — Renderer call | unprofiled_basis_benchmark | 10 | 8.333500 | 0.083335 | 1.387056 | 16.644 |
-| [results/profiling/p100-basis-investigation-20261004/batch16.json](batch16.json) — Renderer call | unprofiled_basis_benchmark | 10 | 8.333500 | 0.083335 | 1.367415 | 16.409 |
-| [results/profiling/p100-basis-investigation-20261004/batch32.json](batch32.json) — Renderer call | unprofiled_basis_benchmark | 10 | 8.333500 | 0.083335 | 1.360671 | 16.328 |
-| [results/profiling/p100-basis-investigation-20261004/batch8.json](batch8.json) — Renderer call | unprofiled_basis_benchmark | 10 | 8.333500 | 0.083335 | 1.234937 | 14.819 |
-| [results/profiling/p100-basis-investigation-20261004/kernel_capture.json](kernel_capture.json) — Renderer call | unprofiled_basis_benchmark | 3 | 8.333500 | 0.025000 | 0.370067 | 14.802 |
-
-The measured signal seconds column totals processed windows. Synthetic and historical short-capture jobs may reuse epochs or leave gaps; this total does not assert a continuous simulation timeline. First-use/warmup are excluded where the recorded harness excludes them. Stage milliseconds elsewhere use the same signal duration as their parent call; stage median / signal-ms is a median cost ratio, while the final column above uses sums (equivalently mean costs for fixed-duration calls).
-
-<!-- END SIGNAL TIME CONTEXT -->
-
-
+**Timing scope:** Renderer-call wall service or separately labeled projection/kernel-call experiment; excludes propagation and receiver processing. [Common measurement definitions](../../../docs/timing.md#timing-conventions) apply to units, statistics, cache state, ratios and comparisons. Historical measurements and estimates are not current fleet-update qualification.
 The previous updates were verified published at `cc5efad`. This investigation runs the same numerical code in the immutable full-run image (source `b4d48f5`), with the same Pascal-compatible CuPy/CUDA libraries and LLVM-reference startup workaround. No production renderer algorithms, precision, path budgets or accuracy thresholds were changed.
 
 ## Exactly what the median measures
@@ -66,3 +48,5 @@ No repair is applied here. The required suite remains failed. Per-capture compar
 No wider transmitter scaling was performed. The earlier near-16-GiB boundary belonged to legacy ray tracing; this renderer collection sampled only 625 MiB of whole-GPU memory. Memory capacity and numerical correctness are distinct from this computation cost.
 
 [Original full report](../p100-basis-full-20261004/REPORT.md) · [Summary](summary.json) · [Kernel diagnosis](kernel_diagnosis.json) · [Timestamp diagnosis](timestamp_diagnosis.json) · [Checksums](checksums.json)
+
+Measurement units and scope: [timing definitions](../../../docs/timing.md); [wall cost per simulated signal second](../../../docs/measurements.md). Historical and instrumented records retain their original qualification.

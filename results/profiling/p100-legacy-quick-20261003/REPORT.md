@@ -21,4 +21,4 @@ The collector originally generated current-solver annotations in the raw JSON/pr
 | nsys_100tx_1rx | unavailable |
 | pluto_example | ok |
 
-[Manifest](manifest.json) · [Logs](logs/) · [Checksums](checksums.json)
+[Manifest](manifest.json) · [Logs](logs) · [Checksums](checksums.json)

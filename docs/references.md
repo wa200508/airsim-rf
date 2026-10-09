@@ -1,6 +1,279 @@
-# Published precedents for environmental RF and terrain I/Q simulation
+# References
 
-**Timing scope:** Mixed scope or architecture/reference document; each workload/table retains its stated timed operation. [Common measurement definitions](TIMING_CONVENTIONS.md) apply to units, statistics, cache state, ratios and comparisons. Historical measurements and estimates are not current fleet-update qualification.
+- [Iq Rendering References](#iq-rendering-references)
+- [Environmental Rf References](#environmental-rf-references)
+
+<a id="iq-rendering-references"></a>
+
+## Published implementations of channel-to-I/Q rendering
+
+
+
+Sources and implementation paths reviewed on **2026-10-05**. This review
+complements the [environmental RF comparison](references.md#environmental-rf-references)
+and [affordable real-time architecture study](archive/planning.md#affordable-realtime-rf).
+It distinguishes actual sample processing from channel generation, link
+performance estimation and visualization. The external implementations were
+inspected; they were not benchmarked locally against our workload.
+
+### The operation and the workload
+
+Time-domain channel simulation, also called channel emulation, takes complex
+transmitted samples, applies propagation delays, complex gains and temporal
+evolution, and sums the contributions at each receiver. Fractional delays
+require a reconstruction/interpolation convention. Noise, receiver filtering,
+oscillator errors and sample-clock conversion are additional processing.
+
+A tapped delay line can preserve Doppler: its complex coefficients must evolve
+at the required sample times. Freezing the coefficients over a block loses
+intra-block evolution; the filter representation itself does not require that
+approximation. A static FFT convolution alone has the same limitation.
+
+Our target is 100 independent transmitters and 10 receivers, continuous 2 MS/s
+I/Q, 120 Hz scene/channel updates, first-order environmental propagation and
+moving platforms. The renderer stress case supplies 1,028 valid paths per
+directed link and 16,667 output samples per update. Each path retains fractional
+delay and its own narrowband Doppler phase evolution. Independent links keep
+private source buffers and transforms. Neither path pruning nor a common
+link-wide Doppler may be used to make this workload cheaper.
+
+None of the references below establishes this exact workload at 120 Hz on a
+P100 or within the approximately $5,000 compute budget.
+
+### Comparison
+
+| Implementation | Actual output / computation | Delay and temporal treatment | Relevance and qualification limit |
+| --- | --- | --- | --- |
+| Sionna PHY [1](#ref1), [2](#ref2) | Complex output samples from supplied complex input samples | Sinc conversion from physical delays; time-varying taps can change every sample | Strong correctness baseline; dense sample-by-delay channel tensors can be large |
+| GNU Radio [3](#ref3) | Streaming complex samples through a fading filter | Sinc fractional-delay weights; fading coefficients rebuilt per output sample | Real streaming precedent; statistical faders and nested CPU loops are not our scene-based scaling result |
+| NVIDIA Sionna Research Kit [4](#ref4) | CUDA filtering of live I/Q in circular buffers | Integer delay indices; CIR constant within each OFDM symbol | Useful CUDA/buffering reference; SISO and symbol-static channel assumptions differ from our target |
+| ACHEM/CHEM [5](#ref5), [6](#ref6) | SDR-facing I/Q processing, resampling, filtering and impairments | Sionna adapter rounds delays and caps tap support; inspected Doppler stage is a common link frequency shift | Useful service and SDR integration architecture; does not establish individual-path Doppler fidelity |
+| HermesPy multipath fading [7](#ref7) | Delayed, weighted complex sample copies summed into a receiver signal | Inspected fading implementation rounds delays and generates sample-varying fading | Transparent sample-level reference; not a qualified GPU solution for our path budget |
+| Reduced-rank channel-emulation research [8](#ref8), [9](#ref9) | Arbitrary complex input filtered through a reconstructed time-varying channel | Controlled delay/Doppler subspace approximation | Closest architectural precedent for our basis renderer; projection still depends on physical path count |
+| SimART [10](#ref10) | Channels, beam evaluation, link metrics and ROS observations | Complex CFR evaluated at subcarrier frequencies and symbol timestamps | Scene/integration complement; inspected main runner does not generate continuous receiver I/Q |
+
+### Sionna PHY: physical paths to sampled filtering
+
+`cir_to_time_channel()` converts complex path coefficients and delays into
+sampled channel taps using sinc weights. Its convention assumes sinc transmit
+pulse shaping and receive filtering. Truncating the allocated delay support
+introduces a numerical approximation; our finite normalized Lanczos operator
+is not automatically identical to this convention [1](#ref1).
+
+`ApplyTimeChannel` gathers delayed complex input samples, multiplies by the
+time-varying channel tensor, sums delay taps, transmit antennas and transmitters,
+and optionally adds noise. The channel tensor includes a time index for every
+output sample. Doppler is retained if the supplied path/tap coefficients evolve
+at those times; the operator does not generate missing Doppler evolution on its
+own [2](#ref2).
+
+This supplies a direct reference for arbitrary waveform filtering without
+requiring OFDM. Its channel storage scales with links, antenna pairs, output
+samples and delay taps. Constructing and storing the whole tensor is a different
+tradeoff from our compact basis filters. Using Sionna PHY also does not resolve
+the separate Sionna RT/Dr.Jit compatibility problem on the P100.
+
+### GNU Radio: per-sample streaming evolution
+
+In `selective_fading_model_impl.cc`, `work()` first generates fading sequences.
+For every output sample it clears the filter taps, adds each fading component
+using sinc weights for its fractional delay, then multiplies the filter by input
+history and sums the result [3](#ref3).
+
+The complex stream can contain arbitrary modulation. The standard coefficients
+come from statistical fading processes, rather than our environmental ray
+paths. This is evidence that time-varying filtering preserves sample-level
+evolution, not evidence that its path-by-tap-by-sample loops meet our deadline.
+
+### NVIDIA Sionna Research Kit: real CUDA channel emulation
+
+The kit applies CIRs to I/Q inside an OpenAirInterface radio pipeline. CIRs can
+arrive from files or ZeroMQ. Slot samples are held in circular buffers; the
+CUDA kernel accumulates delayed, complex-weighted samples, with parallelism
+across output samples and tap contributions [4](#ref4).
+
+The reviewed tutorial documents SISO operation, a CIR held constant during each
+OFDM symbol and a maximum tap delay of 256 samples. It also normalizes channel
+gain and limits noise scaling for the connected-UE demonstration. That is not
+an absolute-voltage calibration suitable for adoption unchanged into ESM.
+The tutorial allows processing taps in strength order to reduce their count;
+we do not adopt that reduction for the all-path benchmark.
+
+This implementation is useful for persistent buffers, integration and kernel
+layout. Its real-time demonstration is not a measurement of 100 independent
+emitters with individual sample-evolving path Dopplers. The documented benefit
+of shared host/device memory on DGX Spark and Jetson platforms also must not be
+assumed for a discrete PCIe P100.
+
+### ACHEM/CHEM: SDR-facing service architecture
+
+ACHEM combines virtual USRPs with an I/Q-level channel service. Its pipeline
+receives sample buffers, converts formats, resamples, applies channel effects
+and returns receiver samples. Worker threads and buffer pools support ongoing
+processing. The inspected DSP source includes causal complex FIR filtering
+using VOLK dot products [5](#ref5).
+
+The Sionna extension obtains delays and complex gains and accumulates paths
+into a tap vector. `cirToTaps()` rounds each delay to a sample position and
+discards contributions beyond the configured support; the documented default
+cap is 64 taps. The extension's documented polling interval has a minimum of
+50 ms [6](#ref6).
+
+In the inspected `Channel::applyFrequencyOffset()`, configured Doppler and
+oscillator offset are added into one frequency shift applied to the link's
+samples. That preserves a common phase evolution, but is not independent
+Doppler for each physical path. Its rounded/capped adapter and update interval
+therefore cannot be treated as an equivalent implementation of our workload.
+Its service boundaries, SDR interfaces and processing measurements remain
+useful architectural precedents.
+
+### HermesPy: explicit delayed sample copies
+
+The inspected `MultipathFadingSample` implementation generates sample-varying
+complex fading for each delay component, multiplies the input samples by that
+sequence, shifts the result into the output, and applies the spatial antenna
+response. Its fading path generator uses rounded sample delays, despite the
+general API accepting an interpolation mode [7](#ref7).
+
+This is a readable sample-domain example for comparison with direct rendering.
+It does not demonstrate our finite fractional-delay operator, arbitrary
+scene-derived channels or GPU capacity. QuaDRiGa channel generation, available
+through other HermesPy adapters, must also be distinguished from actually
+applying a channel to waveform samples.
+
+### Reduced-rank literature and our projection bottleneck
+
+Kaltenberger, Zemen and Ueberhuber (2007) describe a multidimensional discrete
+prolate spheroidal (DPS) subspace representation of geometry-based MIMO
+channels. They exploit bounded delay/Doppler support and a numerical accuracy
+target to reduce the representation. Their reported complexity reductions are
+for the paper's hardware precision and parameters [8](#ref8).
+
+Hofer, Xu and Zemen (2017) implement a related architecture on an SDR/FPGA:
+the host generates physical paths and projects them into basis coefficients;
+the FPGA reconstructs a time-varying channel and convolves it with complex
+input samples. Fractional delays and Doppler are supported. Section IV tests
+random complex input with 120 paths, 10 MHz signal bandwidth, 20 MHz
+oversampled processing, maximum delay 0.4 microseconds and an accuracy target
+of approximately 1e-6 [9](#ref9). These differ materially from our declared
+delay bounds and default temporal tolerance of 1e-10.
+
+The important distinction is that reconstruction cost can become independent
+of physical path count **after projection**. Their host coefficient
+construction still scales with paths and basis dimensions; the paper gives
+O(paths × time rank × frequency rank). It does not eliminate channel setup.
+
+Our [Doppler-basis FFT renderer](rendering.md#doppler-basis-fft) uses a Chebyshev temporal
+expansion and finite fractional-delay weights, rather than their DPS
+construction. It applies each temporal filter to private sampled inputs and
+recombines the filtered outputs with sample-varying basis functions. The
+Jacobi–Anger identities and error bound in that document have their own
+attribution; they are not quoted from these papers.
+
+The P100 [projection investigation](../results/profiling/p100-basis-investigation-20261004/REPORT.md)
+shows why projection remains important: the default 100-TX/one-RX case performs
+750,028,800 weighted complex contributions per window. A separate instrumented
+capture measured approximately 67.52 ms around projection kernel calls. This
+is not a pure Nsight instruction measurement or the unprofiled wall latency.
+The original full renderer's median was 122.67 ms and its timestamp correctness
+qualification failed. Subsequent
+[qualified optimization results](../results/profiling/p100-basis-optimized-full-20261004/FINDINGS.md)
+fix that phase bug and report 56.167 ms median with 76 CUDA correctness tests
+passing, using warp-cooperative projection and 100 links per batch. The
+remaining mean renderer gap to 120 Hz is about 6.80 times. The original
+projection timing above belongs to the earlier gather kernel, not the new
+configuration. Neither the cited papers nor a faster isolated projector
+establishes complete 120 Hz service.
+
+The [published projection comparisons](../results/profiling/p100-basis-optimization-20261004/README.md)
+now include gather, warp-cooperative and dense matrix implementations. Further
+work on reusable delay maps, sparse/tiled or matrix-based projection must
+preserve every path and the selected tolerance, and compare with the qualified
+warp implementation rather than assume a matrix formulation is faster.
+A delay/frequency subspace is another research candidate, whose rank and error
+must be qualified against the declared bounds. Published short-delay or
+lower-precision results cannot replace that qualification.
+
+### SimART: channels and metrics, not an I/Q renderer
+
+SimART's main runner calls Sionna `paths.cfr()` for subcarrier frequencies and
+OFDM-symbol timestamps. It uses the complex response for beamforming, then
+derives power/SNR quantities and invokes `PHYAbstraction` for modeled decoding
+outcomes. This is not sample generation, waveform filtering or demodulation
+of an actual receiver stream [10](#ref10).
+
+Its RF observation export converts path gains to magnitudes and publishes
+delay, Doppler, angles and strength. The message does not preserve complex
+path phase. The likely rationale is that this interface serves visualization
+and channel summaries while phase-sensitive evaluation happens internally;
+no explicit author explanation for omitting phase was found. A bridge to our
+renderer must preserve the original real/imaginary coefficients and their
+time, frequency and antenna conventions. Delay and Doppler alone cannot
+recover all reflection/polarization phase.
+
+SimART is consequently relevant for aligned scene assets, motion, visualization
+and replay. It supplies no inspected equivalent of our continuous all-path
+I/Q renderer or a matching 120 Hz benchmark.
+
+### Sources and inspected code
+
+<a id="ref1"></a>
+**[1] NVIDIA, Sionna PHY.** [`cir_to_time_channel` source](https://nvlabs.github.io/sionna/_modules/sionna/phy/channel/utils.html).
+Physical-path to sampled time-channel conversion, sinc convention and support.
+
+<a id="ref2"></a>
+**[2] NVIDIA, Sionna PHY.** [`ApplyTimeChannel` source](https://nvlabs.github.io/sionna/_modules/sionna/phy/channel/apply_time_channel.html).
+Time-varying complex filtering, tensor shapes and transmitter summation.
+
+<a id="ref3"></a>
+**[3] GNU Radio.** [`selective_fading_model_impl.cc`](https://github.com/gnuradio/gnuradio/blob/main/gr-channels/lib/selective_fading_model_impl.cc).
+Per-output-sample fading, fractional-delay tap construction and streaming filtering.
+
+<a id="ref4"></a>
+**[4] NVIDIA, Sionna Research Kit.** [Real-time Channel Emulator tutorial](https://nvlabs.github.io/sionna/rk/tutorials/channel_emulation/channel_emulation.html),
+[`chn_emu_cuda.cu`](https://github.com/NVlabs/sionna-rk/blob/main/plugins/channel_emulation/cuda_emulator/src/chn_emu_cuda.cu).
+CUDA implementation, buffering, source protocols and documented limitations.
+
+<a id="ref5"></a>
+**[5] ACHEM/CHEM.** [I/Q service documentation](https://docs.digitaltwin.sh/chem/),
+[DSP filtering source](https://github.com/anilgurses/CHEM/blob/main/src/chem/dsp/channel.cpp),
+[link processing source](https://github.com/anilgurses/CHEM/blob/main/src/chem/channel/channel.cpp).
+For the framework publication see [Gürses and Sichitiu, *ACHEM: A Real-Time Digital Twin Framework with Channel and Radio Emulation*, arXiv:2604.04742 (2026)](https://arxiv.org/abs/2604.04742).
+Implementation claims here come from the inspected code and documentation.
+
+<a id="ref6"></a>
+**[6] ACHEM/CHEM.** [Sionna RT extension documentation](https://docs.digitaltwin.sh/sionna/),
+[`sionna_client.cpp`](https://github.com/anilgurses/CHEM/blob/main/extensions/sionna/src/sionna_client.cpp).
+Complex-gain export, rounded delays, tap cap and polling interval.
+
+<a id="ref7"></a>
+**[7] Barkhausen Institut, HermesPy.** [Multipath fading documentation](https://hermespy.org/api/channel/fading/fading.html),
+[`fading.py`](https://github.com/Barkhausen-Institut/hermespy/blob/master/hermespy/channel/fading/fading.py).
+Inspected path impulse generator and `_propagate` sample processing.
+
+<a id="ref8"></a>
+**[8] F. Kaltenberger, T. Zemen and C. W. Ueberhuber.**
+[*Low-Complexity Geometry-Based MIMO Channel Simulation*](https://doi.org/10.1155/2007/95281),
+EURASIP Journal on Advances in Signal Processing, 2007, article 095281.
+Public literature precedent, not a verified drop-in open-source renderer.
+
+<a id="ref9"></a>
+**[9] M. Hofer, Z. Xu and T. Zemen.**
+[*Real-Time Channel Emulation of a Geometry-Based Stochastic Channel Model on a SDR Platform*](https://thomaszemen.org/papers/Hofer17-SPAWC-paper.pdf),
+IEEE SPAWC, 2017. Sections II–IV describe projection, basis reconstruction,
+time-varying convolution and tested parameters. This is distinct from the
+[2019 Hofer et al. paper already discussed](archive/planning.md#affordable-realtime-rf).
+
+<a id="ref10"></a>
+**[10] SimART.** [Repository](https://github.com/guchuanv-alt/SimART),
+[main simulation runner](https://github.com/guchuanv-alt/SimART/blob/main/SimART_GUI/scripts/sionna_sim_only_topic2.py),
+[RF path message](https://github.com/guchuanv-alt/SimART/blob/main/rf_msgs/msg/RfPathObservation.msg),
+[Yan et al., *SimART: A Unified and Open Real-world Multimodal Simulation Platform for 6G Integrated Sensing and Communication*, arXiv:2605.13309 (2026)](https://arxiv.org/abs/2605.13309).
+Reviewed main commit: `f9b1937bd909b33c0705c7deaa137adca54b5fe0`.
+
+<a id="environmental-rf-references"></a>
+
+## Published precedents for environmental RF and terrain I/Q simulation
 
 
 
@@ -13,7 +286,7 @@ presentations are identified separately below. A vendor demonstration establishe
 that a workflow exists; it does not independently validate our implementation.
 
 For the downstream waveform step, the **2026-10-05**
-[channel-to-I/Q implementation review](IQ_RENDERING_REFERENCES.md) adds inspected
+[channel-to-I/Q implementation review](references.md#iq-rendering-references) adds inspected
 sample-processing code from Sionna PHY, GNU Radio, NVIDIA Sionna Research Kit,
 ACHEM/CHEM and HermesPy, plus reduced-rank channel-emulation papers and the
 SimART comparison. It documents fractional-delay and Doppler assumptions
@@ -33,14 +306,14 @@ pipeline are established approaches. Persistent scattering phase, calibrated
 surface backscatter and convergence of coherent I/Q remain work for this
 project. The sources do not establish our 100-TX/10-RX runtime or GPU sizing.
 
-## What is being compared
+### What is being compared
 
 The project has two relevant experiments:
 
-* The [network terrain scenario](TERRAIN_SCENARIO.md) uses 100 independent
+* The [network terrain scenario](terrain.md#terrain-scenario) uses 100 independent
   transmitters and one receiver, first-order surface paths, a synthetic DEM,
   delay/Doppler diagnostics and a selected-link coherent LFM response.
-* The [focused terrain scan](TERRAIN_SIGNATURE.md) moves one independent TX/RX
+* The [focused terrain scan](terrain.md#terrain-signature) moves one independent TX/RX
   pair, separated by 2 m, across the same DEM at 40 m datum altitude. Downward
   12-degree antennas and a 200 MHz LFM pulse reveal terrain relief in a
   pulse-compressed I/Q waterfall. This is a geometric demonstration, with noise
@@ -64,9 +337,9 @@ communications, with AirSim scene truth and one GPU worker per receiver.
 | RadarSimPy ground multipath [16](#ref16) | Both TX-side and RX-side environmental routes affecting coherent signal | FMCW complex samples and interference amplitude curves | Includes target-plus-ground routes beyond our accepted one-surface-interaction limit |
 | RaySAR [17](#ref17), [18](#ref18) | 3D scene geometry and interpretation of multiple reflections | SAR image layers and phase-center locations | The paper explicitly excludes raw-data simulation and processing |
 
-## MathWorks: terrain clutter all the way to I/Q
+### MathWorks: terrain clutter all the way to I/Q
 
-### Site-specific bistatic land clutter
+#### Site-specific bistatic land clutter
 
 The closest MathWorks example is **“Bistatic Clutter Part 3: Simulating
 Site-Specific Bistatic Land Clutter”**, marked **Since R2026b** [1](#ref1). It is a
@@ -112,7 +385,7 @@ lead. The bibliographic record and presentation landing page were located, but
 the full paper and recorded talk were access restricted during this review.
 No measured error numbers from that work are claimed here.
 
-### Older radar terrain examples and a compact clutter channel
+#### Older radar terrain examples and a compact clutter channel
 
 **“Introduction to Radar Scenario Clutter Simulation”**, available since
 R2022a [2](#ref2), provides a more widely available starting point. It demonstrates
@@ -135,7 +408,7 @@ channel computation from signal processing. Its stated role is fast
 exploration before higher-fidelity simulation or measured-data analysis.
 It is not a replacement for site-specific visibility or geometry.
 
-### MATLAB communications ray tracing is another relevant precedent
+#### MATLAB communications ray tracing is another relevant precedent
 
 `comm.RayTracingChannel` filters an input waveform through a multipath channel
 defined by propagation rays [4](#ref4). Its rays carry path delay, loss and phase;
@@ -153,9 +426,9 @@ normalization [4](#ref4). A comparison of absolute received voltage must align t
 settings with our unnormalized gains and absolute path delays; matching plots
 after independent normalization is insufficient.
 
-## Ansys: a scene simulator with an RF simulation plugin
+### Ansys: a scene simulator with an RF simulation plugin
 
-### STK and Perceive EM closely resemble our intended division of work
+#### STK and Perceive EM closely resemble our intended division of work
 
 The **RF Channel Modeler Plugin Overview** [6](#ref6) describes a concrete workflow:
 create an STK scene, import regional 3D tilesets, specify materials, create
@@ -195,7 +468,7 @@ engine. The presentation does not establish our exact combination of 100 TX,
 10 RX, path budget, 200 Hz pulse updates and scene complexity. In particular,
 it does not substantiate one GPU per receiver as a minimum hardware requirement.
 
-### Public Python scene and Doppler example
+#### Public Python scene and Doppler example
 
 The PyAEDT **“Doppler setup”** example [8](#ref8) constructs an HFSS SBR+ environment,
 places actors and a radar, creates a pulse-Doppler setup and demonstrates FRTM
@@ -207,7 +480,7 @@ to solve. Its public setup and post-processing code should not be mistaken for
 a freely executable, self-contained RF backend. It is still a useful template
 for scenario assembly and exporting complex results for signal processing.
 
-## Remcom: environmental multipath and phase-consistent diffuse clutter
+### Remcom: environmental multipath and phase-consistent diffuse clutter
 
 WaveFarer's diffuse-scattering documentation [9](#ref9) directly addresses rough
 surfaces that are insufficiently represented by the geometric mesh. Surface
@@ -243,7 +516,7 @@ equated with our dielectric slab plus angular diffuse pattern. The strongest
 lessons for our project are the workflow, controlled scattering-on/off
 comparisons, and preservation of phase through scene motion.
 
-## NVIDIA Sionna RT: the basis of our complex environmental channel
+### NVIDIA Sionna RT: the basis of our complex environmental channel
 
 The **Sionna RT Technical Report**, arXiv:2504.21719 [11](#ref11), documents the actual
 underlying channel machinery. Version 3 was published on 2026-09-03. It
@@ -286,7 +559,7 @@ The technical report also includes independent random diffuse polarization phase
 in its mathematical treatment [11](#ref11), Appendix A.8. That is not evidence that
 our configured material has persistent random ground phases. Our default
 diffuse operator and sampling behavior are documented in
-[GROUND_SCATTERING.md](GROUND_SCATTERING.md).
+[GROUND_SCATTERING.md](terrain.md#ground-scattering).
 
 Our first-order adapter replaces native candidate discovery with exhaustive
 specular candidates and **1,028 attempted diffuse samples per TX/RX link**.
@@ -297,9 +570,9 @@ The public native tutorial is a reference for these shared components, not a
 validation of our modified sampler. In particular, preserving ray-tube power
 normalization is not sufficient proof of coherent-I/Q convergence.
 
-## RadarSimPy: a remarkably close terrain visualization
+### RadarSimPy: a remarkably close terrain visualization
 
-### Published radar-altimeter notebook
+#### Published radar-altimeter notebook
 
 **“Pulse Radar Altimeter”**, published on 2025-11-21 and inspected in its updated
 form [13](#ref13), links to public notebook code [14](#ref14). It reports RadarSimPy 15.2.0 and
@@ -342,7 +615,7 @@ not imply that every mesh-solver feature is freely available under every
 distribution/license. Backend availability and licensing need separate checks
 before incorporating RadarSimPy into the container or RF plane.
 
-### Environmental multipath example and our bounce limit
+#### Environmental multipath example and our bounce limit
 
 RadarSimPy's **“Multi-Path Effect”** example [16](#ref16) demonstrates a moving corner
 reflector above a dielectric ground plane. It compares complex FMCW data and
@@ -357,7 +630,7 @@ paths. **A scene containing LoS plus many single-interaction paths has multipath
 but it does not have all multiple-bounce environmental paths.** Including the
 target and ground together would require a deeper or specialized backend.
 
-## RaySAR: useful scene interpretation, a different output level
+### RaySAR: useful scene interpretation, a different output level
 
 Auer, Bamler and Reinartz's **“RaySAR — 3D SAR Simulator: Now Open Source”**
 (IGARSS 2016) [18](#ref18) and the public repository [17](#ref17) show that scene-based ray
@@ -372,7 +645,7 @@ It is valuable for understanding how scene geometry and multiple reflections
 manifest in radar images. It is not a ready replacement for the general I/Q
 simulation plane.
 
-## Environmental assumptions: what the precedents do and do not resolve
+### Environmental assumptions: what the precedents do and do not resolve
 
 | Modeling issue | Evidence in the reviewed sources | Current project status |
 | --- | --- | --- |
@@ -402,7 +675,7 @@ why hills become resolvable. Its reported 0.35 m RMS difference against the
 synthetic DEM is an internal demonstration metric, not measured sensor accuracy
 or validation of clutter amplitudes and slow-time statistics.
 
-## Validation work suggested by the published examples
+### Validation work suggested by the published examples
 
 These are proposed follow-ups, not tests already completed by this review.
 
@@ -443,7 +716,7 @@ validation. The current code supports a useful geometric prototype. The reviewed
 references do not justify labeling it a calibrated clutter simulator or a
 proven real-time 100-TX/10-RX product.
 
-## References and access notes
+### References and access notes
 
 All web sources below were inspected or located on **2026-10-03**. Live vendor
 documentation can change; versions and access limitations are noted where
@@ -559,8 +832,3 @@ Bibliographic/search record and talk landing page located; full paper and
 recording access restricted. Included as a validation lead, not as an independently
 reviewed experimental result.
 
-<!-- BEGIN SIGNAL TIME CONTEXT -->
-
-**Simulation-time reference:** use **wall seconds per simulated signal second**, not an unlabeled whole-run time. For fixed windows, divide mean service milliseconds by samples/sample-rate × 1,000. Stage costs use their parent window denominator. Geometry-only solves and analytic operation counts have no generated signal duration; a signal-time ratio is **not applicable**, unless an explicit update interval is assumed and labeled as a scheduling estimate. Unrecorded flight costs remain unknown. See [recorded normalized cases](SIGNAL_TIME_RESULTS.md).
-
-<!-- END SIGNAL TIME CONTEXT -->

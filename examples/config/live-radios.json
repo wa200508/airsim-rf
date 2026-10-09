@@ -1,0 +1,12 @@
+{
+  "address": "127.0.0.1",
+  "scene": "scene_config.jsonc",
+  "sim_config": "/path/to/ProjectAirSim/sim_config",
+  "rf_scene": "../../benchmarks/scenes/terrain.xml",
+  "receiver_profile": {"carrier_hz": 915000000, "sample_rate_hz": 2000000, "rf_bandwidth_hz": 1000000},
+  "samples_per_link": 1028,
+  "radios": {
+    "tx0": {"robot": "Drone1", "waveform_npy": "tx0.npy", "transmit_power_w": 0.0001, "baseband_frequency_bounds_hz": [-250000, 250000], "mount_body_m": [0, 0, 0]},
+    "rx0": {"robot": "Drone2", "mount_body_m": [0, 0, 0]}
+  }
+}
