@@ -172,3 +172,30 @@ def test_real_cuda_fused_projection_high_rank_and_empty_channels():
     assert max(b['degree'] for b in engine.last_metrics['blocks']) >= 32
     empty = replace(jobs[0], coefficients=np.array([],complex), delays_s=np.array([]), doppler_hz=np.array([]))
     np.testing.assert_array_equal(engine.render([empty], num_samples=32), np.zeros((1,32)))
+
+
+@pytest.mark.parametrize('block_samples', [512, 1024, 2048, 4096, 8192])
+def test_cuda_pipeline_block_sizes_preserve_full_window(block_samples):
+    gpu()
+    epoch = 1790000000000000000
+    rng = np.random.default_rng(919)
+    jobs = []
+    for seed, paths in ((42, 103), (53, 8)):
+        job = linked(seed, paths)
+        wave = replace(job.waveform,
+                       samples=rng.normal(size=24000)+1j*rng.normal(size=24000),
+                       reference_time_ns=epoch-200000)
+        jobs.append(replace(job, waveform=wave))
+    cfg = dict(sample_rate_hz=2e6, max_delay_s=100e-6, max_doppler_hz=2500,
+               block_samples=block_samples, temporal_tolerance=1e-10)
+    engine = CudaDopplerBasisRenderer(**cfg, projection='warp', batch_links=2, reuse_buffers=True)
+    kw = dict(num_samples=16667, sim_time_ns=epoch, channel_epoch_ns=epoch)
+    reference_cfg = {**cfg, 'block_samples': 2048}
+    expected = DopplerBasisRenderer(**reference_cfg).render(jobs, **kw)
+    actual = engine.render(jobs, **kw)
+    np.testing.assert_allclose(actual, expected, atol=2e-9, rtol=2e-9)
+    # Reused workspaces must also follow a newly supplied channel.
+    changed = [replace(j, coefficients=j.coefficients*(.7+.2j)) for j in jobs]
+    np.testing.assert_allclose(engine.render(changed, **kw),
+                               DopplerBasisRenderer(**reference_cfg).render(changed, **kw),
+                               atol=2e-9, rtol=2e-9)

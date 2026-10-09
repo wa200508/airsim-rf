@@ -138,7 +138,7 @@ def stats(values):
 
 
 def run(*, output, tx=100, rx=10, iterations=30, warmup=3, renderer='basis-cpu',
-        samples_per_link=1028, airsim_config=None, profile_rendering=False, optimizations=True, fused_projection=False, threads=2, propagation_backend=None, pascal_compat=False):
+        samples_per_link=1028, airsim_config=None, profile_rendering=False, optimizations=True, fused_projection=False, threads=2, propagation_backend=None, pascal_compat=False, block_samples=2048):
     import mitsuba as mi
     if propagation_backend is None:
         propagation_backend = 'cuda' if mi.variant().startswith('cuda') else 'llvm'
@@ -187,7 +187,7 @@ def run(*, output, tx=100, rx=10, iterations=30, warmup=3, renderer='basis-cpu',
     receiver = SDRNetworkReceiver(scene, emitters, PlutoSDRProfile(), renderer=renderer,
         continuous=True, samples_per_link=samples_per_link, link_diagnostics=False,
         profile_rendering=profile_rendering, reuse_render_buffers=optimizations,
-        cache_scattering_samples=optimizations, fused_projection=fused_projection)
+        cache_scattering_samples=optimizations, fused_projection=fused_projection, block_samples=block_samples)
     bridge = AirSimSDRBridge(world, robots, receiver)
     consumer = Consumer(output/'captures')
     rows = []
@@ -280,7 +280,7 @@ def run(*, output, tx=100, rx=10, iterations=30, warmup=3, renderer='basis-cpu',
         pose_source='deterministic AirSim-contract trajectory; physics/RPC not exercised' if airsim_config is None else 'live ProjectAirSim physics/RPC',
         propagation_backend='Sionna RT CUDA/OptiX' if propagation_backend == 'cuda' else 'Sionna RT LLVM CPU', rendering_backend=renderer,
         arguments=dict(tx=tx,rx=rx,iterations=iterations,warmup=warmup,samples_per_link=samples_per_link,profile_rendering=profile_rendering, reuse_render_buffers=optimizations,
-        cache_scattering_samples=optimizations, fused_projection=fused_projection, threads=threads, propagation_backend=propagation_backend, pascal_compat=pascal_compat),
+        cache_scattering_samples=optimizations, fused_projection=fused_projection, threads=threads, propagation_backend=propagation_backend, pascal_compat=pascal_compat, block_samples=block_samples),
         timing_includes=['physics advance (live only)', 'snapshot/mount mapping', 'private waveform generation/copies',
             'scene multipath tracing/export', 'all-path I/Q rendering', 'persistent receive filter/noise/ADC',
             'SC16 serialization', 'loopback HTTP delivery/acknowledgement', 'consumer file write/readback (no fsync)'],
@@ -323,12 +323,13 @@ def main():
     parser.add_argument('--airsim-config', type=Path)
     parser.add_argument('--pascal-compat', action='store_true')
     parser.add_argument('--propagation-backend', choices=('llvm','cuda'), default='llvm')
+    parser.add_argument('--block-samples', type=int, default=2048, help='FFT/basis block size; signal duration and declared support stay fixed')
     parser.add_argument('--threads', type=int, default=2, help='LLVM propagation worker threads')
     parser.add_argument('--no-optimizations', dest='optimizations', action='store_false')
     parser.add_argument('--fused-projection', action='store_true')
     parser.add_argument('--profile-rendering', action='store_true', help='Separate instrumented GPU-event run; never enters unprofiled throughput')
     args = parser.parse_args()
-    if min(args.tx,args.rx,args.iterations,args.samples_per_link,args.threads)<1 or args.warmup<0:
+    if min(args.tx,args.rx,args.iterations,args.samples_per_link,args.threads,args.block_samples)<1 or args.warmup<0:
         parser.error('Positive counts and nonnegative warmup required')
     import drjit as dr
     import mitsuba as mi
