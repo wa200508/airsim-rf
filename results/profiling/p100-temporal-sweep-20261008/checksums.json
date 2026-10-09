@@ -1,0 +1,22 @@
+{
+  "README.md": "9b62273782c10d2a76db20afdd8f3552ac3a1f12a0f258c6c907023b6ff4cf44",
+  "adaptive/REPORT.md": "18eb1f72fad11eabf94dbfc7b9f9db21ad5ed5a270d078b7e3abcdeeb7008a27",
+  "adaptive/measurements.json": "5d22da61ba70b4fbdae30cd3dab3930df1456454b291eedf39e268da138f677e",
+  "adaptive_fused/REPORT.md": "7268c2127cbabd2e338f2212bcf604fe5e84db8edf7a2418d92d0892ae9c3154",
+  "adaptive_fused/measurements.json": "ade0f0f09fa6c35a288043699dcb11fd8b5fbe9d6c6b3633394ae75c85da65e6",
+  "adaptive_single/REPORT.md": "0d08bf85bb45be162cf7c9e13613b430cb86cc092987b39d262de0dfa2b2ff99",
+  "adaptive_single/measurements.json": "dd69ffc0ed313694e797b9134d89cf53bad295f5690f445245eef6e698e2acf6",
+  "fixed_after/REPORT.md": "c702928e7d18b6a59e6b3b9411a69abf780ed66cd97312ddd647d77db7f96351",
+  "fixed_after/measurements.json": "594abfe0da08be01e31c9aa9efd414509bf97ffdc6ea73c4b8c64ee7750e19de",
+  "fixed_before/REPORT.md": "d86b14e2155f1ffcbee652d9db7ed3897a0b82a64ac5a5593ab0eb45b3b1251e",
+  "fixed_before/measurements.json": "a6ab1ae674898d9b9cad2b39d99c3d4686e468485ec614a337cd6acbdbac17e7",
+  "fixed_single/REPORT.md": "2240248f1da4f08f68175ccc1b2694af5f98c82b430f1eb746cfd94ed476b093",
+  "fixed_single/measurements.json": "b4af93540a7359995f8d7d12bf8566962b521cdc3ddc18c799209431221663ad",
+  "logs/adaptive.log": "f965c4bdc81381362871a7f1062cad30c953a892f6b409f604be87e7f687749d",
+  "logs/adaptive_fused.log": "b97480015a60cf7c20863f6539f316edb9f235e398613e9a4940f56d96fb611d",
+  "logs/adaptive_single.log": "10a23232be959cb012ee88e90521d039f5b121b2c957ac32bdce4532100c641c",
+  "logs/fixed_after.log": "e13a73e7fdc89bb36c193920c7af06e2a1f5d3bc6ca8b01b26c35084c44cfb47",
+  "logs/fixed_before.log": "7106a502b06eaf00c799939e6d6ab66159e5cdd83da896c2e21a3b2a54a4ad28",
+  "logs/fixed_single.log": "0936ccfc47ec4cf7c55a08be184af4f47248c1d95704fe53806061bff25ae35c",
+  "manifest.json": "83c9b2d00dca33d9505d6c6de5ee6822ff5730485d22a9452751005186182cb4"
+}

@@ -1,0 +1,338 @@
+         1702028 function calls (1700322 primitive calls) in 4.192 seconds
+
+   Ordered by: cumulative time
+   List reduced from 734 to 80 due to restriction <80>
+
+   ncalls  tottime  percall  cumtime  percall filename:lineno(function)
+       10    0.006    0.001    3.688    0.369 sdr_bridge.py:18(capture)
+       10    0.222    0.022    3.491    0.349 sdr.py:260(capture)
+      100    0.242    0.002    2.427    0.024 doppler_basis_cuda.py:338(render)
+      100    0.000    0.000    0.659    0.007 __init__.py:782(asnumpy)
+      100    0.659    0.007    0.659    0.007 {method 'get' of 'cupy._core.core._ndarray_base' objects}
+      100    0.418    0.004    0.644    0.006 doppler_basis_cuda.py:205(_pack)
+      200    0.000    0.000    0.467    0.002 sort.py:93(argsort)
+      200    0.465    0.002    0.467    0.002 {method 'argsort' of 'cupy._core.core._ndarray_base' objects}
+    11000    0.010    0.000    0.446    0.000 <string>:2(__init__)
+    11000    0.144    0.000    0.436    0.000 sampled_waveform.py:27(__post_init__)
+       10    0.348    0.035    0.385    0.038 benchmark_end_to_end.py:74(window)
+       10    0.013    0.001    0.305    0.031 scattering.py:263(__call__)
+       10    0.001    0.000    0.292    0.029 path_solver.py:163(__call__)
+    18220    0.250    0.000    0.250    0.000 {built-in method numpy.array}
+     1100    0.015    0.000    0.173    0.000 bridge.py:17(mount_kinematics)
+       40    0.084    0.002    0.134    0.003 scene.py:1152(_endpoints)
+       10    0.041    0.004    0.131    0.013 scattering.py:75(__call__)
+       20    0.000    0.000    0.121    0.006 scene.py:924(sources)
+     2900    0.007    0.000    0.115    0.000 _fft.py:215(_fft)
+  101/100    0.028    0.000    0.099    0.001 benchmark_end_to_end.py:122(deliver)
+     2000    0.003    0.000    0.092    0.000 _fft.py:665(fft)
+      100    0.000    0.000    0.089    0.001 client.py:478(read)
+      900    0.052    0.000    0.079    0.000 indexing.py:31(take_along_axis)
+     1100    0.016    0.000    0.079    0.000 _rotation.py:533(from_matrix)
+      100    0.000    0.000    0.077    0.001 socketserver.py:360(finish_request)
+      200    0.000    0.000    0.077    0.000 {method 'close' of '_io.BufferedReader' objects}
+      100    0.000    0.000    0.077    0.001 client.py:440(_close_conn)
+      200    0.000    0.000    0.077    0.000 socket.py:783(close)
+      200    0.001    0.000    0.077    0.000 socket.py:491(_decref_socketios)
+  300/211    0.000    0.000    0.076    0.000 socket.py:501(close)
+  200/111    0.001    0.000    0.076    0.001 socket.py:497(_real_close)
+      100    0.000    0.000    0.069    0.001 socketserver.py:760(__init__)
+   107394    0.067    0.000    0.067    0.000 {method 'reduce' of 'numpy.ufunc' objects}
+     2900    0.002    0.000    0.063    0.000 _fft.py:209(_fft_c2c)
+     2900    0.026    0.000    0.061    0.000 _fft.py:81(_exec_fft)
+    10020    0.005    0.000    0.061    0.000 {built-in method builtins.all}
+      200    0.034    0.000    0.058    0.000 doppler_basis_cuda.py:18(temporal_coefficients)
+      100    0.000    0.000    0.057    0.001 request.py:496(open)
+      100    0.001    0.000    0.056    0.001 request.py:525(_open)
+    40000    0.030    0.000    0.056    0.000 doppler_basis_cuda.py:258(<genexpr>)
+      200    0.000    0.000    0.054    0.000 request.py:485(_call_chain)
+      100    0.000    0.000    0.054    0.001 request.py:1372(http_open)
+    31120    0.012    0.000    0.052    0.000 fromnumeric.py:2474(any)
+    52500    0.014    0.000    0.052    0.000 {method 'all' of 'numpy.ndarray' objects}
+  200/111    0.002    0.000    0.052    0.000 {function socket.close at 0x7d8de1794180}
+      100    0.001    0.000    0.051    0.001 request.py:1303(do_open)
+      100    0.000    0.000    0.050    0.001 client.py:1434(getresponse)
+    34540    0.024    0.000    0.049    0.000 fromnumeric.py:86(_wrapreduction_any_all)
+       10    0.046    0.005    0.046    0.005 paths_buffer.py:658(discard_invalid)
+     2200    0.010    0.000    0.046    0.000 antenna_array.py:120(rotate)
+     7800    0.003    0.000    0.044    0.000 {built-in method builtins.next}
+      100    0.000    0.000    0.042    0.000 server.py:436(handle)
+     2900    0.028    0.000    0.042    0.000 _fft.py:39(_cook_shape)
+     7800    0.030    0.000    0.041    0.000 doppler_basis_cuda.py:364(stage)
+      100    0.000    0.000    0.041    0.000 server.py:399(handle_one_request)
+    54700    0.010    0.000    0.040    0.000 _methods.py:64(_all)
+      100    0.000    0.000    0.040    0.000 benchmark_end_to_end.py:99(do_POST)
+      100    0.002    0.000    0.040    0.000 client.py:336(begin)
+     1100    0.011    0.000    0.037    0.000 numeric.py:1563(cross)
+   105660    0.015    0.000    0.036    0.000 {built-in method builtins.isinstance}
+      300    0.001    0.000    0.035    0.000 {method 'read' of '_io.BufferedReader' objects}
+    20014    0.014    0.000    0.034    0.000 fromnumeric.py:66(_wrapreduction)
+     2240    0.033    0.000    0.033    0.000 geometry.py:89(rotation_matrix)
+     1400    0.021    0.000    0.031    0.000 ranges.py:9(arange)
+     1000    0.030    0.000    0.030    0.000 {method 'sum' of 'cupy._core.core._ndarray_base' objects}
+      900    0.001    0.000    0.029    0.000 _fft.py:689(ifft)
+     3900    0.003    0.000    0.027    0.000 contextlib.py:141(__exit__)
+     1100    0.015    0.000    0.027    0.000 numeric.py:2320(isclose)
+     2200    0.003    0.000    0.027    0.000 _rotation.py:40(_promote)
+    10000    0.006    0.000    0.027    0.000 fromnumeric.py:2342(sum)
+     3700    0.007    0.000    0.026    0.000 numeric.py:1489(moveaxis)
+      100    0.014    0.000    0.025    0.000 _signaltools.py:4970(sosfilt)
+     2200    0.006    0.000    0.023    0.000 _array_api.py:548(xp_promote)
+  603/324    0.001    0.000    0.023    0.000 socket.py:706(readinto)
+      100    0.012    0.000    0.022    0.000 sdr.py:100(quantize_iq)
+     1100    0.001    0.000    0.022    0.000 _rotation.py:434(from_quat)
+     1900    0.012    0.000    0.022    0.000 basic.py:231(zeros)
+       10    0.004    0.000    0.021    0.002 paths.py:484(cir)
+     6124    0.021    0.000    0.021    0.000 basic.py:13(empty)
+    23140    0.005    0.000    0.021    0.000 <frozen abc>:117(__instancecheck__)
+
+
+         1702028 function calls (1700322 primitive calls) in 4.192 seconds
+
+   Ordered by: internal time
+   List reduced from 734 to 80 due to restriction <80>
+
+   ncalls  tottime  percall  cumtime  percall filename:lineno(function)
+      100    0.659    0.007    0.659    0.007 {method 'get' of 'cupy._core.core._ndarray_base' objects}
+      200    0.465    0.002    0.467    0.002 {method 'argsort' of 'cupy._core.core._ndarray_base' objects}
+      100    0.418    0.004    0.644    0.006 doppler_basis_cuda.py:205(_pack)
+       10    0.348    0.035    0.385    0.038 benchmark_end_to_end.py:74(window)
+    18220    0.250    0.000    0.250    0.000 {built-in method numpy.array}
+      100    0.242    0.002    2.427    0.024 doppler_basis_cuda.py:338(render)
+       10    0.222    0.022    3.491    0.349 sdr.py:260(capture)
+    11000    0.144    0.000    0.436    0.000 sampled_waveform.py:27(__post_init__)
+       40    0.084    0.002    0.134    0.003 scene.py:1152(_endpoints)
+   107394    0.067    0.000    0.067    0.000 {method 'reduce' of 'numpy.ufunc' objects}
+      900    0.052    0.000    0.079    0.000 indexing.py:31(take_along_axis)
+       10    0.046    0.005    0.046    0.005 paths_buffer.py:658(discard_invalid)
+       10    0.041    0.004    0.131    0.013 scattering.py:75(__call__)
+      200    0.034    0.000    0.058    0.000 doppler_basis_cuda.py:18(temporal_coefficients)
+     2240    0.033    0.000    0.033    0.000 geometry.py:89(rotation_matrix)
+     1000    0.030    0.000    0.030    0.000 {method 'sum' of 'cupy._core.core._ndarray_base' objects}
+    40000    0.030    0.000    0.056    0.000 doppler_basis_cuda.py:258(<genexpr>)
+     7800    0.030    0.000    0.041    0.000 doppler_basis_cuda.py:364(stage)
+     2900    0.028    0.000    0.042    0.000 _fft.py:39(_cook_shape)
+  101/100    0.028    0.000    0.099    0.001 benchmark_end_to_end.py:122(deliver)
+     2900    0.026    0.000    0.061    0.000 _fft.py:81(_exec_fft)
+    34540    0.024    0.000    0.049    0.000 fromnumeric.py:86(_wrapreduction_any_all)
+     6124    0.021    0.000    0.021    0.000 basic.py:13(empty)
+     1400    0.021    0.000    0.031    0.000 ranges.py:9(arange)
+       10    0.018    0.002    0.018    0.002 complex.py:131(cpx_convert)
+     1100    0.016    0.000    0.079    0.000 _rotation.py:533(from_matrix)
+       14    0.016    0.001    0.016    0.001 {built-in method cupy.cuda.pinned_memory.alloc_pinned_memory}
+    20600    0.016    0.000    0.016    0.000 {method 'fill' of 'numpy.ndarray' objects}
+     1100    0.015    0.000    0.173    0.000 bridge.py:17(mount_kinematics)
+   105660    0.015    0.000    0.036    0.000 {built-in method builtins.isinstance}
+     1100    0.015    0.000    0.027    0.000 numeric.py:2320(isclose)
+      100    0.014    0.000    0.025    0.000 _signaltools.py:4970(sosfilt)
+    52500    0.014    0.000    0.052    0.000 {method 'all' of 'numpy.ndarray' objects}
+    20014    0.014    0.000    0.034    0.000 fromnumeric.py:66(_wrapreduction)
+       10    0.013    0.001    0.305    0.031 scattering.py:263(__call__)
+    31120    0.012    0.000    0.052    0.000 fromnumeric.py:2474(any)
+      100    0.012    0.000    0.022    0.000 sdr.py:100(quantize_iq)
+     1900    0.012    0.000    0.022    0.000 basic.py:231(zeros)
+     2900    0.012    0.000    0.012    0.000 {method 'fft' of 'cupy.cuda.cufft.Plan1d' objects}
+     1100    0.011    0.000    0.037    0.000 numeric.py:1563(cross)
+     2900    0.011    0.000    0.011    0.000 {built-in method cupy._core.core.ascontiguousarray}
+     4900    0.011    0.000    0.011    0.000 {cupy.cuda.stream.get_elapsed_time}
+    11000    0.010    0.000    0.446    0.000 <string>:2(__init__)
+     7400    0.010    0.000    0.016    0.000 numeric.py:1427(normalize_axis_tuple)
+    22210    0.010    0.000    0.010    0.000 {built-in method builtins.abs}
+    82170    0.010    0.000    0.010    0.000 {built-in method builtins.len}
+       20    0.010    0.000    0.017    0.001 scattering.py:22(from_patterns)
+    54700    0.010    0.000    0.040    0.000 _methods.py:64(_all)
+     1900    0.010    0.000    0.010    0.000 {method 'memset_async' of 'cupy.cuda.memory.MemoryPointer' objects}
+     2200    0.010    0.000    0.046    0.000 antenna_array.py:120(rotate)
+      700    0.008    0.000    0.009    0.000 {method 'set' of 'cupy._core.core._ndarray_base' objects}
+    23140    0.008    0.000    0.016    0.000 {built-in method _abc._abc_instancecheck}
+    40000    0.008    0.000    0.008    0.000 doppler_basis_cuda.py:256(<genexpr>)
+    24350    0.007    0.000    0.012    0.000 {built-in method builtins.max}
+     2900    0.007    0.000    0.115    0.000 _fft.py:215(_fft)
+     1100    0.007    0.000    0.012    0.000 benchmark_end_to_end.py:50(get_ground_truth_kinematics)
+     3700    0.007    0.000    0.026    0.000 numeric.py:1489(moveaxis)
+      500    0.007    0.000    0.007    0.000 {method 'astype' of 'cupy._core.core._ndarray_base' objects}
+      200    0.006    0.000    0.009    0.000 {built-in method _hashlib.openssl_sha256}
+      200    0.006    0.000    0.007    0.000 doppler_basis.py:21(doppler_degree)
+    55216    0.006    0.000    0.006    0.000 {method 'items' of 'dict' objects}
+      200    0.006    0.000    0.006    0.000 {built-in method cupy._core._routines_manipulation.concatenate_method}
+      550    0.006    0.000    0.006    0.000 paths_buffer.py:245(_gather_depth)
+    11430    0.006    0.000    0.017    0.000 {built-in method builtins.any}
+     4000    0.006    0.000    0.006    0.000 {method 'used_bytes' of 'cupy.cuda.memory.MemoryPool' objects}
+      300    0.006    0.000    0.009    0.000 search.py:177(where)
+     2200    0.006    0.000    0.023    0.000 _array_api.py:548(xp_promote)
+       10    0.006    0.001    3.688    0.369 sdr_bridge.py:18(capture)
+    10000    0.006    0.000    0.027    0.000 fromnumeric.py:2342(sum)
+      200    0.005    0.000    0.008    0.000 {built-in method _io.open}
+    22240    0.005    0.000    0.005    0.000 {built-in method _abc._abc_subclasscheck}
+    10000    0.005    0.000    0.007    0.000 rendering.py:60(_oscillator_cycles)
+    23140    0.005    0.000    0.021    0.000 <frozen abc>:117(__instancecheck__)
+    10020    0.005    0.000    0.061    0.000 {built-in method builtins.all}
+    10000    0.005    0.000    0.019    0.000 fromnumeric.py:3049(max)
+  603/324    0.005    0.000    0.013    0.000 {method 'recv_into' of '_socket.socket' objects}
+     2200    0.005    0.000    0.009    0.000 _array_api.py:497(xp_result_type)
+     3920    0.004    0.000    0.004    0.000 {method 'astype' of 'numpy.ndarray' objects}
+     1100    0.004    0.000    0.008    0.000 _rotation.py:1226(as_euler)
+       20    0.004    0.000    0.009    0.000 image_method.py:501(_loop_body)
+
+
+   Ordered by: internal time
+   List reduced from 734 to 27 due to restriction <'doppler_basis_cuda|_fft|sdr.py|sampled_waveform'>
+
+Function                                         called...
+                                                     ncalls  tottime  cumtime
+doppler_basis_cuda.py:205(_pack)                 ->      14    0.000    0.000  basic.py:13(empty)
+                                                        500    0.000    0.000  doppler_basis_cuda.py:247(<genexpr>)
+                                                        400    0.000    0.000  doppler_basis_cuda.py:248(<genexpr>)
+                                                      30000    0.002    0.002  fromnumeric.py:2469(_any_dispatcher)
+                                                      30000    0.012    0.049  fromnumeric.py:2474(any)
+                                                      10000    0.001    0.001  fromnumeric.py:3044(_max_dispatcher)
+                                                      10000    0.005    0.019  fromnumeric.py:3049(max)
+                                                         14    0.000    0.000  fromnumeric.py:3320(_prod_dispatcher)
+                                                         14    0.000    0.000  fromnumeric.py:3325(prod)
+                                                      10000    0.005    0.007  rendering.py:60(_oscillator_cycles)
+                                                      20000    0.009    0.009  {built-in method builtins.abs}
+                                                      10000    0.005    0.061  {built-in method builtins.all}
+                                                      10000    0.005    0.013  {built-in method builtins.any}
+                                                      10100    0.002    0.002  {built-in method builtins.len}
+                                                      20100    0.005    0.006  {built-in method builtins.max}
+                                                      10000    0.002    0.002  {built-in method builtins.min}
+                                                      10000    0.002    0.002  {built-in method builtins.round}
+                                                         14    0.016    0.016  {built-in method cupy.cuda.pinned_memory.alloc_pinned_memory}
+                                                        700    0.000    0.000  {built-in method cupy.cuda.stream.get_current_stream}
+                                                      30000    0.003    0.003  {built-in method numpy.asarray}
+                                                        400    0.000    0.000  {built-in method time.perf_counter}
+                                                      10000    0.003    0.009  {method 'all' of 'numpy.ndarray' objects}
+                                                        900    0.000    0.000  {method 'append' of 'list' objects}
+                                                      20600    0.016    0.016  {method 'fill' of 'numpy.ndarray' objects}
+                                                        200    0.000    0.000  {method 'get' of 'dict' objects}
+                                                        202    0.000    0.000  {method 'items' of 'dict' objects}
+                                                        100    0.000    0.000  {method 'pop' of 'dict' objects}
+                                                        700    0.008    0.009  {method 'set' of 'cupy._core.core._ndarray_base' objects}
+doppler_basis_cuda.py:338(render)                ->     100    0.000    0.659  __init__.py:782(asnumpy)
+                                                        200    0.000    0.000  __init__.py:867(get_default_memory_pool)
+                                                       1800    0.002    0.082  _fft.py:665(fft)
+                                                        900    0.001    0.029  _fft.py:689(ifft)
+                                                       1800    0.007    0.007  basic.py:13(empty)
+                                                        100    0.005    0.009  basic.py:231(zeros)
+                                                       3900    0.002    0.021  contextlib.py:132(__enter__)
+                                                       3900    0.003    0.027  contextlib.py:141(__exit__)
+                                                        100    0.001    0.002  contextlib.py:272(contextmanager)
+                                                       3900    0.002    0.006  contextlib.py:299(helper)
+                                                        200    0.006    0.007  doppler_basis.py:21(doppler_degree)
+                                                        200    0.034    0.058  doppler_basis_cuda.py:18(temporal_coefficients)
+                                                        100    0.418    0.644  doppler_basis_cuda.py:205(_pack)
+                                                       2900    0.001    0.012  from_data.py:105(ascontiguousarray)
+                                                        100    0.000    0.000  getlimits.py:399(__init__)
+                                                        100    0.000    0.000  getlimits.py:423(max)
+                                                        900    0.052    0.079  indexing.py:31(take_along_axis)
+                                                       5500    0.001    0.001  multiarray.py:665(min_scalar_type)
+                                                        100    0.001    0.002  ranges.py:9(arange)
+                                                        200    0.000    0.000  rendering.py:55(_epoch)
+                                                        300    0.006    0.009  search.py:177(where)
+                                                        200    0.000    0.467  sort.py:93(argsort)
+                                                        100    0.000    0.000  {built-in method builtins.hash}
+                                                      10400    0.001    0.001  {built-in method builtins.isinstance}
+                                                        100    0.000    0.000  {built-in method builtins.len}
+                                                        100    0.001    0.004  {built-in method builtins.max}
+                                                        900    0.000    0.000  {built-in method builtins.min}
+                                                        200    0.001    0.006  {built-in method builtins.sum}
+                                                        100    0.000    0.000  {built-in method cupy.cuda.stream.get_current_stream}
+                                                        200    0.000    0.000  {built-in method time.perf_counter}
+                                                       4900    0.011    0.011  {cupy.cuda.stream.get_elapsed_time}
+                                                      11800    0.001    0.001  {method 'append' of 'list' objects}
+                                                        200    0.003    0.003  {method 'astype' of 'cupy._core.core._ndarray_base' objects}
+                                                      10000    0.001    0.001  {method 'setdefault' of 'dict' objects}
+                                                       1000    0.030    0.030  {method 'sum' of 'cupy._core.core._ndarray_base' objects}
+                                                        100    0.000    0.000  {method 'total_bytes' of 'cupy.cuda.memory.MemoryPool' objects}
+                                                       1100    0.003    0.003  {method 'transpose' of 'cupy._core.core._ndarray_base' objects}
+                                                        100    0.000    0.000  {method 'used_bytes' of 'cupy.cuda.memory.MemoryPool' objects}
+                                                        100    0.000    0.000  {method 'values' of 'dict' objects}
+sdr.py:260(capture)                              ->     200    0.000    0.000  <frozen importlib._bootstrap>:645(parent)
+                                                      10000    0.009    0.411  <string>:2(__init__)
+                                                        100    0.014    0.025  _signaltools.py:4970(sosfilt)
+                                                        230    0.000    0.000  contextlib.py:775(__enter__)
+                                                        230    0.000    0.000  contextlib.py:778(__exit__)
+                                                        100    0.242    2.427  doppler_basis_cuda.py:338(render)
+                                                      10000    0.001    0.001  fromnumeric.py:2337(_sum_dispatcher)
+                                                      10000    0.006    0.027  fromnumeric.py:2342(sum)
+                                                         10    0.000    0.000  paths.py:335(doppler)
+                                                         10    0.004    0.021  paths.py:484(cir)
+                                                        230    0.000    0.001  profiling.py:10(profile_range)
+                                                         10    0.013    0.305  scattering.py:263(__call__)
+                                                         10    0.000    0.000  scene.py:234(transmitters)
+                                                         10    0.000    0.000  scene.py:242(receivers)
+                                                        100    0.000    0.000  sdr.py:48(adc_bits)
+                                                      10110    0.001    0.001  sdr.py:69(rate_scale)
+                                                        100    0.012    0.022  sdr.py:100(quantize_iq)
+                                                      10100    0.002    0.002  sdr.py:309(<genexpr>)
+                                                         10    0.000    0.000  {built-in method builtins.abs}
+                                                         40    0.000    0.000  {built-in method builtins.isinstance}
+                                                         30    0.000    0.000  {built-in method builtins.len}
+                                                        110    0.000    0.000  {built-in method builtins.round}
+                                                        100    0.001    0.001  {built-in method numpy.arange}
+                                                        100    0.001    0.001  {built-in method numpy.zeros}
+                                                        420    0.000    0.000  {built-in method time.perf_counter}
+                                                        100    0.000    0.000  {method 'append' of 'list' objects}
+                                                        100    0.001    0.001  {method 'astype' of 'numpy.ndarray' objects}
+sampled_waveform.py:27(__post_init__)            ->   11000    0.003    0.020  rendering.py:55(_epoch)
+                                                      22000    0.004    0.011  {built-in method builtins.isinstance}
+                                                      11000    0.245    0.245  {built-in method numpy.array}
+                                                      11000    0.004    0.016  {method 'all' of 'numpy.ndarray' objects}
+doppler_basis_cuda.py:18(temporal_coefficients)  ->     200    0.001    0.009  _fft.py:665(fft)
+                                                        200    0.000    0.006  join.py:35(concatenate)
+                                                       1200    0.000    0.000  multiarray.py:665(min_scalar_type)
+                                                        400    0.000    0.000  numeric.py:1911(isscalar)
+                                                        400    0.005    0.008  ranges.py:9(arange)
+doppler_basis_cuda.py:258(<genexpr>)             ->   30000    0.007    0.025  {method 'all' of 'numpy.ndarray' objects}
+doppler_basis_cuda.py:364(stage)                 ->    3900    0.000    0.000  __init__.py:867(get_default_memory_pool)
+                                                       3900    0.001    0.001  {built-in method builtins.max}
+                                                       3900    0.001    0.001  {built-in method cupy_backends.cuda.libs.nvtx.RangePop}
+                                                       3900    0.002    0.002  {built-in method cupy_backends.cuda.libs.nvtx.RangePush}
+                                                       3900    0.001    0.001  {method 'append' of 'list' objects}
+                                                       3900    0.006    0.006  {method 'used_bytes' of 'cupy.cuda.memory.MemoryPool' objects}
+_fft.py:39(_cook_shape)                          ->    1800    0.007    0.013  basic.py:231(zeros)
+_fft.py:81(_exec_fft)                            ->    2900    0.001    0.002  <frozen importlib._bootstrap>:1390(_handle_fromlist)
+                                                       2900    0.003    0.004  _fft.py:62(_convert_fft_type)
+                                                        900    0.000    0.000  multiarray.py:665(min_scalar_type)
+                                                       2900    0.001    0.001  {built-in method cupy.cuda.cufft.get_current_plan}
+                                                       2900    0.001    0.001  {built-in method cupy.fft._cache.get_plan_cache}
+                                                       2900    0.001    0.001  {built-in method cupy.fft._callback.get_current_callback_manager}
+                                                       2900    0.012    0.012  {method 'fft' of 'cupy.cuda.cufft.Plan1d' objects}
+                                                       2900    0.002    0.002  {method 'get' of 'cupy.fft._cache.PlanCache' objects}
+                                                       2900    0.003    0.012  {method 'get_output_array' of 'cupy.cuda.cufft.Plan1d' objects}
+sdr.py:100(quantize_iq)                          ->     100    0.000    0.000  _shape_base_impl.py:603(_column_stack_dispatcher)
+                                                        100    0.002    0.002  _shape_base_impl.py:607(column_stack)
+                                                        100    0.000    0.000  fromnumeric.py:2240(_clip_dispatcher)
+                                                        100    0.000    0.002  fromnumeric.py:2245(clip)
+                                                        100    0.000    0.000  fromnumeric.py:3732(_mean_dispatcher)
+                                                        100    0.000    0.003  fromnumeric.py:3737(mean)
+                                                        200    0.000    0.000  {built-in method builtins.isinstance}
+                                                        100    0.000    0.000  {built-in method numpy.asarray}
+                                                        100    0.000    0.000  {method 'all' of 'numpy.ndarray' objects}
+                                                        300    0.002    0.002  {method 'astype' of 'numpy.ndarray' objects}
+doppler_basis_cuda.py:256(<genexpr>)             -> 
+_fft.py:215(_fft)                                ->    2900    0.002    0.002  _fft.py:32(_convert_dtype)
+                                                       2900    0.028    0.042  _fft.py:39(_cook_shape)
+                                                       2900    0.002    0.063  _fft.py:209(_fft_c2c)
+                                                       2900    0.000    0.000  {built-in method builtins.isinstance}
+                                                       5800    0.000    0.000  {built-in method builtins.len}
+doppler_basis_cuda.py:525(<genexpr>)             ->   10000    0.002    0.002  {built-in method builtins.len}
+_fft.py:62(_convert_fft_type)                    ->    2900    0.001    0.001  <frozen importlib._bootstrap>:1390(_handle_fromlist)
+_fft.py:665(fft)                                 ->    2000    0.001    0.002  <frozen importlib._bootstrap>:1390(_handle_fromlist)
+                                                       2000    0.006    0.087  _fft.py:215(_fft)
+_fft.py:32(_convert_dtype)                       -> 
+sdr.py:81(__post_init__)                         ->    1000    0.000    0.000  {built-in method builtins.callable}
+                                                       1000    0.000    0.000  {built-in method numpy.asarray}
+                                                       1000    0.000    0.001  {method 'all' of 'numpy.ndarray' objects}
+_fft.py:209(_fft_c2c)                            ->    2900    0.026    0.061  _fft.py:81(_exec_fft)
+sdr.py:309(<genexpr>)                            -> 
+doppler_basis_cuda.py:385(<genexpr>)             ->   10000    0.002    0.002  {built-in method builtins.len}
+sdr.py:69(rate_scale)                            -> 
+doppler_basis_cuda.py:213(<genexpr>)             ->   10000    0.001    0.001  {built-in method builtins.len}
+_fft.py:689(ifft)                                ->     900    0.000    0.001  <frozen importlib._bootstrap>:1390(_handle_fromlist)
+                                                        900    0.001    0.027  _fft.py:215(_fft)
+doppler_basis_cuda.py:527(<genexpr>)             -> 
+doppler_basis_cuda.py:247(<genexpr>)             -> 
+doppler_basis_cuda.py:248(<genexpr>)             -> 
+sdr.py:48(adc_bits)                              -> 
+
+

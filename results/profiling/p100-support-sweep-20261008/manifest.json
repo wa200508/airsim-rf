@@ -1,0 +1,245 @@
+{
+  "scope": "rf_pipeline_temporal_sweep",
+  "iterations": 30,
+  "warmup": 3,
+  "complete": true,
+  "tasks": [
+    {
+      "name": "fixed_before",
+      "command": [
+        "/opt/airsim-rf/.venv/bin/python",
+        "/work/repo/scripts/basis_launch.py",
+        "/work/repo/benchmarks/benchmark_end_to_end.py",
+        "--renderer",
+        "basis-cuda",
+        "--propagation-backend",
+        "cuda",
+        "--pascal-compat",
+        "--tx",
+        "100",
+        "--rx",
+        "10",
+        "--iterations",
+        "30",
+        "--warmup",
+        "3",
+        "--output",
+        "/work/results/p100-support-sweep-20261008/fixed_before"
+      ],
+      "options": [],
+      "returncode": 0,
+      "wall_seconds": 29.135842656000023
+    },
+    {
+      "name": "adaptive",
+      "command": [
+        "/opt/airsim-rf/.venv/bin/python",
+        "/work/repo/scripts/basis_launch.py",
+        "/work/repo/benchmarks/benchmark_end_to_end.py",
+        "--renderer",
+        "basis-cuda",
+        "--propagation-backend",
+        "cuda",
+        "--pascal-compat",
+        "--tx",
+        "100",
+        "--rx",
+        "10",
+        "--iterations",
+        "30",
+        "--warmup",
+        "3",
+        "--output",
+        "/work/results/p100-support-sweep-20261008/adaptive",
+        "--adaptive-temporal"
+      ],
+      "options": [
+        "--adaptive-temporal"
+      ],
+      "returncode": 0,
+      "wall_seconds": 17.04835576000005
+    },
+    {
+      "name": "adaptive_single",
+      "command": [
+        "/opt/airsim-rf/.venv/bin/python",
+        "/work/repo/scripts/basis_launch.py",
+        "/work/repo/benchmarks/benchmark_end_to_end.py",
+        "--renderer",
+        "basis-cuda",
+        "--propagation-backend",
+        "cuda",
+        "--pascal-compat",
+        "--tx",
+        "100",
+        "--rx",
+        "10",
+        "--iterations",
+        "30",
+        "--warmup",
+        "3",
+        "--output",
+        "/work/results/p100-support-sweep-20261008/adaptive_single",
+        "--adaptive-temporal",
+        "--cuda-delay-map",
+        "single"
+      ],
+      "options": [
+        "--adaptive-temporal",
+        "--cuda-delay-map",
+        "single"
+      ],
+      "returncode": 0,
+      "wall_seconds": 16.79941488999998
+    },
+    {
+      "name": "fixed_single",
+      "command": [
+        "/opt/airsim-rf/.venv/bin/python",
+        "/work/repo/scripts/basis_launch.py",
+        "/work/repo/benchmarks/benchmark_end_to_end.py",
+        "--renderer",
+        "basis-cuda",
+        "--propagation-backend",
+        "cuda",
+        "--pascal-compat",
+        "--tx",
+        "100",
+        "--rx",
+        "10",
+        "--iterations",
+        "30",
+        "--warmup",
+        "3",
+        "--output",
+        "/work/results/p100-support-sweep-20261008/fixed_single",
+        "--cuda-delay-map",
+        "single"
+      ],
+      "options": [
+        "--cuda-delay-map",
+        "single"
+      ],
+      "returncode": 0,
+      "wall_seconds": 21.34284281600003
+    },
+    {
+      "name": "adaptive_fused",
+      "command": [
+        "/opt/airsim-rf/.venv/bin/python",
+        "/work/repo/scripts/basis_launch.py",
+        "/work/repo/benchmarks/benchmark_end_to_end.py",
+        "--renderer",
+        "basis-cuda",
+        "--propagation-backend",
+        "cuda",
+        "--pascal-compat",
+        "--tx",
+        "100",
+        "--rx",
+        "10",
+        "--iterations",
+        "30",
+        "--warmup",
+        "3",
+        "--output",
+        "/work/results/p100-support-sweep-20261008/adaptive_fused",
+        "--adaptive-temporal",
+        "--fused-projection"
+      ],
+      "options": [
+        "--adaptive-temporal",
+        "--fused-projection"
+      ],
+      "returncode": 0,
+      "wall_seconds": 17.130574595000326
+    },
+    {
+      "name": "adaptive_trim",
+      "command": [
+        "/opt/airsim-rf/.venv/bin/python",
+        "/work/repo/scripts/basis_launch.py",
+        "/work/repo/benchmarks/benchmark_end_to_end.py",
+        "--renderer",
+        "basis-cuda",
+        "--propagation-backend",
+        "cuda",
+        "--pascal-compat",
+        "--tx",
+        "100",
+        "--rx",
+        "10",
+        "--iterations",
+        "30",
+        "--warmup",
+        "3",
+        "--output",
+        "/work/results/p100-support-sweep-20261008/adaptive_trim",
+        "--adaptive-temporal",
+        "--trim-delay-support"
+      ],
+      "options": [
+        "--adaptive-temporal",
+        "--trim-delay-support"
+      ],
+      "returncode": 0,
+      "wall_seconds": 18.292033801999878
+    },
+    {
+      "name": "fixed_trim",
+      "command": [
+        "/opt/airsim-rf/.venv/bin/python",
+        "/work/repo/scripts/basis_launch.py",
+        "/work/repo/benchmarks/benchmark_end_to_end.py",
+        "--renderer",
+        "basis-cuda",
+        "--propagation-backend",
+        "cuda",
+        "--pascal-compat",
+        "--tx",
+        "100",
+        "--rx",
+        "10",
+        "--iterations",
+        "30",
+        "--warmup",
+        "3",
+        "--output",
+        "/work/results/p100-support-sweep-20261008/fixed_trim",
+        "--trim-delay-support"
+      ],
+      "options": [
+        "--trim-delay-support"
+      ],
+      "returncode": 0,
+      "wall_seconds": 26.71337901300012
+    },
+    {
+      "name": "fixed_after",
+      "command": [
+        "/opt/airsim-rf/.venv/bin/python",
+        "/work/repo/scripts/basis_launch.py",
+        "/work/repo/benchmarks/benchmark_end_to_end.py",
+        "--renderer",
+        "basis-cuda",
+        "--propagation-backend",
+        "cuda",
+        "--pascal-compat",
+        "--tx",
+        "100",
+        "--rx",
+        "10",
+        "--iterations",
+        "30",
+        "--warmup",
+        "3",
+        "--output",
+        "/work/results/p100-support-sweep-20261008/fixed_after"
+      ],
+      "options": [],
+      "returncode": 0,
+      "wall_seconds": 21.583687815999838
+    }
+  ],
+  "note": "Same GPU propagation/versions/scene/epochs; separate sequential processes, shared disk JIT cache; fixed controls bracket experiments."
+}

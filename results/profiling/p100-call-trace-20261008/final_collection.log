@@ -1,0 +1,22 @@
+cuda_preflight: starting
+cuda_preflight: passed
+integration_tests: starting
+integration_tests: passed
+worker_protocol_tests: starting
+worker_protocol_tests: passed
+cuda-2tx-2rx-unprofiled: starting
+cuda-2tx-2rx-unprofiled: passed
+cuda-2tx-2rx-instrumented: starting
+cuda-2tx-2rx-instrumented: passed
+cuda-10tx-4rx-unprofiled: starting
+cuda-10tx-4rx-unprofiled: passed
+cuda-10tx-4rx-instrumented: starting
+cuda-10tx-4rx-instrumented: passed
+cuda-100tx-10rx-unprofiled: starting
+cuda-100tx-10rx-unprofiled: running for 15s
+cuda-100tx-10rx-unprofiled: passed
+cuda-100tx-10rx-instrumented: starting
+cuda-100tx-10rx-instrumented: running for 15s
+cuda-100tx-10rx-instrumented: passed
+Completed and validated collection: /work/results/p100-adaptive-pipeline-full-20261008/REPORT.md
+To publish, copy this bundle into the checkout at results/profiling/<run-id>.

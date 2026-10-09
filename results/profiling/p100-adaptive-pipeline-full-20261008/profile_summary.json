@@ -1,0 +1,452 @@
+[
+  {
+    "path": "profiles/cuda-100tx-10rx-instrumented/measurements.json",
+    "measurement_mode": "instrumented_end_to_end_profile",
+    "arguments": {
+      "tx": 100,
+      "rx": 10,
+      "iterations": 30,
+      "warmup": 3,
+      "samples_per_link": 1028,
+      "profile_rendering": true,
+      "reuse_render_buffers": true,
+      "cache_scattering_samples": true,
+      "fused_projection": false,
+      "threads": 2,
+      "propagation_backend": "cuda",
+      "pascal_compat": true,
+      "block_samples": 2048,
+      "python_profile": false,
+      "adaptive_temporal": true,
+      "cuda_delay_map": "double",
+      "trim_delay_support": false,
+      "projection_lanes": 0,
+      "fft_policy": "scipy"
+    },
+    "summary": {
+      "advance_ms": {
+        "median_ms": 0.0012549999155453406,
+        "std_ms": 0.0005662252115097766,
+        "p95_ms": 0.002013000334954995,
+        "mean_ms": 0.001463999979023356
+      },
+      "source_ms": {
+        "median_ms": 38.07113399989248,
+        "std_ms": 0.6088700587171275,
+        "p95_ms": 39.199310450112534,
+        "mean_ms": 38.10592256668315
+      },
+      "channel_ms": {
+        "median_ms": 31.411605999892345,
+        "std_ms": 1.5633021566546785,
+        "p95_ms": 34.626691000084975,
+        "mean_ms": 32.0925482000348
+      },
+      "rendering_ms": {
+        "median_ms": 224.44884400033516,
+        "std_ms": 4.938858411139177,
+        "p95_ms": 232.77337615104443,
+        "mean_ms": 224.85735793350918
+      },
+      "receiver_ms": {
+        "median_ms": 9.172413499982213,
+        "std_ms": 0.6571718724181924,
+        "p95_ms": 9.94733170030031,
+        "mean_ms": 9.044652999985678
+      },
+      "other_rf_ms": {
+        "median_ms": 68.52375050038972,
+        "std_ms": 3.0509843306242663,
+        "p95_ms": 73.07279359995391,
+        "mean_ms": 68.72100723307994
+      },
+      "delivery_storage_ms": {
+        "median_ms": 7.251042999996571,
+        "std_ms": 0.5352570615979951,
+        "p95_ms": 8.172650500046075,
+        "mean_ms": 7.362070833354058
+      },
+      "total_ms": {
+        "median_ms": 379.637915000103,
+        "std_ms": 6.981266334011597,
+        "p95_ms": 391.4750118500706,
+        "mean_ms": 380.1887317666721
+      }
+    }
+  },
+  {
+    "path": "profiles/cuda-100tx-10rx-unprofiled/measurements.json",
+    "measurement_mode": "unprofiled_end_to_end_benchmark",
+    "arguments": {
+      "tx": 100,
+      "rx": 10,
+      "iterations": 30,
+      "warmup": 3,
+      "samples_per_link": 1028,
+      "profile_rendering": false,
+      "reuse_render_buffers": true,
+      "cache_scattering_samples": true,
+      "fused_projection": false,
+      "threads": 2,
+      "propagation_backend": "cuda",
+      "pascal_compat": true,
+      "block_samples": 2048,
+      "python_profile": false,
+      "adaptive_temporal": true,
+      "cuda_delay_map": "double",
+      "trim_delay_support": false,
+      "projection_lanes": 0,
+      "fft_policy": "scipy"
+    },
+    "summary": {
+      "advance_ms": {
+        "median_ms": 0.001359999941996648,
+        "std_ms": 0.00041434125368855127,
+        "p95_ms": 0.0022635001414528224,
+        "mean_ms": 0.001497999983257614
+      },
+      "source_ms": {
+        "median_ms": 37.91808399978436,
+        "std_ms": 0.5020527492489835,
+        "p95_ms": 38.70558649987288,
+        "mean_ms": 38.03137836665277
+      },
+      "channel_ms": {
+        "median_ms": 29.892646499774855,
+        "std_ms": 1.3798606787249483,
+        "p95_ms": 33.16561905010076,
+        "mean_ms": 30.438185166622134
+      },
+      "rendering_ms": {
+        "median_ms": 220.96538149958178,
+        "std_ms": 4.7056027108278276,
+        "p95_ms": 228.52193299995633,
+        "mean_ms": 220.67756636653635
+      },
+      "receiver_ms": {
+        "median_ms": 8.727414500071973,
+        "std_ms": 1.0394661044347067,
+        "p95_ms": 11.021096000376927,
+        "mean_ms": 8.934297933198346
+      },
+      "other_rf_ms": {
+        "median_ms": 66.25471250117698,
+        "std_ms": 3.536210664594094,
+        "p95_ms": 73.65608549948774,
+        "mean_ms": 66.89433236701916
+      },
+      "delivery_storage_ms": {
+        "median_ms": 7.263797999939925,
+        "std_ms": 0.5678011505349211,
+        "p95_ms": 8.520809500146242,
+        "mean_ms": 7.339628900035677
+      },
+      "total_ms": {
+        "median_ms": 371.8593669998427,
+        "std_ms": 6.482599807609789,
+        "p95_ms": 384.0610724998214,
+        "mean_ms": 372.32008509995467
+      }
+    }
+  },
+  {
+    "path": "profiles/cuda-10tx-4rx-instrumented/measurements.json",
+    "measurement_mode": "instrumented_end_to_end_profile",
+    "arguments": {
+      "tx": 10,
+      "rx": 4,
+      "iterations": 30,
+      "warmup": 3,
+      "samples_per_link": 1028,
+      "profile_rendering": true,
+      "reuse_render_buffers": true,
+      "cache_scattering_samples": true,
+      "fused_projection": false,
+      "threads": 2,
+      "propagation_backend": "cuda",
+      "pascal_compat": true,
+      "block_samples": 2048,
+      "python_profile": false,
+      "adaptive_temporal": true,
+      "cuda_delay_map": "double",
+      "trim_delay_support": false,
+      "projection_lanes": 0,
+      "fft_policy": "scipy"
+    },
+    "summary": {
+      "advance_ms": {
+        "median_ms": 0.0011550002909643808,
+        "std_ms": 0.000272151069684772,
+        "p95_ms": 0.0017350002281091284,
+        "mean_ms": 0.0012460000561986817
+      },
+      "source_ms": {
+        "median_ms": 3.9466290002110327,
+        "std_ms": 0.16174337771714262,
+        "p95_ms": 4.264820549792603,
+        "mean_ms": 3.9753008666745395
+      },
+      "channel_ms": {
+        "median_ms": 11.255837000135216,
+        "std_ms": 0.617073550112349,
+        "p95_ms": 12.19637350004632,
+        "mean_ms": 11.317495299984634
+      },
+      "rendering_ms": {
+        "median_ms": 29.569887000207018,
+        "std_ms": 0.5220362762125134,
+        "p95_ms": 30.130738549769376,
+        "mean_ms": 29.583972966732592
+      },
+      "receiver_ms": {
+        "median_ms": 2.9885289998219378,
+        "std_ms": 0.16252677403167398,
+        "p95_ms": 3.296375999661904,
+        "mean_ms": 3.0123518666490177
+      },
+      "other_rf_ms": {
+        "median_ms": 4.801843499990355,
+        "std_ms": 0.37367446809330995,
+        "p95_ms": 5.327580000448506,
+        "mean_ms": 4.864220099989325
+      },
+      "delivery_storage_ms": {
+        "median_ms": 3.239763999772549,
+        "std_ms": 0.3562926956561215,
+        "p95_ms": 3.9338350001571594,
+        "mean_ms": 3.3388277000540256
+      },
+      "total_ms": {
+        "median_ms": 55.938013500053785,
+        "std_ms": 1.171924928814865,
+        "p95_ms": 58.37032045021714,
+        "mean_ms": 56.096053133448244
+      }
+    }
+  },
+  {
+    "path": "profiles/cuda-10tx-4rx-unprofiled/measurements.json",
+    "measurement_mode": "unprofiled_end_to_end_benchmark",
+    "arguments": {
+      "tx": 10,
+      "rx": 4,
+      "iterations": 30,
+      "warmup": 3,
+      "samples_per_link": 1028,
+      "profile_rendering": false,
+      "reuse_render_buffers": true,
+      "cache_scattering_samples": true,
+      "fused_projection": false,
+      "threads": 2,
+      "propagation_backend": "cuda",
+      "pascal_compat": true,
+      "block_samples": 2048,
+      "python_profile": false,
+      "adaptive_temporal": true,
+      "cuda_delay_map": "double",
+      "trim_delay_support": false,
+      "projection_lanes": 0,
+      "fft_policy": "scipy"
+    },
+    "summary": {
+      "advance_ms": {
+        "median_ms": 0.0012100001640646951,
+        "std_ms": 0.0002903705652529798,
+        "p95_ms": 0.0018375001218373652,
+        "mean_ms": 0.0013176667531903756
+      },
+      "source_ms": {
+        "median_ms": 3.902478999862069,
+        "std_ms": 0.22547748568341208,
+        "p95_ms": 4.39409600005547,
+        "mean_ms": 3.9950104667089668
+      },
+      "channel_ms": {
+        "median_ms": 10.705401999985042,
+        "std_ms": 0.6408285893101188,
+        "p95_ms": 11.954223449947676,
+        "mean_ms": 10.96049546664896
+      },
+      "rendering_ms": {
+        "median_ms": 27.7530624996416,
+        "std_ms": 0.5376592190415428,
+        "p95_ms": 28.798285949596902,
+        "mean_ms": 27.865095966596225
+      },
+      "receiver_ms": {
+        "median_ms": 2.8933235003023583,
+        "std_ms": 0.13778609475521925,
+        "p95_ms": 3.144895550508408,
+        "mean_ms": 2.9058660666275196
+      },
+      "other_rf_ms": {
+        "median_ms": 4.628448000175922,
+        "std_ms": 0.24086501618033612,
+        "p95_ms": 5.028668950444626,
+        "mean_ms": 4.637877400106542
+      },
+      "delivery_storage_ms": {
+        "median_ms": 3.188878999935696,
+        "std_ms": 0.2613380380154841,
+        "p95_ms": 3.7587179500633283,
+        "mean_ms": 3.2438960999570554
+      },
+      "total_ms": {
+        "median_ms": 53.44622399979926,
+        "std_ms": 1.280581952144902,
+        "p95_ms": 56.10064650009007,
+        "mean_ms": 53.61223946674727
+      }
+    }
+  },
+  {
+    "path": "profiles/cuda-2tx-2rx-instrumented/measurements.json",
+    "measurement_mode": "instrumented_end_to_end_profile",
+    "arguments": {
+      "tx": 2,
+      "rx": 2,
+      "iterations": 30,
+      "warmup": 3,
+      "samples_per_link": 1028,
+      "profile_rendering": true,
+      "reuse_render_buffers": true,
+      "cache_scattering_samples": true,
+      "fused_projection": false,
+      "threads": 2,
+      "propagation_backend": "cuda",
+      "pascal_compat": true,
+      "block_samples": 2048,
+      "python_profile": false,
+      "adaptive_temporal": true,
+      "cuda_delay_map": "double",
+      "trim_delay_support": false,
+      "projection_lanes": 0,
+      "fft_policy": "scipy"
+    },
+    "summary": {
+      "advance_ms": {
+        "median_ms": 0.0014150000424706377,
+        "std_ms": 0.00030899258153596284,
+        "p95_ms": 0.0021230000811556238,
+        "mean_ms": 0.0015116666872927453
+      },
+      "source_ms": {
+        "median_ms": 0.8267394998711097,
+        "std_ms": 0.07244944742774925,
+        "p95_ms": 0.9710025000231325,
+        "mean_ms": 0.8519184999992527
+      },
+      "channel_ms": {
+        "median_ms": 9.136218000094232,
+        "std_ms": 0.44327138165898455,
+        "p95_ms": 10.01585045014508,
+        "mean_ms": 9.237872599957578
+      },
+      "rendering_ms": {
+        "median_ms": 11.819135999758146,
+        "std_ms": 0.36963561483340235,
+        "p95_ms": 12.442404450189315,
+        "mean_ms": 11.890858266648744
+      },
+      "receiver_ms": {
+        "median_ms": 1.4258195001275453,
+        "std_ms": 0.08105086677001737,
+        "p95_ms": 1.5548765001767604,
+        "mean_ms": 1.4223455333497743
+      },
+      "other_rf_ms": {
+        "median_ms": 1.3590389999080799,
+        "std_ms": 0.08348639495090808,
+        "p95_ms": 1.5334090499209196,
+        "mean_ms": 1.3678729334515083
+      },
+      "delivery_storage_ms": {
+        "median_ms": 1.902309999877616,
+        "std_ms": 0.2368610695947267,
+        "p95_ms": 2.3032975001342493,
+        "mean_ms": 1.932738133367214
+      },
+      "total_ms": {
+        "median_ms": 26.56101699994906,
+        "std_ms": 0.768591620683969,
+        "p95_ms": 28.047889000072246,
+        "mean_ms": 26.707300633355164
+      }
+    }
+  },
+  {
+    "path": "profiles/cuda-2tx-2rx-unprofiled/measurements.json",
+    "measurement_mode": "unprofiled_end_to_end_benchmark",
+    "arguments": {
+      "tx": 2,
+      "rx": 2,
+      "iterations": 30,
+      "warmup": 3,
+      "samples_per_link": 1028,
+      "profile_rendering": false,
+      "reuse_render_buffers": true,
+      "cache_scattering_samples": true,
+      "fused_projection": false,
+      "threads": 2,
+      "propagation_backend": "cuda",
+      "pascal_compat": true,
+      "block_samples": 2048,
+      "python_profile": false,
+      "adaptive_temporal": true,
+      "cuda_delay_map": "double",
+      "trim_delay_support": false,
+      "projection_lanes": 0,
+      "fft_policy": "scipy"
+    },
+    "summary": {
+      "advance_ms": {
+        "median_ms": 0.0013549999948736513,
+        "std_ms": 0.0002653680723884002,
+        "p95_ms": 0.0019594997866079207,
+        "mean_ms": 0.0014473333218726718
+      },
+      "source_ms": {
+        "median_ms": 0.8382094999888068,
+        "std_ms": 0.11820711531489934,
+        "p95_ms": 1.113900500013187,
+        "mean_ms": 0.8931128333491264
+      },
+      "channel_ms": {
+        "median_ms": 8.81371250011398,
+        "std_ms": 0.5014176302484703,
+        "p95_ms": 9.879964000037944,
+        "mean_ms": 8.995401266747649
+      },
+      "rendering_ms": {
+        "median_ms": 10.924332000286086,
+        "std_ms": 0.34840482701548237,
+        "p95_ms": 11.620268499927986,
+        "mean_ms": 10.983110533364501
+      },
+      "receiver_ms": {
+        "median_ms": 1.3714700000946323,
+        "std_ms": 0.06267290601785004,
+        "p95_ms": 1.4631574997110874,
+        "mean_ms": 1.365367299983215
+      },
+      "other_rf_ms": {
+        "median_ms": 1.333685000645346,
+        "std_ms": 0.09724389645955782,
+        "p95_ms": 1.5361025504262213,
+        "mean_ms": 1.3535970666149904
+      },
+      "delivery_storage_ms": {
+        "median_ms": 1.799553999944692,
+        "std_ms": 0.1967807804628076,
+        "p95_ms": 2.197392499988382,
+        "mean_ms": 1.8574803333801053
+      },
+      "total_ms": {
+        "median_ms": 25.30378749997908,
+        "std_ms": 0.8409009199224328,
+        "p95_ms": 27.12344899996424,
+        "mean_ms": 25.451682666637982
+      }
+    }
+  }
+]

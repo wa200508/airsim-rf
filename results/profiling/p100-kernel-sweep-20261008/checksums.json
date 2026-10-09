@@ -1,0 +1,22 @@
+{
+  "README.md": "653b71ad08eef1d20922ba8051bb951646448c45f18ca6e07c7f787285a4cda4",
+  "adaptive_after/REPORT.md": "70940c683fd50d49b01722e73fd0799e09d966e0ffd51142a051c4510d546d8e",
+  "adaptive_after/measurements.json": "b7d6fd15125573f618de04c5eb7ac586555decbfbd62655ac2b28092b08f06b1",
+  "adaptive_before/REPORT.md": "019c507587d1be9e2dfa86bc5d92f36845860cc291f6e8a6a19ddee17d7a169a",
+  "adaptive_before/measurements.json": "3c2cac13bde85953488ae61b6364bbb8b7563c3b2d84390bb66bfd6808d66d2d",
+  "auto/REPORT.md": "8991dd059ba6054f641824c715efbeb88615eca5205dd243804742ef8444447c",
+  "auto/measurements.json": "2266f3ac9cbbb0a128c19d17fd4486c3640be1ee4b2c76a8ddc62470830c1d7b",
+  "auto_radix23/REPORT.md": "47fbd27b4a1b263b37c911ec4c4e108e80422b25b9e5455540b3b100769be6c0",
+  "auto_radix23/measurements.json": "b747035709483f678cbcd416a63276f8e7ec583a4a3cd452b87f639662242073",
+  "auto_trim_power2/REPORT.md": "9785e2a65c780b72a76631b2b0e95ae0ae932ac607946eb3c5c72d77b17a9a6c",
+  "auto_trim_power2/measurements.json": "2e7380de608491cc84b706de0fd83c0611dfc7db2369d897fbaa6a29da4d9728",
+  "auto_trim_radix23/REPORT.md": "7e4bd22fb8c881ca075025055e48d58402b057ca5831e68340733801822a8831",
+  "auto_trim_radix23/measurements.json": "30b190ef17cea7df710d8ffd57d6651b2e6f5068bac80b9cf5492410cc12163d",
+  "logs/adaptive_after.log": "94cc71f50cc32753f56163545a2f514066f8e8ac63dde89b631b60ad7e2ccc22",
+  "logs/adaptive_before.log": "448a634a0dd6dec9ae54263b9dd082deb16eef2996333a91d32c34d648c6e7ff",
+  "logs/auto.log": "de807a77c15e7b59d1e3471d70754412903d0ba35454fabe2471e248fa5161f1",
+  "logs/auto_radix23.log": "0f0e28c500affbb104d90721befa532a2d393982c0804d04a97da4464d1f31c7",
+  "logs/auto_trim_power2.log": "9a0e69b8511f060f6ab63718f83c2c8a6fc1d60a6c090dbef8660665c2a9ae67",
+  "logs/auto_trim_radix23.log": "f747d5d6194e9f198fd9e069d6127eda07786d86777a1aa642f5d52d7cfbd287",
+  "manifest.json": "995621f3bd89e5eeda85990eb82278ec4eb7a32b6c019f084fc06b86edf80dcc"
+}

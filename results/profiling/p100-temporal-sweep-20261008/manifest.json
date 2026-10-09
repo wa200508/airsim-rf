@@ -1,0 +1,185 @@
+{
+  "scope": "rf_pipeline_temporal_sweep",
+  "iterations": 30,
+  "warmup": 3,
+  "complete": true,
+  "tasks": [
+    {
+      "name": "fixed_before",
+      "command": [
+        "/opt/airsim-rf/.venv/bin/python",
+        "/work/repo/scripts/basis_launch.py",
+        "/work/repo/benchmarks/benchmark_end_to_end.py",
+        "--renderer",
+        "basis-cuda",
+        "--propagation-backend",
+        "cuda",
+        "--pascal-compat",
+        "--tx",
+        "100",
+        "--rx",
+        "10",
+        "--iterations",
+        "30",
+        "--warmup",
+        "3",
+        "--output",
+        "/work/results/p100-temporal-sweep-20261008/fixed_before"
+      ],
+      "options": [],
+      "returncode": 0,
+      "wall_seconds": 29.488552468999842
+    },
+    {
+      "name": "adaptive",
+      "command": [
+        "/opt/airsim-rf/.venv/bin/python",
+        "/work/repo/scripts/basis_launch.py",
+        "/work/repo/benchmarks/benchmark_end_to_end.py",
+        "--renderer",
+        "basis-cuda",
+        "--propagation-backend",
+        "cuda",
+        "--pascal-compat",
+        "--tx",
+        "100",
+        "--rx",
+        "10",
+        "--iterations",
+        "30",
+        "--warmup",
+        "3",
+        "--output",
+        "/work/results/p100-temporal-sweep-20261008/adaptive",
+        "--adaptive-temporal"
+      ],
+      "options": [
+        "--adaptive-temporal"
+      ],
+      "returncode": 0,
+      "wall_seconds": 17.467284481999968
+    },
+    {
+      "name": "adaptive_single",
+      "command": [
+        "/opt/airsim-rf/.venv/bin/python",
+        "/work/repo/scripts/basis_launch.py",
+        "/work/repo/benchmarks/benchmark_end_to_end.py",
+        "--renderer",
+        "basis-cuda",
+        "--propagation-backend",
+        "cuda",
+        "--pascal-compat",
+        "--tx",
+        "100",
+        "--rx",
+        "10",
+        "--iterations",
+        "30",
+        "--warmup",
+        "3",
+        "--output",
+        "/work/results/p100-temporal-sweep-20261008/adaptive_single",
+        "--adaptive-temporal",
+        "--cuda-delay-map",
+        "single"
+      ],
+      "options": [
+        "--adaptive-temporal",
+        "--cuda-delay-map",
+        "single"
+      ],
+      "returncode": 0,
+      "wall_seconds": 17.215500369999972
+    },
+    {
+      "name": "fixed_single",
+      "command": [
+        "/opt/airsim-rf/.venv/bin/python",
+        "/work/repo/scripts/basis_launch.py",
+        "/work/repo/benchmarks/benchmark_end_to_end.py",
+        "--renderer",
+        "basis-cuda",
+        "--propagation-backend",
+        "cuda",
+        "--pascal-compat",
+        "--tx",
+        "100",
+        "--rx",
+        "10",
+        "--iterations",
+        "30",
+        "--warmup",
+        "3",
+        "--output",
+        "/work/results/p100-temporal-sweep-20261008/fixed_single",
+        "--cuda-delay-map",
+        "single"
+      ],
+      "options": [
+        "--cuda-delay-map",
+        "single"
+      ],
+      "returncode": 0,
+      "wall_seconds": 21.806596032000016
+    },
+    {
+      "name": "adaptive_fused",
+      "command": [
+        "/opt/airsim-rf/.venv/bin/python",
+        "/work/repo/scripts/basis_launch.py",
+        "/work/repo/benchmarks/benchmark_end_to_end.py",
+        "--renderer",
+        "basis-cuda",
+        "--propagation-backend",
+        "cuda",
+        "--pascal-compat",
+        "--tx",
+        "100",
+        "--rx",
+        "10",
+        "--iterations",
+        "30",
+        "--warmup",
+        "3",
+        "--output",
+        "/work/results/p100-temporal-sweep-20261008/adaptive_fused",
+        "--adaptive-temporal",
+        "--fused-projection"
+      ],
+      "options": [
+        "--adaptive-temporal",
+        "--fused-projection"
+      ],
+      "returncode": 0,
+      "wall_seconds": 17.48167132200001
+    },
+    {
+      "name": "fixed_after",
+      "command": [
+        "/opt/airsim-rf/.venv/bin/python",
+        "/work/repo/scripts/basis_launch.py",
+        "/work/repo/benchmarks/benchmark_end_to_end.py",
+        "--renderer",
+        "basis-cuda",
+        "--propagation-backend",
+        "cuda",
+        "--pascal-compat",
+        "--tx",
+        "100",
+        "--rx",
+        "10",
+        "--iterations",
+        "30",
+        "--warmup",
+        "3",
+        "--output",
+        "/work/results/p100-temporal-sweep-20261008/fixed_after"
+      ],
+      "options": [],
+      "returncode": 0,
+      "wall_seconds": 22.08208826499981
+    }
+  ],
+  "note": "Same GPU propagation/versions/scene/epochs; separate sequential processes, shared disk JIT cache; fixed controls bracket experiments."
+}

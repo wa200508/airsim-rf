@@ -1,0 +1,104 @@
+{
+  "status": "verified_cuda_cupy",
+  "scope": "renderer_cuda_only",
+  "propagation": "not tested; current Dr.Jit rejects P100",
+  "gpu": "Tesla P100-PCIE-16GB",
+  "compute_capability": "6.0",
+  "cupy_version": "13.6.0",
+  "cuda_runtime_version": 12090,
+  "cuda_driver_version": 13000,
+  "metrics": {
+    "total_ms": 5321.742301000086,
+    "backend": "cuda_cupy",
+    "projection": "gather",
+    "delay_map": "double",
+    "fft_inplace": false,
+    "reuse_buffers": false,
+    "fused_projection": false,
+    "adaptive_temporal": false,
+    "trim_delay_support": false,
+    "projection_lanes": 32,
+    "fft_policy": "scipy",
+    "packing": [
+      {
+        "cpu_prepare_ms": 0.1572399996803142,
+        "upload_submission_ms": 1.1712790001183748,
+        "uploaded_bytes": 7890,
+        "uploaded_keys": [
+          "a",
+          "d",
+          "fd",
+          "valid",
+          "source",
+          "offsets",
+          "base_cycles"
+        ],
+        "buffers_reused": false,
+        "channel_reused": false,
+        "upload_cuda_span_ms": 1.1663999557495117
+      }
+    ],
+    "projection_calls": [
+      {
+        "name": "basis.projection_call",
+        "cuda_ms": 67.9019546508789
+      }
+    ],
+    "valid_paths": 2,
+    "blocks": [
+      {
+        "jobs": 1,
+        "samples": 256,
+        "degree": 10,
+        "temporal_tail_bound": 2.646838275055734e-11,
+        "coefficient_aliasing_included": true,
+        "delay_coefficients": 233,
+        "temporal_bound_hz": 2500,
+        "filter_min_lag": -16,
+        "filter_max_lag": 216,
+        "fft_size": 490,
+        "projection_lanes": 32
+      }
+    ],
+    "sum_output": false,
+    "events": [
+      {
+        "name": "basis.host_pack_and_upload",
+        "cuda_ms": 1.3370879888534546
+      },
+      {
+        "name": "basis.delay_map",
+        "cuda_ms": 3165.58447265625
+      },
+      {
+        "name": "basis.temporal_coefficients",
+        "cuda_ms": 1740.6357421875
+      },
+      {
+        "name": "basis.path_projection",
+        "cuda_ms": 67.96089935302734
+      },
+      {
+        "name": "basis.private_fft_filters",
+        "cuda_ms": 128.4699249267578
+      },
+      {
+        "name": "basis.reconstruction_and_sum",
+        "cuda_ms": 217.05711364746094
+      },
+      {
+        "name": "basis.final_output_export",
+        "cuda_ms": 0.08687999844551086
+      }
+    ],
+    "cuda_event_span_ms": 5321.132120758295,
+    "pool_used_bytes": 164864,
+    "pool_reserved_bytes": 257024,
+    "max_checkpoint_pool_used_bytes": 164864,
+    "pool_measurement_note": "Allocator snapshots include persistent plans/cache; not process-wide peak VRAM",
+    "profile": true,
+    "no_cpu_fallback": true,
+    "precision": "complex128/float64"
+  },
+  "max_absolute_error": 2.3714374201337737e-15
+}

@@ -10,7 +10,7 @@ integration for AMS-GRA.
 
 ## How close are we to real time?
 
-The latest qualified **100-TX × 10-RX RF fleet update** takes **553.685 ms median wall service time** (p95 563.363 ms) to produce ~8.333 ms of signal per receiver. Receivers execute sequentially on one P100. CUDA/OptiX propagation and CUDA rendering are included, together with host source preparation, receiver processing and loopback HTTP/file readback. This is a trajectory-source RF benchmark, excluding live AirSim physics/RPC, WAN workers and startup; thirty measured updates cover **0.250 simulated seconds**, consuming **16.5899 wall seconds**, or **66.36 wall seconds per simulated signal second**. All thirty miss the 120-Hz deadline. See [measurement definitions](TIMING_CONVENTIONS.md) and [the measured configuration](P100_GPU_PIPELINE.md).
+The latest qualified **100-TX × 10-RX RF fleet update** takes **371.859 ms median wall service time** (p95 recorded in the linked report) to produce ~8.333 ms of signal per receiver. Receivers execute sequentially on one P100. CUDA/OptiX propagation and CUDA rendering are included, together with host source preparation, receiver processing and loopback HTTP/file readback. This is a trajectory-source RF benchmark, excluding live AirSim physics/RPC, WAN workers and startup; thirty measured updates cover **0.250 simulated seconds**, consuming **11.1696 wall seconds**, or **44.68 wall seconds per simulated signal second**. All thirty miss the 120-Hz deadline. See [measurement definitions](TIMING_CONVENTIONS.md) and [the measured configuration](results/profiling/p100-adaptive-pipeline-full-20261008/FINDINGS.md).
 
 The older 843.630 ms result used LLVM CPU propagation and another dependency stack. Treat it as a cross-configuration comparison, not an isolated optimization gain. The synthetic renderer-only results below have a different scope and path workload.
 
@@ -47,7 +47,7 @@ clock resampling, queues and recording add unmeasured work, so **complete
 flight completion time remains unknown**. No unmeasured receiver parallelism
 or transmitter sharing is credited.
 
-These historical rows cover one receiver only. Serial ten-receiver and multi-GPU projections from them are estimates; use the measured fleet-update results above for the tested terrain workload. The default modern Dr.Jit CUDA stack rejects P100; [the explicit compatibility stack](P100_GPU_PIPELINE.md) now qualifies CUDA/OptiX propagation on this card.
+These historical rows cover one receiver only. Serial ten-receiver and multi-GPU projections from them are estimates; use the measured fleet-update results above for the tested terrain workload. The default modern Dr.Jit CUDA stack rejects P100; [the explicit compatibility stack](results/profiling/p100-adaptive-pipeline-full-20261008/FINDINGS.md) now qualifies CUDA/OptiX propagation on this card.
 
 See [runtime context and historical comparisons](RUNTIME_STATUS.md) for included
 stages, delivery latency, formulas and why older short-burst/channel-only numbers

@@ -1,0 +1,355 @@
+{
+  "scope": "isolated_private_fft_filter_chain",
+  "samples_per_nominal_block": 2048,
+  "sample_rate_hz": 2000000,
+  "tx": 100,
+  "rx": 1,
+  "precision": "complex128",
+  "warmup": 3,
+  "iterations": 20,
+  "rows": [
+    {
+      "rank": 8,
+      "support": 35,
+      "fft_size": 2100,
+      "n": 20,
+      "wall_mean_ms": 1.2510587000633677,
+      "event_mean_ms": 1.2357071876525878,
+      "wall_median_ms": 1.2497395000536926
+    },
+    {
+      "rank": 8,
+      "support": 35,
+      "fft_size": 2112,
+      "n": 20,
+      "wall_mean_ms": 0.69152685005065,
+      "event_mean_ms": 0.6773791909217834,
+      "wall_median_ms": 0.6886300000132906
+    },
+    {
+      "rank": 8,
+      "support": 35,
+      "fft_size": 2160,
+      "n": 20,
+      "wall_mean_ms": 0.6931958500445035,
+      "event_mean_ms": 0.6818096041679382,
+      "wall_median_ms": 0.6943350001620274
+    },
+    {
+      "rank": 8,
+      "support": 35,
+      "fft_size": 2240,
+      "n": 20,
+      "wall_mean_ms": 0.7460018500751175,
+      "event_mean_ms": 0.7337231993675232,
+      "wall_median_ms": 0.7443894999141776
+    },
+    {
+      "rank": 8,
+      "support": 35,
+      "fft_size": 2250,
+      "n": 20,
+      "wall_mean_ms": 0.7189363500174295,
+      "event_mean_ms": 0.7087855994701385,
+      "wall_median_ms": 0.7206100001440063
+    },
+    {
+      "rank": 8,
+      "support": 35,
+      "fft_size": 2304,
+      "n": 20,
+      "wall_mean_ms": 0.6576453499747004,
+      "event_mean_ms": 0.6441472053527832,
+      "wall_median_ms": 0.6568250000782427
+    },
+    {
+      "rank": 8,
+      "support": 35,
+      "fft_size": 2400,
+      "n": 20,
+      "wall_mean_ms": 0.7806698500417042,
+      "event_mean_ms": 0.7676832050085067,
+      "wall_median_ms": 0.7816550000825373
+    },
+    {
+      "rank": 8,
+      "support": 35,
+      "fft_size": 2430,
+      "n": 20,
+      "wall_mean_ms": 1.2793067500297184,
+      "event_mean_ms": 1.2652127921581269,
+      "wall_median_ms": 1.2801845002741175
+    },
+    {
+      "rank": 8,
+      "support": 35,
+      "fft_size": 2500,
+      "n": 20,
+      "wall_mean_ms": 0.7328643499931786,
+      "event_mean_ms": 0.7216448068618775,
+      "wall_median_ms": 0.7326250001824519
+    },
+    {
+      "rank": 8,
+      "support": 35,
+      "fft_size": 2560,
+      "n": 20,
+      "wall_mean_ms": 0.758588800022153,
+      "event_mean_ms": 0.7465504020452499,
+      "wall_median_ms": 0.7534094997936336
+    },
+    {
+      "rank": 8,
+      "support": 35,
+      "fft_size": 3072,
+      "n": 20,
+      "wall_mean_ms": 0.9002418000363832,
+      "event_mean_ms": 0.8862767934799194,
+      "wall_median_ms": 0.8963599998423888
+    },
+    {
+      "rank": 8,
+      "support": 35,
+      "fft_size": 4096,
+      "n": 20,
+      "wall_mean_ms": 1.0472003000586483,
+      "event_mean_ms": 1.035719984769821,
+      "wall_median_ms": 1.046484500193401
+    },
+    {
+      "rank": 8,
+      "support": 233,
+      "fft_size": 2304,
+      "n": 20,
+      "wall_mean_ms": 0.6462878500315128,
+      "event_mean_ms": 0.6344767957925797,
+      "wall_median_ms": 0.6451250001191511
+    },
+    {
+      "rank": 8,
+      "support": 233,
+      "fft_size": 2400,
+      "n": 20,
+      "wall_mean_ms": 0.7643138499815905,
+      "event_mean_ms": 0.7537455946207047,
+      "wall_median_ms": 0.7678300000861782
+    },
+    {
+      "rank": 8,
+      "support": 233,
+      "fft_size": 2430,
+      "n": 20,
+      "wall_mean_ms": 1.2672977000875107,
+      "event_mean_ms": 1.254316794872284,
+      "wall_median_ms": 1.2667250000504282
+    },
+    {
+      "rank": 8,
+      "support": 233,
+      "fft_size": 2500,
+      "n": 20,
+      "wall_mean_ms": 0.7177483500299786,
+      "event_mean_ms": 0.7061423987150193,
+      "wall_median_ms": 0.714054999889413
+    },
+    {
+      "rank": 8,
+      "support": 233,
+      "fft_size": 2560,
+      "n": 20,
+      "wall_mean_ms": 0.7752768499358353,
+      "event_mean_ms": 0.7624623954296113,
+      "wall_median_ms": 0.7730800000445015
+    },
+    {
+      "rank": 8,
+      "support": 233,
+      "fft_size": 3072,
+      "n": 20,
+      "wall_mean_ms": 0.9072647999573746,
+      "event_mean_ms": 0.8937615990638733,
+      "wall_median_ms": 0.9054145000391145
+    },
+    {
+      "rank": 8,
+      "support": 233,
+      "fft_size": 4096,
+      "n": 20,
+      "wall_mean_ms": 1.0623478000070463,
+      "event_mean_ms": 1.0497792065143585,
+      "wall_median_ms": 1.0576550000678253
+    },
+    {
+      "rank": 27,
+      "support": 35,
+      "fft_size": 2100,
+      "n": 20,
+      "wall_mean_ms": 3.8564286499649825,
+      "event_mean_ms": 3.838308799266815,
+      "wall_median_ms": 3.8485190000301372
+    },
+    {
+      "rank": 27,
+      "support": 35,
+      "fft_size": 2112,
+      "n": 20,
+      "wall_mean_ms": 1.9527730499476093,
+      "event_mean_ms": 1.9356543958187102,
+      "wall_median_ms": 1.9431089999670803
+    },
+    {
+      "rank": 27,
+      "support": 35,
+      "fft_size": 2160,
+      "n": 20,
+      "wall_mean_ms": 1.9563895500596118,
+      "event_mean_ms": 1.938452798128128,
+      "wall_median_ms": 1.9521144999998796
+    },
+    {
+      "rank": 27,
+      "support": 35,
+      "fft_size": 2240,
+      "n": 20,
+      "wall_mean_ms": 2.1453610499975184,
+      "event_mean_ms": 2.126631999015808,
+      "wall_median_ms": 2.1387594997577253
+    },
+    {
+      "rank": 27,
+      "support": 35,
+      "fft_size": 2250,
+      "n": 20,
+      "wall_mean_ms": 2.0759415500378964,
+      "event_mean_ms": 2.059494400024414,
+      "wall_median_ms": 2.070309499913492
+    },
+    {
+      "rank": 27,
+      "support": 35,
+      "fft_size": 2304,
+      "n": 20,
+      "wall_mean_ms": 1.8454216000009183,
+      "event_mean_ms": 1.8283440053462983,
+      "wall_median_ms": 1.8381350000709062
+    },
+    {
+      "rank": 27,
+      "support": 35,
+      "fft_size": 2400,
+      "n": 20,
+      "wall_mean_ms": 2.248074500016628,
+      "event_mean_ms": 2.2278880000114443,
+      "wall_median_ms": 2.252529499855882
+    },
+    {
+      "rank": 27,
+      "support": 35,
+      "fft_size": 2430,
+      "n": 20,
+      "wall_mean_ms": 3.8785441500294837,
+      "event_mean_ms": 3.8603551626205443,
+      "wall_median_ms": 3.8733245000912575
+    },
+    {
+      "rank": 27,
+      "support": 35,
+      "fft_size": 2500,
+      "n": 20,
+      "wall_mean_ms": 2.0693945500397604,
+      "event_mean_ms": 2.053951990604401,
+      "wall_median_ms": 2.069155000071987
+    },
+    {
+      "rank": 27,
+      "support": 35,
+      "fft_size": 2560,
+      "n": 20,
+      "wall_mean_ms": 2.1851955499641917,
+      "event_mean_ms": 2.171014404296875,
+      "wall_median_ms": 2.1789494999211456
+    },
+    {
+      "rank": 27,
+      "support": 35,
+      "fft_size": 3072,
+      "n": 20,
+      "wall_mean_ms": 2.6235199500433737,
+      "event_mean_ms": 2.6094848036766054,
+      "wall_median_ms": 2.6179945000421867
+    },
+    {
+      "rank": 27,
+      "support": 35,
+      "fft_size": 4096,
+      "n": 20,
+      "wall_mean_ms": 3.109619850101808,
+      "event_mean_ms": 3.0947199940681456,
+      "wall_median_ms": 3.1072545000370155
+    },
+    {
+      "rank": 27,
+      "support": 233,
+      "fft_size": 2304,
+      "n": 20,
+      "wall_mean_ms": 1.8746220998991703,
+      "event_mean_ms": 1.8602208018302917,
+      "wall_median_ms": 1.8733549998160015
+    },
+    {
+      "rank": 27,
+      "support": 233,
+      "fft_size": 2400,
+      "n": 20,
+      "wall_mean_ms": 2.2613155000271945,
+      "event_mean_ms": 2.248031997680664,
+      "wall_median_ms": 2.2676500000216038
+    },
+    {
+      "rank": 27,
+      "support": 233,
+      "fft_size": 2430,
+      "n": 20,
+      "wall_mean_ms": 3.8956831999485075,
+      "event_mean_ms": 3.881876802444458,
+      "wall_median_ms": 3.8912540001092566
+    },
+    {
+      "rank": 27,
+      "support": 233,
+      "fft_size": 2500,
+      "n": 20,
+      "wall_mean_ms": 2.100674049938789,
+      "event_mean_ms": 2.086608016490936,
+      "wall_median_ms": 2.0971745000224473
+    },
+    {
+      "rank": 27,
+      "support": 233,
+      "fft_size": 2560,
+      "n": 20,
+      "wall_mean_ms": 2.211780499987981,
+      "event_mean_ms": 2.197806406021118,
+      "wall_median_ms": 2.2110644999884244
+    },
+    {
+      "rank": 27,
+      "support": 233,
+      "fft_size": 3072,
+      "n": 20,
+      "wall_mean_ms": 2.6663374000236217,
+      "event_mean_ms": 2.651027190685272,
+      "wall_median_ms": 2.6684245001433737
+    },
+    {
+      "rank": 27,
+      "support": 233,
+      "fft_size": 4096,
+      "n": 20,
+      "wall_mean_ms": 3.1552068500104724,
+      "event_mean_ms": 3.138755190372467,
+      "wall_median_ms": 3.1512090001797333
+    }
+  ],
+  "note": "Synthetic coefficients only; three cuFFT operations plus multiplication. No propagation/projection/source generation/receiver/delivery. CUDA event spans include dispatch gaps. Not an RF capture or fleet throughput."
+}
