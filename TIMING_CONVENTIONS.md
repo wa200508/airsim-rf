@@ -26,3 +26,5 @@ Sum each stage across links/blocks/receivers **within an update**, then calculat
 Claim an optimization gain only from a matched control: same scene epochs, sample/path/support budgets, model/precision, hardware, backend/versions, worker settings, qualification, instrumentation and comparable cache/GPU contention state. Name any changed dimension. Cold versus reused disk-cache results cannot isolate an algorithm change. Record failed runs as diagnostics without assigning successful throughput or extrapolated latency.
 
 Correctness qualification is separate from speed. Distinguish final-window numerical reference checks, per-update continuity/hash/range checks, solver/integration tests and untested live deployment. Telemetry is sampled whole-device utilization/memory and can miss short activity; 0% sampled utilization does not establish zero GPU execution.
+
+Regenerate normalized context with `python3 scripts/update_timing_context.py`; verify it with `--check`. The runtime and stage table generators have their own `--check` commands. Normalization reads recorded samples and never reruns or changes numerical measurements.

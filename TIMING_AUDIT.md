@@ -93,3 +93,5 @@ All 89 pre-existing Markdown files were scanned for runtime claims. Timing-beari
 | [results/profiling/p100-legacy-scaling-20261003/REPORT.md](results/profiling/p100-legacy-scaling-20261003/REPORT.md) | Legacy propagation-only scaling; rendering disabled; failed sizes have no throughput |
 | [results/profiling/p100-quick-20261003-2005/REPORT.md](results/profiling/p100-quick-20261003-2005/REPORT.md) | Historical local RF service; model/backend and timed region are specified below |
 | [scripts/p100_legacy/README.md](scripts/p100_legacy/README.md) | Mixed scope or architecture/reference document; each workload/table retains its stated timed operation |
+
+The follow-on GPU block sweep adds seven reports with the same normalization. The index now contains 109 recorded cases. Primary unit: wall seconds per simulated signal second; per-call milliseconds retain their explicit sample-duration denominator. Geometry-only and analytic estimates remain marked as lacking a generated-signal denominator.
