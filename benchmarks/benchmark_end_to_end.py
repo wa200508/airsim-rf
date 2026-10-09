@@ -138,7 +138,11 @@ def stats(values):
 
 
 def run(*, output, tx=100, rx=10, iterations=30, warmup=3, renderer='basis-cpu',
-        samples_per_link=1028, airsim_config=None, profile_rendering=False, optimizations=True, fused_projection=False, threads=2, propagation_backend=None, pascal_compat=False, block_samples=2048, python_profile=False, adaptive_temporal=False, cuda_delay_map='double', trim_delay_support=False, projection_lanes=32, fft_policy='scipy'):
+        samples_per_link=1028, airsim_config=None, profile_rendering=False, optimizations=True, fused_projection=False, threads=2, propagation_backend=None, pascal_compat=False, block_samples=2048, python_profile=False, adaptive_temporal=None, cuda_delay_map='double', trim_delay_support=False, projection_lanes=None, fft_policy='scipy'):
+    if adaptive_temporal is None:
+        adaptive_temporal = renderer == 'basis-cuda'
+    if projection_lanes is None:
+        projection_lanes = 0 if renderer == 'basis-cuda' else 32
     import mitsuba as mi
     if propagation_backend is None:
         propagation_backend = 'cuda' if mi.variant().startswith('cuda') else 'llvm'
@@ -234,7 +238,9 @@ def run(*, output, tx=100, rx=10, iterations=30, warmup=3, renderer='basis-cpu',
                 optix_events=sum(bool(v.get('uses_optix')) or 'optix' in str(v.get('type','')).lower() for v in history),
                 codegen_ms=sum(float(v.get('codegen_time',0)) for v in history),
                 backend_ms=sum(float(v.get('backend_time',0)) for v in history),
-                cache_misses=sum(not bool(v.get('cache_hit',False)) for v in history),
+                cache_misses=sum(v.get('cache_hit') is False for v in history),
+                cache_hits=sum(v.get('cache_hit') is True for v in history),
+                cache_hit_unreported=sum(not isinstance(v.get('cache_hit'),bool) for v in history),
                 execution_ms=sum(float(v.get('execution_time',0)) for v in history))
             row = dict(sequence=index, sim_time_ns=origin_ns+sample_start*500, samples=count,
                 advance_ms=pose_ms, source_ms=source_ms, channel_ms=receiver.last_channel_ms,
@@ -343,11 +349,12 @@ def main():
     parser.add_argument('--threads', type=int, default=2, help='LLVM propagation worker threads')
     parser.add_argument('--no-optimizations', dest='optimizations', action='store_false')
     parser.add_argument('--fused-projection', action='store_true')
-    parser.add_argument('--projection-lanes', type=int, choices=(0,8,16,32), default=32, help='Warp subgroup width; 0 chooses width by temporal rank')
+    parser.add_argument('--projection-lanes', type=int, choices=(0,8,16,32), default=None, help='Warp subgroup width; 0 chooses width by temporal rank')
     parser.add_argument('--fft-policy', choices=('scipy','radix23','power2'), default='scipy')
     parser.add_argument('--trim-delay-support', action='store_true', help='Omit mathematically zero filter bins; preserve declared input history and range guards')
     parser.add_argument('--cuda-delay-map', choices=('double','single'), default='double', help='GPU delay-ordering control; every path remains included')
-    parser.add_argument('--adaptive-temporal', action='store_true', help='Choose proven temporal rank from all current path Dopplers; declared limits remain enforced')
+    parser.add_argument('--fixed-temporal', dest='adaptive_temporal', action='store_false', default=None, help='Matched control: use the full declared Doppler range for every basis')
+    parser.add_argument('--adaptive-temporal', action='store_true', default=None, help='Choose proven temporal rank from all current path Dopplers; declared limits remain enforced')
     parser.add_argument('--python-profile', action='store_true', help='Main-thread cProfile during measured updates; requires --profile-rendering')
     parser.add_argument('--profile-rendering', action='store_true', help='Separate instrumented GPU-event run; never enters unprofiled throughput')
     args = parser.parse_args()

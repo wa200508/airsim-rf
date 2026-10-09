@@ -153,7 +153,7 @@ class SDRNetworkReceiver:
                  path_tile=128, sample_tile=32, accumulation="partial",
                  replay=True, max_render_lanes=1_000_000, link_diagnostics=True,
                  batch_reduction="auto", continuous=False, max_delay_s=100e-6,
-                 max_doppler_hz=2500., block_samples=2048, fft_workers=2, profile_rendering=False, reuse_render_buffers=True, cache_scattering_samples=True, fused_projection=False, adaptive_temporal=False, cuda_delay_map='double', trim_delay_support=False, projection_lanes=32, fft_policy='scipy'):
+                 max_doppler_hz=2500., block_samples=2048, fft_workers=2, profile_rendering=False, reuse_render_buffers=True, cache_scattering_samples=True, fused_projection=False, adaptive_temporal=None, cuda_delay_map='double', trim_delay_support=False, projection_lanes=None, fft_policy='scipy'):
         if not emitters or set(emitters) != set(scene.transmitters):
             raise ValueError("Supply one emitter for every scene transmitter")
         if not scene.receivers:
@@ -193,6 +193,10 @@ class SDRNetworkReceiver:
                 reduction=batch_reduction)
         if not isinstance(profile_rendering, bool) or (profile_rendering and renderer != "basis-cuda"):
             raise ValueError("Repeated rendering event profiling requires basis-cuda")
+        if adaptive_temporal is None:
+            adaptive_temporal = renderer == 'basis-cuda'
+        if projection_lanes is None:
+            projection_lanes = 0 if renderer == 'basis-cuda' else 32
         self.profile_rendering = profile_rendering
         self.basis_renderer = None
         if renderer.startswith("basis-"):

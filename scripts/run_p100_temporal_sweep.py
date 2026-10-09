@@ -26,7 +26,7 @@ def main():
                   complete=False,tasks=[],note='Same GPU propagation/versions/scene/epochs; separate sequential processes, shared disk JIT cache; fixed controls bracket experiments.')
     for name, options in cases:
         command=[sys.executable,str(ROOT/'scripts/basis_launch.py'),str(ROOT/'benchmarks/benchmark_end_to_end.py'),
-            '--renderer','basis-cuda','--propagation-backend','cuda','--pascal-compat','--tx','100','--rx','10',
+            '--renderer','basis-cuda','--fixed-temporal','--projection-lanes','32','--propagation-backend','cuda','--pascal-compat','--tx','100','--rx','10',
             '--iterations',str(args.iterations),'--warmup','3','--output',str(args.output/name),*options]
         print(f'Starting {name}',flush=True)
         started=perf_counter()

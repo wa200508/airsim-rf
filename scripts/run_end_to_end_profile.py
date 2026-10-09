@@ -24,6 +24,10 @@ def main():
     parser.add_argument('--iterations', type=int, default=30)
     parser.add_argument('--propagation-backend', choices=('llvm','cuda'), default='llvm')
     parser.add_argument('--pascal-compat', action='store_true')
+    parser.add_argument('--fixed-temporal', dest='adaptive_temporal', action='store_false', help='GPU control: fixed declared-range basis')
+    parser.add_argument('--projection-lanes', type=int, choices=(0,8,16,32), default=0)
+    parser.add_argument('--fft-policy', choices=('scipy','radix23','power2'), default='scipy')
+    parser.add_argument('--trim-delay-support', action='store_true')
     parser.add_argument('--threads', type=int, default=2)
     parser.add_argument('--warmup', type=int, default=3)
     parser.add_argument('--scenarios', nargs='+', default=['2x2','10x4','100x10'], help='TXxRX counts; budgets/cadence unchanged')
@@ -48,7 +52,7 @@ def main():
     (output/'profiles').mkdir()
     backends = ['cpu','cuda'] if args.backend == 'both' else [args.backend]
     manifest=dict(run_id=output.name,scope='rf_pipeline_end_to_end_collection',complete=False,
-                  iterations=args.iterations,warmup=args.warmup,threads=args.threads,propagation_backend=args.propagation_backend,pascal_compat=args.pascal_compat,scenarios=scenarios,backends=backends,tasks=[])
+                  iterations=args.iterations,warmup=args.warmup,threads=args.threads,propagation_backend=args.propagation_backend,pascal_compat=args.pascal_compat,adaptive_temporal=args.adaptive_temporal,projection_lanes=args.projection_lanes,fft_policy=args.fft_policy,trim_delay_support=args.trim_delay_support,scenarios=scenarios,backends=backends,tasks=[])
     def save():
         (output/'manifest.json').write_text(json.dumps(manifest,indent=2)+'\n')
     save()
@@ -112,6 +116,11 @@ def main():
                     '--renderer',f'basis-{backend}','--tx',str(tx),'--rx',str(rx),
                     '--iterations',str(args.iterations),'--warmup',str(args.warmup),'--threads',str(args.threads),'--propagation-backend',args.propagation_backend,
                     '--output',str(output/'profiles'/name)]
+                if backend == 'cuda':
+                    command += ['--adaptive-temporal' if args.adaptive_temporal else '--fixed-temporal',
+                                '--projection-lanes',str(args.projection_lanes),'--fft-policy',args.fft_policy]
+                    if args.trim_delay_support:
+                        command.append('--trim-delay-support')
                 if args.pascal_compat:
                     command.append('--pascal-compat')
                 if mode=='instrumented':

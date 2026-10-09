@@ -22,7 +22,7 @@ def main():
     for label, block in [('control_before',2048),('block512',512),('block1024',1024),
                          ('block4096',4096),('block8192',8192),('control_after',2048)]:
         command = [sys.executable,str(ROOT/'scripts/basis_launch.py'),str(ROOT/'benchmarks/benchmark_end_to_end.py'),
-                   '--renderer','basis-cuda','--propagation-backend','cuda','--pascal-compat',
+                   '--renderer','basis-cuda','--fixed-temporal','--projection-lanes','32','--propagation-backend','cuda','--pascal-compat',
                    '--tx','100','--rx','10','--iterations',str(args.iterations),'--warmup','3',
                    '--block-samples',str(block),'--output',str(args.output/label)]
         print(f'Starting {label}: block={block}', flush=True)

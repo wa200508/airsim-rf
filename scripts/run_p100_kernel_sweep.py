@@ -23,7 +23,7 @@ def main():
     manifest=dict(scope='rf_pipeline_kernel_sweep',complete=False,iterations=args.iterations,warmup=3,tasks=[],note='All cases adaptive; identical GPU propagation/versions, epochs and private traffic. Separate sequential processes with shared disk JIT cache; controls bracket trials.')
     for name,options in cases:
         command=[sys.executable,str(ROOT/'scripts/basis_launch.py'),str(ROOT/'benchmarks/benchmark_end_to_end.py'),
-            '--renderer','basis-cuda','--propagation-backend','cuda','--pascal-compat','--adaptive-temporal',
+            '--renderer','basis-cuda','--fixed-temporal','--projection-lanes','32','--propagation-backend','cuda','--pascal-compat','--adaptive-temporal',
             '--tx','100','--rx','10','--iterations',str(args.iterations),'--warmup','3',
             '--output',str(args.output/name),*options]
         print('Starting '+name,flush=True);start=perf_counter()
