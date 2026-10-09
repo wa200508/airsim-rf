@@ -138,7 +138,7 @@ def stats(values):
 
 
 def run(*, output, tx=100, rx=10, iterations=30, warmup=3, renderer='basis-cpu',
-        samples_per_link=1028, airsim_config=None, profile_rendering=False, optimizations=True, fused_projection=False, threads=2, propagation_backend=None, pascal_compat=False, block_samples=2048):
+        samples_per_link=1028, airsim_config=None, profile_rendering=False, optimizations=True, fused_projection=False, threads=2, propagation_backend=None, pascal_compat=False, block_samples=2048, python_profile=False):
     import mitsuba as mi
     if propagation_backend is None:
         propagation_backend = 'cuda' if mi.variant().startswith('cuda') else 'llvm'
@@ -190,6 +190,10 @@ def run(*, output, tx=100, rx=10, iterations=30, warmup=3, renderer='basis-cpu',
         cache_scattering_samples=optimizations, fused_projection=fused_projection, block_samples=block_samples)
     bridge = AirSimSDRBridge(world, robots, receiver)
     consumer = Consumer(output/'captures')
+    if python_profile and not profile_rendering:
+        raise ValueError('Python profiling requires the separate instrumented run')
+    import cProfile
+    profiler = cProfile.Profile() if python_profile else None
     rows = []
     first = None
     try:
@@ -198,6 +202,8 @@ def run(*, output, tx=100, rx=10, iterations=30, warmup=3, renderer='basis-cpu',
             # Integer sample accounting: 16667, 16666, 16667 ... at 120 Hz.
             sample_end = round((index+1)*FS/120)
             count = sample_end-sample_start
+            if profiler is not None and index == warmup+1:
+                profiler.enable()
             started = perf_counter()
             world.continue_until_sim_time(origin_ns+sample_start*500, wait_until_complete=True)
             pose_ms = (perf_counter()-started)*1000
@@ -248,6 +254,16 @@ def run(*, output, tx=100, rx=10, iterations=30, warmup=3, renderer='basis-cpu',
                 print(f'{len(rows)}/{iterations}: {total_ms:.2f} ms, {count} samples/RX', flush=True)
             sample_start = sample_end
     finally:
+        if profiler is not None:
+            profiler.disable()
+            import pstats
+            (output/'raw').mkdir(exist_ok=True)
+            profiler.dump_stats(str(output/'raw/python_profile.pstats'))
+            with (output/'python_calls.txt').open('w') as stream:
+                stats_report = pstats.Stats(profiler, stream=stream).strip_dirs()
+                stats_report.sort_stats('cumulative').print_stats(80)
+                stats_report.sort_stats('tottime').print_stats(80)
+                stats_report.print_callees('doppler_basis_cuda|_fft|sdr.py|sampled_waveform')
         consumer.close()
         if connection:
             world.pause()
@@ -280,7 +296,7 @@ def run(*, output, tx=100, rx=10, iterations=30, warmup=3, renderer='basis-cpu',
         pose_source='deterministic AirSim-contract trajectory; physics/RPC not exercised' if airsim_config is None else 'live ProjectAirSim physics/RPC',
         propagation_backend='Sionna RT CUDA/OptiX' if propagation_backend == 'cuda' else 'Sionna RT LLVM CPU', rendering_backend=renderer,
         arguments=dict(tx=tx,rx=rx,iterations=iterations,warmup=warmup,samples_per_link=samples_per_link,profile_rendering=profile_rendering, reuse_render_buffers=optimizations,
-        cache_scattering_samples=optimizations, fused_projection=fused_projection, threads=threads, propagation_backend=propagation_backend, pascal_compat=pascal_compat, block_samples=block_samples),
+        cache_scattering_samples=optimizations, fused_projection=fused_projection, threads=threads, propagation_backend=propagation_backend, pascal_compat=pascal_compat, block_samples=block_samples, python_profile=python_profile),
         timing_includes=['physics advance (live only)', 'snapshot/mount mapping', 'private waveform generation/copies',
             'scene multipath tracing/export', 'all-path I/Q rendering', 'persistent receive filter/noise/ADC',
             'SC16 serialization', 'loopback HTTP delivery/acknowledgement', 'consumer file write/readback (no fsync)'],
@@ -327,10 +343,13 @@ def main():
     parser.add_argument('--threads', type=int, default=2, help='LLVM propagation worker threads')
     parser.add_argument('--no-optimizations', dest='optimizations', action='store_false')
     parser.add_argument('--fused-projection', action='store_true')
+    parser.add_argument('--python-profile', action='store_true', help='Main-thread cProfile during measured updates; requires --profile-rendering')
     parser.add_argument('--profile-rendering', action='store_true', help='Separate instrumented GPU-event run; never enters unprofiled throughput')
     args = parser.parse_args()
     if min(args.tx,args.rx,args.iterations,args.samples_per_link,args.threads,args.block_samples)<1 or args.warmup<0:
         parser.error('Positive counts and nonnegative warmup required')
+    if args.python_profile and not args.profile_rendering:
+        parser.error('--python-profile requires --profile-rendering')
     import drjit as dr
     import mitsuba as mi
     dr.set_thread_count(args.threads)
