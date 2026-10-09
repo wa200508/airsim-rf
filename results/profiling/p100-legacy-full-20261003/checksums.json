@@ -1,5 +1,5 @@
 {
-  "REPORT.md": "d46b5339f19e85f7c6a7915606bfb1b20058968ce5fd871679e3009fb96bf6c1",
+  "REPORT.md": "bae38da1bf54b91de25620d7b38391f4adc8cd88bef121c231902e48a9d6b2b8",
   "container_image.json": "6ae099d28b39f37023cfe726fd645ee30fcce1a1401eaade66d9b4e42d0faebf",
   "environment.json": "55e9ad40a8be4efc045e041794bbeeab96ca8570e11cc3ad1c33f994b6c49087",
   "example_summary/listener_a.sigmf-meta": "d4662a25b22406c19ac7003ec82b12d827bbd5ea9f985d1d528844612d70ba2f",
@@ -10,7 +10,7 @@
   "external_harness/Dockerfile": "3e2147b8751a0cb92b215d7c031a26492563bba4cee6e7b9aadb9db7e07a4601",
   "external_harness/Dockerfile-legacy": "1f3dc8e47b05ee509d10f6f32c243b5fada6cd9ef53911720b48b6b59c89fa2a",
   "external_harness/Dockerfile-legacy-cuda": "fe92828d4e3b9fdcfa4fa34ae739d8ec4037960948a75c5bb5ebae0feb4f16c3",
-  "external_harness/REPRODUCE.md": "a0532044687ae1bb582d3f70305840bd3c907905c04e8ab82a18edb8a23bd545",
+  "external_harness/REPRODUCE.md": "e61acf246cac7f7d6643706bdb92ab5e5ed5e92b232a5d3094ea6fe4911a9474",
   "external_harness/analyze_legacy.py": "8a47df264336d931fdbac9f1112758473996ffe30811bde1433c07a3da2ca884",
   "external_harness/launch.py": "eaec13064dd78671e3adc0a705431e2dd4a65246db09e04bc4f32ba0636fe809",
   "external_harness/sitecustomize.py": "30fbf8ada526b87651b95fe84c3e6841411e1ca55cd0b8aa7cbf374496f64ae4",

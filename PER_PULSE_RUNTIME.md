@@ -1,5 +1,9 @@
 # Accepted model: one channel solve per pulse, one interaction
 
+**Timing scope:** Mixed scope or architecture/reference document; each workload/table retains its stated timed operation. [Common measurement definitions](TIMING_CONVENTIONS.md) apply to units, statistics, cache state, ratios and comparisons. Historical measurements and estimates are not current fleet-update qualification.
+
+
+
 **Runtime context (2026-10-05):** Historical single-interaction channel-only timings and compact-tone microbenchmarks; the 144-path scene is not the all-valid-path stress workload. See [current runtime and wall-clock costs](RUNTIME_STATUS.md) for comparable measurements, hardware, exclusions and ten-minute estimates.
 
 Updated 2026-10-03. This supersedes the depth-three planning baseline in
@@ -160,3 +164,9 @@ planned pulse rate explicitly. The benchmark defaults to depth one, with no
 refraction, and records these interaction flags. For historical depth-three
 conditions add `--depth 3 --refraction --pulse-hz 120`. Actual geometry, pulse
 schedule and GPU measurements are the next feasibility gate.
+
+<!-- BEGIN SIGNAL TIME CONTEXT -->
+
+**Simulation-time reference:** use **wall seconds per simulated signal second**, not an unlabeled whole-run time. For fixed windows, divide mean service milliseconds by samples/sample-rate × 1,000. Stage costs use their parent window denominator. Geometry-only solves and analytic operation counts have no generated signal duration; a signal-time ratio is **not applicable**, unless an explicit update interval is assumed and labeled as a scheduling estimate. Unrecorded flight costs remain unknown. See [recorded normalized cases](SIGNAL_TIME_RESULTS.md).
+
+<!-- END SIGNAL TIME CONTEXT -->

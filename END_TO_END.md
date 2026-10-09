@@ -1,3 +1,7 @@
+
+**Timing scope:** Mixed scope or architecture/reference document; each workload/table retains its stated timed operation. [Common measurement definitions](TIMING_CONVENTIONS.md) apply to units, statistics, cache state, ratios and comparisons. Historical measurements and estimates are not current fleet-update qualification.
+
+
 For P100 CUDA/OptiX propagation and CuPy rendering, see [the explicit GPU pipeline](P100_GPU_PIPELINE.md). Historical rows below use their recorded LLVM propagation backend.
 
 # End-to-end RF tests
@@ -46,7 +50,7 @@ only hybrid CPU-propagation/CUDA-rendering runs. The default `both` collection
 fails at preflight if a working CuPy device is unavailable. Every GPU scenario
 also gets a separate 30-window instrumented run, which fills all seven internal
 CUDA stage columns with median ± standard deviation and p95. Those statistics
-are kept separate from unprofiled full-pipeline throughput. Missing stages or
+are kept separate from unprofiled RF fleet-update throughput. Missing stages or
 scenario rows make aggregation fail. CUDA integration
 checks run against the direct scene-derived oracle when that device is present.
 
@@ -168,3 +172,9 @@ CPU rendering. These short scene-to-consumer measurements are not Ryzen or P100
 measurements, nor ten-minute flight tests. The environment record is
 [environment.json](results/end_to_end/environment.json). The raw SC16 captures
 stay local; the recorded reports/JSON are committed for reproduction.
+
+<!-- BEGIN SIGNAL TIME CONTEXT -->
+
+**Simulation-time reference:** use **wall seconds per simulated signal second**, not an unlabeled whole-run time. For fixed windows, divide mean service milliseconds by samples/sample-rate × 1,000. Stage costs use their parent window denominator. Geometry-only solves and analytic operation counts have no generated signal duration; a signal-time ratio is **not applicable**, unless an explicit update interval is assumed and labeled as a scheduling estimate. Unrecorded flight costs remain unknown. See [recorded normalized cases](SIGNAL_TIME_RESULTS.md).
+
+<!-- END SIGNAL TIME CONTEXT -->

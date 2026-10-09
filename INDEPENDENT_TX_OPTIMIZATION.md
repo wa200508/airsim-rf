@@ -1,5 +1,9 @@
 # Optimizations with independent transmitter data
 
+**Timing scope:** Mixed scope or architecture/reference document; each workload/table retains its stated timed operation. [Common measurement definitions](TIMING_CONVENTIONS.md) apply to units, statistics, cache state, ratios and comparisons. Historical measurements and estimates are not current fleet-update qualification.
+
+
+
 **Runtime context (2026-10-05):** Historical direct-renderer accumulation experiments and bandwidth accounting; preserve independent buffers, but use the current qualified basis measurements for achieved throughput. See [current runtime and wall-clock costs](RUNTIME_STATUS.md) for comparable measurements, hardware, exclusions and ten-minute estimates.
 
 The target remains 100 independent transmitters, 10 receivers, continuous
@@ -184,3 +188,16 @@ more launches without reducing the total physical workload.
 The immediate next priorities are GPU measurement of accumulation and a general
 sampled-waveform fused kernel, followed by device-resident channel/frontend
 processing and proposal sampling. The complete 120 Hz goal remains unproven.
+
+<!-- BEGIN SIGNAL TIME CONTEXT -->
+
+**Simulation-time reference:** wall seconds per simulated signal second = total measured wall service / total output signal duration per receiver. Receiver durations are concurrent, not added across receivers. This is a processing-cost ratio for the named scope; it is not a whole-flight measurement. Instrumented costs are diagnostic.
+
+| Raw case / timed scope | Mode | Calls | Signal ms/call (mean) | Measured signal seconds | Measured wall seconds | Wall seconds / signal second |
+| --- | --- | ---: | ---: | ---: | ---: | ---: |
+| [research_results/affordable_realtime/sdr_local_cpu.json](research_results/affordable_realtime/sdr_local_cpu.json) — Local RF service | unprofiled_benchmark | 10 | 2.048000 | 0.020480 | 3.290627 | 160.675 |
+| [research_results/affordable_realtime/sdr_partial_cpu.json](research_results/affordable_realtime/sdr_partial_cpu.json) — Local RF service | unprofiled_benchmark | 10 | 2.048000 | 0.020480 | 6.317350 | 308.464 |
+
+The measured signal seconds column totals processed windows. Synthetic and historical short-capture jobs may reuse epochs or leave gaps; this total does not assert a continuous simulation timeline. First-use/warmup are excluded where the recorded harness excludes them. Stage milliseconds elsewhere use the same signal duration as their parent call; stage median / signal-ms is a median cost ratio, while the final column above uses sums (equivalently mean costs for fixed-duration calls).
+
+<!-- END SIGNAL TIME CONTEXT -->

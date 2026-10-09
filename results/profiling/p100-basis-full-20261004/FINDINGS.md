@@ -1,5 +1,25 @@
 # P100 Doppler-basis renderer findings
 
+**Timing scope:** Renderer-call wall service or separately labeled projection/kernel-call experiment; excludes propagation and receiver processing. [Common measurement definitions](../../../TIMING_CONVENTIONS.md) apply to units, statistics, cache state, ratios and comparisons. Historical measurements and estimates are not current fleet-update qualification.
+
+<!-- BEGIN SIGNAL TIME CONTEXT -->
+
+**Simulation-time reference:** wall seconds per simulated signal second = total measured wall service / total output signal duration per receiver. Receiver durations are concurrent, not added across receivers. This is a processing-cost ratio for the named scope; it is not a whole-flight measurement. Instrumented costs are diagnostic.
+
+| Raw case / timed scope | Mode | Calls | Signal ms/call (mean) | Measured signal seconds | Measured wall seconds | Wall seconds / signal second |
+| --- | --- | ---: | ---: | ---: | ---: | ---: |
+| [results/profiling/p100-basis-full-20261004/profiles/basis_cpu_100tx_1rx.json](profiles/basis_cpu_100tx_1rx.json) — Renderer call | unprofiled_basis_benchmark | 30 | 8.333500 | 0.250005 | 47.930034 | 191.716 |
+| [results/profiling/p100-basis-full-20261004/profiles/basis_cpu_1tx_1rx.json](profiles/basis_cpu_1tx_1rx.json) — Renderer call | unprofiled_basis_benchmark | 30 | 8.333500 | 0.250005 | 0.667671 | 2.671 |
+| [results/profiling/p100-basis-full-20261004/profiles/basis_cpu_4tx_1rx.json](profiles/basis_cpu_4tx_1rx.json) — Renderer call | unprofiled_basis_benchmark | 30 | 8.333500 | 0.250005 | 2.287211 | 9.149 |
+| [results/profiling/p100-basis-full-20261004/profiles/basis_cuda_100tx_1rx.json](profiles/basis_cuda_100tx_1rx.json) — Renderer call | unprofiled_basis_benchmark | 30 | 8.333500 | 0.250005 | 3.691511 | 14.766 |
+| [results/profiling/p100-basis-full-20261004/profiles/basis_cuda_1tx_1rx.json](profiles/basis_cuda_1tx_1rx.json) — Renderer call | unprofiled_basis_benchmark | 30 | 8.333500 | 0.250005 | 0.166860 | 0.667 |
+| [results/profiling/p100-basis-full-20261004/profiles/basis_cuda_4tx_1rx.json](profiles/basis_cuda_4tx_1rx.json) — Renderer call | unprofiled_basis_benchmark | 30 | 8.333500 | 0.250005 | 0.186514 | 0.746 |
+
+The measured signal seconds column totals processed windows. Synthetic and historical short-capture jobs may reuse epochs or leave gaps; this total does not assert a continuous simulation timeline. First-use/warmup are excluded where the recorded harness excludes them. Stage milliseconds elsewhere use the same signal duration as their parent call; stage median / signal-ms is a median cost ratio, while the final column above uses sums (equivalently mean costs for fixed-duration calls).
+
+<!-- END SIGNAL TIME CONTEXT -->
+
+
 **Collection completed; correctness qualification failed.** Source: `b4d48f5e432b5610eb3fedfa854bf9d5347cd2cb`, including the launcher workaround over pulled commit `2a33cd2`.
 
 The required CUDA suite returned **6 passed, 1 failed** in 2.10 s. `test_real_cuda_split_unix_epoch_cancellation_and_boundaries` failed when concatenating split captures at epoch 1790000000000000000 ns. Maximum absolute disagreement was approximately 0.101475, maximum relative disagreement 0.013941. See [test log](logs/basis_cuda_correctness.log). The CPU and GPU basis implementations both form oscillator phase from an absolute timestamp converted to floating-point seconds; loss of phase precision is a candidate cause, not a repaired or fully isolated diagnosis.

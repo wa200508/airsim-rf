@@ -9,7 +9,7 @@ import statistics
 PIPELINE = {
     'advance_ms': 'Truth advance', 'source_ms': 'Private sources', 'channel_ms': 'Scene propagation',
     'rendering_ms': 'Signal rendering', 'receiver_ms': 'Noise/filter/ADC',
-    'other_rf_ms': 'Bridge + other RF work', 'delivery_storage_ms': 'Delivery + storage', 'total_ms': 'Complete update',
+    'other_rf_ms': 'Bridge + other RF work', 'delivery_storage_ms': 'Delivery + storage', 'total_ms': 'Fleet-update wall service',
 }
 EVENTS = {
     'basis.host_pack_and_upload': 'Pack + upload', 'basis.delay_map': 'Delay map',
@@ -127,6 +127,17 @@ def tables(records, *, link_root):
                 lines.append('| '+' | '.join([label(path,data),str(len(data['samples'])),*cells])+' |')
             sections.append('\n'.join(lines))
 
+    normalization=['### Wall time relative to simulated signal time', '',
+        'Each receiver covers the same simulated interval; receiver durations are not added together. Ratio = sum of fleet-update wall times / actual signal duration. Below 1 means throughput headroom for this measured scope; above 1 means slower than simulated signal time. Instrumented rows are diagnostic and do not establish unprofiled throughput.', '',
+        '| Configuration / raw captures | Mode | Updates | Signal ms/update (mean) | Total signal seconds | Total wall seconds | Wall seconds / signal second |',
+        '| --- | --- | ---: | ---: | ---: | ---: | ---: |']
+    for path,data in records:
+        rows=data['samples']
+        signal_ms=sum(row['samples'] for row in rows)/data['sample_rate_hz']*1000
+        wall_ms=sum(row['total_ms'] for row in rows)
+        normalization.append('| '+' | '.join([label(path,data), 'instrumented' if mode(data)==PROFILE else 'unprofiled',str(len(rows)),f'{signal_ms/len(rows):.6f}',f'{signal_ms/1000:.6f}',f'{wall_ms/1000:.6f}',f'{wall_ms/signal_ms:.3f}'])+' |')
+    sections.append('\n'.join(normalization))
+
     normal=[r for r in records if mode(r[1])==NORMAL]
     profiled=[r for r in records if mode(r[1])==PROFILE]
     if normal:
@@ -139,8 +150,8 @@ def tables(records, *, link_root):
             windows=[event_totals(row,data['arguments']['rx']) for row in data['samples']]
             return {key:[row[key] for row in windows] for key in EVENTS}
         render('Repeated CUDA rendering event spans',profiled,EVENTS,event_columns)
-        sections.append('CUDA event spans sum each named stage across all blocks/batches and receivers **within each window**, then summarize those window totals. They include host dispatch gaps and are not pure kernel execution times. They come from separate instrumented full-pipeline runs; do not mix them into unprofiled throughput or add their medians to wall-time medians.')
-    sections.append('All timings are ms per fleet update. Source generation, propagation, continuous receiver filtering/noise/ADC, loopback HTTP delivery and consumer file readback are included. The propagation backend is recorded per row: historical runs used LLVM CPU; explicit CUDA/OptiX runs use GPU ray tracing and fields. Receivers execute serially. The default truth source implements the AirSim contract; it does not run live AirSim physics/RPC or AMS-GRA distributed SDR workers. Startup/warmup are excluded from these tables, physical path counts and hardware/quota are in the linked JSON, and five-/ten-window historical runs do not qualify long-run tail latency.')
+        sections.append('CUDA event spans sum each named stage across all blocks/batches and receivers **within each window**, then summarize those window totals. They include host dispatch gaps and are not pure kernel execution times. They come from separate instrumented RF fleet-update runs; do not mix them into unprofiled throughput or add their medians to wall-time medians.')
+    sections.append('Stage tables report ms per RF fleet update, with the simulation-time denominator and wall-seconds/signal-second ratio in the first table. Source generation, propagation, continuous receiver filtering/noise/ADC, loopback HTTP delivery and consumer file readback are included. The propagation backend is recorded per row: historical runs used LLVM CPU; explicit CUDA/OptiX runs use GPU ray tracing and fields. Receivers execute serially. The default truth source implements the AirSim contract; it does not run live AirSim physics/RPC or AMS-GRA distributed SDR workers. Startup/warmup are excluded from these tables, physical path counts and hardware/quota are in the linked JSON, and five-/ten-window historical runs do not qualify long-run tail latency.')
     return '\n\n'.join(sections)
 
 

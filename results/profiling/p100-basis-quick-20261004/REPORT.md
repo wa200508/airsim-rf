@@ -1,5 +1,14 @@
 # Doppler-basis renderer profiling: p100-basis-quick-20261004
 
+**Timing scope:** Renderer-call wall service or separately labeled projection/kernel-call experiment; excludes propagation and receiver processing. [Common measurement definitions](../../../TIMING_CONVENTIONS.md) apply to units, statistics, cache state, ratios and comparisons. Historical measurements and estimates are not current fleet-update qualification.
+
+<!-- BEGIN SIGNAL TIME CONTEXT -->
+
+**Simulation-time reference:** use **wall seconds per simulated signal second**, not an unlabeled whole-run time. For fixed windows, divide mean service milliseconds by samples/sample-rate × 1,000. Stage costs use their parent window denominator. Geometry-only solves and analytic operation counts have no generated signal duration; a signal-time ratio is **not applicable**, unless an explicit update interval is assumed and labeled as a scheduling estimate. Unrecorded flight costs remain unknown. See [recorded normalized cases](../../../SIGNAL_TIME_RESULTS.md).
+
+<!-- END SIGNAL TIME CONTEXT -->
+
+
 Status: **FAILED / INCOMPLETE**.
 
 **Interrupted diagnostic run:** no completed performance cases. See [startup investigation](INVESTIGATION.md) and the subsequent [full collection](../p100-basis-full-20261004/REPORT.md).
@@ -10,7 +19,7 @@ Renderer GPU status: `verified_cuda_cupy`. Source: `2a33cd27055ecf16f464f857e0af
 
 Propagation: excluded; current pinned Dr.Jit does not support P100; legacy results retained separately. A successful renderer run does not establish current Sionna compatibility or complete RF service at 120 Hz.
 
-## Unprofiled window latency and serial throughput
+## Unprofiled renderer-call wall service and serial throughput
 
 | Backend | TX × RX | Valid paths/link | Samples | Median | p95 | p99 | Max | Windows/s | Misses 120 Hz | Accuracy |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---|

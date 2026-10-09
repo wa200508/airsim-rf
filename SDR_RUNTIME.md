@@ -1,5 +1,9 @@
 # SDR runtime: update rate and latency
 
+**Timing scope:** Mixed scope or architecture/reference document; each workload/table retains its stated timed operation. [Common measurement definitions](TIMING_CONVENTIONS.md) apply to units, statistics, cache state, ratios and comparisons. Historical measurements and estimates are not current fleet-update qualification.
+
+
+
 **Runtime context (2026-10-05):** Historical scene-to-ADC tone captures contain only 4,096 output samples (2.048 ms at 2 MS/s), with scene-dependent surviving paths. Later arbitrary-I/Q GPU rendering is measured separately. See [current runtime and wall-clock costs](RUNTIME_STATUS.md) for comparable measurements, hardware, exclusions and ten-minute estimates.
 
 See [the code-derived scaling model](SDR_COMPLEXITY.md) for stage-by-stage
@@ -177,3 +181,17 @@ The channel export and CPU receive chain are in [sdr.py](src/airsim_rf/sdr.py);
 the per-path waveform loop is in [receiver.py](src/airsim_rf/receiver.py).
 See [GPU planning](GPU_RUNTIME.md) for earlier channel-only work estimates;
 those figures exclude this SDR synthesis and receive chain.
+
+<!-- BEGIN SIGNAL TIME CONTEXT -->
+
+**Simulation-time reference:** wall seconds per simulated signal second = total measured wall service / total output signal duration per receiver. Receiver durations are concurrent, not added across receivers. This is a processing-cost ratio for the named scope; it is not a whole-flight measurement. Instrumented costs are diagnostic.
+
+| Raw case / timed scope | Mode | Calls | Signal ms/call (mean) | Measured signal seconds | Measured wall seconds | Wall seconds / signal second |
+| --- | --- | ---: | ---: | ---: | ---: | ---: |
+| [benchmarks/results/sdr_cpu_100tx_1rx.json](benchmarks/results/sdr_cpu_100tx_1rx.json) — Local RF service | historical | 10 | 2.048000 | 0.020480 | 115.490185 | 5639.169 |
+| [benchmarks/results/sdr_cpu_2tx_1rx.json](benchmarks/results/sdr_cpu_2tx_1rx.json) — Local RF service | historical | 30 | 2.048000 | 0.061440 | 7.354236 | 119.698 |
+| [benchmarks/results/sdr_cpu_2tx_2rx.json](benchmarks/results/sdr_cpu_2tx_2rx.json) — Local RF service | historical | 30 | 2.048000 | 0.061440 | 12.371171 | 201.354 |
+
+The measured signal seconds column totals processed windows. Synthetic and historical short-capture jobs may reuse epochs or leave gaps; this total does not assert a continuous simulation timeline. First-use/warmup are excluded where the recorded harness excludes them. Stage milliseconds elsewhere use the same signal duration as their parent call; stage median / signal-ms is a median cost ratio, while the final column above uses sums (equivalently mean costs for fixed-duration calls).
+
+<!-- END SIGNAL TIME CONTEXT -->

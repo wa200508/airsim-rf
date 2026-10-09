@@ -1,5 +1,9 @@
 # Runtime assessment: 100 transmitters, 10 receivers
 
+**Timing scope:** Mixed scope or architecture/reference document; each workload/table retains its stated timed operation. [Common measurement definitions](TIMING_CONVENTIONS.md) apply to units, statistics, cache state, ratios and comparisons. Historical measurements and estimates are not current fleet-update qualification.
+
+
+
 **Runtime context (2026-10-05):** Historical depth-three propagation sizing and conditional GPU query arithmetic; not a current continuous-I/Q service benchmark. See [current runtime and wall-clock costs](RUNTIME_STATUS.md) for comparable measurements, hardware, exclusions and ten-minute estimates.
 
 **Updated baseline:** [PER_PULSE_RUNTIME.md](PER_PULSE_RUNTIME.md) applies the
@@ -325,3 +329,9 @@ Sionna source:
 [hash counters](https://github.com/NVlabs/sionna-rt/blob/15b5ee036917a4c2a9b6420e05570b77717e2fcc/src/sionna/rt/path_solvers/sb_candidate_generator.py#L345),
 [CIR expansion](https://github.com/NVlabs/sionna-rt/blob/15b5ee036917a4c2a9b6420e05570b77717e2fcc/src/sionna/rt/path_solvers/paths.py#L603),
 [mesh updates](https://github.com/NVlabs/sionna-rt/blob/15b5ee036917a4c2a9b6420e05570b77717e2fcc/src/sionna/rt/scene_object.py#L563).
+
+<!-- BEGIN SIGNAL TIME CONTEXT -->
+
+**Simulation-time reference:** use **wall seconds per simulated signal second**, not an unlabeled whole-run time. For fixed windows, divide mean service milliseconds by samples/sample-rate × 1,000. Stage costs use their parent window denominator. Geometry-only solves and analytic operation counts have no generated signal duration; a signal-time ratio is **not applicable**, unless an explicit update interval is assumed and labeled as a scheduling estimate. Unrecorded flight costs remain unknown. See [recorded normalized cases](SIGNAL_TIME_RESULTS.md).
+
+<!-- END SIGNAL TIME CONTEXT -->

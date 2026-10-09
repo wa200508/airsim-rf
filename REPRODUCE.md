@@ -1,5 +1,9 @@
 # Reproduce airsim-rf at home
 
+**Timing scope:** Mixed scope or architecture/reference document; each workload/table retains its stated timed operation. [Common measurement definitions](TIMING_CONVENTIONS.md) apply to units, statistics, cache state, ratios and comparisons. Historical measurements and estimates are not current fleet-update qualification.
+
+
+
 To use Docker instead of installing Python dependencies, follow
 [the pull-and-test container guide](CONTAINER.md).
 
@@ -90,3 +94,9 @@ For a sequence, control paused simulator stepping between
 `AirSimRadarBridge.capture(targets)` calls and save the captures using
 `save_frame()`. Preserve actual sim timestamps. Constant-velocity extrapolation
 in the standalone RF frame example does not advance AirSim physics.
+
+<!-- BEGIN SIGNAL TIME CONTEXT -->
+
+**Simulation-time reference:** use **wall seconds per simulated signal second**, not an unlabeled whole-run time. For fixed windows, divide mean service milliseconds by samples/sample-rate × 1,000. Stage costs use their parent window denominator. Geometry-only solves and analytic operation counts have no generated signal duration; a signal-time ratio is **not applicable**, unless an explicit update interval is assumed and labeled as a scheduling estimate. Unrecorded flight costs remain unknown. See [recorded normalized cases](SIGNAL_TIME_RESULTS.md).
+
+<!-- END SIGNAL TIME CONTEXT -->

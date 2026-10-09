@@ -1,5 +1,9 @@
 # Change the rendering architecture: all-path Doppler basis and FFTs
 
+**Timing scope:** Mixed scope or architecture/reference document; each workload/table retains its stated timed operation. [Common measurement definitions](TIMING_CONVENTIONS.md) apply to units, statistics, cache state, ratios and comparisons. Historical measurements and estimates are not current fleet-update qualification.
+
+
+
 **Runtime context (2026-10-05):** The 22× figure below compares two CPU algorithms on an earlier host and small link counts. It is not a real-time ratio or fleet speedup. Qualified P100 results are now available separately. See [current runtime and wall-clock costs](RUNTIME_STATUS.md) for comparable measurements, hardware, exclusions and ten-minute estimates.
 
 The batched direct renderer is useful as a reference, but its dominant work
@@ -312,3 +316,21 @@ basis; their reported reductions are not our speedup predictions. See
 [the existing references and comparison](AFFORDABLE_REALTIME_RF.md).
 The mathematical identity used here follows the
 [NIST DLMF Jacobi–Anger expansions](https://dlmf.nist.gov/10.12).
+
+<!-- BEGIN SIGNAL TIME CONTEXT -->
+
+**Simulation-time reference:** wall seconds per simulated signal second = total measured wall service / total output signal duration per receiver. Receiver durations are concurrent, not added across receivers. This is a processing-cost ratio for the named scope; it is not a whole-flight measurement. Instrumented costs are diagnostic.
+
+| Raw case / timed scope | Mode | Calls | Signal ms/call (mean) | Measured signal seconds | Measured wall seconds | Wall seconds / signal second |
+| --- | --- | ---: | ---: | ---: | ---: | ---: |
+| [research_results/doppler_basis_cpu/delay_1000us.json](research_results/doppler_basis_cpu/delay_1000us.json) — Renderer call (basis) | historical | 5 | 8.333500 | 0.041668 | 0.238805 | 5.731 |
+| [research_results/doppler_basis_cpu/doppler_25000.json](research_results/doppler_basis_cpu/doppler_25000.json) — Renderer call (basis) | historical | 5 | 8.333500 | 0.041668 | 1.420582 | 34.093 |
+| [research_results/doppler_basis_cpu/four_links.json](research_results/doppler_basis_cpu/four_links.json) — Renderer call (basis) | historical | 5 | 8.333500 | 0.041668 | 0.652329 | 15.656 |
+| [research_results/doppler_basis_cpu/four_links.json](research_results/doppler_basis_cpu/four_links.json) — Renderer call (direct) | historical | 5 | 8.333500 | 0.041668 | 14.566788 | 349.596 |
+| [research_results/doppler_basis_cpu/one_link.json](research_results/doppler_basis_cpu/one_link.json) — Renderer call (basis) | historical | 5 | 8.333500 | 0.041668 | 0.164990 | 3.960 |
+| [research_results/doppler_basis_cpu/one_link.json](research_results/doppler_basis_cpu/one_link.json) — Renderer call (direct) | historical | 5 | 8.333500 | 0.041668 | 3.473311 | 83.358 |
+| [research_results/doppler_basis_cpu/paths_4096.json](research_results/doppler_basis_cpu/paths_4096.json) — Renderer call (basis) | historical | 5 | 8.333500 | 0.041668 | 0.403660 | 9.688 |
+
+The measured signal seconds column totals processed windows. Synthetic and historical short-capture jobs may reuse epochs or leave gaps; this total does not assert a continuous simulation timeline. First-use/warmup are excluded where the recorded harness excludes them. Stage milliseconds elsewhere use the same signal duration as their parent call; stage median / signal-ms is a median cost ratio, while the final column above uses sums (equivalently mean costs for fixed-duration calls).
+
+<!-- END SIGNAL TIME CONTEXT -->

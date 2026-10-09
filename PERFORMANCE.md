@@ -1,5 +1,9 @@
 # RF timing versus a 120 Hz simulation
 
+**Timing scope:** Mixed scope or architecture/reference document; each workload/table retains its stated timed operation. [Common measurement definitions](TIMING_CONVENTIONS.md) apply to units, statistics, cache state, ratios and comparisons. Historical measurements and estimates are not current fleet-update qualification.
+
+
+
 **Runtime context (2026-10-05):** Historical small point-target radar/chirp measurements, not continuous multi-emitter I/Q or full environmental multipath. See [current runtime and wall-clock costs](RUNTIME_STATUS.md) for comparable measurements, hardware, exclusions and ten-minute estimates.
 
 The current accepted assumptions and updated results are in
@@ -109,3 +113,9 @@ After bootstrap, from the `airsim-rf` repository root:
 The first two commands evaluate an 8.33 ms budget. The last evaluates an 80 ms
 frame budget. Each output reports import, setup, first-update latency, median,
 p95, p99, maximum, deadline misses, and raw latency samples.
+
+<!-- BEGIN SIGNAL TIME CONTEXT -->
+
+**Simulation-time reference:** use **wall seconds per simulated signal second**, not an unlabeled whole-run time. For fixed windows, divide mean service milliseconds by samples/sample-rate × 1,000. Stage costs use their parent window denominator. Geometry-only solves and analytic operation counts have no generated signal duration; a signal-time ratio is **not applicable**, unless an explicit update interval is assumed and labeled as a scheduling estimate. Unrecorded flight costs remain unknown. See [recorded normalized cases](SIGNAL_TIME_RESULTS.md).
+
+<!-- END SIGNAL TIME CONTEXT -->

@@ -1,5 +1,9 @@
 # Run and publish P100 profiling measurements
 
+**Timing scope:** Mixed scope or architecture/reference document; each workload/table retains its stated timed operation. [Common measurement definitions](TIMING_CONVENTIONS.md) apply to units, statistics, cache state, ratios and comparisons. Historical measurements and estimates are not current fleet-update qualification.
+
+
+
 **Runtime context (2026-10-05):** The older current-stack/legacy collectors have separate propagation and renderer scopes. Use the optimized basis collection for the current comparable continuous-I/Q timing. See [current runtime and wall-clock costs](RUNTIME_STATUS.md) for comparable measurements, hardware, exclusions and ten-minute estimates.
 
 For the **updated Doppler-basis FFT test on `profiling/p100`**, use
@@ -232,3 +236,9 @@ was built and its CPU collection path exercised offline with NVTX installed.
 GPU/OptiX/P100 execution and Nsight capture remain untested here because this
 workspace has no GPU. CI additionally runs the test suite and a reduced CPU
 collector smoke test; CPU validation is not GPU compatibility validation.
+
+<!-- BEGIN SIGNAL TIME CONTEXT -->
+
+**Simulation-time reference:** use **wall seconds per simulated signal second**, not an unlabeled whole-run time. For fixed windows, divide mean service milliseconds by samples/sample-rate × 1,000. Stage costs use their parent window denominator. Geometry-only solves and analytic operation counts have no generated signal duration; a signal-time ratio is **not applicable**, unless an explicit update interval is assumed and labeled as a scheduling estimate. Unrecorded flight costs remain unknown. See [recorded normalized cases](SIGNAL_TIME_RESULTS.md).
+
+<!-- END SIGNAL TIME CONTEXT -->

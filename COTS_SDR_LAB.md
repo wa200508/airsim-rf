@@ -1,5 +1,9 @@
 # A COTS SDR starter lab: four drones, two emitters, two listeners
 
+**Timing scope:** Mixed scope or architecture/reference document; each workload/table retains its stated timed operation. [Common measurement definitions](TIMING_CONVENTIONS.md) apply to units, statistics, cache state, ratios and comparisons. Historical measurements and estimates are not current fleet-update qualification.
+
+
+
 **Runtime context (2026-10-05):** The plotted COTS lab uses short scheduled captures; sensor sample rate and configured update rate do not establish continuous wall-clock real-time operation. See [current runtime and wall-clock costs](RUNTIME_STATUS.md) for comparable measurements, hardware, exclusions and ten-minute estimates.
 
 The first SDR target is **Analog Devices ADALM-PLUTO (PlutoSDR)**. The new
@@ -355,3 +359,9 @@ Published 1 MHz–6 GHz coverage, half duplex, up to 20 MS/s and 8-bit I/Q.
 <a id="ref11"></a>
 **[11] SigMF.** [Specification release v1.2.6](https://github.com/sigmf/SigMF/releases/tag/v1.2.6).
 Signal-data/metadata interchange format; exported data uses `ci16_le`.
+
+<!-- BEGIN SIGNAL TIME CONTEXT -->
+
+**Simulation-time reference:** use **wall seconds per simulated signal second**, not an unlabeled whole-run time. For fixed windows, divide mean service milliseconds by samples/sample-rate × 1,000. Stage costs use their parent window denominator. Geometry-only solves and analytic operation counts have no generated signal duration; a signal-time ratio is **not applicable**, unless an explicit update interval is assumed and labeled as a scheduling estimate. Unrecorded flight costs remain unknown. See [recorded normalized cases](SIGNAL_TIME_RESULTS.md).
+
+<!-- END SIGNAL TIME CONTEXT -->

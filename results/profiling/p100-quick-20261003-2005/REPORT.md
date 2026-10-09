@@ -1,5 +1,14 @@
 # RF profiling results: p100-quick-20261003-2005
 
+**Timing scope:** Historical local RF service; model/backend and timed region are specified below. [Common measurement definitions](../../../TIMING_CONVENTIONS.md) apply to units, statistics, cache state, ratios and comparisons. Historical measurements and estimates are not current fleet-update qualification.
+
+<!-- BEGIN SIGNAL TIME CONTEXT -->
+
+**Simulation-time reference:** use **wall seconds per simulated signal second**, not an unlabeled whole-run time. For fixed windows, divide mean service milliseconds by samples/sample-rate × 1,000. Stage costs use their parent window denominator. Geometry-only solves and analytic operation counts have no generated signal duration; a signal-time ratio is **not applicable**, unless an explicit update interval is assumed and labeled as a scheduling estimate. Unrecorded flight costs remain unknown. See [recorded normalized cases](../../../SIGNAL_TIME_RESULTS.md).
+
+<!-- END SIGNAL TIME CONTEXT -->
+
+
 Status: **FAILED / INCOMPLETE**.
 
 GPU status: `blocked`. Source: `720c4011522ad25c1e9c5c470bc20f4f34d480c5`; dirty: `false`.

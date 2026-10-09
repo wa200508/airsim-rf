@@ -1,5 +1,9 @@
 # Drone-mounted pulsed LFM radar
 
+**Timing scope:** Mixed scope or architecture/reference document; each workload/table retains its stated timed operation. [Common measurement definitions](TIMING_CONVENTIONS.md) apply to units, statistics, cache state, ratios and comparisons. Historical measurements and estimates are not current fleet-update qualification.
+
+
+
 The prototype triggers one linear frequency-modulated pulse from the drone's
 antenna location and returns complex baseband voltage samples over one pulse
 repetition interval. Transmit and receive antennas occupy the same location.
@@ -146,3 +150,9 @@ The current integration is a Python sensor adapter. Publishing radar I/Q as a
 native ProjectAirSim sensor topic and testing it with a live simulator remain
 the next integration steps. FMCW would instead use repeated continuous chirps
 and a receive dechirping stage; it is not the implemented waveform here.
+
+<!-- BEGIN SIGNAL TIME CONTEXT -->
+
+**Simulation-time reference:** use **wall seconds per simulated signal second**, not an unlabeled whole-run time. For fixed windows, divide mean service milliseconds by samples/sample-rate × 1,000. Stage costs use their parent window denominator. Geometry-only solves and analytic operation counts have no generated signal duration; a signal-time ratio is **not applicable**, unless an explicit update interval is assumed and labeled as a scheduling estimate. Unrecorded flight costs remain unknown. See [recorded normalized cases](SIGNAL_TIME_RESULTS.md).
+
+<!-- END SIGNAL TIME CONTEXT -->

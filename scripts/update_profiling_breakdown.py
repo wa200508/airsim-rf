@@ -63,10 +63,10 @@ def cases():
 
 def tables():
     records = cases()
-    headings = ['Configuration / raw captures', 'n', 'Pose update', 'Scene propagation', 'Render preparation', 'Basis/filter construction', 'FFT + reconstruction', 'Other rendering work', 'Signal rendering subtotal', 'Receiver processing', 'Measured call total']
+    headings = ['Configuration / raw captures', 'n', 'Signal ms/call', 'Wall s / signal s (mean)', 'Pose update', 'Scene propagation', 'Render preparation', 'Basis/filter construction', 'FFT + reconstruction', 'Other rendering work', 'Signal rendering subtotal', 'Receiver processing', 'Measured call total']
     sections = []
     for title, p95 in (('Median ± sample standard deviation', False), ('95th percentile', True)):
-        lines = ['### ' + title, '', '| ' + ' | '.join(headings) + ' |', '| --- | ---: | ' + ' | '.join(['---:'] * 9) + ' |']
+        lines = ['### ' + title, '', '| ' + ' | '.join(headings) + ' |', '| --- | ---: | ---: | ---: | ' + ' | '.join(['---:'] * 9) + ' |']
         for label, path, columns, data in records:
             cells = []
             for values in columns:
@@ -76,7 +76,7 @@ def tables():
                     cells.append(f'{percentile(values, .95):.2f}')
                 else:
                     cells.append(f'{statistics.median(values):.2f} ± {statistics.stdev(values):.2f}')
-            lines.append('| ' + ' | '.join([f'[{label}]({path.as_posix()})', str(len(columns[8])), *cells]) + ' |')
+            lines.append('| ' + ' | '.join([f'[{label}]({path.as_posix()})', str(len(columns[8])), f"{data.get('capture_duration_ms', data.get('arguments',{}).get('samples',16667)/data.get('arguments',{}).get('sample_rate',2000000)*1000):.6f}", f"{statistics.mean(columns[8])/data.get('capture_duration_ms', data.get('arguments',{}).get('samples',16667)/data.get('arguments',{}).get('sample_rate',2000000)*1000):.3f}", *cells]) + ' |')
         sections.append('\n'.join(lines))
     lines = ['### GPU stage observations: one instrumented capture per configuration', '',
              'These are CUDA-event spans, in ms, from a separate capture. **n = 1; no standard deviation or p95 is available.** They include dispatch gaps and profiling overhead, and must not be added to the unprofiled median above.', '',

@@ -139,3 +139,12 @@ def test_instrumented_receiver_metrics_cannot_be_labeled_unprofiled():
     data['measurement_mode']=metrics.NORMAL
     with pytest.raises(ValueError,match='unprofiled throughput'):
         metrics.validate(data)
+
+
+def test_signal_time_ratio_uses_actual_sample_counts_once_per_fleet(tmp_path):
+    data = metrics.validate(capture())
+    report = metrics.tables([(tmp_path/'measurements.json', data)], link_root=tmp_path)
+    # Two receivers cover one shared interval: 33,333 samples / 2 MS/s.
+    # 24 ms wall service / 16.6665 ms signal, not 24 / (2 * 16.6665).
+    normalized = report.split('### End-to-end RF pipeline')[0]
+    assert '| 8.333250 | 0.016667 | 0.024000 | 1.440 |' in normalized

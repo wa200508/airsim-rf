@@ -1,5 +1,9 @@
 # Updated P100 test: Doppler-basis FFT rendering
 
+**Timing scope:** Mixed scope or architecture/reference document; each workload/table retains its stated timed operation. [Common measurement definitions](TIMING_CONVENTIONS.md) apply to units, statistics, cache state, ratios and comparisons. Historical measurements and estimates are not current fleet-update qualification.
+
+
+
 **Runtime context (2026-10-05):** Collection instructions and renderer-only qualification. GPU compatibility and 120 Hz capacity must be read with the tested workload and excluded stages. See [current runtime and wall-clock costs](RUNTIME_STATUS.md) for comparable measurements, hardware, exclusions and ten-minute estimates.
 
 For actual P100 CUDA/OptiX propagation plus GPU rendering, use the
@@ -216,15 +220,15 @@ CPU** on the P100; rendering uses CuPy. Receivers execute serially on one device
 
 The collector runs **2 TX / 2 RX, 10 TX / 4 RX and 100 TX / 10 RX** on both
 CPU and CUDA, with 30 timed windows and three warmups each. GPU scenarios run
-a second, separate full-pipeline capture series with repeated CUDA-event
+a second, separate RF fleet-update capture series with repeated CUDA-event
 profiling. Both series retain all scene paths, 1,028 diffuse attempts per
 link, 2 MS/s and 120 Hz contiguous sample accounting. There is no synthetic
 path padding, sharing of link transforms, or favorable-workload shortcut.
 
 One `REPORT.md` contains configuration rows and processing-step columns:
 
-- Unprofiled full-pipeline median ± sample standard deviation and p95.
-- Separate instrumented full-pipeline wall-time tables.
+- Unprofiled RF fleet-update median ± sample standard deviation and p95.
+- Separate instrumented RF fleet-update wall-time tables.
 - Repeated GPU stage median ± standard deviation and p95 for packing/upload,
   delay mapping, temporal coefficients, path-to-filter projection, private
   FFT filtering, reconstruction/sum and output download.
@@ -262,3 +266,9 @@ the published results, `python3 scripts/update_profiling_breakdown.py` discovers
 nested complete-pipeline JSON and fills the corresponding tables in
 `RUNTIME_STATUS.md` automatically. It preserves the actual hardware labels
 and keeps instrumented GPU events separate from unprofiled latency.
+
+<!-- BEGIN SIGNAL TIME CONTEXT -->
+
+**Simulation-time reference:** use **wall seconds per simulated signal second**, not an unlabeled whole-run time. For fixed windows, divide mean service milliseconds by samples/sample-rate × 1,000. Stage costs use their parent window denominator. Geometry-only solves and analytic operation counts have no generated signal duration; a signal-time ratio is **not applicable**, unless an explicit update interval is assumed and labeled as a scheduling estimate. Unrecorded flight costs remain unknown. See [recorded normalized cases](SIGNAL_TIME_RESULTS.md).
+
+<!-- END SIGNAL TIME CONTEXT -->

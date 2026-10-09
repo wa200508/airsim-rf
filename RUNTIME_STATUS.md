@@ -1,22 +1,21 @@
 # Current runtime: measured results, estimates and excluded work
 
-Updated **2026-10-05**. This is the current runtime summary. Earlier reports
-retain historical experiments and conditional GPU arithmetic; they do not
-override the workload and measurements here. The [README](README.md) presents
-the same measured table, generated from the published JSON.
+**Timing scope:** Mixed scope or architecture/reference document; each workload/table retains its stated timed operation. [Common measurement definitions](TIMING_CONVENTIONS.md) apply to units, statistics, cache state, ratios and comparisons. Historical measurements and estimates are not current fleet-update qualification.
 
-**No complete moving-scene, continuous-I/Q simulation has been demonstrated
-at real time.** The qualified 100-TX/one-RX renderer runs approximately 194×
-slower than real time on the measured CPU and 6.80× slower on the P100.
-These are different hardware/backend results, not a universal project slowdown.
+
+
+Updated **2026-10-08**. Timings follow [one measurement convention](TIMING_CONVENTIONS.md); historical results remain labeled by their operation and configuration.
+
+The latest qualified **100-TX × 10-RX RF fleet update** takes **553.685 ms median wall service time** (p95 563.363 ms) to produce ~8.333 ms of signal per receiver. Receivers execute sequentially on one P100. CUDA/OptiX propagation and CUDA rendering are included, together with host source preparation, receiver processing and loopback HTTP/file readback. This is a trajectory-source RF benchmark, excluding live AirSim physics/RPC, WAN workers and startup; thirty measured updates cover **0.250 simulated seconds**, consuming **16.5899 wall seconds**, or **66.36 wall seconds per simulated signal second**. All thirty miss the 120-Hz deadline. See [measurement definitions](TIMING_CONVENTIONS.md) and [the measured configuration](P100_GPU_PIPELINE.md).
+
+The older 843.630 ms result used LLVM CPU propagation and another dependency stack. Treat it as a cross-configuration comparison, not an isolated optimization gain. The synthetic renderer-only results below have a different scope and path workload.
 
 ## Comparable continuous-I/Q renderer measurements
 
 Each call produces **16,667 complex samples at 2 MS/s** into one receiver,
 approximately 8.3335 ms of signal. The scene-update target is **120 Hz**, giving
 an 8.3333 ms service budget and 72,000 calls for ten simulated minutes. The
-extra fractional sample per window is negligible for these conversions; a
-future continuous scheduler must account for sample counts exactly.
+extra fractional sample per window is negligible for these conversions; the fleet-update scheduler now alternates sample counts to account for them exactly.
 
 Every link contains **1,028 valid paths**. Inputs are arbitrary sampled I/Q,
 with private buffers and transforms per directed link. All cases use FP64 /
@@ -31,9 +30,9 @@ uniform runtime for every arbitrary waveform and scene.
 
 <!-- BEGIN MEASURED RUNTIME TABLE -->
 
-| Backend / TX → RX | Median window latency | p95 | Wall time / simulated time | Rendering cost for 10 simulated minutes |
+| Backend / TX → RX | Renderer-call wall median (n=30) | p95 | Wall seconds / signal second | Estimated wall time for 600 signal seconds |
 | --- | ---: | ---: | ---: | ---: |
-| [CPU, 100 → 1](results/profiling/p100-basis-optimized-full-20261004/profiles/basis_cpu_100tx_1rx.json) | 1610.09 ms | 1700.36 ms | 194.06× | 32.34 h |
+| [CPU, 100 → 1](results/profiling/p100-basis-optimized-full-20261004/profiles/basis_cpu_100tx_1rx.json) | 1610.09 ms | 1700.36 ms | 194.05× | 32.34 h |
 | [P100 CUDA, 100 → 1](results/profiling/p100-basis-optimized-full-20261004/profiles/basis_cuda_100tx_1rx.json) | 56.17 ms | 59.65 ms | 6.80× | 68.00 min |
 | [CPU, 4 → 1](results/profiling/p100-basis-optimized-full-20261004/profiles/basis_cpu_4tx_1rx.json) | 78.49 ms | 84.62 ms | 9.45× | 94.49 min |
 | [P100 CUDA, 4 → 1](results/profiling/p100-basis-optimized-full-20261004/profiles/basis_cuda_4tx_1rx.json) | 5.68 ms | 6.05 ms | 0.69× | 6.87 min |
@@ -43,7 +42,7 @@ uniform runtime for every arbitrary waveform and scene.
 <!-- END MEASURED RUNTIME TABLE -->
 
 Median/p95 describe one warmed, synchronized, preloaded-window renderer call.
-**Wall/simulated time = mean call milliseconds × 120 / 1,000.** A ratio of
+**Wall seconds / signal second = mean call milliseconds / 8.3335 ms.** A ratio of
 6.80× means 6.80 wall-clock seconds of rendering work per simulated second;
 0.69× means renderer throughput has headroom, not that the complete simulation
 has achieved real time. Ten-minute costs multiply the mean of 30 timed windows
@@ -72,9 +71,9 @@ it is not a confidence interval, accuracy tolerance or deadline guarantee.
 The second table uses the same captures and columns for **p95**, with linear
 percentile interpolation. Startup and warmup captures are excluded.
 
-**— means unavailable or outside the measured scope, never zero.** GPU totals
-have 30 captures, but detailed GPU steps have only one separate instrumented
-capture. Those observations appear in their own table below.
+**— means unavailable or outside the measured scope, never zero.** The historical renderer-only GPU totals have 30 captures and one separate
+instrumented capture per case. The later RF fleet-update tables have separate
+repeated instrumented series, with n recorded for each row.
 
 Read the columns from left to right:
 
@@ -104,37 +103,37 @@ not a matched speed comparison or a full simulation runtime prediction.
 
 ### Median ± sample standard deviation
 
-| Configuration / raw captures | n | Pose update | Scene propagation | Render preparation | Basis/filter construction | FFT + reconstruction | Other rendering work | Signal rendering subtotal | Receiver processing | Measured call total |
-| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
-| [CPU basis, 100 → 1; 16,667 samples](results/profiling/p100-basis-optimized-full-20261004/profiles/basis_cpu_100tx_1rx.json) | 30 | — | — | 90.54 ± 5.73 | 1106.72 ± 16.29 | 397.92 ± 16.77 | 12.31 ± 1.76 | 1610.09 ± 36.60 | — | 1610.09 ± 36.60 |
-| [P100 basis, 100 → 1; 16,667 samples](results/profiling/p100-basis-optimized-full-20261004/profiles/basis_cuda_100tx_1rx.json) | 30 | — | — | — | — | — | — | 56.17 ± 2.13 | — | 56.17 ± 2.13 |
-| [CPU basis, 4 → 1; 16,667 samples](results/profiling/p100-basis-optimized-full-20261004/profiles/basis_cpu_4tx_1rx.json) | 30 | — | — | 4.54 ± 0.27 | 45.69 ± 1.11 | 25.57 ± 2.41 | 2.61 ± 0.29 | 78.49 ± 3.38 | — | 78.49 ± 3.38 |
-| [P100 basis, 4 → 1; 16,667 samples](results/profiling/p100-basis-optimized-full-20261004/profiles/basis_cuda_4tx_1rx.json) | 30 | — | — | — | — | — | — | 5.68 ± 0.18 | — | 5.68 ± 0.18 |
-| [CPU basis, 1 → 1; 16,667 samples](results/profiling/p100-basis-optimized-full-20261004/profiles/basis_cpu_1tx_1rx.json) | 30 | — | — | 1.01 ± 0.05 | 11.96 ± 0.15 | 7.64 ± 0.34 | 1.30 ± 0.10 | 21.87 ± 0.51 | — | 21.87 ± 0.51 |
-| [P100 basis, 1 → 1; 16,667 samples](results/profiling/p100-basis-optimized-full-20261004/profiles/basis_cuda_1tx_1rx.json) | 30 | — | — | — | — | — | — | 5.51 ± 0.29 | — | 5.51 ± 0.29 |
-| [CPU direct SDR, 2 → 1; 4,096 samples (historical)](benchmarks/results/sdr_cpu_2tx_1rx.json) | 30 | 0.04 ± 0.01 | 23.11 ± 2.16 | — | — | — | — | — | 217.74 ± 13.78 | 240.86 ± 14.10 |
-| [CPU direct SDR, 2 → 2; 4,096 samples (historical)](benchmarks/results/sdr_cpu_2tx_2rx.json) | 30 | 0.05 ± 0.01 | 19.59 ± 1.55 | — | — | — | — | — | 389.74 ± 18.89 | 410.42 ± 19.08 |
-| [CPU direct SDR, 100 → 1; 4,096 samples (historical)](benchmarks/results/sdr_cpu_100tx_1rx.json) | 10 | 0.32 ± 0.04 | 681.65 ± 25.46 | — | — | — | — | — | 10846.50 ± 121.42 | 11522.77 ± 131.40 |
-| [CPU LLVM per-link, 100 → 1; 4,096 samples (historical)](research_results/batched_renderer_cpu/per_link_local.json) | 10 | 0.25 ± 0.04 | 65.20 ± 7.19 | — | — | — | — | 189.40 ± 10.82 | 16.04 ± 1.51 | 274.03 ± 16.89 |
-| [CPU LLVM tile 32, 100 → 1; 4,096 samples (historical)](research_results/batched_renderer_cpu/batched_32.json) | 10 | 0.29 ± 0.02 | 60.71 ± 3.23 | — | — | — | — | 170.32 ± 7.00 | 11.00 ± 0.47 | 247.32 ± 7.65 |
-| [CPU LLVM tile 128, 100 → 1; 4,096 samples (historical)](research_results/batched_renderer_cpu/batched_128.json) | 10 | 0.29 ± 0.01 | 61.25 ± 2.53 | — | — | — | — | 169.87 ± 11.05 | 10.50 ± 0.54 | 243.25 ± 12.94 |
+| Configuration / raw captures | n | Signal ms/call | Wall s / signal s (mean) | Pose update | Scene propagation | Render preparation | Basis/filter construction | FFT + reconstruction | Other rendering work | Signal rendering subtotal | Receiver processing | Measured call total |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| [CPU basis, 100 → 1; 16,667 samples](results/profiling/p100-basis-optimized-full-20261004/profiles/basis_cpu_100tx_1rx.json) | 30 | 8.333500 | 194.054 | — | — | 90.54 ± 5.73 | 1106.72 ± 16.29 | 397.92 ± 16.77 | 12.31 ± 1.76 | 1610.09 ± 36.60 | — | 1610.09 ± 36.60 |
+| [P100 basis, 100 → 1; 16,667 samples](results/profiling/p100-basis-optimized-full-20261004/profiles/basis_cuda_100tx_1rx.json) | 30 | 8.333500 | 6.800 | — | — | — | — | — | — | 56.17 ± 2.13 | — | 56.17 ± 2.13 |
+| [CPU basis, 4 → 1; 16,667 samples](results/profiling/p100-basis-optimized-full-20261004/profiles/basis_cpu_4tx_1rx.json) | 30 | 8.333500 | 9.449 | — | — | 4.54 ± 0.27 | 45.69 ± 1.11 | 25.57 ± 2.41 | 2.61 ± 0.29 | 78.49 ± 3.38 | — | 78.49 ± 3.38 |
+| [P100 basis, 4 → 1; 16,667 samples](results/profiling/p100-basis-optimized-full-20261004/profiles/basis_cuda_4tx_1rx.json) | 30 | 8.333500 | 0.687 | — | — | — | — | — | — | 5.68 ± 0.18 | — | 5.68 ± 0.18 |
+| [CPU basis, 1 → 1; 16,667 samples](results/profiling/p100-basis-optimized-full-20261004/profiles/basis_cpu_1tx_1rx.json) | 30 | 8.333500 | 2.645 | — | — | 1.01 ± 0.05 | 11.96 ± 0.15 | 7.64 ± 0.34 | 1.30 ± 0.10 | 21.87 ± 0.51 | — | 21.87 ± 0.51 |
+| [P100 basis, 1 → 1; 16,667 samples](results/profiling/p100-basis-optimized-full-20261004/profiles/basis_cuda_1tx_1rx.json) | 30 | 8.333500 | 0.669 | — | — | — | — | — | — | 5.51 ± 0.29 | — | 5.51 ± 0.29 |
+| [CPU direct SDR, 2 → 1; 4,096 samples (historical)](benchmarks/results/sdr_cpu_2tx_1rx.json) | 30 | 2.048000 | 119.698 | 0.04 ± 0.01 | 23.11 ± 2.16 | — | — | — | — | — | 217.74 ± 13.78 | 240.86 ± 14.10 |
+| [CPU direct SDR, 2 → 2; 4,096 samples (historical)](benchmarks/results/sdr_cpu_2tx_2rx.json) | 30 | 2.048000 | 201.354 | 0.05 ± 0.01 | 19.59 ± 1.55 | — | — | — | — | — | 389.74 ± 18.89 | 410.42 ± 19.08 |
+| [CPU direct SDR, 100 → 1; 4,096 samples (historical)](benchmarks/results/sdr_cpu_100tx_1rx.json) | 10 | 2.048000 | 5639.169 | 0.32 ± 0.04 | 681.65 ± 25.46 | — | — | — | — | — | 10846.50 ± 121.42 | 11522.77 ± 131.40 |
+| [CPU LLVM per-link, 100 → 1; 4,096 samples (historical)](research_results/batched_renderer_cpu/per_link_local.json) | 10 | 2.048000 | 135.654 | 0.25 ± 0.04 | 65.20 ± 7.19 | — | — | — | — | 189.40 ± 10.82 | 16.04 ± 1.51 | 274.03 ± 16.89 |
+| [CPU LLVM tile 32, 100 → 1; 4,096 samples (historical)](research_results/batched_renderer_cpu/batched_32.json) | 10 | 2.048000 | 120.973 | 0.29 ± 0.02 | 60.71 ± 3.23 | — | — | — | — | 170.32 ± 7.00 | 11.00 ± 0.47 | 247.32 ± 7.65 |
+| [CPU LLVM tile 128, 100 → 1; 4,096 samples (historical)](research_results/batched_renderer_cpu/batched_128.json) | 10 | 2.048000 | 121.101 | 0.29 ± 0.01 | 61.25 ± 2.53 | — | — | — | — | 169.87 ± 11.05 | 10.50 ± 0.54 | 243.25 ± 12.94 |
 
 ### 95th percentile
 
-| Configuration / raw captures | n | Pose update | Scene propagation | Render preparation | Basis/filter construction | FFT + reconstruction | Other rendering work | Signal rendering subtotal | Receiver processing | Measured call total |
-| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
-| [CPU basis, 100 → 1; 16,667 samples](results/profiling/p100-basis-optimized-full-20261004/profiles/basis_cpu_100tx_1rx.json) | 30 | — | — | 99.11 | 1143.81 | 439.91 | 16.47 | 1700.36 | — | 1700.36 |
-| [P100 basis, 100 → 1; 16,667 samples](results/profiling/p100-basis-optimized-full-20261004/profiles/basis_cuda_100tx_1rx.json) | 30 | — | — | — | — | — | — | 59.65 | — | 59.65 |
-| [CPU basis, 4 → 1; 16,667 samples](results/profiling/p100-basis-optimized-full-20261004/profiles/basis_cpu_4tx_1rx.json) | 30 | — | — | 4.84 | 48.20 | 29.37 | 3.12 | 84.62 | — | 84.62 |
-| [P100 basis, 4 → 1; 16,667 samples](results/profiling/p100-basis-optimized-full-20261004/profiles/basis_cuda_4tx_1rx.json) | 30 | — | — | — | — | — | — | 6.05 | — | 6.05 |
-| [CPU basis, 1 → 1; 16,667 samples](results/profiling/p100-basis-optimized-full-20261004/profiles/basis_cpu_1tx_1rx.json) | 30 | — | — | 1.12 | 12.23 | 8.37 | 1.42 | 23.05 | — | 23.05 |
-| [P100 basis, 1 → 1; 16,667 samples](results/profiling/p100-basis-optimized-full-20261004/profiles/basis_cuda_1tx_1rx.json) | 30 | — | — | — | — | — | — | 6.14 | — | 6.14 |
-| [CPU direct SDR, 2 → 1; 4,096 samples (historical)](benchmarks/results/sdr_cpu_2tx_1rx.json) | 30 | 0.05 | 25.16 | — | — | — | — | — | 237.02 | 259.32 |
-| [CPU direct SDR, 2 → 2; 4,096 samples (historical)](benchmarks/results/sdr_cpu_2tx_2rx.json) | 30 | 0.07 | 23.02 | — | — | — | — | — | 427.63 | 446.71 |
-| [CPU direct SDR, 100 → 1; 4,096 samples (historical)](benchmarks/results/sdr_cpu_100tx_1rx.json) | 10 | 0.39 | 733.15 | — | — | — | — | — | 11017.94 | 11729.99 |
-| [CPU LLVM per-link, 100 → 1; 4,096 samples (historical)](research_results/batched_renderer_cpu/per_link_local.json) | 10 | 0.32 | 78.09 | — | — | — | — | 211.45 | 18.89 | 302.43 |
-| [CPU LLVM tile 32, 100 → 1; 4,096 samples (historical)](research_results/batched_renderer_cpu/batched_32.json) | 10 | 0.31 | 67.66 | — | — | — | — | 183.58 | 11.82 | 256.45 |
-| [CPU LLVM tile 128, 100 → 1; 4,096 samples (historical)](research_results/batched_renderer_cpu/batched_128.json) | 10 | 0.31 | 66.05 | — | — | — | — | 196.07 | 11.09 | 272.31 |
+| Configuration / raw captures | n | Signal ms/call | Wall s / signal s (mean) | Pose update | Scene propagation | Render preparation | Basis/filter construction | FFT + reconstruction | Other rendering work | Signal rendering subtotal | Receiver processing | Measured call total |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| [CPU basis, 100 → 1; 16,667 samples](results/profiling/p100-basis-optimized-full-20261004/profiles/basis_cpu_100tx_1rx.json) | 30 | 8.333500 | 194.054 | — | — | 99.11 | 1143.81 | 439.91 | 16.47 | 1700.36 | — | 1700.36 |
+| [P100 basis, 100 → 1; 16,667 samples](results/profiling/p100-basis-optimized-full-20261004/profiles/basis_cuda_100tx_1rx.json) | 30 | 8.333500 | 6.800 | — | — | — | — | — | — | 59.65 | — | 59.65 |
+| [CPU basis, 4 → 1; 16,667 samples](results/profiling/p100-basis-optimized-full-20261004/profiles/basis_cpu_4tx_1rx.json) | 30 | 8.333500 | 9.449 | — | — | 4.84 | 48.20 | 29.37 | 3.12 | 84.62 | — | 84.62 |
+| [P100 basis, 4 → 1; 16,667 samples](results/profiling/p100-basis-optimized-full-20261004/profiles/basis_cuda_4tx_1rx.json) | 30 | 8.333500 | 0.687 | — | — | — | — | — | — | 6.05 | — | 6.05 |
+| [CPU basis, 1 → 1; 16,667 samples](results/profiling/p100-basis-optimized-full-20261004/profiles/basis_cpu_1tx_1rx.json) | 30 | 8.333500 | 2.645 | — | — | 1.12 | 12.23 | 8.37 | 1.42 | 23.05 | — | 23.05 |
+| [P100 basis, 1 → 1; 16,667 samples](results/profiling/p100-basis-optimized-full-20261004/profiles/basis_cuda_1tx_1rx.json) | 30 | 8.333500 | 0.669 | — | — | — | — | — | — | 6.14 | — | 6.14 |
+| [CPU direct SDR, 2 → 1; 4,096 samples (historical)](benchmarks/results/sdr_cpu_2tx_1rx.json) | 30 | 2.048000 | 119.698 | 0.05 | 25.16 | — | — | — | — | — | 237.02 | 259.32 |
+| [CPU direct SDR, 2 → 2; 4,096 samples (historical)](benchmarks/results/sdr_cpu_2tx_2rx.json) | 30 | 2.048000 | 201.354 | 0.07 | 23.02 | — | — | — | — | — | 427.63 | 446.71 |
+| [CPU direct SDR, 100 → 1; 4,096 samples (historical)](benchmarks/results/sdr_cpu_100tx_1rx.json) | 10 | 2.048000 | 5639.169 | 0.39 | 733.15 | — | — | — | — | — | 11017.94 | 11729.99 |
+| [CPU LLVM per-link, 100 → 1; 4,096 samples (historical)](research_results/batched_renderer_cpu/per_link_local.json) | 10 | 2.048000 | 135.654 | 0.32 | 78.09 | — | — | — | — | 211.45 | 18.89 | 302.43 |
+| [CPU LLVM tile 32, 100 → 1; 4,096 samples (historical)](research_results/batched_renderer_cpu/batched_32.json) | 10 | 2.048000 | 120.973 | 0.31 | 67.66 | — | — | — | — | 183.58 | 11.82 | 256.45 |
+| [CPU LLVM tile 128, 100 → 1; 4,096 samples (historical)](research_results/batched_renderer_cpu/batched_128.json) | 10 | 2.048000 | 121.101 | 0.31 | 66.05 | — | — | — | — | 196.07 | 11.09 | 272.31 |
 
 ### GPU stage observations: one instrumented capture per configuration
 
@@ -146,9 +145,39 @@ These are CUDA-event spans, in ms, from a separate capture. **n = 1; no standard
 | [P100 basis, 4 → 1; 16,667 samples](results/profiling/p100-basis-optimized-full-20261004/profiles/basis_cuda_4tx_1rx.json) | 1.19 | 1.78 | 2.06 | 1.29 | 1.17 | 0.28 | 0.28 | 8.94 |
 | [P100 basis, 1 → 1; 16,667 samples](results/profiling/p100-basis-optimized-full-20261004/profiles/basis_cuda_1tx_1rx.json) | 0.38 | 1.71 | 2.09 | 1.17 | 3.81 | 3.65 | 0.18 | 14.15 |
 
+### Wall time relative to simulated signal time
+
+Each receiver covers the same simulated interval; receiver durations are not added together. Ratio = sum of fleet-update wall times / actual signal duration. Below 1 means throughput headroom for this measured scope; above 1 means slower than simulated signal time. Instrumented rows are diagnostic and do not establish unprofiled throughput.
+
+| Configuration / raw captures | Mode | Updates | Signal ms/update (mean) | Total signal seconds | Total wall seconds | Wall seconds / signal second |
+| --- | --- | ---: | ---: | ---: | ---: | ---: |
+| [100 → 10, basis-cpu; AMD EPYC 9V74 80-Core Processor; Sionna RT LLVM CPU](results/end_to_end/cpu-100tx-10rx-20261005/measurements.json) | unprofiled | 5 | 8.333400 | 0.041667 | 60.158310 | 1443.788 |
+| [10 → 4, basis-cpu; AMD EPYC 9V74 80-Core Processor; Sionna RT LLVM CPU](results/end_to_end/cpu-10tx-4rx-20261005/measurements.json) | unprofiled | 10 | 8.333350 | 0.083334 | 6.153073 | 73.837 |
+| [100 → 10, basis-cpu; AMD Ryzen 7 8700G w/ Radeon 780M Graphics; Sionna RT LLVM CPU](results/profiling/p100-end-to-end-full-20261005/profiles/cpu-100tx-10rx-unprofiled/measurements.json) | unprofiled | 30 | 8.333333 | 0.250000 | 221.088237 | 884.353 |
+| [10 → 4, basis-cpu; AMD Ryzen 7 8700G w/ Radeon 780M Graphics; Sionna RT LLVM CPU](results/profiling/p100-end-to-end-full-20261005/profiles/cpu-10tx-4rx-unprofiled/measurements.json) | unprofiled | 30 | 8.333333 | 0.250000 | 11.309370 | 45.237 |
+| [2 → 2, basis-cpu; AMD Ryzen 7 8700G w/ Radeon 780M Graphics; Sionna RT LLVM CPU](results/profiling/p100-end-to-end-full-20261005/profiles/cpu-2tx-2rx-unprofiled/measurements.json) | unprofiled | 30 | 8.333333 | 0.250000 | 2.294724 | 9.179 |
+| [100 → 10, basis-cuda; Tesla P100-PCIE-16GB; Sionna RT LLVM CPU](results/profiling/p100-end-to-end-full-20261005/profiles/cuda-100tx-10rx-instrumented/measurements.json) | instrumented | 30 | 8.333333 | 0.250000 | 25.339303 | 101.357 |
+| [100 → 10, basis-cuda; Tesla P100-PCIE-16GB; Sionna RT LLVM CPU](results/profiling/p100-end-to-end-full-20261005/profiles/cuda-100tx-10rx-unprofiled/measurements.json) | unprofiled | 30 | 8.333333 | 0.250000 | 25.358207 | 101.433 |
+| [10 → 4, basis-cuda; Tesla P100-PCIE-16GB; Sionna RT LLVM CPU](results/profiling/p100-end-to-end-full-20261005/profiles/cuda-10tx-4rx-instrumented/measurements.json) | instrumented | 30 | 8.333333 | 0.250000 | 2.010833 | 8.043 |
+| [10 → 4, basis-cuda; Tesla P100-PCIE-16GB; Sionna RT LLVM CPU](results/profiling/p100-end-to-end-full-20261005/profiles/cuda-10tx-4rx-unprofiled/measurements.json) | unprofiled | 30 | 8.333333 | 0.250000 | 1.961289 | 7.845 |
+| [2 → 2, basis-cuda; Tesla P100-PCIE-16GB; Sionna RT LLVM CPU](results/profiling/p100-end-to-end-full-20261005/profiles/cuda-2tx-2rx-instrumented/measurements.json) | instrumented | 30 | 8.333333 | 0.250000 | 0.790174 | 3.161 |
+| [2 → 2, basis-cuda; Tesla P100-PCIE-16GB; Sionna RT LLVM CPU](results/profiling/p100-end-to-end-full-20261005/profiles/cuda-2tx-2rx-unprofiled/measurements.json) | unprofiled | 30 | 8.333333 | 0.250000 | 0.732656 | 2.931 |
+| [100 → 10, basis-cuda; Tesla P100-PCIE-16GB; Sionna RT CUDA/OptiX](results/profiling/p100-gpu-pipeline-full-20261007/profiles/cuda-100tx-10rx-instrumented/measurements.json) | instrumented | 30 | 8.333333 | 0.250000 | 17.325668 | 69.303 |
+| [100 → 10, basis-cuda; Tesla P100-PCIE-16GB; Sionna RT CUDA/OptiX](results/profiling/p100-gpu-pipeline-full-20261007/profiles/cuda-100tx-10rx-unprofiled/measurements.json) | unprofiled | 30 | 8.333333 | 0.250000 | 37.925993 | 151.704 |
+| [10 → 4, basis-cuda; Tesla P100-PCIE-16GB; Sionna RT CUDA/OptiX](results/profiling/p100-gpu-pipeline-full-20261007/profiles/cuda-10tx-4rx-instrumented/measurements.json) | instrumented | 30 | 8.333333 | 0.250000 | 1.961967 | 7.848 |
+| [10 → 4, basis-cuda; Tesla P100-PCIE-16GB; Sionna RT CUDA/OptiX](results/profiling/p100-gpu-pipeline-full-20261007/profiles/cuda-10tx-4rx-unprofiled/measurements.json) | unprofiled | 30 | 8.333333 | 0.250000 | 4.343547 | 17.374 |
+| [2 → 2, basis-cuda; Tesla P100-PCIE-16GB; Sionna RT CUDA/OptiX](results/profiling/p100-gpu-pipeline-full-20261007/profiles/cuda-2tx-2rx-instrumented/measurements.json) | instrumented | 30 | 8.333333 | 0.250000 | 0.841250 | 3.365 |
+| [2 → 2, basis-cuda; Tesla P100-PCIE-16GB; Sionna RT CUDA/OptiX](results/profiling/p100-gpu-pipeline-full-20261007/profiles/cuda-2tx-2rx-unprofiled/measurements.json) | unprofiled | 30 | 8.333333 | 0.250000 | 1.336400 | 5.346 |
+| [100 → 10, basis-cuda; Tesla P100-PCIE-16GB; Sionna RT CUDA/OptiX](results/profiling/p100-gpu-pipeline-opaque-full-20261007/profiles/cuda-100tx-10rx-instrumented/measurements.json) | instrumented | 30 | 8.333333 | 0.250000 | 16.872901 | 67.492 |
+| [100 → 10, basis-cuda; Tesla P100-PCIE-16GB; Sionna RT CUDA/OptiX](results/profiling/p100-gpu-pipeline-opaque-full-20261007/profiles/cuda-100tx-10rx-unprofiled/measurements.json) | unprofiled | 30 | 8.333333 | 0.250000 | 16.589912 | 66.360 |
+| [10 → 4, basis-cuda; Tesla P100-PCIE-16GB; Sionna RT CUDA/OptiX](results/profiling/p100-gpu-pipeline-opaque-full-20261007/profiles/cuda-10tx-4rx-instrumented/measurements.json) | instrumented | 30 | 8.333333 | 0.250000 | 1.921751 | 7.687 |
+| [10 → 4, basis-cuda; Tesla P100-PCIE-16GB; Sionna RT CUDA/OptiX](results/profiling/p100-gpu-pipeline-opaque-full-20261007/profiles/cuda-10tx-4rx-unprofiled/measurements.json) | unprofiled | 30 | 8.333333 | 0.250000 | 1.851779 | 7.407 |
+| [2 → 2, basis-cuda; Tesla P100-PCIE-16GB; Sionna RT CUDA/OptiX](results/profiling/p100-gpu-pipeline-opaque-full-20261007/profiles/cuda-2tx-2rx-instrumented/measurements.json) | instrumented | 30 | 8.333333 | 0.250000 | 0.855329 | 3.421 |
+| [2 → 2, basis-cuda; Tesla P100-PCIE-16GB; Sionna RT CUDA/OptiX](results/profiling/p100-gpu-pipeline-opaque-full-20261007/profiles/cuda-2tx-2rx-unprofiled/measurements.json) | unprofiled | 30 | 8.333333 | 0.250000 | 0.808956 | 3.236 |
+
 ### End-to-end RF pipeline: median ± sample standard deviation
 
-| Configuration / raw captures | n | Truth advance | Private sources | Scene propagation | Signal rendering | Noise/filter/ADC | Bridge + other RF work | Delivery + storage | Complete update |
+| Configuration / raw captures | n | Truth advance | Private sources | Scene propagation | Signal rendering | Noise/filter/ADC | Bridge + other RF work | Delivery + storage | Fleet-update wall service |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
 | [100 → 10, basis-cpu; AMD EPYC 9V74 80-Core Processor; Sionna RT LLVM CPU](results/end_to_end/cpu-100tx-10rx-20261005/measurements.json) | 5 | 0.002 ± 0.000 | 54.178 ± 2.301 | 1186.283 ± 108.425 | 10615.410 ± 429.415 | 12.070 ± 0.255 | 88.654 ± 1.960 | 15.093 ± 3.193 | 11986.071 ± 499.771 |
 | [10 → 4, basis-cpu; AMD EPYC 9V74 80-Core Processor; Sionna RT LLVM CPU](results/end_to_end/cpu-10tx-4rx-20261005/measurements.json) | 10 | 0.003 ± 0.000 | 6.085 ± 0.594 | 105.786 ± 32.761 | 493.207 ± 18.241 | 4.571 ± 1.246 | 7.243 ± 0.778 | 6.468 ± 1.211 | 620.592 ± 32.685 |
@@ -167,7 +196,7 @@ These are CUDA-event spans, in ms, from a separate capture. **n = 1; no standard
 
 ### End-to-end RF pipeline: p95
 
-| Configuration / raw captures | n | Truth advance | Private sources | Scene propagation | Signal rendering | Noise/filter/ADC | Bridge + other RF work | Delivery + storage | Complete update |
+| Configuration / raw captures | n | Truth advance | Private sources | Scene propagation | Signal rendering | Noise/filter/ADC | Bridge + other RF work | Delivery + storage | Fleet-update wall service |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
 | [100 → 10, basis-cpu; AMD EPYC 9V74 80-Core Processor; Sionna RT LLVM CPU](results/end_to_end/cpu-100tx-10rx-20261005/measurements.json) | 5 | 0.002 | 57.731 | 1353.061 | 11108.158 | 12.203 | 89.477 | 20.940 | 12571.095 |
 | [10 → 4, basis-cpu; AMD EPYC 9V74 80-Core Processor; Sionna RT LLVM CPU](results/end_to_end/cpu-10tx-4rx-20261005/measurements.json) | 10 | 0.003 | 7.042 | 126.508 | 520.594 | 6.852 | 8.558 | 8.899 | 654.255 |
@@ -186,7 +215,7 @@ These are CUDA-event spans, in ms, from a separate capture. **n = 1; no standard
 
 ### Instrumented end-to-end wall timings: median ± sample standard deviation
 
-| Configuration / raw captures | n | Truth advance | Private sources | Scene propagation | Signal rendering | Noise/filter/ADC | Bridge + other RF work | Delivery + storage | Complete update |
+| Configuration / raw captures | n | Truth advance | Private sources | Scene propagation | Signal rendering | Noise/filter/ADC | Bridge + other RF work | Delivery + storage | Fleet-update wall service |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
 | [100 → 10, basis-cuda; Tesla P100-PCIE-16GB; Sionna RT LLVM CPU](results/profiling/p100-end-to-end-full-20261005/profiles/cuda-100tx-10rx-instrumented/measurements.json) | 30 | 0.001 ± 0.000 | 38.013 ± 2.022 | 326.550 ± 4.506 | 396.208 ± 5.901 | 8.999 ± 1.039 | 66.090 ± 3.107 | 7.357 ± 0.507 | 843.886 ± 8.037 |
 | [10 → 4, basis-cuda; Tesla P100-PCIE-16GB; Sionna RT LLVM CPU](results/profiling/p100-end-to-end-full-20261005/profiles/cuda-10tx-4rx-instrumented/measurements.json) | 30 | 0.001 ± 0.000 | 4.198 ± 0.283 | 17.648 ± 0.814 | 33.595 ± 0.846 | 3.018 ± 0.173 | 4.787 ± 0.246 | 3.157 ± 0.323 | 66.692 ± 1.383 |
@@ -200,7 +229,7 @@ These are CUDA-event spans, in ms, from a separate capture. **n = 1; no standard
 
 ### Instrumented end-to-end wall timings: p95
 
-| Configuration / raw captures | n | Truth advance | Private sources | Scene propagation | Signal rendering | Noise/filter/ADC | Bridge + other RF work | Delivery + storage | Complete update |
+| Configuration / raw captures | n | Truth advance | Private sources | Scene propagation | Signal rendering | Noise/filter/ADC | Bridge + other RF work | Delivery + storage | Fleet-update wall service |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
 | [100 → 10, basis-cuda; Tesla P100-PCIE-16GB; Sionna RT LLVM CPU](results/profiling/p100-end-to-end-full-20261005/profiles/cuda-100tx-10rx-instrumented/measurements.json) | 30 | 0.002 | 39.317 | 334.466 | 403.764 | 11.107 | 70.559 | 8.091 | 857.864 |
 | [10 → 4, basis-cuda; Tesla P100-PCIE-16GB; Sionna RT LLVM CPU](results/profiling/p100-end-to-end-full-20261005/profiles/cuda-10tx-4rx-instrumented/measurements.json) | 30 | 0.002 | 4.774 | 19.167 | 35.298 | 3.344 | 5.232 | 4.098 | 69.070 |
@@ -240,9 +269,9 @@ These are CUDA-event spans, in ms, from a separate capture. **n = 1; no standard
 | [10 → 4, basis-cuda; Tesla P100-PCIE-16GB; Sionna RT CUDA/OptiX](results/profiling/p100-gpu-pipeline-opaque-full-20261007/profiles/cuda-10tx-4rx-instrumented/measurements.json) | 30 | 4.611 | 6.238 | 3.086 | 13.046 | 8.184 | 1.252 | 0.401 |
 | [2 → 2, basis-cuda; Tesla P100-PCIE-16GB; Sionna RT CUDA/OptiX](results/profiling/p100-gpu-pipeline-opaque-full-20261007/profiles/cuda-2tx-2rx-instrumented/measurements.json) | 30 | 0.598 | 3.117 | 2.161 | 5.538 | 1.531 | 0.442 | 0.210 |
 
-CUDA event spans sum each named stage across all blocks/batches and receivers **within each window**, then summarize those window totals. They include host dispatch gaps and are not pure kernel execution times. They come from separate instrumented full-pipeline runs; do not mix them into unprofiled throughput or add their medians to wall-time medians.
+CUDA event spans sum each named stage across all blocks/batches and receivers **within each window**, then summarize those window totals. They include host dispatch gaps and are not pure kernel execution times. They come from separate instrumented RF fleet-update runs; do not mix them into unprofiled throughput or add their medians to wall-time medians.
 
-All timings are ms per fleet update. Source generation, propagation, continuous receiver filtering/noise/ADC, loopback HTTP delivery and consumer file readback are included. The propagation backend is recorded per row: historical runs used LLVM CPU; explicit CUDA/OptiX runs use GPU ray tracing and fields. Receivers execute serially. The default truth source implements the AirSim contract; it does not run live AirSim physics/RPC or AMS-GRA distributed SDR workers. Startup/warmup are excluded from these tables, physical path counts and hardware/quota are in the linked JSON, and five-/ten-window historical runs do not qualify long-run tail latency.
+Stage tables report ms per RF fleet update, with the simulation-time denominator and wall-seconds/signal-second ratio in the first table. Source generation, propagation, continuous receiver filtering/noise/ADC, loopback HTTP delivery and consumer file readback are included. The propagation backend is recorded per row: historical runs used LLVM CPU; explicit CUDA/OptiX runs use GPU ray tracing and fields. Receivers execute serially. The default truth source implements the AirSim contract; it does not run live AirSim physics/RPC or AMS-GRA distributed SDR workers. Startup/warmup are excluded from these tables, physical path counts and hardware/quota are in the linked JSON, and five-/ten-window historical runs do not qualify long-run tail latency.
 
 <!-- END STAGE TIMING TABLES -->
 
@@ -250,11 +279,11 @@ The raw-capture links are the sources for every number. On `profiling/p100`,
 regenerate these tables with `python scripts/update_profiling_breakdown.py`,
 or verify them with `python scripts/update_profiling_breakdown.py --check`.
 The historical renderer-only GPU captures above have just one instrumented
-observation. For repeated full-pipeline wall timings and CUDA stage distributions,
+observation. For repeated RF fleet-update wall timings and CUDA stage distributions,
 use the [P100 end-to-end collector](P100_BASIS_PROFILING.md#complete-rf-pipeline-fill-every-stage-row).
 It imports only validated complete bundles and keeps instrumented GPU event
-statistics separate from unprofiled latency. No new P100 measurements are
-claimed until such a bundle is collected and published.
+statistics separate from unprofiled latency. The published hybrid and CUDA/OptiX fleet-update bundles below are distinct
+from the historical renderer-only captures.
 
 ## Your ten-minute flight: 10 moving TX and four moving RX
 
@@ -364,5 +393,51 @@ See [END_TO_END.md](END_TO_END.md) for the real-terrain scene-to-consumer test,
 the direct-renderer integration oracle, and CPU/P100 collection commands.
 The default trajectory source exercises the AirSim bridge contract; it does
 not execute AirSim physics/RPC. Full distributed continuous-SDR coverage is
-still outstanding. New full-pipeline results are distinct from renderer-only
+still outstanding. New RF fleet-update results are distinct from renderer-only
 results and do not replace the qualified synthetic stress workload.
+
+<!-- BEGIN SIGNAL TIME CONTEXT -->
+
+**Simulation-time reference:** wall seconds per simulated signal second = total measured wall service / total output signal duration per receiver. Receiver durations are concurrent, not added across receivers. This is a processing-cost ratio for the named scope; it is not a whole-flight measurement. Instrumented costs are diagnostic.
+
+| Raw case / timed scope | Mode | Calls | Signal ms/call (mean) | Measured signal seconds | Measured wall seconds | Wall seconds / signal second |
+| --- | --- | ---: | ---: | ---: | ---: | ---: |
+| [results/end_to_end/cpu-100tx-10rx-20261005/measurements.json](results/end_to_end/cpu-100tx-10rx-20261005/measurements.json) — RF fleet update | historical | 5 | 8.333400 | 0.041667 | 60.158310 | 1443.788 |
+| [results/end_to_end/cpu-10tx-4rx-20261005/measurements.json](results/end_to_end/cpu-10tx-4rx-20261005/measurements.json) — RF fleet update | historical | 10 | 8.333350 | 0.083334 | 6.153073 | 73.837 |
+| [results/profiling/p100-basis-optimized-full-20261004/profiles/basis_cpu_100tx_1rx.json](results/profiling/p100-basis-optimized-full-20261004/profiles/basis_cpu_100tx_1rx.json) — Renderer call | unprofiled_basis_benchmark | 30 | 8.333500 | 0.250005 | 48.514551 | 194.054 |
+| [results/profiling/p100-basis-optimized-full-20261004/profiles/basis_cpu_1tx_1rx.json](results/profiling/p100-basis-optimized-full-20261004/profiles/basis_cpu_1tx_1rx.json) — Renderer call | unprofiled_basis_benchmark | 30 | 8.333500 | 0.250005 | 0.661153 | 2.645 |
+| [results/profiling/p100-basis-optimized-full-20261004/profiles/basis_cpu_4tx_1rx.json](results/profiling/p100-basis-optimized-full-20261004/profiles/basis_cpu_4tx_1rx.json) — Renderer call | unprofiled_basis_benchmark | 30 | 8.333500 | 0.250005 | 2.362246 | 9.449 |
+| [results/profiling/p100-basis-optimized-full-20261004/profiles/basis_cuda_100tx_1rx.json](results/profiling/p100-basis-optimized-full-20261004/profiles/basis_cuda_100tx_1rx.json) — Renderer call | unprofiled_basis_benchmark | 30 | 8.333500 | 0.250005 | 1.700125 | 6.800 |
+| [results/profiling/p100-basis-optimized-full-20261004/profiles/basis_cuda_1tx_1rx.json](results/profiling/p100-basis-optimized-full-20261004/profiles/basis_cuda_1tx_1rx.json) — Renderer call | unprofiled_basis_benchmark | 30 | 8.333500 | 0.250005 | 0.167198 | 0.669 |
+| [results/profiling/p100-basis-optimized-full-20261004/profiles/basis_cuda_4tx_1rx.json](results/profiling/p100-basis-optimized-full-20261004/profiles/basis_cuda_4tx_1rx.json) — Renderer call | unprofiled_basis_benchmark | 30 | 8.333500 | 0.250005 | 0.171683 | 0.687 |
+| [results/profiling/p100-end-to-end-full-20261005/profiles/cpu-100tx-10rx-unprofiled/measurements.json](results/profiling/p100-end-to-end-full-20261005/profiles/cpu-100tx-10rx-unprofiled/measurements.json) — RF fleet update | unprofiled_end_to_end_benchmark | 30 | 8.333333 | 0.250000 | 221.088237 | 884.353 |
+| [results/profiling/p100-end-to-end-full-20261005/profiles/cpu-10tx-4rx-unprofiled/measurements.json](results/profiling/p100-end-to-end-full-20261005/profiles/cpu-10tx-4rx-unprofiled/measurements.json) — RF fleet update | unprofiled_end_to_end_benchmark | 30 | 8.333333 | 0.250000 | 11.309370 | 45.237 |
+| [results/profiling/p100-end-to-end-full-20261005/profiles/cpu-2tx-2rx-unprofiled/measurements.json](results/profiling/p100-end-to-end-full-20261005/profiles/cpu-2tx-2rx-unprofiled/measurements.json) — RF fleet update | unprofiled_end_to_end_benchmark | 30 | 8.333333 | 0.250000 | 2.294724 | 9.179 |
+| [results/profiling/p100-end-to-end-full-20261005/profiles/cuda-100tx-10rx-instrumented/measurements.json](results/profiling/p100-end-to-end-full-20261005/profiles/cuda-100tx-10rx-instrumented/measurements.json) — RF fleet update | instrumented_end_to_end_profile | 30 | 8.333333 | 0.250000 | 25.339303 | 101.357 |
+| [results/profiling/p100-end-to-end-full-20261005/profiles/cuda-100tx-10rx-unprofiled/measurements.json](results/profiling/p100-end-to-end-full-20261005/profiles/cuda-100tx-10rx-unprofiled/measurements.json) — RF fleet update | unprofiled_end_to_end_benchmark | 30 | 8.333333 | 0.250000 | 25.358207 | 101.433 |
+| [results/profiling/p100-end-to-end-full-20261005/profiles/cuda-10tx-4rx-instrumented/measurements.json](results/profiling/p100-end-to-end-full-20261005/profiles/cuda-10tx-4rx-instrumented/measurements.json) — RF fleet update | instrumented_end_to_end_profile | 30 | 8.333333 | 0.250000 | 2.010833 | 8.043 |
+| [results/profiling/p100-end-to-end-full-20261005/profiles/cuda-10tx-4rx-unprofiled/measurements.json](results/profiling/p100-end-to-end-full-20261005/profiles/cuda-10tx-4rx-unprofiled/measurements.json) — RF fleet update | unprofiled_end_to_end_benchmark | 30 | 8.333333 | 0.250000 | 1.961289 | 7.845 |
+| [results/profiling/p100-end-to-end-full-20261005/profiles/cuda-2tx-2rx-instrumented/measurements.json](results/profiling/p100-end-to-end-full-20261005/profiles/cuda-2tx-2rx-instrumented/measurements.json) — RF fleet update | instrumented_end_to_end_profile | 30 | 8.333333 | 0.250000 | 0.790174 | 3.161 |
+| [results/profiling/p100-end-to-end-full-20261005/profiles/cuda-2tx-2rx-unprofiled/measurements.json](results/profiling/p100-end-to-end-full-20261005/profiles/cuda-2tx-2rx-unprofiled/measurements.json) — RF fleet update | unprofiled_end_to_end_benchmark | 30 | 8.333333 | 0.250000 | 0.732656 | 2.931 |
+| [results/profiling/p100-gpu-pipeline-full-20261007/profiles/cuda-100tx-10rx-instrumented/measurements.json](results/profiling/p100-gpu-pipeline-full-20261007/profiles/cuda-100tx-10rx-instrumented/measurements.json) — RF fleet update | instrumented_end_to_end_profile | 30 | 8.333333 | 0.250000 | 17.325668 | 69.303 |
+| [results/profiling/p100-gpu-pipeline-full-20261007/profiles/cuda-100tx-10rx-unprofiled/measurements.json](results/profiling/p100-gpu-pipeline-full-20261007/profiles/cuda-100tx-10rx-unprofiled/measurements.json) — RF fleet update | unprofiled_end_to_end_benchmark | 30 | 8.333333 | 0.250000 | 37.925993 | 151.704 |
+| [results/profiling/p100-gpu-pipeline-full-20261007/profiles/cuda-10tx-4rx-instrumented/measurements.json](results/profiling/p100-gpu-pipeline-full-20261007/profiles/cuda-10tx-4rx-instrumented/measurements.json) — RF fleet update | instrumented_end_to_end_profile | 30 | 8.333333 | 0.250000 | 1.961967 | 7.848 |
+| [results/profiling/p100-gpu-pipeline-full-20261007/profiles/cuda-10tx-4rx-unprofiled/measurements.json](results/profiling/p100-gpu-pipeline-full-20261007/profiles/cuda-10tx-4rx-unprofiled/measurements.json) — RF fleet update | unprofiled_end_to_end_benchmark | 30 | 8.333333 | 0.250000 | 4.343547 | 17.374 |
+| [results/profiling/p100-gpu-pipeline-full-20261007/profiles/cuda-2tx-2rx-instrumented/measurements.json](results/profiling/p100-gpu-pipeline-full-20261007/profiles/cuda-2tx-2rx-instrumented/measurements.json) — RF fleet update | instrumented_end_to_end_profile | 30 | 8.333333 | 0.250000 | 0.841250 | 3.365 |
+| [results/profiling/p100-gpu-pipeline-full-20261007/profiles/cuda-2tx-2rx-unprofiled/measurements.json](results/profiling/p100-gpu-pipeline-full-20261007/profiles/cuda-2tx-2rx-unprofiled/measurements.json) — RF fleet update | unprofiled_end_to_end_benchmark | 30 | 8.333333 | 0.250000 | 1.336400 | 5.346 |
+| [results/profiling/p100-gpu-pipeline-opaque-full-20261007/profiles/cuda-100tx-10rx-instrumented/measurements.json](results/profiling/p100-gpu-pipeline-opaque-full-20261007/profiles/cuda-100tx-10rx-instrumented/measurements.json) — RF fleet update | instrumented_end_to_end_profile | 30 | 8.333333 | 0.250000 | 16.872901 | 67.492 |
+| [results/profiling/p100-gpu-pipeline-opaque-full-20261007/profiles/cuda-100tx-10rx-unprofiled/measurements.json](results/profiling/p100-gpu-pipeline-opaque-full-20261007/profiles/cuda-100tx-10rx-unprofiled/measurements.json) — RF fleet update | unprofiled_end_to_end_benchmark | 30 | 8.333333 | 0.250000 | 16.589912 | 66.360 |
+| [results/profiling/p100-gpu-pipeline-opaque-full-20261007/profiles/cuda-10tx-4rx-instrumented/measurements.json](results/profiling/p100-gpu-pipeline-opaque-full-20261007/profiles/cuda-10tx-4rx-instrumented/measurements.json) — RF fleet update | instrumented_end_to_end_profile | 30 | 8.333333 | 0.250000 | 1.921751 | 7.687 |
+| [results/profiling/p100-gpu-pipeline-opaque-full-20261007/profiles/cuda-10tx-4rx-unprofiled/measurements.json](results/profiling/p100-gpu-pipeline-opaque-full-20261007/profiles/cuda-10tx-4rx-unprofiled/measurements.json) — RF fleet update | unprofiled_end_to_end_benchmark | 30 | 8.333333 | 0.250000 | 1.851779 | 7.407 |
+| [results/profiling/p100-gpu-pipeline-opaque-full-20261007/profiles/cuda-2tx-2rx-instrumented/measurements.json](results/profiling/p100-gpu-pipeline-opaque-full-20261007/profiles/cuda-2tx-2rx-instrumented/measurements.json) — RF fleet update | instrumented_end_to_end_profile | 30 | 8.333333 | 0.250000 | 0.855329 | 3.421 |
+| [results/profiling/p100-gpu-pipeline-opaque-full-20261007/profiles/cuda-2tx-2rx-unprofiled/measurements.json](results/profiling/p100-gpu-pipeline-opaque-full-20261007/profiles/cuda-2tx-2rx-unprofiled/measurements.json) — RF fleet update | unprofiled_end_to_end_benchmark | 30 | 8.333333 | 0.250000 | 0.808956 | 3.236 |
+| [research_results/batched_renderer_cpu/batched_128.json](research_results/batched_renderer_cpu/batched_128.json) — Local RF service | unprofiled_benchmark | 10 | 2.048000 | 0.020480 | 2.480152 | 121.101 |
+| [research_results/batched_renderer_cpu/batched_32.json](research_results/batched_renderer_cpu/batched_32.json) — Local RF service | unprofiled_benchmark | 10 | 2.048000 | 0.020480 | 2.477535 | 120.973 |
+| [research_results/batched_renderer_cpu/per_link_local.json](research_results/batched_renderer_cpu/per_link_local.json) — Local RF service | unprofiled_benchmark | 10 | 2.048000 | 0.020480 | 2.778200 | 135.654 |
+| [benchmarks/results/sdr_cpu_100tx_1rx.json](benchmarks/results/sdr_cpu_100tx_1rx.json) — Local RF service | historical | 10 | 2.048000 | 0.020480 | 115.490185 | 5639.169 |
+| [benchmarks/results/sdr_cpu_2tx_1rx.json](benchmarks/results/sdr_cpu_2tx_1rx.json) — Local RF service | historical | 30 | 2.048000 | 0.061440 | 7.354236 | 119.698 |
+| [benchmarks/results/sdr_cpu_2tx_2rx.json](benchmarks/results/sdr_cpu_2tx_2rx.json) — Local RF service | historical | 30 | 2.048000 | 0.061440 | 12.371171 | 201.354 |
+
+The measured signal seconds column totals processed windows. Synthetic and historical short-capture jobs may reuse epochs or leave gaps; this total does not assert a continuous simulation timeline. First-use/warmup are excluded where the recorded harness excludes them. Stage milliseconds elsewhere use the same signal duration as their parent call; stage median / signal-ms is a median cost ratio, while the final column above uses sums (equivalently mean costs for fixed-duration calls).
+
+<!-- END SIGNAL TIME CONTEXT -->

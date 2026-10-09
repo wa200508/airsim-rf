@@ -1,5 +1,9 @@
 # Direct path I/Q rendering
 
+**Timing scope:** Mixed scope or architecture/reference document; each workload/table retains its stated timed operation. [Common measurement definitions](TIMING_CONVENTIONS.md) apply to units, statistics, cache state, ratios and comparisons. Historical measurements and estimates are not current fleet-update qualification.
+
+
+
 **Runtime context (2026-10-05):** Direct-path reference and earlier implementation measurements, not the current qualified basis-renderer capacity. See [current runtime and wall-clock costs](RUNTIME_STATUS.md) for comparable measurements, hardware, exclusions and ten-minute estimates.
 
 Branch: `optimization/direct-path-renderer`, based on `profiling/p100`.
@@ -202,3 +206,9 @@ These are measured CPU results, not GPU projections or measured P100 behavior.
 The completed local suite and offline non-root profiling container each passed
 88 tests, with five CUDA cases skipped. The direct LLVM pulsed-radar example
 recovered range peaks at 299.79 m and 599.58 m for targets at 300 m and 600 m.
+
+<!-- BEGIN SIGNAL TIME CONTEXT -->
+
+**Simulation-time reference:** use **wall seconds per simulated signal second**, not an unlabeled whole-run time. For fixed windows, divide mean service milliseconds by samples/sample-rate × 1,000. Stage costs use their parent window denominator. Geometry-only solves and analytic operation counts have no generated signal duration; a signal-time ratio is **not applicable**, unless an explicit update interval is assumed and labeled as a scheduling estimate. Unrecorded flight costs remain unknown. See [recorded normalized cases](SIGNAL_TIME_RESULTS.md).
+
+<!-- END SIGNAL TIME CONTEXT -->

@@ -1,5 +1,9 @@
 # Code-derived CPU and GPU runtime model
 
+**Timing scope:** Mixed scope or architecture/reference document; each workload/table retains its stated timed operation. [Common measurement definitions](TIMING_CONVENTIONS.md) apply to units, statistics, cache state, ratios and comparisons. Historical measurements and estimates are not current fleet-update qualification.
+
+
+
 **Runtime context (2026-10-05):** Historical code model and conditional GPU estimates for the older tone/short-capture pipeline. Do not use these forecasts as current GPU measurements. See [current runtime and wall-clock costs](RUNTIME_STATUS.md) for comparable measurements, hardware, exclusions and ten-minute estimates.
 
 This analysis uses the current Pluto-class SDR path, the code in main as of
@@ -296,3 +300,9 @@ Pinned Sionna 2.2.0 references:
 [1] NVIDIA, [GeForce RTX 4090 specifications](https://www.nvidia.com/en-us/geforce/graphics-cards/40-series/rtx-4090/), accessed 2026-10-03.
 
 [2] NVIDIA, [CUDA C++ Programming Guide 12.6.3: native arithmetic instruction throughput](https://docs.nvidia.com/cuda/archive/12.6.3/cuda-c-programming-guide/index.html#arithmetic-instructions-throughput-native-arithmetic-instructions), and the same guide's [sine/cosine and intrinsic-function discussion](https://docs.nvidia.com/cuda/archive/12.6.3/cuda-c-programming-guide/index.html#arithmetic-instructions), accessed 2026-10-03. Hardware maxima constrain the estimate; they are not measured application throughput.
+
+<!-- BEGIN SIGNAL TIME CONTEXT -->
+
+**Simulation-time reference:** use **wall seconds per simulated signal second**, not an unlabeled whole-run time. For fixed windows, divide mean service milliseconds by samples/sample-rate × 1,000. Stage costs use their parent window denominator. Geometry-only solves and analytic operation counts have no generated signal duration; a signal-time ratio is **not applicable**, unless an explicit update interval is assumed and labeled as a scheduling estimate. Unrecorded flight costs remain unknown. See [recorded normalized cases](SIGNAL_TIME_RESULTS.md).
+
+<!-- END SIGNAL TIME CONTEXT -->

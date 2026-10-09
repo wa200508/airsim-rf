@@ -1,5 +1,27 @@
 # RF profiling results: direct-renderer-cpu-validation
 
+**Timing scope:** Historical local RF service; model/backend and timed region are specified below. [Common measurement definitions](../../../TIMING_CONVENTIONS.md) apply to units, statistics, cache state, ratios and comparisons. Historical measurements and estimates are not current fleet-update qualification.
+
+<!-- BEGIN SIGNAL TIME CONTEXT -->
+
+**Simulation-time reference:** wall seconds per simulated signal second = total measured wall service / total output signal duration per receiver. Receiver durations are concurrent, not added across receivers. This is a processing-cost ratio for the named scope; it is not a whole-flight measurement. Instrumented costs are diagnostic.
+
+| Raw case / timed scope | Mode | Calls | Signal ms/call (mean) | Measured signal seconds | Measured wall seconds | Wall seconds / signal second |
+| --- | --- | ---: | ---: | ---: | ---: | ---: |
+| [results/profiling/direct-renderer-cpu-validation/metrics/cpu_100tx_1rx.json](metrics/cpu_100tx_1rx.json) — Local RF service | unprofiled_benchmark | 2 | 2.048000 | 0.004096 | 22.390197 | 5466.357 |
+| [results/profiling/direct-renderer-cpu-validation/metrics/cpu_100tx_1rx_direct.json](metrics/cpu_100tx_1rx_direct.json) — Local RF service | unprofiled_benchmark | 2 | 2.048000 | 0.004096 | 0.788182 | 192.427 |
+| [results/profiling/direct-renderer-cpu-validation/metrics/cpu_2tx_1rx.json](metrics/cpu_2tx_1rx.json) — Local RF service | unprofiled_benchmark | 3 | 2.048000 | 0.006144 | 0.687552 | 111.906 |
+| [results/profiling/direct-renderer-cpu-validation/metrics/cpu_2tx_1rx_direct.json](metrics/cpu_2tx_1rx_direct.json) — Local RF service | unprofiled_benchmark | 3 | 2.048000 | 0.006144 | 0.155916 | 25.377 |
+| [results/profiling/direct-renderer-cpu-validation/profiles/cpu_100tx_1rx_direct_events.json](profiles/cpu_100tx_1rx_direct_events.json) — Local RF service | instrumented_profile | 2 | 2.048000 | 0.004096 | 0.847461 | 206.900 |
+| [results/profiling/direct-renderer-cpu-validation/profiles/cpu_100tx_1rx_events.json](profiles/cpu_100tx_1rx_events.json) — Local RF service | instrumented_profile | 2 | 2.048000 | 0.004096 | 22.365961 | 5460.440 |
+| [results/profiling/direct-renderer-cpu-validation/profiles/cpu_2tx_1rx_direct_events.json](profiles/cpu_2tx_1rx_direct_events.json) — Local RF service | instrumented_profile | 2 | 2.048000 | 0.004096 | 0.039127 | 9.553 |
+| [results/profiling/direct-renderer-cpu-validation/profiles/cpu_2tx_1rx_events.json](profiles/cpu_2tx_1rx_events.json) — Local RF service | instrumented_profile | 2 | 2.048000 | 0.004096 | 0.454616 | 110.990 |
+
+The measured signal seconds column totals processed windows. Synthetic and historical short-capture jobs may reuse epochs or leave gaps; this total does not assert a continuous simulation timeline. First-use/warmup are excluded where the recorded harness excludes them. Stage milliseconds elsewhere use the same signal duration as their parent call; stage median / signal-ms is a median cost ratio, while the final column above uses sums (equivalently mean costs for fixed-duration calls).
+
+<!-- END SIGNAL TIME CONTEXT -->
+
+
 Status: **COMPLETE — CPU-only harness validation; no GPU result**.
 
 GPU status: `not_requested`. Source: `720c4011522ad25c1e9c5c470bc20f4f34d480c5`; dirty: `True`.

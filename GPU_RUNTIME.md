@@ -1,5 +1,9 @@
 # Runtime metrics for one GPU per receiver
 
+**Timing scope:** Mixed scope or architecture/reference document; each workload/table retains its stated timed operation. [Common measurement definitions](TIMING_CONVENTIONS.md) apply to units, statistics, cache state, ratios and comparisons. Historical measurements and estimates are not current fleet-update qualification.
+
+
+
 **Runtime context (2026-10-05):** Historical channel-only CPU measurements and hypothetical GPU query rates. Sub-millisecond ray arithmetic is not complete GPU renderer latency. See [current runtime and wall-clock costs](RUNTIME_STATUS.md) for comparable measurements, hardware, exclusions and ten-minute estimates.
 
 See [the code-derived scaling model](SDR_COMPLEXITY.md) for stage-by-stage
@@ -127,3 +131,9 @@ validate CUDA deployment or GPU memory sizing.
 backends. CPU reports mark GPU channel runtime and deadlines unmeasured. A
 multi-receiver batch leaves the per-worker host sampling estimate unset rather
 than inventing it by dividing a batched timing.
+
+<!-- BEGIN SIGNAL TIME CONTEXT -->
+
+**Simulation-time reference:** use **wall seconds per simulated signal second**, not an unlabeled whole-run time. For fixed windows, divide mean service milliseconds by samples/sample-rate × 1,000. Stage costs use their parent window denominator. Geometry-only solves and analytic operation counts have no generated signal duration; a signal-time ratio is **not applicable**, unless an explicit update interval is assumed and labeled as a scheduling estimate. Unrecorded flight costs remain unknown. See [recorded normalized cases](SIGNAL_TIME_RESULTS.md).
+
+<!-- END SIGNAL TIME CONTEXT -->

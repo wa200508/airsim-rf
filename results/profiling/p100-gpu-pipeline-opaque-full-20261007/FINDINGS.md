@@ -1,14 +1,34 @@
 # Optimized P100 GPU RF pipeline findings
 
+**Timing scope:** RF fleet-update wall service; serial receivers; trajectory source and loopback consumer. [Common measurement definitions](../../../TIMING_CONVENTIONS.md) apply to units, statistics, cache state, ratios and comparisons. Historical measurements and estimates are not current fleet-update qualification.
+
+<!-- BEGIN SIGNAL TIME CONTEXT -->
+
+**Simulation-time reference:** wall seconds per simulated signal second = total measured wall service / total output signal duration per receiver. Receiver durations are concurrent, not added across receivers. This is a processing-cost ratio for the named scope; it is not a whole-flight measurement. Instrumented costs are diagnostic.
+
+| Raw case / timed scope | Mode | Calls | Signal ms/call (mean) | Measured signal seconds | Measured wall seconds | Wall seconds / signal second |
+| --- | --- | ---: | ---: | ---: | ---: | ---: |
+| [results/profiling/p100-gpu-pipeline-opaque-full-20261007/profiles/cuda-100tx-10rx-instrumented/measurements.json](profiles/cuda-100tx-10rx-instrumented/measurements.json) — RF fleet update | instrumented_end_to_end_profile | 30 | 8.333333 | 0.250000 | 16.872901 | 67.492 |
+| [results/profiling/p100-gpu-pipeline-opaque-full-20261007/profiles/cuda-100tx-10rx-unprofiled/measurements.json](profiles/cuda-100tx-10rx-unprofiled/measurements.json) — RF fleet update | unprofiled_end_to_end_benchmark | 30 | 8.333333 | 0.250000 | 16.589912 | 66.360 |
+| [results/profiling/p100-gpu-pipeline-opaque-full-20261007/profiles/cuda-10tx-4rx-instrumented/measurements.json](profiles/cuda-10tx-4rx-instrumented/measurements.json) — RF fleet update | instrumented_end_to_end_profile | 30 | 8.333333 | 0.250000 | 1.921751 | 7.687 |
+| [results/profiling/p100-gpu-pipeline-opaque-full-20261007/profiles/cuda-10tx-4rx-unprofiled/measurements.json](profiles/cuda-10tx-4rx-unprofiled/measurements.json) — RF fleet update | unprofiled_end_to_end_benchmark | 30 | 8.333333 | 0.250000 | 1.851779 | 7.407 |
+| [results/profiling/p100-gpu-pipeline-opaque-full-20261007/profiles/cuda-2tx-2rx-instrumented/measurements.json](profiles/cuda-2tx-2rx-instrumented/measurements.json) — RF fleet update | instrumented_end_to_end_profile | 30 | 8.333333 | 0.250000 | 0.855329 | 3.421 |
+| [results/profiling/p100-gpu-pipeline-opaque-full-20261007/profiles/cuda-2tx-2rx-unprofiled/measurements.json](profiles/cuda-2tx-2rx-unprofiled/measurements.json) — RF fleet update | unprofiled_end_to_end_benchmark | 30 | 8.333333 | 0.250000 | 0.808956 | 3.236 |
+
+The measured signal seconds column totals processed windows. Synthetic and historical short-capture jobs may reuse epochs or leave gaps; this total does not assert a continuous simulation timeline. First-use/warmup are excluded where the recorded harness excludes them. Stage milliseconds elsewhere use the same signal duration as their parent call; stage median / signal-ms is a median cost ratio, while the final column above uses sums (equivalently mean costs for fixed-duration calls).
+
+<!-- END SIGNAL TIME CONTEXT -->
+
+
 Measured source: `6cc6707`; clean code mounted read-only over the isolated compatibility image. Propagation and signal rendering both execute on the P100. All required collector tasks and all six 30-window CUDA series passed. Initialization, the first capture and three warmups are excluded from steady-state tables; each measured series contains 250 ms of simulated signal. No CPU-only end-to-end timing run was added.
 
-| TX / RX | Full median ms | p95 ms | GPU propagation wall ms | GPU renderer wall ms |
+| TX / RX | Fleet-update wall median ms | p95 ms | Propagation wall median ms | Renderer-call wall median ms |
 |---|---:|---:|---:|---:|
 | 2tx-2rx | 26.772 | 28.206 | 9.363 | 11.861 |
 | 10tx-4rx | 61.692 | 64.455 | 10.670 | 35.264 |
 | 100tx-10rx | 553.685 | 563.363 | 31.222 | 398.267 |
 
-The target fleet median improves from the prior 843.630 ms hybrid CPU-propagation/P100-rendering result to 553.685 ms, approximately 1.52 times faster (34.4% lower). This compares different documented Mitsuba/Dr.Jit stacks with the same Sionna 2.2 propagation model; it is not an isolated one-change benchmark. The small 2-TX/2-RX case is slower than the prior hybrid result (26.772 vs 24.045 ms); GPU traversal does not automatically benefit small fleets.
+The current configuration measures 553.685 ms per fleet update; the earlier hybrid CPU-propagation/P100-rendering configuration measured 843.630 ms. The backend, Mitsuba/Dr.Jit stack and optimization settings changed. These are two configuration measurements, not a controlled 1.52× optimization speedup. Each update generates ~8.333 ms of signal per receiver, with ten receivers processed sequentially on one P100. The small 2-TX/2-RX case is slower than the prior hybrid result (26.772 vs 24.045 ms); GPU traversal does not automatically benefit small fleets.
 
 GPU-specific opaque pose inputs address recurring JIT work: the preceding new-trajectory CUDA run measured 1,259.17 ms total and 740.88 ms propagation, while reusing its epochs measured about 576 ms total. With changing pose arrays materialized rather than embedded as compiler literals, the final new-trajectory run measured 31.223 ms propagation. Positions, velocities, orientations and channels are still updated every window. [Comparisons and qualification](../p100-gpu-system-20261007/README.md) retain cold/warm-cache differences and all provisional failures.
 

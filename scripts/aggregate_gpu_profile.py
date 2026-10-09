@@ -95,14 +95,14 @@ def basis_report(root, manifest, env):
         f"Renderer GPU status: `{manifest.get('gpu_status')}`. Source: `{env.get('source_revision')}`; dirty: `{env.get('source_dirty')}`.",'',
         '**Renderer-only:** synthetic changing channels, equal sample clocks, FP64/complex128, private source data and FFTs. All configured paths are valid. No ray tracing, source generation, clock resampling, noise/filter/ADC, AirSim or network/queueing is included.','',
         f"Propagation: {manifest.get('propagation_status')}. A successful renderer run does not establish current Sionna compatibility or complete RF service at 120 Hz.",'',
-        '## Unprofiled window latency and serial throughput','',
-        '| Backend | TX × RX | Valid paths/link | Samples | Median | p95 | p99 | Max | Windows/s | Misses 120 Hz | Accuracy |',
-        '|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---|']
+        '## Unprofiled renderer-call wall service and serial throughput','',
+        '| Backend | TX × RX | Valid paths/link | Samples | Median | p95 | p99 | Max | Windows/s | Wall s / signal s | Signal ms/call | Measured signal s | Measured wall s | Misses 120 Hz | Accuracy |',
+        '|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---|']
     pairs={}
     for path,data in measurements:
         a=data['arguments'];s=data['summary'];qualified=data['accuracy']['passed']
         if data['backend']=='cuda' and not gpu_valid:qualified=False
-        lines.append(f"| [{data['backend']}](profiles/{path.name}) | {a['tx']} × {a['rx']} | {a['paths']} | {a['samples']} | {s['p50_ms']:.3f} ms | {s['p95_ms']:.3f} ms | {s['p99_ms']:.3f} ms | {s['max_ms']:.3f} ms | {data['captures_per_second']:.3f} | {data['misses_120hz']}/{len(data['rows'])} | {'PASS' if qualified else 'INVALID'} |")
+        lines.append(f"| [{data['backend']}](profiles/{path.name}) | {a['tx']} × {a['rx']} | {a['paths']} | {a['samples']} | {s['p50_ms']:.3f} ms | {s['p95_ms']:.3f} ms | {s['p99_ms']:.3f} ms | {s['max_ms']:.3f} ms | {data['captures_per_second']:.3f} | {s['mean_ms']/(a['samples']/a['sample_rate']*1000):.3f} | {a['samples']/a['sample_rate']*1000:.6f} | {len(data['rows'])*a['samples']/a['sample_rate']:.6f} | {sum(r['total_ms'] for r in data['rows'])/1000:.6f} | {data['misses_120hz']}/{len(data['rows'])} | {'PASS' if qualified else 'INVALID'} |")
         key=tuple(a.get(k) for k in ('tx','rx','paths','samples','sample_rate','max_delay_us','max_doppler_hz','taps','block_samples','tolerance'))
         if qualified:pairs.setdefault(key,{})[data['backend']]=data
     if not measurements:lines.append('| No successful measurements | — | — | — | — | — | — | — | — | — | — |')
@@ -122,7 +122,7 @@ def basis_report(root, manifest, env):
             for event in metric.get('events',[]):groups[event['name']]+=event['cuda_ms']
             lines.append(f"* [{name}](profiles/{name}), receiver {ri}: stage spans {dict(groups)}. Pool used/reserved {metric.get('pool_used_bytes')}/{metric.get('pool_reserved_bytes')} bytes; largest sampled pool-use checkpoint {metric.get('max_checkpoint_pool_used_bytes')} bytes. Allocator snapshots include plans/cache and are not exact process peak VRAM.")
     lines+=['','## Accuracy and hardware','',
-        'Every benchmark compares all receiver output samples against CPU basis reconstruction, checks all paths of all links in initial/final sample prefixes against direct rendering, and checks complete direct output for the first/last transmitter of each receiver. Tests cover cancellation, changed channels, split captures, finite boundaries and Unix timestamps. Error is relative to the finite interpolation operator; ideal-sinc/noise-floor qualification remains separate.','',
+        'Each case compares its final timed window’s receiver output samples against CPU basis reconstruction, checks all paths of all links in initial/final sample prefixes against direct rendering, and checks complete direct output for the first/last transmitter of each receiver. Tests cover cancellation, changed channels, split captures, finite boundaries and Unix timestamps. Error is relative to the finite interpolation operator; ideal-sinc/noise-floor qualification remains separate.','',
         f"CPU quota: `{env.get('cpu_quota')}`. Hardware, pinned packages and source hashes: [environment.json](environment.json) and [installed_packages.json](installed_packages.json).",'',
         '```text',env.get('gpu',{}).get('stdout','').strip() or 'GPU inventory unavailable','```','',
         telemetry['note'],'',json.dumps(telemetry['devices'],indent=2),'',

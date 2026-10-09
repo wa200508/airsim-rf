@@ -1,5 +1,9 @@
 # A practical route to continuous 120 Hz RF simulation
 
+**Timing scope:** Mixed scope or architecture/reference document; each workload/table retains its stated timed operation. [Common measurement definitions](TIMING_CONVENTIONS.md) apply to units, statistics, cache state, ratios and comparisons. Historical measurements and estimates are not current fleet-update qualification.
+
+
+
 **Runtime context (2026-10-05):** Architecture research and conditional sizing, not a demonstrated $5,000 real-time deployment. Later P100 measurements supersede statements about unmeasured GPU rendering, not the study’s historical data. See [current runtime and wall-clock costs](RUNTIME_STATUS.md) for comparable measurements, hardware, exclusions and ten-minute estimates.
 
 Research date: 2026-10-04. Target supplied by the user: approximately **$5,000
@@ -409,3 +413,9 @@ research experiments, not a new production channel renderer, GPU profiling
 suite or real-time acceptance test. Stored CPU timings are individual
 experiment timings, with initialization effects, and must not be extrapolated
 to a 1,000-link deployment.
+
+<!-- BEGIN SIGNAL TIME CONTEXT -->
+
+**Simulation-time reference:** use **wall seconds per simulated signal second**, not an unlabeled whole-run time. For fixed windows, divide mean service milliseconds by samples/sample-rate × 1,000. Stage costs use their parent window denominator. Geometry-only solves and analytic operation counts have no generated signal duration; a signal-time ratio is **not applicable**, unless an explicit update interval is assumed and labeled as a scheduling estimate. Unrecorded flight costs remain unknown. See [recorded normalized cases](SIGNAL_TIME_RESULTS.md).
+
+<!-- END SIGNAL TIME CONTEXT -->

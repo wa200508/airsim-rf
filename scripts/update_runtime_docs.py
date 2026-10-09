@@ -12,7 +12,7 @@ END = '<!-- END MEASURED RUNTIME TABLE -->'
 
 def table():
     lines = [
-        '| Backend / TX → RX | Median window latency | p95 | Wall time / simulated time | Rendering cost for 10 simulated minutes |',
+        '| Backend / TX → RX | Renderer-call wall median (n=30) | p95 | Wall seconds / signal second | Estimated wall time for 600 signal seconds |',
         '| --- | ---: | ---: | ---: | ---: |',
     ]
     for tx in (100, 4, 1):
@@ -27,7 +27,7 @@ def table():
             stats = data['summary']
             # Scheduling at 120 Hz: 72,000 renderer calls in ten minutes.
             # Mean cost, not a speedup ratio or a sum of instrumented stages.
-            ratio = stats['mean_ms'] * 120 / 1000
+            ratio = stats['mean_ms'] / (args['samples'] / args['sample_rate'] * 1000)
             minutes = 10 * ratio
             duration = f'{minutes / 60:.2f} h' if minutes >= 120 else f'{minutes:.2f} min'
             label = 'CPU' if backend == 'cpu' else 'P100 CUDA'

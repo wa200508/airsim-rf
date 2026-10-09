@@ -1,28 +1,30 @@
 # airsim-rf
 
+**Timing scope:** Mixed scope or architecture/reference document; each workload/table retains its stated timed operation. [Common measurement definitions](TIMING_CONVENTIONS.md) apply to units, statistics, cache state, ratios and comparisons. Historical measurements and estimates are not current fleet-update qualification.
+
+
+
 A standalone RF simulation project using ProjectAirSim scene truth and Sionna
 propagation, with radar/SDR models, complex I/Q rendering and receiver-worker
 integration for AMS-GRA.
 
 ## How close are we to real time?
 
-**The complete moving-scene RF simulation has not been demonstrated at real
-time.** The latest qualified **100-transmitter/one-receiver renderer** is
-**6.80× slower than real time on a P100** and **194× slower on the measured CPU**.
-The much smaller one-/four-transmitter P100 cases meet the renderer's budget;
-that does not qualify the complete scene-to-receiver service.
+The latest qualified **100-TX × 10-RX RF fleet update** takes **553.685 ms median wall service time** (p95 563.363 ms) to produce ~8.333 ms of signal per receiver. Receivers execute sequentially on one P100. CUDA/OptiX propagation and CUDA rendering are included, together with host source preparation, receiver processing and loopback HTTP/file readback. This is a trajectory-source RF benchmark, excluding live AirSim physics/RPC, WAN workers and startup; thirty measured updates cover **0.250 simulated seconds**, consuming **16.5899 wall seconds**, or **66.36 wall seconds per simulated signal second**. All thirty miss the 120-Hz deadline. See [measurement definitions](TIMING_CONVENTIONS.md) and [the measured configuration](P100_GPU_PIPELINE.md).
+
+The older 843.630 ms result used LLVM CPU propagation and another dependency stack. Treat it as a cross-configuration comparison, not an isolated optimization gain. The synthetic renderer-only results below have a different scope and path workload.
 
 All rows below render **16,667 samples at 2 MS/s per receiver**, with **1,028
 valid paths per directed link**, private arbitrary-waveform inputs, per-sample
 narrowband Doppler, FP64/complex128, 32-tap interpolation, 100 µs declared delay
 support and ±2,500 Hz physical Doppler. They use 120 updates/s and an **8.33 ms
-service budget**. These are comparable continuous-I/Q renderer measurements.
+service budget**. These are synthetic renderer-call measurements; they do not measure a continuous fleet pipeline.
 
 <!-- BEGIN MEASURED RUNTIME TABLE -->
 
-| Backend / TX → RX | Median window latency | p95 | Wall time / simulated time | Rendering cost for 10 simulated minutes |
+| Backend / TX → RX | Renderer-call wall median (n=30) | p95 | Wall seconds / signal second | Estimated wall time for 600 signal seconds |
 | --- | ---: | ---: | ---: | ---: |
-| [CPU, 100 → 1](results/profiling/p100-basis-optimized-full-20261004/profiles/basis_cpu_100tx_1rx.json) | 1610.09 ms | 1700.36 ms | 194.06× | 32.34 h |
+| [CPU, 100 → 1](results/profiling/p100-basis-optimized-full-20261004/profiles/basis_cpu_100tx_1rx.json) | 1610.09 ms | 1700.36 ms | 194.05× | 32.34 h |
 | [P100 CUDA, 100 → 1](results/profiling/p100-basis-optimized-full-20261004/profiles/basis_cuda_100tx_1rx.json) | 56.17 ms | 59.65 ms | 6.80× | 68.00 min |
 | [CPU, 4 → 1](results/profiling/p100-basis-optimized-full-20261004/profiles/basis_cpu_4tx_1rx.json) | 78.49 ms | 84.62 ms | 9.45× | 94.49 min |
 | [P100 CUDA, 4 → 1](results/profiling/p100-basis-optimized-full-20261004/profiles/basis_cuda_4tx_1rx.json) | 5.68 ms | 6.05 ms | 0.69× | 6.87 min |
@@ -31,8 +33,7 @@ service budget**. These are comparable continuous-I/Q renderer measurements.
 
 <!-- END MEASURED RUNTIME TABLE -->
 
-Ratios and ten-minute costs use the **mean** of 30 warmed windows, not the
-median or an algorithm speedup. Costs are extrapolated renderer work, not
+Ratios divide the **mean** of 30 warmed renderer calls by their 8.3335 ms signal duration. Ten-minute costs extrapolate that ratio over 600 signal seconds. Costs are extrapolated renderer work, not
 measured ten-minute flights. A ratio below 1 means renderer throughput headroom.
 The CPU host was **Ryzen 7 8700G**, with two FFT workers configured and no CPU
 quota; its Radeon 780M was unused. The GPU was **P100-PCIE-16GB**. The current
@@ -46,12 +47,7 @@ clock resampling, queues and recording add unmeasured work, so **complete
 flight completion time remains unknown**. No unmeasured receiver parallelism
 or transmitter sharing is credited.
 
-For the original **100-TX/10-RX** goal, these GPU rows cover one receiver only.
-One P100 processing ten receivers serially would imply about 11.33 hours of
-rendering per ten simulated minutes; ten independent P100s could ideally
-approach 68 minutes in parallel. Both are extrapolations, not fleet tests.
-Current Sionna RT/Dr.Jit CUDA propagation is unsupported on P100; these results
-qualify the separate CuPy renderer, not an integrated P100 simulation.
+These historical rows cover one receiver only. Serial ten-receiver and multi-GPU projections from them are estimates; use the measured fleet-update results above for the tested terrain workload. The default modern Dr.Jit CUDA stack rejects P100; [the explicit compatibility stack](P100_GPU_PIPELINE.md) now qualifies CUDA/OptiX propagation on this card.
 
 See [runtime context and historical comparisons](RUNTIME_STATUS.md) for included
 stages, delivery latency, formulas and why older short-burst/channel-only numbers
@@ -321,5 +317,22 @@ ADC and a network consumer. Live AirSim and distributed SDR coverage are describ
 The new **scene-to-consumer CPU measurements** are 11.99 s/update for
 100 TX × ten RX and 620.59 ms/update for ten TX × four RX, on a cloud CPU
 with a two-core quota. Those are complete RF-pipeline timings with a trajectory
-source, CPU propagation/rendering and serial receivers; live AirSim and the
-P100 end-to-end run remain unmeasured. See [all stages and p95](RUNTIME_STATUS.md#end-to-end-rf-pipeline-median--sample-standard-deviation).
+source, CPU propagation/rendering and serial receivers; live AirSim remains unmeasured; the
+P100 results are now measured separately with the explicit compatibility stack. See [all stages and p95](RUNTIME_STATUS.md#end-to-end-rf-pipeline-median--sample-standard-deviation).
+
+<!-- BEGIN SIGNAL TIME CONTEXT -->
+
+**Simulation-time reference:** wall seconds per simulated signal second = total measured wall service / total output signal duration per receiver. Receiver durations are concurrent, not added across receivers. This is a processing-cost ratio for the named scope; it is not a whole-flight measurement. Instrumented costs are diagnostic.
+
+| Raw case / timed scope | Mode | Calls | Signal ms/call (mean) | Measured signal seconds | Measured wall seconds | Wall seconds / signal second |
+| --- | --- | ---: | ---: | ---: | ---: | ---: |
+| [results/profiling/p100-basis-optimized-full-20261004/profiles/basis_cpu_100tx_1rx.json](results/profiling/p100-basis-optimized-full-20261004/profiles/basis_cpu_100tx_1rx.json) — Renderer call | unprofiled_basis_benchmark | 30 | 8.333500 | 0.250005 | 48.514551 | 194.054 |
+| [results/profiling/p100-basis-optimized-full-20261004/profiles/basis_cpu_1tx_1rx.json](results/profiling/p100-basis-optimized-full-20261004/profiles/basis_cpu_1tx_1rx.json) — Renderer call | unprofiled_basis_benchmark | 30 | 8.333500 | 0.250005 | 0.661153 | 2.645 |
+| [results/profiling/p100-basis-optimized-full-20261004/profiles/basis_cpu_4tx_1rx.json](results/profiling/p100-basis-optimized-full-20261004/profiles/basis_cpu_4tx_1rx.json) — Renderer call | unprofiled_basis_benchmark | 30 | 8.333500 | 0.250005 | 2.362246 | 9.449 |
+| [results/profiling/p100-basis-optimized-full-20261004/profiles/basis_cuda_100tx_1rx.json](results/profiling/p100-basis-optimized-full-20261004/profiles/basis_cuda_100tx_1rx.json) — Renderer call | unprofiled_basis_benchmark | 30 | 8.333500 | 0.250005 | 1.700125 | 6.800 |
+| [results/profiling/p100-basis-optimized-full-20261004/profiles/basis_cuda_1tx_1rx.json](results/profiling/p100-basis-optimized-full-20261004/profiles/basis_cuda_1tx_1rx.json) — Renderer call | unprofiled_basis_benchmark | 30 | 8.333500 | 0.250005 | 0.167198 | 0.669 |
+| [results/profiling/p100-basis-optimized-full-20261004/profiles/basis_cuda_4tx_1rx.json](results/profiling/p100-basis-optimized-full-20261004/profiles/basis_cuda_4tx_1rx.json) — Renderer call | unprofiled_basis_benchmark | 30 | 8.333500 | 0.250005 | 0.171683 | 0.687 |
+
+The measured signal seconds column totals processed windows. Synthetic and historical short-capture jobs may reuse epochs or leave gaps; this total does not assert a continuous simulation timeline. First-use/warmup are excluded where the recorded harness excludes them. Stage milliseconds elsewhere use the same signal duration as their parent call; stage median / signal-ms is a median cost ratio, while the final column above uses sums (equivalently mean costs for fixed-duration calls).
+
+<!-- END SIGNAL TIME CONTEXT -->

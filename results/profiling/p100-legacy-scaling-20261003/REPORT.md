@@ -1,5 +1,14 @@
 # P100 legacy propagation-only scaling
 
+**Timing scope:** Legacy propagation-only scaling; rendering disabled; failed sizes have no throughput. [Common measurement definitions](../../../TIMING_CONVENTIONS.md) apply to units, statistics, cache state, ratios and comparisons. Historical measurements and estimates are not current fleet-update qualification.
+
+<!-- BEGIN SIGNAL TIME CONTEXT -->
+
+**Simulation-time reference:** use **wall seconds per simulated signal second**, not an unlabeled whole-run time. For fixed windows, divide mean service milliseconds by samples/sample-rate × 1,000. Stage costs use their parent window denominator. Geometry-only solves and analytic operation counts have no generated signal duration; a signal-time ratio is **not applicable**, unless an explicit update interval is assumed and labeled as a scheduling estimate. Unrecorded flight costs remain unknown. See [recorded normalized cases](../../../SIGNAL_TIME_RESULTS.md).
+
+<!-- END SIGNAL TIME CONTEXT -->
+
+
 **Legacy Sionna 0.19.2 / Mitsuba 3.5.2 / Dr.Jit 0.4.6 / TensorFlow 2.15.1.**
 
 All transmitters in each case are instantiated simultaneously in one scene and one native solve; no transmitter batching. One RX, static TX positions, original terrain mesh, 915 MHz, synthetic single-element dipoles, depth 1, LoS/reflection/scattering. Native Fibonacci tracing launches 1,028 rays per TX; scattering keep probability 1, random scatter phases disabled. Material epsilon_r=5, conductivity=.01, scattering=.3; legacy material lacks thickness.

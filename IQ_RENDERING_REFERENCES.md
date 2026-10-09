@@ -1,5 +1,9 @@
 # Published implementations of channel-to-I/Q rendering
 
+**Timing scope:** Mixed scope or architecture/reference document; each workload/table retains its stated timed operation. [Common measurement definitions](TIMING_CONVENTIONS.md) apply to units, statistics, cache state, ratios and comparisons. Historical measurements and estimates are not current fleet-update qualification.
+
+
+
 Sources and implementation paths reviewed on **2026-10-05**. This review
 complements the [environmental RF comparison](ENVIRONMENTAL_RF_REFERENCES.md)
 and [affordable real-time architecture study](AFFORDABLE_REALTIME_RF.md).
@@ -261,3 +265,9 @@ time-varying convolution and tested parameters. This is distinct from the
 [RF path message](https://github.com/guchuanv-alt/SimART/blob/main/rf_msgs/msg/RfPathObservation.msg),
 [Yan et al., *SimART: A Unified and Open Real-world Multimodal Simulation Platform for 6G Integrated Sensing and Communication*, arXiv:2605.13309 (2026)](https://arxiv.org/abs/2605.13309).
 Reviewed main commit: `f9b1937bd909b33c0705c7deaa137adca54b5fe0`.
+
+<!-- BEGIN SIGNAL TIME CONTEXT -->
+
+**Simulation-time reference:** use **wall seconds per simulated signal second**, not an unlabeled whole-run time. For fixed windows, divide mean service milliseconds by samples/sample-rate × 1,000. Stage costs use their parent window denominator. Geometry-only solves and analytic operation counts have no generated signal duration; a signal-time ratio is **not applicable**, unless an explicit update interval is assumed and labeled as a scheduling estimate. Unrecorded flight costs remain unknown. See [recorded normalized cases](SIGNAL_TIME_RESULTS.md).
+
+<!-- END SIGNAL TIME CONTEXT -->
