@@ -19,7 +19,9 @@ def main():
     cases=[('fixed_before',[]),('adaptive',['--adaptive-temporal']),
            ('adaptive_single',['--adaptive-temporal','--cuda-delay-map','single']),
            ('fixed_single',['--cuda-delay-map','single']),
-           ('adaptive_fused',['--adaptive-temporal','--fused-projection']),('fixed_after',[])]
+           ('adaptive_fused',['--adaptive-temporal','--fused-projection']),
+           ('adaptive_trim',['--adaptive-temporal','--trim-delay-support']),
+           ('fixed_trim',['--trim-delay-support']),('fixed_after',[])]
     manifest=dict(scope='rf_pipeline_temporal_sweep',iterations=args.iterations,warmup=3,
                   complete=False,tasks=[],note='Same GPU propagation/versions/scene/epochs; separate sequential processes, shared disk JIT cache; fixed controls bracket experiments.')
     for name, options in cases:

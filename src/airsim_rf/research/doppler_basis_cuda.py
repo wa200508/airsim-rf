@@ -150,7 +150,7 @@ class CudaDopplerBasisRenderer:
     def __init__(self, *, sample_rate_hz, max_delay_s, max_doppler_hz,
                  block_samples=2048, temporal_tolerance=1e-10, batch_links=8,
                  projection='gather', delay_map='double', fft_inplace=False,
-                 reuse_buffers=False, fused_projection=False, adaptive_temporal=False):
+                 reuse_buffers=False, fused_projection=False, adaptive_temporal=False, trim_delay_support=False):
         # Reuse parameter guards, but not CPU channel construction.
         self.config = DopplerBasisRenderer(sample_rate_hz=sample_rate_hz,
             max_delay_s=max_delay_s, max_doppler_hz=max_doppler_hz,
@@ -176,6 +176,9 @@ class CudaDopplerBasisRenderer:
             raise ValueError('Fused projection requires warp projection')
         if not isinstance(adaptive_temporal, bool):
             raise ValueError('adaptive_temporal must be boolean')
+        if not isinstance(trim_delay_support, bool):
+            raise ValueError('trim_delay_support must be boolean')
+        self.trim_delay_support = trim_delay_support
         self.adaptive_temporal = adaptive_temporal
         self.reuse_buffers = bool(reuse_buffers)
         self.fused_projection = bool(fused_projection)
@@ -230,11 +233,15 @@ class CudaDopplerBasisRenderer:
             if self.reuse_buffers:
                 self._buffers[slot] = buffered
         host, device = buffered['host'], buffered['device']
-        for array in host.values():
-            array.fill(0)
+        for key, array in host.items():
+            if key != 'source':
+                array.fill(0)
+        # Each source row is overwritten below; clear only uncovered padding.
+        # This retains full declared history/lookahead validation and uploads.
         a, d, fd, valid = (host[key] for key in ('a', 'd', 'fd', 'valid'))
         private_input, offsets, base_cycles = (host[key] for key in ('source', 'offsets', 'base_cycles'))
         actual_doppler_hz = 0.
+        filter_min_lag = filter_max_lag = None
         for j, job in enumerate(jobs):
             wave = job.waveform
             if wave.sample_rate_hz != cfg.fs or job.time_scale != 1.:
@@ -246,6 +253,11 @@ class CudaDopplerBasisRenderer:
                 raise ValueError('All supplied paths must be finite')
             if np.any(arrays[1] < 0) or np.any(arrays[1] > cfg.max_delay_s) or np.any(abs(arrays[2]) > cfg.max_doppler_hz):
                 raise ValueError('Path outside declared delay/Doppler range')
+            if self.trim_delay_support and arrays[1].size:
+                first_lag = int(np.ceil(float(np.min(arrays[1]))*cfg.fs))-half
+                last_lag = int(np.ceil(float(np.max(arrays[1]))*cfg.fs))+half-1
+                filter_min_lag = first_lag if filter_min_lag is None else min(filter_min_lag, first_lag)
+                filter_max_lag = last_lag if filter_max_lag is None else max(filter_max_lag, last_lag)
             if self.adaptive_temporal and arrays[2].size:
                 # Bound all supplied physical paths, including zero-gain paths.
                 # Declared limits above still validate the complete input range.
@@ -261,7 +273,12 @@ class CudaDopplerBasisRenderer:
                 raise ValueError('Insufficient private source history/lookahead')
             clipped_lo, clipped_hi = max(0, lo), min(wave.samples.size, hi)
             if clipped_hi > clipped_lo:
-                private_input[j, clipped_lo-lo:clipped_hi-lo] = wave.samples[clipped_lo:clipped_hi]
+                first, last = clipped_lo-lo, clipped_hi-lo
+                private_input[j, :first].fill(0)
+                private_input[j, last:].fill(0)
+                private_input[j, first:last] = wave.samples[clipped_lo:clipped_hi]
+            else:
+                private_input[j].fill(0)
             n = len(arrays[0])
             a[j, :n] = arrays[0]*job.amplitude_scale*np.exp(1j*job.phase_offset_rad)
             d[j, :n], fd[j, :n], valid[j, :n] = arrays[1], arrays[2], True
@@ -305,6 +322,8 @@ class CudaDopplerBasisRenderer:
             self._upload_events.append((upload_start, upload_end))
         data = dict(device, count=count, paths=paths, half=half, min_lag=min_lag, max_lag=max_lag,
                     temporal_bound_hz=actual_doppler_hz if self.adaptive_temporal else cfg.max_doppler_hz,
+                    filter_min_lag=min_lag if filter_min_lag is None else filter_min_lag,
+                    filter_max_lag=max_lag if filter_max_lag is None else filter_max_lag,
                     channel_reused=channel_reused, channel_cache=cached if revision is not None else None)
         if channel_reused:
             data.update(cached['device'])
@@ -363,7 +382,8 @@ class CudaDopplerBasisRenderer:
                     data = self._pack([job for _, job in batch], sim_time_ns, num_samples,
                                       (workspace_id, batch[0][1].waveform.interpolation_taps, begin), channel_revision, profile)
                 count, paths, half = data['count'], data['paths'], data['half']
-                support = data['max_lag']-data['min_lag']+1
+                support = data['filter_max_lag']-data['filter_min_lag']+1
+                source_offset = data['max_lag']-data['filter_max_lag']
                 if not data['channel_reused']:
                     with stage('basis.delay_map'):
                         if self.delay_map == 'double':
@@ -389,7 +409,7 @@ class CudaDopplerBasisRenderer:
                             # A private interpolation matrix per link; no path or
                             # waveform sharing. Construct fresh on every capture.
                             dense = cp.zeros((count, paths, support), cp.float64)
-                            indices = cp.where(data['valid'][..., None], lag-data['min_lag'], 0)
+                            indices = cp.where(data['valid'][..., None], lag-data['filter_min_lag'], 0)
                             dense[cp.arange(count)[:, None, None],
                                   cp.arange(paths)[None, :, None], indices] = interp
                     if data['channel_cache'] is not None:
@@ -436,7 +456,7 @@ class CudaDopplerBasisRenderer:
                                 grid = ((entries+127)//128,)
                             kernel_args = (starts, interp, coeff, kernels,
                                 np.int32(paths), np.int32(2*half), np.int32(rank), np.int32(support),
-                                np.int32(data['min_lag']), np.int64(entries))
+                                np.int32(data['filter_min_lag']), np.int64(entries))
                             if self.projection == 'warp':
                                 kernel_args += (factors, np.int32(self.fused_projection))
                             if profile:
@@ -447,7 +467,7 @@ class CudaDopplerBasisRenderer:
                                 project_end.record()
                                 events.append(('basis.projection_call', project_begin, project_end))
                     with stage('basis.private_fft_filters'):
-                        source = data['source'][:, start:start+n+support-1]
+                        source = data['source'][:, start+source_offset:start+source_offset+n+support-1]
                         size = next_fast_len(source.shape[1])
                         private_fft = cp.fft.fft(source, size, axis=-1)
                         if self.fft_inplace:
@@ -474,7 +494,8 @@ class CudaDopplerBasisRenderer:
                             output[indices, start:start+n] = rendered
                     blocks.append(dict(jobs=count, samples=n, degree=degree, temporal_tail_bound=tail,
                                        coefficient_aliasing_included=True, delay_coefficients=support,
-                                       temporal_bound_hz=data['temporal_bound_hz']))
+                                       temporal_bound_hz=data['temporal_bound_hz'], filter_min_lag=data['filter_min_lag'],
+                                       filter_max_lag=data['filter_max_lag']))
         with stage('basis.final_output_export'):
             result = cp.asnumpy(output)
         cp.cuda.get_current_stream().synchronize()
@@ -483,7 +504,7 @@ class CudaDopplerBasisRenderer:
         event_ms = [{ 'name': name, 'cuda_ms': float(cp.cuda.get_elapsed_time(a, b)) } for name, a, b in events]
         self.last_metrics = dict(total_ms=(perf_counter()-started)*1000, backend='cuda_cupy',
             projection=self.projection, delay_map=self.delay_map, fft_inplace=self.fft_inplace,
-            reuse_buffers=self.reuse_buffers, fused_projection=self.fused_projection, adaptive_temporal=self.adaptive_temporal,
+            reuse_buffers=self.reuse_buffers, fused_projection=self.fused_projection, adaptive_temporal=self.adaptive_temporal, trim_delay_support=self.trim_delay_support,
             packing=self._pack_stats,
             projection_calls=[v for v in event_ms if v['name'] == 'basis.projection_call'],
             valid_paths=sum(len(job.coefficients) for job in jobs), blocks=blocks, sum_output=sum_output,

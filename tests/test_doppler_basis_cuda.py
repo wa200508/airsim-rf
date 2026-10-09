@@ -258,3 +258,43 @@ def test_adaptive_temporal_single_sort_and_fusion(fused):
                                      adaptive_temporal=True, delay_map='single', fused_projection=fused)
     actual = engine.render(jobs, num_samples=1025)
     np.testing.assert_allclose(actual, DopplerBasisRenderer(**cfg).render(jobs, num_samples=1025), atol=2e-9, rtol=2e-9)
+
+
+@pytest.mark.parametrize('projection', ['warp', 'gather', 'dense'])
+@pytest.mark.parametrize('delay_s', [0., 0.375e-6, 20.125e-6, 100e-6])
+def test_trimmed_delay_support_matches_full_declared_operator(projection, delay_s):
+    gpu()
+    job = linked(42, 103)
+    job = replace(job, delays_s=np.full(103, delay_s), doppler_hz=job.doppler_hz*.02)
+    cfg = dict(sample_rate_hz=2e6, max_delay_s=100e-6, max_doppler_hz=2500, block_samples=256)
+    engine = CudaDopplerBasisRenderer(**cfg, projection=projection, trim_delay_support=True,
+                                     adaptive_temporal=True, reuse_buffers=True)
+    kw = dict(num_samples=1025, channel_epoch_ns=-123000)
+    expected = DopplerBasisRenderer(**cfg).render([job], **kw)
+    actual = engine.render([job], **kw)
+    np.testing.assert_allclose(actual, expected, atol=2e-9, rtol=2e-9)
+    assert set(b['delay_coefficients'] for b in engine.last_metrics['blocks']) == {32}
+    changed = replace(job, delays_s=np.linspace(0, 100e-6, 103))
+    np.testing.assert_allclose(engine.render([changed], **kw),
+                               DopplerBasisRenderer(**cfg).render([changed], **kw), atol=2e-9, rtol=2e-9)
+    assert max(b['delay_coefficients'] for b in engine.last_metrics['blocks']) == 232
+
+
+def test_trimmed_buffers_clear_missing_input_and_preserve_declared_history():
+    gpu()
+    epoch = 1790000000000000000
+    job = linked(42, 64)
+    wave = replace(job.waveform, reference_time_ns=epoch-200000, boundary='zero')
+    job = replace(job, waveform=wave, delays_s=job.delays_s*.01, doppler_hz=job.doppler_hz*.01)
+    cfg = dict(sample_rate_hz=2e6, max_delay_s=100e-6, max_doppler_hz=2500, block_samples=256)
+    engine = CudaDopplerBasisRenderer(**cfg, reuse_buffers=True, projection='warp',
+                                     adaptive_temporal=True, trim_delay_support=True)
+    for time in [epoch, epoch-300000, epoch+2000000, epoch]:
+        kw = dict(num_samples=1025, sim_time_ns=time, channel_epoch_ns=epoch,
+                  channel_revision='v1', workspace_id='rx')
+        expected = DopplerBasisRenderer(**cfg).render([job], **{k:v for k,v in kw.items() if k not in ('channel_revision','workspace_id')})
+        np.testing.assert_allclose(engine.render([job], **kw), expected, atol=2e-9, rtol=2e-9)
+    # Compact paths do not relax the original declared-history requirement.
+    error_wave = replace(wave, reference_time_ns=epoch, boundary='error')
+    with pytest.raises(ValueError, match='history/lookahead'):
+        engine.render([replace(job, waveform=error_wave)], num_samples=1025, sim_time_ns=epoch)
