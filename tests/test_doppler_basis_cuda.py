@@ -199,3 +199,62 @@ def test_cuda_pipeline_block_sizes_preserve_full_window(block_samples):
     np.testing.assert_allclose(engine.render(changed, **kw),
                                DopplerBasisRenderer(**reference_cfg).render(changed, **kw),
                                atol=2e-9, rtol=2e-9)
+
+
+@pytest.mark.parametrize('projection', ['warp', 'gather', 'dense'])
+@pytest.mark.parametrize('doppler', [0., 65., 2500., 25000.])
+def test_adaptive_temporal_preserves_declared_support_and_error(projection, doppler):
+    gpu()
+    epoch = 1790000000000000000
+    rng = np.random.default_rng(719)
+    source = SampledWaveform(rng.normal(size=20000)+1j*rng.normal(size=20000), 2e6,
+                             reference_time_ns=epoch-200000)
+    original = linked(42, 103)
+    job = replace(original, waveform=source, doppler_hz=original.doppler_hz*doppler/2500)
+    declared = max(2500., doppler)
+    cfg = dict(sample_rate_hz=2e6, max_delay_s=100e-6, max_doppler_hz=declared,
+               block_samples=2048, temporal_tolerance=1e-10)
+    engine = CudaDopplerBasisRenderer(**cfg, projection=projection, reuse_buffers=True, adaptive_temporal=True)
+    kw = dict(num_samples=16667, sim_time_ns=epoch, channel_epoch_ns=epoch)
+    actual = engine.render([job], **kw)
+    expected = DopplerBasisRenderer(**cfg).render([job], **kw)
+    np.testing.assert_allclose(actual, expected, atol=2e-9, rtol=2e-9)
+    assert max(b['temporal_tail_bound'] for b in engine.last_metrics['blocks']) <= 5e-11
+    if doppler < 2500:
+        assert max(b['degree'] for b in engine.last_metrics['blocks']) < doppler_degree(declared, 2047/2e6, 5e-11)[0]
+    # A later full-range path must increase rank, even if its gain is zero.
+    fd = job.doppler_hz.copy(); fd[0] = declared
+    gain = job.coefficients.copy(); gain[0] = 0
+    changed = replace(job, doppler_hz=fd, coefficients=gain)
+    changed_output = engine.render([changed], **kw)
+    np.testing.assert_allclose(changed_output, DopplerBasisRenderer(**cfg).render([changed], **kw), atol=2e-9, rtol=2e-9)
+    assert max(b['temporal_bound_hz'] for b in engine.last_metrics['blocks']) == declared
+    fd[0] = declared+1
+    with pytest.raises(ValueError, match='declared delay/Doppler range'):
+        engine.render([replace(job, doppler_hz=fd)], **kw)
+
+
+def test_adaptive_temporal_revision_cache_and_split_epoch():
+    gpu()
+    epoch = 1790000000000000000
+    job = linked(43, 103)
+    job = replace(job, doppler_hz=job.doppler_hz*.01,
+                  waveform=replace(job.waveform, reference_time_ns=epoch-200000))
+    cfg = dict(sample_rate_hz=2e6, max_delay_s=100e-6, max_doppler_hz=2500, block_samples=256)
+    engine = CudaDopplerBasisRenderer(**cfg, reuse_buffers=True, projection='warp', adaptive_temporal=True)
+    kw = dict(channel_epoch_ns=epoch, channel_revision='v1', workspace_id='rx')
+    full = engine.render([job], num_samples=1025, sim_time_ns=epoch, **kw)
+    left = engine.render([job], num_samples=137, sim_time_ns=epoch, **kw)
+    right = engine.render([job], num_samples=888, sim_time_ns=epoch+137*500, **kw)
+    np.testing.assert_allclose(np.concatenate([left, right], axis=1), full, atol=2e-9, rtol=2e-9)
+
+
+@pytest.mark.parametrize('fused', [False, True])
+def test_adaptive_temporal_single_sort_and_fusion(fused):
+    gpu()
+    jobs = [replace(linked(42, 103), doppler_hz=linked(42, 103).doppler_hz*.02), linked(53, 8)]
+    cfg = dict(sample_rate_hz=2e6, max_delay_s=100e-6, max_doppler_hz=2500, block_samples=512)
+    engine = CudaDopplerBasisRenderer(**cfg, projection='warp', reuse_buffers=True,
+                                     adaptive_temporal=True, delay_map='single', fused_projection=fused)
+    actual = engine.render(jobs, num_samples=1025)
+    np.testing.assert_allclose(actual, DopplerBasisRenderer(**cfg).render(jobs, num_samples=1025), atol=2e-9, rtol=2e-9)
