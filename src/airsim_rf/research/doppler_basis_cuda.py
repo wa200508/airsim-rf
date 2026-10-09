@@ -74,17 +74,18 @@ _PROJECT_WARP = r'''
 extern "C" __global__ void project_warp(
     const int* starts, const double* interp, const double* coeff,
     double* kernels, int paths, int taps, int rank, int support,
-    int min_lag, long long entries, const double* factors, int fused) {
+    int min_lag, long long entries, const double* factors, int fused, int lanes) {
     long long thread = (long long)blockDim.x*blockIdx.x+threadIdx.x;
-    long long warp = thread/32;
-    int lane = thread%32, tiles = (rank+31)/32;
+    long long group = thread/lanes;
+    int lane = thread%lanes, tiles = (rank+lanes-1)/lanes;
+    unsigned mask = (lanes==32 ? 0xffffffffu : ((1u<<lanes)-1u)) << ((thread%32)/lanes*lanes);
     long long jobs = entries/((long long)rank*support);
-    if (warp >= jobs*support*tiles) return;
-    int k = warp%support, q = ((warp/support)%tiles)*32+lane;
-    int job = warp/((long long)support*tiles), lag = min_lag+k;
+    bool valid = group < jobs*support*tiles;
+    int k = group%support, q = ((group/support)%tiles)*lanes+lane;
+    int job = valid ? group/((long long)support*tiles) : 0, lag = min_lag+k;
     const int* row = starts+(long long)job*paths;
     int first=0, last=0;
-    if (lane==0) {
+    if (lane==0 && valid) {
         int lo=0, hi=paths;
         while (lo<hi) { int mid=(lo+hi)/2;
             if (row[mid]<lag-taps+1) lo=mid+1; else hi=mid; }
@@ -93,12 +94,12 @@ extern "C" __global__ void project_warp(
             if (row[mid]<=lag) lo=mid+1; else hi=mid; }
         last=lo;
     }
-    first=__shfl_sync(0xffffffffu,first,0);
-    last=__shfl_sync(0xffffffffu,last,0);
+    first=__shfl_sync(mask,first,0,lanes);
+    last=__shfl_sync(mask,last,0,lanes);
     double real=0., imag=0.;
     for (int p=first; p<last; ++p) {
         double w=lane==0 ? interp[((long long)job*paths+p)*taps+lag-row[p]] : 0.;
-        w=__shfl_sync(0xffffffffu,w,0);
+        w=__shfl_sync(mask,w,0,lanes);
         if (q<rank) {
             long long c=((long long)job*paths+p)*rank+q;
             double cr=coeff[2*c], ci=coeff[2*c+1];
@@ -111,7 +112,7 @@ extern "C" __global__ void project_warp(
             real+=w*cr; imag+=w*ci;
         }
     }
-    if (q<rank) {
+    if (valid && q<rank) {
         long long index=((long long)job*rank+q)*support+k;
         kernels[2*index]=real; kernels[2*index+1]=imag;
     }
@@ -150,7 +151,7 @@ class CudaDopplerBasisRenderer:
     def __init__(self, *, sample_rate_hz, max_delay_s, max_doppler_hz,
                  block_samples=2048, temporal_tolerance=1e-10, batch_links=8,
                  projection='gather', delay_map='double', fft_inplace=False,
-                 reuse_buffers=False, fused_projection=False, adaptive_temporal=False, trim_delay_support=False):
+                 reuse_buffers=False, fused_projection=False, adaptive_temporal=False, trim_delay_support=False, projection_lanes=32, fft_policy='scipy'):
         # Reuse parameter guards, but not CPU channel construction.
         self.config = DopplerBasisRenderer(sample_rate_hz=sample_rate_hz,
             max_delay_s=max_delay_s, max_doppler_hz=max_doppler_hz,
@@ -174,6 +175,11 @@ class CudaDopplerBasisRenderer:
             raise RuntimeError('CuPy CUDA unavailable; no CPU fallback') from exc
         if fused_projection and projection != 'warp':
             raise ValueError('Fused projection requires warp projection')
+        if isinstance(projection_lanes, bool) or projection_lanes not in (0,8,16,32):
+            raise ValueError('projection_lanes must be 0 (auto), 8, 16 or 32')
+        if fft_policy not in ('scipy','radix23','power2'):
+            raise ValueError('fft_policy must be scipy, radix23 or power2')
+        self.projection_lanes, self.fft_policy = projection_lanes, fft_policy
         if not isinstance(adaptive_temporal, bool):
             raise ValueError('adaptive_temporal must be boolean')
         if not isinstance(trim_delay_support, bool):
@@ -432,6 +438,7 @@ class CudaDopplerBasisRenderer:
                         degree_cache[n] = doppler_degree(data['temporal_bound_hz'], duration, cfg.temporal_tolerance/2)
                     degree, tail = degree_cache[n]
                     rank = degree+1
+                    lanes = (8 if rank <= 8 else 16 if rank <= 16 else 32) if self.projection_lanes == 0 else self.projection_lanes
                     with stage('basis.temporal_coefficients'):
                         if n not in cache:
                             temporal = temporal_coefficients(cp, np.pi*data['fd']*duration, degree)
@@ -450,15 +457,15 @@ class CudaDopplerBasisRenderer:
                             if self.projection == 'warp':
                                 if not self.fused_projection:
                                     coeff = cp.ascontiguousarray(coeff.transpose(0, 2, 1))
-                                warps = count*support*((rank+31)//32)
-                                grid = ((warps+3)//4,)
+                                groups = count*support*((rank+lanes-1)//lanes)
+                                grid = ((groups*lanes+127)//128,)
                             else:
                                 grid = ((entries+127)//128,)
                             kernel_args = (starts, interp, coeff, kernels,
                                 np.int32(paths), np.int32(2*half), np.int32(rank), np.int32(support),
                                 np.int32(data['filter_min_lag']), np.int64(entries))
                             if self.projection == 'warp':
-                                kernel_args += (factors, np.int32(self.fused_projection))
+                                kernel_args += (factors, np.int32(self.fused_projection), np.int32(lanes))
                             if profile:
                                 project_begin, project_end = cp.cuda.Event(), cp.cuda.Event()
                                 project_begin.record()
@@ -468,7 +475,15 @@ class CudaDopplerBasisRenderer:
                                 events.append(('basis.projection_call', project_begin, project_end))
                     with stage('basis.private_fft_filters'):
                         source = data['source'][:, start+source_offset:start+source_offset+n+support-1]
-                        size = next_fast_len(source.shape[1])
+                        required = source.shape[1]
+                        if self.fft_policy == 'power2':
+                            size = 1 << (required-1).bit_length()
+                        elif self.fft_policy == 'radix23':
+                            # Measured cuFFT-friendly lengths; avoid CPU-selected
+                            # large radix chains. Padding preserves convolution.
+                            size = min(factor << (((required+factor-1)//factor)-1).bit_length() for factor in (1,3,9))
+                        else:
+                            size = next_fast_len(required)
                         private_fft = cp.fft.fft(source, size, axis=-1)
                         if self.fft_inplace:
                             # Only disposable filter buffers may be overwritten.
@@ -495,7 +510,7 @@ class CudaDopplerBasisRenderer:
                     blocks.append(dict(jobs=count, samples=n, degree=degree, temporal_tail_bound=tail,
                                        coefficient_aliasing_included=True, delay_coefficients=support,
                                        temporal_bound_hz=data['temporal_bound_hz'], filter_min_lag=data['filter_min_lag'],
-                                       filter_max_lag=data['filter_max_lag']))
+                                       filter_max_lag=data['filter_max_lag'], fft_size=size, projection_lanes=lanes))
         with stage('basis.final_output_export'):
             result = cp.asnumpy(output)
         cp.cuda.get_current_stream().synchronize()
@@ -504,7 +519,7 @@ class CudaDopplerBasisRenderer:
         event_ms = [{ 'name': name, 'cuda_ms': float(cp.cuda.get_elapsed_time(a, b)) } for name, a, b in events]
         self.last_metrics = dict(total_ms=(perf_counter()-started)*1000, backend='cuda_cupy',
             projection=self.projection, delay_map=self.delay_map, fft_inplace=self.fft_inplace,
-            reuse_buffers=self.reuse_buffers, fused_projection=self.fused_projection, adaptive_temporal=self.adaptive_temporal, trim_delay_support=self.trim_delay_support,
+            reuse_buffers=self.reuse_buffers, fused_projection=self.fused_projection, adaptive_temporal=self.adaptive_temporal, trim_delay_support=self.trim_delay_support, projection_lanes=self.projection_lanes, fft_policy=self.fft_policy,
             packing=self._pack_stats,
             projection_calls=[v for v in event_ms if v['name'] == 'basis.projection_call'],
             valid_paths=sum(len(job.coefficients) for job in jobs), blocks=blocks, sum_output=sum_output,

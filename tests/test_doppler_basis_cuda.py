@@ -298,3 +298,21 @@ def test_trimmed_buffers_clear_missing_input_and_preserve_declared_history():
     error_wave = replace(wave, reference_time_ns=epoch, boundary='error')
     with pytest.raises(ValueError, match='history/lookahead'):
         engine.render([replace(job, waveform=error_wave)], num_samples=1025, sim_time_ns=epoch)
+
+
+@pytest.mark.parametrize('lanes', [0, 8, 16, 32])
+@pytest.mark.parametrize('doppler', [65., 25000.])
+@pytest.mark.parametrize('fft_policy', ['radix23', 'power2'])
+def test_subwarp_projection_and_gpu_fft_padding_preserve_private_output(lanes, doppler, fft_policy):
+    gpu()
+    jobs = []
+    for seed, paths in ((42, 103), (53, 8), (17, 37)):
+        original = linked(seed, paths)
+        jobs.append(replace(original, delays_s=original.delays_s*.01,
+                            doppler_hz=original.doppler_hz*doppler/2500))
+    cfg = dict(sample_rate_hz=2e6, max_delay_s=100e-6, max_doppler_hz=max(2500.,doppler), block_samples=512)
+    engine = CudaDopplerBasisRenderer(**cfg, projection='warp', adaptive_temporal=True,
+        trim_delay_support=True, reuse_buffers=True, projection_lanes=lanes, fft_policy=fft_policy)
+    actual = engine.render(jobs, num_samples=1025)
+    np.testing.assert_allclose(actual, DopplerBasisRenderer(**cfg).render(jobs, num_samples=1025), atol=2e-9, rtol=2e-9)
+    np.testing.assert_allclose(engine.render(jobs, num_samples=1025, sum_output=True), actual.sum(axis=0), atol=2e-9, rtol=2e-9)

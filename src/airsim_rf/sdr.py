@@ -153,7 +153,7 @@ class SDRNetworkReceiver:
                  path_tile=128, sample_tile=32, accumulation="partial",
                  replay=True, max_render_lanes=1_000_000, link_diagnostics=True,
                  batch_reduction="auto", continuous=False, max_delay_s=100e-6,
-                 max_doppler_hz=2500., block_samples=2048, fft_workers=2, profile_rendering=False, reuse_render_buffers=True, cache_scattering_samples=True, fused_projection=False, adaptive_temporal=False, cuda_delay_map='double', trim_delay_support=False):
+                 max_doppler_hz=2500., block_samples=2048, fft_workers=2, profile_rendering=False, reuse_render_buffers=True, cache_scattering_samples=True, fused_projection=False, adaptive_temporal=False, cuda_delay_map='double', trim_delay_support=False, projection_lanes=32, fft_policy='scipy'):
         if not emitters or set(emitters) != set(scene.transmitters):
             raise ValueError("Supply one emitter for every scene transmitter")
         if not scene.receivers:
@@ -203,7 +203,7 @@ class SDRNetworkReceiver:
             if renderer == "basis-cuda":
                 from .research.doppler_basis_cuda import CudaDopplerBasisRenderer
                 self.basis_renderer = CudaDopplerBasisRenderer(**options, batch_links=len(emitters), projection="warp",
-                reuse_buffers=reuse_render_buffers, fused_projection=fused_projection, adaptive_temporal=adaptive_temporal, delay_map=cuda_delay_map, trim_delay_support=trim_delay_support)
+                reuse_buffers=reuse_render_buffers, fused_projection=fused_projection, adaptive_temporal=adaptive_temporal, delay_map=cuda_delay_map, trim_delay_support=trim_delay_support, projection_lanes=projection_lanes, fft_policy=fft_policy)
             else:
                 from .research.doppler_basis import DopplerBasisRenderer
                 self.basis_renderer = DopplerBasisRenderer(**options, fft_workers=fft_workers)

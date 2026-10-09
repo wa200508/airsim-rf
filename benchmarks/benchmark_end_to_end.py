@@ -138,7 +138,7 @@ def stats(values):
 
 
 def run(*, output, tx=100, rx=10, iterations=30, warmup=3, renderer='basis-cpu',
-        samples_per_link=1028, airsim_config=None, profile_rendering=False, optimizations=True, fused_projection=False, threads=2, propagation_backend=None, pascal_compat=False, block_samples=2048, python_profile=False, adaptive_temporal=False, cuda_delay_map='double', trim_delay_support=False):
+        samples_per_link=1028, airsim_config=None, profile_rendering=False, optimizations=True, fused_projection=False, threads=2, propagation_backend=None, pascal_compat=False, block_samples=2048, python_profile=False, adaptive_temporal=False, cuda_delay_map='double', trim_delay_support=False, projection_lanes=32, fft_policy='scipy'):
     import mitsuba as mi
     if propagation_backend is None:
         propagation_backend = 'cuda' if mi.variant().startswith('cuda') else 'llvm'
@@ -187,7 +187,7 @@ def run(*, output, tx=100, rx=10, iterations=30, warmup=3, renderer='basis-cpu',
     receiver = SDRNetworkReceiver(scene, emitters, PlutoSDRProfile(), renderer=renderer,
         continuous=True, samples_per_link=samples_per_link, link_diagnostics=False,
         profile_rendering=profile_rendering, reuse_render_buffers=optimizations,
-        cache_scattering_samples=optimizations, fused_projection=fused_projection, block_samples=block_samples, adaptive_temporal=adaptive_temporal, cuda_delay_map=cuda_delay_map, trim_delay_support=trim_delay_support)
+        cache_scattering_samples=optimizations, fused_projection=fused_projection, block_samples=block_samples, adaptive_temporal=adaptive_temporal, cuda_delay_map=cuda_delay_map, trim_delay_support=trim_delay_support, projection_lanes=projection_lanes, fft_policy=fft_policy)
     bridge = AirSimSDRBridge(world, robots, receiver)
     consumer = Consumer(output/'captures')
     if python_profile and not profile_rendering:
@@ -296,7 +296,7 @@ def run(*, output, tx=100, rx=10, iterations=30, warmup=3, renderer='basis-cpu',
         pose_source='deterministic AirSim-contract trajectory; physics/RPC not exercised' if airsim_config is None else 'live ProjectAirSim physics/RPC',
         propagation_backend='Sionna RT CUDA/OptiX' if propagation_backend == 'cuda' else 'Sionna RT LLVM CPU', rendering_backend=renderer,
         arguments=dict(tx=tx,rx=rx,iterations=iterations,warmup=warmup,samples_per_link=samples_per_link,profile_rendering=profile_rendering, reuse_render_buffers=optimizations,
-        cache_scattering_samples=optimizations, fused_projection=fused_projection, threads=threads, propagation_backend=propagation_backend, pascal_compat=pascal_compat, block_samples=block_samples, python_profile=python_profile, adaptive_temporal=adaptive_temporal, cuda_delay_map=cuda_delay_map, trim_delay_support=trim_delay_support),
+        cache_scattering_samples=optimizations, fused_projection=fused_projection, threads=threads, propagation_backend=propagation_backend, pascal_compat=pascal_compat, block_samples=block_samples, python_profile=python_profile, adaptive_temporal=adaptive_temporal, cuda_delay_map=cuda_delay_map, trim_delay_support=trim_delay_support, projection_lanes=projection_lanes, fft_policy=fft_policy),
         timing_includes=['physics advance (live only)', 'snapshot/mount mapping', 'private waveform generation/copies',
             'scene multipath tracing/export', 'all-path I/Q rendering', 'persistent receive filter/noise/ADC',
             'SC16 serialization', 'loopback HTTP delivery/acknowledgement', 'consumer file write/readback (no fsync)'],
@@ -343,6 +343,8 @@ def main():
     parser.add_argument('--threads', type=int, default=2, help='LLVM propagation worker threads')
     parser.add_argument('--no-optimizations', dest='optimizations', action='store_false')
     parser.add_argument('--fused-projection', action='store_true')
+    parser.add_argument('--projection-lanes', type=int, choices=(0,8,16,32), default=32, help='Warp subgroup width; 0 chooses width by temporal rank')
+    parser.add_argument('--fft-policy', choices=('scipy','radix23','power2'), default='scipy')
     parser.add_argument('--trim-delay-support', action='store_true', help='Omit mathematically zero filter bins; preserve declared input history and range guards')
     parser.add_argument('--cuda-delay-map', choices=('double','single'), default='double', help='GPU delay-ordering control; every path remains included')
     parser.add_argument('--adaptive-temporal', action='store_true', help='Choose proven temporal rank from all current path Dopplers; declared limits remain enforced')
