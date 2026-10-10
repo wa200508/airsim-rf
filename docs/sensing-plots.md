@@ -1,5 +1,47 @@
 # RF sensing figures and interpretation
 
+## Physical scenarios behind the figures
+
+These are **two separate offline experiments**, not a single radar/ESM mission.
+The diagrams below use the recorded P100 source data. They show RF Cartesian
+coordinates and synthetic terrain, not a screenshot of a live AirSim flight.
+[Diagram provenance and source hashes](figures/sensing_scenarios.json) are saved
+with the figures.
+
+![Two moving CW beacons and two passive receivers](figures/sensing_esm_scenario.png)
+
+**ESM / passive reception.** Open symbols mark the starting positions; filled
+symbols mark the final capture at 5.5 s. Arrows show the intervening motion.
+Heights are labeled because the overhead view hides the vertical coordinate.
+Beacon A transmits a +150 kHz baseband CW tone at 0 dBm; B transmits a −200 kHz
+tone at −30 dBm, around a nominal 915 MHz carrier. Both receivers listen to both
+beacons over synthetic terrain, with direct, reflected and diffuse propagation.
+Dotted connecting lines show which devices communicate, not extracted traced rays.
+
+The waterfall should therefore contain two nearly vertical bands: one strong
+tone and one weak tone. Clock errors shift their apparent frequencies differently
+at the two receivers. During the approximately 2.048 ms displayed capture, a
+3 m/s receiver travels only about 6 mm; the full 5.5 s motion is not displayed
+in that waterfall. The weak-line plot instead compares twelve separate captures
+along those routes. The passive delay/frequency cuts compare the two receivers'
+recordings; the narrowband tones provide poor delay discrimination.
+
+![Downward-looking radar scanning two hills and a swale](figures/sensing_radar_scenario.png)
+
+**Terrain radar.** A downward-looking TX/RX pair moves at 10 m/s at RF height
+40 m, with a 2 m baseline in RF x. The elevation view uses the actual DEM
+midpoint samples along the route. Its vertical scale is enlarged; the baseline
+separation shown is projected onto the route. Colored V paths are illustrative
+midpoint references, not the actual traced multipath. The selected first hill,
+swale and second hill are the same sites used in the matched-filter profiles.
+
+Raised ground shortens the TX–ground–RX path: the hills' peaks move toward
+smaller total path length `cτ`, while the swale lies near the approximately
+80 m flat-ground reference. Multiple scattering paths broaden or split the
+response. Comparing 200 MHz with 20 MHz on the same traced channels shows the
+effect of bandwidth on delay separation. The height-error plot then compares
+the I/Q peak's equivalent height with the DEM midpoint reference along the route.
+
 ## What the color plots mean
 
 A **spectrum waterfall** has frequency on one axis, acquisition time on the
@@ -117,6 +159,7 @@ Their algorithms and demonstrated capabilities are not claimed for this data.
 
 ```bash
 python scripts/basis_launch.py benchmarks/generate_sensing_figures.py --backend cuda
+python benchmarks/generate_sensing_scenarios.py
 ```
 
 [Processed numerical products](figures/sensing_products.npz) and

@@ -1,0 +1,68 @@
+{
+  "scope": "Scenario illustrations from recorded P100 geometry; no new propagation or I/Q",
+  "source_sha256": {
+    "pluto_esm_report.json": "5ae063cce0405082266d7fdb19f57cb3a0e886dbe2fbee398e7454f0e7e1bb20",
+    "terrain_signature_data.json": "2e91039b02304e94e9d3221c91b15f9bdf9f6558195cee16ffac3b7ca057c4e4",
+    "terrain_scan_iq.npz": "19256ef12336a2227b95de00723adb01471c530c794cf500ab4bac63a2052f5d"
+  },
+  "figures": [
+    "sensing_esm_scenario",
+    "sensing_radar_scenario"
+  ],
+  "esm": {
+    "start_positions_m": [
+      [
+        -60.0,
+        -30.0,
+        12.0
+      ],
+      [
+        45.0,
+        45.0,
+        18.0
+      ],
+      [
+        -30.0,
+        -10.0,
+        14.0
+      ],
+      [
+        30.0,
+        -50.0,
+        20.0
+      ]
+    ],
+    "final_positions_m": [
+      [
+        -49.0,
+        -30.0,
+        12.0
+      ],
+      [
+        39.5,
+        45.0,
+        18.0
+      ],
+      [
+        -13.5,
+        -10.0,
+        14.0
+      ],
+      [
+        30.0,
+        -33.5,
+        20.0
+      ]
+    ],
+    "final_epoch_s": 5.5,
+    "nominal_carrier_hz": 915000000.0,
+    "link_lines": "Illustrative device associations, not traced rays"
+  },
+  "radar": {
+    "altitude_m": 40,
+    "baseline_m": 2.0,
+    "projected_baseline_m": 1.6641005886756874,
+    "reference_paths": "Illustrative midpoint geometry, not extracted traced rays",
+    "vertical_scale": "Enlarged relative to horizontal; not equal aspect"
+  }
+}

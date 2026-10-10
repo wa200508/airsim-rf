@@ -28,3 +28,4 @@ for path in Path(sys.argv[1]).glob('*/*'):
 PY
 
 "${figure_run[@]}" benchmarks/generate_sensing_figures.py --backend cuda
+"${figure_run[@]}" benchmarks/generate_sensing_scenarios.py
