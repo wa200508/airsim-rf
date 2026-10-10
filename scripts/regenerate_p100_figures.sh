@@ -25,3 +25,5 @@ for path in Path(sys.argv[1]).glob('*/*'):
     if path.suffix in {'.png', '.svg', '.npz', '.json'}:
         shutil.copy2(path, Path('docs/figures')/path.name)
 PY
+
+"${figure_run[@]}" benchmarks/generate_sensing_figures.py --backend cuda

@@ -1,5 +1,7 @@
 # Terrain
 
+The current sensor-observable figures are in the [RF sensing analysis](sensing-plots.md), including radar delay profiles, ESM spectral diagnostics and passive-geolocation ambiguity plots. Earlier illustrations below are retained as linked scenario background.
+
 - [Ground Scattering](#ground-scattering)
 - [Terrain Scenario](#terrain-scenario)
 - [Terrain Signature](#terrain-signature)
@@ -236,7 +238,7 @@ relief, not a surveyed site or a calibrated land-cover model.
 The figures and underlying I/Q were regenerated on the P100 using CUDA/OptiX
 propagation and direct CUDA rendering. [Reproduction and timing scope](setup.md#regenerate-documentation-figures-on-the-p100).
 
-![DEM elevations, platform locations and triangulated surface](figures/terrain_overview.png)
+[Earlier demonstration illustration: DEM elevations, platform locations and triangulated surface](figures/terrain_overview.png)
 
 Each grid cell becomes two triangles, for 441 vertices and 800 faces. Those
 triangles are the geometry Sionna actually intersects: elevations affect path
@@ -282,7 +284,7 @@ the datum, so its clearance above the DEM varies; it is not terrain-following.
 
 ### Delay and Doppler waterfalls
 
-![Flat-ground and DEM channel delay and Doppler waterfalls](figures/channel_waterfalls.png)
+[Earlier demonstration illustration: Flat-ground and DEM channel delay and Doppler waterfalls](figures/channel_waterfalls.png)
 
 Every row is one channel snapshot. We histogram **sum(|a|²)** across all valid
 direct, specular and diffuse paths from all 100 transmitters. This is an
@@ -304,7 +306,7 @@ retained paths, not a promise that every sampling attempt produces a return.
 
 ### Coherent LFM response
 
-![Single-transmitter LFM pulse-compressed waterfalls](figures/lfm_waterfalls.png)
+[Earlier demonstration illustration: Single-transmitter LFM pulse-compressed waterfalls](figures/lfm_waterfalls.png)
 
 For this plot we select **TX 50 → RX 0** from those same channel solves. We
 generate complex voltage with the existing `synthesize_voltage()` function,
@@ -332,7 +334,7 @@ used here. [The scattering guide](terrain.md#ground-scattering) explains those l
 
 ### I/Q frequency waterfall
 
-![Received LFM I/Q spectrograms for flat ground and terrain](figures/iq_spectrograms.png)
+[Earlier demonstration illustration: Received LFM I/Q spectrograms for flat ground and terrain](figures/iq_spectrograms.png)
 
 These are spectrograms of the **actual complex voltage samples** for TX 50 at
 the final, 3.1 s epoch. The sweep runs from approximately −10 to +10 MHz; delayed
@@ -410,7 +412,7 @@ bright ridge below is calculated from **received complex voltage**, using LFM
 pulse compression. The first hill, drainage swale and second hill are visible
 in its changing delay. The DEM profile is shown separately for comparison.
 
-![DEM profile, flat-control I/Q and terrain I/Q aligned along the flight line](figures/terrain_signature.png)
+[Earlier demonstration illustration: DEM profile, flat-control I/Q and terrain I/Q aligned along the flight line](figures/terrain_signature.png)
 
 The terrain has not been exaggerated or replaced. We changed the measurement
 geometry and waveform so the existing features become resolvable. The raw
@@ -459,7 +461,7 @@ scenario or a new off-the-shelf hardware specification.
 | Propagation | Actual Sionna LoS, first-order specular and diffuse paths |
 | Diffuse budget | 1,028 attempts/link, half TX and half RX proposals; 10% uniform support |
 
-![Flight line, beam footprints and independently extracted I/Q heights](figures/terrain_scan_geometry.png)
+[Earlier demonstration illustration: Flight line, beam footprints and independently extracted I/Q heights](figures/terrain_scan_geometry.png)
 
 The circles show approximate individual-antenna half-power footprints: solid
 for TX, dashed for RX. Their overlap concentrates surface contributions near
@@ -511,7 +513,7 @@ midpoint profile.
 
 ### Identify the individual features by their delays
 
-![Flat ground and three feature-specific I/Q delay profiles](figures/terrain_delay_cuts.png)
+[Earlier demonstration illustration: Flat ground and three feature-specific I/Q delay profiles](figures/terrain_delay_cuts.png)
 
 | Feature | Distance along route | DEM midpoint height | I/Q peak equivalent height | Geometric reference total path |
 | --- | ---: | ---: | ---: | ---: |
@@ -529,7 +531,7 @@ bright to show its shape.
 
 ### A bandwidth-only control
 
-![Same terrain channels with 20 MHz and 200 MHz chirps](figures/terrain_bandwidth_comparison.png)
+[Earlier demonstration illustration: Same terrain channels with 20 MHz and 200 MHz chirps](figures/terrain_bandwidth_comparison.png)
 
 For each terrain snapshot, we reuse **exactly the same complex path gains,
 delays and Dopplers** to generate another I/Q block with a 20 MHz chirp. Beam,

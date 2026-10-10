@@ -16,6 +16,7 @@ host preparation, receiver processing and loopback delivery. Live physics/RPC,
 startup and distributed SDR transport remain unmeasured; all 30 updates miss the
 120 Hz deadline. See [performance and optimization limits](docs/performance.md).
 
+- [Radar, ESM and passive-geolocation figures](docs/sensing-plots.md)
 - [Architecture and integration contracts](docs/architecture.md)
 - [Rendering algorithms and reference operators](docs/rendering.md)
 - [Terrain and propagation assumptions](docs/terrain.md)

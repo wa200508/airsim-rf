@@ -1,5 +1,7 @@
 # Architecture
 
+The current sensor-observable figures are in the [RF sensing analysis](sensing-plots.md), including radar delay profiles, ESM spectral diagnostics and passive-geolocation ambiguity plots. Earlier illustrations below are retained as linked scenario background.
+
 - [Radar](#radar)
 - [End To End](#end-to-end)
 - [Cots Sdr Lab](#cots-sdr-lab)
@@ -360,7 +362,7 @@ These SDR figures and raw recordings were regenerated with P100 propagation
 and direct CUDA sample rendering. Receiver processing and plots use the host.
 [Reproduction and capture durations](setup.md#regenerate-documentation-figures-on-the-p100).
 
-![Four radio mounts, received link powers and recorded I/Q spectra](figures/pluto_esm_overview.png)
+[Earlier demonstration illustration: Four radio mounts, received link powers and recorded I/Q spectra](figures/pluto_esm_overview.png)
 
 ### Why start with PlutoSDR
 
@@ -541,7 +543,7 @@ These values exclude the small path-dependent Doppler. Welch spectra use
 the tens-of-hertz motion contributions. Differences between listeners are
 principally chosen reference-clock offsets here.
 
-![Two listeners' recorded 12-bit spectrum waterfalls](figures/pluto_esm_waterfalls.png)
+[Earlier demonstration illustration: Two listeners' recorded 12-bit spectrum waterfalls](figures/pluto_esm_waterfalls.png)
 
 The new tests independently check actual Sionna free-space link power against
 Friis for two TX and two RX, coherent cancellation before quantization,

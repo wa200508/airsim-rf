@@ -1,0 +1,43 @@
+{
+  "scope": "Academic-style postprocessing of recorded P100 sensing data",
+  "generation_command": "python scripts/basis_launch.py benchmarks/generate_sensing_figures.py --backend cuda --output-dir recordings/academic-sensing-figures",
+  "source_sha256": {
+    "benchmarks/generate_sensing_figures.py": "d8ec66c7b66f77f0db27314da2e08094713bf3cd28f4d273dd8d7d105697e4f0",
+    "src/airsim_rf/sensing_analysis.py": "36c392657b9e60aa2287e456e995f730cc8cf3e453fe1052403cdf74b626f7d9",
+    "tests/test_sensing_analysis.py": "e0b4d2aa1be5af690660c96190c29aa75a7517a5b1e7b0859f2f5c87df84ba34"
+  },
+  "figure_sets": 8,
+  "outputs_sha256": {
+    "sensing_esm_line_prominence.png": "7b3fe932ff45a0680e325b29c23e1d687ab75046a2b4b7a13b715a14ee4d190c",
+    "sensing_esm_line_prominence.svg": "d9adae39caefc98c96aadc063158b5872bc0f685ecad2325e42923fbebac8163",
+    "sensing_esm_spectrum.png": "fe84f95638b7ba89e30645e141fbd6aa82c9df08a5ca0d2344932a6d6f783a4f",
+    "sensing_esm_spectrum.svg": "911027b272feb78b36c8b4c62bc662e560ab31e74c0a24f84997617b3380dafa",
+    "sensing_passive_caf.png": "e7245c111dc4736a7c235e2e47e8f744ba5177a1cdb2e2e46387461dbc10fe04",
+    "sensing_passive_caf.svg": "8c86e5b76eb9ca72bc756605c10f7ba739f6422a537d6d2f582c82e357ccc835",
+    "sensing_passive_cuts.png": "c9c5051dbba299793ef9ea948de85a641223b9f9554e3c667359822b679dd209",
+    "sensing_passive_cuts.svg": "adac6555c20d80340dbe3655df6983a8c1ee8ff60376aec21e7ae37d845d2712",
+    "sensing_passive_geometry.png": "4c90fedbd4134716367a67db4d5888c9662eca83a8ac15a3e0c451aa76c61cc4",
+    "sensing_passive_geometry.svg": "75d5bed97ceb6f5df2423efccb4a14e9b83b648631038228439b1386a1103c09",
+    "sensing_products.json": "7fcf783581bf638e815598fbd42ce4433e1744ec8e53448bbe5e1ba94a89c039",
+    "sensing_products.npz": "0f6b9705a331bd83ec80469c9c5e385e3c30e14b93050c0844d913c6975779f2",
+    "sensing_radar_delay_profiles.png": "33d026d4c4e2abc991e492041665b8dc00ed887e44171084c16fa3e4616982c5",
+    "sensing_radar_delay_profiles.svg": "53c937f57dbbcd4d02d64de199df1b049dce8d4f3d414167551cb20dd0165731",
+    "sensing_radar_error.png": "cde85c19d8371d5216207880b091c59edfdc3b10c36a43c4a820c7a53c48e075",
+    "sensing_radar_error.svg": "76d3f0d318dc088ea52fdbfcda88056d56dc97029d9444a954ae9ead239e8c93",
+    "sensing_radar_range_time.png": "c9073e64287de52da6f86194d0a4a76f32cf18f0ded93f38eb4d8274e8883e56",
+    "sensing_radar_range_time.svg": "9b9e4cf5fc96ed02bd364e46d28785a8cef04e72f9bd215a692123c040680c13"
+  },
+  "qualification": {
+    "analysis_checks_cpu_and_cuda": 7,
+    "offline_cpu_suite_passed": 174,
+    "cuda_cases_skipped_in_cpu_suite": 158,
+    "png_visual_inspection": 8,
+    "offline_figure_generation_smoke": true
+  },
+  "literature": [
+    "https://doi.org/10.3390/s20113270",
+    "https://arxiv.org/abs/1604.02659",
+    "https://cyclostationarity.com/wp-content/uploads/2019/03/SEARCH-EFFICIENT-METHODS-OF-DETECTION-OF-CYCLOSTATIONARY-SIGNALS.pdf",
+    "https://doi.org/10.1177/1687814017737451"
+  ]
+}

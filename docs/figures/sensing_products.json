@@ -1,0 +1,48 @@
+{
+  "scope": "Postprocessing recorded P100 data; no new propagation, detection trial ensemble or live geolocation",
+  "source_sha256": {
+    "terrain_scan_iq.npz": "19256ef12336a2227b95de00723adb01471c530c794cf500ab4bac63a2052f5d",
+    "terrain_signature_data.json": "2e91039b02304e94e9d3221c91b15f9bdf9f6558195cee16ffac3b7ca057c4e4",
+    "pluto_esm_iq.npz": "5dfbd6cd5bc0ec35e354c8701eb643d6436c40e06327675a42a16d54422082ff",
+    "pluto_esm_report.json": "5ae063cce0405082266d7fdb19f57cb3a0e886dbe2fbee398e7454f0e7e1bb20"
+  },
+  "figures": [
+    "sensing_radar_range_time",
+    "sensing_radar_delay_profiles",
+    "sensing_radar_error",
+    "sensing_esm_spectrum",
+    "sensing_esm_line_prominence",
+    "sensing_passive_caf",
+    "sensing_passive_cuts",
+    "sensing_passive_geometry"
+  ],
+  "caf_backend": "cuda",
+  "caf_definition": "sum Hann[n] s2[n] conj(s1[n-lag]) exp(-j2pi f n/fs), energy-normalized power",
+  "caf_capture_seconds": 0.002048,
+  "caf_common_support_seconds": 0.002028,
+  "caf_native_frequency_scale_hz": 493.0966469428008,
+  "caf_fft_interpolated_spacing_hz": 122.0703125,
+  "caf_lag_spacing_seconds": 5e-07,
+  "caf_raw_frequency_center_hz": 13725.0,
+  "oracle_clock_correction": "Recorded actual sample rates and receiver LO/phase truth; 32-tap Lanczos resampling. Not an estimated calibration.",
+  "welch": {
+    "segment_samples": 1024,
+    "overlap_samples": 512,
+    "fft_samples": 1024,
+    "window": "Hann",
+    "bin_spacing_hz": 1953.125,
+    "units": "dBm/Hz via |voltage|^2/50 ohm"
+  },
+  "line_prominence": "Maximum PSD within 5 kHz of known weak tone / median PSD 15\u201360 kHz away. Not total-band SNR, blind detection or Pd.",
+  "geometry": {
+    "truth_tdoa_ns": 188.2333618931088,
+    "truth_fdoa_hz": 10.451020266211248,
+    "assumptions": "Known emitter altitude and velocity, receiver pose/velocity and calibrated clocks; loci from recorded geometry, not measured estimates."
+  },
+  "unsupported_claims": [
+    "Coherent pulse-train range-Doppler from gapped snapshots",
+    "ROC/Pd-Pfa without labeled H0/H1 trials",
+    "Modulation classification from CW beacons",
+    "Geolocation error ellipse/CRLB without identified observations and noise covariance"
+  ]
+}

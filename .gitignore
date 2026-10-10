@@ -21,3 +21,6 @@ results/profiling/**/captures/
 
 # Nested profiling binaries are local diagnostics.
 results/profiling/**/raw/
+
+# Reproducible scientific plot values.
+!docs/figures/sensing_products.npz

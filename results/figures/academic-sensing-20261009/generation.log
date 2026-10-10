@@ -1,0 +1,18 @@
+{
+  "figures": [
+    "sensing_radar_range_time",
+    "sensing_radar_delay_profiles",
+    "sensing_radar_error",
+    "sensing_esm_spectrum",
+    "sensing_esm_line_prominence",
+    "sensing_passive_caf",
+    "sensing_passive_cuts",
+    "sensing_passive_geometry"
+  ],
+  "caf_backend": "cuda",
+  "geometry": {
+    "truth_tdoa_ns": 188.2333618931088,
+    "truth_fdoa_hz": 10.451020266211248,
+    "assumptions": "Known emitter altitude and velocity, receiver pose/velocity and calibrated clocks; loci from recorded geometry, not measured estimates."
+  }
+}
