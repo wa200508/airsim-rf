@@ -1,0 +1,94 @@
+{
+  "tracked_markdown_files": 115,
+  "maintained_markdown_files": 16,
+  "missing_files": [],
+  "missing_maintained_fragments": [
+    {
+      "file": "docs/architecture.md",
+      "line": 462,
+      "target": "../README.md#attach-to-an-airsim-vehicle"
+    }
+  ],
+  "duplicate_maintained_anchors": [
+    {
+      "file": "docs/references.md",
+      "anchor": "ref1",
+      "lines": [
+        220,
+        727
+      ]
+    },
+    {
+      "file": "docs/references.md",
+      "anchor": "ref2",
+      "lines": [
+        224,
+        733
+      ]
+    },
+    {
+      "file": "docs/references.md",
+      "anchor": "ref3",
+      "lines": [
+        228,
+        738
+      ]
+    },
+    {
+      "file": "docs/references.md",
+      "anchor": "ref4",
+      "lines": [
+        232,
+        742
+      ]
+    },
+    {
+      "file": "docs/references.md",
+      "anchor": "ref5",
+      "lines": [
+        237,
+        747
+      ]
+    },
+    {
+      "file": "docs/references.md",
+      "anchor": "ref6",
+      "lines": [
+        244,
+        752
+      ]
+    },
+    {
+      "file": "docs/references.md",
+      "anchor": "ref7",
+      "lines": [
+        249,
+        757
+      ]
+    },
+    {
+      "file": "docs/references.md",
+      "anchor": "ref8",
+      "lines": [
+        254,
+        763
+      ]
+    },
+    {
+      "file": "docs/references.md",
+      "anchor": "ref9",
+      "lines": [
+        260,
+        768
+      ]
+    },
+    {
+      "file": "docs/references.md",
+      "anchor": "ref10",
+      "lines": [
+        267,
+        773
+      ]
+    }
+  ]
+}

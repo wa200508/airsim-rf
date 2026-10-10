@@ -1,0 +1,69 @@
+{
+  "same_array_keys": true,
+  "array_count": 34,
+  "arrays_equal_including_nan": {
+    "path_length_m": true,
+    "distance_m": true,
+    "range_time_flat": true,
+    "range_time_dem": true,
+    "profiles_200mhz": true,
+    "profiles_20mhz": true,
+    "height_error_m": true,
+    "abs_error_sorted_m": true,
+    "error_ecdf": true,
+    "spectrum_frequency_hz": true,
+    "psd_Analog": true,
+    "psd_12-bit": true,
+    "psd_8-bit_control": true,
+    "waterfall_frequency_hz_0": true,
+    "waterfall_time_seconds_0": true,
+    "waterfall_psd_w_per_hz_0": true,
+    "waterfall_frequency_hz_1": true,
+    "waterfall_time_seconds_1": true,
+    "waterfall_psd_w_per_hz_1": true,
+    "weak_line_prominence_0_Analog": true,
+    "weak_line_prominence_0_12-bit": true,
+    "weak_line_prominence_0_8-bit_control": true,
+    "weak_line_prominence_1_Analog": true,
+    "weak_line_prominence_1_12-bit": true,
+    "weak_line_prominence_1_8-bit_control": true,
+    "caf_lag_seconds": true,
+    "caf_raw_frequency_hz": true,
+    "caf_raw_power": false,
+    "caf_corrected_frequency_hz": true,
+    "caf_corrected_power": false,
+    "geometry_grid_x_m": true,
+    "geometry_grid_y_m": true,
+    "geometry_tdoa_seconds": true,
+    "geometry_fdoa_hz": true
+  },
+  "scope": "Fresh NumPy postprocessing of committed raw recordings, not a new propagation simulation.",
+  "differing_arrays": {
+    "caf_raw_power": {
+      "max_absolute_difference": 3.1955769974612025e-09,
+      "max_difference_over_reference_peak": 1.3885705448510508e-08,
+      "reference_peak": 0.23013429237071895,
+      "reference_argmax": [
+        19,
+        20
+      ],
+      "regenerated_argmax": [
+        19,
+        20
+      ]
+    },
+    "caf_corrected_power": {
+      "max_absolute_difference": 3.138096005272928e-09,
+      "max_difference_over_reference_peak": 1.3475765567257252e-08,
+      "reference_peak": 0.23286959019958897,
+      "reference_argmax": [
+        19,
+        20
+      ],
+      "regenerated_argmax": [
+        19,
+        20
+      ]
+    }
+  }
+}

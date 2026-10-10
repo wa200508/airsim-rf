@@ -1,0 +1,150 @@
+{
+  "final_link_powers": [
+    {
+      "receiver": "listener_a",
+      "link_power_dbm": {
+        "beacon_a": -99.78340468078187,
+        "beacon_b": -94.99682920600775
+      },
+      "thermal_noise_power_dbm": -103.97503294542278,
+      "clipping_fraction": 0.0
+    },
+    {
+      "receiver": "listener_b",
+      "link_power_dbm": {
+        "beacon_a": -65.89336707924383,
+        "beacon_b": -95.49692050872207
+      },
+      "thermal_noise_power_dbm": -103.97509808975795,
+      "clipping_fraction": 0.0
+    }
+  ],
+  "nonfinite_arrays": {
+    "weak_line_prominence_0_8-bit_control": {
+      "shape": [
+        12
+      ],
+      "nonfinite": 12,
+      "total": 12
+    },
+    "weak_line_prominence_1_8-bit_control": {
+      "shape": [
+        12
+      ],
+      "nonfinite": 10,
+      "total": 12
+    }
+  },
+  "adc8_nonzero_samples_per_capture": [
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      4096
+    ],
+    [
+      0,
+      4096
+    ]
+  ],
+  "shared_scattering_fixture_at_epoch_zero": {
+    "tx_below_surface": 31,
+    "tx_count": 100,
+    "minimum_clearance_m": -2.490796849702342,
+    "rx_clearance_m": 6.743755865818008
+  },
+  "fleet_fixture_at_epoch_zero": {
+    "2x2": {
+      "below_surface": 0,
+      "min_clearance_m": 15.292289785984448,
+      "below_indices": []
+    },
+    "10x4": {
+      "below_surface": 0,
+      "min_clearance_m": 2.611610156042765,
+      "below_indices": []
+    },
+    "100x10": {
+      "below_surface": 3,
+      "min_clearance_m": -1.8680970407075996,
+      "below_indices": [
+        64,
+        71,
+        86
+      ]
+    }
+  },
+  "radar_error": {
+    "bias_m": 0.10689419842029833,
+    "rmse_m": 0.913036643235383,
+    "max_absolute_m": 4.065491184551812,
+    "worst_index": 67,
+    "worst_route_distance_m": 134.2
+  },
+  "weak_line_prominence_0_8-bit_control": [
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null
+  ],
+  "weak_line_prominence_1_8-bit_control": [
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    17.56635284423828,
+    18.491655349731445
+  ]
+}
