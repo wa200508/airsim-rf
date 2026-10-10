@@ -26,6 +26,7 @@ def main():
     parser.add_argument('--ideal-clocks', action='store_true')
     parser.add_argument('--no-noise', action='store_true')
     parser.add_argument('--backend', choices=('cpu', 'cuda'), default='cpu')
+    parser.add_argument('--pascal-compat', action='store_true', help='Explicit pinned P100 CUDA compatibility adapter')
     args = parser.parse_args()
     if min(args.epochs, args.snapshot_stride) < 1 or args.samples < 1024 or args.samples_per_link < 2:
         parser.error('Positive epochs/stride, >=1024 samples and >=2 attempts/link required')
@@ -37,10 +38,14 @@ def main():
     if args.backend == 'cuda' and not dr.has_backend(dr.JitBackend.CUDA):
         parser.error('CUDA unavailable; no implicit CPU fallback')
     mi.set_variant('cuda_ad_mono_polarized' if args.backend == 'cuda' else 'llvm_ad_mono_polarized')
+    if args.pascal_compat:
+        from airsim_rf.p100_compat import enable_pascal_compat
+        enable_pascal_compat()
     import sionna.rt as rt
     from scipy.signal import welch
     from airsim_rf.sdr import PlutoSDRProfile, RadioClock, SDREmitter, SDRNetworkReceiver, quantize_iq
     from airsim_rf.terrain import demo_terrain
+    from airsim_rf.rendering import ToneWaveform
     import matplotlib
     matplotlib.use('Agg')
     import matplotlib.pyplot as plt
@@ -66,12 +71,13 @@ def main():
     emitters = {}
     for i in range(2):
         frequency = frequencies[i]
-        emitters[names[i]] = SDREmitter(lambda t, f=frequency: np.exp(2j*np.pi*f*t),
+        emitters[names[i]] = SDREmitter(ToneWaveform(frequency),
               transmit_power_w=1e-3*10**(powers_dbm[i]/10), clock=clocks[i],
               baseband_frequency_bounds_hz=(frequency, frequency))
     profile = PlutoSDRProfile(noise_figure_db=args.noise_figure_db,
               input_full_scale_dbm=args.full_scale_dbm, noise_enabled=not args.no_noise)
     receiver = SDRNetworkReceiver(scene, emitters, profile,
+              renderer='direct-cuda' if args.backend == 'cuda' else 'numpy',
               clocks=dict(zip(names[2:], clocks[2:])),
               path_solver='first-order-scattering' if args.propagation == 'diffuse' else 'single-bounce',
               max_depth=0 if args.propagation == 'los' else 1, samples_per_link=args.samples_per_link)
@@ -139,6 +145,7 @@ def main():
                       'DC offset and I/Q imbalance', 'USB drops and acquisition start jitter', 'drone airframe scattering'],
           budget=dict(checked_utc='2026-10-03', usd_per_pluto=349.95, radios=4, radio_subtotal_usd=1399.80,
                       source='https://www.nooelec.com/store/adalm-pluto.html', excludes='tax, shipping, antennas, cables, computers, power and drones'),
+          execution=dict(propagation=mi.variant(), iq_renderer=receiver.renderer, analysis_and_plotting='host SciPy/Matplotlib', pascal_compat=args.pascal_compat),
           versions=dict(sionna=rt.__version__, mitsuba=mi.__version__, drjit=dr.__version__, backend=mi.variant()))
     for key in arrays:
         arrays[key] = np.stack(arrays[key]).reshape((args.epochs, 2)+np.shape(arrays[key][0]))

@@ -1,0 +1,97 @@
+{
+  "scope": "documentation figure regeneration; separate sampled snapshots, not continuous fleet throughput",
+  "date": "2026-10-09",
+  "gpu": "Tesla P100-PCIE-16GB",
+  "image": "airsim-rf:p100-modern-gpu",
+  "source_base_revision": "bdc382080eaae26d1bb9db34954bdc32520fdbf8",
+  "source_modified": true,
+  "source_sha256": {
+    "benchmarks/generate_rf_waterfalls.py": "706a69a1be065f4f202723f16dfcf0479165fb43c0a9ed40dc967f13d079069d",
+    "benchmarks/generate_terrain_signature.py": "2531a36b19f3b396b2d06d8991b2632357a924ed2816daaa1bdf480f3ad26975",
+    "benchmarks/terrain_scan.py": "fe0b0298622c258d9f0a4c8a4f588742b19c38de595e6478a05f45b558068a7e",
+    "examples/pluto_esm_drones.py": "c16d5708f4ad5c61ab350b098aa4ef7d715926adaf94161c1a77ae0e533cf2c2",
+    "src/airsim_rf/p100_compat.py": "7efbc84304483328e4f96237e4c381c811803789bcb2a1aa6ec3779c5c978a20",
+    "src/airsim_rf/rendering.py": "f5b828911facfad842423d83b9c1ea9bfebf03749b599af6466da788d85863fc",
+    "scripts/basis_launch.py": "264b971aa177e85563713bbee84b23f0a98729bf51370c2b244de480c5df7039",
+    "results/figures/p100-20261009/validate_same_channel.py": "2dfcf90983a4812286cd7e1557538786f1da39ca34fc3e8b3e0230b49c907f62"
+  },
+  "versions": {
+    "sionna_rt": "2.2.0",
+    "mitsuba": "3.8.0",
+    "drjit": "1.3.1"
+  },
+  "execution": {
+    "propagation": "cuda_ad_mono_polarized",
+    "iq_renderer": "direct-cuda",
+    "analysis_and_plotting": "host SciPy/Matplotlib",
+    "receiver_filter_noise_adc": "host",
+    "pascal_compat": true
+  },
+  "commands": [
+    "python scripts/basis_launch.py benchmarks/generate_rf_waterfalls.py --backend cuda --pascal-compat --output-dir recordings/p100-figures-20261009/waterfalls",
+    "python scripts/basis_launch.py benchmarks/generate_terrain_signature.py --backend cuda --pascal-compat --output-dir recordings/p100-figures-20261009/terrain",
+    "python scripts/basis_launch.py examples/pluto_esm_drones.py --backend cuda --pascal-compat --output-dir recordings/p100-figures-20261009/pluto"
+  ],
+  "windows": {
+    "waterfalls": {
+      "cases": 2,
+      "windows_per_case": 32,
+      "samples_per_window": 600,
+      "sample_rate_hz": 50000000,
+      "signal_seconds_per_case": 0.000384,
+      "snapshot_span_seconds": 3.1
+    },
+    "terrain": {
+      "cases": 3,
+      "windows_per_case": 91,
+      "samples_per_window": 1500,
+      "sample_rate_hz": 500000000,
+      "signal_seconds_per_case": 0.000273,
+      "snapshot_span_seconds": 18.03
+    },
+    "pluto": {
+      "windows": 12,
+      "receivers": 2,
+      "samples_per_window": 4096,
+      "sample_rate_hz": 2000000,
+      "signal_seconds_per_receiver": 0.024576,
+      "snapshot_span_seconds": 5.5
+    }
+  },
+  "figures_png": 10,
+  "figures_svg": 8,
+  "assets_sha256": {
+    "channel_waterfalls.png": "5e5345129c66d1f3b940ef78033cecc7f369029a854de60bcdd973549835ca8d",
+    "channel_waterfalls.svg": "980e7fb99dca810ac73c0cc7633575553105b7a9bad8dcb6c1d016416fc9f8bd",
+    "iq_spectrograms.png": "b32667e818873476ac280b277de65749cf06235485b7a8bba381643ad02c5b12",
+    "iq_spectrograms.svg": "4f02c4baafdb31fb465bbe25a9d36f735ecf16ffc113dbeab2b0166f68d7f521",
+    "lfm_waterfalls.png": "6a06added99a140ea1f48a6af6273ed7169b09e57fed31f8ba4d272248ca2347",
+    "lfm_waterfalls.svg": "511aee8f4f0df039048f98b3e10d52a8c0a83de3e8f6728eb05c80ac48516dd5",
+    "pluto_esm_iq.npz": "5dfbd6cd5bc0ec35e354c8701eb643d6436c40e06327675a42a16d54422082ff",
+    "pluto_esm_overview.png": "98bb3e1c17db6d8c86f7f2666d8e4437e0c9ad36cc4b6c0122e4257a6c82aeed",
+    "pluto_esm_report.json": "5ae063cce0405082266d7fdb19f57cb3a0e886dbe2fbee398e7454f0e7e1bb20",
+    "pluto_esm_waterfalls.png": "19ae90aed63240548abee40c7abd28d9ab104c76466ad9081484a0fb42b1fca1",
+    "scenario_data.json": "bdc7538a9317cfd27c8654787822adeaea4b959f5172b66b7660124fd83f461f",
+    "terrain_bandwidth_comparison.png": "a6376fd7d1788650399a53057ad63c25bca9b053dc29e97cf9662f3ec7412624",
+    "terrain_bandwidth_comparison.svg": "8827a711b2003fe5a2b20331602b1fdabea178992c49a0b599915de3498b1802",
+    "terrain_delay_cuts.png": "346e43cbe417f737158cdcd8cdf769d6ccbff943086bf29d6e03e3944f8e9370",
+    "terrain_delay_cuts.svg": "c426c8ba74f4867621fbab7e1c8c860f4e48296e1fe6f8286f2c65c76e6db8f3",
+    "terrain_overview.png": "73210b92255b207a886136b276abfbeb75aba893c38f083a8725334fb18c92af",
+    "terrain_overview.svg": "09c96eb1701806051fea0a8397b3a80e29a8cc5f6e0ca80095dc7b3211245bc0",
+    "terrain_scan_geometry.png": "a105f1aff57171da351c82376bb4f3aac2ffd4939cee4ff55d84e4c8bb3dd1d3",
+    "terrain_scan_geometry.svg": "5a6a0362c86c399af8c3baf4cfcb349b96e94603bd9ddba8a1f383c9cb3ab77b",
+    "terrain_scan_iq.npz": "19256ef12336a2227b95de00723adb01471c530c794cf500ab4bac63a2052f5d",
+    "terrain_signature.png": "7a31728d41a5f66fe3ece10e0be2055633dc83333d08d8be876114ce24c41ab8",
+    "terrain_signature.svg": "ab046971dc4073d0c010506725fd36900dee57a86e42647a7ec9449d033f248c",
+    "terrain_signature_data.json": "2e91039b02304e94e9d3221c91b15f9bdf9f6558195cee16ffac3b7ca057c4e4"
+  },
+  "qualification": {
+    "dataset_shapes_and_finite_values": true,
+    "visual_inspection_png_figures": 10,
+    "same_channel_renderer_reference": true,
+    "renderer_terrain_sdr_tests_passed": 51,
+    "cpu_suite_passed": 169,
+    "cpu_cuda_tests_skipped": 156
+  },
+  "previous_cpu_comparison_note": "Compared against the figure assets at source_base_revision. This changes propagation backend and Mitsuba/Dr.Jit versions; it is not an isolated renderer comparison. Terrain complex I/Q relative L2 differences are approximately 1.9\u20132.2%, with unchanged height-peak metrics. Same-channel CUDA-vs-NumPy rendering separately has worst relative L2 error 4.31e-7 across six cases."
+}

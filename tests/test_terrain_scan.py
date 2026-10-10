@@ -26,9 +26,14 @@ def test_narrow_pattern_gain_and_half_power_angle():
     assert 0 < back/boresight < 2e-6
 
 
-def test_actual_iq_peak_moves_earlier_when_ground_is_raised():
+@pytest.mark.parametrize("renderer", ["numpy", "direct-cuda"])
+def test_actual_iq_peak_moves_earlier_when_ground_is_raised(renderer):
+    if renderer == "direct-cuda":
+        import drjit as dr
+        if not dr.has_backend(dr.JitBackend.CUDA):
+            pytest.skip("CUDA device unavailable")
     scene, _ = scan_scene('ground')
-    scan = TerrainScan(scene)
+    scan = TerrainScan(scene, renderer=renderer)
     estimates, lengths = [], []
     gate = (scan.length_m >= 60) & (scan.length_m <= 100)
     ground = next(iter(scene.objects.values()))

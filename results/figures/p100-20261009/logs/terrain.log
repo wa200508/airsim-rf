@@ -1,0 +1,16 @@
+ground: 1/91, 953 retained paths
+ground: 16/91, 965 retained paths
+ground: 31/91, 970 retained paths
+ground: 46/91, 969 retained paths
+ground: 61/91, 969 retained paths
+ground: 76/91, 966 retained paths
+ground: 91/91, 959 retained paths
+terrain: 1/91, 954 retained paths
+terrain: 16/91, 966 retained paths
+terrain: 31/91, 968 retained paths
+terrain: 46/91, 969 retained paths
+terrain: 61/91, 972 retained paths
+terrain: 76/91, 965 retained paths
+terrain: 91/91, 958 retained paths
+{"dem_vs_iq_peak_correlation": 0.9850924658831642, "rmse_m": 0.35071069099343694, "median_absolute_error_m": 0.21541163843602318}
+Saved terrain signature figures and raw complex I/Q to recordings/p100-figures-20261009/terrain

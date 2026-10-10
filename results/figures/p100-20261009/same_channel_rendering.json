@@ -1,0 +1,48 @@
+{
+  "scope": "same GPU-traced physical channel; CUDA vs NumPy rendering only",
+  "cases": [
+    {
+      "scene": "ground",
+      "epoch_s": 0.0,
+      "paths": 953,
+      "relative_l2_error": 0.0,
+      "max_absolute_error_v": 0.0
+    },
+    {
+      "scene": "ground",
+      "epoch_s": 9.0,
+      "paths": 969,
+      "relative_l2_error": 1.89368904557341e-07,
+      "max_absolute_error_v": 2.764863893389702e-09
+    },
+    {
+      "scene": "ground",
+      "epoch_s": 18.0,
+      "paths": 959,
+      "relative_l2_error": 3.7823582488272223e-07,
+      "max_absolute_error_v": 5.6073048426696914e-09
+    },
+    {
+      "scene": "terrain",
+      "epoch_s": 0.0,
+      "paths": 954,
+      "relative_l2_error": 0.0,
+      "max_absolute_error_v": 0.0
+    },
+    {
+      "scene": "terrain",
+      "epoch_s": 9.0,
+      "paths": 970,
+      "relative_l2_error": 1.8956083636112453e-07,
+      "max_absolute_error_v": 9.241326037745523e-10
+    },
+    {
+      "scene": "terrain",
+      "epoch_s": 18.0,
+      "paths": 958,
+      "relative_l2_error": 4.3056229515059385e-07,
+      "max_absolute_error_v": 6.868750568322923e-10
+    }
+  ],
+  "passed": true
+}

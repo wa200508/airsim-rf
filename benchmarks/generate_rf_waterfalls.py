@@ -12,6 +12,7 @@ from scattering_scenario import load_fixture, update_platforms
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--backend', choices=('cpu', 'cuda'), default='cpu')
+    parser.add_argument('--pascal-compat', action='store_true', help='Explicit pinned P100 CUDA compatibility adapter')
     parser.add_argument('--epochs', type=int, default=32)
     parser.add_argument('--tx', type=int, default=100)
     parser.add_argument('--samples-per-link', type=int, default=1028)
@@ -28,10 +29,14 @@ def main():
     if args.backend == 'cuda' and not dr.has_backend(dr.JitBackend.CUDA):
         parser.error('CUDA unavailable; no CPU fallback')
     mi.set_variant('cuda_ad_mono_polarized' if args.backend == 'cuda' else 'llvm_ad_mono_polarized')
+    if args.pascal_compat:
+        from airsim_rf.p100_compat import enable_pascal_compat
+        enable_pascal_compat()
     import sionna.rt as rt
     from sionna.rt.constants import InteractionType
     from scipy.signal import correlate, spectrogram
     from airsim_rf.receiver import ReceiverConfig, synthesize_voltage
+    from airsim_rf.rendering import LFMChirpWaveform
     from airsim_rf.scattering import FirstOrderScatteringPathSolver
     from airsim_rf.terrain import demo_terrain
     import matplotlib
@@ -84,10 +89,9 @@ def main():
             rows_delay.append(np.histogram(tau[valid]*1e9, delay_edges_ns, weights=weights)[0])
             rows_doppler.append(np.histogram(doppler[valid], doppler_edges_hz, weights=weights)[0])
             epoch_ns = round(epoch*1e9)
-            epoch_exact = epoch_ns*1e-9
             block = synthesize_voltage(a[representative], tau[representative],
-                    lambda t: chirp(t-epoch_exact), sim_time_ns=epoch_ns, config=cfg,
-                    doppler_hz=doppler[representative])
+                    LFMChirpWaveform(bandwidth, pulse_width, epoch_ns), sim_time_ns=epoch_ns, config=cfg,
+                    doppler_hz=doppler[representative], renderer='direct-cuda' if args.backend == 'cuda' else 'numpy')
             compressed = correlate(block.iq_volts, template, mode='full', method='fft')[template.size-1:]
             compressed /= np.sum(np.abs(template)**2)
             rows_iq.append(np.abs(compressed[show_length])**2)
@@ -186,6 +190,7 @@ def main():
     result = {'scope': 'Actual channel solves and coherent single-TX voltage synthesis; synthetic scene, no live AirSim',
               'arguments': {key: str(value) if isinstance(value, Path) else value for key, value in vars(args).items()},
               'versions': {'sionna_rt': rt.__version__, 'mitsuba': mi.__version__, 'drjit': dr.__version__, 'backend': mi.variant()},
+              'execution': {'propagation': mi.variant(), 'iq_renderer': 'direct-cuda' if args.backend == 'cuda' else 'numpy', 'analysis_and_plotting': 'host SciPy/Matplotlib', 'pascal_compat': args.pascal_compat},
               'terrain': {'grid_shape': list(terrain.heights_m.shape), 'spacing_m': 10, 'vertices': 441, 'triangles': 800,
                           'elevation_min_m': float(terrain.heights_m.min()), 'elevation_max_m': float(terrain.heights_m.max()),
                           'surveyed': False, 'material': {'relative_permittivity': 5, 'conductivity_s_per_m': .01,

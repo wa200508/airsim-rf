@@ -64,10 +64,11 @@ def total_length_to_height(length_m, *, altitude_m=40, baseline_m=2):
 
 class TerrainScan:
     """One moving TX/RX pair; no two-way link squaring or point-target RCS."""
-    def __init__(self, scene, *, bandwidth_hz=200e6, samples_per_link=1028):
+    def __init__(self, scene, *, bandwidth_hz=200e6, samples_per_link=1028, renderer="numpy"):
         if not np.isfinite(bandwidth_hz) or not 0 < bandwidth_hz < 500e6:
             raise ValueError('Bandwidth must be positive and below 500 MS/s')
         self.scene, self.bandwidth_hz, self.samples_per_link = scene, bandwidth_hz, samples_per_link
+        self.renderer = renderer
         self.config = ReceiverConfig(carrier_hz=24.125e9, sample_rate_hz=500e6,
                     num_samples=1500, transmit_power_w=1, impedance_ohm=50, noise_enabled=False)
         self.pulse_width_s = 2e-6
@@ -100,9 +101,9 @@ class TerrainScan:
     def voltage_from_channel(self, a, tau, doppler, *, epoch_s):
         """Permit a bandwidth comparison using exactly the same traced paths."""
         epoch_ns = round(epoch_s*1e9)
-        exact_epoch = epoch_ns*1e-9
-        block = synthesize_voltage(a, tau, lambda t: self.chirp(t-exact_epoch),
-                   sim_time_ns=epoch_ns, config=self.config, doppler_hz=doppler)
+        from airsim_rf.rendering import LFMChirpWaveform
+        block = synthesize_voltage(a, tau, LFMChirpWaveform(self.bandwidth_hz, self.pulse_width_s, epoch_ns),
+                   sim_time_ns=epoch_ns, config=self.config, doppler_hz=doppler, renderer=self.renderer)
         compressed = correlate(block.iq_volts, self.template, mode='full', method='fft')[self.template.size-1:]
         compressed /= np.sum(np.abs(self.template)**2)
         return block.iq_volts, compressed

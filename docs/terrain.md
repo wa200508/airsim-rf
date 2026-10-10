@@ -233,6 +233,9 @@ sinusoidal relief give elevations from −1.73 to 6.45 m. The reproducible formu
 is in [`demo_terrain()`](../src/airsim_rf/terrain.py). It represents plausible low
 relief, not a surveyed site or a calibrated land-cover model.
 
+The figures and underlying I/Q were regenerated on the P100 using CUDA/OptiX
+propagation and direct CUDA rendering. [Reproduction and timing scope](setup.md#regenerate-documentation-figures-on-the-p100).
+
 ![DEM elevations, platform locations and triangulated surface](figures/terrain_overview.png)
 
 Each grid cell becomes two triangles, for 441 vertices and 800 faces. Those

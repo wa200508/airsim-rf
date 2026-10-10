@@ -12,6 +12,7 @@ from airsim_rf.terrain import demo_terrain
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--backend', choices=('cpu', 'cuda'), default='cpu')
+    parser.add_argument('--pascal-compat', action='store_true', help='Explicit pinned P100 CUDA compatibility adapter')
     parser.add_argument('--scan-points', type=int, default=91)
     parser.add_argument('--samples-per-link', type=int, default=1028)
     parser.add_argument('--beamwidth-deg', type=float, default=12)
@@ -25,6 +26,9 @@ def main():
     if args.backend == 'cuda' and not dr.has_backend(dr.JitBackend.CUDA):
         parser.error('CUDA unavailable; no CPU fallback')
     mi.set_variant('cuda_ad_mono_polarized' if args.backend == 'cuda' else 'llvm_ad_mono_polarized')
+    if args.pascal_compat:
+        from airsim_rf.p100_compat import enable_pascal_compat
+        enable_pascal_compat()
     import sionna.rt as rt
     import matplotlib
     matplotlib.use('Agg')
@@ -51,8 +55,8 @@ def main():
     series, records = {}, {}
     for name in ('ground', 'terrain'):
         scene, peak_gain = scan_scene(name, beamwidth_deg=args.beamwidth_deg)
-        scan = TerrainScan(scene, samples_per_link=args.samples_per_link)
-        low = TerrainScan(scene, bandwidth_hz=20e6, samples_per_link=args.samples_per_link) if name == 'terrain' else None
+        scan = TerrainScan(scene, samples_per_link=args.samples_per_link, renderer='direct-cuda' if args.backend == 'cuda' else 'numpy')
+        low = TerrainScan(scene, bandwidth_hz=20e6, samples_per_link=args.samples_per_link, renderer='direct-cuda' if args.backend == 'cuda' else 'numpy') if name == 'terrain' else None
         gate = (scan.length_m >= 60) & (scan.length_m <= 100)
         length = scan.length_m[gate]
         iq_rows, compressed_rows, low_iq_rows, low_compressed_rows, counts = [], [], [], [], []
@@ -177,6 +181,7 @@ def main():
     summary = {'scope': 'Focused one-TX/one-RX terrain demonstration, not the 100-TX throughput benchmark',
          'arguments': {k: str(v) if isinstance(v, Path) else v for k, v in vars(args).items()},
          'versions': {'sionna_rt': rt.__version__, 'mitsuba': mi.__version__, 'drjit': dr.__version__, 'backend': mi.variant()},
+         'execution': {'propagation': mi.variant(), 'iq_renderer': 'direct-cuda' if args.backend == 'cuda' else 'numpy', 'analysis_and_plotting': 'host SciPy/Matplotlib', 'pascal_compat': args.pascal_compat},
          'geometry': {'altitude_m': 40, 'baseline_m': 2, 'speed_m_s': 10, 'distance_m': distance.tolist(),
                       'epoch_s': epochs.tolist(), 'beamwidth_deg': args.beamwidth_deg, 'peak_gain_dbi': peak_gain},
          'waveform': {'bandwidth_hz': 200e6, 'control_bandwidth_hz': 20e6, 'sample_rate_hz': 500e6,

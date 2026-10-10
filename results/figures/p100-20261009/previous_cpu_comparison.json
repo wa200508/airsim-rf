@@ -1,0 +1,88 @@
+{
+  "terrain": {
+    "iq_flat": {
+      "shape": [
+        91,
+        1500
+      ],
+      "max_absolute_difference": 0.00011986951886469477,
+      "relative_l2_difference": 0.022072599072823922
+    },
+    "iq_dem": {
+      "shape": [
+        91,
+        1500
+      ],
+      "max_absolute_difference": 0.0001993112221166703,
+      "relative_l2_difference": 0.018965980390425408
+    },
+    "iq_dem_20mhz": {
+      "shape": [
+        91,
+        1500
+      ],
+      "max_absolute_difference": 0.00017899728758897083,
+      "relative_l2_difference": 0.018969563325570954
+    },
+    "compressed_flat": {
+      "shape": [
+        91,
+        66
+      ],
+      "max_absolute_difference": 0.00011084230480352108,
+      "relative_l2_difference": 0.022069544011122297
+    },
+    "compressed_dem": {
+      "shape": [
+        91,
+        66
+      ],
+      "max_absolute_difference": 0.00017153697453428166,
+      "relative_l2_difference": 0.018969474845906713
+    },
+    "compressed_dem_20mhz": {
+      "shape": [
+        91,
+        66
+      ],
+      "max_absolute_difference": 0.00017486930316482448,
+      "relative_l2_difference": 0.01898944646755755
+    },
+    "height_comparison": {
+      "dem_vs_iq_peak_correlation": 0.9850924658831642,
+      "rmse_m": 0.35071069099343694,
+      "median_absolute_error_m": 0.21541163843602318
+    }
+  },
+  "pluto": {
+    "input_iq_volts": {
+      "shape": [
+        12,
+        2,
+        4096
+      ],
+      "max_absolute_difference": 3.773541493251223e-08,
+      "relative_l2_difference": 6.049798309283731e-05
+    },
+    "adc_iq_volts": {
+      "shape": [
+        12,
+        2,
+        4096
+      ],
+      "max_absolute_difference": 3.4526747185736895e-06,
+      "relative_l2_difference": 0.0008916973142777424
+    },
+    "adc_codes": {
+      "shape": [
+        12,
+        2,
+        4096,
+        2
+      ],
+      "max_absolute_difference": 1.0,
+      "relative_l2_difference": 0.0008916974472796826,
+      "changed_components": 239
+    }
+  }
+}

@@ -120,14 +120,14 @@
   "records": [
     {
       "epoch_s": 0.0,
-      "channel_ms": 12.675550999119878,
-      "capture_ms": 378.3104870090028,
+      "channel_ms": 830.3571760000068,
+      "capture_ms": 892.0134180000332,
       "receivers": [
         {
           "receiver": "listener_a",
           "link_power_dbm": {
-            "beacon_a": -59.11440781983604,
-            "beacon_b": -96.95520760750726
+            "beacon_a": -59.11442057536896,
+            "beacon_b": -96.95534923013722
           },
           "thermal_noise_power_dbm": -103.97503294542278,
           "noise_bandwidth_hz": 1000035.5177307124,
@@ -143,8 +143,8 @@
         {
           "receiver": "listener_b",
           "link_power_dbm": {
-            "beacon_a": -66.93126987131186,
-            "beacon_b": -96.95165000555265
+            "beacon_a": -66.93119450873242,
+            "beacon_b": -96.95170756483691
           },
           "thermal_noise_power_dbm": -103.97509808975795,
           "noise_bandwidth_hz": 1000020.5172729488,
@@ -161,14 +161,14 @@
     },
     {
       "epoch_s": 0.5,
-      "channel_ms": 10.357178005506285,
-      "capture_ms": 378.7630459992215,
+      "channel_ms": 52.867577999904825,
+      "capture_ms": 93.2230299999901,
       "receivers": [
         {
           "receiver": "listener_a",
           "link_power_dbm": {
-            "beacon_a": -58.510525295070295,
-            "beacon_b": -96.48202234385046
+            "beacon_a": -58.51052662875866,
+            "beacon_b": -96.48212390414741
           },
           "thermal_noise_power_dbm": -103.97503294542278,
           "noise_bandwidth_hz": 1000035.5177307124,
@@ -184,8 +184,8 @@
         {
           "receiver": "listener_b",
           "link_power_dbm": {
-            "beacon_a": -66.55240295887668,
-            "beacon_b": -96.86259444032271
+            "beacon_a": -66.55235748222046,
+            "beacon_b": -96.86256031798011
           },
           "thermal_noise_power_dbm": -103.97509808975795,
           "noise_bandwidth_hz": 1000020.5172729488,
@@ -202,14 +202,14 @@
     },
     {
       "epoch_s": 1.0,
-      "channel_ms": 10.130613998626359,
-      "capture_ms": 383.1100319948746,
+      "channel_ms": 23.403891000043586,
+      "capture_ms": 68.12230799994268,
       "receivers": [
         {
           "receiver": "listener_a",
           "link_power_dbm": {
-            "beacon_a": -58.563497586619874,
-            "beacon_b": -96.52189946729918
+            "beacon_a": -58.563397871881826,
+            "beacon_b": -96.52191206718754
           },
           "thermal_noise_power_dbm": -103.97503294542278,
           "noise_bandwidth_hz": 1000035.5177307124,
@@ -225,8 +225,8 @@
         {
           "receiver": "listener_b",
           "link_power_dbm": {
-            "beacon_a": -65.05353193442191,
-            "beacon_b": -96.90498784978514
+            "beacon_a": -65.0535898262697,
+            "beacon_b": -96.90500901413385
           },
           "thermal_noise_power_dbm": -103.97509808975795,
           "noise_bandwidth_hz": 1000020.5172729488,
@@ -243,14 +243,14 @@
     },
     {
       "epoch_s": 1.5,
-      "channel_ms": 10.160258010728285,
-      "capture_ms": 380.5539390014019,
+      "channel_ms": 23.896862000015062,
+      "capture_ms": 64.3779119999408,
       "receivers": [
         {
           "receiver": "listener_a",
           "link_power_dbm": {
-            "beacon_a": -58.90663636907991,
-            "beacon_b": -96.36247621455239
+            "beacon_a": -58.906644780484925,
+            "beacon_b": -96.36260736822504
           },
           "thermal_noise_power_dbm": -103.97503294542278,
           "noise_bandwidth_hz": 1000035.5177307124,
@@ -266,8 +266,8 @@
         {
           "receiver": "listener_b",
           "link_power_dbm": {
-            "beacon_a": -65.7392590351927,
-            "beacon_b": -96.27416893042866
+            "beacon_a": -65.73907410042254,
+            "beacon_b": -96.2742303072018
           },
           "thermal_noise_power_dbm": -103.97509808975795,
           "noise_bandwidth_hz": 1000020.5172729488,
@@ -284,14 +284,14 @@
     },
     {
       "epoch_s": 2.0,
-      "channel_ms": 40.170045002014376,
-      "capture_ms": 414.0349710069131,
+      "channel_ms": 26.09855499997593,
+      "capture_ms": 55.551412999989225,
       "receivers": [
         {
           "receiver": "listener_a",
           "link_power_dbm": {
-            "beacon_a": -58.65543245804743,
-            "beacon_b": -96.11669255640875
+            "beacon_a": -58.65542462510254,
+            "beacon_b": -96.11665994089088
           },
           "thermal_noise_power_dbm": -103.97503294542278,
           "noise_bandwidth_hz": 1000035.5177307124,
@@ -307,8 +307,8 @@
         {
           "receiver": "listener_b",
           "link_power_dbm": {
-            "beacon_a": -66.36803259948961,
-            "beacon_b": -97.16208529320005
+            "beacon_a": -66.36795897248203,
+            "beacon_b": -97.16209837672564
           },
           "thermal_noise_power_dbm": -103.97509808975795,
           "noise_bandwidth_hz": 1000020.5172729488,
@@ -325,14 +325,14 @@
     },
     {
       "epoch_s": 2.5,
-      "channel_ms": 10.049272998003289,
-      "capture_ms": 388.8597900077002,
+      "channel_ms": 9.187862999965546,
+      "capture_ms": 37.761636000027465,
       "receivers": [
         {
           "receiver": "listener_a",
           "link_power_dbm": {
-            "beacon_a": -58.843932871786954,
-            "beacon_b": -95.65251562357675
+            "beacon_a": -58.84387089296716,
+            "beacon_b": -95.65257054373176
           },
           "thermal_noise_power_dbm": -103.97503294542278,
           "noise_bandwidth_hz": 1000035.5177307124,
@@ -348,8 +348,8 @@
         {
           "receiver": "listener_b",
           "link_power_dbm": {
-            "beacon_a": -66.91787714467472,
-            "beacon_b": -95.73094184113532
+            "beacon_a": -66.9179852868941,
+            "beacon_b": -95.73086099145732
           },
           "thermal_noise_power_dbm": -103.97509808975795,
           "noise_bandwidth_hz": 1000020.5172729488,
@@ -366,14 +366,14 @@
     },
     {
       "epoch_s": 3.0,
-      "channel_ms": 10.66952000837773,
-      "capture_ms": 392.36939999682363,
+      "channel_ms": 9.756513999946037,
+      "capture_ms": 21.96461599999111,
       "receivers": [
         {
           "receiver": "listener_a",
           "link_power_dbm": {
-            "beacon_a": -58.905744235374335,
-            "beacon_b": -95.59924650170252
+            "beacon_a": -58.90576025957926,
+            "beacon_b": -95.59926317212266
           },
           "thermal_noise_power_dbm": -103.97503294542278,
           "noise_bandwidth_hz": 1000035.5177307124,
@@ -389,8 +389,8 @@
         {
           "receiver": "listener_b",
           "link_power_dbm": {
-            "beacon_a": -67.25721545547728,
-            "beacon_b": -96.06260484296689
+            "beacon_a": -67.25724558627255,
+            "beacon_b": -96.06259402090834
           },
           "thermal_noise_power_dbm": -103.97509808975795,
           "noise_bandwidth_hz": 1000020.5172729488,
@@ -407,14 +407,14 @@
     },
     {
       "epoch_s": 3.5,
-      "channel_ms": 9.818552993237972,
-      "capture_ms": 386.7291640053736,
+      "channel_ms": 10.329884000043421,
+      "capture_ms": 32.132631999957084,
       "receivers": [
         {
           "receiver": "listener_a",
           "link_power_dbm": {
-            "beacon_a": -59.33103892583297,
-            "beacon_b": -95.5705618924076
+            "beacon_a": -59.331034006172835,
+            "beacon_b": -95.57059351053213
           },
           "thermal_noise_power_dbm": -103.97503294542278,
           "noise_bandwidth_hz": 1000035.5177307124,
@@ -430,8 +430,8 @@
         {
           "receiver": "listener_b",
           "link_power_dbm": {
-            "beacon_a": -67.4013469988531,
-            "beacon_b": -95.50915375706865
+            "beacon_a": -67.40136638394016,
+            "beacon_b": -95.50910945534605
           },
           "thermal_noise_power_dbm": -103.97509808975795,
           "noise_bandwidth_hz": 1000020.5172729488,
@@ -448,14 +448,14 @@
     },
     {
       "epoch_s": 4.0,
-      "channel_ms": 10.952077005640604,
-      "capture_ms": 390.61908700386994,
+      "channel_ms": 9.601596000038626,
+      "capture_ms": 46.406619000094906,
       "receivers": [
         {
           "receiver": "listener_a",
           "link_power_dbm": {
-            "beacon_a": -59.57396027719136,
-            "beacon_b": -95.77254791627206
+            "beacon_a": -59.57392766454585,
+            "beacon_b": -95.77254605564924
           },
           "thermal_noise_power_dbm": -103.97503294542278,
           "noise_bandwidth_hz": 1000035.5177307124,
@@ -471,8 +471,8 @@
         {
           "receiver": "listener_b",
           "link_power_dbm": {
-            "beacon_a": -66.05802959182685,
-            "beacon_b": -95.42165925535699
+            "beacon_a": -66.05798032019396,
+            "beacon_b": -95.42165769705088
           },
           "thermal_noise_power_dbm": -103.97509808975795,
           "noise_bandwidth_hz": 1000020.5172729488,
@@ -489,14 +489,14 @@
     },
     {
       "epoch_s": 4.5,
-      "channel_ms": 9.914944996125996,
-      "capture_ms": 391.09253499191254,
+      "channel_ms": 10.270794999996724,
+      "capture_ms": 24.124337999978707,
       "receivers": [
         {
           "receiver": "listener_a",
           "link_power_dbm": {
-            "beacon_a": -60.41588272915786,
-            "beacon_b": -95.5311333122385
+            "beacon_a": -60.41594244412326,
+            "beacon_b": -95.53112844851935
           },
           "thermal_noise_power_dbm": -103.97503294542278,
           "noise_bandwidth_hz": 1000035.5177307124,
@@ -512,8 +512,8 @@
         {
           "receiver": "listener_b",
           "link_power_dbm": {
-            "beacon_a": -65.6580653481334,
-            "beacon_b": -95.04487907697344
+            "beacon_a": -65.6581425849725,
+            "beacon_b": -95.04486418229426
           },
           "thermal_noise_power_dbm": -103.97509808975795,
           "noise_bandwidth_hz": 1000020.5172729488,
@@ -530,14 +530,14 @@
     },
     {
       "epoch_s": 5.0,
-      "channel_ms": 10.15167500008829,
-      "capture_ms": 390.9460819995729,
+      "channel_ms": 9.292770999991262,
+      "capture_ms": 21.304596999925707,
       "receivers": [
         {
           "receiver": "listener_a",
           "link_power_dbm": {
-            "beacon_a": -60.05828960501069,
-            "beacon_b": -95.36421754238377
+            "beacon_a": -60.058372413007284,
+            "beacon_b": -95.36425434204773
           },
           "thermal_noise_power_dbm": -103.97503294542278,
           "noise_bandwidth_hz": 1000035.5177307124,
@@ -553,8 +553,8 @@
         {
           "receiver": "listener_b",
           "link_power_dbm": {
-            "beacon_a": -64.69149201211039,
-            "beacon_b": -95.380939110661
+            "beacon_a": -64.6915155181207,
+            "beacon_b": -95.38088814600405
           },
           "thermal_noise_power_dbm": -103.97509808975795,
           "noise_bandwidth_hz": 1000020.5172729488,
@@ -571,14 +571,14 @@
     },
     {
       "epoch_s": 5.5,
-      "channel_ms": 10.255569010041654,
-      "capture_ms": 392.5116820028052,
+      "channel_ms": 8.912538000004133,
+      "capture_ms": 31.411073999947803,
       "receivers": [
         {
           "receiver": "listener_a",
           "link_power_dbm": {
-            "beacon_a": -60.263407800849194,
-            "beacon_b": -95.54263972561715
+            "beacon_a": -60.26345147766773,
+            "beacon_b": -95.54267584946109
           },
           "thermal_noise_power_dbm": -103.97503294542278,
           "noise_bandwidth_hz": 1000035.5177307124,
@@ -594,8 +594,8 @@
         {
           "receiver": "listener_b",
           "link_power_dbm": {
-            "beacon_a": -63.49738395749955,
-            "beacon_b": -95.08335855149524
+            "beacon_a": -63.49741856795948,
+            "beacon_b": -95.08334326641776
           },
           "thermal_noise_power_dbm": -103.97509808975795,
           "noise_bandwidth_hz": 1000020.5172729488,
@@ -648,10 +648,16 @@
     "source": "https://www.nooelec.com/store/adalm-pluto.html",
     "excludes": "tax, shipping, antennas, cables, computers, power and drones"
   },
+  "execution": {
+    "propagation": "cuda_ad_mono_polarized",
+    "iq_renderer": "direct-cuda",
+    "analysis_and_plotting": "host SciPy/Matplotlib",
+    "pascal_compat": true
+  },
   "versions": {
     "sionna": "2.2.0",
-    "mitsuba": "3.9.1",
-    "drjit": "1.5.0",
-    "backend": "llvm_ad_mono_polarized"
+    "mitsuba": "3.8.0",
+    "drjit": "1.3.1",
+    "backend": "cuda_ad_mono_polarized"
   }
 }

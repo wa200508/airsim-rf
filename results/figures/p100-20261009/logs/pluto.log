@@ -1,0 +1,13 @@
+epoch 0.000s: listener_a A=-59.1 B=-97.0 dBm; listener_b A=-66.9 B=-97.0 dBm
+epoch 0.500s: listener_a A=-58.5 B=-96.5 dBm; listener_b A=-66.6 B=-96.9 dBm
+epoch 1.000s: listener_a A=-58.6 B=-96.5 dBm; listener_b A=-65.1 B=-96.9 dBm
+epoch 1.500s: listener_a A=-58.9 B=-96.4 dBm; listener_b A=-65.7 B=-96.3 dBm
+epoch 2.000s: listener_a A=-58.7 B=-96.1 dBm; listener_b A=-66.4 B=-97.2 dBm
+epoch 2.500s: listener_a A=-58.8 B=-95.7 dBm; listener_b A=-66.9 B=-95.7 dBm
+epoch 3.000s: listener_a A=-58.9 B=-95.6 dBm; listener_b A=-67.3 B=-96.1 dBm
+epoch 3.500s: listener_a A=-59.3 B=-95.6 dBm; listener_b A=-67.4 B=-95.5 dBm
+epoch 4.000s: listener_a A=-59.6 B=-95.8 dBm; listener_b A=-66.1 B=-95.4 dBm
+epoch 4.500s: listener_a A=-60.4 B=-95.5 dBm; listener_b A=-65.7 B=-95.0 dBm
+epoch 5.000s: listener_a A=-60.1 B=-95.4 dBm; listener_b A=-64.7 B=-95.4 dBm
+epoch 5.500s: listener_a A=-60.3 B=-95.5 dBm; listener_b A=-63.5 B=-95.1 dBm
+Saved recordings, plots and assumptions to recordings/p100-figures-20261009/pluto

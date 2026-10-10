@@ -1,0 +1,9 @@
+ground: epoch 1/32, 96589 paths, 1320.8 ms channel
+ground: epoch 9/32, 96594 paths, 20.4 ms channel
+ground: epoch 17/32, 96609 paths, 47.5 ms channel
+ground: epoch 25/32, 96604 paths, 48.5 ms channel
+terrain: epoch 1/32, 96700 paths, 311.9 ms channel
+terrain: epoch 9/32, 96716 paths, 21.5 ms channel
+terrain: epoch 17/32, 96723 paths, 22.9 ms channel
+terrain: epoch 25/32, 96722 paths, 25.0 ms channel
+Saved documentation figures and underlying waterfall values in recordings/p100-figures-20261009/waterfalls

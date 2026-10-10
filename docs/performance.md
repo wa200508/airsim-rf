@@ -56,6 +56,13 @@ preserve the evidence. GPU event spans are diagnostic and can include dispatch
 gaps; synchronizing download calls can absorb earlier queued GPU work. Neither
 is an independent end-to-end throughput measurement.
 
+The P100 compatibility adapter is deliberately version-specific: it replaces an
+unsupported path-counter operation and patches Sionna path-storage allocation.
+Exact version/layout guards fail on unsupported changes. This remains an
+isolated dependency-compatibility constraint, not a portable optimization;
+upgrading dependencies requires fresh qualification. The live command records
+those versions and whether the adapter was enabled in its manifest.
+
 Remaining costs include host source copies, serial receiver dispatch and private
 input transfers. GPU-resident ingestion or overlapping independent work may help,
 but each would need representative workloads and explicit traffic accounting.

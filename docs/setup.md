@@ -707,3 +707,27 @@ nested complete-pipeline JSON and fills the corresponding tables in
 `docs/archive/runtime.md` automatically. It preserves the actual hardware labels
 and keeps instrumented GPU events separate from unprofiled latency.
 
+
+## Regenerate documentation figures on the P100
+
+The checked-in figure data were regenerated on 2026-10-09 with CUDA/OptiX
+propagation and the direct CUDA I/Q renderer. Use the isolated P100-compatible
+image described above, then run from the checkout:
+
+```bash
+bash scripts/regenerate_p100_figures.sh
+```
+
+The script uses `airsim-rf:p100-modern-gpu` by default; override
+`RF_P100_GPU_IMAGE` when using an equivalent qualified image. It preserves all
+published sample/path budgets, stages recordings under `recordings/`, and copies
+PNG/SVG, JSON and NPZ assets into `docs/figures`. Plotting, matched filtering,
+spectral analysis and receiver filter/noise/ADC remain host work. CUDA is required;
+there is no fallback. [Generation provenance and checksums](../results/figures/p100-20261009/manifest.json).
+
+These are sampled snapshot demonstrations, not continuous flight or throughput
+measurements. The 32 waterfall epochs span 3.1 s but generate only 384 µs of I/Q
+per scene. The 91-point terrain scan spans 18.03 s with 273 µs of I/Q per scene/
+bandwidth configuration. The twelve SDR captures span 5.5 s and contain 24.576 ms
+of signal per receiver, with gaps between captures. Figure-generation channel
+milliseconds exclude rendering/plotting and do not measure a complete pipeline.

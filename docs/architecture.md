@@ -356,6 +356,10 @@ about detection range require calibration and a specified detector.
 ADI likewise distinguishes a radio's capabilities from the range/rate of a
 complete waveform, antenna and environment-dependent link [6](#ref6).
 
+These SDR figures and raw recordings were regenerated with P100 propagation
+and direct CUDA sample rendering. Receiver processing and plots use the host.
+[Reproduction and capture durations](setup.md#regenerate-documentation-figures-on-the-p100).
+
 ![Four radio mounts, received link powers and recorded I/Q spectra](figures/pluto_esm_overview.png)
 
 ### Why start with PlutoSDR
