@@ -1,10 +1,12 @@
 {
-  "scope": "Postprocessing recorded P100 data; no new propagation, detection trial ensemble or live geolocation",
+  "scope": "Postprocessing recorded RF data; no new propagation, detection trial ensemble or live geolocation",
+  "generator_sha256": "3e951eb4f366e7246ee15267df821e13eb74a75a4a4fc4f6bd60b2e4586ccaa9",
   "source_sha256": {
     "terrain_scan_iq.npz": "8ee4f434b5c91aa10c2266d2316b32c10e447399f7333ca2a715c10e61856d8f",
     "terrain_signature_data.json": "4ab0405b0eb81887d54b7a5bbc6234ec6960ef3649ea420314fdfedc97b19a82",
     "pluto_esm_iq.npz": "6e9211b0e1de9efe167367cc653334300cabd39abd17a8091c93acadc5edbd8b",
-    "pluto_esm_report.json": "d465a6364621e65376c172e52b914235aefc2a4a0ff214081843b87bf60fed52"
+    "pluto_esm_report.json": "d465a6364621e65376c172e52b914235aefc2a4a0ff214081843b87bf60fed52",
+    "sensing_visibility.json": "1e2e3d916efec126ae98de456881c0f0af9443b18ecc19538f52f6697d42f2fb"
   },
   "figures": [
     "sensing_radar_delay_profiles",
@@ -12,6 +14,7 @@
     "sensing_esm_spectrum",
     "sensing_esm_waterfall",
     "sensing_esm_line_prominence",
+    "sensing_esm_link_power",
     "sensing_passive_cuts",
     "sensing_passive_geometry"
   ],
@@ -60,6 +63,7 @@
   "caf_fft_interpolated_spacing_hz": 122.0703125,
   "caf_lag_spacing_seconds": 5e-07,
   "caf_raw_frequency_center_hz": 13725.0,
+  "undefined_metric_policy": "NaN with explicit status; all-zero captures are not 0 dB prominence",
   "oracle_clock_correction": "Recorded actual sample rates and receiver LO/phase truth; 32-tap Lanczos resampling. Not an estimated calibration.",
   "welch": {
     "segment_samples": 1024,
@@ -69,6 +73,96 @@
     "bin_spacing_hz": 1953.125,
     "units": "dBm/Hz via |voltage|^2/50 ohm"
   },
+  "line_prominence_status": [
+    {
+      "Analog": [
+        "valid",
+        "valid",
+        "valid",
+        "valid",
+        "valid",
+        "valid",
+        "valid",
+        "valid",
+        "valid",
+        "valid",
+        "valid",
+        "valid"
+      ],
+      "12-bit": [
+        "valid",
+        "valid",
+        "valid",
+        "valid",
+        "valid",
+        "valid",
+        "valid",
+        "valid",
+        "valid",
+        "valid",
+        "valid",
+        "valid"
+      ],
+      "8-bit control": [
+        "all_samples_zero",
+        "all_samples_zero",
+        "all_samples_zero",
+        "all_samples_zero",
+        "all_samples_zero",
+        "all_samples_zero",
+        "all_samples_zero",
+        "all_samples_zero",
+        "all_samples_zero",
+        "all_samples_zero",
+        "all_samples_zero",
+        "all_samples_zero"
+      ]
+    },
+    {
+      "Analog": [
+        "valid",
+        "valid",
+        "valid",
+        "valid",
+        "valid",
+        "valid",
+        "valid",
+        "valid",
+        "valid",
+        "valid",
+        "valid",
+        "valid"
+      ],
+      "12-bit": [
+        "valid",
+        "valid",
+        "valid",
+        "valid",
+        "valid",
+        "valid",
+        "valid",
+        "valid",
+        "valid",
+        "valid",
+        "valid",
+        "valid"
+      ],
+      "8-bit control": [
+        "all_samples_zero",
+        "all_samples_zero",
+        "all_samples_zero",
+        "all_samples_zero",
+        "all_samples_zero",
+        "all_samples_zero",
+        "all_samples_zero",
+        "all_samples_zero",
+        "all_samples_zero",
+        "all_samples_zero",
+        "valid",
+        "valid"
+      ]
+    }
+  ],
   "line_prominence": "Maximum PSD within 5 kHz of known weak tone / median PSD 15\u201360 kHz away. Not total-band SNR, blind detection or Pd.",
   "geometry": {
     "truth_tdoa_ns": 187.42749026250303,

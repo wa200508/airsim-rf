@@ -20,6 +20,7 @@ def main():
     parser.add_argument('--snapshot-stride', type=int, default=20)
     parser.add_argument('--threads', type=int, default=2)
     parser.add_argument('--output-dir', type=Path, default=Path('docs/figures'))
+    parser.add_argument('--legacy-diagnostics', action='store_true', help='Write explicitly named historical channel diagnostics; not the sensing gallery')
     args = parser.parse_args()
     if min(args.epochs, args.tx, args.snapshot_stride, args.threads) < 1 or args.samples_per_link < 2 or args.pulse_hz <= 0:
         parser.error('Positive counts/rate required; >=2 samples/link')
@@ -121,6 +122,10 @@ def main():
                            'records': records, 'planes': planes, 'geometry_prepare_ms': prepare_ms}
 
     def save(fig, name):
+        if not args.legacy_diagnostics:
+            plt.close(fig)
+            return
+        name = name.replace('waterfalls', 'snapshot_channel_diagnostics')
         fig.savefig(args.output_dir/f'{name}.svg', metadata={'Date': None}, dpi=140, bbox_inches='tight')
         fig.savefig(args.output_dir/f'{name}.png', dpi=140, bbox_inches='tight')
         plt.close(fig)
@@ -141,7 +146,7 @@ def main():
             if key == 'delay':
                 axes[row, column].set_xlim(0, 400)
         fig.colorbar(image, ax=axes[:, column], label='Sum of path powers per bin (dB, dimensionless)')
-    fig.suptitle(f'{args.tx} TX → 1 RX: incoherent channel-power waterfalls\n'
+    fig.suptitle(f'{args.tx} TX → 1 RX: incoherent channel-power snapshot histograms\n'
                  f'{args.samples_per_link} attempts/link; all direct, specular and diffuse paths; 24.125 GHz')
     save(fig, 'channel_waterfalls')
 

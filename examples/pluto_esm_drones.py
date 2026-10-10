@@ -27,6 +27,7 @@ def main():
     parser.add_argument('--no-noise', action='store_true')
     parser.add_argument('--backend', choices=('cpu', 'cuda'), default='cpu')
     parser.add_argument('--pascal-compat', action='store_true', help='Explicit pinned P100 CUDA compatibility adapter')
+    parser.add_argument('--legacy-diagnostics', action='store_true', help='Write the historical overview; current sensing figures are generated separately')
     args = parser.parse_args()
     if min(args.epochs, args.snapshot_stride) < 1 or args.samples < 1024 or args.samples_per_link < 2:
         parser.error('Positive epochs/stride, >=1024 samples and >=2 attempts/link required')
@@ -209,20 +210,8 @@ def main():
         axes[1, ri].legend(fontsize=8)
     fig.suptitle('PlutoSDR-class passive sensing: two simultaneous beacons, two moving receivers\n'
                  '915 MHz; 2 MS/s; 1 MHz receive filter; chosen NF / ADC calibration; no shared radio clock')
-    fig.savefig(args.output_dir/'pluto_esm_overview.png', dpi=160)
-    plt.close(fig)
-    fig, axes = plt.subplots(1, 2, figsize=(12, 5), layout='constrained', sharey=True)
-    psds = np.asarray(psds)
-    for ri, ax in enumerate(axes):
-        levels = 10*np.log10(np.maximum(psds[:, ri]/1e-3, 1e-30))
-        image = ax.imshow(levels, extent=[-profile.sample_rate_hz/2e3, profile.sample_rate_hz/2e3,
-                         epochs_s[-1]+args.snapshot_stride/200., epochs_s[0]],
-                          aspect='auto', cmap='magma', vmin=-150, vmax=-90)
-        ax.set(xlabel='Baseband frequency (kHz)', ylabel='Selected simulation epoch (s)',
-               xlim=(-500, 500), title=names[ri+2])
-    fig.colorbar(image, ax=axes, label='Recorded 12-bit I/Q PSD (dBm/Hz)')
-    fig.suptitle('Received spectrum waterfall; clock offsets differ between listeners')
-    fig.savefig(args.output_dir/'pluto_esm_waterfalls.png', dpi=160)
+    if args.legacy_diagnostics:
+        fig.savefig(args.output_dir/'pluto_esm_overview.png', dpi=160)
     plt.close(fig)
     print(f'Saved recordings, plots and assumptions to {args.output_dir}', flush=True)
 

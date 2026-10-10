@@ -58,7 +58,7 @@ def main():
                 midpoint = (end[tx, :2]+end[rx, :2])/2
                 ax.scatter(*midpoint, marker='x', color='#a00000', s=100, lw=2, zorder=5)
                 blocked.append(f'{"AB"[tx]} → Receiver {rx-1}')
-        ax.plot([], [], 'x', color='#a00000', label='Direct link blocked by terrain')
+        ax.plot([], [], 'x', color='#a00000', label='Cross: blocked-link status (not hit location)')
         visibility_note = ('Terrain blocks '+', '.join(blocked)+'.\n' if blocked
                            else 'All recorded direct links are clear.\n')
         visibility_note += 'Reflected / diffuse reception remains possible.\n'
@@ -114,7 +114,7 @@ def main():
     dem = demo_terrain()
     xx, yy = np.meshgrid(dem.x_m, dem.y_m)
     fig = plt.figure(figsize=(10, 7), layout='constrained')
-    ax = fig.add_subplot(projection='3d', computed_zorder=False)
+    ax = fig.add_subplot(projection='3d')
     ax.plot_surface(xx, yy, dem.heights_m, color='#aab98c', edgecolor='#71815c',
                     linewidth=.25, alpha=.65, shade=True, zorder=1)
     nominal = radio.get('trajectory', {}).get('nominal_positions_at_start_m', start)
@@ -134,8 +134,41 @@ def main():
     ax.view_init(elev=29, azim=-115)
     ax.set_title('0–30 m terrain: scripted radios climb to retain ≥5 m clearance\n'
                  'Dots: start; stars / triangles: final capture; vertical scale enlarged\n'
-                 'Routes drawn over the surface for visibility', fontsize=12)
+                 'Perspective view; quantitative clearance shown below', fontsize=12)
     save(fig, 'sensing_esm_scene_3d')
+
+    # Quantitative route clearance, sampled at the actual acquisition epochs.
+    fig,axes=plt.subplots(2,2,figsize=(9,5.5),layout='constrained',sharex=True,sharey=True)
+    min_clearances=[]
+    positions=np.asarray([r['positions_m'] for r in radio['records']])
+    for i,ax in enumerate(axes.flat):
+        ground=dem.elevation_at(positions[:,i,0],positions[:,i,1])
+        clearance=positions[:,i,2]-ground
+        min_clearances.append(float(clearance.min()))
+        ax.plot(epochs,positions[:,i,2],color=colors[i],label='Radio altitude')
+        ax.plot(epochs,ground,color='#586d3d',ls='--',label='Terrain beneath radio')
+        ax.fill_between(epochs,ground,positions[:,i,2],alpha=.1,color=colors[i])
+        ax.set(title=f'{["Beacon A","Beacon B","Receiver 1","Receiver 2"][i]}: min sampled clearance {clearance.min():.2f} m',
+               xlabel='Capture epoch (s)',ylabel='RF height (m)')
+        ax.grid(alpha=.2);ax.legend(fontsize=8)
+    fig.suptitle('Scripted terrain-following poses: capture samples, not flight dynamics',fontsize=12)
+    save(fig,'sensing_esm_clearance')
+
+    # Actual vertical terrain section beneath the final blocked direct link.
+    blocked_link=next((l for l in visibility['records'][-1]['links'] if l['terrain_blocks_direct']),None) if visibility_path.exists() else None
+    if blocked_link:
+        ti=radio['devices'].index(blocked_link['tx']);ri=radio['devices'].index(blocked_link['rx'])
+        u=np.linspace(0,1,1001);line=end[ti]+u[:,None]*(end[ri]-end[ti])
+        ground=dem.elevation_at(line[:,0],line[:,1]);d=u*np.linalg.norm(end[ri,:2]-end[ti,:2])
+        fig,ax=plt.subplots(figsize=(8,3.4),layout='constrained')
+        ax.fill_between(d,0,ground,color='#d7ddc9');ax.plot(d,ground,color='#586d3d',label='Terrain section')
+        ax.plot(d,line[:,2],color='#c45d00',label='Straight TX–RX segment')
+        ax.fill_between(d,line[:,2],ground,where=ground>line[:,2],color='#a00000',alpha=.5,label='Terrain above link')
+        ax.scatter([d[0],d[-1]],[line[0,2],line[-1,2]],color='k',s=30)
+        ax.set(xlabel='Horizontal distance from Beacon A (m)',ylabel='RF height (m)',
+               title=f'Beacon A → Receiver 1 at {epoch:g} s: direct path blocked')
+        ax.grid(alpha=.2);ax.legend(fontsize=8)
+        save(fig,'sensing_esm_blockage')
 
     distance = radar['distance_m']
     height = np.asarray(terrain['dem_height_reference_m'])
@@ -181,12 +214,13 @@ def main():
     save(fig, 'sensing_radar_scenario')
     sources = ('pluto_esm_report.json', 'terrain_signature_data.json', 'terrain_scan_iq.npz')
     manifest = {
-        'scope': 'Scenario illustrations from recorded P100 geometry; no new propagation or I/Q',
+        'scope': 'Scenario illustrations from recorded RF geometry; no new propagation or I/Q',
         'source_sha256': {name: sha256((args.data_dir/name).read_bytes()).hexdigest() for name in sources},
         'terrain_formula_sha256': sha256((Path(__file__).resolve().parents[1]/'src/airsim_rf/terrain.py').read_bytes()).hexdigest(),
-        'figures': ['sensing_esm_scenario', 'sensing_esm_scene_3d', 'sensing_radar_scenario'],
+        'figures': ['sensing_esm_scenario', 'sensing_esm_scene_3d', 'sensing_esm_clearance', 'sensing_esm_blockage', 'sensing_radar_scenario'],
         'esm': {'start_positions_m': start.tolist(), 'final_positions_m': end.tolist(),
-                'final_epoch_s': epoch, 'nominal_carrier_hz': radio['profile']['carrier_hz'],
+                'final_epoch_s': epoch, 'minimum_sampled_clearances_m': min_clearances,
+                'blockage_section_samples':1001, 'nominal_carrier_hz': radio['profile']['carrier_hz'],
                 'link_lines': 'Illustrative device associations, not traced rays'},
         'radar': {'altitude_m': altitude, 'baseline_m': float(np.linalg.norm(rx[0]-tx[0])),
                   'projected_baseline_m': float(2*projected_half_baseline),

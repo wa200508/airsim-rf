@@ -51,6 +51,10 @@ jobs:
         run: docker run --rm --network none airsim-rf:test python /opt/airsim-rf/scripts/run_gpu_profile.py --cpu-only --quick --tx 2 --samples 1024 --samples-per-link 128 --no-example --no-nsys --no-telemetry --output-root /work/profiling --run-id ci-smoke
       - name: Smoke test sensing-data analysis offline
         run: docker run --rm --network none airsim-rf:test python /opt/airsim-rf/benchmarks/generate_sensing_figures.py --data-dir /opt/airsim-rf/docs/figures --output-dir /work/sensing
+      - name: Smoke test physical scenario figures offline
+        run: docker run --rm --network none airsim-rf:test python /opt/airsim-rf/benchmarks/generate_sensing_scenarios.py --data-dir /opt/airsim-rf/docs/figures --output-dir /work/scenarios
+      - name: Validate published sensing products
+        run: docker run --rm --network none -w /opt/airsim-rf airsim-rf:test python scripts/check_sensing_products.py
       - name: Registry tags
         id: meta
         if: github.event_name != 'pull_request'

@@ -1,14 +1,16 @@
 {
-  "scope": "Scenario illustrations from recorded P100 geometry; no new propagation or I/Q",
+  "scope": "Scenario illustrations from recorded RF geometry; no new propagation or I/Q",
   "source_sha256": {
     "pluto_esm_report.json": "d465a6364621e65376c172e52b914235aefc2a4a0ff214081843b87bf60fed52",
     "terrain_signature_data.json": "4ab0405b0eb81887d54b7a5bbc6234ec6960ef3649ea420314fdfedc97b19a82",
     "terrain_scan_iq.npz": "8ee4f434b5c91aa10c2266d2316b32c10e447399f7333ca2a715c10e61856d8f"
   },
-  "terrain_formula_sha256": "f3cbe3dfa2ee20ef0c04a8fbe9fb9b6cd94a0d2726e732521b7dae672b6fa558",
+  "terrain_formula_sha256": "90bc0fb15b9811b62515213b223c5600639ecadb9f0fd101e4eecf35d079e5ad",
   "figures": [
     "sensing_esm_scenario",
     "sensing_esm_scene_3d",
+    "sensing_esm_clearance",
+    "sensing_esm_blockage",
     "sensing_radar_scenario"
   ],
   "esm": {
@@ -57,6 +59,13 @@
       ]
     ],
     "final_epoch_s": 5.5,
+    "minimum_sampled_clearances_m": [
+      5.0,
+      5.0,
+      4.999999999999998,
+      7.465457547620842
+    ],
+    "blockage_section_samples": 1001,
     "nominal_carrier_hz": 915000000.0,
     "link_lines": "Illustrative device associations, not traced rays"
   },

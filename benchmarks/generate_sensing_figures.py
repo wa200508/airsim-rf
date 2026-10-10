@@ -1,4 +1,4 @@
-"""Publication-style RF observables from recorded P100 datasets, without retracing."""
+"""Publication-style RF observables from recorded RF datasets, without retracing."""
 import argparse
 from hashlib import sha256
 import json
@@ -64,7 +64,7 @@ def main():
 
     truth=np.asarray(terrain['dem_height_reference_m']);estimate=np.asarray(terrain['iq_peak_height_dem_m'])
     error=estimate-truth;ecdf=np.arange(1,len(error)+1)/len(error)
-    fig,axes=plt.subplots(1,2,figsize=(7.2,2.8),layout='constrained')
+    fig,axes=plt.subplots(1,3,figsize=(10.6,3),layout='constrained')
     axes[0].scatter(truth,estimate,s=10,alpha=.7,label='91 scan positions')
     axes[0].plot([-1,31],[-1,31],'k--',lw=.8,label='Identity')
     axes[0].set(xlabel='DEM midpoint height (m)',ylabel='I/Q peak equivalent height (m)')
@@ -72,6 +72,14 @@ def main():
     axes[1].step(np.sort(np.abs(error)),ecdf,where='post')
     axes[1].set(xlabel='Absolute height error (m)',ylabel='Empirical cumulative probability',ylim=(0,1.02))
     panel(axes[1],f'(b) RMSE = {np.sqrt(np.mean(error**2)):.3f} m')
+    worst=int(np.argmax(np.abs(error)))
+    axes[2].plot(distance,error,lw=1,label='Signed peak-height error')
+    axes[2].axhline(0,color='k',ls=':',lw=.7)
+    axes[2].plot(distance[worst],error[worst],'ro',ms=4)
+    axes[2].annotate(f'{error[worst]:+.2f} m at {distance[worst]:.1f} m',
+        (distance[worst],error[worst]),xytext=(.05,.95),textcoords='axes fraction',va='top',fontsize=8)
+    axes[2].set(xlabel='Route distance (m)',ylabel='Estimate − midpoint reference (m)')
+    panel(axes[2],'(c) Error along the route')
     data.update(height_error_m=error,abs_error_sorted_m=np.sort(np.abs(error)),error_ecdf=ecdf)
     save(fig,'sensing_radar_error')
 
@@ -86,14 +94,18 @@ def main():
     fig,axes=plt.subplots(1,2,figsize=(7.2,2.8),layout='constrained',sharey=True)
     for ri,ax in enumerate(axes):
         for key,psd in spectra.items():
-            ax.plot(freq/1e3,10*np.log10(np.maximum(psd[-1,ri],1e-30)/1e-3),label=key,lw=.9)
+            if np.any(psd[-1,ri]):
+                ax.plot(freq/1e3,10*np.log10(np.maximum(psd[-1,ri],1e-30)/1e-3),label=key,lw=.9)
+            else:
+                ax.text(.03,.10,'8-bit control: all samples zero; no PSD trace',
+                    transform=ax.transAxes,fontsize=7,bbox={'facecolor':'white','alpha':.9,'edgecolor':'none'})
             data['psd_'+key.replace(' ','_')]=psd
         for index,tone in enumerate(expected[ri]):
             ax.axvline(tone/1e3,color='k',ls=':',lw=.7)
             ax.text(tone/1e3,-91,' A' if index==0 else ' B',fontsize=8)
         ax.set(xlabel='Baseband frequency (kHz)',xlim=(-400,400),ylim=(-180,-88))
         panel(ax,f'({"ab"[ri]}) Receiver {ri+1}, final capture')
-    axes[0].set_ylabel('Input-referred PSD (dBm/Hz)');fig.legend(*axes[0].get_legend_handles_labels(),loc='outside upper center',ncol=3)
+    axes[0].set_ylabel('Input-referred PSD (dBm/Hz)');fig.legend(*axes[1].get_legend_handles_labels(),loc='outside upper center',ncol=3)
     save(fig,'sensing_esm_spectrum')
 
     fig,axes=plt.subplots(1,2,figsize=(7.2,3),layout='constrained')
@@ -117,24 +129,64 @@ def main():
             'bin_spacing_hz':actual_rate/512,'hann_enbw_hz':1.5*actual_rate/512,
             'window':'Hann','units':'dBm/Hz','time_order':'newest at top',
             'source':'final contiguous 12-bit ADC I/Q capture; no interpolation between snapshots'})
+        for index,tone in enumerate(expected[ri]):
+            ax.text(tone/1e3,wf_time[-1]*1000,'A' if index==0 else 'B',ha='center',va='bottom',fontsize=8)
+    fig.suptitle(f"915 MHz nominal carrier; capture epoch {radio['epochs_s'][-1]:g} s; ≈2.048 ms contiguous I/Q",fontsize=9)
     axes[1].set_ylabel('')
     fig.colorbar(im,ax=axes,label='Input-referred PSD (dBm/Hz)')
     save(fig,'sensing_esm_waterfall')
 
 
-    fig,axes=plt.subplots(1,2,figsize=(7.2,2.8),layout='constrained',sharey=True)
+    fig,gridaxes=plt.subplots(2,2,figsize=(8,4.7),layout='constrained',sharex='col',sharey='row',
+        gridspec_kw={'height_ratios':[3,1]})
+    axes=gridaxes[0]; statuses=[]
     for ri,ax in enumerate(axes):
         target=expected[ri,1]
         near=np.abs(freq-target)<5000
         collar=(np.abs(freq-target)>15000)&(np.abs(freq-target)<60000)
+        receiver_status={}
         for key,psd in spectra.items():
-            prominence=10*np.log10(psd[:,ri,near].max(axis=-1)/np.median(psd[:,ri,collar],axis=-1))
+            peak=psd[:,ri,near].max(axis=-1);floor=np.median(psd[:,ri,collar],axis=-1)
+            valid=(peak>0)&(floor>0)
+            prominence=np.full_like(peak,np.nan)
+            prominence[valid]=10*np.log10(peak[valid]/floor[valid])
             data[f'weak_line_prominence_{ri}_'+key.replace(' ','_')]=prominence
+            receiver_status[key]=['valid' if v else 'all_samples_zero' if not np.any(signals[key][i,ri])
+                                  else 'undefined_peak_or_floor' for i,v in enumerate(valid)]
             ax.plot(radio['epochs_s'],prominence,'o-',ms=3,lw=.8,label=key)
-        ax.set(xlabel='Snapshot epoch (s)')
+        statuses.append(receiver_status)
         panel(ax,f'({"ab"[ri]}) Receiver {ri+1}')
+        fractions=np.count_nonzero(sdr['adc8_control_iq_volts'][:,ri],axis=-1)/sdr['adc8_control_iq_volts'].shape[-1]
+        data[f'adc8_nonzero_fraction_{ri}']=fractions
+        statusax=gridaxes[1,ri]
+        statusax.step(radio['epochs_s'],fractions,where='mid',color='C2')
+        statusax.plot(radio['epochs_s'],fractions,'o',color='C2',ms=3)
+        statusax.set(xlabel='Snapshot epoch (s)',ylabel='8-bit nonzero\ncode fraction',ylim=(-.1,1.1),yticks=[0,1])
+        statusax.grid(alpha=.2)
+        ax.text(.03,.05,'Zero-code captures: prominence undefined',transform=ax.transAxes,fontsize=7)
     axes[0].set_ylabel('Peak / local PSD floor (dB)');axes[1].legend()
     save(fig,'sensing_esm_line_prominence')
+
+    visibility=json.loads((args.data_dir/'sensing_visibility.json').read_text())
+    if visibility['report_sha256'] != sha256((args.data_dir/'pluto_esm_report.json').read_bytes()).hexdigest():
+        raise ValueError('Visibility/report source hash mismatch')
+    fig,axes=plt.subplots(1,2,figsize=(8,3.2),layout='constrained',sharey=True)
+    for ri,ax in enumerate(axes):
+        for ti,txname in enumerate(radio['devices'][:2]):
+            rxname=radio['devices'][ri+2]
+            powers=np.array([r['receivers'][ri]['link_power_dbm'][txname] for r in radio['records']])
+            blocked=np.array([next(l['terrain_blocks_direct'] for l in r['links'] if l['tx']==txname and l['rx']==rxname)
+                              for r in visibility['records']])
+            if not np.allclose([r['epoch_s'] for r in visibility['records']],radio['epochs_s']):
+                raise ValueError('Visibility epochs differ from radio captures')
+            ax.plot(radio['epochs_s'],powers,color=f'C{ti}',label=f'Beacon {"AB"[ti]}')
+            ax.scatter(np.array(radio['epochs_s'])[blocked],powers[blocked],marker='x',color=f'C{ti}',s=35)
+            data[f'link_power_dbm_{ri}_{ti}']=powers
+            data[f'direct_blocked_{ri}_{ti}']=blocked
+        ax.plot([],[],'kx',label='Direct link blocked')
+        ax.set(xlabel='Snapshot epoch (s)');panel(ax,f'Receiver {ri+1}');ax.legend(fontsize=7)
+    axes[0].set_ylabel('Per-link received power before noise (dBm)')
+    save(fig,'sensing_esm_link_power')
 
     pair=sdr['adc_iq_volts'][-1]
     rates=[r['actual_sample_rate_hz'] for r in radio['records'][-1]['receivers']]
@@ -146,16 +198,19 @@ def main():
     corrected_band=np.abs(freqcaf)<2500
     data.update(caf_lag_seconds=lags,caf_raw_frequency_hz=freqcaf[raw_band],caf_raw_power=raw[:,raw_band],caf_corrected_frequency_hz=freqcaf[corrected_band],caf_corrected_power=aligned[:,corrected_band])
 
-    fig,axes=plt.subplots(1,2,figsize=(7.2,2.8),layout='constrained')
+    fig,axes=plt.subplots(1,2,figsize=(8.6,3.2),layout='constrained')
     for power,center,label in ((raw,bias,'Recorded clocks'),(aligned,0,'Oracle corrected')):
         band=np.abs(freqcaf-center)<2500
         slab=power[:,band]
         peak_lag,peak_bin=np.unravel_index(np.argmax(slab),slab.shape)
-        axes[0].plot(lags*1e6,power_db(slab[:,peak_bin]),label=label)
-        axes[1].plot((freqcaf[band]-center)/1e3,power_db(slab[peak_lag]),label=label)
+        axes[0].plot(lags*1e6,power_db(slab[:,peak_bin]),ls='--' if center==0 else '-',label=label)
+        axes[1].plot(freqcaf[band]/1e3,power_db(slab[peak_lag]),ls='--' if center==0 else '-',label=label)
+    axes[0].set_xticks([-10,-5,0,5,10])
     axes[0].set(xlabel='Relative lag (µs)',ylabel='CAF power / cut peak (dB)',ylim=(-5,.1))
-    axes[1].set(xlabel='Frequency about respective center (kHz)',ylabel='CAF power / cut peak (dB)',ylim=(-50,1))
-    panel(axes[0],'(a) Delay cuts at peak frequency');panel(axes[1],'(b) Frequency cuts at peak lag');axes[1].legend()
+    axes[1].set(xlabel='Absolute interreceiver frequency offset (kHz)',ylabel='CAF power / cut peak (dB)',ylim=(-50,1))
+    panel(axes[0],'(a) Delay cuts at peak frequency');panel(axes[1],'(b) Known-clock frequency correction');axes[1].legend()
+    axes[1].set_xlim(-3,bias/1e3+3)
+    axes[1].text(.03,.12,f'Raw center: {bias/1e3:.3f} kHz; oracle: 0 kHz',transform=axes[1].transAxes,fontsize=7)
     save(fig,'sensing_passive_cuts')
 
     # Recorded geometry: conditional loci only, never an I/Q-derived location fix.
@@ -178,19 +233,21 @@ def main():
     ax.scatter(positions[2:,0],positions[2:,1],marker='^',s=35,color='k',label='Receivers')
     for i,p in enumerate(positions[2:]):ax.annotate(f' R{i+1}',p[:2])
     ax.set(xlabel='RF x (m)',ylabel='RF y (m)',aspect='equal',xlim=(-100,100),ylim=(-100,100))
-    panel(ax,'Conditional geometry at epoch 0');ax.legend(loc='upper center',bbox_to_anchor=(.5,-.20))
+    panel(ax,'Epoch 0 truth loci: multiple crossings possible');ax.legend(loc='upper center',bbox_to_anchor=(.5,-.20))
     data.update(geometry_grid_x_m=grid,geometry_grid_y_m=grid,geometry_tdoa_seconds=delay,geometry_fdoa_hz=doppler)
     save(fig,'sensing_passive_geometry')
 
     np.savez_compressed(args.output_dir/'sensing_products.npz',**data)
-    manifest={'scope':'Postprocessing recorded P100 data; no new propagation, detection trial ensemble or live geolocation',
-        'source_sha256':{n:sha256((args.data_dir/n).read_bytes()).hexdigest() for n in ('terrain_scan_iq.npz','terrain_signature_data.json','pluto_esm_iq.npz','pluto_esm_report.json')},
+    manifest={'scope':'Postprocessing recorded RF data; no new propagation, detection trial ensemble or live geolocation',
+        'generator_sha256':sha256(Path(__file__).read_bytes()).hexdigest(),
+        'source_sha256':{n:sha256((args.data_dir/n).read_bytes()).hexdigest() for n in ('terrain_scan_iq.npz','terrain_signature_data.json','pluto_esm_iq.npz','pluto_esm_report.json','sensing_visibility.json')},
         'figures':figures,'waterfalls':waterfall_metadata,'color_map_policy':'Frequency-time PSD waterfall only; no range-Doppler map without a qualified coherent pulse train','caf_backend':args.backend,'caf_definition':'sum Hann[n] s2[n] conj(s1[n-lag]) exp(-j2pi f n/fs), energy-normalized power',
         'caf_capture_seconds':len(pair[0])/fs,'caf_common_support_seconds':(len(pair[0])-40)/fs,'caf_native_frequency_scale_hz':fs/(len(pair[0])-40),
         'caf_fft_interpolated_spacing_hz':float(freqcaf[1]-freqcaf[0]),'caf_lag_spacing_seconds':1/fs,'caf_raw_frequency_center_hz':bias,
+        'undefined_metric_policy':'NaN with explicit status; all-zero captures are not 0 dB prominence',
         'oracle_clock_correction':'Recorded actual sample rates and receiver LO/phase truth; 32-tap Lanczos resampling. Not an estimated calibration.',
         'welch':{'segment_samples':1024,'overlap_samples':512,'fft_samples':1024,'window':'Hann','bin_spacing_hz':fs/1024,'units':'dBm/Hz via |voltage|^2/50 ohm'},
-        'line_prominence':'Maximum PSD within 5 kHz of known weak tone / median PSD 15–60 kHz away. Not total-band SNR, blind detection or Pd.',
+        'line_prominence_status':statuses, 'line_prominence':'Maximum PSD within 5 kHz of known weak tone / median PSD 15–60 kHz away. Not total-band SNR, blind detection or Pd.',
         'geometry':{'truth_tdoa_ns':float(truth_delay*1e9),'truth_fdoa_hz':float(truth_fd),'assumptions':'Known emitter altitude and velocity, receiver pose/velocity and calibrated clocks; loci from recorded geometry, not measured estimates.'},
         'unsupported_claims':['Coherent pulse-train range-Doppler from gapped snapshots','ROC/Pd-Pfa without labeled H0/H1 trials','Modulation classification from CW beacons','Geolocation error ellipse/CRLB without identified observations and noise covariance']}
     (args.output_dir/'sensing_products.json').write_text(json.dumps(manifest,indent=2)+'\n')

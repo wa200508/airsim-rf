@@ -70,8 +70,8 @@ across consecutive pulses in slow time. PRF, pulse count and coherent observatio
 length must be specified. See [MathWorks' range–Doppler processing](https://www.mathworks.com/help/phased/ug/range-doppler-response.html).
 
 The current full-color figure is a genuine **frequency–time waterfall**.
-The prior range-versus-position and interreceiver CAF color surfaces have been
-removed from the displayed/generated set. Their scalar data and one-dimensional
+The current gallery and its generators exclude the prior range-versus-position
+and interreceiver CAF color surfaces. Archived assets are historical diagnostics. Their scalar data and one-dimensional
 profiles remain useful diagnostics; they are not labeled as spectrum waterfalls
 or conventional target range–Doppler maps.
 
@@ -159,7 +159,14 @@ ambiguity diagnostics, not target range–Doppler responses.
 **Figure 7.** Loci from recorded epoch-zero poses/velocities for beacon A:
 TDOA 187.43 ns and FDOA 10.57 Hz. Emitter height and velocity are held at truth,
 and clocks are assumed calibrated. The emitter marker is truth, not an estimated
-fix. No localization accuracy, error ellipse or CRLB is demonstrated here.
+fix. The loci have multiple crossings; two observations with these conditional
+assumptions do not establish a unique location. This geometry uses epoch 0, whereas
+the spectrum, waterfall and CAF use epoch 5.5 s. No localization accuracy, error ellipse or CRLB is demonstrated here.
+
+The frequency cuts share an absolute offset axis: recorded clocks shift the
+response by approximately +13.725 kHz, and the known-clock correction centers it
+near zero. Each cut is independently peak-normalized; overlapping delay cuts
+compare ambiguity shape, not absolute recovered power.
 
 ## Literature and reproduction
 
@@ -189,3 +196,40 @@ recorded link power is −99.78 dBm, versus −65.89 dBm at Receiver 2. Beacon B
 powers are −95.00 and −95.50 dBm respectively. These are per-link powers before
 receiver noise, not integrated powers read from the PSD plot. The records and
 [mesh visibility report](figures/sensing_visibility.json) identify each capture.
+
+
+![Received link powers and direct-path blockage over the capture epochs](figures/sensing_esm_link_power.png)
+
+Crosses mark a terrain-blocked direct link; power includes other retained paths.
+The lines connect separate capture summaries and do not represent a continuously
+recorded waveform between epochs.
+
+![Radio altitude and terrain height at each capture](figures/sensing_esm_clearance.png)
+
+The clearance plots show recorded acquisition poses, with at least 5 m separation
+from the triangle terrain. They are a geometric trajectory prescription.
+
+![Terrain section beneath the final blocked link](figures/sensing_esm_blockage.png)
+
+The section samples 1,001 points along the actual final Beacon A–Receiver 1
+segment. Red shading identifies terrain above that line. Actual mesh visibility
+is checked separately; the plan-view cross is a status marker, not an intersection.
+
+### Undefined 8-bit control measurements
+
+The control uses the same input gain/full-scale setting with eight quantizer bits;
+it is not a calibrated model of a commercial 8-bit receiver. At this gain the
+control produces only zero codes for Receiver 1's twelve captures and Receiver 2's
+first ten. Their PSD peak/local-floor ratio is therefore 0/0 and **undefined**.
+The lower panels show the nonzero-code fraction, and the spectrum labels absent
+zero-code traces. Undefined prominence values retain NaN plus a reason in the
+numerical manifest; they are not assigned 0 dB or an invented noise floor.
+
+### Height-error interpretation
+
+The route RMSE is 0.913 m, mean signed error +0.107 m, and maximum absolute error
+4.065 m at route distance 134.2 m. The signed-error panel exposes that outlier.
+These describe one correlated route against a midpoint-height reference, not
+independent trials or field accuracy. Site-normalized delay profiles compare
+bandwidth within a site; their amplitudes cannot compare absolute return power
+across sites.
