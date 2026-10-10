@@ -191,12 +191,21 @@ limits recorded explicitly.
 
 ## Power, clearance and terrain blockage
 
-At the final capture (5.5 s), Beacon A → Receiver 1 is terrain-blocked. Its
-recorded link power is −99.78 dBm, versus −65.89 dBm at Receiver 2. Beacon B's
-powers are −95.00 and −95.50 dBm respectively. These are per-link powers before
-receiver noise, not integrated powers read from the PSD plot. The records and
-[mesh visibility report](figures/sensing_visibility.json) identify each capture.
+<!-- BEGIN CAPTURE SUMMARY -->
 
+Final capture epoch: **5.5 s**. Link powers precede receiver noise.
+
+| Receiver | Beacon A (dBm) | Beacon B (dBm) | Noise (dBm) | All-zero 8-bit captures |
+| --- | ---: | ---: | ---: | ---: |
+| Receiver 1 | -99.78 | -95.00 | -103.98 | 12/12 |
+| Receiver 2 | -65.89 | -95.50 | -103.98 | 10/12 |
+
+<!-- END CAPTURE SUMMARY -->
+
+The mesh visibility record identifies terrain-blocked direct links. A blocked
+beacon can still contribute reflected/diffuse power; this table is not PSD-bin
+power. Values are derived from the canonical reports by
+`scripts/update_sensing_summary.py`.
 
 ![Received link powers and direct-path blockage over the capture epochs](figures/sensing_esm_link_power.png)
 
@@ -227,8 +236,13 @@ numerical manifest; they are not assigned 0 dB or an invented noise floor.
 
 ### Height-error interpretation
 
-The route RMSE is 0.913 m, mean signed error +0.107 m, and maximum absolute error
-4.065 m at route distance 134.2 m. The signed-error panel exposes that outlier.
+<!-- BEGIN RADAR QUALITY -->
+
+Route RMSE **0.913 m**; mean signed error **+0.107 m**; maximum absolute error **4.065 m** at route distance **134.2 m**.
+
+<!-- END RADAR QUALITY -->
+
+The signed-error panel exposes the worst route sample.
 These describe one correlated route against a midpoint-height reference, not
 independent trials or field accuracy. Site-normalized delay profiles compare
 bandwidth within a site; their amplitudes cannot compare absolute return power

@@ -7,7 +7,7 @@ server is a separate component; installing the Python client does not launch it.
 | Workflow | Environment | Status |
 | --- | --- | --- |
 | Offline examples/tests | Standard locked Sionna RT stack, LLVM | CPU CI and offline tests |
-| GPU live capture | Standard stack plus CuPy and CUDA libraries | Requires compatible GPU and real simulator qualification |
+| GPU live capture | Standard stack plus CuPy and CUDA libraries | Real static Runtime smoke tested on the explicit P100 stack; other devices need qualification |
 | Pascal/P100 capture | Sionna RT 2.2.0, Mitsuba 3.8.0, Dr.Jit 1.3.1, CuPy 13.6, CUDA 12.2 libraries | Explicit compatibility adapter; measured GPU pipeline |
 | Sensing gallery postprocessing | Scientific Python with recorded source files | Backend-neutral observables; CUDA CAF is optional |
 

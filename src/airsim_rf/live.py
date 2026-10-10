@@ -35,7 +35,7 @@ def validate_inputs(config_path):
         raise ValueError('At least one transmitter and receiver required')
     return {'configuration_sha256':sha256(path.read_bytes()).hexdigest(),
         'rf_scene':scene_provenance(local(config['rf_scene'])),
-        'sim_config_sha256':{p.name:sha256(p.read_bytes()).hexdigest() for p in config_dir.glob('*.json*')},
+        'sim_config_sha256':{str(p.relative_to(config_dir)):sha256(p.read_bytes()).hexdigest() for p in config_dir.rglob('*.json*')},
         'waveforms':sources}
 
 

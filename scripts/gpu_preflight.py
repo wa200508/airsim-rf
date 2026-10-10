@@ -24,7 +24,7 @@ def main():
         from airsim_rf.scattering import FirstOrderScatteringPathSolver
         from airsim_rf.profiling import summarize_kernel_history
         root = Path(__file__).resolve().parents[1]
-        scene = rt.load_scene(str(root/'benchmarks/scenes/terrain.xml'))
+        scene = rt.load_scene(str(root/'benchmarks/scenes/terrain_benchmark_v1.xml'))
         scene.frequency = 915e6
         scene.tx_array = rt.PlanarArray(num_rows=1, num_cols=1, pattern='hw_dipole', polarization='V')
         scene.rx_array = rt.PlanarArray(num_rows=1, num_cols=1, pattern='hw_dipole', polarization='V')
@@ -44,7 +44,8 @@ def main():
             raise RuntimeError('Smoke solve returned nonfinite values or no retained paths')
         if args.backend == 'cuda' and (not history['cuda_operation_count'] or not history['optix_kernel_count']):
             raise RuntimeError('Terrain solve did not record both CUDA and OptiX execution')
-        result.update(status='ok', versions={'sionna_rt': rt.__version__, 'mitsuba': mi.__version__,
+        from airsim_rf.terrain import scene_provenance
+        result.update(scene_provenance=scene_provenance(root/'benchmarks/scenes/terrain_benchmark_v1.xml'), status='ok', versions={'sionna_rt': rt.__version__, 'mitsuba': mi.__version__,
             'drjit': dr.__version__, 'backend': mi.variant()}, specular_planes=planes,
             retained_paths=int((tau>=0).sum()), profile=history)
     except Exception as exc:

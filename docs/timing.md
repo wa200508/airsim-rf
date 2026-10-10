@@ -30,3 +30,20 @@ Claim an optimization gain only from a matched control: same scene epochs, sampl
 Correctness qualification is separate from speed. Distinguish final-window numerical reference checks, per-update continuity/hash/range checks, solver/integration tests and untested live deployment. Telemetry is sampled whole-device utilization/memory and can miss short activity; 0% sampled utilization does not establish zero GPU execution.
 
 Regenerate the single measurement index with `python3 scripts/update_timing_context.py`; verify it with `--check`. The runtime and stage table generators have their own `--check` commands. Normalization reads recorded samples and never reruns or changes numerical measurements.
+
+## Clock glossary
+
+| Term | Meaning |
+| --- | --- |
+| Simulation epoch | Position on the simulator's nanosecond clock; not a duration |
+| Acquisition duration | Contiguous signal time represented by the samples in one recording window |
+| Requested update interval | Desired simulator advance; actual elapsed time may include tick overshoot |
+| Service wall time | Elapsed host time within the named operation's timer boundary |
+| Cold/first-use call | Includes initialization/compilation occurring inside that timer |
+| Warmed call | After the harness's declared warmup; recurring compilation remains timed |
+| Wall seconds per signal second | Summed service wall time divided by summed window durations per concurrent receiver |
+
+The [real Runtime smoke](../results/reviews/project-quality-20261009/live-server/REPORT.md)
+measures live RPC/advance and recording writes with first-use included. Its short,
+cold, stationary 0.120 s acquisition cannot be compared directly to warmed fleet
+updates or extrapolated into a sustained flight qualification.

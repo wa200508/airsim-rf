@@ -23,7 +23,7 @@ class AirSimSDRBridge:
         poses = {}
         for name, robot in self.robots.items():
             data = robot.get_ground_truth_kinematics()
-            poses[name] = mount_kinematics(data['kinematics'], self.mounts[name])
+            poses[name] = mount_kinematics(data, self.mounts[name])
         if not self.world.is_paused() or self.world.get_sim_time() != epoch:
             raise RuntimeError("AirSim advanced while collecting the network snapshot")
         for name, (position, velocity, orientation) in poses.items():

@@ -1,0 +1,100 @@
+02:33:28:487 [INFO] Connecting to simulation server at 127.0.0.1
+02:33:28:489 [INFO] Connection opened.
+02:33:28:490 [INFO] Loading scene config: scene_rf.jsonc
+02:33:29:032 [INFO] Getting the list of available topic info from the sim server...
+02:33:29:042 [INFO] Successfully received topic info list.
+02:33:29:043 [INFO] World object updated for the loaded scene '/Sim/SceneRFTwoRadios'. Note: Any previous Drone object instances may no longer be valid.
+02:33:29:043 [INFO] Trajectory 'null_trajectory' imported successfully.
+02:33:29:044 [INFO] Initalizing Drone 'Drone1'...
+02:33:29:044 [INFO] -------------------------------------------------
+02:33:29:044 [INFO] The following topics can be subscribed to for robot 'Drone1':
+02:33:29:044 [INFO]     robot_info["actual_pose"]
+02:33:29:044 [INFO]     robot_info["collision_info"]
+02:33:29:044 [INFO]     robot_info["rotor_info"]
+02:33:29:044 [INFO] -------------------------------------------------
+02:33:29:044 [INFO] Drone 'Drone1' initialized for World scene '/Sim/SceneRFTwoRadios'
+02:33:29:048 [INFO] Initalizing Drone 'Drone2'...
+02:33:29:048 [INFO] -------------------------------------------------
+02:33:29:048 [INFO] The following topics can be subscribed to for robot 'Drone2':
+02:33:29:048 [INFO]     robot_info["actual_pose"]
+02:33:29:049 [INFO]     robot_info["collision_info"]
+02:33:29:049 [INFO]     robot_info["rotor_info"]
+02:33:29:049 [INFO] -------------------------------------------------
+02:33:29:049 [INFO] Drone 'Drone2' initialized for World scene '/Sim/SceneRFTwoRadios'
+{
+  "status": "complete",
+  "scope": "live_airsim_rf_recording",
+  "sample_rate_hz": 2000000,
+  "timing_includes": "physics advance/RPC, snapshot, RF capture, data and metadata writes; no fsync",
+  "provenance": {
+    "inputs": {
+      "configuration_sha256": "89e8b860ff621861024861dcf18fd5fa140fb402df049dd97aea989a8d786ef8",
+      "rf_scene": {
+        "scene_id": "rf_ground",
+        "xml_sha256": "c77427ec3f34d66e3f8985ef839083b0874d047ef16de3a8d84446493a5871fa",
+        "meshes_sha256": {
+          "ground.ply": "a79cddd969602a05527ea77dfe89bac4e0f0c204bac69b880d7cfd3391267247"
+        }
+      },
+      "sim_config_sha256": {
+        "scene_rf.jsonc": "56ccebac99b4fb1bd193e53d200e219fb503f8a19934e2b905ef620b4a9a23da",
+        "robot_rf.jsonc": "e6e2c24a1586c712999b9e9cc49c9091349d99ebc088d7e13fa6281ec03083e3"
+      },
+      "waveforms": {
+        "tx0": {
+          "sha256": "6d3179167e82dacf4094c9959a91b423f0fa3479bc3c8a4992ed6ee2458120a8",
+          "samples": 500000,
+          "signal_seconds": 0.25,
+          "mean_sample_power": 1.0
+        }
+      }
+    },
+    "configuration": {
+      "address": "127.0.0.1",
+      "scene": "scene_rf.jsonc",
+      "sim_config": "sim_config",
+      "rf_scene": "rf_ground.xml",
+      "receiver_profile": {
+        "carrier_hz": 915000000,
+        "sample_rate_hz": 2000000,
+        "rf_bandwidth_hz": 1000000
+      },
+      "samples_per_link": 1028,
+      "radios": {
+        "tx0": {
+          "robot": "Drone1",
+          "waveform_npy": "tx0.npy",
+          "transmit_power_w": 0.0001,
+          "baseband_frequency_bounds_hz": [
+            150000,
+            150000
+          ],
+          "mount_body_m": [
+            0,
+            0,
+            0
+          ]
+        },
+        "rx0": {
+          "robot": "Drone2",
+          "mount_body_m": [
+            0,
+            0,
+            0
+          ]
+        }
+      }
+    },
+    "propagation_backend": "cuda_ad_mono_polarized",
+    "renderer": "basis-cuda",
+    "pascal_compat": true,
+    "sionna_rt": "2.2.0",
+    "mitsuba": "3.8.0",
+    "drjit": "1.3.1",
+    "cupy": "13.6.0"
+  },
+  "signal_seconds_per_receiver": 0.12,
+  "wall_seconds_per_signal_second": 48.91472442501102
+}
+02:33:34:926 [INFO] Disconnecting from simulation server...
+02:33:34:952 [INFO] Disconnected.

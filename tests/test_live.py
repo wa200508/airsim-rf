@@ -111,3 +111,28 @@ def test_generated_first_run_inputs_are_finite_and_paths_resolve(tmp_path):
     np.save(path.parent/'tx0.npy',np.array([complex(float('nan'),0)]))
     with pytest.raises(ValueError,match='finite'):
         validate_inputs(path)
+
+
+def test_real_projectairsim_rpc_pose_twist_is_not_wrapped():
+    world=TickWorld();robots,receiver,calls=fixture(world)
+    for robot in robots.values():
+        wrapped=robot.get_ground_truth_kinematics()
+        robot.get_ground_truth_kinematics=lambda value=wrapped['kinematics']: value
+    bridge=AirSimSDRBridge(world,robots,receiver)
+    bridge.capture_elapsed(advance_ns=10_000_000)
+    assert calls[0][1]==24000
+    np.testing.assert_equal(receiver.scene.transmitters['tx'].position,[2,-3,10])
+
+
+def test_recording_inspector_rejects_timestamp_discontinuity(tmp_path):
+    import importlib.util
+    from pathlib import Path
+    spec=importlib.util.spec_from_file_location('inspect_live',Path(__file__).resolve().parents[1]/'scripts/inspect_live_recording.py')
+    tool=importlib.util.module_from_spec(spec);spec.loader.exec_module(tool)
+    world=TickWorld();robots,receiver,_=fixture(world)
+    directory=tmp_path/'run';record(world,robots,receiver,directory,updates=2,advance_ns=10_000_000,max_samples=100000)
+    assert tool.inspect(directory)['updates']==2
+    path=directory/'manifest.json';manifest=json.loads(path.read_text());manifest['rows'][1]['sim_time_ns']+=500
+    path.write_text(json.dumps(manifest))
+    with pytest.raises(ValueError,match='contiguous'):
+        tool.inspect(directory)

@@ -1,0 +1,127 @@
+{
+  "status": "complete",
+  "scope": "live_airsim_rf_recording",
+  "sample_rate_hz": 2000000,
+  "timing_includes": "physics advance/RPC, snapshot, RF capture, data and metadata writes; no fsync",
+  "rows": [
+    {
+      "sim_time_ns": 0,
+      "samples_per_receiver": 24000,
+      "wall_ms": 5549.318377999953
+    },
+    {
+      "sim_time_ns": 12000000,
+      "samples_per_receiver": 24000,
+      "wall_ms": 62.35835300049075
+    },
+    {
+      "sim_time_ns": 24000000,
+      "samples_per_receiver": 24000,
+      "wall_ms": 29.998488000273937
+    },
+    {
+      "sim_time_ns": 36000000,
+      "samples_per_receiver": 24000,
+      "wall_ms": 33.992745999967156
+    },
+    {
+      "sim_time_ns": 48000000,
+      "samples_per_receiver": 24000,
+      "wall_ms": 34.33121600028244
+    },
+    {
+      "sim_time_ns": 60000000,
+      "samples_per_receiver": 24000,
+      "wall_ms": 31.32826999990357
+    },
+    {
+      "sim_time_ns": 72000000,
+      "samples_per_receiver": 24000,
+      "wall_ms": 32.20808300011413
+    },
+    {
+      "sim_time_ns": 84000000,
+      "samples_per_receiver": 24000,
+      "wall_ms": 31.124895000175457
+    },
+    {
+      "sim_time_ns": 96000000,
+      "samples_per_receiver": 24000,
+      "wall_ms": 32.518879999770434
+    },
+    {
+      "sim_time_ns": 108000000,
+      "samples_per_receiver": 24000,
+      "wall_ms": 32.587622000392
+    }
+  ],
+  "provenance": {
+    "inputs": {
+      "configuration_sha256": "89e8b860ff621861024861dcf18fd5fa140fb402df049dd97aea989a8d786ef8",
+      "rf_scene": {
+        "scene_id": "rf_ground",
+        "xml_sha256": "c77427ec3f34d66e3f8985ef839083b0874d047ef16de3a8d84446493a5871fa",
+        "meshes_sha256": {
+          "ground.ply": "a79cddd969602a05527ea77dfe89bac4e0f0c204bac69b880d7cfd3391267247"
+        }
+      },
+      "sim_config_sha256": {
+        "scene_rf.jsonc": "56ccebac99b4fb1bd193e53d200e219fb503f8a19934e2b905ef620b4a9a23da",
+        "robot_rf.jsonc": "e6e2c24a1586c712999b9e9cc49c9091349d99ebc088d7e13fa6281ec03083e3"
+      },
+      "waveforms": {
+        "tx0": {
+          "sha256": "6d3179167e82dacf4094c9959a91b423f0fa3479bc3c8a4992ed6ee2458120a8",
+          "samples": 500000,
+          "signal_seconds": 0.25,
+          "mean_sample_power": 1.0
+        }
+      }
+    },
+    "configuration": {
+      "address": "127.0.0.1",
+      "scene": "scene_rf.jsonc",
+      "sim_config": "sim_config",
+      "rf_scene": "rf_ground.xml",
+      "receiver_profile": {
+        "carrier_hz": 915000000,
+        "sample_rate_hz": 2000000,
+        "rf_bandwidth_hz": 1000000
+      },
+      "samples_per_link": 1028,
+      "radios": {
+        "tx0": {
+          "robot": "Drone1",
+          "waveform_npy": "tx0.npy",
+          "transmit_power_w": 0.0001,
+          "baseband_frequency_bounds_hz": [
+            150000,
+            150000
+          ],
+          "mount_body_m": [
+            0,
+            0,
+            0
+          ]
+        },
+        "rx0": {
+          "robot": "Drone2",
+          "mount_body_m": [
+            0,
+            0,
+            0
+          ]
+        }
+      }
+    },
+    "propagation_backend": "cuda_ad_mono_polarized",
+    "renderer": "basis-cuda",
+    "pascal_compat": true,
+    "sionna_rt": "2.2.0",
+    "mitsuba": "3.8.0",
+    "drjit": "1.3.1",
+    "cupy": "13.6.0"
+  },
+  "signal_seconds_per_receiver": 0.12,
+  "wall_seconds_per_signal_second": 48.91472442501102
+}

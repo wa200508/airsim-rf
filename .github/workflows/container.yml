@@ -55,6 +55,8 @@ jobs:
         run: docker run --rm --network none airsim-rf:test python /opt/airsim-rf/benchmarks/generate_sensing_scenarios.py --data-dir /opt/airsim-rf/docs/figures --output-dir /work/scenarios
       - name: Validate published sensing products
         run: docker run --rm --network none -w /opt/airsim-rf airsim-rf:test python scripts/check_sensing_products.py
+      - name: Check scientific summary scalars
+        run: docker run --rm --network none -w /opt/airsim-rf airsim-rf:test python scripts/update_sensing_summary.py --check
       - name: Registry tags
         id: meta
         if: github.event_name != 'pull_request'

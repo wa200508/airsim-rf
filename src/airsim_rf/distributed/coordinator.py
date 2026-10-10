@@ -9,7 +9,7 @@ import warnings
 import numpy as np
 from scipy.spatial.transform import Rotation, Slerp
 
-from airsim_rf.bridge import NED_TO_RF, mount_kinematics, vector3
+from airsim_rf.bridge import NED_TO_RF, mount_kinematics, normalize_kinematics, vector3
 from airsim_rf.radar import PointTarget
 from .client import CaptureBarrier, WorkerClient
 
@@ -155,7 +155,7 @@ class AirSimSource:
         if not self.world.is_paused():
             raise RuntimeError("AirSim must be paused for distributed truth collection")
         epoch = self.world.get_sim_time()
-        states = {name: robot.get_ground_truth_kinematics()["kinematics"] for name, robot in self.robots.items()}
+        states = {name: normalize_kinematics(robot.get_ground_truth_kinematics()) for name, robot in self.robots.items()}
         poses = {r["receiver_id"]: mount_kinematics(states[r["robot"]], r.get("mount_body_m", [0, 0, 0]))
                  for r in self.receivers}
         targets = []

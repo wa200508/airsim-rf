@@ -14,8 +14,19 @@ def vector3(value):
     return np.array([value[key] for key in ("x", "y", "z")], dtype=float)
 
 
+def normalize_kinematics(message):
+    """Pinned RPC shape plus compatibility with earlier wrapped adapter messages."""
+    if not isinstance(message, dict):
+        raise ValueError('ProjectAirSim kinematics must contain pose and twist')
+    state = message.get('kinematics', message)
+    if not isinstance(state, dict) or 'pose' not in state or 'twist' not in state:
+        raise ValueError('ProjectAirSim kinematics must contain pose and twist')
+    return state
+
+
 def mount_kinematics(kinematics, offset_body_m=(0, 0, 0)):
     """Convert AirSim pose/twist including omega cross lever-arm velocity."""
+    kinematics = normalize_kinematics(kinematics)
     pose, twist = kinematics["pose"], kinematics["twist"]
     q = pose["orientation"]
     body_to_ned = Rotation.from_quat([q[k] for k in ("x", "y", "z", "w")]).as_matrix()
@@ -37,7 +48,7 @@ def snapshot_mount(world, robot, offset_body_m):
         raise RuntimeError("Pause AirSim before capture so pose and timestamp agree")
     time_ns = world.get_sim_time()
     message = robot.get_ground_truth_kinematics()
-    mount = mount_kinematics(message["kinematics"], offset_body_m)
+    mount = mount_kinematics(message, offset_body_m)
     if not world.is_paused() or world.get_sim_time() != time_ns:
         raise RuntimeError("Simulation advanced during RF snapshot")
     return time_ns, mount

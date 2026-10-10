@@ -1,0 +1,43 @@
+02:32:23:719 [INFO] Connecting to simulation server at 127.0.0.1
+02:32:23:723 [INFO] Connection opened.
+02:32:23:723 [INFO] Loading scene config: scene_rf.jsonc
+02:32:24:266 [INFO] Getting the list of available topic info from the sim server...
+02:32:24:277 [INFO] Successfully received topic info list.
+02:32:24:277 [INFO] World object updated for the loaded scene '/Sim/SceneRFTwoRadios'. Note: Any previous Drone object instances may no longer be valid.
+02:32:24:277 [INFO] Trajectory 'null_trajectory' imported successfully.
+02:32:24:278 [INFO] Initalizing Drone 'Drone1'...
+02:32:24:278 [INFO] -------------------------------------------------
+02:32:24:278 [INFO] The following topics can be subscribed to for robot 'Drone1':
+02:32:24:278 [INFO]     robot_info["actual_pose"]
+02:32:24:278 [INFO]     robot_info["collision_info"]
+02:32:24:278 [INFO]     robot_info["rotor_info"]
+02:32:24:278 [INFO] -------------------------------------------------
+02:32:24:278 [INFO] Drone 'Drone1' initialized for World scene '/Sim/SceneRFTwoRadios'
+02:32:24:281 [INFO] Initalizing Drone 'Drone2'...
+02:32:24:282 [INFO] -------------------------------------------------
+02:32:24:282 [INFO] The following topics can be subscribed to for robot 'Drone2':
+02:32:24:282 [INFO]     robot_info["actual_pose"]
+02:32:24:282 [INFO]     robot_info["collision_info"]
+02:32:24:282 [INFO]     robot_info["rotor_info"]
+02:32:24:282 [INFO] -------------------------------------------------
+02:32:24:282 [INFO] Drone 'Drone2' initialized for World scene '/Sim/SceneRFTwoRadios'
+02:32:24:289 [INFO] Disconnecting from simulation server...
+02:32:24:369 [INFO] Disconnected.
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/work/repo/src/airsim_rf/live.py", line 176, in <module>
+    main()
+  File "/work/repo/src/airsim_rf/live.py", line 164, in main
+    result = record(world, robots, receiver, args.output, updates=args.updates,
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/work/repo/src/airsim_rf/live.py", line 70, in record
+    captures = bridge.capture_elapsed(advance_ns=advance_ns, max_samples=max_samples)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/work/repo/src/airsim_rf/sdr_bridge.py", line 55, in capture_elapsed
+    start = self.snapshot()
+            ^^^^^^^^^^^^^^^
+  File "/work/repo/src/airsim_rf/sdr_bridge.py", line 26, in snapshot
+    poses[name] = mount_kinematics(data['kinematics'], self.mounts[name])
+                                   ~~~~^^^^^^^^^^^^^^
+KeyError: 'kinematics'

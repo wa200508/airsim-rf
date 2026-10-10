@@ -145,7 +145,8 @@ def test_protocol_rejects_bad_epochs_and_identity():
             CaptureRequest.from_dict(bad)
 
 
-def test_airsim_truth_uses_paused_native_time_and_rejects_torn_snapshot():
+@pytest.mark.parametrize('wrapped',[False,True])
+def test_airsim_truth_uses_paused_native_time_and_rejects_torn_snapshot(wrapped):
     class World:
         epoch, paused = 1_000_000_000, True
         def pause(self):
@@ -163,9 +164,10 @@ def test_airsim_truth_uses_paused_native_time_and_rejects_torn_snapshot():
         def get_ground_truth_kinematics(self):
             if self.torn:
                 world.epoch += 1
-            return {"kinematics": {"pose": {"position": dict(x=1, y=2, z=-3),
+            value = {"kinematics": {"pose": {"position": dict(x=1, y=2, z=-3),
                 "orientation": dict(x=0, y=0, z=0, w=1)},
                 "twist": {"linear": dict(x=4, y=5, z=6), "angular": dict(x=0, y=0, z=0)}}}
+            return value if wrapped else value["kinematics"]
     robot = Robot()
     source = AirSimSource(world, {"Drone1": robot}, [{"receiver_id": "rx0", "robot": "Drone1",
         "dis_entity_id": [1, 1, 1]}], [{"name": "drone-target", "robot": "Drone1", "rcs_m2": 1}])

@@ -60,11 +60,12 @@ fallback. Out-of-range delays/Dopplers remain errors. Experimental trimming,
 FFT-shape and precision controls are not part of this workflow.
 
 The paused-world contract, overshoot handling, continuity and recording format
-are tested offline. **A real ProjectAirSim server session has not been qualified
-in this workspace.** First verify a small two-radio session and inspect its
-manifest/recordings before expanding the scene. The measured P100 workload is
-currently slower than real time; this workflow advances simulation in controlled
-steps and does not promise live wall-clock streaming.
+are tested offline. A real pinned **ProjectAirSim Runtime container** with two
+stationary non-physics robots has now passed the P100 live smoke test: ten windows,
+240,000 complex samples and 0.120 signal seconds. [Qualification evidence](../results/reviews/project-quality-20261009/live-server/REPORT.md).
+Moving-vehicle physics and Unreal mesh interoperability remain unqualified.
+The measured workloads are slower than real time; controlled stepping does not
+promise live wall-clock streaming.
 
 ## Complete two-radio first run
 
@@ -125,3 +126,15 @@ The manifest now hashes waveform files, RF XML/mesh and simulator configuration
 files alongside dependency/backend versions. Relative `sim_config` and RF/source
 paths resolve beside `radios.json`. Keep server logs with the recording evidence.
 After inspection, stop the smoke server with `docker stop airsim-rf-runtime`.
+
+
+Inspect the finished recording in the scientific Python environment:
+
+```bash
+python scripts/inspect_live_recording.py recordings/live-first-run
+```
+
+The inspector verifies byte/sample counts, signed ADC range, per-window metadata
+and timestamp continuity. It also reports the final-window spectral peak. For
+the +150 kHz smoke input, compare the peak with 150,000 Hz within its reported FFT
+bin spacing; this is a spectral sanity check, not calibrated analog validation.

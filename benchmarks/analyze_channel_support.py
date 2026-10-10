@@ -15,7 +15,7 @@ parser.add_argument('--output-dir',type=Path,default=Path('research_results/affo
 args=parser.parse_args()
 args.output_dir.mkdir(parents=True,exist_ok=True)
 root=Path(__file__).resolve().parents[1]
-scene=rt.load_scene(str(root/'benchmarks/scenes/terrain.xml'))
+scene=rt.load_scene(str(root/'benchmarks/scenes/terrain_benchmark_v1.xml'))
 scene.tx_array=rt.PlanarArray(num_rows=1,num_cols=1,pattern='hw_dipole',polarization='V')
 scene.rx_array=rt.PlanarArray(num_rows=1,num_cols=1,pattern='hw_dipole',polarization='V')
 emitters={}
@@ -32,7 +32,8 @@ tau=tau[0,0,:,0,:] if tau.ndim==5 else tau[0]
 fd=paths.doppler.numpy().reshape(tau.shape)
 valid=tau>=0
 spans=[float(np.ptp(t[v])) for t,v in zip(tau,valid) if v.any()]
-result=dict(scope='100 TX, 1 RX, first epoch of existing terrain benchmark, CPU channel export only',
+from airsim_rf.terrain import scene_provenance
+result=dict(scene_provenance=scene_provenance(root/'benchmarks/scenes/terrain_benchmark_v1.xml'), scope='100 TX, 1 RX, first epoch of existing terrain benchmark, CPU channel export only',
  carrier_hz=915e6,sample_rate_hz=2e6,attempts_per_link=1028,retained_paths=int(valid.sum()),
  max_path_doppler_hz=float(np.max(abs(fd[valid]))),
  absolute_delay_us=dict(min=float(tau[valid].min()*1e6),max=float(tau[valid].max()*1e6)),

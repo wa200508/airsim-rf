@@ -24,3 +24,8 @@ results/profiling/**/raw/
 
 # Reproducible scientific plot values.
 !docs/figures/sensing_products.npz
+
+# Review smoke captures are regenerated; publish metadata and reports only.
+results/reviews/**/captures/
+# ProjectAirSim client writes its task-local log in the working directory.
+projectairsim_client.log

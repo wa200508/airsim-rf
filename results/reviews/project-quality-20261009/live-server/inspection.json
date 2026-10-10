@@ -1,0 +1,33 @@
+{
+  "status": "passed",
+  "scope": "recording structure, sample continuity, code range and spectral summary",
+  "server_motion_or_physical_accuracy_qualified": false,
+  "updates": 10,
+  "sample_rate_hz": 2000000,
+  "signal_seconds_per_receiver": 0.12,
+  "samples_per_update": [
+    24000,
+    24000,
+    24000,
+    24000,
+    24000,
+    24000,
+    24000,
+    24000,
+    24000,
+    24000
+  ],
+  "wall_seconds_per_signal_second": 48.91472442501102,
+  "receivers": {
+    "rx0": {
+      "complex_samples": 240000,
+      "data_bytes": 960000,
+      "data_sha256": "f63780b2e7d505d1306bc692c6c945c43097f3e2fbe0f9ea29083acfc8d6e84a",
+      "adc_component_min": -21,
+      "adc_component_max": 22,
+      "nonzero_complex_sample_fraction": 1.0,
+      "final_window_peak_baseband_hz": 149902.34375,
+      "frequency_bin_spacing_hz": 488.28125
+    }
+  }
+}

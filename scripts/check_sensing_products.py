@@ -21,11 +21,11 @@ def check(data_dir, output_dir):
     with np.load(output_dir/'sensing_products.npz',allow_pickle=False) as products:
         for key in products.files:
             values=products[key]
-            if np.isfinite(values).all():
-                continue
             prefix='weak_line_prominence_'
             if not key.startswith(prefix):
-                raise ValueError(f'Unexpected nonfinite array {key}')
+                if not np.isfinite(values).all():
+                    raise ValueError(f'Unexpected nonfinite array {key}')
+                continue
             receiver,label=key[len(prefix):].split('_',1)
             states=manifest['line_prominence_status'][int(receiver)][label.replace('_',' ')]
             if len(states)!=len(values):

@@ -31,3 +31,7 @@ PY
 "${figure_run[@]}" benchmarks/generate_sensing_figures.py --backend cuda
 "${figure_run[@]}" benchmarks/check_sensing_visibility.py --backend cuda
 "${figure_run[@]}" benchmarks/generate_sensing_scenarios.py
+
+"${figure_run[@]}" scripts/update_sensing_summary.py
+"${figure_run[@]}" scripts/check_sensing_products.py
+python3 scripts/check_docs.py

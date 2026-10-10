@@ -1,0 +1,81 @@
+{
+  "global": {
+    "core:datatype": "ci16_le",
+    "core:version": "1.2.6",
+    "core:sample_rate": 2000000,
+    "core:description": "Simulated signed 12-bit SDR I/Q in int16 containers; uncalibrated"
+  },
+  "captures": [
+    {
+      "core:sample_start": 0,
+      "core:frequency": 915000000,
+      "airsim_rf:sim_time_ns": 0,
+      "airsim_rf:volts_per_count": 3.452669830012439e-06,
+      "airsim_rf:clipped_component_fraction": 0.0
+    },
+    {
+      "core:sample_start": 24000,
+      "core:frequency": 915000000,
+      "airsim_rf:sim_time_ns": 12000000,
+      "airsim_rf:volts_per_count": 3.452669830012439e-06,
+      "airsim_rf:clipped_component_fraction": 0.0
+    },
+    {
+      "core:sample_start": 48000,
+      "core:frequency": 915000000,
+      "airsim_rf:sim_time_ns": 24000000,
+      "airsim_rf:volts_per_count": 3.452669830012439e-06,
+      "airsim_rf:clipped_component_fraction": 0.0
+    },
+    {
+      "core:sample_start": 72000,
+      "core:frequency": 915000000,
+      "airsim_rf:sim_time_ns": 36000000,
+      "airsim_rf:volts_per_count": 3.452669830012439e-06,
+      "airsim_rf:clipped_component_fraction": 0.0
+    },
+    {
+      "core:sample_start": 96000,
+      "core:frequency": 915000000,
+      "airsim_rf:sim_time_ns": 48000000,
+      "airsim_rf:volts_per_count": 3.452669830012439e-06,
+      "airsim_rf:clipped_component_fraction": 0.0
+    },
+    {
+      "core:sample_start": 120000,
+      "core:frequency": 915000000,
+      "airsim_rf:sim_time_ns": 60000000,
+      "airsim_rf:volts_per_count": 3.452669830012439e-06,
+      "airsim_rf:clipped_component_fraction": 0.0
+    },
+    {
+      "core:sample_start": 144000,
+      "core:frequency": 915000000,
+      "airsim_rf:sim_time_ns": 72000000,
+      "airsim_rf:volts_per_count": 3.452669830012439e-06,
+      "airsim_rf:clipped_component_fraction": 0.0
+    },
+    {
+      "core:sample_start": 168000,
+      "core:frequency": 915000000,
+      "airsim_rf:sim_time_ns": 84000000,
+      "airsim_rf:volts_per_count": 3.452669830012439e-06,
+      "airsim_rf:clipped_component_fraction": 0.0
+    },
+    {
+      "core:sample_start": 192000,
+      "core:frequency": 915000000,
+      "airsim_rf:sim_time_ns": 96000000,
+      "airsim_rf:volts_per_count": 3.452669830012439e-06,
+      "airsim_rf:clipped_component_fraction": 0.0
+    },
+    {
+      "core:sample_start": 216000,
+      "core:frequency": 915000000,
+      "airsim_rf:sim_time_ns": 108000000,
+      "airsim_rf:volts_per_count": 3.452669830012439e-06,
+      "airsim_rf:clipped_component_fraction": 0.0
+    }
+  ],
+  "annotations": []
+}

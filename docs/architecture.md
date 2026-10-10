@@ -7,7 +7,7 @@ filtered, corrupted by the chosen noise model, quantized, and recorded. The
 
 | Component | Implemented behavior | Qualification boundary |
 | --- | --- | --- |
-| AirSim adapter | Paused-world poses, mount mapping, elapsed-time capture | Offline contract tested; actual Runtime session results belong in the live guide |
+| AirSim adapter | Paused-world poses, mount mapping, elapsed-time capture | Offline contract and real static Runtime smoke tested; vehicle physics remains unqualified |
 | Propagation | Direct/specular/first-order diffuse paths with an explicit per-link sampling budget | Synthetic material/terrain, not calibrated land backscatter |
 | Sample rendering | Direct reference and Doppler-basis CPU/CUDA operators | Agreement with declared finite interpolation and delay/Doppler bounds |
 | Receiver | Filter, noise, clock terms, ideal ADC and input-referred scale | No analog compression, measured ENOB, or calibrated hardware response |

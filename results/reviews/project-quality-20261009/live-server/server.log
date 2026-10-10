@@ -1,0 +1,420 @@
+Starting Project AirSim Runtime by IAMAI with topics_port=8989, services_port=8990, ground_height=0 m, ground_clearance=0 m
+[microsoft::projectairsim::simulator] Loading Simulator.
+[microsoft::projectairsim::simulator] Load 'id'.
+[microsoft::projectairsim::simulator] [Sim] 'id' loaded.
+[microsoft::projectairsim::simulator] [Sim] Load 'topics'.
+[microsoft::projectairsim::simulator] [Sim] 'topics' loaded.
+[microsoft::projectairsim::simulator] [Sim] Load 'services'.
+[microsoft::projectairsim::simulator] [Sim] 'services' loaded.
+[microsoft::projectairsim::simulator] [Sim] Load 'default-scene'.
+[microsoft::projectairsim::simulator] [Sim] 'default-scene' loaded.
+[microsoft::projectairsim::simulator] [Sim] Simulator successfully loaded.
+[microsoft::projectairsim::simulator] Setting client authorization public key to ""
+[microsoft::projectairsim::client_authorization] Client authorization public key cleared--all clients accepted and authorization tokens not required
+[SimServer::RegisterServiceMethods] Registering service methods.
+[SimServer::LoadScene] Loading scene.
+[microsoft::projectairsim::simulator] Loading Default Scene
+[microsoft::projectairsim::scene] Loading 'id'.
+[microsoft::projectairsim::scene] [DefaultScene] 'id' loaded.
+[microsoft::projectairsim::scene] [DefaultScene] Loading 'home-geo-point'.
+[microsoft::projectairsim::scene] [DefaultScene] 'home-geo-point' missing or empty. Using default home geo point.
+[microsoft::projectairsim::scene] [DefaultScene] Loading 'wind-settings'.
+[microsoft::projectairsim::scene] [DefaultScene] 'wind-settings' missing or empty. Using default wind setting.
+[microsoft::projectairsim::scene] [DefaultScene] Loading 'clock' settings.
+[microsoft::projectairsim::scene] [DefaultScene] 'clock' missing or empty. Using default clock settings.
+[microsoft::projectairsim::topic_manager] Registered topic /Sim/DefaultScene/clock
+[microsoft::projectairsim::scene] [DefaultScene] Loading 'segmentation' settings.
+[microsoft::projectairsim::scene] [DefaultScene] 'segmentation' missing or empty. Using default segmentation settings.
+[microsoft::projectairsim::scene] Loading 'scene-type'.
+[microsoft::projectairsim::scene] [DefaultScene] 'scene-type' loaded.
+[microsoft::projectairsim::scene] Loading 'tiles-dir'.
+[microsoft::projectairsim::scene] [DefaultScene] 'tiles-dir' loaded.
+[microsoft::projectairsim::scene] Loading 'horizon-tiles-dir'.
+[microsoft::projectairsim::scene] [DefaultScene] 'horizon-tiles-dir' loaded.
+[microsoft::projectairsim::scene] Loading 'tiles-altitude-offset'.
+[microsoft::projectairsim::scene] [DefaultScene] 'tiles-altitude-offset' loaded.
+[microsoft::projectairsim::scene] Loading 'tiles-lod-max'.
+[microsoft::projectairsim::scene] [DefaultScene] 'tiles-lod-max' loaded.
+[microsoft::projectairsim::scene] Loading 'tiles-lod-min'.
+[microsoft::projectairsim::scene] [DefaultScene] 'tiles-lod-min' loaded.
+[microsoft::projectairsim::scene] [DefaultScene] Loading 'actors'.
+[microsoft::projectairsim::scene] [DefaultScene] 'actors' missing or empty.
+[microsoft::projectairsim::scene] [DefaultScene] Loading 'Enviroment Actors'.
+[microsoft::projectairsim::scene] [DefaultScene] 'environment-actors' missing or empty.
+[microsoft::projectairsim::scene] [DefaultScene] Loading 'vr-mode'.
+[microsoft::projectairsim::scene] [DefaultScene][0] 'vr-mode' loaded.
+[microsoft::projectairsim::simulator] [Sim] 'scene' loaded.
+[SimServer::LoadPhysicsWorld] Loading physics bodies for scene 'DefaultScene'.
+[SimServer::LoadControllers] Loading controllers for scene 'DefaultScene'.
+[SimServer::StartSimulator] Starting simulator.
+[microsoft::projectairsim::topic_manager] Topic socket created with id: '1'.
+[microsoft::projectairsim::topic_manager] nng_listen success 'tcp://*:8989'.
+[microsoft::projectairsim::service_manager] Starting ServiceManager
+[microsoft::projectairsim::service_manager] nng socket for services created '2'.
+[microsoft::projectairsim::service_manager] Services active at: 'tcp://*:8990'.
+[SimServer::StartScene] Starting scene.
+Project AirSim Runtime is running. Press Ctrl-C to end.
+[microsoft::projectairsim::topic_manager] Pub-sub client connected; active topic pipes: 1
+[SimServer::SimReloadSceneWithJSON] Reloading scene.
+[SimServer::StopScene] Stopping scene.
+[microsoft::projectairsim::service_manager] Unregistered ALL ServiceMethods
+[SimServer::UnloadScene] Unloading scene.
+[SimServer::UnloadControllers] Unloading controllers.
+[SimServer::UnloadPhysicsWorld] Unloading physics bodies.
+[SimServer::UnloadTileManager] Unloading tile manager.
+[microsoft::projectairsim::topic_manager] Unregistered topic /Sim/DefaultScene/clock
+[SimServer::LoadScene] Loading scene.
+[microsoft::projectairsim::simulator] Loading Scene with JSON Data.
+[microsoft::projectairsim::scene] Loading 'id'.
+[microsoft::projectairsim::scene] [SceneRFTwoRadios] 'id' loaded.
+[microsoft::projectairsim::scene] [SceneRFTwoRadios] Loading 'home-geo-point'.
+[microsoft::projectairsim::scene] [SceneRFTwoRadios] 'clock' settings loaded.
+[microsoft::projectairsim::scene] [SceneRFTwoRadios] Loading 'wind-settings'.
+[microsoft::projectairsim::scene] [SceneRFTwoRadios] 'wind-settings' missing or empty. Using default wind setting.
+[microsoft::projectairsim::scene] [SceneRFTwoRadios] Loading 'clock' settings.
+[microsoft::projectairsim::scene] [SceneRFTwoRadios] 'clock' settings loaded.
+[microsoft::projectairsim::topic_manager] Registered topic /Sim/SceneRFTwoRadios/clock
+[microsoft::projectairsim::scene] [SceneRFTwoRadios] Loading 'segmentation' settings.
+[microsoft::projectairsim::scene] [SceneRFTwoRadios] 'segmentation' missing or empty. Using default segmentation settings.
+[microsoft::projectairsim::scene] Loading 'scene-type'.
+[microsoft::projectairsim::scene] [SceneRFTwoRadios] 'scene-type' loaded.
+[microsoft::projectairsim::scene] Loading 'tiles-dir'.
+[microsoft::projectairsim::scene] [SceneRFTwoRadios] 'tiles-dir' loaded.
+[microsoft::projectairsim::scene] Loading 'horizon-tiles-dir'.
+[microsoft::projectairsim::scene] [SceneRFTwoRadios] 'horizon-tiles-dir' loaded.
+[microsoft::projectairsim::scene] Loading 'tiles-altitude-offset'.
+[microsoft::projectairsim::scene] [SceneRFTwoRadios] 'tiles-altitude-offset' loaded.
+[microsoft::projectairsim::scene] Loading 'tiles-lod-max'.
+[microsoft::projectairsim::scene] [SceneRFTwoRadios] 'tiles-lod-max' loaded.
+[microsoft::projectairsim::scene] Loading 'tiles-lod-min'.
+[microsoft::projectairsim::scene] [SceneRFTwoRadios] 'tiles-lod-min' loaded.
+[microsoft::projectairsim::scene] [SceneRFTwoRadios] Loading 'actors'.
+[microsoft::projectairsim::scene] [SceneRFTwoRadios] Loading 'actor.name'.
+[microsoft::projectairsim::scene] [SceneRFTwoRadios][Drone1] 'actor.name' loaded.
+[microsoft::projectairsim::scene] [SceneRFTwoRadios][Drone1] Loading 'actor.type'.
+[microsoft::projectairsim::scene] [SceneRFTwoRadios][Drone1] 'actor.type' loaded.
+[microsoft::projectairsim::scene] [SceneRFTwoRadios][Drone1] Loading 'actor.origin'.
+[microsoft::projectairsim::scene] [SceneRFTwoRadios][Drone1] 'actor.origin' loaded.
+[microsoft::projectairsim::scene] [SceneRFTwoRadios][Drone1] Loading 'actor'.
+[microsoft::projectairsim::actor::robot] [Drone1] Loading 'physics-type'.
+[microsoft::projectairsim::actor::robot] [Drone1] 'physics-type' loaded.
+[microsoft::projectairsim::actor::robot] [Drone1] Loading 'links'.
+[microsoft::projectairsim::link] Loading 'id'.
+[microsoft::projectairsim::link] [Frame] 'id' loaded.
+[microsoft::projectairsim::link] [Frame]Loading 'inertial'.
+[microsoft::projectairsim::inertial] Loading 'origin'.
+[microsoft::projectairsim::inertial] 'origin' loaded.
+[microsoft::projectairsim::inertial] Loading 'mass'.
+[microsoft::projectairsim::inertial] 'mass' loaded.
+[microsoft::projectairsim::inertial] Loading 'inertia'.
+[microsoft::projectairsim::inertial] 'inertia' loaded.
+[microsoft::projectairsim::inertial] Loading 'aerodynamics'.
+[microsoft::projectairsim::inertial] 'aerodynamics' loaded.
+[microsoft::projectairsim::link] [Frame] 'inertial' loaded.
+[microsoft::projectairsim::link] [Frame]Loading 'collision'.
+[microsoft::projectairsim::collision] Loading 'enabled'.
+[microsoft::projectairsim::collision] 'enabled' loaded.
+[microsoft::projectairsim::collision] Loading 'restitution'.
+[microsoft::projectairsim::collision] 'restitution' loaded.
+[microsoft::projectairsim::collision] Loading 'friction'.
+[microsoft::projectairsim::collision] 'friction' loaded.
+[microsoft::projectairsim::link] [Frame] 'collision' loaded.
+[microsoft::projectairsim::link] [Frame]Loading 'visual'.
+[microsoft::projectairsim::visual] Loading 'origin'.
+[microsoft::projectairsim::visual] 'origin' loaded.
+[microsoft::projectairsim::visual] Loading 'geometry'.
+[microsoft::projectairsim::visual] 'geometry' missing or empty.
+[microsoft::projectairsim::link] [Frame] 'visual' loaded.
+[microsoft::projectairsim::actor::robot] [Drone1] 'links' loaded.
+[microsoft::projectairsim::actor::robot] [Drone1] Loading 'joints'.
+[microsoft::projectairsim::actor::robot] [Drone1] 'joints' missing or empty.
+[microsoft::projectairsim::actor::robot] [Drone1] 'joints' loaded.
+[microsoft::projectairsim::actor::robot] [Drone1] Loading 'sensors'.
+[microsoft::projectairsim::actor::robot] [Drone1] Loading 'sensors'.
+[microsoft::projectairsim::actor::robot] [Drone1] 'sensors' missing or empty.
+[microsoft::projectairsim::actor::robot] [Drone1] 'sensors' loaded.
+[microsoft::projectairsim::actor::robot] [Drone1] 'sensors' loaded.
+[microsoft::projectairsim::actor::robot] [Drone1] Loading 'actuators'.
+[microsoft::projectairsim::actor::robot] [Drone1] Loading 'actuators'.
+[microsoft::projectairsim::actor::robot] [Drone1] 'actuators' missing or empty.
+[microsoft::projectairsim::actor::robot] [Drone1] 'actuators' loaded.
+[microsoft::projectairsim::actor::robot] [Drone1] 'actuators' loaded.
+[microsoft::projectairsim::actor::robot] [Drone1] Loading 'controller'.
+[microsoft::projectairsim::actor::robot] [Drone1] 'controller' missing or empty.
+[microsoft::projectairsim::scene] [SceneRFTwoRadios] Loading 'actor.name'.
+[microsoft::projectairsim::scene] [SceneRFTwoRadios][Drone2] 'actor.name' loaded.
+[microsoft::projectairsim::scene] [SceneRFTwoRadios][Drone2] Loading 'actor.type'.
+[microsoft::projectairsim::scene] [SceneRFTwoRadios][Drone2] 'actor.type' loaded.
+[microsoft::projectairsim::scene] [SceneRFTwoRadios][Drone2] Loading 'actor.origin'.
+[microsoft::projectairsim::scene] [SceneRFTwoRadios][Drone2] 'actor.origin' loaded.
+[microsoft::projectairsim::scene] [SceneRFTwoRadios][Drone2] Loading 'actor'.
+[microsoft::projectairsim::actor::robot] [Drone2] Loading 'physics-type'.
+[microsoft::projectairsim::actor::robot] [Drone2] 'physics-type' loaded.
+[microsoft::projectairsim::actor::robot] [Drone2] Loading 'links'.
+[microsoft::projectairsim::link] Loading 'id'.
+[microsoft::projectairsim::link] [Frame] 'id' loaded.
+[microsoft::projectairsim::link] [Frame]Loading 'inertial'.
+[microsoft::projectairsim::inertial] Loading 'origin'.
+[microsoft::projectairsim::inertial] 'origin' loaded.
+[microsoft::projectairsim::inertial] Loading 'mass'.
+[microsoft::projectairsim::inertial] 'mass' loaded.
+[microsoft::projectairsim::inertial] Loading 'inertia'.
+[microsoft::projectairsim::inertial] 'inertia' loaded.
+[microsoft::projectairsim::inertial] Loading 'aerodynamics'.
+[microsoft::projectairsim::inertial] 'aerodynamics' loaded.
+[microsoft::projectairsim::link] [Frame] 'inertial' loaded.
+[microsoft::projectairsim::link] [Frame]Loading 'collision'.
+[microsoft::projectairsim::collision] Loading 'enabled'.
+[microsoft::projectairsim::collision] 'enabled' loaded.
+[microsoft::projectairsim::collision] Loading 'restitution'.
+[microsoft::projectairsim::collision] 'restitution' loaded.
+[microsoft::projectairsim::collision] Loading 'friction'.
+[microsoft::projectairsim::collision] 'friction' loaded.
+[microsoft::projectairsim::link] [Frame] 'collision' loaded.
+[microsoft::projectairsim::link] [Frame]Loading 'visual'.
+[microsoft::projectairsim::visual] Loading 'origin'.
+[microsoft::projectairsim::visual] 'origin' loaded.
+[microsoft::projectairsim::visual] Loading 'geometry'.
+[microsoft::projectairsim::visual] 'geometry' missing or empty.
+[microsoft::projectairsim::link] [Frame] 'visual' loaded.
+[microsoft::projectairsim::actor::robot] [Drone2] 'links' loaded.
+[microsoft::projectairsim::actor::robot] [Drone2] Loading 'joints'.
+[microsoft::projectairsim::actor::robot] [Drone2] 'joints' missing or empty.
+[microsoft::projectairsim::actor::robot] [Drone2] 'joints' loaded.
+[microsoft::projectairsim::actor::robot] [Drone2] Loading 'sensors'.
+[microsoft::projectairsim::actor::robot] [Drone2] Loading 'sensors'.
+[microsoft::projectairsim::actor::robot] [Drone2] 'sensors' missing or empty.
+[microsoft::projectairsim::actor::robot] [Drone2] 'sensors' loaded.
+[microsoft::projectairsim::actor::robot] [Drone2] 'sensors' loaded.
+[microsoft::projectairsim::actor::robot] [Drone2] Loading 'actuators'.
+[microsoft::projectairsim::actor::robot] [Drone2] Loading 'actuators'.
+[microsoft::projectairsim::actor::robot] [Drone2] 'actuators' missing or empty.
+[microsoft::projectairsim::actor::robot] [Drone2] 'actuators' loaded.
+[microsoft::projectairsim::actor::robot] [Drone2] 'actuators' loaded.
+[microsoft::projectairsim::actor::robot] [Drone2] Loading 'controller'.
+[microsoft::projectairsim::actor::robot] [Drone2] 'controller' missing or empty.
+[microsoft::projectairsim::scene] [SceneRFTwoRadios] Loading 'Enviroment Actors'.
+[microsoft::projectairsim::scene] [SceneRFTwoRadios] 'environment-actors' missing or empty.
+[microsoft::projectairsim::scene] [SceneRFTwoRadios] Loading 'vr-mode'.
+[microsoft::projectairsim::scene] [SceneRFTwoRadios][0] 'vr-mode' loaded.
+[microsoft::projectairsim::simulator] [Sim] 'scene' loaded.
+[SimServer::LoadPhysicsWorld] Loading physics bodies for scene 'SceneRFTwoRadios'.
+[SimServer::LoadControllers] Loading controllers for scene 'SceneRFTwoRadios'.
+[SimServer::LoadControllers] Unsupported controller type ''
+[SimServer::LoadControllers] Unsupported controller type ''
+[SimServer::RegisterServiceMethods] Registering service methods.
+[SimServer::StartScene] Starting scene.
+[microsoft::projectairsim::topic_manager] Registered topic /Sim/SceneRFTwoRadios/robots/Drone1/actual_pose
+[microsoft::projectairsim::topic_manager] Registered topic /Sim/SceneRFTwoRadios/robots/Drone1/desired_pose
+[microsoft::projectairsim::topic_manager] Registered topic /Sim/SceneRFTwoRadios/robots/Drone1/collision_info
+[microsoft::projectairsim::topic_manager] Registered topic /Sim/SceneRFTwoRadios/robots/Drone1/rotor_info
+[microsoft::projectairsim::topic_manager] Successfully subscribed to topic '/Sim/SceneRFTwoRadios/robots/Drone1/desired_pose'.
+[microsoft::projectairsim::topic_manager] Registered topic /Sim/SceneRFTwoRadios/robots/Drone2/actual_pose
+[microsoft::projectairsim::topic_manager] Registered topic /Sim/SceneRFTwoRadios/robots/Drone2/desired_pose
+[microsoft::projectairsim::topic_manager] Registered topic /Sim/SceneRFTwoRadios/robots/Drone2/collision_info
+[microsoft::projectairsim::topic_manager] Registered topic /Sim/SceneRFTwoRadios/robots/Drone2/rotor_info
+[microsoft::projectairsim::topic_manager] Successfully subscribed to topic '/Sim/SceneRFTwoRadios/robots/Drone2/desired_pose'.
+[microsoft::projectairsim::topic_manager] Client subscribing to topic /$topics
+[microsoft::projectairsim::topic_manager] Client unsubscribing from topic /$topics
+[microsoft::projectairsim::topic_manager] Pub-sub client disconnected; active topic pipes: 0
+[microsoft::projectairsim::topic_manager] Pub-sub client disconnected--resetting client authorization
+[microsoft::projectairsim::client_authorization] Client authorization token accepted (no client authorization token public key)
+[microsoft::projectairsim::topic_manager] Unsubscribing all topics.
+[microsoft::projectairsim::service_manager] Req-resp client disconnected--resetting client authorization
+[microsoft::projectairsim::client_authorization] Client authorization token accepted (no client authorization token public key)
+[microsoft::projectairsim::topic_manager] Pub-sub client connected; active topic pipes: 1
+[SimServer::SimReloadSceneWithJSON] Reloading scene.
+[SimServer::StopScene] Stopping scene.
+[microsoft::projectairsim::topic_manager] Unregistered topic /Sim/SceneRFTwoRadios/robots/Drone1/actual_pose
+[microsoft::projectairsim::topic_manager] Unregistered topic /Sim/SceneRFTwoRadios/robots/Drone1/desired_pose
+[microsoft::projectairsim::topic_manager] Unregistered topic /Sim/SceneRFTwoRadios/robots/Drone1/collision_info
+[microsoft::projectairsim::topic_manager] Unregistered topic /Sim/SceneRFTwoRadios/robots/Drone1/rotor_info
+[microsoft::projectairsim::topic_manager] Unregistered topic /Sim/SceneRFTwoRadios/robots/Drone2/actual_pose
+[microsoft::projectairsim::topic_manager] Unregistered topic /Sim/SceneRFTwoRadios/robots/Drone2/desired_pose
+[microsoft::projectairsim::topic_manager] Unregistered topic /Sim/SceneRFTwoRadios/robots/Drone2/collision_info
+[microsoft::projectairsim::topic_manager] Unregistered topic /Sim/SceneRFTwoRadios/robots/Drone2/rotor_info
+[microsoft::projectairsim::service_manager] Unregistered ALL ServiceMethods
+[SimServer::UnloadScene] Unloading scene.
+[SimServer::UnloadControllers] Unloading controllers.
+[SimServer::UnloadPhysicsWorld] Unloading physics bodies.
+[SimServer::UnloadTileManager] Unloading tile manager.
+[microsoft::projectairsim::topic_manager] Unregistered topic /Sim/SceneRFTwoRadios/clock
+[SimServer::LoadScene] Loading scene.
+[microsoft::projectairsim::simulator] Loading Scene with JSON Data.
+[microsoft::projectairsim::scene] Loading 'id'.
+[microsoft::projectairsim::scene] [SceneRFTwoRadios] 'id' loaded.
+[microsoft::projectairsim::scene] [SceneRFTwoRadios] Loading 'home-geo-point'.
+[microsoft::projectairsim::scene] [SceneRFTwoRadios] 'clock' settings loaded.
+[microsoft::projectairsim::scene] [SceneRFTwoRadios] Loading 'wind-settings'.
+[microsoft::projectairsim::scene] [SceneRFTwoRadios] 'wind-settings' missing or empty. Using default wind setting.
+[microsoft::projectairsim::scene] [SceneRFTwoRadios] Loading 'clock' settings.
+[microsoft::projectairsim::scene] [SceneRFTwoRadios] 'clock' settings loaded.
+[microsoft::projectairsim::topic_manager] Registered topic /Sim/SceneRFTwoRadios/clock
+[microsoft::projectairsim::scene] [SceneRFTwoRadios] Loading 'segmentation' settings.
+[microsoft::projectairsim::scene] [SceneRFTwoRadios] 'segmentation' missing or empty. Using default segmentation settings.
+[microsoft::projectairsim::scene] Loading 'scene-type'.
+[microsoft::projectairsim::scene] [SceneRFTwoRadios] 'scene-type' loaded.
+[microsoft::projectairsim::scene] Loading 'tiles-dir'.
+[microsoft::projectairsim::scene] [SceneRFTwoRadios] 'tiles-dir' loaded.
+[microsoft::projectairsim::scene] Loading 'horizon-tiles-dir'.
+[microsoft::projectairsim::scene] [SceneRFTwoRadios] 'horizon-tiles-dir' loaded.
+[microsoft::projectairsim::scene] Loading 'tiles-altitude-offset'.
+[microsoft::projectairsim::scene] [SceneRFTwoRadios] 'tiles-altitude-offset' loaded.
+[microsoft::projectairsim::scene] Loading 'tiles-lod-max'.
+[microsoft::projectairsim::scene] [SceneRFTwoRadios] 'tiles-lod-max' loaded.
+[microsoft::projectairsim::scene] Loading 'tiles-lod-min'.
+[microsoft::projectairsim::scene] [SceneRFTwoRadios] 'tiles-lod-min' loaded.
+[microsoft::projectairsim::scene] [SceneRFTwoRadios] Loading 'actors'.
+[microsoft::projectairsim::scene] [SceneRFTwoRadios] Loading 'actor.name'.
+[microsoft::projectairsim::scene] [SceneRFTwoRadios][Drone1] 'actor.name' loaded.
+[microsoft::projectairsim::scene] [SceneRFTwoRadios][Drone1] Loading 'actor.type'.
+[microsoft::projectairsim::scene] [SceneRFTwoRadios][Drone1] 'actor.type' loaded.
+[microsoft::projectairsim::scene] [SceneRFTwoRadios][Drone1] Loading 'actor.origin'.
+[microsoft::projectairsim::scene] [SceneRFTwoRadios][Drone1] 'actor.origin' loaded.
+[microsoft::projectairsim::scene] [SceneRFTwoRadios][Drone1] Loading 'actor'.
+[microsoft::projectairsim::actor::robot] [Drone1] Loading 'physics-type'.
+[microsoft::projectairsim::actor::robot] [Drone1] 'physics-type' loaded.
+[microsoft::projectairsim::actor::robot] [Drone1] Loading 'links'.
+[microsoft::projectairsim::link] Loading 'id'.
+[microsoft::projectairsim::link] [Frame] 'id' loaded.
+[microsoft::projectairsim::link] [Frame]Loading 'inertial'.
+[microsoft::projectairsim::inertial] Loading 'origin'.
+[microsoft::projectairsim::inertial] 'origin' loaded.
+[microsoft::projectairsim::inertial] Loading 'mass'.
+[microsoft::projectairsim::inertial] 'mass' loaded.
+[microsoft::projectairsim::inertial] Loading 'inertia'.
+[microsoft::projectairsim::inertial] 'inertia' loaded.
+[microsoft::projectairsim::inertial] Loading 'aerodynamics'.
+[microsoft::projectairsim::inertial] 'aerodynamics' loaded.
+[microsoft::projectairsim::link] [Frame] 'inertial' loaded.
+[microsoft::projectairsim::link] [Frame]Loading 'collision'.
+[microsoft::projectairsim::collision] Loading 'enabled'.
+[microsoft::projectairsim::collision] 'enabled' loaded.
+[microsoft::projectairsim::collision] Loading 'restitution'.
+[microsoft::projectairsim::collision] 'restitution' loaded.
+[microsoft::projectairsim::collision] Loading 'friction'.
+[microsoft::projectairsim::collision] 'friction' loaded.
+[microsoft::projectairsim::link] [Frame] 'collision' loaded.
+[microsoft::projectairsim::link] [Frame]Loading 'visual'.
+[microsoft::projectairsim::visual] Loading 'origin'.
+[microsoft::projectairsim::visual] 'origin' loaded.
+[microsoft::projectairsim::visual] Loading 'geometry'.
+[microsoft::projectairsim::visual] 'geometry' missing or empty.
+[microsoft::projectairsim::link] [Frame] 'visual' loaded.
+[microsoft::projectairsim::actor::robot] [Drone1] 'links' loaded.
+[microsoft::projectairsim::actor::robot] [Drone1] Loading 'joints'.
+[microsoft::projectairsim::actor::robot] [Drone1] 'joints' missing or empty.
+[microsoft::projectairsim::actor::robot] [Drone1] 'joints' loaded.
+[microsoft::projectairsim::actor::robot] [Drone1] Loading 'sensors'.
+[microsoft::projectairsim::actor::robot] [Drone1] Loading 'sensors'.
+[microsoft::projectairsim::actor::robot] [Drone1] 'sensors' missing or empty.
+[microsoft::projectairsim::actor::robot] [Drone1] 'sensors' loaded.
+[microsoft::projectairsim::actor::robot] [Drone1] 'sensors' loaded.
+[microsoft::projectairsim::actor::robot] [Drone1] Loading 'actuators'.
+[microsoft::projectairsim::actor::robot] [Drone1] Loading 'actuators'.
+[microsoft::projectairsim::actor::robot] [Drone1] 'actuators' missing or empty.
+[microsoft::projectairsim::actor::robot] [Drone1] 'actuators' loaded.
+[microsoft::projectairsim::actor::robot] [Drone1] 'actuators' loaded.
+[microsoft::projectairsim::actor::robot] [Drone1] Loading 'controller'.
+[microsoft::projectairsim::actor::robot] [Drone1] 'controller' missing or empty.
+[microsoft::projectairsim::scene] [SceneRFTwoRadios] Loading 'actor.name'.
+[microsoft::projectairsim::scene] [SceneRFTwoRadios][Drone2] 'actor.name' loaded.
+[microsoft::projectairsim::scene] [SceneRFTwoRadios][Drone2] Loading 'actor.type'.
+[microsoft::projectairsim::scene] [SceneRFTwoRadios][Drone2] 'actor.type' loaded.
+[microsoft::projectairsim::scene] [SceneRFTwoRadios][Drone2] Loading 'actor.origin'.
+[microsoft::projectairsim::scene] [SceneRFTwoRadios][Drone2] 'actor.origin' loaded.
+[microsoft::projectairsim::scene] [SceneRFTwoRadios][Drone2] Loading 'actor'.
+[microsoft::projectairsim::actor::robot] [Drone2] Loading 'physics-type'.
+[microsoft::projectairsim::actor::robot] [Drone2] 'physics-type' loaded.
+[microsoft::projectairsim::actor::robot] [Drone2] Loading 'links'.
+[microsoft::projectairsim::link] Loading 'id'.
+[microsoft::projectairsim::link] [Frame] 'id' loaded.
+[microsoft::projectairsim::link] [Frame]Loading 'inertial'.
+[microsoft::projectairsim::inertial] Loading 'origin'.
+[microsoft::projectairsim::inertial] 'origin' loaded.
+[microsoft::projectairsim::inertial] Loading 'mass'.
+[microsoft::projectairsim::inertial] 'mass' loaded.
+[microsoft::projectairsim::inertial] Loading 'inertia'.
+[microsoft::projectairsim::inertial] 'inertia' loaded.
+[microsoft::projectairsim::inertial] Loading 'aerodynamics'.
+[microsoft::projectairsim::inertial] 'aerodynamics' loaded.
+[microsoft::projectairsim::link] [Frame] 'inertial' loaded.
+[microsoft::projectairsim::link] [Frame]Loading 'collision'.
+[microsoft::projectairsim::collision] Loading 'enabled'.
+[microsoft::projectairsim::collision] 'enabled' loaded.
+[microsoft::projectairsim::collision] Loading 'restitution'.
+[microsoft::projectairsim::collision] 'restitution' loaded.
+[microsoft::projectairsim::collision] Loading 'friction'.
+[microsoft::projectairsim::collision] 'friction' loaded.
+[microsoft::projectairsim::link] [Frame] 'collision' loaded.
+[microsoft::projectairsim::link] [Frame]Loading 'visual'.
+[microsoft::projectairsim::visual] Loading 'origin'.
+[microsoft::projectairsim::visual] 'origin' loaded.
+[microsoft::projectairsim::visual] Loading 'geometry'.
+[microsoft::projectairsim::visual] 'geometry' missing or empty.
+[microsoft::projectairsim::link] [Frame] 'visual' loaded.
+[microsoft::projectairsim::actor::robot] [Drone2] 'links' loaded.
+[microsoft::projectairsim::actor::robot] [Drone2] Loading 'joints'.
+[microsoft::projectairsim::actor::robot] [Drone2] 'joints' missing or empty.
+[microsoft::projectairsim::actor::robot] [Drone2] 'joints' loaded.
+[microsoft::projectairsim::actor::robot] [Drone2] Loading 'sensors'.
+[microsoft::projectairsim::actor::robot] [Drone2] Loading 'sensors'.
+[microsoft::projectairsim::actor::robot] [Drone2] 'sensors' missing or empty.
+[microsoft::projectairsim::actor::robot] [Drone2] 'sensors' loaded.
+[microsoft::projectairsim::actor::robot] [Drone2] 'sensors' loaded.
+[microsoft::projectairsim::actor::robot] [Drone2] Loading 'actuators'.
+[microsoft::projectairsim::actor::robot] [Drone2] Loading 'actuators'.
+[microsoft::projectairsim::actor::robot] [Drone2] 'actuators' missing or empty.
+[microsoft::projectairsim::actor::robot] [Drone2] 'actuators' loaded.
+[microsoft::projectairsim::actor::robot] [Drone2] 'actuators' loaded.
+[microsoft::projectairsim::actor::robot] [Drone2] Loading 'controller'.
+[microsoft::projectairsim::actor::robot] [Drone2] 'controller' missing or empty.
+[microsoft::projectairsim::scene] [SceneRFTwoRadios] Loading 'Enviroment Actors'.
+[microsoft::projectairsim::scene] [SceneRFTwoRadios] 'environment-actors' missing or empty.
+[microsoft::projectairsim::scene] [SceneRFTwoRadios] Loading 'vr-mode'.
+[microsoft::projectairsim::scene] [SceneRFTwoRadios][0] 'vr-mode' loaded.
+[microsoft::projectairsim::simulator] [Sim] 'scene' loaded.
+[SimServer::LoadPhysicsWorld] Loading physics bodies for scene 'SceneRFTwoRadios'.
+[SimServer::LoadControllers] Loading controllers for scene 'SceneRFTwoRadios'.
+[SimServer::LoadControllers] Unsupported controller type ''
+[SimServer::LoadControllers] Unsupported controller type ''
+[SimServer::RegisterServiceMethods] Registering service methods.
+[SimServer::StartScene] Starting scene.
+[microsoft::projectairsim::topic_manager] Registered topic /Sim/SceneRFTwoRadios/robots/Drone1/actual_pose
+[microsoft::projectairsim::topic_manager] Registered topic /Sim/SceneRFTwoRadios/robots/Drone1/desired_pose
+[microsoft::projectairsim::topic_manager] Registered topic /Sim/SceneRFTwoRadios/robots/Drone1/collision_info
+[microsoft::projectairsim::topic_manager] Registered topic /Sim/SceneRFTwoRadios/robots/Drone1/rotor_info
+[microsoft::projectairsim::topic_manager] Successfully subscribed to topic '/Sim/SceneRFTwoRadios/robots/Drone1/desired_pose'.
+[microsoft::projectairsim::topic_manager] Registered topic /Sim/SceneRFTwoRadios/robots/Drone2/actual_pose
+[microsoft::projectairsim::topic_manager] Registered topic /Sim/SceneRFTwoRadios/robots/Drone2/desired_pose
+[microsoft::projectairsim::topic_manager] Registered topic /Sim/SceneRFTwoRadios/robots/Drone2/collision_info
+[microsoft::projectairsim::topic_manager] Registered topic /Sim/SceneRFTwoRadios/robots/Drone2/rotor_info
+[microsoft::projectairsim::topic_manager] Successfully subscribed to topic '/Sim/SceneRFTwoRadios/robots/Drone2/desired_pose'.
+[microsoft::projectairsim::topic_manager] Client subscribing to topic /$topics
+[microsoft::projectairsim::scene] Continuing sim time until 10000000 ns, and then will pause.
+[microsoft::projectairsim::scene] Waiting to reach target sim time.
+[microsoft::projectairsim::scene] Continuing sim time until 22000000 ns, and then will pause.
+[microsoft::projectairsim::scene] Waiting to reach target sim time.
+[microsoft::projectairsim::scene] Continuing sim time until 34000000 ns, and then will pause.
+[microsoft::projectairsim::scene] Waiting to reach target sim time.
+[microsoft::projectairsim::scene] Continuing sim time until 46000000 ns, and then will pause.
+[microsoft::projectairsim::scene] Waiting to reach target sim time.
+[microsoft::projectairsim::scene] Continuing sim time until 58000000 ns, and then will pause.
+[microsoft::projectairsim::scene] Waiting to reach target sim time.
+[microsoft::projectairsim::scene] Continuing sim time until 70000000 ns, and then will pause.
+[microsoft::projectairsim::scene] Waiting to reach target sim time.
+[microsoft::projectairsim::scene] Continuing sim time until 82000000 ns, and then will pause.
+[microsoft::projectairsim::scene] Waiting to reach target sim time.
+[microsoft::projectairsim::scene] Continuing sim time until 94000000 ns, and then will pause.
+[microsoft::projectairsim::scene] Waiting to reach target sim time.
+[microsoft::projectairsim::scene] Continuing sim time until 106000000 ns, and then will pause.
+[microsoft::projectairsim::scene] Waiting to reach target sim time.
+[microsoft::projectairsim::scene] Continuing sim time until 118000000 ns, and then will pause.
+[microsoft::projectairsim::scene] Waiting to reach target sim time.
+[microsoft::projectairsim::topic_manager] Client unsubscribing from topic /$topics
+[microsoft::projectairsim::topic_manager] Pub-sub client disconnected; active topic pipes: 0
+[microsoft::projectairsim::topic_manager] Pub-sub client disconnected--resetting client authorization
+[microsoft::projectairsim::client_authorization] Client authorization token accepted (no client authorization token public key)
+[microsoft::projectairsim::topic_manager] Unsubscribing all topics.
+[microsoft::projectairsim::service_manager] Req-resp client disconnected--resetting client authorization
+[microsoft::projectairsim::client_authorization] Client authorization token accepted (no client authorization token public key)
