@@ -65,3 +65,63 @@ in this workspace.** First verify a small two-radio session and inspect its
 manifest/recordings before expanding the scene. The measured P100 workload is
 currently slower than real time; this workflow advances simulation in controlled
 steps and does not promise live wall-clock streaming.
+
+## Complete two-radio first run
+
+Install [the CUDA environment](setup.md#live-cuda-dependencies), or use the
+P100-compatible image in [setup](setup.md#p100-profiling). The first smoke scene
+uses two stationary, non-physics robots and a flat ground plane: NED
+`(-20, 0, -20)` and `(20, 0, -20)` become RF `(-20, 0, 20)` and `(20, 0, 20)`.
+It tests the real server/API clock and RF recording, not vehicle dynamics.
+
+Create all inputs in a new directory:
+
+```bash
+python examples/prepare_live_example.py --output recordings/live-inputs
+python -m airsim_rf.live --config recordings/live-inputs/radios.json --check-config
+```
+
+The generator writes a unit-power +150 kHz complex CW waveform: 500,000 samples
+at 2 MS/s, covering 0.25 s; `radios.json`; a ground XML/PLY; and two robot/scene
+configuration files. The RF material is synthetic. The waveform duration leaves
+margin for ten requested 10 ms steps with the scene's 3 ms physics-clock ticks.
+`--check-config` requires neither GPU nor server. It checks finite source values,
+frequency bounds and local files, and prints source/geometry/configuration hashes.
+
+The standalone **ProjectAirSim Runtime** uses the actual ProjectAirSim server and
+client APIs without Unreal. It provides a flat ground host; Sionna separately
+traces that matching RF plane on the GPU. Use Unreal only when rendered sensors
+or detailed simulator-world geometry are required. Such geometry must also be
+exported/aligned in the RF scene. [Pinned Runtime source instructions](https://github.com/iamaisim/ProjectAirSim/blob/cfb865f29f255b15ef28ec8fdcfaa01a6b66497f/samples/projectairsim_runtime/README.md).
+
+```bash
+scripts/build_airsim_runtime.sh
+docker run --rm -d --name airsim-rf-runtime \
+  -p 127.0.0.1:8989:8989 -p 127.0.0.1:8990:8990 airsim-rf:airsim-runtime
+```
+
+With the server running, record ten updates. In the P100 image, mount this
+checkout and use host networking to reach the loopback-published server ports:
+
+```bash
+docker run --rm --gpus device=0 --network host --tmpfs /.drjit:rw,mode=1777 \
+  --user "$(id -u):$(id -g)" -v "$PWD:/work/repo" -w /work/repo \
+  -e PYTHONPATH=/work/repo/src -e MPLCONFIGDIR=/tmp/matplotlib \
+  --entrypoint /opt/airsim-rf/.venv/bin/python airsim-rf:p100-modern-gpu \
+  scripts/basis_launch.py -m airsim_rf.live --pascal-compat \
+  --config recordings/live-inputs/radios.json --output recordings/live-first-run \
+  --updates 10 --advance-ns 10000000
+```
+
+Success means `manifest.json` has `status: complete`, ten rows, increasing
+continuous timestamps and sample offsets, and one receiver data/metadata pair.
+At 3 ms tick overshoot, a requested 10 ms step can become 12 ms: 24,000 samples
+per update, 240,000 total and 0.120 signal seconds. Inspect actual elapsed time
+rather than requiring that count for every simulator clock implementation.
+Values are signed 12-bit codes in little-endian int16 I/Q pairs. Convert back
+to input-referred volts using each window's recorded volts-per-count.
+
+The manifest now hashes waveform files, RF XML/mesh and simulator configuration
+files alongside dependency/backend versions. Relative `sim_config` and RF/source
+paths resolve beside `radios.json`. Keep server logs with the recording evidence.
+After inspection, stop the smoke server with `docker stop airsim-rf-runtime`.

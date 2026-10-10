@@ -16,6 +16,7 @@ airsim-rf-coordinator = "airsim_rf.distributed.coordinator:main"
 
 [project.optional-dependencies]
 airsim = ["projectairsim>=1.1.0"]
+live = ["projectairsim>=1.1.0", "cupy-cuda12x==13.6.0"]
 test = ["pytest>=8.3"]
 
 [tool.setuptools.packages.find]

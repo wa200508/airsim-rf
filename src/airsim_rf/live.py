@@ -5,6 +5,40 @@ from pathlib import Path
 from time import perf_counter
 
 
+def validate_inputs(config_path):
+    """Check finite source files and provenance without CUDA or a simulator."""
+    from hashlib import sha256
+    import numpy as np
+    from .terrain import scene_provenance
+    path=Path(config_path).resolve();config=json.loads(path.read_text())
+    local=lambda name: (path.parent/name).resolve()
+    profile=config['receiver_profile'];rate=float(profile['sample_rate_hz'])
+    if not np.isfinite(rate) or rate <= 0:
+        raise ValueError('Positive finite sample rate required')
+    config_dir=local(config['sim_config'])
+    scene=(config_dir/config['scene']).resolve()
+    if not scene.is_file():
+        raise ValueError(f'Missing ProjectAirSim scene configuration: {scene}')
+    radios=config['radios'];sources={}
+    for name,radio in radios.items():
+        if 'waveform_npy' not in radio:
+            continue
+        waveform=local(radio['waveform_npy']);values=np.load(waveform,allow_pickle=False)
+        if values.ndim!=1 or not np.iscomplexobj(values) or not values.size or not np.isfinite(values).all():
+            raise ValueError(f'{name}: nonempty finite 1-D complex waveform required')
+        power=float(radio['transmit_power_w']);bounds=np.asarray(radio['baseband_frequency_bounds_hz'],float)
+        if not np.isfinite(power) or power<=0 or bounds.shape!=(2,) or not np.isfinite(bounds).all() or bounds[0]>bounds[1] or np.max(abs(bounds))>=rate/2:
+            raise ValueError(f'{name}: invalid power or frequency bounds')
+        sources[name]={'sha256':sha256(waveform.read_bytes()).hexdigest(),'samples':len(values),
+            'signal_seconds':len(values)/rate,'mean_sample_power':float(np.mean(abs(values)**2))}
+    if not sources or len(sources)==len(radios):
+        raise ValueError('At least one transmitter and receiver required')
+    return {'configuration_sha256':sha256(path.read_bytes()).hexdigest(),
+        'rf_scene':scene_provenance(local(config['rf_scene'])),
+        'sim_config_sha256':{p.name:sha256(p.read_bytes()).hexdigest() for p in config_dir.glob('*.json*')},
+        'waveforms':sources}
+
+
 def record(world, robots, receiver, output, *, updates, advance_ns, max_samples,
            mounts_body_m=None, provenance=None):
     """Write contiguous ci16_le captures; checkpoint metadata after every update."""
@@ -76,9 +110,14 @@ def main():
     parser.add_argument('--advance-ns', type=int, default=10_000_000)
     parser.add_argument('--max-samples', type=int, default=2_000_000)
     parser.add_argument('--pascal-compat', action='store_true')
+    parser.add_argument('--check-config', action='store_true', help='Validate files/provenance without a server or GPU')
     args = parser.parse_args()
     if min(args.updates, args.advance_ns, args.max_samples) < 1:
         parser.error('Counts and interval must be positive')
+    input_provenance=validate_inputs(args.config)
+    if args.check_config:
+        print(json.dumps(input_provenance,indent=2))
+        return
     config = json.loads(args.config.read_text())
     import mitsuba as mi
     mi.set_variant('cuda_ad_mono_polarized')
@@ -124,7 +163,7 @@ def main():
         mounts = {n: r.get('mount_body_m', [0, 0, 0]) for n, r in config['radios'].items()}
         result = record(world, robots, receiver, args.output, updates=args.updates,
             advance_ns=args.advance_ns, max_samples=args.max_samples, mounts_body_m=mounts,
-            provenance={'configuration': config, 'propagation_backend': mi.variant(),
+            provenance={'inputs':input_provenance, 'configuration': config, 'propagation_backend': mi.variant(),
                 'renderer': 'basis-cuda', 'pascal_compat': args.pascal_compat,
                 'sionna_rt': rt.__version__, 'mitsuba': mi.__version__,
                 'drjit': dr.__version__, 'cupy': cp.__version__})

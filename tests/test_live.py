@@ -94,3 +94,20 @@ def test_live_recording_keeps_completed_data_when_next_capture_fails(tmp_path):
     assert manifest['status'] == 'failed'
     assert len(manifest['rows']) == 1
     assert manifest['signal_seconds_per_receiver'] == .012
+
+
+def test_generated_first_run_inputs_are_finite_and_paths_resolve(tmp_path):
+    import importlib.util
+    from pathlib import Path
+    from airsim_rf.live import validate_inputs
+    spec=importlib.util.spec_from_file_location('prepare_live',Path(__file__).resolve().parents[1]/'examples/prepare_live_example.py')
+    example=importlib.util.module_from_spec(spec);spec.loader.exec_module(example)
+    path=example.prepare(tmp_path/'example')
+    provenance=validate_inputs(path)
+    assert provenance['waveforms']['tx0']['samples']==500000
+    assert provenance['waveforms']['tx0']['signal_seconds']==.25
+    assert provenance['rf_scene']['scene_id']=='rf_ground'
+    np.testing.assert_allclose(provenance['waveforms']['tx0']['mean_sample_power'],1)
+    np.save(path.parent/'tx0.npy',np.array([complex(float('nan'),0)]))
+    with pytest.raises(ValueError,match='finite'):
+        validate_inputs(path)

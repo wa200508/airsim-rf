@@ -37,3 +37,20 @@ Do not relabel geometry/height/along-track intensity or interreceiver TDOA/FDOA
 ambiguity surfaces as those displays. Use line profiles for other observables.
 Do not fill temporal gaps between short captures to imply a continuous waterfall.
 [Definitions and current figures](sensing-plots.md).
+
+## Documentation and scientific product checks
+
+`check_docs.py` checks files, Markdown fragments and duplicate explicit citation
+IDs outside code fences. `check_sensing_products.py` checks both gallery
+manifests, input hashes, PNG/SVG presence and nonfinite metrics against explicit
+status and raw quantizer-zero counts. Run it in the scientific Python environment:
+
+```bash
+python scripts/check_sensing_products.py
+```
+
+CI exercises both sensing-analysis and physical-scenario generators. Still inspect
+rendered outputs: machine checks cannot establish legible labels, meaningful axes,
+normalization, scenario interpretation or physical realism. Undefined values are
+acceptable only when both metadata and plots explain them. Current guides are
+short entry points; dated research is in `docs/archive/`.
