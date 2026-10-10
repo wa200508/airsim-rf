@@ -4,7 +4,7 @@
 traces scene paths on CUDA/OptiX, renders private sampled inputs on CUDA, and
 writes continuous timestamped I/Q with receiver noise, filtering and signed
 12-bit ADC codes. It requires a running ProjectAirSim server and the optional
-Python client. [Setup and the explicit P100 environment](setup.md).
+Python client. [Setup and supported execution environments](setup.md).
 
 Copy [the configuration example](../examples/config/live-radios.json), edit the
 server address, ProjectAirSim scene/config paths, radio-to-robot mappings and

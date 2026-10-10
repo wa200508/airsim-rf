@@ -3,7 +3,7 @@
 GitHub Actions builds the CPU container, runs tests offline as the unprivileged
 container user, smoke-tests radar, distributed workers, SDR and terrain examples,
 and then publishes the tested image. [Workflow](../.github/workflows/container.yml).
-CUDA tests skip in CPU CI; their qualification is a separate P100 collection.
+CUDA tests skip in CPU CI; their qualification requires a separate run on compatible hardware.
 
 The failure at commit bf58884 was a reporting regression: historical records
 without sample rate or measured wall totals caused the basis report to crash.

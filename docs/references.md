@@ -277,6 +277,8 @@ Reviewed main commit: `f9b1937bd909b33c0705c7deaa137adca54b5fe0`.
 
 
 
+For actual sample rendering, see the [channel-to-I/Q source review](#iq-rendering-references) and [current runtime context](performance.md). These distinguish channels, short radar captures and continuous receiver output.
+
 This review compares published implementations with airsim-rf's environmental
 propagation and terrain demonstrations. Sources were inspected on **2026-10-03**;
 the implementation baseline is commit
