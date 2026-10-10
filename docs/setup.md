@@ -721,9 +721,14 @@ bash scripts/regenerate_p100_figures.sh
 The script uses `airsim-rf:p100-modern-gpu` by default; override
 `RF_P100_GPU_IMAGE` when using an equivalent qualified image. It preserves all
 published sample/path budgets, stages recordings under `recordings/`, and copies
-PNG/SVG, JSON and NPZ assets into `docs/figures`. Plotting, matched filtering,
+JSON and NPZ source data into `docs/figures`, then generates the current
+sensing PNG/SVG figures and scenario illustrations there. Plotting, matched filtering,
 spectral analysis and receiver filter/noise/ADC remain host work. CUDA is required;
-there is no fallback. [Generation provenance and checksums](../results/figures/p100-20261009/manifest.json).
+there is no fallback. [Current generation provenance and checksums](../results/figures/terrain-relief-20261009/manifest.json).
+
+The hardware and backend are execution choices, not properties of the RF
+observables. The same source-data analysis and plotting can run in the standard
+Python environment; see the [sensing figure guide](sensing-plots.md).
 
 These are sampled snapshot demonstrations, not continuous flight or throughput
 measurements. The 32 waterfall epochs span 3.1 s but generate only 384 µs of I/Q

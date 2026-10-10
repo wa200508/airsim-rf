@@ -225,9 +225,9 @@ cannot resolve vegetation or small-scale roughness.
 
 The [scenario diagrams and sensing figures](sensing-plots.md) show the current
 physical arrangements and connect them to the measured RF observables. All
-current source data was regenerated on the P100 with CUDA/OptiX propagation
-and direct CUDA I/Q rendering after changing the mesh on 2026-10-09. STFT,
-matched filtering and plotting are host postprocessing.
+current source data was regenerated after changing the mesh on 2026-10-09.
+Received I/Q comes from traced propagation paths; short-time spectral analysis
+and matched filtering produce the displayed observables.
 
 The aggregate 100-TX/1-RX demonstration uses TX height 35 m and RX height 40 m
 at a fixed datum, lifting both flat-ground and terrain controls equally.
@@ -304,7 +304,7 @@ range–Doppler map is claimed.
 
 ### Reproduction and raw data
 
-Run the [P100 regeneration workflow](setup.md#regenerate-documentation-figures-on-the-p100):
+Run the [figure regeneration workflow](setup.md#regenerate-documentation-figures-on-the-p100):
 
 ```bash
 bash scripts/regenerate_p100_figures.sh

@@ -3,7 +3,7 @@
 ## Physical scenarios behind the figures
 
 These are **two separate offline experiments**, not a single radar/ESM mission.
-The diagrams below use the recorded P100 source data. They show RF Cartesian
+The diagrams below use the recorded simulation source data. They show RF Cartesian
 coordinates and synthetic terrain, not a screenshot of a live AirSim flight.
 [Diagram provenance and source hashes](figures/sensing_scenarios.json) are saved
 with the figures.
@@ -33,7 +33,7 @@ in that waterfall. The weak-line plot instead compares twelve separate captures
 along those routes. The passive delay/frequency cuts compare the two receivers'
 recordings; the narrowband tones provide poor delay discrimination.
 
-[P100 mesh visibility checks](figures/sensing_visibility.json) show that the
+[Mesh visibility checks](figures/sensing_visibility.json) show that the
 final capture's **Beacon A → Receiver 1 direct path is blocked by terrain**;
 the other three direct links are clear. The blocked beacon can still arrive
 through reflected or diffuse paths. This explains why its received band is
@@ -89,9 +89,8 @@ The actual receiver sample rates are 2,000,010 and 1,999,980 samples/s. Frequenc
 bins are approximately 3.906 kHz apart; Hann equivalent noise bandwidth is about
 5.859 kHz. Colors show input-referred **PSD in dBm/Hz**, using the 50 Ω model,
 with one shared scale for both receivers. The two stationary bands are the
-recorded beacons; the waterfall does not imply frequency hopping. The underlying
-propagation and I/Q were generated on the P100; this STFT and plotting use SciPy
-on the host. The receiver remains a specification-based, uncalibrated model.
+recorded beacons; the waterfall does not imply frequency hopping. The waterfall is computed from recorded received I/Q using a short-time Fourier
+transform. The receiver remains a specification-based, uncalibrated model.
 
 ## Radar profiles and estimation error
 
@@ -172,14 +171,13 @@ and [Guo et al.'s TDOA/FDOA geometry study](https://doi.org/10.1177/168781401773
 Their algorithms and demonstrated capabilities are not claimed for this data.
 
 ```bash
-python scripts/basis_launch.py benchmarks/generate_sensing_figures.py --backend cuda
-python scripts/basis_launch.py benchmarks/check_sensing_visibility.py --backend cuda
+python benchmarks/generate_sensing_figures.py
 python benchmarks/generate_sensing_scenarios.py
 ```
 
 [Processed numerical products](figures/sensing_products.npz) and
 [window definitions, source hashes and processing parameters](figures/sensing_products.json)
-are saved beside the figures. `--backend numpy` permits CPU-only analysis of
-the same recorded P100 data. A genuine radar range–Doppler figure requires a new
+are saved beside the figures. The plotting commands use the recorded source
+data and preserve the stated processing definitions. A genuine radar range–Doppler figure requires a new
 coherent acquisition with its pulse timing, phase model, CPI and Doppler ambiguity
 limits recorded explicitly.

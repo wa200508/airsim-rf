@@ -5,8 +5,8 @@ noise and ADC → timestamped SDR recordings. The project also provides radar
 models and an AMS-GRA radar worker; continuous SDR uses a separate capture API.
 
 Start with the [live AirSim-to-SDR workflow](docs/live-workflow.md), then consult
-[setup and containers](docs/setup.md) for dependencies and the explicit P100
-compatibility environment. Live capture requires a running ProjectAirSim server.
+[setup and containers](docs/setup.md) for dependencies and supported execution
+environments. Live capture requires a running ProjectAirSim server.
 
 The latest measured 100-TX × 10-RX workload costs **44.68 wall seconds per
 simulated signal second** on one P100: 11.1696 wall seconds for 0.250 signal
