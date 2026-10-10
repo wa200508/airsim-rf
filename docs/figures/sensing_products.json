@@ -7,15 +7,51 @@
     "pluto_esm_report.json": "5ae063cce0405082266d7fdb19f57cb3a0e886dbe2fbee398e7454f0e7e1bb20"
   },
   "figures": [
-    "sensing_radar_range_time",
     "sensing_radar_delay_profiles",
     "sensing_radar_error",
     "sensing_esm_spectrum",
+    "sensing_esm_waterfall",
     "sensing_esm_line_prominence",
-    "sensing_passive_caf",
     "sensing_passive_cuts",
     "sensing_passive_geometry"
   ],
+  "waterfalls": [
+    {
+      "receiver": 1,
+      "actual_sample_rate_hz": 2000010.0,
+      "capture_start_ns": 5500000000,
+      "capture_samples": 4096,
+      "capture_seconds": 0.0020479897600511996,
+      "frame_count": 29,
+      "window_samples": 512,
+      "hop_samples": 128,
+      "fft_samples": 512,
+      "bin_spacing_hz": 3906.26953125,
+      "hann_enbw_hz": 5859.404296875,
+      "window": "Hann",
+      "units": "dBm/Hz",
+      "time_order": "newest at top",
+      "source": "final contiguous 12-bit ADC I/Q capture; no interpolation between snapshots"
+    },
+    {
+      "receiver": 2,
+      "actual_sample_rate_hz": 1999980.0,
+      "capture_start_ns": 5500000000,
+      "capture_samples": 4096,
+      "capture_seconds": 0.002048020480204802,
+      "frame_count": 29,
+      "window_samples": 512,
+      "hop_samples": 128,
+      "fft_samples": 512,
+      "bin_spacing_hz": 3906.2109375,
+      "hann_enbw_hz": 5859.31640625,
+      "window": "Hann",
+      "units": "dBm/Hz",
+      "time_order": "newest at top",
+      "source": "final contiguous 12-bit ADC I/Q capture; no interpolation between snapshots"
+    }
+  ],
+  "color_map_policy": "Frequency-time PSD waterfall only; no range-Doppler map without a qualified coherent pulse train",
   "caf_backend": "cuda",
   "caf_definition": "sum Hann[n] s2[n] conj(s1[n-lag]) exp(-j2pi f n/fs), energy-normalized power",
   "caf_capture_seconds": 0.002048,

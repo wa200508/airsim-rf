@@ -16,13 +16,14 @@ figure_run=(docker run --rm --gpus "device=${RF_PROFILE_GPU:-0}" --network none
 "${figure_run[@]}" benchmarks/generate_rf_waterfalls.py --backend cuda --pascal-compat --output-dir "$figure_stage/waterfalls"
 "${figure_run[@]}" benchmarks/generate_terrain_signature.py --backend cuda --pascal-compat --output-dir "$figure_stage/terrain"
 "${figure_run[@]}" examples/pluto_esm_drones.py --backend cuda --pascal-compat --output-dir "$figure_stage/pluto"
-# Finite final-block SigMF exports stay local; the published NPZ contains all epochs.
+# Publish source data; older demonstration color maps stay local.
+# The sensing generator below produces the current waterfalls and line plots.
 python3 - "$figure_stage" <<'PY'
 from pathlib import Path
 import shutil
 import sys
 for path in Path(sys.argv[1]).glob('*/*'):
-    if path.suffix in {'.png', '.svg', '.npz', '.json'}:
+    if path.suffix in {'.npz', '.json'}:
         shutil.copy2(path, Path('docs/figures')/path.name)
 PY
 

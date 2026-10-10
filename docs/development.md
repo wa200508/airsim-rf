@@ -23,3 +23,17 @@ Do not copy its tables into every guide. Historical stage tables live only in
 [the runtime archive](archive/runtime.md); update them with
 `scripts/update_runtime_docs.py` and `scripts/update_profiling_breakdown.py`.
 Keep scopes and simulation-time denominators beside new timing claims.
+
+## Color-map convention
+
+Full-color 2D sensor plots must be spectrum waterfalls (frequency versus
+acquisition time, color = spectral power/PSD) or properly processed range–Doppler
+maps (range versus Doppler, color = response power). Record window/hop/FFT size,
+units and capture duration for waterfalls; record fast-time range processing,
+PRF, pulse count, coherent observation length and Doppler ambiguity limits for
+range–Doppler maps. FFT padding does not add physical resolution.
+
+Do not relabel geometry/height/along-track intensity or interreceiver TDOA/FDOA
+ambiguity surfaces as those displays. Use line profiles for other observables.
+Do not fill temporal gaps between short captures to imply a continuous waterfall.
+[Definitions and current figures](sensing-plots.md).

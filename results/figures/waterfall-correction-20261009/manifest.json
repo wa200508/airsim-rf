@@ -1,0 +1,83 @@
+{
+  "scope": "Correct color plots to frequency-time PSD waterfalls; remove range-position and interreceiver CAF heatmaps",
+  "references": [
+    "https://www.rohde-schwarz.com/lat/knowledge-center/videos/how-to-visualize-signals-with-a-spectrogram-on-the-fswx_251220-1613784.html",
+    "https://www.mathworks.com/help/phased/ug/range-doppler-response.html"
+  ],
+  "source_sha256": {
+    "benchmarks/generate_sensing_figures.py": "f25155dcaa586096471219edc00a6f2d598e51a65ce236ed160783a761e33cbd",
+    "src/airsim_rf/sensing_analysis.py": "255196338c4a52a6e6bedc29146193673c691cf147a4ef22b081a3276daa6ad3",
+    "tests/test_sensing_analysis.py": "4e2c32e9929658de56169a5b574c40f20ab04f0e832d75af7047f757d5d9c86a"
+  },
+  "outputs_sha256": {
+    "sensing_esm_line_prominence.png": "7b3fe932ff45a0680e325b29c23e1d687ab75046a2b4b7a13b715a14ee4d190c",
+    "sensing_esm_line_prominence.svg": "d9adae39caefc98c96aadc063158b5872bc0f685ecad2325e42923fbebac8163",
+    "sensing_esm_spectrum.png": "fe84f95638b7ba89e30645e141fbd6aa82c9df08a5ca0d2344932a6d6f783a4f",
+    "sensing_esm_spectrum.svg": "911027b272feb78b36c8b4c62bc662e560ab31e74c0a24f84997617b3380dafa",
+    "sensing_esm_waterfall.png": "9de2f92d5009020dd34ea51c9f5e4d05fb608f4c90b24b5b943a445efca62c6b",
+    "sensing_esm_waterfall.svg": "3a731b717a2a66954b159e34c948338c6d87abffbf551c617d6489ddd3033052",
+    "sensing_passive_cuts.png": "c9c5051dbba299793ef9ea948de85a641223b9f9554e3c667359822b679dd209",
+    "sensing_passive_cuts.svg": "adac6555c20d80340dbe3655df6983a8c1ee8ff60376aec21e7ae37d845d2712",
+    "sensing_passive_geometry.png": "4c90fedbd4134716367a67db4d5888c9662eca83a8ac15a3e0c451aa76c61cc4",
+    "sensing_passive_geometry.svg": "75d5bed97ceb6f5df2423efccb4a14e9b83b648631038228439b1386a1103c09",
+    "sensing_products.json": "4dd6369d57bddaa303d5a39e1b6b483e74cf777060e28d924f00c4b725ab1087",
+    "sensing_products.npz": "cb4a9ee5dff8991029658fbf9f4e77213de4dcd7b5361b823531bd51d76f9be2",
+    "sensing_radar_delay_profiles.png": "33d026d4c4e2abc991e492041665b8dc00ed887e44171084c16fa3e4616982c5",
+    "sensing_radar_delay_profiles.svg": "53c937f57dbbcd4d02d64de199df1b049dce8d4f3d414167551cb20dd0165731",
+    "sensing_radar_error.png": "cde85c19d8371d5216207880b091c59edfdc3b10c36a43c4a820c7a53c48e075",
+    "sensing_radar_error.svg": "76d3f0d318dc088ea52fdbfcda88056d56dc97029d9444a954ae9ead239e8c93"
+  },
+  "waterfalls": [
+    {
+      "receiver": 1,
+      "actual_sample_rate_hz": 2000010.0,
+      "capture_start_ns": 5500000000,
+      "capture_samples": 4096,
+      "capture_seconds": 0.0020479897600511996,
+      "frame_count": 29,
+      "window_samples": 512,
+      "hop_samples": 128,
+      "fft_samples": 512,
+      "bin_spacing_hz": 3906.26953125,
+      "hann_enbw_hz": 5859.404296875,
+      "window": "Hann",
+      "units": "dBm/Hz",
+      "time_order": "newest at top",
+      "source": "final contiguous 12-bit ADC I/Q capture; no interpolation between snapshots"
+    },
+    {
+      "receiver": 2,
+      "actual_sample_rate_hz": 1999980.0,
+      "capture_start_ns": 5500000000,
+      "capture_samples": 4096,
+      "capture_seconds": 0.002048020480204802,
+      "frame_count": 29,
+      "window_samples": 512,
+      "hop_samples": 128,
+      "fft_samples": 512,
+      "bin_spacing_hz": 3906.2109375,
+      "hann_enbw_hz": 5859.31640625,
+      "window": "Hann",
+      "units": "dBm/Hz",
+      "time_order": "newest at top",
+      "source": "final contiguous 12-bit ADC I/Q capture; no interpolation between snapshots"
+    }
+  ],
+  "figures": [
+    "sensing_radar_delay_profiles",
+    "sensing_radar_error",
+    "sensing_esm_spectrum",
+    "sensing_esm_waterfall",
+    "sensing_esm_line_prominence",
+    "sensing_passive_cuts",
+    "sensing_passive_geometry"
+  ],
+  "qualification": {
+    "analysis_checks_cpu_and_cuda_passed": 9,
+    "waterfall_png_inspected": true,
+    "offline_generation_smoke_passed": true,
+    "offline_cpu_suite_passed": 176,
+    "cuda_cases_skipped_in_cpu_suite": 158
+  },
+  "range_doppler_status": "Not generated: current radar snapshots do not constitute a qualified coherent pulse train."
+}

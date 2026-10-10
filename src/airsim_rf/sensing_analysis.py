@@ -66,3 +66,24 @@ def align_known_receiver_clocks(iq, *, actual_rates_hz, receiver_clocks,
         offset = carrier_hz*clock['error_ppm']*1e-6
         corrected.append(wave(times)*np.exp(1j*(2*np.pi*offset*times+clock['phase_rad'])))
     return np.asarray(corrected)
+
+
+def received_waterfall(iq, *, sample_rate_hz, impedance_ohm=50., window_samples=512, hop_samples=128):
+    """Frequency × elapsed-time PSD from one contiguous received I/Q block.
+
+    No padding or bridging between disjoint captures. Frames are Hann-windowed
+    and dated at their centers; PSD is input-referred W/Hz, two-sided.
+    """
+    from scipy.signal import spectrogram
+    values = np.asarray(iq)
+    if values.ndim != 1 or not np.isfinite(values).all():
+        raise ValueError('Finite one-dimensional I/Q required')
+    if not np.isfinite(sample_rate_hz) or sample_rate_hz <= 0 or not np.isfinite(impedance_ohm) or impedance_ohm <= 0:
+        raise ValueError('Positive finite sample rate and impedance required')
+    if not 1 <= hop_samples <= window_samples <= len(values):
+        raise ValueError('Window/hop must fit the contiguous capture')
+    frequency, time, psd = spectrogram(values, fs=sample_rate_hz,window='hann',
+        nperseg=window_samples,noverlap=window_samples-hop_samples,nfft=window_samples,
+        detrend=False,return_onesided=False,scaling='density',mode='psd')
+    order = np.argsort(frequency)
+    return frequency[order], time, psd[order]/impedance_ohm

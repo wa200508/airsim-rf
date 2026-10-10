@@ -7,7 +7,7 @@ from pathlib import Path
 import numpy as np
 from scipy.signal import welch
 
-from airsim_rf.sensing_analysis import power_db, cross_ambiguity, align_known_receiver_clocks
+from airsim_rf.sensing_analysis import power_db, cross_ambiguity, align_known_receiver_clocks, received_waterfall
 
 C = 299792458.
 
@@ -44,13 +44,6 @@ def main():
     pflat, pdem = np.abs(radar['compressed_flat'])**2, np.abs(radar['compressed_dem'])**2
     reference = max(pflat.max(),pdem.max())
     data.update(path_length_m=length, distance_m=distance, range_time_flat=power_db(pflat,reference), range_time_dem=power_db(pdem,reference))
-    fig, axes = plt.subplots(1,2,figsize=(7.2,3.1),layout='constrained',sharey=True)
-    for ax,key,title in zip(axes,('range_time_flat','range_time_dem'),('(a) Flat control','(b) DEM surface')):
-        im=ax.pcolormesh(length,distance,data[key],vmin=-40,vmax=0,cmap='viridis',shading='nearest',rasterized=True)
-        ax.set(xlabel=r'Bistatic path length $c\tau$ (m)',ylabel='Along-track distance (m)')
-        panel(ax,title)
-    fig.colorbar(im,ax=axes,label='Matched-filter power / shared peak (dB)')
-    save(fig,'sensing_radar_range_time')
 
     fig, axes=plt.subplots(1,3,figsize=(7.6,2.6),layout='constrained',sharey=True)
     for ax,feature,letter in zip(axes,terrain['features'],'abc'):
@@ -103,6 +96,32 @@ def main():
     axes[0].set_ylabel('Input-referred PSD (dBm/Hz)');fig.legend(*axes[0].get_legend_handles_labels(),loc='outside upper center',ncol=3)
     save(fig,'sensing_esm_spectrum')
 
+    fig,axes=plt.subplots(1,2,figsize=(7.2,3),layout='constrained')
+    waterfall_metadata=[]
+    for ri,ax in enumerate(axes):
+        actual_rate=radio['records'][-1]['receivers'][ri]['actual_sample_rate_hz']
+        wf_frequency,wf_time,wf_psd=received_waterfall(sdr['adc_iq_volts'][-1,ri],
+            sample_rate_hz=actual_rate,impedance_ohm=impedance)
+        dbm_hz=10*np.log10(np.maximum(wf_psd,1e-30)/1e-3)
+        im=ax.pcolormesh(wf_frequency/1e3,wf_time*1000,dbm_hz.T,
+            vmin=-175,vmax=-90,cmap='viridis',shading='nearest',rasterized=True)
+        ax.set(xlabel='Baseband frequency (kHz)',ylabel='Time from capture start (ms)',xlim=(-400,400))
+        panel(ax,f'({"ab"[ri]}) Receiver {ri+1} waterfall')
+        data[f'waterfall_frequency_hz_{ri}']=wf_frequency
+        data[f'waterfall_time_seconds_{ri}']=wf_time
+        data[f'waterfall_psd_w_per_hz_{ri}']=wf_psd
+        waterfall_metadata.append({'receiver':ri+1,'actual_sample_rate_hz':actual_rate,
+            'capture_start_ns':int(sdr['sim_time_ns'][-1]),'capture_samples':4096,
+            'capture_seconds':4096/actual_rate,'frame_count':len(wf_time),
+            'window_samples':512,'hop_samples':128,'fft_samples':512,
+            'bin_spacing_hz':actual_rate/512,'hann_enbw_hz':1.5*actual_rate/512,
+            'window':'Hann','units':'dBm/Hz','time_order':'newest at top',
+            'source':'final contiguous 12-bit ADC I/Q capture; no interpolation between snapshots'})
+    axes[1].set_ylabel('')
+    fig.colorbar(im,ax=axes,label='Input-referred PSD (dBm/Hz)')
+    save(fig,'sensing_esm_waterfall')
+
+
     fig,axes=plt.subplots(1,2,figsize=(7.2,2.8),layout='constrained',sharey=True)
     for ri,ax in enumerate(axes):
         target=expected[ri,1]
@@ -126,15 +145,6 @@ def main():
     raw_band=np.abs(freqcaf-bias)<2500
     corrected_band=np.abs(freqcaf)<2500
     data.update(caf_lag_seconds=lags,caf_raw_frequency_hz=freqcaf[raw_band],caf_raw_power=raw[:,raw_band],caf_corrected_frequency_hz=freqcaf[corrected_band],caf_corrected_power=aligned[:,corrected_band])
-    fig,axes=plt.subplots(1,2,figsize=(7.2,3),layout='constrained',sharey=True)
-    for ax,power,center,title in zip(axes,(raw,aligned),(bias,0),('(a) Uncorrected clocks','(b) Truth clock correction')):
-        band=np.abs(freqcaf-center)<2500
-        im=ax.pcolormesh(lags*1e6,(freqcaf[band]-center)/1e3,power_db(power[:,band]).T,vmin=-45,vmax=0,cmap='viridis',shading='nearest',rasterized=True)
-        ax.set(xlabel='Relative lag (µs)',ylabel='Frequency difference about center (kHz)')
-        panel(ax,title)
-    axes[1].set_ylabel('')
-    fig.colorbar(im,ax=axes,label='CAF power / each panel peak (dB)')
-    save(fig,'sensing_passive_caf')
 
     fig,axes=plt.subplots(1,2,figsize=(7.2,2.8),layout='constrained')
     for power,center,label in ((raw,bias,'Recorded clocks'),(aligned,0,'Oracle corrected')):
@@ -175,7 +185,7 @@ def main():
     np.savez_compressed(args.output_dir/'sensing_products.npz',**data)
     manifest={'scope':'Postprocessing recorded P100 data; no new propagation, detection trial ensemble or live geolocation',
         'source_sha256':{n:sha256((args.data_dir/n).read_bytes()).hexdigest() for n in ('terrain_scan_iq.npz','terrain_signature_data.json','pluto_esm_iq.npz','pluto_esm_report.json')},
-        'figures':figures,'caf_backend':args.backend,'caf_definition':'sum Hann[n] s2[n] conj(s1[n-lag]) exp(-j2pi f n/fs), energy-normalized power',
+        'figures':figures,'waterfalls':waterfall_metadata,'color_map_policy':'Frequency-time PSD waterfall only; no range-Doppler map without a qualified coherent pulse train','caf_backend':args.backend,'caf_definition':'sum Hann[n] s2[n] conj(s1[n-lag]) exp(-j2pi f n/fs), energy-normalized power',
         'caf_capture_seconds':len(pair[0])/fs,'caf_common_support_seconds':(len(pair[0])-40)/fs,'caf_native_frequency_scale_hz':fs/(len(pair[0])-40),
         'caf_fft_interpolated_spacing_hz':float(freqcaf[1]-freqcaf[0]),'caf_lag_spacing_seconds':1/fs,'caf_raw_frequency_center_hz':bias,
         'oracle_clock_correction':'Recorded actual sample rates and receiver LO/phase truth; 32-tap Lanczos resampling. Not an estimated calibration.',
