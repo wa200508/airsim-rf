@@ -460,9 +460,12 @@ The documented [raw recording](figures/pluto_esm_iq.npz) and
 
 All coordinates below are **RF x north, y west, z up**, in metres, matching
 the [AirSim transform](../README.md#attach-to-an-airsim-vehicle). Antennas are at
-the given datum elevations, not at a fixed terrain-relative height.
+the nominal datum heights below unless the DEM requires a climb to retain
+5 m clearance. The current mesh spans 0–30 m. Actual poses and local vertical
+velocities are recorded per capture in [the source report](figures/pluto_esm_report.json).
+The trajectory is prescribed geometrically; no autopilot dynamics are simulated.
 
-| Mount | Role | Start x/y/z (m) | Velocity x/y/z (m/s) |
+| Mount | Role | Nominal start x/y/z (m) | Nominal velocity x/y/z (m/s) |
 | --- | --- | --- | --- |
 | beacon_a | Strong emitter | −60 / −30 / 12 | 2 / 0 / 0 |
 | beacon_b | Weak emitter | 45 / 45 / 18 | −1 / 0 / 0 |

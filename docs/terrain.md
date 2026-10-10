@@ -210,378 +210,112 @@ per link is a starting budget, not a fidelity guarantee.
 
 ## Flat ground and DEM terrain: tested RF scenarios
 
+The current synthetic RF terrain spans **0–30 m**, over a 200 × 200 m area.
+It uses a 21 × 21 grid at 10 m spacing, exported as 441 vertices and 800
+triangles. The reproducible [DEM formula](../src/airsim_rf/terrain.py) retains
+the two broad hills and drainage swale, clips below-zero elevation to zero,
+and scales the maximum to 30 m. Zero-height patches are real parts of the mesh.
+This is a synthetic scene, not surveyed terrain.
 
+The mesh is the geometry Sionna intersects: relief changes visibility, path
+lengths, facet normals, reflected and diffuse contributions. Uniform material
+properties remain permittivity 5, conductivity 0.01 S/m, thickness 0.5 m and
+scattering coefficient 0.3, with Lambertian diffuse scattering. A 10 m mesh
+cannot resolve vegetation or small-scale roughness.
 
-**Runtime context (2026-10-05):** Offline selected epochs and waveform plots demonstrate terrain effects, not a continuously advancing 120 Hz end-to-end flight. See [current runtime and wall-clock costs](archive/runtime.md#runtime-status) for comparable measurements, hardware, exclusions and ten-minute estimates.
+The [scenario diagrams and sensing figures](sensing-plots.md) show the current
+physical arrangements and connect them to the measured RF observables. All
+current source data was regenerated on the P100 with CUDA/OptiX propagation
+and direct CUDA I/Q rendering after changing the mesh on 2026-10-09. STFT,
+matched filtering and plotting are host postprocessing.
 
-For a clear view of individual terrain features in I/Q, see the
-[focused beam scan and bandwidth comparison](terrain.md#terrain-signature). The
-aggregate scenario below tests many links; it is not a terrain imaging scan.
+The aggregate 100-TX/1-RX demonstration uses TX height 35 m and RX height 40 m
+at a fixed datum, lifting both flat-ground and terrain controls equally.
+Its horizontal routes and antenna motion retain the shared timing fixture's
+rules. These higher-altitude demonstration poses differ from historical
+throughput fixtures; the regenerated figure data is not a new throughput
+benchmark. See [aggregate source data](figures/scenario_data.json).
 
-The [published environmental RF comparison](references.md#environmental-rf-references)
-connects this scenario to terrain-clutter and scene-multipath examples from
-MathWorks, Ansys, Remcom, NVIDIA and RadarSimPy, with citations and modeling limits.
+The two-beacon/two-receiver ESM example uses scripted terrain clearance:
+`z = max(nominal datum height, DEM(x,y) + 5 m)`. Horizontal routes remain the
+same; local facet slope sets vertical velocity for endpoint Doppler. The
+[radio report](figures/pluto_esm_report.json) records actual poses, velocities
+and clearance at every capture. This is geometric trajectory prescription,
+not simulated autopilot dynamics or a live AirSim flight. AirSim's visual
+world must separately use matching geometry for a live experiment.
 
-These figures come from actual Sionna channel solves and the repository's complex
-voltage synthesis. They compare the original flat-ground fixture with a small
-synthetic digital elevation model (DEM). The offline scenario supplies platform
-poses directly; it does not require a live AirSim instance.
-
-### Elevation model
-
-The terrain spans 200 × 200 m, sampled on a 21 × 21 grid at 10 m spacing. Broad
-Gaussian hills, a diagonal drainage swale, a gentle eastward slope and low
-sinusoidal relief give elevations from −1.73 to 6.45 m. The reproducible formula
-is in [`demo_terrain()`](../src/airsim_rf/terrain.py). It represents plausible low
-relief, not a surveyed site or a calibrated land-cover model.
-
-The figures and underlying I/Q were regenerated on the P100 using CUDA/OptiX
-propagation and direct CUDA rendering. [Reproduction and timing scope](setup.md#regenerate-documentation-figures-on-the-p100).
-
-[Earlier demonstration illustration: DEM elevations, platform locations and triangulated surface](figures/terrain_overview.png)
-
-Each grid cell becomes two triangles, for 441 vertices and 800 faces. Those
-triangles are the geometry Sionna actually intersects: elevations affect path
-lengths, surface normals, specular reflections and visibility. The RF scene
-uses face normals, so its surface is piecewise planar. A 10 m mesh does not
-resolve soil roughness, vegetation or small terrain features.
-
-`TerrainGrid(x_m, y_m, heights_m)` also accepts other finite, increasing local
-Cartesian grids. `write_ply()` exports RF geometry and `elevation_at()` uses the
-same triangle interpolation as that geometry. Heights are in metres, with z
-upward and a shared local datum. No raster/GIS ingestion, georeferencing or
-automatic AirSim world import is included. A running AirSim scene must use
-matching geometry and the existing coordinate conversion for consistent truth.
-
-Both fixtures retain identical synthetic material properties: relative
-permittivity 5, conductivity 0.01 S/m, slab thickness 0.5 m, scattering
-coefficient 0.3 and Lambertian diffuse scattering. Sionna uses its nonmagnetic
-material model. There are no spatial land-cover classes or roughness textures.
-
-### Platform and radio scenario
-
-| Parameter | Value |
-| --- | --- |
-| Propagation | Independent one-way TX → RX; LoS, specular and diffuse; depth 1 |
-| Transmitters | 100, initially x=0, y evenly spaced from −25 to +25 m, z=10 m |
-| Receiver | One physical RX, initially (10, −5, 15) m |
-| TX motion | +1 m/s along x, constant absolute z |
-| RX motion | +0.5 m/s along y, constant absolute z |
-| Antennas | 1 × 1 TR 38.901, vertical polarization, approximately downward |
-| Antenna pitch | TX: π/2 + 0.05 sin(t+i); RX: π/2 + 0.05 sin(t), radians |
-| Carrier | 24.125 GHz |
-| Diffuse attempts | 1,028 per TX/RX pair; 514 from each endpoint |
-| Proposal distribution | 90% endpoint gain pattern, 10% uniform directions |
-| Random seed | 42, common random numbers across pulse epochs |
-| Pulse cadence | 200 Hz, channel computed once per selected pulse |
-| Figure snapshots | 32, every twentieth pulse: 0 to 3.1 s in 0.1 s steps |
-
-The figures use the same setup and trajectory function as
-`benchmark_scattering.py`. The 100-TX/1-RX channel workload represents one
-receiver worker in the proposed 100-TX/10-RX deployment. The figures do not
-measure ten workers concurrently. Each platform stays at a fixed height above
-the datum, so its clearance above the DEM varies; it is not terrain-following.
-
-### Delay and Doppler waterfalls
-
-[Earlier demonstration illustration: Flat-ground and DEM channel delay and Doppler waterfalls](figures/channel_waterfalls.png)
-
-Every row is one channel snapshot. We histogram **sum(|a|²)** across all valid
-direct, specular and diffuse paths from all 100 transmitters. This is an
-incoherent channel-power diagnostic; mutually uncorrelated, unit-power
-transmissions give it a received-power interpretation. It is not the coherent
-voltage sum from 100 transmitters.
-
-The left column groups absolute path delays into 12.5 ns bins and displays
-0–400 ns, zooming the stronger returns. The underlying data cover 0–1,200 ns.
-The right column groups instantaneous path Doppler into approximately 4.17 Hz
-bins over −200 to +200 Hz. This is Sionna's geometric endpoint Doppler, **not**
-a slow-time FFT or a measured velocity spectrum. Each column shares one color
-scale between flat ground and terrain; rows are not independently normalized.
-
-Over this trajectory the flat fixture retains 96,383–96,416 diffuse paths per
-snapshot plus 100 LoS and 100 specular paths. The DEM retains 96,483–96,514
-diffuse paths, 100 LoS paths and 115–119 specular paths. These are the actual
-retained paths, not a promise that every sampling attempt produces a return.
-
-### Coherent LFM response
-
-[Earlier demonstration illustration: Single-transmitter LFM pulse-compressed waterfalls](figures/lfm_waterfalls.png)
-
-For this plot we select **TX 50 → RX 0** from those same channel solves. We
-generate complex voltage with the existing `synthesize_voltage()` function,
-using a 20 MHz LFM sweep over 8 µs, 1 W transmit power, a 50 Ω load, 50 MS/s and
-a 12 µs receive window. Thermal noise is disabled. These are explicit
-demonstration settings, not an additional off-the-shelf radar specification.
-
-Each path delays the chirp, scales it by its complex Sionna coefficient and
-applies narrowband Doppler during the pulse. The path voltages are added
-coherently. A linear matched filter, divided by transmitted pulse energy,
-produces each waterfall row. The color is 10 log10 of its voltage magnitude
-squared, relative to 1 V², with a shared scale for both surfaces.
-
-The horizontal axis is **total TX–surface–RX path length cτ**. This is a
-bistatic link, so dividing by two and calling it monostatic target range would
-be incorrect. The nominal path-length resolution is c/B ≈ 15 m, with a 6 m
-sample spacing. Matched-filter sidelobes and coherent cancellation also affect
-the displayed response.
-
-The same seed does not create persistent physical scatterers. Sampled hit
-points move with antenna proposals. The coherent response is valid as an output
-of the current model, but its pulse-to-pulse fluctuations do not establish
-realistic rough-ground speckle or Doppler coherence. No slow-time radar FFT is
-used here. [The scattering guide](terrain.md#ground-scattering) explains those limits.
-
-### I/Q frequency waterfall
-
-[Earlier demonstration illustration: Received LFM I/Q spectrograms for flat ground and terrain](figures/iq_spectrograms.png)
-
-These are spectrograms of the **actual complex voltage samples** for TX 50 at
-the final, 3.1 s epoch. The sweep runs from approximately −10 to +10 MHz; delayed
-copies and interference modify its response. We use a 128-sample Hann window,
-16-sample hop and 256-point FFT, with a two-sided power spectral density in
-V²/Hz. The noise-free window ends after 12 µs, long before the next 5 ms PRI.
-The data do not represent continuous full-PRI capture.
-
-### Runtime and reproduction
-
-The CPU timing reports remain separate from the figure-generation trajectory.
-First-use compilation and cached kernels can dominate different snapshots;
-plotting and I/Q synthesis timings are not included in the channel timer.
-[GPU planning](archive/planning.md#gpu-runtime) distinguishes measured host costs from
-conditional GPU estimates. No GPU runtime or VRAM measurement is added here.
-
-The DEM has 800 distinct specular planes rather than one. At 100 TX / 1 RX,
-its upper bounds are 182,900 candidates and 365,700 visibility queries per
-pulse, versus 103,000 and 205,900 for flat ground. At 200 pulses/s, the ray stage
-alone needs 73.14 million queries/s per GPU if it consumes the entire budget.
-Actual retained paths are far fewer than specular candidates. Query throughput
-still depends on scene geometry and excludes fields, sampling and I/Q work.
-
-For this DEM, set the per-source path cap to at least
-`num_rx * (1028 + 1 + 800)`. The default total candidate limit of two million
-covers 100 TX / 10 RX (1,829,000 candidates); a finer mesh can exceed it. The
-solver rejects an insufficient cap rather than truncating coverage. Use
-`solver.specular_plane_count(scene)` when budgeting another mesh.
-
-```bash
-python3.12 scripts/bootstrap.py
-.venv/bin/python scripts/generate_demo_terrain.py
-.venv/bin/python benchmarks/generate_rf_waterfalls.py --output-dir docs/figures
-.venv/bin/python benchmarks/benchmark_scattering.py --scene terrain \
-  --tx 100 --rx 1 --samples-per-link 1028 \
-  --output benchmarks/results/scattering_cpu_terrain_100tx_1rx_1028.json
-.venv/bin/python -m pytest -q
-```
-
-The [saved scenario data](figures/scenario_data.json) contain per-epoch
-counts and the underlying delay, Doppler and matched-filter waterfall values.
-The [terrain timing report](../benchmarks/results/scattering_cpu_terrain_100tx_1rx_1028.json)
-records CPU cache/host conditions and per-GPU work arithmetic. The plot script
-also saves SVG versions for export.
-
-On the two-core CPU quota, the recorded DEM run used three warmups and ten
-timed pulse epochs: median **70.1 ms**, p95 **76.2 ms**, with median host sampling
-**17.0 ms** and peak host RSS **214 MiB**. Plane-cache preparation took about
-21 ms separately. These are CPU channel measurements, not GPU predictions or
-end-to-end I/Q deadlines; the JSON contains the exact values and cache context.
-
-The published CPU test container includes the DEM and plotting script:
-
-```bash
-mkdir -p recordings
-docker run --rm --network none --user "$(id -u):$(id -g)" \
-  -v "$PWD/recordings:/work" ghcr.io/wa200508/airsim-rf:latest \
-  python /opt/airsim-rf/benchmarks/generate_rf_waterfalls.py --output-dir /work/figures
-```
-
-Use `--backend cuda` on a configured CUDA host for a GPU run; it refuses CPU
-fallback. The published `latest` image is the CPU test environment, not a
-validated GPU deployment image.
+Earlier demonstration images and historical benchmark reports describe the
+previous low-relief mesh. Their old results are not measurements of this
+0–30 m scene. The current figure gallery and source archives supersede those
+illustrations for interpreting the present scenario.
 
 <a id="terrain-signature"></a>
 
 ## Seeing terrain features in received I/Q
 
+The radar scan uses one downward-looking TX/RX pair at fixed datum height
+40 m and a 2 m RF-x baseline. It travels about 180 m at 10 m/s, sampling 91
+selected pulse epochs over about 18 s. The radios remain at least 10 m above
+the tallest terrain. These are separated snapshots, not a qualified coherent
+slow-time pulse train.
 
+The carrier is 24.125 GHz. Each 2 µs rectangular LFM pulse uses 200 MHz
+bandwidth, 1 W transmit power and a 500 MS/s complex receive rate, with 1,500
+samples (3 µs) per capture. The antenna is a synthetic downward 12° full
+half-power beamwidth pattern; noise is disabled. First-order tracing includes
+direct, specular and diffuse paths, with 1,028 diffuse attempts per link.
 
-**Runtime context (2026-10-05):** Offline focused terrain/radar demonstration, not a continuous multi-emitter runtime benchmark. See [current runtime and wall-clock costs](archive/runtime.md#runtime-status) for comparable measurements, hardware, exclusions and ten-minute estimates.
-
-Start with this focused scan to see how the existing DEM changes RF data. The
-bright ridge below is calculated from **received complex voltage**, using LFM
-pulse compression. The first hill, drainage swale and second hill are visible
-in its changing delay. The DEM profile is shown separately for comparison.
-
-[Earlier demonstration illustration: DEM profile, flat-control I/Q and terrain I/Q aligned along the flight line](figures/terrain_signature.png)
-
-The terrain has not been exaggerated or replaced. We changed the measurement
-geometry and waveform so the existing features become resolvable. The raw
-I/Q and compressed profiles are saved in
-[`terrain_scan_iq.npz`](figures/terrain_scan_iq.npz).
-
-The [published-implementation comparison](references.md#environmental-rf-references)
-relates this scan to RadarSimPy's terrain altimeter and MathWorks' bistatic
-land-clutter examples. It distinguishes the demonstrated geometry/delay
-behavior from calibrated rough-ground amplitudes and slow-time statistics.
-
-### Why the earlier plots hid the terrain
-
-The [original scenario](terrain.md#terrain-scenario) moved only about 3 m near the center
-of the DEM. It did not traverse the main hills. The aggregate channel waterfalls
-also mixed 100 transmitter locations and many surface points. Their delay bins
-do not identify a unique ground location.
-
-Its 20 MHz LFM pulse resolves approximately **15 m of total path length**
-(`c/B`). A 6 m change in near-nadir ground height changes the TX–ground–RX path
-by roughly 12 m, and smaller features change it less. Those contributions blend
-inside the pulse-compression response. The I/Q frequency spectrogram mainly
-shows the transmitted chirp; it is not a topographic image.
-
-This scan makes three explicit changes: a route across the features, a narrower
-beam that localizes illumination, and a wider chirp that resolves delay. It is
-a separate one-link demonstration, not a replacement for the 100-TX throughput
-scenario or a new off-the-shelf hardware specification.
-
-### What was simulated
-
-| Parameter | Focused scan |
-| --- | --- |
-| Surface | Same 200 × 200 m DEM, 10 m grid, 800 triangles |
-| Material | Same uniform permittivity 5, conductivity 0.01 S/m, thickness 0.5 m, scattering coefficient 0.3, Lambertian |
-| Radios | One independent TX and RX, separated by 2 m along x |
-| Altitude | Both at z=40 m above the fixed datum |
-| Route | Approximately (−75, −50) to (+75, +50) m, about 180 m |
-| Motion | Both travel at 10 m/s; 91 selected pulse epochs over about 18 s |
-| Pulse clock | 200 Hz; selected snapshots are about 0.2 s / 2 m apart |
-| Antennas | Downward, synthetic 12° full half-power beamwidth, vertical polarization |
-| Pattern | Axisymmetric Gaussian with positive background floor; spherical average gain 1, peak ≈24 dBi |
-| Carrier | 24.125 GHz |
-| LFM | 200 MHz bandwidth, 2 µs pulse, 1 W, 50 Ω, noise disabled |
-| Capture | 500 MS/s complex voltage, 1,500 samples / 3 µs |
-| Propagation | Actual Sionna LoS, first-order specular and diffuse paths |
-| Diffuse budget | 1,028 attempts/link, half TX and half RX proposals; 10% uniform support |
-
-[Earlier demonstration illustration: Flight line, beam footprints and independently extracted I/Q heights](figures/terrain_scan_geometry.png)
-
-The circles show approximate individual-antenna half-power footprints: solid
-for TX, dashed for RX. Their overlap concentrates surface contributions near
-the baseline midpoint. Actual field gain is evaluated for every retained path;
-these circles do not crop the mesh or select paths after tracing. Directional
-proposals still preserve the uniform component and both antenna patterns.
-
-We use the general one-way TX–surface–RX solver. We do not square a reciprocal
-link, introduce point-target RCS, or substitute the DEM height into an analytic
-echo generator. The DEM enters the RF calculation through its actual triangle
-geometry, normals, visibility and material response.
-
-### How the I/Q becomes the visible ridge
-
-For every selected pulse, Sionna computes complex gains, absolute delays and
-endpoint Doppler. `synthesize_voltage()` adds delayed, phase-shifted chirp copies
-**coherently**. It computes the channel once per pulse and applies narrowband
-Doppler during the receive window.
-
-We correlate those complex samples with the transmitted chirp and divide by
-the template's sample energy. All waterfall panels use one shared reference
-for voltage magnitude squared; there is no normalization of individual rows,
-terrain gain boost, smoothing or terrain-dependent path selection.
-
-The measured ridge is the largest compressed I/Q peak in a fixed **60–100 m
-total-path-length gate**. DEM elevations and predicted delays do not enter
-that peak estimator. The vertical coordinate converts delay into an equivalent
-height for a scatterer beneath the baseline midpoint:
+For each snapshot, complex voltage coherently sums the traced delayed pulse
+copies. A linear matched filter divides by template energy. The largest peak
+in a fixed **10–100 m total-path-length gate** gives the diagnostic equivalent
+height. The old 60–100 m gate would discard the new hills' shorter echoes.
+DEM heights and reference delays do not enter I/Q generation or peak selection.
 
 ```
 L = c * delay
 h_equivalent = 40 - sqrt((L/2)² - (2/2)²)
 ```
 
-Higher ground shortens the path and appears higher in this coordinate. It is
-not a general terrain inversion: off-nadir points with different positions and
-elevations can have the same delay. The narrow overlapping beams make the
-midpoint approximation useful here. Native sample spacing is about 0.60 m in
-total path length, or 0.30 m near nadir in equivalent height. The 200 MHz
-bandwidth gives approximately 1.5 m path-length resolution, about 0.75 m of
-near-nadir height separation; sample spacing is not resolution.
+This assumes a scatterer beneath the baseline midpoint. It is not a unique
+inversion for off-nadir paths. Sample spacing is about 0.60 m in total path
+length; nominal 200 MHz delay resolution is `c/B`, about 1.50 m in total path
+length, or approximately 0.75 m near-nadir height separation.
 
-Across the 91 snapshots, the I/Q peak coordinate and DEM midpoint profile have
-correlation **0.985** and **0.35 m RMS difference**. This is a descriptive
-comparison on this noise-free synthetic scene, not validated field accuracy or
-a claim to reconstruct a DEM from arbitrary I/Q. Beam footprint, facets,
-specular visibility and coherent interference cause departures from the
-midpoint profile.
+The regenerated 91-position comparison has correlation **0.9945** and
+**0.913 m RMS difference** against the DEM midpoint profile. This descriptive
+noise-free result is not field accuracy; facets, off-nadir scattering and
+coherent multipath can move the peak.
 
-### Identify the individual features by their delays
-
-[Earlier demonstration illustration: Flat ground and three feature-specific I/Q delay profiles](figures/terrain_delay_cuts.png)
-
-| Feature | Distance along route | DEM midpoint height | I/Q peak equivalent height | Geometric reference total path |
+| Feature | Route distance | DEM midpoint height | I/Q peak equivalent height | Midpoint path reference |
 | --- | ---: | ---: | ---: | ---: |
-| A: first hill | 40.05 m | 6.28 m | 5.84 m | 67.46 m |
-| B: swale | 108.15 m | 0.17 m | 0.44 m | 79.68 m |
-| C: second hill | 162.25 m | 5.07 m | 5.24 m | 69.89 m |
+| A: first hill | 40.05 m | 29.23 m | 29.56 m | 21.63 m |
+| B: swale | 108.15 m | 1.26 m | 2.24 m | 77.50 m |
+| C: second hill | 162.25 m | 23.58 m | 23.84 m | 32.90 m |
 
-Flat ground's reference path is about 80.02 m. The hills' responses arrive
-earlier, while the swale approaches the flat-ground delay. Dotted lines are
-geometric references calculated after simulation; they do not set the RF
-peaks. The first hill is weaker on this shared absolute scale: facet slope and
-specular alignment affect amplitude as well as delay. The ideal flat plane
-produces a strong specular return; the terrain does not have to be equally
-bright to show its shape.
+Flat ground's midpoint reference is about 80.02 m. Raised ground shortens the
+path substantially: the first hill is near a 21.63 m total path, while the
+swale is near 77.50 m. The [current delay profiles](sensing-plots.md#radar-profiles-and-estimation-error)
+compare 200 MHz and 20 MHz pulses on **the same traced complex channels**.
+Only bandwidth changes; 20 MHz resolves about 15 m of total path length.
 
-### A bandwidth-only control
+The model still lacks calibrated persistent scatterer phases, roughness
+correlation and validated slow-time speckle. No SAR focusing or conventional
+range–Doppler map is claimed.
 
-[Earlier demonstration illustration: Same terrain channels with 20 MHz and 200 MHz chirps](figures/terrain_bandwidth_comparison.png)
+### Reproduction and raw data
 
-For each terrain snapshot, we reuse **exactly the same complex path gains,
-delays and Dopplers** to generate another I/Q block with a 20 MHz chirp. Beam,
-geometry, transmit power, pulse duration, receive window and sampling rate stay
-the same. Only chirp bandwidth changes. The 20 MHz compressed response is much
-broader; the 200 MHz response exposes the terrain ridge. This isolates the
-delay-resolution effect from changes in terrain or ray coverage.
-
-The DEM remains coarse and synthetic, with a homogeneous material. The model
-still lacks persistent calibrated scatterer phases, roughness correlation and
-validated slow-time speckle. We do not use SAR focusing or a slow-time Doppler
-FFT here. The illustrated ridge demonstrates geometric delay structure in the
-current coherent model; it does not validate those missing statistics.
-
-### Reproduce and inspect the raw data
+Run the [P100 regeneration workflow](setup.md#regenerate-documentation-figures-on-the-p100):
 
 ```bash
-.venv/bin/python benchmarks/generate_terrain_signature.py
-.venv/bin/python -m pytest -q
+bash scripts/regenerate_p100_figures.sh
 ```
 
-The script saves PNG/SVG plots, a
-[scenario and comparison summary](figures/terrain_signature_data.json)
-and the complex-sample archive. The figure-generation run is not a GPU runtime
-benchmark. `--backend cuda` refuses CPU fallback on a configured CUDA host.
-
-```python
-import numpy as np
-from scipy.signal import correlate
-
-with np.load("docs/figures/terrain_scan_iq.npz", allow_pickle=False) as data:
-    iq = data["iq_dem"]                  # complex64 [91, 1500], volts
-    fs = float(data["sample_rate_hz"])
-    width = float(data["pulse_width_s"])
-    bandwidth = float(data["bandwidth_hz"])
-    t = np.arange(round(width * fs)) / fs
-    template = np.exp(1j * np.pi * bandwidth * (t*t/width - t))
-    profile = correlate(iq[20], template, mode="full", method="fft")
-    profile = profile[len(template)-1:] / np.sum(np.abs(template)**2)
-    path_length_m = np.arange(len(profile)) * 299792458 / fs
-```
-
-The archive also contains `iq_flat`, `iq_dem_20mhz`, compressed complex profiles,
-pose/pulse metadata and the separately labeled DEM reference. The CPU test
-container includes the archive and generator:
-
-```bash
-mkdir -p recordings
-docker run --rm --network none --user "$(id -u):$(id -g)" \
-  -v "$PWD/recordings:/work" ghcr.io/wa200508/airsim-rf:latest \
-  python /opt/airsim-rf/benchmarks/generate_terrain_signature.py --output-dir /work/terrain_scan
-```
-
+It first rebuilds the DEM mesh, then generates the source data, observables
+and scenario illustrations. [Complex radar I/Q](figures/terrain_scan_iq.npz),
+[radar metadata and comparisons](figures/terrain_signature_data.json),
+[SDR I/Q](figures/pluto_esm_iq.npz), and
+[processing definitions and source hashes](figures/sensing_products.json)
+are stored beside the figures. Figure-generation execution time is not a
+continuous simulation throughput measurement; see the
+[historical runtime report](archive/runtime.md#runtime-status) for its original
+measurement scopes and scene assumptions.

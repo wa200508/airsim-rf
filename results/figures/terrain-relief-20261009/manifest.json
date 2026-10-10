@@ -1,0 +1,114 @@
+{
+  "scope": "New synthetic 0\u201330 m mesh and scripted clearance trajectories; offline P100 propagation/IQ plus host DSP, not live flight or throughput profiling",
+  "reproduction": "bash scripts/regenerate_p100_figures.sh",
+  "terrain": {
+    "min_m": 0.0,
+    "max_m": 30.0,
+    "mesh_sha256": "e7dda42a46640752cd1600207549adf7aa1a3bed6bda5f778efdb527ec29a633"
+  },
+  "radio_execution": {
+    "propagation": "cuda_ad_mono_polarized",
+    "iq_renderer": "direct-cuda",
+    "analysis_and_plotting": "host SciPy/Matplotlib",
+    "pascal_compat": true
+  },
+  "radio_versions": {
+    "sionna": "2.2.0",
+    "mitsuba": "3.8.0",
+    "drjit": "1.3.1",
+    "backend": "cuda_ad_mono_polarized"
+  },
+  "radar_execution": {
+    "propagation": "cuda_ad_mono_polarized",
+    "iq_renderer": "direct-cuda",
+    "analysis_and_plotting": "host SciPy/Matplotlib",
+    "pascal_compat": true
+  },
+  "radar_versions": {
+    "sionna_rt": "2.2.0",
+    "mitsuba": "3.8.0",
+    "drjit": "1.3.1",
+    "backend": "cuda_ad_mono_polarized"
+  },
+  "minimum_recorded_clearance_m": 4.999999999999998,
+  "radar_comparison": {
+    "dem_vs_iq_peak_correlation": 0.9944854346841657,
+    "rmse_m": 0.913036643235383,
+    "median_absolute_error_m": 0.47673505205303357
+  },
+  "final_direct_visibility": {
+    "epoch_s": 5.5,
+    "links": [
+      {
+        "tx": "beacon_a",
+        "rx": "listener_a",
+        "terrain_blocks_direct": true
+      },
+      {
+        "tx": "beacon_a",
+        "rx": "listener_b",
+        "terrain_blocks_direct": false
+      },
+      {
+        "tx": "beacon_b",
+        "rx": "listener_a",
+        "terrain_blocks_direct": false
+      },
+      {
+        "tx": "beacon_b",
+        "rx": "listener_b",
+        "terrain_blocks_direct": false
+      }
+    ]
+  },
+  "validation": {
+    "offline_tests_passed": 177,
+    "cuda_cases_skipped_in_offline_suite": 158,
+    "p100_tests_passed": 23,
+    "cpu_environment_note": "Pinned P100 image uses Dr.Jit 1.3.1; optional Metal enum supplied as None for Sionna 2.2 CPU reference tests. P100 checks use explicit enable_pascal_compat adapter.",
+    "figures_visually_inspected": true
+  },
+  "source_sha256": {
+    "src/airsim_rf/terrain.py": "f3cbe3dfa2ee20ef0c04a8fbe9fb9b6cd94a0d2726e732521b7dae672b6fa558",
+    "benchmarks/generate_rf_waterfalls.py": "956c78bb5b4ff44e52899b8f8a66ddd539c32aa2a16fb5ffd201bfa69cec4296",
+    "benchmarks/generate_terrain_signature.py": "736a88b43b73ae03fe12afa365e73825d735c39395e4d8f1be104680b23c40fd",
+    "examples/pluto_esm_drones.py": "5ea7fe32b80b315de3aab5b34e453ba83dcbb1bfcb5d65e0495998db5efb95e4",
+    "benchmarks/generate_sensing_figures.py": "f63e227d172e52122bf2e7d9b09ff9fbd76e75c4913314c36c51e4974f55bcaf",
+    "benchmarks/generate_sensing_scenarios.py": "664417d0919cb4670e2ebcfe8d800c97fb6fd3194be51d92b2d6b6bf74efc451",
+    "benchmarks/check_sensing_visibility.py": "0468d9be6d3a65bebab26bc3d0e5f941143d672d09773e8d9125883d0363356f",
+    "scripts/regenerate_p100_figures.sh": "936cb8501668aef7219f571e64409a1af66de89ecf1a2eb3b4058d604bbb94fd",
+    "tests/test_terrain.py": "a4bb8582803ec7ab9f44106738503517fa3bb01d1076938ca1d2c2bbd93f1857",
+    "tests/test_sdr.py": "6601c0132489beafe4ac0812ecab29b1062f9e1ccc699b9fce50b67ca4ee8127"
+  },
+  "output_sha256": {
+    "docs/figures/pluto_esm_iq.npz": "6e9211b0e1de9efe167367cc653334300cabd39abd17a8091c93acadc5edbd8b",
+    "docs/figures/pluto_esm_report.json": "d465a6364621e65376c172e52b914235aefc2a4a0ff214081843b87bf60fed52",
+    "docs/figures/scenario_data.json": "4417d0b866de7a4ff820ee342e0c82542f5680fc0a52c7ea292b2b1eea6cf0aa",
+    "docs/figures/sensing_esm_line_prominence.png": "4f423a629d195034b997ae0c41303bf1a374bf17a3887efc1eee8398d03c1446",
+    "docs/figures/sensing_esm_line_prominence.svg": "3117350bacd09a6a3c25680c563bc2ba612adcc1dffec9e7389c820bc4b81d57",
+    "docs/figures/sensing_esm_scenario.png": "ac2562dd806efa5b7ac97b2b74a494d05ee25f987136346984b3e0ceac324c46",
+    "docs/figures/sensing_esm_scenario.svg": "fb0f28e0019cee014a2754421a0c336bb6c125de7fa7780f2f6e5c3b8d8c9b5f",
+    "docs/figures/sensing_esm_scene_3d.png": "8831428230ecba4b49ef33512bcdfefeb66c3cec8139cb471dc473144b4277fb",
+    "docs/figures/sensing_esm_scene_3d.svg": "1a81a39b60cea69cac382a931d9f6762ea288ca709b5fd00b6658aa25c22d7e4",
+    "docs/figures/sensing_esm_spectrum.png": "add338a53a8aee5496f36b9b8b3d99ee4e3dafe5d280b4593fde0324ea0abe71",
+    "docs/figures/sensing_esm_spectrum.svg": "e44c4cc19332ca61e279542fca68c6ab8d8b4ca02cfaba49d8b03100477fad8e",
+    "docs/figures/sensing_esm_waterfall.png": "bd2c7a2cc74d5acb5eda20d222a72e53635a550b3d798c7715cd6e674121e51a",
+    "docs/figures/sensing_esm_waterfall.svg": "b7c469a88bd6583e8f1df585aa591e680a41dcccd33b8a27070090dd506f00fd",
+    "docs/figures/sensing_passive_cuts.png": "4352a16498fe4a52a4894d2ada1c120aceb2d958c8c279909ddf0fd1521a17f2",
+    "docs/figures/sensing_passive_cuts.svg": "3773ef13a9c3e1b0b17a4f38139af1ea3f7c75d1c1644b419bbe98ad6d8886df",
+    "docs/figures/sensing_passive_geometry.png": "5221d928bb4273f2ac4209889dc66c104aa9b8744e052d0bf2df28cd99e308ae",
+    "docs/figures/sensing_passive_geometry.svg": "1093a457e148271aeb73f11949ea6997ea41cb9f6b29c91458c816960b093497",
+    "docs/figures/sensing_products.json": "6b01935602120f08761d47eaf1f19dcf0b6c6ca29c5f83c27482e09df7f2d548",
+    "docs/figures/sensing_products.npz": "303a6d4fa2506a6740f276b12debe44a43caec45f880f72ff947a84fbc8534c6",
+    "docs/figures/sensing_radar_delay_profiles.png": "b124771ac5d253742e0d11f08a781f2d5314f91b93fbce6881d92af5d28caa4e",
+    "docs/figures/sensing_radar_delay_profiles.svg": "52c7fd1470c29bf08a51f9f7191d6ae412632e45148811e066c7af997f947e6d",
+    "docs/figures/sensing_radar_error.png": "cba6b12b3b3bff8e7d6afd4c8533f1b62bb958a57cc35b106e17ec430ee3ca9b",
+    "docs/figures/sensing_radar_error.svg": "2cbf17c32bdf9befdad375bd41787f74842746b39f9d4b6a84f52c4fc7adcc6a",
+    "docs/figures/sensing_radar_scenario.png": "267cc29494487d5d7aaa83d14e96d0670eeb704a5cc9cdd617121ae44e1616af",
+    "docs/figures/sensing_radar_scenario.svg": "b61b342ff3e49a2c715b587283f302aba9da961147a1853b73590acc6fb12109",
+    "docs/figures/sensing_scenarios.json": "73a34ad13c362589e998615b9bb321a28ccf9ce3bd32e61d5edb2e8335dc1c9a",
+    "docs/figures/sensing_visibility.json": "1e2e3d916efec126ae98de456881c0f0af9443b18ecc19538f52f6697d42f2fb",
+    "docs/figures/terrain_scan_iq.npz": "8ee4f434b5c91aa10c2266d2316b32c10e447399f7333ca2a715c10e61856d8f",
+    "docs/figures/terrain_signature_data.json": "4ab0405b0eb81887d54b7a5bbc6234ec6960ef3649ea420314fdfedc97b19a82"
+  }
+}

@@ -13,6 +13,7 @@ figure_run=(docker run --rm --gpus "device=${RF_PROFILE_GPU:-0}" --network none
   -e PYTHONPATH=/work/repo/src -e NVIDIA_DRIVER_CAPABILITIES=compute,utility,graphics
   -e MPLCONFIGDIR=/tmp/matplotlib -e CUPY_CACHE_DIR=/tmp/cupy-cache
   -e CUDA_CACHE_PATH=/tmp/cuda-cache "$figure_image" scripts/basis_launch.py)
+"${figure_run[@]}" scripts/generate_demo_terrain.py
 "${figure_run[@]}" benchmarks/generate_rf_waterfalls.py --backend cuda --pascal-compat --output-dir "$figure_stage/waterfalls"
 "${figure_run[@]}" benchmarks/generate_terrain_signature.py --backend cuda --pascal-compat --output-dir "$figure_stage/terrain"
 "${figure_run[@]}" examples/pluto_esm_drones.py --backend cuda --pascal-compat --output-dir "$figure_stage/pluto"
@@ -28,4 +29,5 @@ for path in Path(sys.argv[1]).glob('*/*'):
 PY
 
 "${figure_run[@]}" benchmarks/generate_sensing_figures.py --backend cuda
+"${figure_run[@]}" benchmarks/check_sensing_visibility.py --backend cuda
 "${figure_run[@]}" benchmarks/generate_sensing_scenarios.py

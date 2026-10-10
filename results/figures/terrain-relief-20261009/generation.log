@@ -1,0 +1,58 @@
+/work/repo/benchmarks/scenes/terrain.ply: (21, 21), elevation 0.00 to 30.00 m
+ground: epoch 1/32, 94115 paths, 1320.0 ms channel
+ground: epoch 9/32, 94135 paths, 21.5 ms channel
+ground: epoch 17/32, 94121 paths, 21.3 ms channel
+ground: epoch 25/32, 94129 paths, 23.4 ms channel
+terrain: epoch 1/32, 95312 paths, 300.6 ms channel
+terrain: epoch 9/32, 95281 paths, 20.0 ms channel
+terrain: epoch 17/32, 95272 paths, 20.6 ms channel
+terrain: epoch 25/32, 95323 paths, 20.0 ms channel
+Saved documentation figures and underlying waterfall values in recordings/p100-documentation-figures/waterfalls
+ground: 1/91, 953 retained paths
+ground: 16/91, 965 retained paths
+ground: 31/91, 970 retained paths
+ground: 46/91, 969 retained paths
+ground: 61/91, 969 retained paths
+ground: 76/91, 966 retained paths
+ground: 91/91, 959 retained paths
+terrain: 1/91, 962 retained paths
+terrain: 16/91, 969 retained paths
+terrain: 31/91, 969 retained paths
+terrain: 46/91, 972 retained paths
+terrain: 61/91, 972 retained paths
+terrain: 76/91, 969 retained paths
+terrain: 91/91, 960 retained paths
+{"dem_vs_iq_peak_correlation": 0.9944854346841657, "rmse_m": 0.913036643235383, "median_absolute_error_m": 0.47673505205303357}
+Saved terrain signature figures and raw complex I/Q to recordings/p100-documentation-figures/terrain
+epoch 0.000s: listener_a A=-91.9 B=-96.4 dBm; listener_b A=-114.5 B=-97.1 dBm
+epoch 0.500s: listener_a A=-98.1 B=-97.4 dBm; listener_b A=-115.1 B=-96.8 dBm
+epoch 1.000s: listener_a A=-99.5 B=-97.6 dBm; listener_b A=-113.4 B=-96.9 dBm
+epoch 1.500s: listener_a A=-93.4 B=-97.1 dBm; listener_b A=-111.4 B=-96.9 dBm
+epoch 2.000s: listener_a A=-99.3 B=-96.6 dBm; listener_b A=-116.8 B=-95.6 dBm
+epoch 2.500s: listener_a A=-104.4 B=-95.9 dBm; listener_b A=-108.0 B=-95.1 dBm
+epoch 3.000s: listener_a A=-95.7 B=-96.5 dBm; listener_b A=-110.4 B=-95.5 dBm
+epoch 3.500s: listener_a A=-94.1 B=-96.5 dBm; listener_b A=-110.5 B=-96.5 dBm
+epoch 4.000s: listener_a A=-104.2 B=-95.8 dBm; listener_b A=-113.2 B=-95.9 dBm
+epoch 4.500s: listener_a A=-97.1 B=-95.0 dBm; listener_b A=-99.6 B=-95.8 dBm
+epoch 5.000s: listener_a A=-93.6 B=-95.2 dBm; listener_b A=-65.7 B=-95.3 dBm
+epoch 5.500s: listener_a A=-99.8 B=-95.0 dBm; listener_b A=-65.9 B=-95.5 dBm
+Saved recordings, plots and assumptions to recordings/p100-documentation-figures/pluto
+/work/repo/benchmarks/generate_sensing_figures.py:131: RuntimeWarning: invalid value encountered in divide
+  prominence=10*np.log10(psd[:,ri,near].max(axis=-1)/np.median(psd[:,ri,collar],axis=-1))
+{
+  "figures": [
+    "sensing_radar_delay_profiles",
+    "sensing_radar_error",
+    "sensing_esm_spectrum",
+    "sensing_esm_waterfall",
+    "sensing_esm_line_prominence",
+    "sensing_passive_cuts",
+    "sensing_passive_geometry"
+  ],
+  "caf_backend": "cuda",
+  "geometry": {
+    "truth_tdoa_ns": 187.42749026250303,
+    "truth_fdoa_hz": 10.569785213762874,
+    "assumptions": "Known emitter altitude and velocity, receiver pose/velocity and calibrated clocks; loci from recorded geometry, not measured estimates."
+  }
+}

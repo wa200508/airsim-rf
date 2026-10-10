@@ -8,6 +8,13 @@ coordinates and synthetic terrain, not a screenshot of a live AirSim flight.
 [Diagram provenance and source hashes](figures/sensing_scenarios.json) are saved
 with the figures.
 
+The current mesh spans **0–30 m**, including zero-height patches. The ESM
+radios climb where needed to maintain at least 5 m clearance; vertical velocity
+follows the local terrain slope. This is a scripted trajectory, not autopilot
+dynamics. Per-capture poses and clearances are recorded in the source report.
+
+![Terrain and scripted radio routes in three dimensions](figures/sensing_esm_scene_3d.png)
+
 ![Two moving CW beacons and two passive receivers](figures/sensing_esm_scenario.png)
 
 **ESM / passive reception.** Open symbols mark the starting positions; filled
@@ -18,18 +25,25 @@ tone at −30 dBm, around a nominal 915 MHz carrier. Both receivers listen to bo
 beacons over synthetic terrain, with direct, reflected and diffuse propagation.
 Dotted connecting lines show which devices communicate, not extracted traced rays.
 
-The waterfall should therefore contain two nearly vertical bands: one strong
-tone and one weak tone. Clock errors shift their apparent frequencies differently
+The waterfall should therefore contain two nearly vertical bands, with strength
+depending on visibility and propagation. Clock errors shift their apparent frequencies differently
 at the two receivers. During the approximately 2.048 ms displayed capture, a
-3 m/s receiver travels only about 6 mm; the full 5.5 s motion is not displayed
+receiver moves only about 6 mm horizontally; the full 5.5 s motion is not displayed
 in that waterfall. The weak-line plot instead compares twelve separate captures
 along those routes. The passive delay/frequency cuts compare the two receivers'
 recordings; the narrowband tones provide poor delay discrimination.
 
+[P100 mesh visibility checks](figures/sensing_visibility.json) show that the
+final capture's **Beacon A → Receiver 1 direct path is blocked by terrain**;
+the other three direct links are clear. The blocked beacon can still arrive
+through reflected or diffuse paths. This explains why its received band is
+much weaker at Receiver 1, despite A's higher transmit power. The plan-view
+diagram marks the blocked direct link with a red cross.
+
 ![Downward-looking radar scanning two hills and a swale](figures/sensing_radar_scenario.png)
 
 **Terrain radar.** A downward-looking TX/RX pair moves at 10 m/s at RF height
-40 m, with a 2 m baseline in RF x. The elevation view uses the actual DEM
+40 m (at least 10 m above the tallest terrain), with a 2 m baseline in RF x. The elevation view uses the actual DEM
 midpoint samples along the route. Its vertical scale is enlarged; the baseline
 separation shown is projected onto the route. Colored V paths are illustrative
 midpoint references, not the actual traced multipath. The selected first hill,
@@ -93,7 +107,7 @@ midpoint-geometry references; they do not generate the I/Q.
 ![Estimator scatter and empirical absolute error CDF](figures/sensing_radar_error.png)
 
 **Figure 3.** I/Q-peak equivalent-height estimates versus the DEM midpoint
-reference, and the absolute-error CDF over 91 scan positions. RMSE is 0.3507 m.
+reference, and the absolute-error CDF over 91 scan positions. RMSE is 0.9130 m.
 Equivalent height assumes midpoint scattering and the recorded 2 m baseline.
 The route samples are correlated; this is a descriptive empirical CDF without
 independent-trial confidence bounds, not general terrain inversion.
@@ -144,7 +158,7 @@ ambiguity diagnostics, not target range–Doppler responses.
 ![Conditional TDOA and FDOA geometry](figures/sensing_passive_geometry.png)
 
 **Figure 7.** Loci from recorded epoch-zero poses/velocities for beacon A:
-TDOA 188.23 ns and FDOA 10.45 Hz. Emitter height and velocity are held at truth,
+TDOA 187.43 ns and FDOA 10.57 Hz. Emitter height and velocity are held at truth,
 and clocks are assumed calibrated. The emitter marker is truth, not an estimated
 fix. No localization accuracy, error ellipse or CRLB is demonstrated here.
 
@@ -159,6 +173,7 @@ Their algorithms and demonstrated capabilities are not claimed for this data.
 
 ```bash
 python scripts/basis_launch.py benchmarks/generate_sensing_figures.py --backend cuda
+python scripts/basis_launch.py benchmarks/check_sensing_visibility.py --backend cuda
 python benchmarks/generate_sensing_scenarios.py
 ```
 

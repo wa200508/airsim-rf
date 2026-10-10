@@ -57,11 +57,15 @@ def main():
     scene.rx_array = rt.PlanarArray(num_rows=1, num_cols=1, pattern='hw_dipole', polarization='V')
     starts = np.array([[-60, -30, 12], [45, 45, 18], [-30, -10, 14], [30, -50, 20]], dtype=float)
     velocities = np.array([[2, 0, 0], [-1, 0, 0], [3, 0, 0], [0, 3, 0]], dtype=float)
+    terrain = demo_terrain()
+    def trajectory(epoch):
+        return terrain.clearance_pose(starts+velocities*epoch, velocities, clearance_m=5.)
+    initial_positions, initial_velocities = trajectory(0.)
     names = ('beacon_a', 'beacon_b', 'listener_a', 'listener_b')
     devices = []
     for index, name in enumerate(names):
         cls = rt.Transmitter if index < 2 else rt.Receiver
-        device = cls(name, position=starts[index].tolist(), velocity=velocities[index].tolist())
+        device = cls(name, position=initial_positions[index].tolist(), velocity=initial_velocities[index].tolist())
         scene.add(device)
         devices.append(device)
     clocks = [RadioClock()]*4 if args.ideal_clocks else [
@@ -85,8 +89,10 @@ def main():
     arrays = {name: [] for name in ('adc_iq_volts', 'adc_codes', 'input_iq_volts', 'adc8_control_iq_volts')}
     psds, records, link_powers = [], [], []
     for epoch in epochs_s:
+        positions, motion = trajectory(epoch)
         for i, device in enumerate(devices):
-            device.position = (starts[i]+velocities[i]*epoch).tolist()
+            device.position = positions[i].tolist()
+            device.velocity = motion[i].tolist()
         start = perf_counter()
         captures = receiver.capture(round(float(epoch)*1e9), num_samples=args.samples)
         total_ms = (perf_counter()-start)*1000
@@ -112,7 +118,8 @@ def main():
         psds.append(row_psd)
         link_powers.append(row_powers)
         records.append(dict(epoch_s=float(epoch), channel_ms=receiver.last_channel_ms,
-                     capture_ms=total_ms, receivers=row))
+                     capture_ms=total_ms, receivers=row, positions_m=positions.tolist(),
+                     velocities_m_s=motion.tolist(), clearance_m=(positions[:,2]-terrain.elevation_at(positions[:,0],positions[:,1])).tolist()))
         print(f'epoch {epoch:.3f}s: '+ '; '.join(
               f'{item["receiver"]} A={item["link_power_dbm"]["beacon_a"]:.1f} B={item["link_power_dbm"]["beacon_b"]:.1f} dBm'
               for item in row), flush=True)
@@ -126,7 +133,10 @@ def main():
           profile=asdict(profile), adc_bits=profile.adc_bits, epochs_s=epochs_s.tolist(),
           nominal_channel_update_hz=200, samples_per_capture=args.samples, antennas='Ideal vertical half-wave dipoles',
           clocks=[asdict(clock) for clock in clocks], devices=list(names),
-          positions_at_start_m=starts.tolist(), velocities_m_s=velocities.tolist(),
+          positions_at_start_m=initial_positions.tolist(), velocities_m_s=initial_velocities.tolist(),
+          trajectory=dict(rule='z = max(nominal datum height, DEM(x,y) + 5 m); local facet slope sets vertical velocity',
+                          nominal_positions_at_start_m=starts.tolist(), nominal_velocities_m_s=velocities.tolist(),
+                          minimum_clearance_m=5., flight_dynamics=False),
           emitter_baseband_hz=frequencies, emitter_port_power_dbm=powers_dbm,
           expected_tone_hz_excluding_doppler=expected_tones, propagation=args.propagation,
           attempts_per_link=args.samples_per_link if args.propagation == 'diffuse' else 0,
@@ -175,7 +185,7 @@ def main():
     image = axes[0, 0].pcolormesh(x, y, terrain.heights_m, cmap='terrain', shading='auto')
     fig.colorbar(image, ax=axes[0, 0], label='DEM elevation (m)')
     for i, name in enumerate(names):
-        route = starts[i]+epochs_s[:, None]*velocities[i]
+        route = np.asarray([record['positions_m'][i] for record in records])
         axes[0, 0].plot(route[:, 0], route[:, 1], marker='o', markersize=3, label=name)
     axes[0, 0].set(xlabel='RF x (m)', ylabel='RF y (m)', title='Four RF mounts; vertical dipoles', aspect='equal')
     axes[0, 0].legend(fontsize=8)

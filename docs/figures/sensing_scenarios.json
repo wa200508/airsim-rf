@@ -1,12 +1,14 @@
 {
   "scope": "Scenario illustrations from recorded P100 geometry; no new propagation or I/Q",
   "source_sha256": {
-    "pluto_esm_report.json": "5ae063cce0405082266d7fdb19f57cb3a0e886dbe2fbee398e7454f0e7e1bb20",
-    "terrain_signature_data.json": "2e91039b02304e94e9d3221c91b15f9bdf9f6558195cee16ffac3b7ca057c4e4",
-    "terrain_scan_iq.npz": "19256ef12336a2227b95de00723adb01471c530c794cf500ab4bac63a2052f5d"
+    "pluto_esm_report.json": "d465a6364621e65376c172e52b914235aefc2a4a0ff214081843b87bf60fed52",
+    "terrain_signature_data.json": "4ab0405b0eb81887d54b7a5bbc6234ec6960ef3649ea420314fdfedc97b19a82",
+    "terrain_scan_iq.npz": "8ee4f434b5c91aa10c2266d2316b32c10e447399f7333ca2a715c10e61856d8f"
   },
+  "terrain_formula_sha256": "f3cbe3dfa2ee20ef0c04a8fbe9fb9b6cd94a0d2726e732521b7dae672b6fa558",
   "figures": [
     "sensing_esm_scenario",
+    "sensing_esm_scene_3d",
     "sensing_radar_scenario"
   ],
   "esm": {
@@ -14,17 +16,17 @@
       [
         -60.0,
         -30.0,
-        12.0
+        23.771192244741727
       ],
       [
         45.0,
         45.0,
-        18.0
+        30.794240708058155
       ],
       [
         -30.0,
         -10.0,
-        14.0
+        22.35809507245162
       ],
       [
         30.0,
@@ -36,17 +38,17 @@
       [
         -49.0,
         -30.0,
-        12.0
+        31.690587127982877
       ],
       [
         39.5,
         45.0,
-        18.0
+        29.929986176915136
       ],
       [
         -13.5,
         -10.0,
-        14.0
+        17.56895659942649
       ],
       [
         30.0,

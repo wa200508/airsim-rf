@@ -64,9 +64,37 @@ class TerrainGrid:
             np.savetxt(output, vertices, fmt='%.9g')
             np.savetxt(output, np.column_stack((np.full(len(faces), 3), faces)), fmt='%d')
 
+    def clearance_pose(self, position_m, velocity_m_s, *, clearance_m=5.):
+        """Lift scripted poses to a minimum terrain clearance, with local z velocity.
+
+        Horizontal motion is preserved. This is a geometric trajectory rule,
+        not a flight controller or an acceleration-limited vehicle model.
+        """
+        position, velocity = np.broadcast_arrays(np.asarray(position_m, dtype=float),
+                                                 np.asarray(velocity_m_s, dtype=float))
+        if (position.shape[-1] != 3 or not np.isfinite(position).all()
+                or not np.isfinite(velocity).all() or not np.isfinite(clearance_m)
+                or clearance_m <= 0):
+            raise ValueError('Finite 3-D poses and positive clearance required')
+        position, velocity = position.copy(), velocity.copy()
+        x, y = position[..., 0], position[..., 1]
+        floor = self.elevation_at(x, y)+clearance_m
+        ix = np.clip(np.searchsorted(self.x_m, x, side='right')-1, 0, self.x_m.size-2)
+        iy = np.clip(np.searchsorted(self.y_m, y, side='right')-1, 0, self.y_m.size-2)
+        dx, dy = self.x_m[ix+1]-self.x_m[ix], self.y_m[iy+1]-self.y_m[iy]
+        lower = (y-self.y_m[iy])/dy <= (x-self.x_m[ix])/dx
+        h00, h10 = self.heights_m[iy, ix], self.heights_m[iy, ix+1]
+        h01, h11 = self.heights_m[iy+1, ix], self.heights_m[iy+1, ix+1]
+        gx = np.where(lower, h10-h00, h11-h01)/dx
+        gy = np.where(lower, h11-h10, h01-h00)/dy
+        follows = position[..., 2] < floor
+        velocity[..., 2] = np.where(follows, gx*velocity[..., 0]+gy*velocity[..., 1], velocity[..., 2])
+        position[..., 2] = np.maximum(position[..., 2], floor)
+        return position, velocity
+
 
 def demo_terrain():
-    """Deterministic synthetic DEM: broad hills, drainage swale and low relief.
+    """Deterministic 0–30 m DEM: broad hills and a zero-height drainage swale.
 
     No surveyed location, small-scale roughness or land-cover calibration is
     implied. Material properties belong to the scene, not elevation samples.
@@ -78,4 +106,6 @@ def demo_terrain():
                +3.5*np.exp(-((x-50)/35)**2-((y-40)/25)**2)
                -3*np.exp(-((y-.25*x-10)/14)**2)
                +.8*np.sin(x/30)*np.cos(y/35))
+    heights = np.maximum(heights, 0.)
+    heights *= 30./heights.max()
     return TerrainGrid(axis, axis, heights)

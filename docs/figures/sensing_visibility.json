@@ -1,0 +1,308 @@
+{
+  "scope": "Segment visibility against actual mesh; not received power or multipath strength",
+  "backend": "cuda_ad_mono_polarized",
+  "mesh_sha256": "e7dda42a46640752cd1600207549adf7aa1a3bed6bda5f778efdb527ec29a633",
+  "report_sha256": "d465a6364621e65376c172e52b914235aefc2a4a0ff214081843b87bf60fed52",
+  "records": [
+    {
+      "epoch_s": 0.0,
+      "links": [
+        {
+          "tx": "beacon_a",
+          "rx": "listener_a",
+          "terrain_blocks_direct": true
+        },
+        {
+          "tx": "beacon_a",
+          "rx": "listener_b",
+          "terrain_blocks_direct": true
+        },
+        {
+          "tx": "beacon_b",
+          "rx": "listener_a",
+          "terrain_blocks_direct": false
+        },
+        {
+          "tx": "beacon_b",
+          "rx": "listener_b",
+          "terrain_blocks_direct": false
+        }
+      ]
+    },
+    {
+      "epoch_s": 0.5,
+      "links": [
+        {
+          "tx": "beacon_a",
+          "rx": "listener_a",
+          "terrain_blocks_direct": true
+        },
+        {
+          "tx": "beacon_a",
+          "rx": "listener_b",
+          "terrain_blocks_direct": true
+        },
+        {
+          "tx": "beacon_b",
+          "rx": "listener_a",
+          "terrain_blocks_direct": false
+        },
+        {
+          "tx": "beacon_b",
+          "rx": "listener_b",
+          "terrain_blocks_direct": false
+        }
+      ]
+    },
+    {
+      "epoch_s": 1.0,
+      "links": [
+        {
+          "tx": "beacon_a",
+          "rx": "listener_a",
+          "terrain_blocks_direct": true
+        },
+        {
+          "tx": "beacon_a",
+          "rx": "listener_b",
+          "terrain_blocks_direct": true
+        },
+        {
+          "tx": "beacon_b",
+          "rx": "listener_a",
+          "terrain_blocks_direct": false
+        },
+        {
+          "tx": "beacon_b",
+          "rx": "listener_b",
+          "terrain_blocks_direct": false
+        }
+      ]
+    },
+    {
+      "epoch_s": 1.5,
+      "links": [
+        {
+          "tx": "beacon_a",
+          "rx": "listener_a",
+          "terrain_blocks_direct": true
+        },
+        {
+          "tx": "beacon_a",
+          "rx": "listener_b",
+          "terrain_blocks_direct": true
+        },
+        {
+          "tx": "beacon_b",
+          "rx": "listener_a",
+          "terrain_blocks_direct": false
+        },
+        {
+          "tx": "beacon_b",
+          "rx": "listener_b",
+          "terrain_blocks_direct": false
+        }
+      ]
+    },
+    {
+      "epoch_s": 2.0,
+      "links": [
+        {
+          "tx": "beacon_a",
+          "rx": "listener_a",
+          "terrain_blocks_direct": true
+        },
+        {
+          "tx": "beacon_a",
+          "rx": "listener_b",
+          "terrain_blocks_direct": true
+        },
+        {
+          "tx": "beacon_b",
+          "rx": "listener_a",
+          "terrain_blocks_direct": false
+        },
+        {
+          "tx": "beacon_b",
+          "rx": "listener_b",
+          "terrain_blocks_direct": false
+        }
+      ]
+    },
+    {
+      "epoch_s": 2.5,
+      "links": [
+        {
+          "tx": "beacon_a",
+          "rx": "listener_a",
+          "terrain_blocks_direct": true
+        },
+        {
+          "tx": "beacon_a",
+          "rx": "listener_b",
+          "terrain_blocks_direct": true
+        },
+        {
+          "tx": "beacon_b",
+          "rx": "listener_a",
+          "terrain_blocks_direct": false
+        },
+        {
+          "tx": "beacon_b",
+          "rx": "listener_b",
+          "terrain_blocks_direct": false
+        }
+      ]
+    },
+    {
+      "epoch_s": 3.0,
+      "links": [
+        {
+          "tx": "beacon_a",
+          "rx": "listener_a",
+          "terrain_blocks_direct": true
+        },
+        {
+          "tx": "beacon_a",
+          "rx": "listener_b",
+          "terrain_blocks_direct": true
+        },
+        {
+          "tx": "beacon_b",
+          "rx": "listener_a",
+          "terrain_blocks_direct": false
+        },
+        {
+          "tx": "beacon_b",
+          "rx": "listener_b",
+          "terrain_blocks_direct": false
+        }
+      ]
+    },
+    {
+      "epoch_s": 3.5,
+      "links": [
+        {
+          "tx": "beacon_a",
+          "rx": "listener_a",
+          "terrain_blocks_direct": true
+        },
+        {
+          "tx": "beacon_a",
+          "rx": "listener_b",
+          "terrain_blocks_direct": true
+        },
+        {
+          "tx": "beacon_b",
+          "rx": "listener_a",
+          "terrain_blocks_direct": false
+        },
+        {
+          "tx": "beacon_b",
+          "rx": "listener_b",
+          "terrain_blocks_direct": false
+        }
+      ]
+    },
+    {
+      "epoch_s": 4.0,
+      "links": [
+        {
+          "tx": "beacon_a",
+          "rx": "listener_a",
+          "terrain_blocks_direct": true
+        },
+        {
+          "tx": "beacon_a",
+          "rx": "listener_b",
+          "terrain_blocks_direct": true
+        },
+        {
+          "tx": "beacon_b",
+          "rx": "listener_a",
+          "terrain_blocks_direct": false
+        },
+        {
+          "tx": "beacon_b",
+          "rx": "listener_b",
+          "terrain_blocks_direct": false
+        }
+      ]
+    },
+    {
+      "epoch_s": 4.5,
+      "links": [
+        {
+          "tx": "beacon_a",
+          "rx": "listener_a",
+          "terrain_blocks_direct": true
+        },
+        {
+          "tx": "beacon_a",
+          "rx": "listener_b",
+          "terrain_blocks_direct": true
+        },
+        {
+          "tx": "beacon_b",
+          "rx": "listener_a",
+          "terrain_blocks_direct": false
+        },
+        {
+          "tx": "beacon_b",
+          "rx": "listener_b",
+          "terrain_blocks_direct": false
+        }
+      ]
+    },
+    {
+      "epoch_s": 5.0,
+      "links": [
+        {
+          "tx": "beacon_a",
+          "rx": "listener_a",
+          "terrain_blocks_direct": true
+        },
+        {
+          "tx": "beacon_a",
+          "rx": "listener_b",
+          "terrain_blocks_direct": false
+        },
+        {
+          "tx": "beacon_b",
+          "rx": "listener_a",
+          "terrain_blocks_direct": false
+        },
+        {
+          "tx": "beacon_b",
+          "rx": "listener_b",
+          "terrain_blocks_direct": false
+        }
+      ]
+    },
+    {
+      "epoch_s": 5.5,
+      "links": [
+        {
+          "tx": "beacon_a",
+          "rx": "listener_a",
+          "terrain_blocks_direct": true
+        },
+        {
+          "tx": "beacon_a",
+          "rx": "listener_b",
+          "terrain_blocks_direct": false
+        },
+        {
+          "tx": "beacon_b",
+          "rx": "listener_a",
+          "terrain_blocks_direct": false
+        },
+        {
+          "tx": "beacon_b",
+          "rx": "listener_b",
+          "terrain_blocks_direct": false
+        }
+      ]
+    }
+  ]
+}

@@ -1,10 +1,10 @@
 {
   "scope": "Postprocessing recorded P100 data; no new propagation, detection trial ensemble or live geolocation",
   "source_sha256": {
-    "terrain_scan_iq.npz": "19256ef12336a2227b95de00723adb01471c530c794cf500ab4bac63a2052f5d",
-    "terrain_signature_data.json": "2e91039b02304e94e9d3221c91b15f9bdf9f6558195cee16ffac3b7ca057c4e4",
-    "pluto_esm_iq.npz": "5dfbd6cd5bc0ec35e354c8701eb643d6436c40e06327675a42a16d54422082ff",
-    "pluto_esm_report.json": "5ae063cce0405082266d7fdb19f57cb3a0e886dbe2fbee398e7454f0e7e1bb20"
+    "terrain_scan_iq.npz": "8ee4f434b5c91aa10c2266d2316b32c10e447399f7333ca2a715c10e61856d8f",
+    "terrain_signature_data.json": "4ab0405b0eb81887d54b7a5bbc6234ec6960ef3649ea420314fdfedc97b19a82",
+    "pluto_esm_iq.npz": "6e9211b0e1de9efe167367cc653334300cabd39abd17a8091c93acadc5edbd8b",
+    "pluto_esm_report.json": "d465a6364621e65376c172e52b914235aefc2a4a0ff214081843b87bf60fed52"
   },
   "figures": [
     "sensing_radar_delay_profiles",
@@ -71,8 +71,8 @@
   },
   "line_prominence": "Maximum PSD within 5 kHz of known weak tone / median PSD 15\u201360 kHz away. Not total-band SNR, blind detection or Pd.",
   "geometry": {
-    "truth_tdoa_ns": 188.2333618931088,
-    "truth_fdoa_hz": 10.451020266211248,
+    "truth_tdoa_ns": 187.42749026250303,
+    "truth_fdoa_hz": 10.569785213762874,
     "assumptions": "Known emitter altitude and velocity, receiver pose/velocity and calibrated clocks; loci from recorded geometry, not measured estimates."
   },
   "unsupported_claims": [

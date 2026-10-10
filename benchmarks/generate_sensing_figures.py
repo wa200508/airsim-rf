@@ -38,7 +38,7 @@ def main():
     def panel(ax,title):
         ax.set_title(title,loc='left')
         ax.grid(alpha=.2)
-    gate = (radar['path_length_m']>=60)&(radar['path_length_m']<=100)
+    gate = (radar['path_length_m']>=10)&(radar['path_length_m']<=100)
     length = radar['path_length_m'][gate]
     distance = radar['distance_m']
     pflat, pdem = np.abs(radar['compressed_flat'])**2, np.abs(radar['compressed_dem'])**2
@@ -54,7 +54,7 @@ def main():
         ax.plot(length,power_db(high,ref),label='200 MHz')
         ax.plot(length,power_db(low,ref),ls='--',label='20 MHz')
         ax.axvline(feature['midpoint_expected_path_length_m'],color='k',ls=':',lw=.8,label='Midpoint reference')
-        ax.set(xlabel=r'$c\tau$ (m)',ylim=(-45,1),xlim=(60,100))
+        ax.set(xlabel=r'$c\tau$ (m)',ylim=(-45,1),xlim=(10,100))
         panel(ax,f'({letter}) '+feature['label'].split(': ')[1])
     axes[0].set_ylabel('Matched-filter power / site peak (dB)')
     axes[-1].legend(loc='lower right')
@@ -66,7 +66,7 @@ def main():
     error=estimate-truth;ecdf=np.arange(1,len(error)+1)/len(error)
     fig,axes=plt.subplots(1,2,figsize=(7.2,2.8),layout='constrained')
     axes[0].scatter(truth,estimate,s=10,alpha=.7,label='91 scan positions')
-    axes[0].plot([-1,7],[-1,7],'k--',lw=.8,label='Identity')
+    axes[0].plot([-1,31],[-1,31],'k--',lw=.8,label='Identity')
     axes[0].set(xlabel='DEM midpoint height (m)',ylabel='I/Q peak equivalent height (m)')
     panel(axes[0],'(a) Estimator versus reference');axes[0].legend()
     axes[1].step(np.sort(np.abs(error)),ecdf,where='post')

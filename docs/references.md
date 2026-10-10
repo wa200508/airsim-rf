@@ -671,7 +671,7 @@ texture is not an RF material assignment.
 The focused scan currently tests **how changing terrain geometry changes echo
 delay**. Its raised-plane test moves the received compressed peak by the
 expected bistatic path change, and its flat-ground and bandwidth controls show
-why hills become resolvable. Its reported 0.35 m RMS difference against the
+why hills become resolvable. Its regenerated 0–30 m scene reports 0.913 m RMS difference against the
 synthetic DEM is an internal demonstration metric, not measured sensor accuracy
 or validation of clutter amplitudes and slow-time statistics.
 
@@ -831,4 +831,3 @@ IET Conference Proceedings 2022(17), pp. 125–129; publication cited by [1].
 Bibliographic/search record and talk landing page located; full paper and
 recording access restricted. Included as a validation lead, not as an independently
 reviewed experimental result.
-

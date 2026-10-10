@@ -33,7 +33,7 @@ def main():
     start = np.asarray(radio['positions_at_start_m'])
     velocity = np.asarray(radio['velocities_m_s'])
     epoch = radio['epochs_s'][-1]
-    end = start+epoch*velocity
+    end = np.asarray(radio['records'][-1].get('positions_m', start+epoch*velocity))
     colors = ['#c45d00', '#0072b2', '#333333', '#555555']
     fig = plt.figure(figsize=(11, 6.2), layout='constrained')
     grid = fig.add_gridspec(2, 2, width_ratios=[1.3, 1], height_ratios=[1, .3])
@@ -44,6 +44,24 @@ def main():
         for rx in range(2, 4):
             ax.plot(*np.stack([end[tx, :2], end[rx, :2]]).T,
                     color=colors[tx], alpha=.45, lw=1, ls=':')
+    visibility_path = args.data_dir/'sensing_visibility.json'
+    visibility_note = 'Direct visibility has not been checked for this report.\n'
+    if visibility_path.exists():
+        visibility = json.loads(visibility_path.read_text())
+        if visibility['report_sha256'] != sha256((args.data_dir/'pluto_esm_report.json').read_bytes()).hexdigest():
+            raise ValueError('Visibility result does not match the recorded radio report')
+        blocked = []
+        for link in visibility['records'][-1]['links']:
+            if link['terrain_blocks_direct']:
+                tx = radio['devices'].index(link['tx'])
+                rx = radio['devices'].index(link['rx'])
+                midpoint = (end[tx, :2]+end[rx, :2])/2
+                ax.scatter(*midpoint, marker='x', color='#a00000', s=100, lw=2, zorder=5)
+                blocked.append(f'{"AB"[tx]} → Receiver {rx-1}')
+        ax.plot([], [], 'x', color='#a00000', label='Direct link blocked by terrain')
+        visibility_note = ('Terrain blocks '+', '.join(blocked)+'.\n' if blocked
+                           else 'All recorded direct links are clear.\n')
+        visibility_note += 'Reflected / diffuse reception remains possible.\n'
     offsets = [(0, -32), (-85, 12), (-90, 12), (12, -8)]
     for i, label in enumerate(['Beacon A', 'Beacon B', 'Receiver 1', 'Receiver 2']):
         marker = '*' if i < 2 else '^'
@@ -55,7 +73,7 @@ def main():
         detail = (f"{radio['emitter_baseband_hz'][i]/1e3:+.0f} kHz CW, "
                   f"{radio['emitter_port_power_dbm'][i]:.0f} dBm" if i < 2
                   else 'Passive listening')
-        ax.annotate(f'{label}\n{detail}\nz = {end[i,2]:g} m', end[i, :2],
+        ax.annotate(f'{label}\n{detail}\nz = {end[i,2]:.2f} m', end[i, :2],
                     xytext=offsets[i], textcoords='offset points', fontsize=9,
                     color=colors[i], bbox={'facecolor': 'white', 'edgecolor': 'none', 'alpha': .9})
     ax.plot([], [], 'o', mfc='none', mec='k', label='Open symbol: t = 0 s')
@@ -77,10 +95,9 @@ def main():
         f'  Receiver 2: A ≈ {tones[1,0]:+.1f}, B ≈ {tones[1,1]:+.1f} kHz\n'
         '(Recorded clock offsets included; path Doppler excluded.)\n\n'
         'Different receiver clocks shift both bands.\n'
-        'Terrain reflections / diffuse paths combine with\n'
-        'direct reception; these alter amplitude and phase.\n\n'
+        +visibility_note+'\n'
         'The waterfall spans only ≈2.048 ms at t = 5.5 s.\n'
-        'At 3 m/s a receiver moves only ≈6 mm in that time:\n'
+        'Horizontal receiver motion is only ≈6 mm:\n'
         'expect steady tones, not a sweep across the plot.', va='top', fontsize=9.5, linespacing=1.45)
     epochs = np.asarray(radio['epochs_s'])
     timeline.plot(epochs, np.zeros_like(epochs), '|', color='gray', ms=14)
@@ -91,6 +108,34 @@ def main():
                   transform=timeline.transAxes, ha='center', fontsize=8)
     fig.suptitle('Two moving beacons → two passive SDR receivers', fontsize=15, weight='bold')
     save(fig, 'sensing_esm_scenario')
+
+    # Solid shaded surface is a physical 3-D scene, not a sensor color map.
+    from airsim_rf.terrain import demo_terrain
+    dem = demo_terrain()
+    xx, yy = np.meshgrid(dem.x_m, dem.y_m)
+    fig = plt.figure(figsize=(10, 7), layout='constrained')
+    ax = fig.add_subplot(projection='3d', computed_zorder=False)
+    ax.plot_surface(xx, yy, dem.heights_m, color='#aab98c', edgecolor='#71815c',
+                    linewidth=.25, alpha=.65, shade=True, zorder=1)
+    nominal = radio.get('trajectory', {}).get('nominal_positions_at_start_m', start)
+    nominal_v = radio.get('trajectory', {}).get('nominal_velocities_m_s', velocity)
+    t = np.linspace(0, epoch, 101)
+    for i, label in enumerate(['Beacon A', 'Beacon B', 'Receiver 1', 'Receiver 2']):
+        route = np.asarray(nominal)[i]+t[:,None]*np.asarray(nominal_v)[i]
+        if 'trajectory' in radio:
+            route, _ = dem.clearance_pose(route, np.asarray(nominal_v)[i],
+                                          clearance_m=radio['trajectory']['minimum_clearance_m'])
+        ax.plot(*route.T, color=colors[i], lw=3, zorder=3)
+        ax.scatter(*route[0], color=colors[i], marker='o', s=20, zorder=4)
+        ax.scatter(*route[-1], color=colors[i], marker='*' if i<2 else '^', s=90, zorder=4)
+        ax.text(*(route[-1]+[0,0,3]), label, color=colors[i], fontsize=9, zorder=5)
+    ax.set(xlabel='RF x (m)', ylabel='RF y (m)', zlabel='Height z (m)', zlim=(0, 40))
+    ax.set_box_aspect((1, 1, .45))
+    ax.view_init(elev=29, azim=-115)
+    ax.set_title('0–30 m terrain: scripted radios climb to retain ≥5 m clearance\n'
+                 'Dots: start; stars / triangles: final capture; vertical scale enlarged\n'
+                 'Routes drawn over the surface for visibility', fontsize=12)
+    save(fig, 'sensing_esm_scene_3d')
 
     distance = radar['distance_m']
     height = np.asarray(terrain['dem_height_reference_m'])
@@ -116,7 +161,7 @@ def main():
         ax.scatter(d, h, s=30, color=color, zorder=4)
         ax.text(d+3, 23, f"{feature['label']}\nheight {h:.2f} m\n"
                 f"reference cτ = {feature['midpoint_expected_path_length_m']:.2f} m",
-                fontsize=9, color=color)
+                fontsize=9, color=color, bbox={'facecolor':'white', 'edgecolor':'none', 'alpha':.85})
     ax.set(xlabel='Distance along scan route (m)', ylabel='RF height z (m)',
            xlim=(-5, distance[-1]+5), ylim=(-2, 50))
     ax.set_title('Route elevation view — vertical scale enlarged', loc='left', fontsize=12)
@@ -138,7 +183,8 @@ def main():
     manifest = {
         'scope': 'Scenario illustrations from recorded P100 geometry; no new propagation or I/Q',
         'source_sha256': {name: sha256((args.data_dir/name).read_bytes()).hexdigest() for name in sources},
-        'figures': ['sensing_esm_scenario', 'sensing_radar_scenario'],
+        'terrain_formula_sha256': sha256((Path(__file__).resolve().parents[1]/'src/airsim_rf/terrain.py').read_bytes()).hexdigest(),
+        'figures': ['sensing_esm_scenario', 'sensing_esm_scene_3d', 'sensing_radar_scenario'],
         'esm': {'start_positions_m': start.tolist(), 'final_positions_m': end.tolist(),
                 'final_epoch_s': epoch, 'nominal_carrier_hz': radio['profile']['carrier_hz'],
                 'link_lines': 'Illustrative device associations, not traced rays'},

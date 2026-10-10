@@ -57,7 +57,7 @@ def main():
         scene, peak_gain = scan_scene(name, beamwidth_deg=args.beamwidth_deg)
         scan = TerrainScan(scene, samples_per_link=args.samples_per_link, renderer='direct-cuda' if args.backend == 'cuda' else 'numpy')
         low = TerrainScan(scene, bandwidth_hz=20e6, samples_per_link=args.samples_per_link, renderer='direct-cuda' if args.backend == 'cuda' else 'numpy') if name == 'terrain' else None
-        gate = (scan.length_m >= 60) & (scan.length_m <= 100)
+        gate = (scan.length_m >= 10) & (scan.length_m <= 100)
         length = scan.length_m[gate]
         iq_rows, compressed_rows, low_iq_rows, low_compressed_rows, counts = [], [], [], [], []
         for i, (position, epoch) in enumerate(zip(positions, epochs)):
@@ -79,7 +79,7 @@ def main():
     power = {name: np.abs(values['compressed'])**2 for name, values in series.items()}
     maximum = max(values.max() for values in power.values())
     relative = {name: 10*np.log10(np.maximum(values/maximum, 1e-8)) for name, values in power.items()}
-    # Peak comes only from received I/Q and a fixed 60–100 m delay gate.
+    # Peak comes only from received I/Q and a fixed 10–100 m delay gate.
     # Neither terrain elevations nor predicted delay enter this estimator.
     measured = {name: heights[np.argmax(values, axis=1)] for name, values in power.items()}
     feature_ranges = ((0, 75), (75, 130), (130, route_length+1))
@@ -111,12 +111,12 @@ def main():
     for index, label, color in zip(feature_indices, labels, colors):
         axes[0].plot(distance[index], truth[index], 'o', color=color)
         axes[0].annotate(label, (distance[index], truth[index]), xytext=(0, 13), textcoords='offset points', ha='center', color=color)
-    axes[0].set(ylabel='Terrain elevation (m)', ylim=(-3, 9), title='Same DEM: flight line crosses both hills and the drainage swale')
+    axes[0].set(ylabel='Terrain elevation (m)', ylim=(-3, 33), title='Same DEM: flight line crosses both hills and the drainage swale')
     axes[0].legend(loc='upper right', fontsize=8)
     for ax, name, title in zip(axes[1:], ('ground', 'terrain'), ('Flat ground: received I/Q gives a flat delay ridge', 'DEM: shorter delay over hills, longer delay over the swale')):
         im = ax.pcolormesh(xedges, yedges, relative[name].T, cmap='magma', vmin=-40, vmax=0, rasterized=True)
         ax.plot(distance, measured[name], color='white', lw=1, alpha=.8, label='Peak extracted from I/Q')
-        ax.set(ylabel='Equivalent surface height (m)', ylim=(-3, 9), title=title)
+        ax.set(ylabel='Equivalent surface height (m)', ylim=(-3, 33), title=title)
         guides(ax)
         ax.legend(loc='upper right', fontsize=8)
     axes[-1].set_xlabel('Distance along flight line (m)')
@@ -141,7 +141,7 @@ def main():
     axes[1].plot(distance, measured['terrain'], color='#2266bb', marker='.', markersize=3, label='Height coordinate of I/Q peak')
     axes[1].plot(distance, measured['ground'], color='gray', ls='--', label='Flat-control I/Q peak')
     guides(axes[1])
-    axes[1].set(xlabel='Distance along flight line (m)', ylabel='Elevation / equivalent height (m)', ylim=(-3, 9), title='Independent comparison: DEM reference versus received-data peak')
+    axes[1].set(xlabel='Distance along flight line (m)', ylabel='Elevation / equivalent height (m)', ylim=(-3, 33), title='Independent comparison: DEM reference versus received-data peak')
     axes[1].legend(fontsize=8)
     axes[1].grid(alpha=.2)
     save(fig, 'terrain_scan_geometry')
@@ -153,7 +153,7 @@ def main():
         ax.plot(length, relative['terrain'][index], color=color, lw=1.8, label=f'{label}, h={truth[index]:.1f} m')
         ax.axvline(expected_lengths[index], color=color, ls=':', alpha=.8)
     ax.set(xlabel='Total TX–surface–RX path length cτ (m)', ylabel='Compressed voltage power (dB, shared reference)',
-           ylim=(-45, 3), xlim=(60, 95), title='I/Q delay cuts: raised ground arrives earlier\nDotted lines are geometric midpoint references; they do not generate the I/Q')
+           ylim=(-45, 3), xlim=(10, 100), title='I/Q delay cuts: raised ground arrives earlier\nDotted lines are geometric midpoint references; they do not generate the I/Q')
     ax.legend(fontsize=9)
     ax.grid(alpha=.2)
     save(fig, 'terrain_delay_cuts')
@@ -161,7 +161,7 @@ def main():
     fig, axes = plt.subplots(2, 1, figsize=(12, 7), sharex=True, sharey=True, layout='constrained')
     for ax, name, bandwidth in zip(axes, ('terrain_20mhz', 'terrain'), (20, 200)):
         im = ax.pcolormesh(xedges, yedges, relative[name].T, cmap='magma', vmin=-40, vmax=0, rasterized=True)
-        ax.set(ylabel='Equivalent height (m)', ylim=(-3, 9), title=f'{bandwidth} MHz chirp; total path-length resolution {C/(bandwidth*1e6):.1f} m')
+        ax.set(ylabel='Equivalent height (m)', ylim=(-3, 33), title=f'{bandwidth} MHz chirp; total path-length resolution {C/(bandwidth*1e6):.1f} m')
         guides(ax)
     axes[-1].set_xlabel('Distance along flight line (m)')
     fig.colorbar(im, ax=axes, label='Pulse-compressed voltage power (dB, shared reference)')

@@ -1,0 +1,25 @@
+{
+  "epoch_s": 5.5,
+  "links": [
+    {
+      "tx": "beacon_a",
+      "rx": "listener_a",
+      "terrain_blocks_direct": true
+    },
+    {
+      "tx": "beacon_a",
+      "rx": "listener_b",
+      "terrain_blocks_direct": false
+    },
+    {
+      "tx": "beacon_b",
+      "rx": "listener_a",
+      "terrain_blocks_direct": false
+    },
+    {
+      "tx": "beacon_b",
+      "rx": "listener_b",
+      "terrain_blocks_direct": false
+    }
+  ]
+}

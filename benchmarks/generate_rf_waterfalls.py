@@ -72,6 +72,11 @@ def main():
         rows_delay, rows_doppler, rows_iq, records = [], [], [], []
         for index, epoch in enumerate(epochs):
             update_platforms(scene, float(epoch))
+            # Shared timing fixtures retain their historic poses. This physical
+            # demonstration lifts both controls equally above the 30 m surface.
+            for device in list(scene.transmitters.values())+list(scene.receivers.values()):
+                p = np.asarray(device.position.numpy()).reshape(3)
+                device.position = (p+[0, 0, 25]).tolist()
             start = time.perf_counter()
             paths = solver(scene, samples_per_src=args.samples_per_link,
                            max_num_paths_per_src=args.samples_per_link+1+planes, seed=42)
@@ -175,8 +180,8 @@ def main():
     ax = fig.add_subplot(121)
     image = ax.pcolormesh(x, y, terrain.heights_m, shading='auto', cmap='terrain', rasterized=True)
     ax.contour(x, y, terrain.heights_m, levels=10, colors='black', linewidths=.4, alpha=.5)
-    ax.plot(np.zeros(args.tx), np.linspace(-25, 25, args.tx), '.', color='navy', label='TX start positions, z=10 m')
-    ax.plot([10, 10], [-5, -5+.5*epochs[-1]], color='crimson', marker='o', label='RX route, z=15 m')
+    ax.plot(np.zeros(args.tx), np.linspace(-25, 25, args.tx), '.', color='navy', label='TX start positions, z=35 m')
+    ax.plot([10, 10], [-5, -5+.5*epochs[-1]], color='crimson', marker='o', label='RX route, z=40 m')
     ax.arrow(0, 0, epochs[-1], 0, color='navy', width=.4, length_includes_head=True)
     ax.set(xlabel='East / x (m)', ylabel='North / y (m)', title='Synthetic DEM and platform geometry', aspect='equal')
     ax.legend(fontsize=8, loc='upper left')
@@ -195,6 +200,7 @@ def main():
                           'elevation_min_m': float(terrain.heights_m.min()), 'elevation_max_m': float(terrain.heights_m.max()),
                           'surveyed': False, 'material': {'relative_permittivity': 5, 'conductivity_s_per_m': .01,
                           'thickness_m': .5, 'scattering_coefficient': .3, 'scattering_pattern': 'Lambertian'}},
+              'platforms': {'tx_altitude_m': 35, 'rx_altitude_m': 40, 'rule': 'Fixed datum heights; both flat and terrain controls lifted equally by 25 m'},
               'waveform': {'representative_tx_index': representative, 'carrier_hz': cfg.carrier_hz,
                           'bandwidth_hz': bandwidth, 'pulse_width_s': pulse_width, 'sample_rate_hz': cfg.sample_rate_hz,
                           'receive_samples': cfg.num_samples, 'transmit_power_w': 1, 'impedance_ohm': 50, 'noise': False},
