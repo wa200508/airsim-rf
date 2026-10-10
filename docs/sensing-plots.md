@@ -181,3 +181,11 @@ are saved beside the figures. The plotting commands use the recorded source
 data and preserve the stated processing definitions. A genuine radar range–Doppler figure requires a new
 coherent acquisition with its pulse timing, phase model, CPI and Doppler ambiguity
 limits recorded explicitly.
+
+## Power, clearance and terrain blockage
+
+At the final capture (5.5 s), Beacon A → Receiver 1 is terrain-blocked. Its
+recorded link power is −99.78 dBm, versus −65.89 dBm at Receiver 2. Beacon B's
+powers are −95.00 and −95.50 dBm respectively. These are per-link powers before
+receiver noise, not integrated powers read from the PSD plot. The records and
+[mesh visibility report](figures/sensing_visibility.json) identify each capture.

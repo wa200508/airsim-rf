@@ -358,8 +358,8 @@ about detection range require calibration and a specified detector.
 ADI likewise distinguishes a radio's capabilities from the range/rate of a
 complete waveform, antenna and environment-dependent link [6](#ref6).
 
-These SDR figures and raw recordings were regenerated with P100 propagation
-and direct CUDA sample rendering. Receiver processing and plots use the host.
+These SDR figures describe simulated received I/Q over the recorded terrain.
+Execution backends are recorded in the dataset provenance.
 [Reproduction and capture durations](setup.md#regenerate-documentation-figures-on-the-p100).
 
 [Earlier demonstration illustration: Four radio mounts, received link powers and recorded I/Q spectra](figures/pluto_esm_overview.png)
@@ -459,7 +459,7 @@ The documented [raw recording](figures/pluto_esm_iq.npz) and
 | Proposed samples | 1,028 per link, four links | Attempts; misses and blocked samples are not retained paths |
 
 All coordinates below are **RF x north, y west, z up**, in metres, matching
-the [AirSim transform](../README.md#attach-to-an-airsim-vehicle). Antennas are at
+the [AirSim transform](#attach-it-to-projectairsim). Antennas are at
 the nominal datum heights below unless the DEM requires a climb to retain
 5 m clearance. The current mesh spans 0–30 m. Actual poses and local vertical
 velocities are recorded per capture in [the source report](figures/pluto_esm_report.json).
@@ -527,12 +527,18 @@ approximation also requires receive bandwidth below output sample rate.
 
 ### What the tested example shows
 
-At the final documented epoch, listener A receives approximately **−60.3 dBm**
-from beacon A and **−95.5 dBm** from beacon B, before adding receiver noise.
-Listener B receives approximately **−63.5 and −95.1 dBm**. The chosen filtered
-thermal-noise budget is approximately **−104.0 dBm** per listener. Neither
-12-bit capture clips. These are outputs of the stated model, not measurements
-of Pluto hardware or calibrated rough-ground received powers.
+At the final capture (**5.5 s**) in [the current source report](figures/pluto_esm_report.json):
+
+| Receiver | Beacon A link power | Beacon B link power |
+| --- | ---: | ---: |
+| listener_a | −99.78 dBm | −95.00 dBm |
+| listener_b | −65.89 dBm | −95.50 dBm |
+
+These link powers precede receiver noise (approximately −103.98 dBm per listener).
+Terrain blocks Beacon A's direct path to listener A; reflected/diffuse reception
+remains possible. Neither 12-bit capture clips. These are model outputs, not
+measured Pluto hardware or calibrated rough-ground backscatter. See the
+[power and visibility history](sensing-plots.md#power-clearance-and-terrain-blockage).
 
 The oscillator choices put the nominally sampled tones near:
 

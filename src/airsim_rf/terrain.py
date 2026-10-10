@@ -93,7 +93,7 @@ class TerrainGrid:
         return position, velocity
 
 
-def demo_terrain():
+def demo_terrain(*, historical=False):
     """Deterministic 0–30 m DEM: broad hills and a zero-height drainage swale.
 
     No surveyed location, small-scale roughness or land-cover calibration is
@@ -106,6 +106,44 @@ def demo_terrain():
                +3.5*np.exp(-((x-50)/35)**2-((y-40)/25)**2)
                -3*np.exp(-((y-.25*x-10)/14)**2)
                +.8*np.sin(x/30)*np.cos(y/35))
+    if historical:
+        return TerrainGrid(axis, axis, heights)
     heights = np.maximum(heights, 0.)
     heights *= 30./heights.max()
     return TerrainGrid(axis, axis, heights)
+
+
+def scene_provenance(scene_path):
+    """Content hashes identify an XML scene and each referenced PLY mesh."""
+    from hashlib import sha256
+    import xml.etree.ElementTree as ET
+    path = Path(scene_path)
+    meshes = [path.parent/node.attrib['value'] for node in ET.parse(path).iter('string')
+              if node.attrib.get('name') == 'filename' and node.attrib['value'].endswith('.ply')]
+    return {'scene_id': path.stem, 'xml_sha256': sha256(path.read_bytes()).hexdigest(),
+            'meshes_sha256': {mesh.name: sha256(mesh.read_bytes()).hexdigest() for mesh in meshes}}
+
+
+def validate_flight_envelope(grid, initial, velocity, duration_s, *, curve_radius_m=0., clearance_m=1.):
+    """Conservatively certify an entire trajectory against the highest mesh vertex.
+
+    Supports linear motion with bounded horizontal excursions. This is stricter
+    than sampled local clearance and cannot miss a hill between capture epochs.
+    Raises rather than altering the benchmark's physical inputs.
+    """
+    initial, velocity = np.asarray(initial, float), np.asarray(velocity, float)
+    if (initial.shape[-1] != 3 or initial.shape != velocity.shape
+            or not np.isfinite(initial).all() or not np.isfinite(velocity).all()
+            or not np.isfinite(duration_s) or duration_s < 0):
+        raise ValueError('Finite matching poses/velocities and nonnegative duration required')
+    end = initial+velocity*duration_s
+    lo, hi = np.minimum(initial, end), np.maximum(initial, end)
+    if (np.any(lo[..., 0]-curve_radius_m < grid.x_m[0]) or np.any(hi[..., 0]+curve_radius_m > grid.x_m[-1])
+            or np.any(lo[..., 1]-curve_radius_m < grid.y_m[0]) or np.any(hi[..., 1]+curve_radius_m > grid.y_m[-1])):
+        raise ValueError('Trajectory leaves the benchmark terrain; shorten the run or define a new scene')
+    lower_bound = float(np.min(lo[..., 2])-grid.heights_m.max())
+    if lower_bound < clearance_m:
+        raise ValueError(f'Trajectory clearance bound {lower_bound:.3f} m < {clearance_m:g} m; define a valid scene')
+    return {'validation': 'whole-interval conservative bound against maximum mesh height',
+            'duration_s': duration_s, 'minimum_clearance_bound_m': lower_bound,
+            'required_clearance_m': clearance_m}

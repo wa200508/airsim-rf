@@ -45,7 +45,8 @@ def main():
     profiler = CaptureProfiler() if args.profile else None
     root = Path(__file__).resolve().parents[1]
     start = perf_counter()
-    scene = rt.load_scene(str(root/'benchmarks/scenes/terrain.xml'))
+    scene_path = root/'benchmarks/scenes/terrain_benchmark_v1.xml'
+    scene = rt.load_scene(str(scene_path))
     scene.tx_array = rt.PlanarArray(num_rows=1, num_cols=1, pattern='hw_dipole', polarization='V')
     scene.rx_array = rt.PlanarArray(num_rows=1, num_cols=1, pattern='hw_dipole', polarization='V')
     if args.tx == 2:
@@ -59,6 +60,10 @@ def main():
         clocks = [RadioClock(float(x), float(i*.1)) for i, x in enumerate(np.linspace(-20, 20, args.tx))]
     rx_pos = np.array([[-30, -10, 14], [30, -50, 20]], dtype=float)[:args.rx]
     rx_vel = np.array([[3, 0, 0], [0, 3, 0]], dtype=float)[:args.rx]
+    from airsim_rf.terrain import demo_terrain, scene_provenance, validate_flight_envelope
+    contract = scene_provenance(scene_path)
+    contract['flight_envelope'] = validate_flight_envelope(demo_terrain(historical=True),
+        np.vstack((tx_pos, rx_pos)), np.vstack((tx_vel, rx_vel)), (args.iterations+args.warmup)/200.)
     devices, emitters = [], {}
     for i in range(args.tx):
         name = f'beacon_{i}'
@@ -144,7 +149,7 @@ def main():
         timing_includes='Pose writes, synchronized channel/NumPy export, per-path IQ, enabled per-link diagnostics, receive noise/filter and ADC conversion',
         timing_excludes=['AirSim RPC/physics', 'transport', 'queueing', 'storage', 'plots', 'RF skill processing'],
         initial_tx_positions_m=tx_pos.tolist(), initial_rx_positions_m=rx_pos.tolist(),
-        capture_duration_ms=args.samples/2e6*1000, filter_warmup_samples=256,
+        scene_provenance=contract, capture_duration_ms=args.samples/2e6*1000, filter_warmup_samples=256,
         preparation_ms=preparation_ms, first_capture=first,
         first_capture_note='New process with existing on-disk JIT cache; imports excluded; not a cache-cleared cold-start benchmark',
         service=stats(times), channel=stats([r['channel_ms'] for r in rows]),

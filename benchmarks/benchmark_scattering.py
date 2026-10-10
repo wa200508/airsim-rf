@@ -38,9 +38,18 @@ def main():
     from airsim_rf.scattering import FirstOrderScatteringPathSolver
     from airsim_rf.runtime_metrics import receiver_gpu_workload, conditional_gpu_ray_times
     from scattering_scenario import load_fixture, update_platforms
-    from airsim_rf.terrain import demo_terrain
-    scene = load_fixture(args.scene, args.tx, args.rx)
-    elevations = demo_terrain().heights_m if args.scene == 'terrain' else np.zeros((2, 2))
+    from airsim_rf.terrain import demo_terrain, scene_provenance, validate_flight_envelope
+    scene = load_fixture(args.scene, args.tx, args.rx, historical=True)
+    elevations = demo_terrain(historical=True).heights_m if args.scene == 'terrain' else np.zeros((2, 2))
+    scene_name = 'terrain_benchmark_v1' if args.scene == 'terrain' else args.scene
+    scene_path = Path(__file__).resolve().parent/'scenes'/f'{scene_name}.xml'
+    contract = scene_provenance(scene_path)
+    if args.scene == 'terrain':
+        devices = list(scene.transmitters.values())+list(scene.receivers.values())
+        contract['flight_envelope'] = validate_flight_envelope(demo_terrain(historical=True),
+            np.asarray([np.asarray(d.position).ravel() for d in devices]),
+            np.asarray([np.asarray(d.velocity).ravel() for d in devices]),
+            (args.warmup+args.iterations)/args.pulse_hz)
     solver = FirstOrderScatteringPathSolver(uniform_fraction=args.uniform_fraction)
     prepare_start = time.perf_counter()
     planes = solver.specular_plane_count(scene)
@@ -87,7 +96,7 @@ def main():
     # A multi-RX batch cannot establish one-worker host cost by dividing by RX.
     host_ms = stage_summary['host_numpy_sampling_ms']['p50_ms'] if args.rx == 1 else None
     result = {"scope": f"Synthetic {args.scene}; independent moving TX/RX plus first-order diffuse and specular propagation",
-              "scene_file": f"benchmarks/scenes/{args.scene}.xml", "specular_planes": planes,
+              "scene_file": str(scene_path.relative_to(Path(__file__).resolve().parents[1])), "scene_provenance": contract, "specular_planes": planes,
               "geometry_prepare_ms": geometry_prepare_ms,
               "model": {"carrier_hz": 24.125e9, "depth": 1, "refraction": False, "diffraction": False,
                         "surface_geometry": "21x21 DEM, 800 planar triangles" if args.scene == 'terrain' else "Flat mesh, two triangles",

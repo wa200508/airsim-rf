@@ -104,3 +104,22 @@ def test_dem_ridge_blocks_direct_path(tmp_path):
         _, tau = paths.cir(normalize_delays=False, out_type='numpy')
         counts.append(int((tau >= 0).sum()))
     assert counts == [1, 0]
+
+
+def test_benchmark_mesh_is_immutable_and_matches_historical_grid():
+    from hashlib import sha256
+    from airsim_rf.terrain import demo_terrain, scene_provenance, validate_flight_envelope
+    root = Path(__file__).resolve().parents[1]
+    mesh = root/'benchmarks/scenes/terrain_benchmark_v1.ply'
+    assert sha256(mesh.read_bytes()).hexdigest() == 'db07f14ad075a12b204c9c5115e60aae314bfd044d97965c4bc524d3d7630f3b'
+    lines = mesh.read_text().split('end_header\n')[1].splitlines()
+    vertices, faces = demo_terrain(historical=True).mesh()
+    np.testing.assert_allclose(np.array([list(map(float,line.split())) for line in lines[:len(vertices)]]), vertices, atol=5e-8)
+    contract = scene_provenance(root/'benchmarks/scenes/terrain_benchmark_v1.xml')
+    assert contract['meshes_sha256'][mesh.name] == sha256(mesh.read_bytes()).hexdigest()
+    valid = validate_flight_envelope(demo_terrain(historical=True), np.array([[0,0,10.]]), np.array([[1,0,0.]]), .5)
+    assert valid['minimum_clearance_bound_m'] > 1
+    with pytest.raises(ValueError, match='clearance'):
+        validate_flight_envelope(demo_terrain(), np.array([[0,0,10.]]), np.array([[1,0,0.]]), .5)
+    with pytest.raises(ValueError, match='leaves'):
+        validate_flight_envelope(demo_terrain(historical=True), np.array([[99,0,40.]]), np.array([[3,0,0.]]), 1)

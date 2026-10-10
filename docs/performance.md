@@ -67,3 +67,14 @@ Remaining costs include host source copies, serial receiver dispatch and private
 input transfers. GPU-resident ingestion or overlapping independent work may help,
 but each would need representative workloads and explicit traffic accounting.
 The next product priority is live timestamp continuity and usable recordings.
+
+## Scene identity for matched comparisons
+
+The published performance captures predate the 0–30 m sensing terrain. Timing
+commands now explicitly load `benchmarks/scenes/terrain_benchmark_v1.xml` and its
+immutable original low-relief mesh, recovered from revision `150b40e`. New reports
+include XML/mesh hashes and a conservative clearance certificate for the full
+trajectory interval. The taller `terrain.xml` remains the sensing demonstration.
+Changing terrain is a new workload, not an optimization speedup. Historical
+result files retain their original metadata and must be interpreted using their
+recorded source revision.

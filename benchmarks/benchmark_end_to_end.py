@@ -158,7 +158,8 @@ def run(*, output, tx=100, rx=10, iterations=30, warmup=3, renderer='basis-cpu',
         dr.set_flag(dr.JitFlag.KernelHistory, True)
     output = Path(output)
     output.mkdir(parents=True, exist_ok=False)
-    scene = rt.load_scene(str(ROOT/'benchmarks/scenes/terrain.xml'))
+    scene_path = ROOT/'benchmarks/scenes/terrain_benchmark_v1.xml'
+    scene = rt.load_scene(str(scene_path))
     scene.tx_array = rt.PlanarArray(num_rows=1, num_cols=1, pattern='hw_dipole', polarization='V')
     scene.rx_array = rt.PlanarArray(num_rows=1, num_cols=1, pattern='hw_dipole', polarization='V')
     connection = None
@@ -171,6 +172,13 @@ def run(*, output, tx=100, rx=10, iterations=30, warmup=3, renderer='basis-cpu',
         velocity = rng.uniform(-8, 8, 3)
         robots[name] = TrajectoryRobot(world, position, velocity)
         scene.add((rt.Transmitter if i<tx else rt.Receiver)(name, position=position, velocity=velocity.tolist()))
+    from airsim_rf.terrain import demo_terrain, scene_provenance, validate_flight_envelope
+    contract = scene_provenance(scene_path)
+    if not airsim_config:
+        contract['flight_envelope'] = validate_flight_envelope(demo_terrain(historical=True),
+            np.asarray([r.position for r in robots.values()]),
+            np.asarray([r.velocity for r in robots.values()]),
+            (iterations+warmup+2)/120, curve_radius_m=4.)
     if airsim_config:
         from projectairsim import Drone, ProjectAirSimClient, World
         config = json.loads(Path(airsim_config).read_text())
@@ -298,7 +306,7 @@ def run(*, output, tx=100, rx=10, iterations=30, warmup=3, renderer='basis-cpu',
         scope='rf_pipeline_end_to_end' if airsim_config is None else 'live_airsim_rf_end_to_end',
         hardware=dict(cpu=next(line.split(':',1)[1].strip() for line in Path('/proc/cpuinfo').read_text().splitlines() if line.startswith('model name')), cpu_count=os.cpu_count(), cpu_quota=Path('/sys/fs/cgroup/cpu.max').read_text().strip(),
                       platform=platform.platform(), sionna_rt=rt.__version__, mitsuba=mi.__version__, drjit=dr.__version__, jit_variant=mi.variant(), gpu=gpu),
-        source_revision=revision, source_dirty=dirty,
+        source_revision=revision, source_dirty=dirty, scene_provenance=contract,
         pose_source='deterministic AirSim-contract trajectory; physics/RPC not exercised' if airsim_config is None else 'live ProjectAirSim physics/RPC',
         propagation_backend='Sionna RT CUDA/OptiX' if propagation_backend == 'cuda' else 'Sionna RT LLVM CPU', rendering_backend=renderer,
         arguments=dict(tx=tx,rx=rx,iterations=iterations,warmup=warmup,samples_per_link=samples_per_link,profile_rendering=profile_rendering, reuse_render_buffers=optimizations,

@@ -4,9 +4,10 @@ from pathlib import Path
 import numpy as np
 
 
-def load_fixture(name, transmitters, receivers):
+def load_fixture(name, transmitters, receivers, *, historical=False):
     import sionna.rt as rt
-    scene = rt.load_scene(str(Path(__file__).resolve().parent/'scenes'/f'{name}.xml'))
+    scene_name = 'terrain_benchmark_v1' if historical and name == 'terrain' else name
+    scene = rt.load_scene(str(Path(__file__).resolve().parent/'scenes'/f'{scene_name}.xml'))
     scene.frequency = 24.125e9
     scene.tx_array = rt.PlanarArray(num_rows=1, num_cols=1, pattern='tr38901', polarization='V')
     scene.rx_array = rt.PlanarArray(num_rows=1, num_cols=1, pattern='tr38901', polarization='V')
