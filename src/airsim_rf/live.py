@@ -105,7 +105,7 @@ def record(world, robots, receiver, output, *, updates, advance_ns, max_samples,
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--config', required=True, type=Path)
-    parser.add_argument('--output', required=True, type=Path)
+    parser.add_argument('--output', type=Path)
     parser.add_argument('--updates', type=int, default=10)
     parser.add_argument('--advance-ns', type=int, default=10_000_000)
     parser.add_argument('--max-samples', type=int, default=2_000_000)
@@ -114,6 +114,8 @@ def main():
     args = parser.parse_args()
     if min(args.updates, args.advance_ns, args.max_samples) < 1:
         parser.error('Counts and interval must be positive')
+    if not args.check_config and args.output is None:
+        parser.error('--output is required when recording')
     input_provenance=validate_inputs(args.config)
     if args.check_config:
         print(json.dumps(input_provenance,indent=2))

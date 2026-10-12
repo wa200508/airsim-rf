@@ -35,7 +35,7 @@ def prepare(output, *, address='127.0.0.1'):
         'Use a simulator world with only matching ground for this smoke experiment.\n'
         'Other visible buildings/objects are NOT included in the RF mesh.\n'
         'Waveform: unit-power +150kHz CW, 500000 samples, 0.25 s at 2 MS/s.\n'
-        'Minimal non-physics robots; real server loading remains to be qualified.\n')
+        'Minimal non-physics robots; this checks server integration, not flight dynamics.\n')
     return output/'radios.json'
 
 

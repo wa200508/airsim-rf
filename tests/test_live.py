@@ -136,3 +136,20 @@ def test_recording_inspector_rejects_timestamp_discontinuity(tmp_path):
     path.write_text(json.dumps(manifest))
     with pytest.raises(ValueError,match='contiguous'):
         tool.inspect(directory)
+
+
+def test_check_config_cli_does_not_require_recording_output(tmp_path, monkeypatch, capsys):
+    import importlib.util
+    from pathlib import Path
+    from airsim_rf.live import main
+    spec=importlib.util.spec_from_file_location('prepare_live',Path(__file__).resolve().parents[1]/'examples/prepare_live_example.py')
+    example=importlib.util.module_from_spec(spec);spec.loader.exec_module(example)
+    config=example.prepare(tmp_path/'inputs')
+    monkeypatch.setattr('sys.argv',['airsim_rf.live','--config',str(config),'--check-config'])
+    main()
+    assert json.loads(capsys.readouterr().out)['waveforms']['tx0']['samples']==500000
+    monkeypatch.setattr('sys.argv',['airsim_rf.live','--config',str(config)])
+    with pytest.raises(SystemExit) as error:
+        main()
+    assert error.value.code==2
+    assert '--output is required when recording' in capsys.readouterr().err
