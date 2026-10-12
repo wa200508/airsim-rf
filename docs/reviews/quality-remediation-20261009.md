@@ -60,3 +60,25 @@ hashes, small JSON and logs are published. Large plotting assets are regenerated
 from the committed recordings. Further improvements should build on representative
 workloads and measured live behavior rather than additional tuning of this one
 terrain or reinterpreting renderer-only timings as full-system throughput.
+
+
+## Follow-up qualification checklist — updated 11 October 2026
+
+The twelve original findings above are closed. Subsequent live-workflow work has
+its own evidence and narrower qualification boundaries:
+
+| Follow-up | Status and evidence |
+| --- | --- |
+| Real moving TX and signed Doppler | Complete for controlled flight: [motion report](../../results/reviews/live-motion-20261011/REPORT.md). |
+| Channel-boundary phase and update cadence | Complete against the piecewise model, including an injected-reset negative control: [phase report](../../results/reviews/live-phase-20261011/REPORT.md). Small pose-refresh corrections remain. |
+| Moving ground-specular paths | Complete for the flat-ground case in the phase report; complex gains are shared with the analytic I/Q reference. |
+| Independent moving RX | Complete for two controlled drones, including lateral RX velocity: [two-drone report](../../results/reviews/moving-receiver-20261011/REPORT.md). |
+| Moving diffuse paths | Open: test temporal sampling stability and compare summed I/Q against a reference without treating stochastic sample changes as physical fading. |
+| Occlusion and path births/deaths | Open: move through a known obstruction, check visibility transition, timing, and filter state; avoid claiming arbitrary smooth phase when a path disappears. |
+| Explicit turn maneuvers | Open: test changing direction and nonzero mount offsets against measured angular/linear kinematics. |
+| Unreal mesh interoperability | Open: load/export a matching rendered world and demonstrate alignment; the standalone flat-ground Runtime cannot establish this. |
+
+These open entries are qualification gaps, not evidence that their implementations
+are broken. Fixes should follow observed failures rather than scenario-specific
+adjustments. Performance comparisons require isolated runs and explicit signal
+durations; the correctness captures above are not throughput benchmarks.

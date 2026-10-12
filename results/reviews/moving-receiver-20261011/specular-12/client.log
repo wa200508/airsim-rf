@@ -1,0 +1,51 @@
+01:01:45:277 [INFO] Connecting to simulation server at 127.0.0.1
+01:01:45:279 [INFO] Connection opened.
+01:01:45:279 [INFO] Loading scene config: scene.jsonc
+01:01:45:890 [INFO] Getting the list of available topic info from the sim server...
+01:01:45:901 [INFO] Successfully received topic info list.
+01:01:45:901 [INFO] World object updated for the loaded scene '/Sim/RFMovingQualification'. Note: Any previous Drone object instances may no longer be valid.
+01:01:45:901 [INFO] Trajectory 'null_trajectory' imported successfully.
+01:01:45:901 [INFO] Initalizing Drone 'Drone1'...
+01:01:45:901 [INFO] -------------------------------------------------
+01:01:45:901 [INFO] The following topics can be subscribed to for robot 'Drone1':
+01:01:45:901 [INFO]     sensors["IMU1"]["imu_kinematics"]
+01:01:45:901 [INFO]     sensors["GPS"]["gps"]
+01:01:45:901 [INFO]     sensors["Barometer"]["barometer"]
+01:01:45:901 [INFO]     sensors["Magnetometer"]["magnetometer"]
+01:01:45:901 [INFO]     robot_info["actual_pose"]
+01:01:45:901 [INFO]     robot_info["collision_info"]
+01:01:45:902 [INFO]     robot_info["rotor_info"]
+01:01:45:902 [INFO] -------------------------------------------------
+01:01:45:902 [INFO] Drone 'Drone1' initialized for World scene '/Sim/RFMovingQualification'
+01:01:45:902 [INFO] Initalizing Drone 'Drone2'...
+01:01:45:902 [INFO] -------------------------------------------------
+01:01:45:902 [INFO] The following topics can be subscribed to for robot 'Drone2':
+01:01:45:902 [INFO]     sensors["IMU1"]["imu_kinematics"]
+01:01:45:902 [INFO]     sensors["GPS"]["gps"]
+01:01:45:902 [INFO]     sensors["Barometer"]["barometer"]
+01:01:45:902 [INFO]     sensors["Magnetometer"]["magnetometer"]
+01:01:45:902 [INFO]     robot_info["actual_pose"]
+01:01:45:902 [INFO]     robot_info["collision_info"]
+01:01:45:902 [INFO]     robot_info["rotor_info"]
+01:01:45:902 [INFO] -------------------------------------------------
+01:01:45:902 [INFO] Drone 'Drone2' initialized for World scene '/Sim/RFMovingQualification'
+01:01:58:353 [INFO] Disconnecting from simulation server...
+{
+  "status": "passed",
+  "checks": {
+    "motion_exceeds_half_meter": true,
+    "doppler_sign_matches_command": true,
+    "no_adc_clipping": true,
+    "flight_command_completed": true,
+    "receiver_motion_exceeds_half_meter": true,
+    "receiver_has_lateral_motion": true
+  },
+  "scope": "moving Fast Physics recording; composite frequency is not direct-path Doppler",
+  "signal_seconds_per_receiver": 0.48,
+  "wall_seconds_per_signal_second": 15.542697162500001,
+  "tx_displacement_m": 1.3193417711773752,
+  "maximum_absolute_doppler_error_hz": null,
+  "rx_displacement_m": 1.3896863867455413,
+  "tolerance_hz": 0.5
+}
+01:01:58:420 [INFO] Disconnected.

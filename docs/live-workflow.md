@@ -69,8 +69,10 @@ passed with the real Fast Physics controller: approaching and receding TXs,
 against actual velocity. A [phase/cadence and ground-reflection follow-up](../results/reviews/live-phase-20261011/REPORT.md)
 checked boundary I/Q against the piecewise-channel model at 6–48 ms intervals.
 Small pose-refresh phase corrections remain and grow with longer windows; exact
-phase continuity under acceleration is not guaranteed. Moving receivers, diffuse
-paths, occlusion transitions and Unreal mesh interoperability remain unqualified.
+phase continuity under acceleration is not guaranteed. A [two-drone follow-up](../results/reviews/moving-receiver-20261011/REPORT.md)
+also passed direct/specular checks with independent TX and RX motion, including
+lateral RX velocity. Diffuse paths, occlusion transitions, explicit turns and
+Unreal mesh interoperability remain unqualified.
 The measured workloads are slower than real time; controlled stepping does not
 promise live wall-clock streaming.
 
