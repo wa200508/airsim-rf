@@ -66,8 +66,11 @@ stationary non-physics robots has now passed the P100 live smoke test: ten windo
 A subsequent [moving-flight qualification](../results/reviews/live-motion-20261011/REPORT.md)
 passed with the real Fast Physics controller: approaching and receding TXs,
 0.480 signal seconds per run, and within-window direct-path Doppler checked
-against actual velocity. Cross-window carrier phase, moving multipath and Unreal
-mesh interoperability remain unqualified.
+against actual velocity. A [phase/cadence and ground-reflection follow-up](../results/reviews/live-phase-20261011/REPORT.md)
+checked boundary I/Q against the piecewise-channel model at 6–48 ms intervals.
+Small pose-refresh phase corrections remain and grow with longer windows; exact
+phase continuity under acceleration is not guaranteed. Moving receivers, diffuse
+paths, occlusion transitions and Unreal mesh interoperability remain unqualified.
 The measured workloads are slower than real time; controlled stepping does not
 promise live wall-clock streaming.
 

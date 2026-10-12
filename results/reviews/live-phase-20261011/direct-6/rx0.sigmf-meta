@@ -1,0 +1,571 @@
+{
+  "global": {
+    "core:datatype": "ci16_le",
+    "core:version": "1.2.6",
+    "core:sample_rate": 2000000.0,
+    "core:description": "Simulated signed 12-bit SDR I/Q in int16 containers; uncalibrated"
+  },
+  "captures": [
+    {
+      "core:sample_start": 0,
+      "core:frequency": 915000000.0,
+      "airsim_rf:sim_time_ns": 2001000000,
+      "airsim_rf:volts_per_count": 3.452669830012439e-06,
+      "airsim_rf:clipped_component_fraction": 0.0
+    },
+    {
+      "core:sample_start": 12000,
+      "core:frequency": 915000000.0,
+      "airsim_rf:sim_time_ns": 2007000000,
+      "airsim_rf:volts_per_count": 3.452669830012439e-06,
+      "airsim_rf:clipped_component_fraction": 0.0
+    },
+    {
+      "core:sample_start": 24000,
+      "core:frequency": 915000000.0,
+      "airsim_rf:sim_time_ns": 2013000000,
+      "airsim_rf:volts_per_count": 3.452669830012439e-06,
+      "airsim_rf:clipped_component_fraction": 0.0
+    },
+    {
+      "core:sample_start": 36000,
+      "core:frequency": 915000000.0,
+      "airsim_rf:sim_time_ns": 2019000000,
+      "airsim_rf:volts_per_count": 3.452669830012439e-06,
+      "airsim_rf:clipped_component_fraction": 0.0
+    },
+    {
+      "core:sample_start": 48000,
+      "core:frequency": 915000000.0,
+      "airsim_rf:sim_time_ns": 2025000000,
+      "airsim_rf:volts_per_count": 3.452669830012439e-06,
+      "airsim_rf:clipped_component_fraction": 0.0
+    },
+    {
+      "core:sample_start": 60000,
+      "core:frequency": 915000000.0,
+      "airsim_rf:sim_time_ns": 2031000000,
+      "airsim_rf:volts_per_count": 3.452669830012439e-06,
+      "airsim_rf:clipped_component_fraction": 0.0
+    },
+    {
+      "core:sample_start": 72000,
+      "core:frequency": 915000000.0,
+      "airsim_rf:sim_time_ns": 2037000000,
+      "airsim_rf:volts_per_count": 3.452669830012439e-06,
+      "airsim_rf:clipped_component_fraction": 0.0
+    },
+    {
+      "core:sample_start": 84000,
+      "core:frequency": 915000000.0,
+      "airsim_rf:sim_time_ns": 2043000000,
+      "airsim_rf:volts_per_count": 3.452669830012439e-06,
+      "airsim_rf:clipped_component_fraction": 0.0
+    },
+    {
+      "core:sample_start": 96000,
+      "core:frequency": 915000000.0,
+      "airsim_rf:sim_time_ns": 2049000000,
+      "airsim_rf:volts_per_count": 3.452669830012439e-06,
+      "airsim_rf:clipped_component_fraction": 0.0
+    },
+    {
+      "core:sample_start": 108000,
+      "core:frequency": 915000000.0,
+      "airsim_rf:sim_time_ns": 2055000000,
+      "airsim_rf:volts_per_count": 3.452669830012439e-06,
+      "airsim_rf:clipped_component_fraction": 0.0
+    },
+    {
+      "core:sample_start": 120000,
+      "core:frequency": 915000000.0,
+      "airsim_rf:sim_time_ns": 2061000000,
+      "airsim_rf:volts_per_count": 3.452669830012439e-06,
+      "airsim_rf:clipped_component_fraction": 0.0
+    },
+    {
+      "core:sample_start": 132000,
+      "core:frequency": 915000000.0,
+      "airsim_rf:sim_time_ns": 2067000000,
+      "airsim_rf:volts_per_count": 3.452669830012439e-06,
+      "airsim_rf:clipped_component_fraction": 0.0
+    },
+    {
+      "core:sample_start": 144000,
+      "core:frequency": 915000000.0,
+      "airsim_rf:sim_time_ns": 2073000000,
+      "airsim_rf:volts_per_count": 3.452669830012439e-06,
+      "airsim_rf:clipped_component_fraction": 0.0
+    },
+    {
+      "core:sample_start": 156000,
+      "core:frequency": 915000000.0,
+      "airsim_rf:sim_time_ns": 2079000000,
+      "airsim_rf:volts_per_count": 3.452669830012439e-06,
+      "airsim_rf:clipped_component_fraction": 0.0
+    },
+    {
+      "core:sample_start": 168000,
+      "core:frequency": 915000000.0,
+      "airsim_rf:sim_time_ns": 2085000000,
+      "airsim_rf:volts_per_count": 3.452669830012439e-06,
+      "airsim_rf:clipped_component_fraction": 0.0
+    },
+    {
+      "core:sample_start": 180000,
+      "core:frequency": 915000000.0,
+      "airsim_rf:sim_time_ns": 2091000000,
+      "airsim_rf:volts_per_count": 3.452669830012439e-06,
+      "airsim_rf:clipped_component_fraction": 0.0
+    },
+    {
+      "core:sample_start": 192000,
+      "core:frequency": 915000000.0,
+      "airsim_rf:sim_time_ns": 2097000000,
+      "airsim_rf:volts_per_count": 3.452669830012439e-06,
+      "airsim_rf:clipped_component_fraction": 0.0
+    },
+    {
+      "core:sample_start": 204000,
+      "core:frequency": 915000000.0,
+      "airsim_rf:sim_time_ns": 2103000000,
+      "airsim_rf:volts_per_count": 3.452669830012439e-06,
+      "airsim_rf:clipped_component_fraction": 0.0
+    },
+    {
+      "core:sample_start": 216000,
+      "core:frequency": 915000000.0,
+      "airsim_rf:sim_time_ns": 2109000000,
+      "airsim_rf:volts_per_count": 3.452669830012439e-06,
+      "airsim_rf:clipped_component_fraction": 0.0
+    },
+    {
+      "core:sample_start": 228000,
+      "core:frequency": 915000000.0,
+      "airsim_rf:sim_time_ns": 2115000000,
+      "airsim_rf:volts_per_count": 3.452669830012439e-06,
+      "airsim_rf:clipped_component_fraction": 0.0
+    },
+    {
+      "core:sample_start": 240000,
+      "core:frequency": 915000000.0,
+      "airsim_rf:sim_time_ns": 2121000000,
+      "airsim_rf:volts_per_count": 3.452669830012439e-06,
+      "airsim_rf:clipped_component_fraction": 0.0
+    },
+    {
+      "core:sample_start": 252000,
+      "core:frequency": 915000000.0,
+      "airsim_rf:sim_time_ns": 2127000000,
+      "airsim_rf:volts_per_count": 3.452669830012439e-06,
+      "airsim_rf:clipped_component_fraction": 0.0
+    },
+    {
+      "core:sample_start": 264000,
+      "core:frequency": 915000000.0,
+      "airsim_rf:sim_time_ns": 2133000000,
+      "airsim_rf:volts_per_count": 3.452669830012439e-06,
+      "airsim_rf:clipped_component_fraction": 0.0
+    },
+    {
+      "core:sample_start": 276000,
+      "core:frequency": 915000000.0,
+      "airsim_rf:sim_time_ns": 2139000000,
+      "airsim_rf:volts_per_count": 3.452669830012439e-06,
+      "airsim_rf:clipped_component_fraction": 0.0
+    },
+    {
+      "core:sample_start": 288000,
+      "core:frequency": 915000000.0,
+      "airsim_rf:sim_time_ns": 2145000000,
+      "airsim_rf:volts_per_count": 3.452669830012439e-06,
+      "airsim_rf:clipped_component_fraction": 0.0
+    },
+    {
+      "core:sample_start": 300000,
+      "core:frequency": 915000000.0,
+      "airsim_rf:sim_time_ns": 2151000000,
+      "airsim_rf:volts_per_count": 3.452669830012439e-06,
+      "airsim_rf:clipped_component_fraction": 0.0
+    },
+    {
+      "core:sample_start": 312000,
+      "core:frequency": 915000000.0,
+      "airsim_rf:sim_time_ns": 2157000000,
+      "airsim_rf:volts_per_count": 3.452669830012439e-06,
+      "airsim_rf:clipped_component_fraction": 0.0
+    },
+    {
+      "core:sample_start": 324000,
+      "core:frequency": 915000000.0,
+      "airsim_rf:sim_time_ns": 2163000000,
+      "airsim_rf:volts_per_count": 3.452669830012439e-06,
+      "airsim_rf:clipped_component_fraction": 0.0
+    },
+    {
+      "core:sample_start": 336000,
+      "core:frequency": 915000000.0,
+      "airsim_rf:sim_time_ns": 2169000000,
+      "airsim_rf:volts_per_count": 3.452669830012439e-06,
+      "airsim_rf:clipped_component_fraction": 0.0
+    },
+    {
+      "core:sample_start": 348000,
+      "core:frequency": 915000000.0,
+      "airsim_rf:sim_time_ns": 2175000000,
+      "airsim_rf:volts_per_count": 3.452669830012439e-06,
+      "airsim_rf:clipped_component_fraction": 0.0
+    },
+    {
+      "core:sample_start": 360000,
+      "core:frequency": 915000000.0,
+      "airsim_rf:sim_time_ns": 2181000000,
+      "airsim_rf:volts_per_count": 3.452669830012439e-06,
+      "airsim_rf:clipped_component_fraction": 0.0
+    },
+    {
+      "core:sample_start": 372000,
+      "core:frequency": 915000000.0,
+      "airsim_rf:sim_time_ns": 2187000000,
+      "airsim_rf:volts_per_count": 3.452669830012439e-06,
+      "airsim_rf:clipped_component_fraction": 0.0
+    },
+    {
+      "core:sample_start": 384000,
+      "core:frequency": 915000000.0,
+      "airsim_rf:sim_time_ns": 2193000000,
+      "airsim_rf:volts_per_count": 3.452669830012439e-06,
+      "airsim_rf:clipped_component_fraction": 0.0
+    },
+    {
+      "core:sample_start": 396000,
+      "core:frequency": 915000000.0,
+      "airsim_rf:sim_time_ns": 2199000000,
+      "airsim_rf:volts_per_count": 3.452669830012439e-06,
+      "airsim_rf:clipped_component_fraction": 0.0
+    },
+    {
+      "core:sample_start": 408000,
+      "core:frequency": 915000000.0,
+      "airsim_rf:sim_time_ns": 2205000000,
+      "airsim_rf:volts_per_count": 3.452669830012439e-06,
+      "airsim_rf:clipped_component_fraction": 0.0
+    },
+    {
+      "core:sample_start": 420000,
+      "core:frequency": 915000000.0,
+      "airsim_rf:sim_time_ns": 2211000000,
+      "airsim_rf:volts_per_count": 3.452669830012439e-06,
+      "airsim_rf:clipped_component_fraction": 0.0
+    },
+    {
+      "core:sample_start": 432000,
+      "core:frequency": 915000000.0,
+      "airsim_rf:sim_time_ns": 2217000000,
+      "airsim_rf:volts_per_count": 3.452669830012439e-06,
+      "airsim_rf:clipped_component_fraction": 0.0
+    },
+    {
+      "core:sample_start": 444000,
+      "core:frequency": 915000000.0,
+      "airsim_rf:sim_time_ns": 2223000000,
+      "airsim_rf:volts_per_count": 3.452669830012439e-06,
+      "airsim_rf:clipped_component_fraction": 0.0
+    },
+    {
+      "core:sample_start": 456000,
+      "core:frequency": 915000000.0,
+      "airsim_rf:sim_time_ns": 2229000000,
+      "airsim_rf:volts_per_count": 3.452669830012439e-06,
+      "airsim_rf:clipped_component_fraction": 0.0
+    },
+    {
+      "core:sample_start": 468000,
+      "core:frequency": 915000000.0,
+      "airsim_rf:sim_time_ns": 2235000000,
+      "airsim_rf:volts_per_count": 3.452669830012439e-06,
+      "airsim_rf:clipped_component_fraction": 0.0
+    },
+    {
+      "core:sample_start": 480000,
+      "core:frequency": 915000000.0,
+      "airsim_rf:sim_time_ns": 2241000000,
+      "airsim_rf:volts_per_count": 3.452669830012439e-06,
+      "airsim_rf:clipped_component_fraction": 0.0
+    },
+    {
+      "core:sample_start": 492000,
+      "core:frequency": 915000000.0,
+      "airsim_rf:sim_time_ns": 2247000000,
+      "airsim_rf:volts_per_count": 3.452669830012439e-06,
+      "airsim_rf:clipped_component_fraction": 0.0
+    },
+    {
+      "core:sample_start": 504000,
+      "core:frequency": 915000000.0,
+      "airsim_rf:sim_time_ns": 2253000000,
+      "airsim_rf:volts_per_count": 3.452669830012439e-06,
+      "airsim_rf:clipped_component_fraction": 0.0
+    },
+    {
+      "core:sample_start": 516000,
+      "core:frequency": 915000000.0,
+      "airsim_rf:sim_time_ns": 2259000000,
+      "airsim_rf:volts_per_count": 3.452669830012439e-06,
+      "airsim_rf:clipped_component_fraction": 0.0
+    },
+    {
+      "core:sample_start": 528000,
+      "core:frequency": 915000000.0,
+      "airsim_rf:sim_time_ns": 2265000000,
+      "airsim_rf:volts_per_count": 3.452669830012439e-06,
+      "airsim_rf:clipped_component_fraction": 0.0
+    },
+    {
+      "core:sample_start": 540000,
+      "core:frequency": 915000000.0,
+      "airsim_rf:sim_time_ns": 2271000000,
+      "airsim_rf:volts_per_count": 3.452669830012439e-06,
+      "airsim_rf:clipped_component_fraction": 0.0
+    },
+    {
+      "core:sample_start": 552000,
+      "core:frequency": 915000000.0,
+      "airsim_rf:sim_time_ns": 2277000000,
+      "airsim_rf:volts_per_count": 3.452669830012439e-06,
+      "airsim_rf:clipped_component_fraction": 0.0
+    },
+    {
+      "core:sample_start": 564000,
+      "core:frequency": 915000000.0,
+      "airsim_rf:sim_time_ns": 2283000000,
+      "airsim_rf:volts_per_count": 3.452669830012439e-06,
+      "airsim_rf:clipped_component_fraction": 0.0
+    },
+    {
+      "core:sample_start": 576000,
+      "core:frequency": 915000000.0,
+      "airsim_rf:sim_time_ns": 2289000000,
+      "airsim_rf:volts_per_count": 3.452669830012439e-06,
+      "airsim_rf:clipped_component_fraction": 0.0
+    },
+    {
+      "core:sample_start": 588000,
+      "core:frequency": 915000000.0,
+      "airsim_rf:sim_time_ns": 2295000000,
+      "airsim_rf:volts_per_count": 3.452669830012439e-06,
+      "airsim_rf:clipped_component_fraction": 0.0
+    },
+    {
+      "core:sample_start": 600000,
+      "core:frequency": 915000000.0,
+      "airsim_rf:sim_time_ns": 2301000000,
+      "airsim_rf:volts_per_count": 3.452669830012439e-06,
+      "airsim_rf:clipped_component_fraction": 0.0
+    },
+    {
+      "core:sample_start": 612000,
+      "core:frequency": 915000000.0,
+      "airsim_rf:sim_time_ns": 2307000000,
+      "airsim_rf:volts_per_count": 3.452669830012439e-06,
+      "airsim_rf:clipped_component_fraction": 0.0
+    },
+    {
+      "core:sample_start": 624000,
+      "core:frequency": 915000000.0,
+      "airsim_rf:sim_time_ns": 2313000000,
+      "airsim_rf:volts_per_count": 3.452669830012439e-06,
+      "airsim_rf:clipped_component_fraction": 0.0
+    },
+    {
+      "core:sample_start": 636000,
+      "core:frequency": 915000000.0,
+      "airsim_rf:sim_time_ns": 2319000000,
+      "airsim_rf:volts_per_count": 3.452669830012439e-06,
+      "airsim_rf:clipped_component_fraction": 0.0
+    },
+    {
+      "core:sample_start": 648000,
+      "core:frequency": 915000000.0,
+      "airsim_rf:sim_time_ns": 2325000000,
+      "airsim_rf:volts_per_count": 3.452669830012439e-06,
+      "airsim_rf:clipped_component_fraction": 0.0
+    },
+    {
+      "core:sample_start": 660000,
+      "core:frequency": 915000000.0,
+      "airsim_rf:sim_time_ns": 2331000000,
+      "airsim_rf:volts_per_count": 3.452669830012439e-06,
+      "airsim_rf:clipped_component_fraction": 0.0
+    },
+    {
+      "core:sample_start": 672000,
+      "core:frequency": 915000000.0,
+      "airsim_rf:sim_time_ns": 2337000000,
+      "airsim_rf:volts_per_count": 3.452669830012439e-06,
+      "airsim_rf:clipped_component_fraction": 0.0
+    },
+    {
+      "core:sample_start": 684000,
+      "core:frequency": 915000000.0,
+      "airsim_rf:sim_time_ns": 2343000000,
+      "airsim_rf:volts_per_count": 3.452669830012439e-06,
+      "airsim_rf:clipped_component_fraction": 0.0
+    },
+    {
+      "core:sample_start": 696000,
+      "core:frequency": 915000000.0,
+      "airsim_rf:sim_time_ns": 2349000000,
+      "airsim_rf:volts_per_count": 3.452669830012439e-06,
+      "airsim_rf:clipped_component_fraction": 0.0
+    },
+    {
+      "core:sample_start": 708000,
+      "core:frequency": 915000000.0,
+      "airsim_rf:sim_time_ns": 2355000000,
+      "airsim_rf:volts_per_count": 3.452669830012439e-06,
+      "airsim_rf:clipped_component_fraction": 0.0
+    },
+    {
+      "core:sample_start": 720000,
+      "core:frequency": 915000000.0,
+      "airsim_rf:sim_time_ns": 2361000000,
+      "airsim_rf:volts_per_count": 3.452669830012439e-06,
+      "airsim_rf:clipped_component_fraction": 0.0
+    },
+    {
+      "core:sample_start": 732000,
+      "core:frequency": 915000000.0,
+      "airsim_rf:sim_time_ns": 2367000000,
+      "airsim_rf:volts_per_count": 3.452669830012439e-06,
+      "airsim_rf:clipped_component_fraction": 0.0
+    },
+    {
+      "core:sample_start": 744000,
+      "core:frequency": 915000000.0,
+      "airsim_rf:sim_time_ns": 2373000000,
+      "airsim_rf:volts_per_count": 3.452669830012439e-06,
+      "airsim_rf:clipped_component_fraction": 0.0
+    },
+    {
+      "core:sample_start": 756000,
+      "core:frequency": 915000000.0,
+      "airsim_rf:sim_time_ns": 2379000000,
+      "airsim_rf:volts_per_count": 3.452669830012439e-06,
+      "airsim_rf:clipped_component_fraction": 0.0
+    },
+    {
+      "core:sample_start": 768000,
+      "core:frequency": 915000000.0,
+      "airsim_rf:sim_time_ns": 2385000000,
+      "airsim_rf:volts_per_count": 3.452669830012439e-06,
+      "airsim_rf:clipped_component_fraction": 0.0
+    },
+    {
+      "core:sample_start": 780000,
+      "core:frequency": 915000000.0,
+      "airsim_rf:sim_time_ns": 2391000000,
+      "airsim_rf:volts_per_count": 3.452669830012439e-06,
+      "airsim_rf:clipped_component_fraction": 0.0
+    },
+    {
+      "core:sample_start": 792000,
+      "core:frequency": 915000000.0,
+      "airsim_rf:sim_time_ns": 2397000000,
+      "airsim_rf:volts_per_count": 3.452669830012439e-06,
+      "airsim_rf:clipped_component_fraction": 0.0
+    },
+    {
+      "core:sample_start": 804000,
+      "core:frequency": 915000000.0,
+      "airsim_rf:sim_time_ns": 2403000000,
+      "airsim_rf:volts_per_count": 3.452669830012439e-06,
+      "airsim_rf:clipped_component_fraction": 0.0
+    },
+    {
+      "core:sample_start": 816000,
+      "core:frequency": 915000000.0,
+      "airsim_rf:sim_time_ns": 2409000000,
+      "airsim_rf:volts_per_count": 3.452669830012439e-06,
+      "airsim_rf:clipped_component_fraction": 0.0
+    },
+    {
+      "core:sample_start": 828000,
+      "core:frequency": 915000000.0,
+      "airsim_rf:sim_time_ns": 2415000000,
+      "airsim_rf:volts_per_count": 3.452669830012439e-06,
+      "airsim_rf:clipped_component_fraction": 0.0
+    },
+    {
+      "core:sample_start": 840000,
+      "core:frequency": 915000000.0,
+      "airsim_rf:sim_time_ns": 2421000000,
+      "airsim_rf:volts_per_count": 3.452669830012439e-06,
+      "airsim_rf:clipped_component_fraction": 0.0
+    },
+    {
+      "core:sample_start": 852000,
+      "core:frequency": 915000000.0,
+      "airsim_rf:sim_time_ns": 2427000000,
+      "airsim_rf:volts_per_count": 3.452669830012439e-06,
+      "airsim_rf:clipped_component_fraction": 0.0
+    },
+    {
+      "core:sample_start": 864000,
+      "core:frequency": 915000000.0,
+      "airsim_rf:sim_time_ns": 2433000000,
+      "airsim_rf:volts_per_count": 3.452669830012439e-06,
+      "airsim_rf:clipped_component_fraction": 0.0
+    },
+    {
+      "core:sample_start": 876000,
+      "core:frequency": 915000000.0,
+      "airsim_rf:sim_time_ns": 2439000000,
+      "airsim_rf:volts_per_count": 3.452669830012439e-06,
+      "airsim_rf:clipped_component_fraction": 0.0
+    },
+    {
+      "core:sample_start": 888000,
+      "core:frequency": 915000000.0,
+      "airsim_rf:sim_time_ns": 2445000000,
+      "airsim_rf:volts_per_count": 3.452669830012439e-06,
+      "airsim_rf:clipped_component_fraction": 0.0
+    },
+    {
+      "core:sample_start": 900000,
+      "core:frequency": 915000000.0,
+      "airsim_rf:sim_time_ns": 2451000000,
+      "airsim_rf:volts_per_count": 3.452669830012439e-06,
+      "airsim_rf:clipped_component_fraction": 0.0
+    },
+    {
+      "core:sample_start": 912000,
+      "core:frequency": 915000000.0,
+      "airsim_rf:sim_time_ns": 2457000000,
+      "airsim_rf:volts_per_count": 3.452669830012439e-06,
+      "airsim_rf:clipped_component_fraction": 0.0
+    },
+    {
+      "core:sample_start": 924000,
+      "core:frequency": 915000000.0,
+      "airsim_rf:sim_time_ns": 2463000000,
+      "airsim_rf:volts_per_count": 3.452669830012439e-06,
+      "airsim_rf:clipped_component_fraction": 0.0
+    },
+    {
+      "core:sample_start": 936000,
+      "core:frequency": 915000000.0,
+      "airsim_rf:sim_time_ns": 2469000000,
+      "airsim_rf:volts_per_count": 3.452669830012439e-06,
+      "airsim_rf:clipped_component_fraction": 0.0
+    },
+    {
+      "core:sample_start": 948000,
+      "core:frequency": 915000000.0,
+      "airsim_rf:sim_time_ns": 2475000000,
+      "airsim_rf:volts_per_count": 3.452669830012439e-06,
+      "airsim_rf:clipped_component_fraction": 0.0
+    }
+  ],
+  "annotations": []
+}

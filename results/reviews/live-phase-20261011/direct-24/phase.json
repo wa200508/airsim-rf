@@ -1,0 +1,458 @@
+{
+  "status": "passed",
+  "checks": {
+    "path_length_within_1mm": true,
+    "path_doppler_within_1mHz": true,
+    "path_phase_residual_below_0_01rad": true,
+    "whole_iq_nrmse_below_1percent": true,
+    "boundary_iq_nrmse_below_1percent": true,
+    "adc_geometry_residual_below_0_01rad": true
+  },
+  "metrics": {
+    "maximum_path_length_error_m": 5.029860396632557e-06,
+    "maximum_path_doppler_error_hz": 1.4235835976705857e-06,
+    "maximum_path_refresh_jump_rad": 0.002074701225085906,
+    "maximum_path_phase_residual_rad": 9.32506663247066e-05,
+    "whole_recording_iq_nrmse": 0.0027516442514653734,
+    "boundary_neighborhood_iq_nrmse": 0.0027771762572291175,
+    "maximum_adc_fitted_jump_rad": 0.0020669653057732162,
+    "maximum_adc_vs_geometry_residual_rad": 9.149827676746547e-05
+  },
+  "scope": "flat-ground path geometry and piecewise narrowband signal/filter/ADC continuity; shared traced complex gains",
+  "window_ms": 24,
+  "paths_per_snapshot": 1,
+  "commanded_velocity_m_s": 3.0,
+  "signal_seconds_per_receiver": 0.48,
+  "wall_seconds_per_signal_second": 13.926729950000077,
+  "boundary_neighborhood_samples_each_side": 128,
+  "boundaries": [
+    {
+      "sim_time_ns": 2025000000,
+      "path_refresh_jump_rad": [
+        0.002074701225085906
+      ],
+      "geometry_refresh_jump_rad": [
+        0.002007844218306465
+      ],
+      "path_phase_residual_rad": [
+        6.685700677944119e-05
+      ],
+      "adc_fitted_jump_rad": 0.0020669653057732162,
+      "adc_vs_geometry_residual_rad": 5.9121087466751376e-05
+    },
+    {
+      "sim_time_ns": 2049000000,
+      "path_refresh_jump_rad": [
+        0.001869764732175927
+      ],
+      "geometry_refresh_jump_rad": [
+        0.001958302562568681
+      ],
+      "path_phase_residual_rad": [
+        -8.853783039275422e-05
+      ],
+      "adc_fitted_jump_rad": 0.0018675353823094099,
+      "adc_vs_geometry_residual_rad": -9.076718025927134e-05
+    },
+    {
+      "sim_time_ns": 2073000000,
+      "path_refresh_jump_rad": [
+        0.0019109714190883587
+      ],
+      "geometry_refresh_jump_rad": [
+        0.0018502960144943792
+      ],
+      "path_phase_residual_rad": [
+        6.0675404593979465e-05
+      ],
+      "adc_fitted_jump_rad": 0.0019127924731994206,
+      "adc_vs_geometry_residual_rad": 6.24964587050414e-05
+    },
+    {
+      "sim_time_ns": 2097000000,
+      "path_refresh_jump_rad": [
+        0.0018882454357633807
+      ],
+      "geometry_refresh_jump_rad": [
+        0.001823301547762224
+      ],
+      "path_phase_residual_rad": [
+        6.49438880011566e-05
+      ],
+      "adc_fitted_jump_rad": 0.0019012655555048497,
+      "adc_vs_geometry_residual_rad": 7.796400774262558e-05
+    },
+    {
+      "sim_time_ns": 2121000000,
+      "path_refresh_jump_rad": [
+        0.0017364003376045822
+      ],
+      "geometry_refresh_jump_rad": [
+        0.001766683343879416
+      ],
+      "path_phase_residual_rad": [
+        -3.0283006274833824e-05
+      ],
+      "adc_fitted_jump_rad": 0.001738679173570535,
+      "adc_vs_geometry_residual_rad": -2.8004170308881023e-05
+    },
+    {
+      "sim_time_ns": 2145000000,
+      "path_refresh_jump_rad": [
+        0.0016962004961385002
+      ],
+      "geometry_refresh_jump_rad": [
+        0.0017118206465374097
+      ],
+      "path_phase_residual_rad": [
+        -1.5620150398909516e-05
+      ],
+      "adc_fitted_jump_rad": 0.0016962172893650873,
+      "adc_vs_geometry_residual_rad": -1.560335717232242e-05
+    },
+    {
+      "sim_time_ns": 2169000000,
+      "path_refresh_jump_rad": [
+        0.0016414733685257143
+      ],
+      "geometry_refresh_jump_rad": [
+        0.0016535044652756792
+      ],
+      "path_phase_residual_rad": [
+        -1.2031096749964831e-05
+      ],
+      "adc_fitted_jump_rad": 0.0016353675160755837,
+      "adc_vs_geometry_residual_rad": -1.8136949200095454e-05
+    },
+    {
+      "sim_time_ns": 2193000000,
+      "path_refresh_jump_rad": [
+        0.001629970444330997
+      ],
+      "geometry_refresh_jump_rad": [
+        0.0016076410559660026
+      ],
+      "path_phase_residual_rad": [
+        2.232938836499443e-05
+      ],
+      "adc_fitted_jump_rad": 0.0016281849262704817,
+      "adc_vs_geometry_residual_rad": 2.0543870304479128e-05
+    },
+    {
+      "sim_time_ns": 2217000000,
+      "path_refresh_jump_rad": [
+        0.0015357072613801925
+      ],
+      "geometry_refresh_jump_rad": [
+        0.001570710919774898
+      ],
+      "path_phase_residual_rad": [
+        -3.500365839470554e-05
+      ],
+      "adc_fitted_jump_rad": 0.001530041471140997,
+      "adc_vs_geometry_residual_rad": -4.0669448633900984e-05
+    },
+    {
+      "sim_time_ns": 2241000000,
+      "path_refresh_jump_rad": [
+        0.0015381395972053902
+      ],
+      "geometry_refresh_jump_rad": [
+        0.0015033510819197904
+      ],
+      "path_phase_residual_rad": [
+        3.4788515285599786e-05
+      ],
+      "adc_fitted_jump_rad": 0.001547482276066848,
+      "adc_vs_geometry_residual_rad": 4.4131194147057577e-05
+    },
+    {
+      "sim_time_ns": 2265000000,
+      "path_refresh_jump_rad": [
+        0.0014506922775208153
+      ],
+      "geometry_refresh_jump_rad": [
+        0.0014576563077124405
+      ],
+      "path_phase_residual_rad": [
+        -6.96403019162517e-06
+      ],
+      "adc_fitted_jump_rad": 0.0014534208533927284,
+      "adc_vs_geometry_residual_rad": -4.235454319712062e-06
+    },
+    {
+      "sim_time_ns": 2289000000,
+      "path_refresh_jump_rad": [
+        0.0014538528765211114
+      ],
+      "geometry_refresh_jump_rad": [
+        0.001463548075554266
+      ],
+      "path_phase_residual_rad": [
+        -9.695199033154644e-06
+      ],
+      "adc_fitted_jump_rad": 0.0014551264462944191,
+      "adc_vs_geometry_residual_rad": -8.421629259846915e-06
+    },
+    {
+      "sim_time_ns": 2313000000,
+      "path_refresh_jump_rad": [
+        0.0014218470934626026
+      ],
+      "geometry_refresh_jump_rad": [
+        0.0013920154641129392
+      ],
+      "path_phase_residual_rad": [
+        2.9831629349663444e-05
+      ],
+      "adc_fitted_jump_rad": 0.0014232136316341128,
+      "adc_vs_geometry_residual_rad": 3.119816752117366e-05
+    },
+    {
+      "sim_time_ns": 2337000000,
+      "path_refresh_jump_rad": [
+        0.001352147297914108
+      ],
+      "geometry_refresh_jump_rad": [
+        0.0013497242911710838
+      ],
+      "path_phase_residual_rad": [
+        2.423006743024203e-06
+      ],
+      "adc_fitted_jump_rad": 0.001352658298471976,
+      "adc_vs_geometry_residual_rad": 2.9340073008921057e-06
+    },
+    {
+      "sim_time_ns": 2361000000,
+      "path_refresh_jump_rad": [
+        0.001241463719252378
+      ],
+      "geometry_refresh_jump_rad": [
+        0.0012973447308335384
+      ],
+      "path_phase_residual_rad": [
+        -5.588101158116032e-05
+      ],
+      "adc_fitted_jump_rad": 0.0012434220187878214,
+      "adc_vs_geometry_residual_rad": -5.392271204571696e-05
+    },
+    {
+      "sim_time_ns": 2385000000,
+      "path_refresh_jump_rad": [
+        0.0013318066729552935
+      ],
+      "geometry_refresh_jump_rad": [
+        0.001268709950469793
+      ],
+      "path_phase_residual_rad": [
+        6.309672248550058e-05
+      ],
+      "adc_fitted_jump_rad": 0.0013328744374846435,
+      "adc_vs_geometry_residual_rad": 6.416448701485056e-05
+    },
+    {
+      "sim_time_ns": 2409000000,
+      "path_refresh_jump_rad": [
+        0.0011308014205351216
+      ],
+      "geometry_refresh_jump_rad": [
+        0.0012240520868598281
+      ],
+      "path_phase_residual_rad": [
+        -9.32506663247066e-05
+      ],
+      "adc_fitted_jump_rad": 0.0011325538100923627,
+      "adc_vs_geometry_residual_rad": -9.149827676746547e-05
+    },
+    {
+      "sim_time_ns": 2433000000,
+      "path_refresh_jump_rad": [
+        0.0012475727484235757
+      ],
+      "geometry_refresh_jump_rad": [
+        0.0011976437526901584
+      ],
+      "path_phase_residual_rad": [
+        4.992899573341724e-05
+      ],
+      "adc_fitted_jump_rad": 0.0012409114656073417,
+      "adc_vs_geometry_residual_rad": 4.3267712917183225e-05
+    },
+    {
+      "sim_time_ns": 2457000000,
+      "path_refresh_jump_rad": [
+        0.0011294367428291707
+      ],
+      "geometry_refresh_jump_rad": [
+        0.0011685568477661779
+      ],
+      "path_phase_residual_rad": [
+        -3.912010493700713e-05
+      ],
+      "adc_fitted_jump_rad": 0.001129113162072759,
+      "adc_vs_geometry_residual_rad": -3.944368569341883e-05
+    }
+  ],
+  "geometry_errors": [
+    {
+      "length_error_m": [
+        5.030128136240819e-08
+      ],
+      "doppler_error_hz": [
+        7.812328863820994e-07
+      ]
+    },
+    {
+      "length_error_m": [
+        -1.7161311802738055e-06
+      ],
+      "doppler_error_hz": [
+        8.81106487327088e-07
+      ]
+    },
+    {
+      "length_error_m": [
+        7.313112675433331e-07
+      ],
+      "doppler_error_hz": [
+        2.3861255549206817e-07
+      ]
+    },
+    {
+      "length_error_m": [
+        -2.1054299566003465e-06
+      ],
+      "doppler_error_hz": [
+        -4.562013877773552e-08
+      ]
+    },
+    {
+      "length_error_m": [
+        -3.708064575391745e-06
+      ],
+      "doppler_error_hz": [
+        9.311199669070902e-07
+      ]
+    },
+    {
+      "length_error_m": [
+        -3.108715525002026e-06
+      ],
+      "doppler_error_hz": [
+        1.2351750235950476e-06
+      ]
+    },
+    {
+      "length_error_m": [
+        -1.7686314208731346e-06
+      ],
+      "doppler_error_hz": [
+        8.589737827691124e-07
+      ]
+    },
+    {
+      "length_error_m": [
+        -1.2256386128228769e-06
+      ],
+      "doppler_error_hz": [
+        9.9097401928816e-07
+      ]
+    },
+    {
+      "length_error_m": [
+        -1.9876567378673826e-06
+      ],
+      "doppler_error_hz": [
+        2.260946008192377e-07
+      ]
+    },
+    {
+      "length_error_m": [
+        -3.0229688263716525e-07
+      ],
+      "doppler_error_hz": [
+        2.3650644109807217e-08
+      ]
+    },
+    {
+      "length_error_m": [
+        -2.806591417936488e-06
+      ],
+      "doppler_error_hz": [
+        8.860722076065031e-07
+      ]
+    },
+    {
+      "length_error_m": [
+        -2.58722717916271e-06
+      ],
+      "doppler_error_hz": [
+        -6.77875318544352e-07
+      ]
+    },
+    {
+      "length_error_m": [
+        -3.796874217698587e-06
+      ],
+      "doppler_error_hz": [
+        9.105963041378118e-07
+      ]
+    },
+    {
+      "length_error_m": [
+        -4.367482560496683e-06
+      ],
+      "doppler_error_hz": [
+        4.974542253677328e-07
+      ]
+    },
+    {
+      "length_error_m": [
+        -5.029860396632557e-06
+      ],
+      "doppler_error_hz": [
+        8.367507504658533e-07
+      ]
+    },
+    {
+      "length_error_m": [
+        -2.03160516321077e-06
+      ],
+      "doppler_error_hz": [
+        -8.338454904333048e-08
+      ]
+    },
+    {
+      "length_error_m": [
+        -4.624137076802981e-06
+      ],
+      "doppler_error_hz": [
+        4.4722514758177567e-07
+      ]
+    },
+    {
+      "length_error_m": [
+        -5.344367650650383e-07
+      ],
+      "doppler_error_hz": [
+        1.4235835976705857e-06
+      ]
+    },
+    {
+      "length_error_m": [
+        -3.2742293072374196e-06
+      ],
+      "doppler_error_hz": [
+        6.141963808659057e-07
+      ]
+    },
+    {
+      "length_error_m": [
+        3.831321748748451e-07
+      ],
+      "doppler_error_hz": [
+        -1.1960743506733706e-07
+      ]
+    }
+  ]
+}

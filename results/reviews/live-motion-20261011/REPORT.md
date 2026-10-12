@@ -109,6 +109,8 @@ The documented configuration-only CLI was also fixed and regression-tested.
 
 ## Remaining qualification
 
+Subsequent evidence: [phase-boundary, cadence and specular-path checks](../live-phase-20261011/REPORT.md). The paragraphs below describe the gaps at the time of this initial run.
+
 Sample/time continuity passes; **carrier phase continuity across refreshed
 channel windows is not yet qualified**. The phase fit intentionally excludes
 window edges. Next test the phase residual at those boundaries and its sensitivity

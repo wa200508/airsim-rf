@@ -1,0 +1,264 @@
+{
+  "status": "passed",
+  "checks": {
+    "path_length_within_1mm": true,
+    "path_doppler_within_1mHz": true,
+    "path_phase_residual_below_0_01rad": true,
+    "whole_iq_nrmse_below_1percent": true,
+    "boundary_iq_nrmse_below_1percent": true
+  },
+  "metrics": {
+    "maximum_path_length_error_m": 5.029860396632557e-06,
+    "maximum_path_doppler_error_hz": 1.097605042410521e-05,
+    "maximum_path_refresh_jump_rad": 0.007506800778828815,
+    "maximum_path_phase_residual_rad": 0.0022227131396603816,
+    "whole_recording_iq_nrmse": 0.0025739077881382923,
+    "boundary_neighborhood_iq_nrmse": 0.0025789392591751034
+  },
+  "scope": "flat-ground path geometry and piecewise narrowband signal/filter/ADC continuity; shared traced complex gains",
+  "window_ms": 48,
+  "paths_per_snapshot": 2,
+  "commanded_velocity_m_s": 3.0,
+  "signal_seconds_per_receiver": 0.48,
+  "wall_seconds_per_signal_second": 14.406834858334133,
+  "boundary_neighborhood_samples_each_side": 128,
+  "boundaries": [
+    {
+      "sim_time_ns": 2049000000,
+      "path_refresh_jump_rad": [
+        0.007506800778828815,
+        0.0014200159043862293
+      ],
+      "geometry_refresh_jump_rad": [
+        0.007528466541857792,
+        0.003527186433768925
+      ],
+      "path_phase_residual_rad": [
+        -2.166576302897738e-05,
+        -0.002107170529382696
+      ]
+    },
+    {
+      "sim_time_ns": 2097000000,
+      "path_refresh_jump_rad": [
+        0.007118367784639367,
+        0.0010269306227899122
+      ],
+      "geometry_refresh_jump_rad": [
+        0.006992791353324978,
+        0.0030939316124387606
+      ],
+      "path_phase_residual_rad": [
+        0.00012557643131438923,
+        -0.0020670009896488484
+      ]
+    },
+    {
+      "sim_time_ns": 2145000000,
+      "path_refresh_jump_rad": [
+        0.006525106102121203,
+        0.0008284922551553553
+      ],
+      "geometry_refresh_jump_rad": [
+        0.006570963408371711,
+        0.0027995103984799208
+      ],
+      "path_phase_residual_rad": [
+        -4.58573062505083e-05,
+        -0.0019710181433245655
+      ]
+    },
+    {
+      "sim_time_ns": 2193000000,
+      "path_refresh_jump_rad": [
+        0.0061522597325058825,
+        0.0002637307756863106
+      ],
+      "geometry_refresh_jump_rad": [
+        0.006141941535724005,
+        0.002360397811867143
+      ],
+      "path_phase_residual_rad": [
+        1.0318196781877731e-05,
+        -0.0020966670361808326
+      ]
+    },
+    {
+      "sim_time_ns": 2241000000,
+      "path_refresh_jump_rad": [
+        0.005757354499392964,
+        -0.00022409839427650624
+      ],
+      "geometry_refresh_jump_rad": [
+        0.005757600170331668,
+        0.0019615653110711673
+      ],
+      "path_phase_residual_rad": [
+        -2.456709387041803e-07,
+        -0.0021856637053476735
+      ]
+    },
+    {
+      "sim_time_ns": 2289000000,
+      "path_refresh_jump_rad": [
+        0.005404118911001898,
+        3.953537886980385e-05
+      ],
+      "geometry_refresh_jump_rad": [
+        0.005421013977957578,
+        0.00197528989793172
+      ],
+      "path_phase_residual_rad": [
+        -1.6895066955679994e-05,
+        -0.0019357545190619163
+      ]
+    },
+    {
+      "sim_time_ns": 2337000000,
+      "path_refresh_jump_rad": [
+        0.0051024334166887,
+        -0.0005765773136845453
+      ],
+      "geometry_refresh_jump_rad": [
+        0.0050702410809533305,
+        0.0016461358259758363
+      ],
+      "path_phase_residual_rad": [
+        3.2192335735369525e-05,
+        -0.0022227131396603816
+      ]
+    },
+    {
+      "sim_time_ns": 2385000000,
+      "path_refresh_jump_rad": [
+        0.004741648109683361,
+        -0.0007679312503259262
+      ],
+      "geometry_refresh_jump_rad": [
+        0.004734571151913337,
+        0.0013659558174987652
+      ],
+      "path_phase_residual_rad": [
+        7.076957770023838e-06,
+        -0.002133887067824691
+      ]
+    },
+    {
+      "sim_time_ns": 2433000000,
+      "path_refresh_jump_rad": [
+        0.004398483055905622,
+        -0.0009508178158337267
+      ],
+      "geometry_refresh_jump_rad": [
+        0.004441657495110718,
+        0.0011466745276564885
+      ],
+      "path_phase_residual_rad": [
+        -4.3174439205095894e-05,
+        -0.0020974923434902153
+      ]
+    }
+  ],
+  "geometry_errors": [
+    {
+      "length_error_m": [
+        5.030128136240819e-08,
+        -3.780560071220407e-06
+      ],
+      "doppler_error_hz": [
+        7.812328863820994e-07,
+        -1.0638147798225361e-05
+      ]
+    },
+    {
+      "length_error_m": [
+        7.313112675433331e-07,
+        -9.003395433637706e-07
+      ],
+      "doppler_error_hz": [
+        2.3861255549206817e-07,
+        -1.0176400496497706e-05
+      ]
+    },
+    {
+      "length_error_m": [
+        -3.708064575391745e-06,
+        -1.812822034708006e-07
+      ],
+      "doppler_error_hz": [
+        9.311199669070902e-07,
+        -9.262561265543923e-06
+      ]
+    },
+    {
+      "length_error_m": [
+        -1.7686314208731346e-06,
+        -1.8555044576373803e-06
+      ],
+      "doppler_error_hz": [
+        8.589737827691124e-07,
+        -9.698521846068786e-06
+      ]
+    },
+    {
+      "length_error_m": [
+        -1.9876567378673826e-06,
+        -8.011466476887108e-07
+      ],
+      "doppler_error_hz": [
+        2.260946008192377e-07,
+        -9.068842631521079e-06
+      ]
+    },
+    {
+      "length_error_m": [
+        -2.806591417936488e-06,
+        -6.977625801596332e-07
+      ],
+      "doppler_error_hz": [
+        8.860722076065031e-07,
+        -9.536878339488908e-06
+      ]
+    },
+    {
+      "length_error_m": [
+        -3.796874217698587e-06,
+        -4.451142416428411e-06
+      ],
+      "doppler_error_hz": [
+        9.105963041378118e-07,
+        -9.97897970034245e-06
+      ]
+    },
+    {
+      "length_error_m": [
+        -5.029860396632557e-06,
+        -7.731338556027367e-07
+      ],
+      "doppler_error_hz": [
+        8.367507504658533e-07,
+        -9.380005645986955e-06
+      ]
+    },
+    {
+      "length_error_m": [
+        -4.624137076802981e-06,
+        -2.59790422774131e-06
+      ],
+      "doppler_error_hz": [
+        4.4722514758177567e-07,
+        -1.097605042410521e-05
+      ]
+    },
+    {
+      "length_error_m": [
+        -3.2742293072374196e-06,
+        -3.1438483603096756e-06
+      ],
+      "doppler_error_hz": [
+        6.141963808659057e-07,
+        -9.473161806106134e-06
+      ]
+    }
+  ]
+}

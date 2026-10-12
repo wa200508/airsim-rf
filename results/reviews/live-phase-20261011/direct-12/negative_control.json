@@ -1,0 +1,16 @@
+{
+  "status": "passed",
+  "scope": "injected pi phase reset is rejected",
+  "reset_sample_offset": 480000,
+  "corrupted_capture_status": "failed",
+  "metrics": {
+    "maximum_path_length_error_m": 6.286204623506819e-06,
+    "maximum_path_doppler_error_hz": 1.759240779719562e-06,
+    "maximum_path_refresh_jump_rad": 0.0006711097471465699,
+    "maximum_path_phase_residual_rad": 0.00010968167374891814,
+    "whole_recording_iq_nrmse": 1.4275622348898045,
+    "boundary_neighborhood_iq_nrmse": 1.4272783943183478,
+    "maximum_adc_fitted_jump_rad": 3.14118135146659,
+    "maximum_adc_vs_geometry_residual_rad": 3.1415759527506255
+  }
+}

@@ -1,0 +1,261 @@
+{
+  "status": "complete",
+  "scope": "live_airsim_rf_recording",
+  "sample_rate_hz": 2000000.0,
+  "timing_includes": "physics advance/RPC, snapshot, RF capture, data and metadata writes; no fsync",
+  "rows": [
+    {
+      "sim_time_ns": 2001000000,
+      "samples_per_receiver": 24000,
+      "wall_ms": 5711.573850000036
+    },
+    {
+      "sim_time_ns": 2013000000,
+      "samples_per_receiver": 24000,
+      "wall_ms": 77.64275199997428
+    },
+    {
+      "sim_time_ns": 2025000000,
+      "samples_per_receiver": 24000,
+      "wall_ms": 45.57004399998732
+    },
+    {
+      "sim_time_ns": 2037000000,
+      "samples_per_receiver": 24000,
+      "wall_ms": 45.33794599990415
+    },
+    {
+      "sim_time_ns": 2049000000,
+      "samples_per_receiver": 24000,
+      "wall_ms": 42.65395200002331
+    },
+    {
+      "sim_time_ns": 2061000000,
+      "samples_per_receiver": 24000,
+      "wall_ms": 46.570714000040425
+    },
+    {
+      "sim_time_ns": 2073000000,
+      "samples_per_receiver": 24000,
+      "wall_ms": 47.722931999942375
+    },
+    {
+      "sim_time_ns": 2085000000,
+      "samples_per_receiver": 24000,
+      "wall_ms": 45.6546419999313
+    },
+    {
+      "sim_time_ns": 2097000000,
+      "samples_per_receiver": 24000,
+      "wall_ms": 44.74817199991321
+    },
+    {
+      "sim_time_ns": 2109000000,
+      "samples_per_receiver": 24000,
+      "wall_ms": 45.88183000009849
+    },
+    {
+      "sim_time_ns": 2121000000,
+      "samples_per_receiver": 24000,
+      "wall_ms": 44.58148399999118
+    },
+    {
+      "sim_time_ns": 2133000000,
+      "samples_per_receiver": 24000,
+      "wall_ms": 43.81884099996114
+    },
+    {
+      "sim_time_ns": 2145000000,
+      "samples_per_receiver": 24000,
+      "wall_ms": 40.76565099990148
+    },
+    {
+      "sim_time_ns": 2157000000,
+      "samples_per_receiver": 24000,
+      "wall_ms": 43.189057999938996
+    },
+    {
+      "sim_time_ns": 2169000000,
+      "samples_per_receiver": 24000,
+      "wall_ms": 39.82924100000673
+    },
+    {
+      "sim_time_ns": 2181000000,
+      "samples_per_receiver": 24000,
+      "wall_ms": 44.49943400004486
+    },
+    {
+      "sim_time_ns": 2193000000,
+      "samples_per_receiver": 24000,
+      "wall_ms": 45.5628429999706
+    },
+    {
+      "sim_time_ns": 2205000000,
+      "samples_per_receiver": 24000,
+      "wall_ms": 44.675562999941576
+    },
+    {
+      "sim_time_ns": 2217000000,
+      "samples_per_receiver": 24000,
+      "wall_ms": 43.4336749999602
+    },
+    {
+      "sim_time_ns": 2229000000,
+      "samples_per_receiver": 24000,
+      "wall_ms": 45.033749000026546
+    },
+    {
+      "sim_time_ns": 2241000000,
+      "samples_per_receiver": 24000,
+      "wall_ms": 44.84677000004922
+    },
+    {
+      "sim_time_ns": 2253000000,
+      "samples_per_receiver": 24000,
+      "wall_ms": 45.78011199998855
+    },
+    {
+      "sim_time_ns": 2265000000,
+      "samples_per_receiver": 24000,
+      "wall_ms": 41.304456000034406
+    },
+    {
+      "sim_time_ns": 2277000000,
+      "samples_per_receiver": 24000,
+      "wall_ms": 45.13679899991985
+    },
+    {
+      "sim_time_ns": 2289000000,
+      "samples_per_receiver": 24000,
+      "wall_ms": 45.175727000014376
+    },
+    {
+      "sim_time_ns": 2301000000,
+      "samples_per_receiver": 24000,
+      "wall_ms": 43.601203999969584
+    },
+    {
+      "sim_time_ns": 2313000000,
+      "samples_per_receiver": 24000,
+      "wall_ms": 49.437245000035546
+    },
+    {
+      "sim_time_ns": 2325000000,
+      "samples_per_receiver": 24000,
+      "wall_ms": 43.560114000001704
+    },
+    {
+      "sim_time_ns": 2337000000,
+      "samples_per_receiver": 24000,
+      "wall_ms": 47.8356910000457
+    },
+    {
+      "sim_time_ns": 2349000000,
+      "samples_per_receiver": 24000,
+      "wall_ms": 47.60110400002304
+    },
+    {
+      "sim_time_ns": 2361000000,
+      "samples_per_receiver": 24000,
+      "wall_ms": 41.9906690000289
+    },
+    {
+      "sim_time_ns": 2373000000,
+      "samples_per_receiver": 24000,
+      "wall_ms": 40.32730700009779
+    },
+    {
+      "sim_time_ns": 2385000000,
+      "samples_per_receiver": 24000,
+      "wall_ms": 45.99184900007458
+    },
+    {
+      "sim_time_ns": 2397000000,
+      "samples_per_receiver": 24000,
+      "wall_ms": 43.22751699999117
+    },
+    {
+      "sim_time_ns": 2409000000,
+      "samples_per_receiver": 24000,
+      "wall_ms": 43.599244000006365
+    },
+    {
+      "sim_time_ns": 2421000000,
+      "samples_per_receiver": 24000,
+      "wall_ms": 42.95236999996632
+    },
+    {
+      "sim_time_ns": 2433000000,
+      "samples_per_receiver": 24000,
+      "wall_ms": 43.39759600009074
+    },
+    {
+      "sim_time_ns": 2445000000,
+      "samples_per_receiver": 24000,
+      "wall_ms": 44.256766999978936
+    },
+    {
+      "sim_time_ns": 2457000000,
+      "samples_per_receiver": 24000,
+      "wall_ms": 43.857560999981615
+    },
+    {
+      "sim_time_ns": 2469000000,
+      "samples_per_receiver": 24000,
+      "wall_ms": 44.67499199995473
+    }
+  ],
+  "provenance": {
+    "experiment": "fast-physics moving TX, stationary RX, direct + specular ground",
+    "commanded_north_velocity_m_s": 3.0,
+    "settling_signal_seconds": 2.001,
+    "noise_enabled": false,
+    "carrier_hz": 915000000.0,
+    "tone_hz": 150000,
+    "source_robot_sha256": "6f8cb70bfb8e64b1ae1d22cbb675000e21df6fffc29431b4ab85d47578ee7faa",
+    "backend": "cuda_ad_mono_polarized",
+    "renderer": "basis-cuda",
+    "sionna_rt": "2.2.0",
+    "max_depth": 1,
+    "antenna": "isotropic V",
+    "transmit_power_w": 0.01,
+    "requested_window_ms": 12,
+    "filter_sos": [
+      [
+        0.09398085143379444,
+        0.18796170286758887,
+        0.09398085143379444,
+        1.0,
+        -1.387778780781446e-16,
+        0.03956612989658006
+      ],
+      [
+        1.0,
+        2.0,
+        1.0,
+        1.0,
+        -1.1102230246251565e-16,
+        0.4464626921716894
+      ]
+    ],
+    "impedance_ohm": 50.0,
+    "runtime_source_commit": "cfb865f29f255b15ef28ec8fdcfaa01a6b66497f",
+    "rf_scene": {
+      "scene_id": "ground",
+      "xml_sha256": "c77427ec3f34d66e3f8985ef839083b0874d047ef16de3a8d84446493a5871fa",
+      "meshes_sha256": {
+        "ground.ply": "a79cddd969602a05527ea77dfe89bac4e0f0c204bac69b880d7cfd3391267247"
+      }
+    },
+    "sim_config_sha256": {
+      "scene.jsonc": "e535dce38d28840de93a4281a64fa50743709a626f128ce75e8f7d8818ffc01b",
+      "fixed.jsonc": "e6e2c24a1586c712999b9e9cc49c9091349d99ebc088d7e13fa6281ec03083e3",
+      "moving.jsonc": "b2d784ee86a16a9e2f29371c7aff1959bb29aee5b5f36dda3a328cdd19125b8b"
+    },
+    "waveform_complex128_sha256": "4e1a49390b493e72445e5fbd4a624de91bd68ff0d998bb4c8503ed45e8fc9b51",
+    "waveform_origin_ns": 1001000000,
+    "waveform_samples": 4000000
+  },
+  "signal_seconds_per_receiver": 0.48,
+  "wall_seconds_per_signal_second": 15.577711389583015
+}

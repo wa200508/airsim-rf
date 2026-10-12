@@ -7,6 +7,8 @@ are checked separately against the flat-ground image construction.
 import argparse
 import json
 from pathlib import Path
+import shutil
+import tempfile
 
 import numpy as np
 from scipy.signal import sosfilt
@@ -104,9 +106,27 @@ def analyze(directory):
         'boundary_neighborhood_samples_each_side':128,'boundaries':boundaries,'geometry_errors':geometry_errors}
 
 
+def negative_control(directory):
+    """Inject a pi phase reset into a private recording copy; require rejection."""
+    directory=Path(directory)
+    with tempfile.TemporaryDirectory() as temporary:
+        copy=Path(temporary)/'recording';shutil.copytree(directory,copy)
+        rows=json.loads((copy/'capture/manifest.json').read_text())['rows']
+        split=sum(r['samples_per_receiver'] for r in rows[:len(rows)//2])
+        path=copy/'capture/rx0.sigmf-data'
+        codes=np.fromfile(path,dtype='<i2').reshape(-1,2)
+        codes[split:]*=-1;codes.tofile(path)
+        report=analyze(copy)
+    detected=not report['checks']['whole_iq_nrmse_below_1percent'] and not report['checks']['boundary_iq_nrmse_below_1percent']
+    return {'status':'passed' if detected else 'failed','scope':'injected pi phase reset is rejected',
+        'reset_sample_offset':split,'corrupted_capture_status':report['status'],'metrics':report['metrics']}
+
+
 if __name__=='__main__':
     parser=argparse.ArgumentParser(description=__doc__);parser.add_argument('directory',type=Path)
-    args=parser.parse_args();report=analyze(args.directory)
-    (args.directory/'phase.json').write_text(json.dumps(report,indent=2)+'\n')
+    parser.add_argument('--negative-control',action='store_true')
+    args=parser.parse_args();report=(negative_control if args.negative_control else analyze)(args.directory)
+    filename='negative_control.json' if args.negative_control else 'phase.json'
+    (args.directory/filename).write_text(json.dumps(report,indent=2)+'\n')
     print(json.dumps({k:v for k,v in report.items() if k not in ('boundaries','geometry_errors')},indent=2))
     if report['status']!='passed':raise SystemExit(1)
