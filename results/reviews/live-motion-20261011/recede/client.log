@@ -1,0 +1,45 @@
+00:42:43:163 [INFO] Connecting to simulation server at 127.0.0.1
+00:42:43:165 [INFO] Connection opened.
+00:42:43:165 [INFO] Loading scene config: scene.jsonc
+00:42:43:746 [INFO] Getting the list of available topic info from the sim server...
+00:42:43:757 [INFO] Successfully received topic info list.
+00:42:43:757 [INFO] World object updated for the loaded scene '/Sim/RFMovingQualification'. Note: Any previous Drone object instances may no longer be valid.
+00:42:43:757 [INFO] Trajectory 'null_trajectory' imported successfully.
+00:42:43:758 [INFO] Initalizing Drone 'Drone1'...
+00:42:43:758 [INFO] -------------------------------------------------
+00:42:43:758 [INFO] The following topics can be subscribed to for robot 'Drone1':
+00:42:43:758 [INFO]     sensors["IMU1"]["imu_kinematics"]
+00:42:43:758 [INFO]     sensors["GPS"]["gps"]
+00:42:43:758 [INFO]     sensors["Barometer"]["barometer"]
+00:42:43:758 [INFO]     sensors["Magnetometer"]["magnetometer"]
+00:42:43:758 [INFO]     robot_info["actual_pose"]
+00:42:43:758 [INFO]     robot_info["collision_info"]
+00:42:43:758 [INFO]     robot_info["rotor_info"]
+00:42:43:758 [INFO] -------------------------------------------------
+00:42:43:758 [INFO] Drone 'Drone1' initialized for World scene '/Sim/RFMovingQualification'
+00:42:43:758 [INFO] Initalizing Drone 'Drone2'...
+00:42:43:758 [INFO] -------------------------------------------------
+00:42:43:758 [INFO] The following topics can be subscribed to for robot 'Drone2':
+00:42:43:758 [INFO]     robot_info["actual_pose"]
+00:42:43:758 [INFO]     robot_info["collision_info"]
+00:42:43:758 [INFO]     robot_info["rotor_info"]
+00:42:43:758 [INFO] -------------------------------------------------
+00:42:43:758 [INFO] Drone 'Drone2' initialized for World scene '/Sim/RFMovingQualification'
+00:42:56:155 [INFO] Disconnecting from simulation server...
+{
+  "status": "passed",
+  "checks": {
+    "motion_exceeds_half_meter": true,
+    "doppler_error_below_half_hz": true,
+    "doppler_sign_matches_command": true,
+    "no_adc_clipping": true,
+    "flight_command_completed": true
+  },
+  "scope": "moving Fast Physics pose integration and within-window direct-path Doppler; no multipath or phase-boundary qualification",
+  "signal_seconds_per_receiver": 0.48,
+  "wall_seconds_per_signal_second": 15.414793114582892,
+  "tx_displacement_m": 1.3193246051155507,
+  "maximum_absolute_doppler_error_hz": 0.0005885850431930351,
+  "tolerance_hz": 0.5
+}
+00:42:56:223 [INFO] Disconnected.

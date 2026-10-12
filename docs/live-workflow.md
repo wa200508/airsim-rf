@@ -63,7 +63,11 @@ The paused-world contract, overshoot handling, continuity and recording format
 are tested offline. A real pinned **ProjectAirSim Runtime container** with two
 stationary non-physics robots has now passed the P100 live smoke test: ten windows,
 240,000 complex samples and 0.120 signal seconds. [Qualification evidence](../results/reviews/project-quality-20261009/live-server/REPORT.md).
-Moving-vehicle physics and Unreal mesh interoperability remain unqualified.
+A subsequent [moving-flight qualification](../results/reviews/live-motion-20261011/REPORT.md)
+passed with the real Fast Physics controller: approaching and receding TXs,
+0.480 signal seconds per run, and within-window direct-path Doppler checked
+against actual velocity. Cross-window carrier phase, moving multipath and Unreal
+mesh interoperability remain unqualified.
 The measured workloads are slower than real time; controlled stepping does not
 promise live wall-clock streaming.
 
