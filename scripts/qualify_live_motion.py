@@ -55,11 +55,12 @@ async def run(args):
     dump(sim/'fixed.jsonc',{'physics-type':'non-physics','links':[{'name':'Frame','collision':{'enabled':False}}],'sensors':[]})
     dump(sim/'scene.jsonc',{'id':'RFMovingQualification','scene-type':'UnrealNative',
         'actors':[{'type':'robot','name':name,'origin':{'xyz':xyz,'rpy-deg':'0 0 0'},'robot-config':cfg}
-                  for name,xyz,cfg in [('Drone1','-20 0 -20','moving.jsonc'),('Drone2','20 0 -20','fixed.jsonc')]],
+                  for name,xyz,cfg in [('Drone1','-20 0 -20','moving.jsonc'),
+                    ('Drone2','20 0 -20','moving.jsonc' if args.moving_receiver else 'fixed.jsonc')]],
         'clock':{'type':'steppable','step-ns':3_000_000,'real-time-update-rate':3_000_000,'pause-on-start':True},
         'home-geo-point':{'latitude':47.641468,'longitude':-122.140165,'altitude':122.}})
     client=ProjectAirSimClient(address=args.address);client.connect()
-    motion_task=None
+    motion_task=None;receiver_task=None
     try:
         world=World(client,'scene.jsonc',sim_config_path=str(sim.resolve()))
         world.pause()
@@ -67,6 +68,9 @@ async def run(args):
         tx.enable_api_control();tx.arm()
         command_origin=int(world.get_sim_time())
         motion_task=await tx.move_by_velocity_async(v_north=args.velocity, v_east=0,v_down=0,duration=5.)
+        if args.moving_receiver:
+            rx.enable_api_control();rx.arm()
+            receiver_task=await rx.move_by_velocity_async(v_north=-args.velocity,v_east=1.,v_down=0,duration=5.)
         # Advance two simulated seconds to settle the flight controller before RF capture.
         world.continue_until_sim_time(int(world.get_sim_time())+2_001_000_000,wait_until_complete=True)
         await asyncio.sleep(0)
@@ -102,7 +106,8 @@ async def run(args):
                 message=self.robot.get_ground_truth_kinematics()
                 trajectory.append({'radio':self.name,'sim_time_ns':int(world.get_sim_time()),'kinematics':message})
                 return message
-        provenance={'experiment':'fast-physics moving TX, stationary RX, '+('direct + specular ground' if args.reflection else 'direct path only'),
+        provenance={'experiment':'fast-physics moving TX, '+('moving RX, ' if args.moving_receiver else 'stationary RX, ')+('direct + specular ground' if args.reflection else 'direct path only'),
+            'commanded_rx_velocity_ned_m_s':[-args.velocity,1.,0.] if args.moving_receiver else [0.,0.,0.],
             'commanded_north_velocity_m_s':args.velocity,'settling_signal_seconds':2.001,
             'noise_enabled':False,'carrier_hz':profile.carrier_hz,'tone_hz':frequency,
             'source_robot_sha256':sha256(source.read_bytes()).hexdigest(),
@@ -124,6 +129,7 @@ async def run(args):
         # socket. These post-capture physics ticks are outside recording timing.
         world.continue_until_sim_time(command_origin+5_100_000_000,wait_until_complete=True)
         command_result=await asyncio.wait_for(motion_task,timeout=10)
+        receiver_command_result=await asyncio.wait_for(receiver_task,timeout=10) if receiver_task is not None else True
         codes=np.fromfile(args.output/'capture/rx0.sigmf-data',dtype='<i2').reshape(-1,2)
         iq=codes[:,0]+1j*codes[:,1];offset=0;rows=[]
         for index,row in enumerate(manifest['rows']):
@@ -133,17 +139,22 @@ async def run(args):
             expected=float(np.dot(vtx-vrx,direction)*profile.carrier_hz/299792458.)
             count=row['samples_per_receiver'];block=iq[offset:offset+count];offset+=count
             # Discard filter/window transition, demodulate known tone, then fit
-            # unwrapped phase over 10 ms. This is not an FFT-bin peak estimate.
+            # unwrapped phase inside the window. This is not an FFT-bin peak estimate.
             measured=estimate_tone_offset(block,fs,frequency)
             rows.append({'sim_time_ns':row['sim_time_ns'],'tx_position_rf_m':ptx.tolist(),
+                'rx_position_rf_m':prx.tolist(),'rx_velocity_rf_m_s':vrx.tolist(),
                 'tx_velocity_rf_m_s':vtx.tolist(),'expected_doppler_hz':expected,
                 'measured_doppler_hz':measured,'error_hz':measured-expected})
         errors=np.array([r['error_hz'] for r in rows]);displacement=float(np.linalg.norm(np.array(rows[-1]['tx_position_rf_m'])-rows[0]['tx_position_rf_m']))
+        receiver_displacement=float(np.linalg.norm(np.array(rows[-1]['rx_position_rf_m'])-rows[0]['rx_position_rf_m']))
         clipping=json.loads((args.output/'capture/rx0.sigmf-meta').read_text())['captures']
         checks={'motion_exceeds_half_meter':displacement>.5,
             'doppler_sign_matches_command':all(r['expected_doppler_hz']*args.velocity>0 for r in rows),
             'no_adc_clipping':all(c['airsim_rf:clipped_component_fraction']==0 for c in clipping),
-            'flight_command_completed':bool(command_result)}
+            'flight_command_completed':bool(command_result) and bool(receiver_command_result)}
+        if args.moving_receiver:
+            checks['receiver_motion_exceeds_half_meter']=receiver_displacement>.5
+            checks['receiver_has_lateral_motion']=all(abs(r['rx_velocity_rf_m_s'][1])>.1 for r in rows)
         if not args.reflection:
             checks['doppler_error_below_half_hz']=bool(np.max(abs(errors))<.5)
         result={'status':'passed' if all(checks.values()) else 'failed','checks':checks,
@@ -152,12 +163,14 @@ async def run(args):
             'signal_seconds_per_receiver':manifest['signal_seconds_per_receiver'],
             'wall_seconds_per_signal_second':manifest['wall_seconds_per_signal_second'],
             'tx_displacement_m':displacement,'maximum_absolute_doppler_error_hz':None if args.reflection else float(np.max(abs(errors))),
+            'rx_displacement_m':receiver_displacement,
             'tolerance_hz':.5,'rows':rows}
         dump(args.output/'motion.json',result)
         print(json.dumps({k:v for k,v in result.items() if k!='rows'},indent=2))
         if result['status']!='passed':raise RuntimeError('Motion qualification failed; inspect motion.json')
     finally:
         if motion_task is not None: motion_task.cancel()
+        if receiver_task is not None: receiver_task.cancel()
         client.disconnect()
 
 
@@ -170,4 +183,5 @@ if __name__=='__main__':
     parser.add_argument('--pascal-compat',action='store_true')
     parser.add_argument('--window-ms',type=int,choices=(6,12,24,48),default=12)
     parser.add_argument('--reflection',action='store_true',help='Include the specular ground path, without diffuse scattering')
+    parser.add_argument('--moving-receiver',action='store_true',help='Fly RX with opposite north velocity and +1 m/s east command')
     asyncio.run(run(parser.parse_args()))

@@ -44,3 +44,18 @@ def test_ground_image_geometry_has_distinct_radial_velocity():
     distance,radial=phase.geometry(tx,rx,True)
     assert distance==5.
     assert radial==pytest.approx(1.8)
+
+
+@pytest.mark.parametrize('reflection',[False,True])
+def test_two_moving_robots_radial_velocity_matches_range_derivative(reflection):
+    spec=importlib.util.spec_from_file_location('phase',Path(__file__).resolve().parents[1]/'scripts/analyze_live_phase.py')
+    phase=importlib.util.module_from_spec(spec);spec.loader.exec_module(phase)
+    def state(position,velocity,time=0.):
+        return {'pose':{'position':dict(zip('xyz',np.array(position)+time*np.array(velocity))),
+            'orientation':{'x':0,'y':0,'z':0,'w':1}},
+            'twist':{'linear':dict(zip('xyz',velocity)),'angular':dict.fromkeys('xyz',0.)}}
+    tx=([0,0,-2],[1,2,-.5]);rx=([3,4,-3],[-2,1,.2]);dt=1e-5
+    _,closing=phase.geometry(state(*tx),state(*rx),reflection)
+    before=phase.geometry(state(*tx,-dt),state(*rx,-dt),reflection)[0]
+    after=phase.geometry(state(*tx,dt),state(*rx,dt),reflection)[0]
+    assert closing==pytest.approx(-(after-before)/(2*dt),abs=1e-8)
