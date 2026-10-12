@@ -155,3 +155,54 @@ def test_cached_draws_preserve_moving_paths_and_invalidate_seed_and_patterns():
         np.testing.assert_allclose(a[order], expected_a[expected_order], atol=1e-12, rtol=1e-6)
         np.testing.assert_allclose(tau[order], expected_tau[expected_order], atol=1e-12, rtol=0)
         assert cached.sampling['sampling_cache_hit'] == (index == 1)
+
+
+def test_surface_samples_stay_fixed_under_motion_and_obey_doppler():
+    solver=FirstOrderScatteringPathSolver(surface_sampling=True)
+    scene=ground_scene();options=dict(samples_per_src=512,max_num_paths_per_src=514,los=False,specular_reflection=False,seed=42)
+    def capture():
+        paths=solver(scene,**options);a,tau,diffuse=path_data(paths)
+        vertices=paths.vertices.numpy()[0,0,0][diffuse]
+        order=np.lexsort(vertices.T)
+        return vertices[order],a[diffuse][order],paths.doppler.numpy()[0,0][diffuse][order]
+    vertices,a,fd=capture();dt=.001
+    scene.transmitters['tx'].position=scene.transmitters['tx'].position+[dt,0,0]
+    scene.receivers['rx'].position=scene.receivers['rx'].position+[0,.5*dt,0]
+    moved,b,_=capture()
+    np.testing.assert_array_equal(vertices,moved)
+    residual=np.angle(b/a*np.exp(-2j*np.pi*fd*dt))
+    assert np.quantile(abs(residual),.95)<.01
+    assert solver.sampling['sampling_cache_hit']
+
+
+def test_surface_area_weights_match_angular_incoherent_power():
+    scene=ground_scene();powers=[]
+    for surface in (False,True):
+        paths=FirstOrderScatteringPathSolver(surface_sampling=surface)(scene,
+            samples_per_src=16384,max_num_paths_per_src=16386,los=False,specular_reflection=False,seed=42)
+        a,_,diffuse=path_data(paths);powers.append(float(np.sum(abs(a[diffuse])**2)))
+    assert powers[1]==pytest.approx(powers[0],rel=.2)
+
+
+def test_surface_realization_rebuilds_on_mesh_change():
+    scene=ground_scene();solver=FirstOrderScatteringPathSolver(surface_sampling=True)
+    options=dict(samples_per_src=128,max_num_paths_per_src=130,los=False,specular_reflection=False)
+    solver(scene,**options)
+    ground=next(iter(scene.objects.values()));ground.position=ground.position+[0,0,1]
+    paths=solver(scene,**options);_,_,diffuse=path_data(paths)
+    assert not solver.sampling['sampling_cache_hit']
+    np.testing.assert_allclose(paths.vertices.numpy()[0,0,0][diffuse,2],1,atol=1e-6)
+
+
+def test_surface_visibility_is_recomputed_from_both_endpoints():
+    scene=ground_scene();solver=FirstOrderScatteringPathSolver(surface_sampling=True)
+    options=dict(samples_per_src=256,max_num_paths_per_src=258,los=False,specular_reflection=False)
+    a,_,diffuse=path_data(solver(scene,**options));assert diffuse.sum()==256
+    # Opposite sides of the ground cannot share a reflected diffuse path.
+    scene.transmitters['tx'].position=[-5,0,-10]
+    _,_,blocked=path_data(solver(scene,**options));assert blocked.sum()==0
+    scene.transmitters['tx'].position=[-5,0,10]
+    b,_,restored=path_data(solver(scene,**options));assert restored.sum()==256
+    np.testing.assert_allclose(np.sort(abs(a[diffuse])),np.sort(abs(b[restored])),rtol=1e-6)
+    scene.receivers['rx'].position=[5,0,-10]
+    _,_,blocked=path_data(solver(scene,**options));assert blocked.sum()==0

@@ -59,13 +59,13 @@ def run(args):
     rows=[]
     for count in (128,512,2048):
         for seed in (42,43,44):
-            solver=FirstOrderScatteringPathSolver();pose(0)
+            solver=FirstOrderScatteringPathSolver(surface_sampling=args.surface_sampling);pose(0)
             a,tau,fd,vertices,diffuse=solve(solver,count,seed)
             repeated=solve(solver,count,seed)
-            fresh=solve(FirstOrderScatteringPathSolver(cache_sampling=False),count,seed)
+            fresh=solve(FirstOrderScatteringPathSolver(cache_sampling=False,surface_sampling=args.surface_sampling),count,seed)
             base_valid=(tau>=0)&diffuse
             def equivalent(other):
-                order=np.argsort(tau);other_order=np.argsort(other[1])
+                order=np.lexsort(vertices.T);other_order=np.lexsort(other[3].T)
                 return all(np.allclose(x[order],y[other_order],rtol=1e-6,atol=1e-12)
                     for x,y in zip((a,tau,fd),other[:3]))
             reproducible=equivalent(repeated);cache_equal=equivalent(fresh)
@@ -73,8 +73,12 @@ def run(args):
                 pose(dt);b,delay,newfd,points,newdiffuse=solve(solver,count,seed)
                 old_indices=np.flatnonzero(base_valid&(abs(a)>0))
                 new_indices=np.flatnonzero((delay>=0)&newdiffuse&(abs(b)>0))
-                left,right=match_proposals(vertices[old_indices],points[new_indices],
-                    [s[0] for s in states],[s[0]+s[1]*dt for s in states])
+                if args.surface_sampling:
+                    distance,right=cKDTree(points[new_indices]).query(vertices[old_indices])
+                    left=np.flatnonzero(distance<1e-5);right=right[left]
+                else:
+                    left,right=match_proposals(vertices[old_indices],points[new_indices],
+                        [s[0] for s in states],[s[0]+s[1]*dt for s in states])
                 left=old_indices[left];right=new_indices[right]
                 displacement=np.linalg.norm(points[right]-vertices[left],axis=1)
                 residual=np.angle(b[right]/a[left]*np.exp(-2j*np.pi*fd[left]*dt))
@@ -94,7 +98,7 @@ def run(args):
         'all_comparisons_have_diffuse_paths':all(r['common_valid_slots']>0 for r in rows)}
     report={'status':'passed' if all(checks.values()) else 'failed','checks':checks,
         'scope':'diffuse angular-sampling repeatability and local-motion diagnostics, not coherent diffuse qualification',
-        'persistent_surface_scatterers_qualified':False,'backend':mi.variant(),'sionna_rt':rt.__version__,
+        'persistent_surface_scatterers_qualified':False,'surface_sampling':args.surface_sampling,'backend':mi.variant(),'sionna_rt':rt.__version__,
         'trajectory_sha256':sha256(args.trajectory.read_bytes()).hexdigest(),
         'rf_scene':scene_provenance(root/'benchmarks/scenes/ground.xml'),
         'motion':'constant measured endpoint velocities, fixed starting orientations; actual sampled surface positions may slide',
@@ -111,4 +115,5 @@ if __name__=='__main__':
     parser.add_argument('--trajectory',type=Path,default=Path('results/reviews/moving-receiver-20261011/direct-12/trajectory.json'))
     parser.add_argument('--output',type=Path,required=True)
     parser.add_argument('--pascal-compat',action='store_true')
+    parser.add_argument('--surface-sampling',action='store_true')
     run(parser.parse_args())

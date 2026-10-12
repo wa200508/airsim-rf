@@ -62,10 +62,12 @@ class _AngularProposal:
 
 
 class _ScatteringCandidates(_PlanarCandidates):
-    def __init__(self, candidate_limit, uniform_fraction, cache_sampling=True):
+    def __init__(self, candidate_limit, uniform_fraction, cache_sampling=True, surface_sampling=False):
         super().__init__(candidate_limit)
         self.uniform_fraction = uniform_fraction
         self.cache_sampling = cache_sampling
+        self.surface_sampling = surface_sampling
+        self._surface_cache = None
         self._draw_cache = None
         self.scene = None
         self.synthetic_array = True
@@ -115,56 +117,99 @@ class _ScatteringCandidates(_PlanarCandidates):
         dr.scatter(visibility, self.visibility, base_row)
         self.visibility = visibility
 
-        proposal_start = perf_counter()
-        with profile_range("rf.channel.proposal_tables"):
-            tx_proposal = _AngularProposal.from_patterns(self.scene.tx_array.antenna_pattern.patterns,
-                          receive=False, uniform_fraction=self.uniform_fraction)
-            rx_proposal = _AngularProposal.from_patterns(self.scene.rx_array.antenna_pattern.patterns,
-                          receive=True, uniform_fraction=self.uniform_fraction)
-        proposal_ms = (perf_counter()-proposal_start)*1000
-        sampling_start = perf_counter()
-        with profile_range("rf.channel.host_proposal_draws"):
-            tx_count, rx_count = (samples+1)//2, samples//2
-            pairs = sources*targets
-            # Evaluate both patterns each call: mutable antenna closures must
-            # invalidate sampling too. Poses are applied afresh below.
-            key = (sources, targets, samples, kwargs['seed'],
-                   tx_proposal.probability.tobytes(), rx_proposal.probability.tobytes())
-            hit = self.cache_sampling and self._draw_cache is not None and self._draw_cache[0] == key
-            if hit:
-                local = self._draw_cache[1]
-            else:
-                rng = np.random.default_rng(kwargs['seed'])
-                local = np.empty((3, pairs, samples))
-                local[:, :, :tx_count] = tx_proposal.draw(rng, pairs*tx_count).reshape(3, pairs, tx_count)
-                local[:, :, tx_count:] = rx_proposal.draw(rng, pairs*rx_count).reshape(3, pairs, rx_count)
-                if self.cache_sampling:
-                    local.flags.writeable = False
-                    self._draw_cache = (key, local)
-            # This region is strictly NumPy/host work, even with a CUDA backend.
-            # Table preparation above includes backend evaluation and host export.
-        sampling_ms = (perf_counter()-sampling_start)*1000
-        local = mi.Vector3f(local.reshape(3, -1))
-        dr.make_opaque(local)
-        lane = dr.arange(mi.UInt, width)
-        source, target = lane//(targets*samples), (lane//samples) % targets
-        from_tx = lane % samples < tx_count
-        tx = dr.gather(mi.Point3f, src, source)
-        rx = dr.gather(mi.Point3f, tgt, target)
-        tx_ort = self.scene.sources(self.synthetic_array, True)[1]
-        rx_ort = self.scene.targets(self.synthetic_array, True)[1]
-        dr.make_opaque(tx_ort, rx_ort)
-        tx_rot = dr.gather(mi.Matrix3f, rotation_matrix(tx_ort), source)
-        rx_rot = dr.gather(mi.Matrix3f, rotation_matrix(rx_ort), target)
-        directions = dr.select(from_tx, tx_rot@local, rx_rot@local)
-        origin = dr.select(from_tx, tx, rx)
-        si = kwargs["mi_scene"].ray_intersect(mi.Ray3f(origin, directions),
-                         ray_flags=mi.RayFlags.Minimal, coherent=True)
-        valid = si.is_valid()
-        shape = dr.reinterpret_array(mi.UInt, si.shape)
-        mesh = dr.reinterpret_array(mi.MeshPtr, shape)
-        normal = mesh.face_normal(si.prim_index, active=valid)
-        vertex = dr.select(valid, si.p, origin+directions)
+        if self.surface_sampling:
+            surface_start = perf_counter()
+            # Uniform area quadrature samples stay anchored to the static mesh.
+            # All links share the same realization; pose/antenna changes do not
+            # redraw points. Geometry, count or seed changes start a new one.
+            self._planes(kwargs['mi_scene'])
+            key = (self._fingerprint, samples, kwargs['seed'])
+            hit = self._surface_cache is not None and self._surface_cache[0] == key
+            if not hit:
+                triangles=[];shape_ids=[];primitive_ids=[]
+                for mesh in kwargs['mi_scene'].shapes():
+                    xyz=mesh.vertex_positions_buffer().numpy().reshape(-1,3)
+                    faces=mesh.faces_buffer().numpy().reshape(-1,3)
+                    triangles.extend(xyz[faces])
+                    shape_ids.extend([int(dr.reinterpret_array(mi.UInt, mi.MeshPtr(mesh))[0])]*len(faces))
+                    primitive_ids.extend(range(len(faces)))
+                if not triangles:
+                    raise ValueError('Surface sampling requires nonempty mesh geometry')
+                triangles=np.asarray(triangles)
+                areas=np.linalg.norm(np.cross(triangles[:,1]-triangles[:,0],triangles[:,2]-triangles[:,0]),axis=1)/2
+                total=float(areas.sum())
+                if not np.isfinite(total) or total<=0:
+                    raise ValueError('Surface sampling requires positive finite mesh area')
+                rng=np.random.default_rng(kwargs['seed'])
+                selected=rng.choice(len(areas),samples,p=areas/total)
+                u=np.sqrt(rng.random(samples));v=rng.random(samples)
+                points=((1-u)[:,None]*triangles[selected,0]+(u*(1-v))[:,None]*triangles[selected,1]+(u*v)[:,None]*triangles[selected,2])
+                self._surface_cache=(key,points,np.asarray(shape_ids)[selected],np.asarray(primitive_ids)[selected],total)
+            _,points,ids,primitives,total=self._surface_cache
+            pairs=sources*targets
+            lane=dr.arange(mi.UInt,width);source=lane//(targets*samples);target=(lane//samples)%targets
+            tx=dr.gather(mi.Point3f,src,source);rx=dr.gather(mi.Point3f,tgt,target)
+            vertex=mi.Point3f(np.tile(points,(pairs,1)).T)
+            shape=mi.UInt(np.tile(ids,pairs));primitive=mi.UInt(np.tile(primitives,pairs))
+            mesh=dr.reinterpret_array(mi.MeshPtr,shape)
+            normal=mesh.face_normal(primitive)
+            valid=dr.full(mi.Bool,True,width)
+            area_pdf=mi.Float(1/total)
+            proposal_ms=0.
+            sampling_ms=(perf_counter()-surface_start)*1000
+            tx_count=rx_count=0
+        else:
+            proposal_start = perf_counter()
+            with profile_range("rf.channel.proposal_tables"):
+                tx_proposal = _AngularProposal.from_patterns(self.scene.tx_array.antenna_pattern.patterns,
+                              receive=False, uniform_fraction=self.uniform_fraction)
+                rx_proposal = _AngularProposal.from_patterns(self.scene.rx_array.antenna_pattern.patterns,
+                              receive=True, uniform_fraction=self.uniform_fraction)
+            proposal_ms = (perf_counter()-proposal_start)*1000
+            sampling_start = perf_counter()
+            with profile_range("rf.channel.host_proposal_draws"):
+                tx_count, rx_count = (samples+1)//2, samples//2
+                pairs = sources*targets
+                # Evaluate both patterns each call: mutable antenna closures must
+                # invalidate sampling too. Poses are applied afresh below.
+                key = (sources, targets, samples, kwargs['seed'],
+                       tx_proposal.probability.tobytes(), rx_proposal.probability.tobytes())
+                hit = self.cache_sampling and self._draw_cache is not None and self._draw_cache[0] == key
+                if hit:
+                    local = self._draw_cache[1]
+                else:
+                    rng = np.random.default_rng(kwargs['seed'])
+                    local = np.empty((3, pairs, samples))
+                    local[:, :, :tx_count] = tx_proposal.draw(rng, pairs*tx_count).reshape(3, pairs, tx_count)
+                    local[:, :, tx_count:] = rx_proposal.draw(rng, pairs*rx_count).reshape(3, pairs, rx_count)
+                    if self.cache_sampling:
+                        local.flags.writeable = False
+                        self._draw_cache = (key, local)
+                # This region is strictly NumPy/host work, even with a CUDA backend.
+                # Table preparation above includes backend evaluation and host export.
+            sampling_ms = (perf_counter()-sampling_start)*1000
+            local = mi.Vector3f(local.reshape(3, -1))
+            dr.make_opaque(local)
+            lane = dr.arange(mi.UInt, width)
+            source, target = lane//(targets*samples), (lane//samples) % targets
+            from_tx = lane % samples < tx_count
+            tx = dr.gather(mi.Point3f, src, source)
+            rx = dr.gather(mi.Point3f, tgt, target)
+            tx_ort = self.scene.sources(self.synthetic_array, True)[1]
+            rx_ort = self.scene.targets(self.synthetic_array, True)[1]
+            dr.make_opaque(tx_ort, rx_ort)
+            tx_rot = dr.gather(mi.Matrix3f, rotation_matrix(tx_ort), source)
+            rx_rot = dr.gather(mi.Matrix3f, rotation_matrix(rx_ort), target)
+            directions = dr.select(from_tx, tx_rot@local, rx_rot@local)
+            origin = dr.select(from_tx, tx, rx)
+            si = kwargs["mi_scene"].ray_intersect(mi.Ray3f(origin, directions),
+                             ray_flags=mi.RayFlags.Minimal, coherent=True)
+            primitive = si.prim_index
+            valid = si.is_valid()
+            shape = dr.reinterpret_array(mi.UInt, si.shape)
+            mesh = dr.reinterpret_array(mi.MeshPtr, shape)
+            normal = mesh.face_normal(primitive, active=valid)
+            vertex = dr.select(valid, si.p, origin+directions)
         tx_delta, rx_delta = vertex-tx, vertex-rx
         tx_length, rx_length = dr.norm(tx_delta), dr.norm(rx_delta)
         valid &= (tx_length > MIN_SEGMENT_LENGTH) & (rx_length > MIN_SEGMENT_LENGTH)
@@ -173,16 +218,22 @@ class _ScatteringCandidates(_PlanarCandidates):
         # Diffuse reflection keeps the outgoing wave on the incident side.
         valid &= dr.dot(normal, tx_direction)*dr.dot(normal, rx_direction) > 0
         normal *= dr.sign(dr.dot(normal, -tx_direction))
-        shadow = spawn_ray_to(vertex, dr.select(from_tx, rx, tx), normal)
-        valid &= ~kwargs["mi_scene"].ray_test(shadow, active=valid)
+        if self.surface_sampling:
+            for endpoint in (tx,rx):
+                shadow=spawn_ray_to(vertex,endpoint,normal)
+                valid &= ~kwargs['mi_scene'].ray_test(shadow,active=valid)
+        else:
+            shadow = spawn_ray_to(vertex, dr.select(from_tx, rx, tx), normal)
+            valid &= ~kwargs["mi_scene"].ray_test(shadow, active=valid)
         tx_cosine = dr.abs(dr.dot(normal, tx_direction))
         rx_cosine = dr.abs(dr.dot(normal, rx_direction))
-        p_tx = tx_proposal.pdf(tx_rot.T@tx_direction)
-        p_rx = rx_proposal.pdf(rx_rot.T@rx_direction)
-        # Convert each endpoint's solid-angle PDF to area density on the hit
-        # triangle, then use the complete stratified-mixture density (MIS).
-        area_pdf = (tx_count/samples*p_tx*tx_cosine/dr.square(tx_length)
-                    + rx_count/samples*p_rx*rx_cosine/dr.square(rx_length))
+        if not self.surface_sampling:
+            p_tx = tx_proposal.pdf(tx_rot.T@tx_direction)
+            p_rx = rx_proposal.pdf(rx_rot.T@rx_direction)
+            # Convert each endpoint's solid-angle PDF to area density on the hit
+            # triangle, then use the complete stratified-mixture density (MIS).
+            area_pdf = (tx_count/samples*p_tx*tx_cosine/dr.square(tx_length)
+                        + rx_count/samples*p_rx*rx_cosine/dr.square(rx_length))
         # Sionna starts with 4*pi/N and divides it by PathsBuffer.probs.
         # This correction yields incident dOmega = cos(theta_tx)/(N*q_A*r_tx²).
         correction = 4*dr.pi*area_pdf*dr.square(tx_length)/dr.maximum(tx_cosine, 1e-20)
@@ -192,7 +243,7 @@ class _ScatteringCandidates(_PlanarCandidates):
         dr.scatter(paths._tgt_indices, target, row)
         dr.scatter(paths._valid, valid, row)
         dr.scatter(paths.shapes.array, shape, row)
-        dr.scatter(paths.primitives.array, si.prim_index, row)
+        dr.scatter(paths.primitives.array, primitive, row)
         dr.scatter(paths.interaction_types.array, mi.UInt(InteractionType.DIFFUSE), row)
         dr.scatter(paths.probs.array, dr.select(valid, correction, mi.Float(1)), row)
         for axis in ("x", "y", "z"):
@@ -208,7 +259,8 @@ class _ScatteringCandidates(_PlanarCandidates):
         paths.advance_paths_counter(count)
         self.last_sampling = {"samples_per_link": samples, "diffuse_launches": width,
                               "tx_launches": pairs*tx_count, "rx_launches": pairs*rx_count,
-                              "uniform_fraction": self.uniform_fraction, "sampling_cache_hit": hit}
+                              "uniform_fraction": self.uniform_fraction, "sampling_cache_hit": hit,
+                              "surface_sampling": self.surface_sampling}
         self.last_timings = {"proposal_table_prepare_ms": proposal_ms,
                              "host_numpy_sampling_ms": sampling_ms}
         return paths
@@ -222,8 +274,15 @@ class FirstOrderScatteringPathSolver:
     antenna nulls may yield fewer retained paths; counts do not prove fidelity.
     Uses Sionna's diffuse ray-tube model, with density-corrected sampling. It
     does not introduce an independently calibrated roughness/speckle law.
+
+    Experimental ``surface_sampling=True`` uses a shared, seeded uniform-area
+    point set fixed on the mesh rather than antenna-relative rays. Visibility
+    and density-corrected fields are recomputed per pose. Mesh/seed/count changes
+    rebuild the realization; antenna/pose changes do not. This can need many more
+    samples than angular importance sampling and is not calibrated roughness.
+    ``cache_sampling`` controls only the angular draw cache.
     """
-    def __init__(self, *, candidate_limit=2_000_000, uniform_fraction=.1, cache_sampling=True, opaque_poses=True):
+    def __init__(self, *, candidate_limit=2_000_000, uniform_fraction=.1, cache_sampling=True, opaque_poses=True, surface_sampling=False):
         import sionna.rt as rt
         if rt.__version__ != "2.2.0":
             raise RuntimeError("Scattering adapter requires Sionna RT 2.2.0 private API")
@@ -233,7 +292,7 @@ class FirstOrderScatteringPathSolver:
             raise ValueError("candidate_limit must be a positive integer")
         self.opaque_poses = opaque_poses
         self._solver = rt.PathSolver(deterministic=True)
-        self._candidates = _ScatteringCandidates(candidate_limit, uniform_fraction, cache_sampling)
+        self._candidates = _ScatteringCandidates(candidate_limit, uniform_fraction, cache_sampling, surface_sampling)
         self._solver._candidate_generator = self._candidates
         self._solver._image_method = _VisibleImageMethod(self._solver._image_method, self._candidates)
 
