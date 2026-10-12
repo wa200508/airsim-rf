@@ -1,4 +1,4 @@
-"""Bounded real Runtime flight + direct-path SDR Doppler qualification.
+"""Bounded real Runtime flight + direct/specular SDR qualification.
 
 Requires the pinned Runtime source and a running server. Writes raw recordings
 under output; never commands a physical vehicle. See docs/live-workflow.md.
@@ -81,7 +81,20 @@ async def run(args):
         emitter=SDREmitter(SampledWaveform(values,fs,origin-1_000_000_000,boundary='zero'),
             transmit_power_w=.01,baseband_frequency_bounds_hz=(frequency,frequency))
         receiver=SDRNetworkReceiver(scene,{'tx0':emitter},profile,renderer='basis-cuda',
-            continuous=True,max_depth=0,samples_per_link=2)
+            continuous=True,max_depth=int(args.reflection),samples_per_link=2,
+            path_solver='single-bounce' if args.reflection else 'first-order-scattering')
+        channels=[]
+        solver=receiver.solver
+        def logged_solver(*positional,**keywords):
+            paths=solver(*positional,**keywords)
+            a,tau=paths.cir(num_time_steps=1,normalize_delays=False,out_type='numpy')
+            a=a.reshape(-1);tau=tau.reshape(-1);doppler=paths.doppler.numpy().reshape(-1)
+            valid=tau>=0
+            channels.append({'coefficient_real':a[valid].real.tolist(),
+                'coefficient_imag':a[valid].imag.tolist(),'delay_s':tau[valid].tolist(),
+                'doppler_hz':doppler[valid].tolist()})
+            return paths
+        receiver.solver=logged_solver
         trajectory=[]
         class LoggedRobot:
             def __init__(self,robot,name): self.robot,self.name=robot,name
@@ -89,20 +102,23 @@ async def run(args):
                 message=self.robot.get_ground_truth_kinematics()
                 trajectory.append({'radio':self.name,'sim_time_ns':int(world.get_sim_time()),'kinematics':message})
                 return message
-        provenance={'experiment':'fast-physics moving TX, stationary RX, direct path only',
+        provenance={'experiment':'fast-physics moving TX, stationary RX, '+('direct + specular ground' if args.reflection else 'direct path only'),
             'commanded_north_velocity_m_s':args.velocity,'settling_signal_seconds':2.001,
             'noise_enabled':False,'carrier_hz':profile.carrier_hz,'tone_hz':frequency,
             'source_robot_sha256':sha256(source.read_bytes()).hexdigest(),
             'backend':mi.variant(),'renderer':'basis-cuda','sionna_rt':rt.__version__,
-            'max_depth':0,'antenna':'isotropic V','transmit_power_w':.01,
+            'max_depth':int(args.reflection),'antenna':'isotropic V','transmit_power_w':.01,
+            'requested_window_ms':args.window_ms,'filter_sos':receiver.sos.tolist(),
+            'impedance_ohm':profile.impedance_ohm,
             'runtime_source_commit':subprocess.check_output(['git','-C',str(args.runtime_source),'rev-parse','HEAD'],text=True).strip(),
             'rf_scene':scene_provenance(root/'benchmarks/scenes/ground.xml'),
             'sim_config_sha256':{p.name:sha256(p.read_bytes()).hexdigest() for p in sim.glob('*.jsonc')},
             'waveform_complex128_sha256':sha256(values.tobytes()).hexdigest(),
             'waveform_origin_ns':origin-1_000_000_000,'waveform_samples':len(values)}
         manifest=record(world,{'tx0':LoggedRobot(tx,'tx0'),'rx0':LoggedRobot(rx,'rx0')},receiver,
-            args.output/'capture',updates=40,advance_ns=12_000_000,max_samples=100000,provenance=provenance)
+            args.output/'capture',updates=480//args.window_ms,advance_ns=args.window_ms*1_000_000,max_samples=100000,provenance=provenance)
         dump(args.output/'trajectory.json',trajectory)
+        dump(args.output/'channels.json',channels)
         dump(args.output/'inspection.json',inspect(args.output/'capture'))
         # Let the server finish its five-second command before closing the RPC
         # socket. These post-capture physics ticks are outside recording timing.
@@ -125,15 +141,17 @@ async def run(args):
         errors=np.array([r['error_hz'] for r in rows]);displacement=float(np.linalg.norm(np.array(rows[-1]['tx_position_rf_m'])-rows[0]['tx_position_rf_m']))
         clipping=json.loads((args.output/'capture/rx0.sigmf-meta').read_text())['captures']
         checks={'motion_exceeds_half_meter':displacement>.5,
-            'doppler_error_below_half_hz':bool(np.max(abs(errors))<.5),
             'doppler_sign_matches_command':all(r['expected_doppler_hz']*args.velocity>0 for r in rows),
             'no_adc_clipping':all(c['airsim_rf:clipped_component_fraction']==0 for c in clipping),
             'flight_command_completed':bool(command_result)}
+        if not args.reflection:
+            checks['doppler_error_below_half_hz']=bool(np.max(abs(errors))<.5)
         result={'status':'passed' if all(checks.values()) else 'failed','checks':checks,
-            'scope':'moving Fast Physics pose integration and within-window direct-path Doppler; no multipath or phase-boundary qualification',
+            'scope':('moving Fast Physics recording; composite frequency is not direct-path Doppler' if args.reflection else
+                'moving Fast Physics pose integration and within-window direct-path Doppler'),
             'signal_seconds_per_receiver':manifest['signal_seconds_per_receiver'],
             'wall_seconds_per_signal_second':manifest['wall_seconds_per_signal_second'],
-            'tx_displacement_m':displacement,'maximum_absolute_doppler_error_hz':float(np.max(abs(errors))),
+            'tx_displacement_m':displacement,'maximum_absolute_doppler_error_hz':None if args.reflection else float(np.max(abs(errors))),
             'tolerance_hz':.5,'rows':rows}
         dump(args.output/'motion.json',result)
         print(json.dumps({k:v for k,v in result.items() if k!='rows'},indent=2))
@@ -150,4 +168,6 @@ if __name__=='__main__':
     parser.add_argument('--address',default='127.0.0.1')
     parser.add_argument('--velocity',type=float,choices=(-3.,3.),default=3.)
     parser.add_argument('--pascal-compat',action='store_true')
+    parser.add_argument('--window-ms',type=int,choices=(6,12,24,48),default=12)
+    parser.add_argument('--reflection',action='store_true',help='Include the specular ground path, without diffuse scattering')
     asyncio.run(run(parser.parse_args()))
