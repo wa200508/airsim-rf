@@ -98,3 +98,13 @@ shows that cached angular proposals remain numerically repeatable while their
 surface intersections move with the antennas. Persistent surface scatterers are
 not modeled. Do not infer validated moving diffuse speckle or Doppler spectra
 from snapshot power checks or continuous receiver sample timestamps.
+
+
+An experimental alternative is available directly on
+`FirstOrderScatteringPathSolver(surface_sampling=True)`. It fixes shared samples
+on mesh surfaces and recomputes visibility/fields per pose. The
+[prototype report](../results/reviews/diffuse-surface-20261012/REPORT.md) records
+much smaller local-motion phase residuals and the larger sampling budgets that
+uniform area sampling can require. This option is not yet wired into the live
+recorder or SDR receiver, and does not change their defaults or qualify calibrated
+roughness statistics. Mesh, seed and sample-count changes reset its realization.

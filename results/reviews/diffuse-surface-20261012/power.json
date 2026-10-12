@@ -1,0 +1,47 @@
+{
+  "scope": "2.4 GHz ground fixture; incoherent power, not coherent summed power or hardware calibration",
+  "rows": [
+    {
+      "samples_per_link": 4096,
+      "seed": 42,
+      "angular_power_gain": 4.2965462299093815e-09,
+      "surface_power_gain": 4.443974077616986e-09,
+      "surface_over_angular": 1.0343131063460507
+    },
+    {
+      "samples_per_link": 4096,
+      "seed": 43,
+      "angular_power_gain": 3.991478703113671e-09,
+      "surface_power_gain": 3.08317726904761e-09,
+      "surface_over_angular": 0.772439864615208
+    },
+    {
+      "samples_per_link": 4096,
+      "seed": 44,
+      "angular_power_gain": 4.031576406049453e-09,
+      "surface_power_gain": 3.368472167863956e-09,
+      "surface_over_angular": 0.8355223437684334
+    },
+    {
+      "samples_per_link": 16384,
+      "seed": 42,
+      "angular_power_gain": 4.148064558506803e-09,
+      "surface_power_gain": 4.5985641961010515e-09,
+      "surface_over_angular": 1.1086047797087364
+    },
+    {
+      "samples_per_link": 16384,
+      "seed": 43,
+      "angular_power_gain": 4.061836644808636e-09,
+      "surface_power_gain": 4.205462644790714e-09,
+      "surface_over_angular": 1.0353598661250063
+    },
+    {
+      "samples_per_link": 16384,
+      "seed": 44,
+      "angular_power_gain": 4.1210723722429066e-09,
+      "surface_power_gain": 3.895746392146293e-09,
+      "surface_over_angular": 0.9453234595892381
+    }
+  ]
+}
