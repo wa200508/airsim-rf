@@ -55,6 +55,16 @@ update; use `--max-samples` to choose a tighter limit. Overshoot beyond the cap
 stops before allocating I/Q. Large intervals also freeze geometry longer, so
 select update cadence for the motion and channel dynamics.
 
+**Diffuse temporal-coherence limitation:** the default live solver includes
+first-order diffuse paths sampled by antenna-relative angular rays. As radios
+move, those rays can hit different surface points even with the same seed.
+Continuous sample timestamps and persistent receiver-filter state do not imply
+persistent diffuse scatterers or physically qualified temporal speckle. The
+[measured diffuse audit](../results/reviews/diffuse-stability-20261012/REPORT.md)
+found substantial phase changes beyond the previous snapshot's local-Doppler
+continuation. Direct/specular qualification does not cover this behavior; avoid
+interpreting moving diffuse Doppler spectra as validated sensing observables.
+
 CUDA is required for both propagation and rendering; there is no silent CPU
 fallback. Out-of-range delays/Dopplers remain errors. Experimental trimming,
 FFT-shape and precision controls are not part of this workflow.

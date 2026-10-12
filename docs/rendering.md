@@ -88,3 +88,13 @@ Current next steps concern representative input/device-transfer workloads and
 live interoperability. The [historical research record](archive/rendering-research.md)
 retains completed implementation steps, old CPU measurements and experimental
 controls. Do not read that record's original roadmap as current missing features.
+
+
+## Moving diffuse-channel limitation
+
+Renderer agreement for supplied paths does not qualify the channel's temporal
+scattering model. The [diffuse replay audit](../results/reviews/diffuse-stability-20261012/REPORT.md)
+shows that cached angular proposals remain numerically repeatable while their
+surface intersections move with the antennas. Persistent surface scatterers are
+not modeled. Do not infer validated moving diffuse speckle or Doppler spectra
+from snapshot power checks or continuous receiver sample timestamps.

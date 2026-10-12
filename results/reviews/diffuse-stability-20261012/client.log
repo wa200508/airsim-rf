@@ -1,0 +1,58 @@
+{
+  "status": "passed",
+  "checks": {
+    "stationary_repeat_equivalent": true,
+    "cache_preserves_result": true,
+    "all_comparisons_have_diffuse_paths": true
+  },
+  "scope": "diffuse angular-sampling repeatability and local-motion diagnostics, not coherent diffuse qualification",
+  "persistent_surface_scatterers_qualified": false,
+  "backend": "cuda_ad_mono_polarized",
+  "sionna_rt": "2.2.0",
+  "trajectory_sha256": "d012d9d0a85c34051d6787ff6e46778b02cba44f518d3653e96a7028c5908e02",
+  "rf_scene": {
+    "scene_id": "ground",
+    "xml_sha256": "c77427ec3f34d66e3f8985ef839083b0874d047ef16de3a8d84446493a5871fa",
+    "meshes_sha256": {
+      "ground.ply": "a79cddd969602a05527ea77dfe89bac4e0f0c204bac69b880d7cfd3391267247"
+    }
+  },
+  "motion": "constant measured endpoint velocities, fixed starting orientations; actual sampled surface positions may slide",
+  "states_rf": [
+    {
+      "position_m": [
+        -16.471567153930664,
+        8.974765819402819e-07,
+        20.362703323364258
+      ],
+      "velocity_m_s": [
+        2.757296323776245,
+        9.68052177086065e-07,
+        -0.006842473521828651
+      ],
+      "orientation_rad": [
+        7.527264934197478e-09,
+        0.035259513634469775,
+        -6.514364262946352e-08
+      ]
+    },
+    {
+      "position_m": [
+        16.470199584960938,
+        -1.1672979593276978,
+        20.411060333251953
+      ],
+      "velocity_m_s": [
+        -2.7558703422546387,
+        -0.9157392382621765,
+        -0.005762489512562752
+      ],
+      "orientation_rad": [
+        0.0033334388009859323,
+        -0.03547019307614363,
+        0.012097687910176014
+      ]
+    }
+  ],
+  "carrier_hz": 915000000.0
+}
