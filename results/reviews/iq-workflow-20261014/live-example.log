@@ -1,0 +1,35 @@
+00:04:53:537 [INFO] Connecting to simulation server at 127.0.0.1
+00:04:53:539 [INFO] Connection opened.
+00:04:53:539 [INFO] Loading scene config: scene_rf.jsonc
+00:04:54:158 [INFO] Getting the list of available topic info from the sim server...
+00:04:54:169 [INFO] Successfully received topic info list.
+00:04:54:169 [INFO] World object updated for the loaded scene '/Sim/SceneRFTwoRadios'. Note: Any previous Drone object instances may no longer be valid.
+00:04:54:169 [INFO] Trajectory 'null_trajectory' imported successfully.
+00:04:54:170 [INFO] Initalizing Drone 'Drone1'...
+00:04:54:170 [INFO] -------------------------------------------------
+00:04:54:170 [INFO] The following topics can be subscribed to for robot 'Drone1':
+00:04:54:170 [INFO]     robot_info["actual_pose"]
+00:04:54:170 [INFO]     robot_info["collision_info"]
+00:04:54:170 [INFO]     robot_info["rotor_info"]
+00:04:54:170 [INFO] -------------------------------------------------
+00:04:54:170 [INFO] Drone 'Drone1' initialized for World scene '/Sim/SceneRFTwoRadios'
+00:04:54:174 [INFO] Initalizing Drone 'Drone2'...
+00:04:54:174 [INFO] -------------------------------------------------
+00:04:54:174 [INFO] The following topics can be subscribed to for robot 'Drone2':
+00:04:54:174 [INFO]     robot_info["actual_pose"]
+00:04:54:174 [INFO]     robot_info["collision_info"]
+00:04:54:174 [INFO]     robot_info["rotor_info"]
+00:04:54:174 [INFO] -------------------------------------------------
+00:04:54:174 [INFO] Drone 'Drone2' initialized for World scene '/Sim/SceneRFTwoRadios'
+rx0: epoch=0 ns, N=24000, fs=2e+06 Hz, RMS=6.96084e-05 V
+rx0: epoch=12000000 ns, N=24000, fs=2e+06 Hz, RMS=6.96255e-05 V
+rx0: epoch=24000000 ns, N=24000, fs=2e+06 Hz, RMS=6.96222e-05 V
+rx0: epoch=36000000 ns, N=24000, fs=2e+06 Hz, RMS=6.96335e-05 V
+rx0: epoch=48000000 ns, N=24000, fs=2e+06 Hz, RMS=6.9602e-05 V
+rx0: epoch=60000000 ns, N=24000, fs=2e+06 Hz, RMS=6.96243e-05 V
+rx0: epoch=72000000 ns, N=24000, fs=2e+06 Hz, RMS=6.96136e-05 V
+rx0: epoch=84000000 ns, N=24000, fs=2e+06 Hz, RMS=6.96213e-05 V
+rx0: epoch=96000000 ns, N=24000, fs=2e+06 Hz, RMS=6.96299e-05 V
+rx0: epoch=108000000 ns, N=24000, fs=2e+06 Hz, RMS=6.9615e-05 V
+00:05:00:275 [INFO] Disconnecting from simulation server...
+00:05:00:333 [INFO] Disconnected.

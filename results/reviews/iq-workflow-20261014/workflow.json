@@ -1,0 +1,110 @@
+[
+  {
+    "mode": "direct",
+    "status": "passed",
+    "callback_blocks": 3,
+    "complex_samples": 72000,
+    "signal_seconds": 0.036,
+    "wall_seconds_per_signal_second": 154.5956725833422,
+    "retained_paths": [
+      {
+        "tx0": 1
+      },
+      {
+        "tx0": 1
+      },
+      {
+        "tx0": 1
+      }
+    ],
+    "propagation_options": {
+      "path_solver": "first-order-scattering",
+      "max_depth": 0,
+      "surface_sampling": false,
+      "samples_per_link": 1028,
+      "seed": 42
+    },
+    "scope": "real stationary Runtime to GPU SDR, synchronous processing callback, saved data and CPU reader round trip"
+  },
+  {
+    "mode": "specular",
+    "status": "passed",
+    "callback_blocks": 3,
+    "complex_samples": 72000,
+    "signal_seconds": 0.036,
+    "wall_seconds_per_signal_second": 12.381331277790904,
+    "retained_paths": [
+      {
+        "tx0": 2
+      },
+      {
+        "tx0": 2
+      },
+      {
+        "tx0": 2
+      }
+    ],
+    "propagation_options": {
+      "path_solver": "single-bounce",
+      "max_depth": 1,
+      "surface_sampling": false,
+      "samples_per_link": 1028,
+      "seed": 42
+    },
+    "scope": "real stationary Runtime to GPU SDR, synchronous processing callback, saved data and CPU reader round trip"
+  },
+  {
+    "mode": "diffuse-angular",
+    "status": "passed",
+    "callback_blocks": 3,
+    "complex_samples": 72000,
+    "signal_seconds": 0.036,
+    "wall_seconds_per_signal_second": 12.831674277776985,
+    "retained_paths": [
+      {
+        "tx0": 369
+      },
+      {
+        "tx0": 369
+      },
+      {
+        "tx0": 369
+      }
+    ],
+    "propagation_options": {
+      "path_solver": "first-order-scattering",
+      "max_depth": 1,
+      "surface_sampling": false,
+      "samples_per_link": 1028,
+      "seed": 42
+    },
+    "scope": "real stationary Runtime to GPU SDR, synchronous processing callback, saved data and CPU reader round trip"
+  },
+  {
+    "mode": "diffuse-surface",
+    "status": "passed",
+    "callback_blocks": 3,
+    "complex_samples": 72000,
+    "signal_seconds": 0.036,
+    "wall_seconds_per_signal_second": 11.555386361098702,
+    "retained_paths": [
+      {
+        "tx0": 4098
+      },
+      {
+        "tx0": 4098
+      },
+      {
+        "tx0": 4098
+      }
+    ],
+    "propagation_options": {
+      "path_solver": "first-order-scattering",
+      "max_depth": 1,
+      "surface_sampling": true,
+      "samples_per_link": 4096,
+      "seed": 42
+    },
+    "scope": "real stationary Runtime to GPU SDR, synchronous processing callback, saved data and CPU reader round trip"
+  }
+]

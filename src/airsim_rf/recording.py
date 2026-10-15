@@ -1,4 +1,4 @@
-"""Read completed airsim-rf recordings as calibrated complex sample blocks.
+"""Read completed airsim-rf recordings as scaled complex sample blocks.
 
 No simulator, CUDA, or Sionna scene is required. This reader handles this
 project's SigMF layout; it is not a reader for arbitrary SigMF datasets.

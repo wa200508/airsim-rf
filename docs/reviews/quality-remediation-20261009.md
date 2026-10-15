@@ -62,7 +62,7 @@ workloads and measured live behavior rather than additional tuning of this one
 terrain or reinterpreting renderer-only timings as full-system throughput.
 
 
-## Follow-up qualification checklist — updated 12 October 2026
+## Follow-up qualification checklist — updated 14 October 2026
 
 The twelve original findings above are closed. Subsequent live-workflow work has
 its own evidence and narrower qualification boundaries:
@@ -73,7 +73,8 @@ its own evidence and narrower qualification boundaries:
 | Channel-boundary phase and update cadence | Complete against the piecewise model, including an injected-reset negative control: [phase report](../../results/reviews/live-phase-20261011/REPORT.md). Small pose-refresh corrections remain. |
 | Moving ground-specular paths | Complete for the flat-ground case in the phase report; complex gains are shared with the analytic I/Q reference. |
 | Independent moving RX | Complete for two controlled drones, including lateral RX velocity: [two-drone report](../../results/reviews/moving-receiver-20261011/REPORT.md). |
-| Moving diffuse paths | Investigation complete: [GPU replay audit](../../results/reviews/diffuse-stability-20261012/REPORT.md) found sliding sampled surface points and large phase changes despite repeatable caching. An [opt-in fixed-surface solver prototype](../../results/reviews/diffuse-surface-20261012/REPORT.md) now passes motion/power/mesh checks. Live/SDR integration, coherent I/Q and broader physical-model qualification remain open. |
+| Moving diffuse paths | Investigation complete: [GPU replay audit](../../results/reviews/diffuse-stability-20261012/REPORT.md) found sliding sampled surface points and large phase changes despite repeatable caching. An [opt-in fixed-surface solver prototype](../../results/reviews/diffuse-surface-20261012/REPORT.md) now passes motion/power/mesh checks. [Live/SDR integration](../../results/reviews/iq-workflow-20261014/REPORT.md) now passes for stationary capture, callbacks and recording readback. Moving coherent I/Q and broader physical-model qualification remain open. |
+| Scenario assembly and I/Q access | Complete for the stationary starter: [walkthrough](../scenario-to-iq.md), explicit propagation choice, synchronous callback and CPU reader. Distributed SDR transport is not implemented. |
 | Occlusion and path births/deaths | Open: move through a known obstruction, check visibility transition, timing, and filter state; avoid claiming arbitrary smooth phase when a path disappears. |
 | Explicit turn maneuvers | Open: test changing direction and nonzero mount offsets against measured angular/linear kinematics. |
 | Unreal mesh interoperability | Open: load/export a matching rendered world and demonstrate alignment; the standalone flat-ground Runtime cannot establish this. |

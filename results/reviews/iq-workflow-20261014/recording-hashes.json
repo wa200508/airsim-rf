@@ -1,0 +1,18 @@
+{
+  "direct": {
+    "bytes": 288000,
+    "sha256": "9a64ac2c1060c56bb200036af2d12084dd806af12eadef70078faef4eebbb38b"
+  },
+  "specular": {
+    "bytes": 288000,
+    "sha256": "e70be6b0dc97ecdf82872f0328c7dccad7b9f4b1f5fa4a469eb34648e9e77e33"
+  },
+  "diffuse-angular": {
+    "bytes": 288000,
+    "sha256": "e1c919f675beedff94d55c7a38efc9215e0b35e02c22b50c6f71f7a57e80a9e6"
+  },
+  "diffuse-surface": {
+    "bytes": 288000,
+    "sha256": "b41e761a6eae61ac2b24f562c1fea417b322c026ce9adcad14e5d86576b8dfa2"
+  }
+}

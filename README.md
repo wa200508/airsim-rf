@@ -7,7 +7,8 @@ models and an AMS-GRA radar worker; continuous SDR uses a separate capture API.
 | Goal | Start here |
 | --- | --- |
 | Run an offline example | [Setup](docs/setup.md#reproduce) |
-| Record AirSim-driven SDR I/Q | [Two-radio live workflow](docs/live-workflow.md) |
+| Build a scenario and process its I/Q | [Scenario-to-I/Q walkthrough](docs/scenario-to-iq.md) |
+| Configure the live recorder and server | [Live workflow reference](docs/live-workflow.md) |
 | Understand the physical scenarios and plots | [Sensing gallery](docs/sensing-plots.md) |
 | Reproduce measured GPU performance | [Benchmark setup](docs/setup.md#p100-basis-profiling) |
 

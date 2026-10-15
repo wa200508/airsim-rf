@@ -193,3 +193,32 @@ def test_propagation_choices_and_invalid_configuration():
     assert propagation_options({'propagation':{'mode':'diffuse-surface','samples_per_link':4096}})['surface_sampling']
     for value in ({'mode':'unknown'},{'samples_per_link':True},{'seed':-1},{'typo':1}):
         with pytest.raises(ValueError):propagation_options({'propagation':value})
+
+
+def test_multiple_receiver_files_keep_independent_scales(tmp_path):
+    from airsim_rf.recording import iter_iq_blocks
+    world=TickWorld();robots,receiver,_=fixture(world)
+    receiver.scene.receivers['rx2']=SimpleNamespace()
+    robots['rx2']=robots['rx']
+    original=receiver.capture
+    def capture(epoch,*,num_samples):
+        result=original(epoch,num_samples=num_samples)
+        result['rx2']=SimpleNamespace(adc_codes=np.tile([-20,30],(num_samples,1)),
+            sim_time_ns=epoch,volts_per_count=.002,clipped_component_fraction=0.)
+        return result
+    receiver.capture=capture
+    record(world,robots,receiver,tmp_path/'run',updates=2,advance_ns=10000000,max_samples=100000)
+    first=list(iter_iq_blocks(tmp_path/'run','rx'));second=list(iter_iq_blocks(tmp_path/'run','rx2'))
+    assert [b.sim_time_ns for b in first]==[b.sim_time_ns for b in second]
+    np.testing.assert_allclose(first[0].samples,.123-.456j,rtol=1e-6)
+    np.testing.assert_allclose(second[0].samples,-.04+.06j,rtol=1e-6)
+
+
+def test_reader_rejects_mismatched_metadata(tmp_path):
+    from airsim_rf.recording import iter_iq_blocks
+    world=TickWorld();robots,receiver,_=fixture(world)
+    record(world,robots,receiver,tmp_path/'run',updates=2,advance_ns=10000000,max_samples=100000)
+    path=tmp_path/'run/rx.sigmf-meta';meta=json.loads(path.read_text())
+    meta['captures'][1]['core:sample_start']+=1;path.write_text(json.dumps(meta))
+    with pytest.raises(ValueError,match='offsets'):
+        list(iter_iq_blocks(tmp_path/'run','rx'))

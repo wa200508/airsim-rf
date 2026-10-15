@@ -1,0 +1,8 @@
+{
+  "receiver": "rx0",
+  "complex_samples": 72000,
+  "sample_rate_hz": 2000000.0,
+  "signal_seconds": 0.036,
+  "first_sim_time_ns": 0,
+  "rms_complex_volts": 6.887748089900344e-05
+}

@@ -96,7 +96,7 @@ Renderer agreement for supplied paths does not qualify the channel's temporal
 scattering model. The [diffuse replay audit](../results/reviews/diffuse-stability-20261012/REPORT.md)
 shows that cached angular proposals remain numerically repeatable while their
 surface intersections move with the antennas. Persistent surface scatterers are
-not modeled. Do not infer validated moving diffuse speckle or Doppler spectra
+not modeled by that angular-sampling mode. Do not infer validated moving diffuse speckle or Doppler spectra
 from snapshot power checks or continuous receiver sample timestamps.
 
 
@@ -105,6 +105,9 @@ An experimental alternative is available directly on
 on mesh surfaces and recomputes visibility/fields per pose. The
 [prototype report](../results/reviews/diffuse-surface-20261012/REPORT.md) records
 much smaller local-motion phase residuals and the larger sampling budgets that
-uniform area sampling can require. This option is not yet wired into the live
-recorder or SDR receiver, and does not change their defaults or qualify calibrated
-roughness statistics. Mesh, seed and sample-count changes reset its realization.
+uniform area sampling can require. Select `diffuse-surface` in the live
+configuration to use it through the SDR receiver and recorder; see the
+[scenario walkthrough](scenario-to-iq.md) and
+[stationary integration checks](../results/reviews/iq-workflow-20261014/REPORT.md).
+This does not qualify moving coherent diffuse I/Q or calibrated roughness
+statistics. Mesh, seed and sample-count changes reset its realization.

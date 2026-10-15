@@ -1,0 +1,104 @@
+00:00:19:231 [INFO] Connecting to simulation server at 127.0.0.1
+00:00:19:234 [INFO] Connection opened.
+00:00:19:234 [INFO] Loading scene config: scene_rf.jsonc
+00:00:19:789 [INFO] Getting the list of available topic info from the sim server...
+00:00:19:799 [INFO] Successfully received topic info list.
+00:00:19:799 [INFO] World object updated for the loaded scene '/Sim/SceneRFTwoRadios'. Note: Any previous Drone object instances may no longer be valid.
+00:00:19:800 [INFO] Trajectory 'null_trajectory' imported successfully.
+00:00:19:800 [INFO] Initalizing Drone 'Drone1'...
+00:00:19:800 [INFO] -------------------------------------------------
+00:00:19:800 [INFO] The following topics can be subscribed to for robot 'Drone1':
+00:00:19:800 [INFO]     robot_info["actual_pose"]
+00:00:19:800 [INFO]     robot_info["collision_info"]
+00:00:19:800 [INFO]     robot_info["rotor_info"]
+00:00:19:800 [INFO] -------------------------------------------------
+00:00:19:800 [INFO] Drone 'Drone1' initialized for World scene '/Sim/SceneRFTwoRadios'
+00:00:19:805 [INFO] Initalizing Drone 'Drone2'...
+00:00:19:805 [INFO] -------------------------------------------------
+00:00:19:805 [INFO] The following topics can be subscribed to for robot 'Drone2':
+00:00:19:805 [INFO]     robot_info["actual_pose"]
+00:00:19:805 [INFO]     robot_info["collision_info"]
+00:00:19:805 [INFO]     robot_info["rotor_info"]
+00:00:19:805 [INFO] -------------------------------------------------
+00:00:19:805 [INFO] Drone 'Drone2' initialized for World scene '/Sim/SceneRFTwoRadios'
+00:00:25:378 [INFO] Disconnecting from simulation server...
+00:00:25:443 [INFO] Disconnected.
+{"mode": "direct", "status": "passed", "callback_blocks": 3, "complex_samples": 72000, "signal_seconds": 0.036, "wall_seconds_per_signal_second": 154.5956725833422, "retained_paths": [{"tx0": 1}, {"tx0": 1}, {"tx0": 1}], "propagation_options": {"path_solver": "first-order-scattering", "max_depth": 0, "surface_sampling": false, "samples_per_link": 1028, "seed": 42}, "scope": "real stationary Runtime to GPU SDR, synchronous processing callback, saved data and CPU reader round trip"}
+00:00:25:470 [INFO] Connecting to simulation server at 127.0.0.1
+00:00:25:472 [INFO] Connection opened.
+00:00:25:472 [INFO] Loading scene config: scene_rf.jsonc
+00:00:25:951 [INFO] Getting the list of available topic info from the sim server...
+00:00:25:962 [INFO] Successfully received topic info list.
+00:00:25:962 [INFO] World object updated for the loaded scene '/Sim/SceneRFTwoRadios'. Note: Any previous Drone object instances may no longer be valid.
+00:00:25:962 [INFO] Trajectory 'null_trajectory' imported successfully.
+00:00:25:963 [INFO] Initalizing Drone 'Drone1'...
+00:00:25:963 [INFO] -------------------------------------------------
+00:00:25:963 [INFO] The following topics can be subscribed to for robot 'Drone1':
+00:00:25:963 [INFO]     robot_info["actual_pose"]
+00:00:25:963 [INFO]     robot_info["collision_info"]
+00:00:25:963 [INFO]     robot_info["rotor_info"]
+00:00:25:963 [INFO] -------------------------------------------------
+00:00:25:963 [INFO] Drone 'Drone1' initialized for World scene '/Sim/SceneRFTwoRadios'
+00:00:25:965 [INFO] Initalizing Drone 'Drone2'...
+00:00:25:965 [INFO] -------------------------------------------------
+00:00:25:965 [INFO] The following topics can be subscribed to for robot 'Drone2':
+00:00:25:965 [INFO]     robot_info["actual_pose"]
+00:00:25:965 [INFO]     robot_info["collision_info"]
+00:00:25:965 [INFO]     robot_info["rotor_info"]
+00:00:25:965 [INFO] -------------------------------------------------
+00:00:25:965 [INFO] Drone 'Drone2' initialized for World scene '/Sim/SceneRFTwoRadios'
+00:00:26:414 [INFO] Disconnecting from simulation server...
+00:00:26:489 [INFO] Disconnected.
+{"mode": "specular", "status": "passed", "callback_blocks": 3, "complex_samples": 72000, "signal_seconds": 0.036, "wall_seconds_per_signal_second": 12.381331277790904, "retained_paths": [{"tx0": 2}, {"tx0": 2}, {"tx0": 2}], "propagation_options": {"path_solver": "single-bounce", "max_depth": 1, "surface_sampling": false, "samples_per_link": 1028, "seed": 42}, "scope": "real stationary Runtime to GPU SDR, synchronous processing callback, saved data and CPU reader round trip"}
+00:00:26:516 [INFO] Connecting to simulation server at 127.0.0.1
+00:00:26:517 [INFO] Connection opened.
+00:00:26:517 [INFO] Loading scene config: scene_rf.jsonc
+00:00:27:017 [INFO] Getting the list of available topic info from the sim server...
+00:00:27:027 [INFO] Successfully received topic info list.
+00:00:27:027 [INFO] World object updated for the loaded scene '/Sim/SceneRFTwoRadios'. Note: Any previous Drone object instances may no longer be valid.
+00:00:27:028 [INFO] Trajectory 'null_trajectory' imported successfully.
+00:00:27:028 [INFO] Initalizing Drone 'Drone1'...
+00:00:27:028 [INFO] -------------------------------------------------
+00:00:27:028 [INFO] The following topics can be subscribed to for robot 'Drone1':
+00:00:27:028 [INFO]     robot_info["actual_pose"]
+00:00:27:028 [INFO]     robot_info["collision_info"]
+00:00:27:028 [INFO]     robot_info["rotor_info"]
+00:00:27:028 [INFO] -------------------------------------------------
+00:00:27:028 [INFO] Drone 'Drone1' initialized for World scene '/Sim/SceneRFTwoRadios'
+00:00:27:030 [INFO] Initalizing Drone 'Drone2'...
+00:00:27:030 [INFO] -------------------------------------------------
+00:00:27:030 [INFO] The following topics can be subscribed to for robot 'Drone2':
+00:00:27:030 [INFO]     robot_info["actual_pose"]
+00:00:27:030 [INFO]     robot_info["collision_info"]
+00:00:27:030 [INFO]     robot_info["rotor_info"]
+00:00:27:030 [INFO] -------------------------------------------------
+00:00:27:030 [INFO] Drone 'Drone2' initialized for World scene '/Sim/SceneRFTwoRadios'
+00:00:27:495 [INFO] Disconnecting from simulation server...
+00:00:27:501 [INFO] Disconnected.
+{"mode": "diffuse-angular", "status": "passed", "callback_blocks": 3, "complex_samples": 72000, "signal_seconds": 0.036, "wall_seconds_per_signal_second": 12.831674277776985, "retained_paths": [{"tx0": 369}, {"tx0": 369}, {"tx0": 369}], "propagation_options": {"path_solver": "first-order-scattering", "max_depth": 1, "surface_sampling": false, "samples_per_link": 1028, "seed": 42}, "scope": "real stationary Runtime to GPU SDR, synchronous processing callback, saved data and CPU reader round trip"}
+00:00:27:529 [INFO] Connecting to simulation server at 127.0.0.1
+00:00:27:530 [INFO] Connection opened.
+00:00:27:530 [INFO] Loading scene config: scene_rf.jsonc
+00:00:28:072 [INFO] Getting the list of available topic info from the sim server...
+00:00:28:082 [INFO] Successfully received topic info list.
+00:00:28:082 [INFO] World object updated for the loaded scene '/Sim/SceneRFTwoRadios'. Note: Any previous Drone object instances may no longer be valid.
+00:00:28:083 [INFO] Trajectory 'null_trajectory' imported successfully.
+00:00:28:083 [INFO] Initalizing Drone 'Drone1'...
+00:00:28:083 [INFO] -------------------------------------------------
+00:00:28:083 [INFO] The following topics can be subscribed to for robot 'Drone1':
+00:00:28:083 [INFO]     robot_info["actual_pose"]
+00:00:28:083 [INFO]     robot_info["collision_info"]
+00:00:28:083 [INFO]     robot_info["rotor_info"]
+00:00:28:083 [INFO] -------------------------------------------------
+00:00:28:083 [INFO] Drone 'Drone1' initialized for World scene '/Sim/SceneRFTwoRadios'
+00:00:28:085 [INFO] Initalizing Drone 'Drone2'...
+00:00:28:085 [INFO] -------------------------------------------------
+00:00:28:085 [INFO] The following topics can be subscribed to for robot 'Drone2':
+00:00:28:085 [INFO]     robot_info["actual_pose"]
+00:00:28:085 [INFO]     robot_info["collision_info"]
+00:00:28:085 [INFO]     robot_info["rotor_info"]
+00:00:28:085 [INFO] -------------------------------------------------
+00:00:28:085 [INFO] Drone 'Drone2' initialized for World scene '/Sim/SceneRFTwoRadios'
+00:00:28:504 [INFO] Disconnecting from simulation server...
+00:00:28:542 [INFO] Disconnected.
+{"mode": "diffuse-surface", "status": "passed", "callback_blocks": 3, "complex_samples": 72000, "signal_seconds": 0.036, "wall_seconds_per_signal_second": 11.555386361098702, "retained_paths": [{"tx0": 4098}, {"tx0": 4098}, {"tx0": 4098}], "propagation_options": {"path_solver": "first-order-scattering", "max_depth": 1, "surface_sampling": true, "samples_per_link": 4096, "seed": 42}, "scope": "real stationary Runtime to GPU SDR, synchronous processing callback, saved data and CPU reader round trip"}

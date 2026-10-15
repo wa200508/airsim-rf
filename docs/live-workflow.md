@@ -1,5 +1,8 @@
 # Live AirSim-to-SDR recording
 
+Start with the [scenario-to-I/Q walkthrough](scenario-to-iq.md) for complete
+inputs, propagation choices, a CPU recording reader and a live processing callback.
+
 `airsim-rf-live` connects to ProjectAirSim, snapshots paused robot kinematics,
 traces scene paths on CUDA/OptiX, renders private sampled inputs on CUDA, and
 writes continuous timestamped I/Q with receiver noise, filtering and signed
@@ -39,7 +42,7 @@ The output directory must be new. Each receiver produces `<name>.sigmf-data`
 sample offset, AirSim start timestamp, carrier, volts per count and clipping
 fraction for every window. `manifest.json` records completion/failure, window
 sample counts, wall milliseconds and **wall seconds per signal second**. Its
-service timer includes live physics/RPC and writes, unlike the trajectory-source
+service timer includes live physics/RPC, writes and any processing callback, unlike the trajectory-source
 benchmark. First-use compilation is included. Final metadata/checkpoint writes
 are excluded; writes are not fsync-ed. A failed run retains completed recordings
 and a failure label. It is not a native AMS-GRA stream or physical SDR driver.
@@ -55,7 +58,8 @@ update; use `--max-samples` to choose a tighter limit. Overshoot beyond the cap
 stops before allocating I/Q. Large intervals also freeze geometry longer, so
 select update cadence for the motion and channel dynamics.
 
-**Diffuse temporal-coherence limitation:** the default live solver includes
+**Diffuse temporal-coherence limitation:** configurations without an explicit
+propagation section retain `diffuse-angular`, which includes
 first-order diffuse paths sampled by antenna-relative angular rays. As radios
 move, those rays can hit different surface points even with the same seed.
 Continuous sample timestamps and persistent receiver-filter state do not imply
@@ -64,6 +68,9 @@ persistent diffuse scatterers or physically qualified temporal speckle. The
 found substantial phase changes beyond the previous snapshot's local-Doppler
 continuation. Direct/specular qualification does not cover this behavior; avoid
 interpreting moving diffuse Doppler spectra as validated sensing observables.
+New generated starters explicitly use `specular`. The opt-in `diffuse-surface`
+mode now works through the live recorder and SDR receiver, but moving coherent
+I/Q with that mode remains unqualified. See [mode choices](scenario-to-iq.md).
 
 CUDA is required for both propagation and rendering; there is no silent CPU
 fallback. Out-of-range delays/Dopplers remain errors. Experimental trimming,

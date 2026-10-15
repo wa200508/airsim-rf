@@ -81,6 +81,16 @@ and Doppler alone do not determine a coherent voltage.
 
 <a id="distributed"></a>
 
+## User signal-processing interfaces
+
+`airsim_rf.live.run(..., on_capture=callback)` supplies each receiver window
+to a synchronous Python callback after saving it. The simulator remains paused
+while user processing runs. `airsim_rf.recording.iter_iq_blocks` streams complete
+recordings into CPU NumPy arrays with sample rate, sample offset, integer
+simulator epoch and per-window voltage scaling. These interfaces share the same
+post-ADC samples; neither is a network transport or physical SDR driver.
+See the [scenario-to-I/Q walkthrough](scenario-to-iq.md) for runnable examples.
+
 ## Distributed interfaces
 
 `airsim-rf-worker` and `airsim-rf-coordinator` provide the radar worker API.
