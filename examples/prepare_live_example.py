@@ -7,7 +7,7 @@ import shutil
 import numpy as np
 
 
-def prepare(output, *, address='127.0.0.1'):
+def prepare(output, *, address='127.0.0.1', propagation='specular'):
     output=Path(output)
     output.mkdir(parents=True,exist_ok=False)
     root=Path(__file__).resolve().parents[1]
@@ -27,7 +27,7 @@ def prepare(output, *, address='127.0.0.1'):
         'scene-type':'UnrealNative'},indent=2)+'\n')
     config={'address':address,'scene':'scene_rf.jsonc','sim_config':'sim_config','rf_scene':'rf_ground.xml',
         'receiver_profile':{'carrier_hz':915_000_000,'sample_rate_hz':fs,'rf_bandwidth_hz':1_000_000},
-        'samples_per_link':1028,'radios':{'tx0':{'robot':'Drone1','waveform_npy':'tx0.npy',
+        'propagation':{'mode':propagation,'samples_per_link':4096 if propagation=='diffuse-surface' else 1028,'seed':42},'radios':{'tx0':{'robot':'Drone1','waveform_npy':'tx0.npy',
             'transmit_power_w':.0001,'baseband_frequency_bounds_hz':[frequency,frequency],'mount_body_m':[0,0,0]},
             'rx0':{'robot':'Drone2','mount_body_m':[0,0,0]}}}
     (output/'radios.json').write_text(json.dumps(config,indent=2)+'\n')
@@ -43,8 +43,9 @@ def main():
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--output',type=Path,required=True)
     parser.add_argument('--address',default='127.0.0.1')
+    parser.add_argument('--propagation',choices=['direct','specular','diffuse-angular','diffuse-surface'],default='specular')
     args=parser.parse_args()
-    print(prepare(args.output,address=args.address))
+    print(prepare(args.output,address=args.address,propagation=args.propagation))
 
 
 if __name__=='__main__':

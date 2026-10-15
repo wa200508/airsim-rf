@@ -10,9 +10,13 @@ def validate_inputs(config_path):
     from hashlib import sha256
     import numpy as np
     from .terrain import scene_provenance
+    from .scenario import propagation_options
+    from .sdr import PlutoSDRProfile
+    import re
     path=Path(config_path).resolve();config=json.loads(path.read_text())
     local=lambda name: (path.parent/name).resolve()
-    profile=config['receiver_profile'];rate=float(profile['sample_rate_hz'])
+    options=propagation_options(config)
+    profile=config['receiver_profile'];rate=PlutoSDRProfile(**profile).sample_rate_hz
     if not np.isfinite(rate) or rate <= 0:
         raise ValueError('Positive finite sample rate required')
     config_dir=local(config['sim_config'])
@@ -21,6 +25,13 @@ def validate_inputs(config_path):
         raise ValueError(f'Missing ProjectAirSim scene configuration: {scene}')
     radios=config['radios'];sources={}
     for name,radio in radios.items():
+        if not re.fullmatch(r'[A-Za-z0-9][A-Za-z0-9_-]*',name):
+            raise ValueError('Radio IDs must use letters, digits, underscores or hyphens')
+        if not isinstance(radio.get('robot'),str) or not radio['robot'].strip():
+            raise ValueError(f'{name}: robot name is required')
+        mount=np.asarray(radio.get('mount_body_m',[0,0,0]),dtype=float)
+        if mount.shape!=(3,) or not np.isfinite(mount).all():
+            raise ValueError(f'{name}: mount_body_m must contain three finite coordinates')
         if 'waveform_npy' not in radio:
             continue
         waveform=local(radio['waveform_npy']);values=np.load(waveform,allow_pickle=False)
@@ -33,14 +44,14 @@ def validate_inputs(config_path):
             'signal_seconds':len(values)/rate,'mean_sample_power':float(np.mean(abs(values)**2))}
     if not sources or len(sources)==len(radios):
         raise ValueError('At least one transmitter and receiver required')
-    return {'configuration_sha256':sha256(path.read_bytes()).hexdigest(),
+    return {'propagation_options':options, 'configuration_sha256':sha256(path.read_bytes()).hexdigest(),
         'rf_scene':scene_provenance(local(config['rf_scene'])),
         'sim_config_sha256':{str(p.relative_to(config_dir)):sha256(p.read_bytes()).hexdigest() for p in config_dir.rglob('*.json*')},
         'waveforms':sources}
 
 
 def record(world, robots, receiver, output, *, updates, advance_ns, max_samples,
-           mounts_body_m=None, provenance=None):
+           mounts_body_m=None, provenance=None, on_capture=None):
     """Write contiguous ci16_le captures; checkpoint metadata after every update."""
     from .sdr_bridge import AirSimSDRBridge
     if not receiver.continuous:
@@ -57,7 +68,7 @@ def record(world, robots, receiver, output, *, updates, advance_ns, max_samples,
         'captures': [], 'annotations': []} for name in offsets}
     manifest = {'status': 'running', 'scope': 'live_airsim_rf_recording',
         'sample_rate_hz': receiver.profile.sample_rate_hz,
-        'timing_includes': 'physics advance/RPC, snapshot, RF capture, data and metadata writes; no fsync',
+        'timing_includes': 'physics advance/RPC, snapshot, RF capture, data and metadata writes, synchronous on_capture callback; no fsync',
         'rows': rows, 'provenance': provenance or {}}
     def checkpoint():
         for name, value in metadata.items():
@@ -88,6 +99,9 @@ def record(world, robots, receiver, output, *, updates, advance_ns, max_samples,
                    'samples_per_receiver': counts.pop()}
             rows.append(row)
             checkpoint()
+            if on_capture is not None:
+                for name, capture in captures.items():
+                    on_capture(name, capture)
             row['wall_ms'] = (perf_counter()-tick)*1000
         manifest['status'] = 'complete'
     except BaseException as error:
@@ -116,10 +130,34 @@ def main():
         parser.error('Counts and interval must be positive')
     if not args.check_config and args.output is None:
         parser.error('--output is required when recording')
-    input_provenance=validate_inputs(args.config)
     if args.check_config:
+        input_provenance=validate_inputs(args.config)
         print(json.dumps(input_provenance,indent=2))
         return
+    result = run(args.config, args.output, updates=args.updates, advance_ns=args.advance_ns,
+        max_samples=args.max_samples, pascal_compat=args.pascal_compat)
+    print(json.dumps({k: v for k, v in result.items() if k != 'rows'}, indent=2))
+
+
+def run(config_path, output, *, updates=10, advance_ns=10_000_000,
+        max_samples=2_000_000, pascal_compat=False, on_capture=None):
+    """Load a scenario, connect/step ProjectAirSim, record and optionally process I/Q.
+
+    on_capture(receiver_id, SDRCapture) runs synchronously after each window is
+    written. Exceptions stop the run and mark the manifest failed. The simulator
+    is left paused. This owns the simulator's stepping; do not run another client
+    that advances or reloads this world concurrently.
+    """
+    from types import SimpleNamespace
+    if min(updates, advance_ns, max_samples) < 1:
+        raise ValueError('Counts and interval must be positive')
+    if on_capture is not None and not callable(on_capture):
+        raise ValueError('on_capture must be callable')
+    args=SimpleNamespace(config=Path(config_path), output=Path(output), updates=updates,
+        advance_ns=advance_ns, max_samples=max_samples, pascal_compat=pascal_compat)
+    if args.output.exists():
+        raise ValueError(f'Output already exists; choose a new recording directory: {args.output}')
+    input_provenance=validate_inputs(args.config)
     config = json.loads(args.config.read_text())
     import mitsuba as mi
     mi.set_variant('cuda_ad_mono_polarized')
@@ -161,15 +199,15 @@ def main():
                     origin, boundary='zero'), transmit_power_w=radio['transmit_power_w'],
                     baseband_frequency_bounds_hz=tuple(radio['baseband_frequency_bounds_hz']))
         receiver = SDRNetworkReceiver(scene, emitters, profile, renderer='basis-cuda',
-            continuous=True, samples_per_link=config.get('samples_per_link', 1028))
+            continuous=True, **input_provenance['propagation_options'])
         mounts = {n: r.get('mount_body_m', [0, 0, 0]) for n, r in config['radios'].items()}
         result = record(world, robots, receiver, args.output, updates=args.updates,
-            advance_ns=args.advance_ns, max_samples=args.max_samples, mounts_body_m=mounts,
+            advance_ns=args.advance_ns, max_samples=args.max_samples, mounts_body_m=mounts, on_capture=on_capture,
             provenance={'inputs':input_provenance, 'configuration': config, 'propagation_backend': mi.variant(),
                 'renderer': 'basis-cuda', 'pascal_compat': args.pascal_compat,
                 'sionna_rt': rt.__version__, 'mitsuba': mi.__version__,
                 'drjit': dr.__version__, 'cupy': cp.__version__})
-        print(json.dumps({k: v for k, v in result.items() if k != 'rows'}, indent=2))
+        return result
     finally:
         client.disconnect()
 

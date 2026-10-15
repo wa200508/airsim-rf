@@ -153,3 +153,43 @@ def test_check_config_cli_does_not_require_recording_output(tmp_path, monkeypatc
         main()
     assert error.value.code==2
     assert '--output is required when recording' in capsys.readouterr().err
+
+
+def test_recording_reader_and_callback_preserve_samples_times_and_scaling(tmp_path):
+    from airsim_rf.recording import iter_iq_blocks
+    world=TickWorld();robots,receiver,_=fixture(world);seen=[]
+    record(world,robots,receiver,tmp_path/'run',updates=2,advance_ns=10000000,max_samples=100000,
+           on_capture=lambda name,cap:seen.append((name,cap.sim_time_ns,cap.adc_codes.copy())))
+    blocks=list(iter_iq_blocks(tmp_path/'run','rx'))
+    assert len(blocks)==len(seen)==2
+    assert [b.sample_start for b in blocks]==[0,24000]
+    for block,event in zip(blocks,seen):
+        assert block.sim_time_ns==event[1]
+        assert block.samples.dtype==np.complex64
+        np.testing.assert_allclose(block.samples,.123-.456j,rtol=1e-6)
+    raw=list(iter_iq_blocks(tmp_path/'run','rx',units='adc_codes'))
+    np.testing.assert_array_equal(raw[0].samples,123-456j)
+    path=tmp_path/'run/rx.sigmf-data';path.write_bytes(path.read_bytes()[:-4])
+    with pytest.raises(ValueError,match='byte count'):
+        list(iter_iq_blocks(tmp_path/'run','rx'))
+
+
+def test_callback_failure_marks_saved_recording_failed(tmp_path):
+    from airsim_rf.recording import iter_iq_blocks
+    world=TickWorld();robots,receiver,_=fixture(world)
+    def fail(name,capture):raise RuntimeError('processor failed')
+    with pytest.raises(RuntimeError,match='processor failed'):
+        record(world,robots,receiver,tmp_path/'run',updates=2,advance_ns=10000000,max_samples=100000,on_capture=fail)
+    assert (tmp_path/'run/rx.sigmf-data').stat().st_size==24000*4
+    with pytest.raises(ValueError,match='completed'):
+        list(iter_iq_blocks(tmp_path/'run','rx'))
+
+
+def test_propagation_choices_and_invalid_configuration():
+    from airsim_rf.scenario import propagation_options
+    assert propagation_options({})['surface_sampling'] is False
+    assert propagation_options({'propagation':{'mode':'direct'}})['max_depth']==0
+    assert propagation_options({'propagation':{'mode':'specular'}})['path_solver']=='single-bounce'
+    assert propagation_options({'propagation':{'mode':'diffuse-surface','samples_per_link':4096}})['surface_sampling']
+    for value in ({'mode':'unknown'},{'samples_per_link':True},{'seed':-1},{'typo':1}):
+        with pytest.raises(ValueError):propagation_options({'propagation':value})
