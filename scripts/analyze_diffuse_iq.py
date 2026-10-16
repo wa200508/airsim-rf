@@ -35,14 +35,16 @@ def analyze(directory, *, inject_reset=False):
     manifest=json.loads((directory/'capture/manifest.json').read_text())
     channels=json.loads((directory/'channels.json').read_text())
     p=manifest['provenance'];rows=manifest['rows'];fs=manifest['sample_rate_hz']
+    metadata=json.loads((directory/'capture/rx0.sigmf-meta').read_text())
     if len(rows)!=len(channels) or len(rows)<2:
         raise ValueError('At least two aligned channel windows required')
     if p['noise_enabled']:
         raise ValueError('Deterministic reference requires receiver noise disabled')
     sos=np.asarray(p['filter_sos']);state=np.zeros((len(sos),2),dtype=complex)
-    references=[];observations=[];counts=[]
+    references=[];observations=[];counts=[];scales=[]
     for index,(row,channel,block) in enumerate(zip(rows,channels,iter_iq_blocks(directory/'capture'))):
         count=len(block.samples);counts.append(count)
+        scales.append(np.full(count,metadata['captures'][index]['airsim_rf:volts_per_count']))
         signal=cw_reference(channel,count,fs,p['tone_hz'],
             (row['sim_time_ns']-p['waveform_origin_ns'])*1e-9,
             np.sqrt(p['impedance_ohm']*p['transmit_power_w']))
@@ -59,6 +61,11 @@ def analyze(directory, *, inject_reset=False):
         if energy==0:raise ValueError('Reference has no energy for relative-error qualification')
         return float(np.linalg.norm(observed[indices]-reference[indices])/energy)
     whole=error(slice(None));boundary=error(edges)
+    scale=np.concatenate(scales)
+    components=lambda x:np.column_stack((x.real,x.imag))
+    code_error=components(observed-reference)/scale[:,None]
+    quantized=np.clip(np.rint(components(reference)/scale[:,None]),-2048,2047)
+    observed_codes=np.rint(components(observed)/scale[:,None])
     checks={'whole_iq_nrmse_below_1percent':whole<.01,
             'boundary_iq_nrmse_below_1percent':boundary<.01}
     if inject_reset:
@@ -67,6 +74,9 @@ def analyze(directory, *, inject_reset=False):
     return {'status':'passed' if all(checks.values()) else 'failed','checks':checks,
         'scope':'injected pi reset rejection' if inject_reset else 'moving multipath CW rendering, continuous filtering and ADC readback; shared traced paths',
         'whole_iq_nrmse':whole,'boundary_iq_nrmse':boundary,
+        'max_component_error_adc_counts':float(np.max(abs(code_error))),
+        'fraction_components_matching_reference_adc_codes':float(np.mean(quantized==observed_codes)),
+        'reference_rms_adc_counts':float(np.sqrt(np.mean(abs(reference/scale)**2))),
         'path_count_min':min(len(c['delay_s']) for c in channels),
         'path_count_max':max(len(c['delay_s']) for c in channels),
         'complex_samples':sum(counts),'signal_seconds_per_receiver':sum(counts)/fs,

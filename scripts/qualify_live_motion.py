@@ -89,14 +89,14 @@ async def run(args):
             (args.output/'screen.ply').write_text('ply\nformat ascii 1.0\nelement vertex 4\nproperty float x\nproperty float y\nproperty float z\nelement face 2\nproperty list uchar int vertex_indices\nend_header\n0 -0.75 0\n0 -0.65 0\n0 -0.65 30\n0 -0.75 30\n3 0 1 2\n3 0 2 3\n')
             rf_scene.write_text('<scene version="2.1.0"><bsdf type="radio-material" id="screen-material"><float name="relative_permittivity" value="5"/></bsdf><shape type="ply" id="screen"><string name="filename" value="screen.ply"/><ref id="screen-material" name="bsdf"/></shape></scene>')
         scene=rt.load_scene(str(rf_scene))
-        scene.tx_array=rt.PlanarArray(num_rows=1,num_cols=1,pattern='iso',polarization='V')
-        scene.rx_array=rt.PlanarArray(num_rows=1,num_cols=1,pattern='iso',polarization='V')
+        scene.tx_array=rt.PlanarArray(num_rows=1,num_cols=1,pattern=args.antenna_pattern,polarization='V')
+        scene.rx_array=rt.PlanarArray(num_rows=1,num_cols=1,pattern=args.antenna_pattern,polarization='V')
         profile=PlutoSDRProfile(noise_enabled=False);scene.frequency=profile.carrier_hz
         scene.add(rt.Transmitter('tx0',position=[-20,0,20]));scene.add(rt.Receiver('rx0',position=[20,0,20]))
         # One second of history/lookahead, avoiding an artificial waveform onset.
         values=np.exp(2j*np.pi*frequency*np.arange(4_000_000)/fs)
         emitter=SDREmitter(SampledWaveform(values,fs,origin-1_000_000_000,boundary='zero'),
-            transmit_power_w=.01,baseband_frequency_bounds_hz=(frequency,frequency))
+            transmit_power_w=args.transmit_power_w,baseband_frequency_bounds_hz=(frequency,frequency))
         receiver=SDRNetworkReceiver(scene,{'tx0':emitter},profile,renderer='basis-cuda',
             continuous=True,max_depth=int(args.reflection or bool(args.diffuse)),
             samples_per_link=args.samples_per_link if args.diffuse else 2,
@@ -132,7 +132,7 @@ async def run(args):
             'source_robot_sha256':sha256(source.read_bytes()).hexdigest(),
             'backend':mi.variant(),'renderer':'basis-cuda','sionna_rt':rt.__version__,
             'max_depth':int(args.reflection or bool(args.diffuse)),
-            'diffuse_mode':args.diffuse,'samples_per_link':args.samples_per_link if args.diffuse else 2,'antenna':'isotropic V','transmit_power_w':.01,
+            'diffuse_mode':args.diffuse,'samples_per_link':args.samples_per_link if args.diffuse else 2,'antenna':args.antenna_pattern+' V','transmit_power_w':args.transmit_power_w,
             'requested_window_ms':args.window_ms,'filter_sos':receiver.sos.tolist(),
             'impedance_ohm':profile.impedance_ohm,
             'runtime_source_commit':subprocess.check_output(['git','-C',str(args.runtime_source),'rev-parse','HEAD'],text=True).strip(),
@@ -217,9 +217,12 @@ if __name__=='__main__':
     modes.add_argument('--turning-mounts',action='store_true',help='Body-frame velocity with yaw rates and nonzero radio offsets; requires --moving-receiver')
     modes.add_argument('--occlusion-test',action='store_true',help='Direct path crosses RF-only screen; requires --moving-receiver')
     modes.add_argument('--diffuse',choices=('angular','surface'),help='Include first-order diffuse paths; analyze with analyze_diffuse_iq.py')
+    parser.add_argument('--transmit-power-w',type=float,default=.01)
+    parser.add_argument('--antenna-pattern',choices=('iso','tr38901'),default='iso')
     parser.add_argument('--samples-per-link',type=int,default=1024)
     modes.add_argument('--reflection',action='store_true',help='Include the specular ground path, without diffuse scattering')
     parser.add_argument('--moving-receiver',action='store_true',help='Fly RX with opposite north velocity and +1 m/s east command')
     args=parser.parse_args()
     if (args.occlusion_test or args.turning_mounts) and not args.moving_receiver:parser.error('--occlusion-test/--turning-mounts requires --moving-receiver')
+    if not np.isfinite(args.transmit_power_w) or args.transmit_power_w<=0:parser.error('--transmit-power-w must be finite and positive')
     asyncio.run(run(args))

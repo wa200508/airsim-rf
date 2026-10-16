@@ -1,0 +1,257 @@
+{
+  "status": "passed",
+  "checks": {
+    "gain_error_below_0_01dB": true,
+    "gain_changes_over_0_5dB": true,
+    "fixed_orientation_rejected_over_0_5dB": true
+  },
+  "metrics": {
+    "max_gain_error_db": 1.1539673860028188e-05,
+    "observed_gain_change_db": 6.860914714584162,
+    "fixed_orientation_rms_error_db": 12.705691979805
+  },
+  "scope": "direct-path directional/isotropic gain ratio under matched turning poses; shared polarization",
+  "signal_seconds_per_receiver": 0.48,
+  "rows": [
+    {
+      "sim_time_ns": 2001000000,
+      "expected_gain_db": -23.28927264526722,
+      "measured_gain_db": -23.28927042717976,
+      "fixed_orientation_gain_db": -14.005818703016683
+    },
+    {
+      "sim_time_ns": 2013000000,
+      "expected_gain_db": -23.439193857404952,
+      "measured_gain_db": -23.439186024237472,
+      "fixed_orientation_gain_db": -14.005899926445467
+    },
+    {
+      "sim_time_ns": 2025000000,
+      "expected_gain_db": -23.590468987678975,
+      "measured_gain_db": -23.590462247457005,
+      "fixed_orientation_gain_db": -14.005981572364044
+    },
+    {
+      "sim_time_ns": 2037000000,
+      "expected_gain_db": -23.743098280539023,
+      "measured_gain_db": -23.743090597455097,
+      "fixed_orientation_gain_db": -14.006063644130599
+    },
+    {
+      "sim_time_ns": 2049000000,
+      "expected_gain_db": -23.89708093845388,
+      "measured_gain_db": -23.89707735495442,
+      "fixed_orientation_gain_db": -14.006146132683323
+    },
+    {
+      "sim_time_ns": 2061000000,
+      "expected_gain_db": -24.05242001131358,
+      "measured_gain_db": -24.052412857456467,
+      "fixed_orientation_gain_db": -14.006229018023049
+    },
+    {
+      "sim_time_ns": 2073000000,
+      "expected_gain_db": -24.20911812177512,
+      "measured_gain_db": -24.20910912085111,
+      "fixed_orientation_gain_db": -14.00631230799149
+    },
+    {
+      "sim_time_ns": 2085000000,
+      "expected_gain_db": -24.367170920681815,
+      "measured_gain_db": -24.367167239711517,
+      "fixed_orientation_gain_db": -14.006395987652294
+    },
+    {
+      "sim_time_ns": 2097000000,
+      "expected_gain_db": -24.52659022079071,
+      "measured_gain_db": -24.52658963954061,
+      "fixed_orientation_gain_db": -14.00648004885544
+    },
+    {
+      "sim_time_ns": 2109000000,
+      "expected_gain_db": -24.6873739912477,
+      "measured_gain_db": -24.687369014895882,
+      "fixed_orientation_gain_db": -14.0065644901924
+    },
+    {
+      "sim_time_ns": 2121000000,
+      "expected_gain_db": -24.849520956689503,
+      "measured_gain_db": -24.84951654768929,
+      "fixed_orientation_gain_db": -14.006649305058698
+    },
+    {
+      "sim_time_ns": 2133000000,
+      "expected_gain_db": -25.01302694526021,
+      "measured_gain_db": -25.013025946415954,
+      "fixed_orientation_gain_db": -14.006734471043224
+    },
+    {
+      "sim_time_ns": 2145000000,
+      "expected_gain_db": -25.17790172202191,
+      "measured_gain_db": -25.177907608267425,
+      "fixed_orientation_gain_db": -14.006819999426003
+    },
+    {
+      "sim_time_ns": 2157000000,
+      "expected_gain_db": -25.344140471793548,
+      "measured_gain_db": -25.34414604699533,
+      "fixed_orientation_gain_db": -14.006905871449046
+    },
+    {
+      "sim_time_ns": 2169000000,
+      "expected_gain_db": -25.511753158518225,
+      "measured_gain_db": -25.51176087528241,
+      "fixed_orientation_gain_db": -14.006992078328064
+    },
+    {
+      "sim_time_ns": 2181000000,
+      "expected_gain_db": -25.680734862976937,
+      "measured_gain_db": -25.680744963844838,
+      "fixed_orientation_gain_db": -14.007078616305954
+    },
+    {
+      "sim_time_ns": 2193000000,
+      "expected_gain_db": -25.851086830543,
+      "measured_gain_db": -25.85108965658856,
+      "fixed_orientation_gain_db": -14.007165486242904
+    },
+    {
+      "sim_time_ns": 2205000000,
+      "expected_gain_db": -26.02280715505895,
+      "measured_gain_db": -26.0228163683179,
+      "fixed_orientation_gain_db": -14.007252670761167
+    },
+    {
+      "sim_time_ns": 2217000000,
+      "expected_gain_db": -26.195895480462816,
+      "measured_gain_db": -26.195907020136676,
+      "fixed_orientation_gain_db": -14.007340167659247
+    },
+    {
+      "sim_time_ns": 2229000000,
+      "expected_gain_db": -26.370365181636,
+      "measured_gain_db": -26.370368724047964,
+      "fixed_orientation_gain_db": -14.007427981242877
+    },
+    {
+      "sim_time_ns": 2241000000,
+      "expected_gain_db": -26.546207885440815,
+      "measured_gain_db": -26.546214139525112,
+      "fixed_orientation_gain_db": -14.007516086067682
+    },
+    {
+      "sim_time_ns": 2253000000,
+      "expected_gain_db": -26.72342568146616,
+      "measured_gain_db": -26.72343113820572,
+      "fixed_orientation_gain_db": -14.007604476003362
+    },
+    {
+      "sim_time_ns": 2265000000,
+      "expected_gain_db": -26.902025155049174,
+      "measured_gain_db": -26.90203257752129,
+      "fixed_orientation_gain_db": -14.00769316177303
+    },
+    {
+      "sim_time_ns": 2277000000,
+      "expected_gain_db": -27.08200411119786,
+      "measured_gain_db": -27.082010291700996,
+      "fixed_orientation_gain_db": -14.007782120279959
+    },
+    {
+      "sim_time_ns": 2289000000,
+      "expected_gain_db": -27.263363831334154,
+      "measured_gain_db": -27.26336741433809,
+      "fixed_orientation_gain_db": -14.007871353764534
+    },
+    {
+      "sim_time_ns": 2301000000,
+      "expected_gain_db": -27.4461058647136,
+      "measured_gain_db": -27.446107716275424,
+      "fixed_orientation_gain_db": -14.007960870513699
+    },
+    {
+      "sim_time_ns": 2313000000,
+      "expected_gain_db": -27.6302276523623,
+      "measured_gain_db": -27.63022342272349,
+      "fixed_orientation_gain_db": -14.008050640446687
+    },
+    {
+      "sim_time_ns": 2325000000,
+      "expected_gain_db": -27.815733397010547,
+      "measured_gain_db": -27.81573509509922,
+      "fixed_orientation_gain_db": -14.008140674530813
+    },
+    {
+      "sim_time_ns": 2337000000,
+      "expected_gain_db": -28.002623926404244,
+      "measured_gain_db": -28.002630646929422,
+      "fixed_orientation_gain_db": -14.008230955601023
+    },
+    {
+      "sim_time_ns": 2349000000,
+      "expected_gain_db": -28.19090655512536,
+      "measured_gain_db": -28.1909171362976,
+      "fixed_orientation_gain_db": -14.008321493939778
+    },
+    {
+      "sim_time_ns": 2361000000,
+      "expected_gain_db": -28.38057467406179,
+      "measured_gain_db": -28.380582206271644,
+      "fixed_orientation_gain_db": -14.008412275108455
+    },
+    {
+      "sim_time_ns": 2373000000,
+      "expected_gain_db": -28.571632939501075,
+      "measured_gain_db": -28.571633147632426,
+      "fixed_orientation_gain_db": -14.008503285771358
+    },
+    {
+      "sim_time_ns": 2385000000,
+      "expected_gain_db": -28.764082273149285,
+      "measured_gain_db": -28.76408687319372,
+      "fixed_orientation_gain_db": -14.008594534832369
+    },
+    {
+      "sim_time_ns": 2397000000,
+      "expected_gain_db": -28.95791982154794,
+      "measured_gain_db": -28.95791895567635,
+      "fixed_orientation_gain_db": -14.008686029781838
+    },
+    {
+      "sim_time_ns": 2409000000,
+      "expected_gain_db": -29.153151846577636,
+      "measured_gain_db": -29.15314849837727,
+      "fixed_orientation_gain_db": -14.008777738779123
+    },
+    {
+      "sim_time_ns": 2421000000,
+      "expected_gain_db": -29.349774305283297,
+      "measured_gain_db": -29.34977224813999,
+      "fixed_orientation_gain_db": -14.008869677038643
+    },
+    {
+      "sim_time_ns": 2433000000,
+      "expected_gain_db": -29.547790841286652,
+      "measured_gain_db": -29.547793426863063,
+      "fixed_orientation_gain_db": -14.008961824857959
+    },
+    {
+      "sim_time_ns": 2445000000,
+      "expected_gain_db": -29.747190688804622,
+      "measured_gain_db": -29.747188630217288,
+      "fixed_orientation_gain_db": -14.00905419963759
+    },
+    {
+      "sim_time_ns": 2457000000,
+      "expected_gain_db": -29.947986763173688,
+      "measured_gain_db": -29.947985461696128,
+      "fixed_orientation_gain_db": -14.00914677775971
+    },
+    {
+      "sim_time_ns": 2469000000,
+      "expected_gain_db": -30.150183495664535,
+      "measured_gain_db": -30.15018514176392,
+      "fixed_orientation_gain_db": -14.009239560699157
+    }
+  ]
+}

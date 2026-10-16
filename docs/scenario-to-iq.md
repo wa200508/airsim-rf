@@ -176,6 +176,10 @@ a promise of real-time delivery.
 `capture.input_iq_volts` is the pre-ADC filtered signal; `adc_iq_volts` is the
 quantized/reconstructed signal; `adc_codes` is an `(N, 2)` signed int16 I,Q array.
 Use the stage appropriate to your experiment and report which one you used.
+A weak signal can have large relative quantization error without clipping: the
+[directional-flight check](../results/reviews/directional-turns-20261015/REPORT.md)
+measured about 5% I/Q error at eight RMS ADC counts. Inspect signal level in
+counts as well as clipping; do not equate no clipping with adequate resolution.
 
 If your application already owns the simulator, RF receiver and flight control,
 use `airsim_rf.live.record(world, robots, receiver, ..., on_capture=process)`

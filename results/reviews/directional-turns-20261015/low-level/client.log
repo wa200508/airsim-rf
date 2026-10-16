@@ -1,0 +1,51 @@
+00:13:45:997 [INFO] Connecting to simulation server at 127.0.0.1
+00:13:45:999 [INFO] Connection opened.
+00:13:45:999 [INFO] Loading scene config: scene.jsonc
+00:13:46:606 [INFO] Getting the list of available topic info from the sim server...
+00:13:46:616 [INFO] Successfully received topic info list.
+00:13:46:617 [INFO] World object updated for the loaded scene '/Sim/RFMovingQualification'. Note: Any previous Drone object instances may no longer be valid.
+00:13:46:617 [INFO] Trajectory 'null_trajectory' imported successfully.
+00:13:46:617 [INFO] Initalizing Drone 'Drone1'...
+00:13:46:617 [INFO] -------------------------------------------------
+00:13:46:617 [INFO] The following topics can be subscribed to for robot 'Drone1':
+00:13:46:617 [INFO]     sensors["IMU1"]["imu_kinematics"]
+00:13:46:617 [INFO]     sensors["GPS"]["gps"]
+00:13:46:617 [INFO]     sensors["Barometer"]["barometer"]
+00:13:46:618 [INFO]     sensors["Magnetometer"]["magnetometer"]
+00:13:46:618 [INFO]     robot_info["actual_pose"]
+00:13:46:618 [INFO]     robot_info["collision_info"]
+00:13:46:618 [INFO]     robot_info["rotor_info"]
+00:13:46:618 [INFO] -------------------------------------------------
+00:13:46:618 [INFO] Drone 'Drone1' initialized for World scene '/Sim/RFMovingQualification'
+00:13:46:618 [INFO] Initalizing Drone 'Drone2'...
+00:13:46:618 [INFO] -------------------------------------------------
+00:13:46:618 [INFO] The following topics can be subscribed to for robot 'Drone2':
+00:13:46:618 [INFO]     sensors["IMU1"]["imu_kinematics"]
+00:13:46:618 [INFO]     sensors["GPS"]["gps"]
+00:13:46:618 [INFO]     sensors["Barometer"]["barometer"]
+00:13:46:618 [INFO]     sensors["Magnetometer"]["magnetometer"]
+00:13:46:618 [INFO]     robot_info["actual_pose"]
+00:13:46:618 [INFO]     robot_info["collision_info"]
+00:13:46:618 [INFO]     robot_info["rotor_info"]
+00:13:46:618 [INFO] -------------------------------------------------
+00:13:46:618 [INFO] Drone 'Drone2' initialized for World scene '/Sim/RFMovingQualification'
+{
+  "status": "passed",
+  "checks": {
+    "motion_exceeds_half_meter": true,
+    "no_adc_clipping": true,
+    "flight_command_completed": true,
+    "receiver_motion_exceeds_half_meter": true,
+    "receiver_has_lateral_motion": true,
+    "doppler_error_below_half_hz": true
+  },
+  "scope": "moving Fast Physics pose integration and within-window direct-path Doppler",
+  "signal_seconds_per_receiver": 0.48,
+  "wall_seconds_per_signal_second": 14.75738112083273,
+  "tx_displacement_m": 1.12890117517931,
+  "maximum_absolute_doppler_error_hz": 0.2608363433213512,
+  "rx_displacement_m": 1.284463024659282,
+  "tolerance_hz": 0.5
+}
+00:13:58:728 [INFO] Disconnecting from simulation server...
+00:13:58:797 [INFO] Disconnected.

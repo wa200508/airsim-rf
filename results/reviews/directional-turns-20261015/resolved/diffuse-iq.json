@@ -1,0 +1,19 @@
+{
+  "status": "passed",
+  "checks": {
+    "whole_iq_nrmse_below_1percent": true,
+    "boundary_iq_nrmse_below_1percent": true
+  },
+  "scope": "moving multipath CW rendering, continuous filtering and ADC readback; shared traced paths",
+  "whole_iq_nrmse": 0.005031446735835845,
+  "boundary_iq_nrmse": 0.00503123713921253,
+  "max_component_error_adc_counts": 0.5256983954701973,
+  "fraction_components_matching_reference_adc_codes": 0.9880671875,
+  "reference_rms_adc_counts": 81.25641659936602,
+  "path_count_min": 1,
+  "path_count_max": 1,
+  "complex_samples": 960000,
+  "signal_seconds_per_receiver": 0.48,
+  "diffuse_mode": null,
+  "boundary_samples_each_side": 128
+}

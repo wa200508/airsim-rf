@@ -93,8 +93,9 @@ lateral RX velocity. A [moving-I/Q follow-up](../results/reviews/moving-iq-20261
 checks fixed-surface diffuse rendering and direct-path disappearance/return behind
 an RF-only screen. A [turning-mount check](../results/reviews/turning-mounts-20261015/REPORT.md)
 also passes for two yawing drones with nonzero radio offsets and direct paths.
-General multipath transitions, directional-pattern rotation and Unreal mesh
-interoperability remain unqualified.
+[Directional pattern rotation](../results/reviews/directional-turns-20261015/REPORT.md)
+also passes a matched-flight gain check. General multipath transitions and
+Unreal mesh interoperability remain unqualified.
 The measured workloads are slower than real time; controlled stepping does not
 promise live wall-clock streaming.
 
