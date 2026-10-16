@@ -10,12 +10,12 @@ def validate_inputs(config_path):
     from hashlib import sha256
     import numpy as np
     from .terrain import scene_provenance
-    from .scenario import propagation_options
+    from .scenario import propagation_options, antenna_options
     from .sdr import PlutoSDRProfile
     import re
     path=Path(config_path).resolve();config=json.loads(path.read_text())
     local=lambda name: (path.parent/name).resolve()
-    options=propagation_options(config)
+    options=propagation_options(config);antennas=antenna_options(config)
     profile=config['receiver_profile'];rate=PlutoSDRProfile(**profile).sample_rate_hz
     if not np.isfinite(rate) or rate <= 0:
         raise ValueError('Positive finite sample rate required')
@@ -44,7 +44,7 @@ def validate_inputs(config_path):
             'signal_seconds':len(values)/rate,'mean_sample_power':float(np.mean(abs(values)**2))}
     if not sources or len(sources)==len(radios):
         raise ValueError('At least one transmitter and receiver required')
-    return {'propagation_options':options, 'configuration_sha256':sha256(path.read_bytes()).hexdigest(),
+    return {'propagation_options':options, 'antenna_options':antennas, 'configuration_sha256':sha256(path.read_bytes()).hexdigest(),
         'rf_scene':scene_provenance(local(config['rf_scene'])),
         'sim_config_sha256':{str(p.relative_to(config_dir)):sha256(p.read_bytes()).hexdigest() for p in config_dir.rglob('*.json*')},
         'waveforms':sources}
@@ -64,6 +64,7 @@ def record(world, robots, receiver, output, *, updates, advance_ns, max_samples,
     rows, offsets = [], {name: 0 for name in receiver.scene.receivers}
     metadata = {name: {'global': {'core:datatype': 'ci16_le',
         'core:version': '1.2.6', 'core:sample_rate': receiver.profile.sample_rate_hz,
+        'core:extensions': [{'name':'airsim_rf','version':'0.1.0','optional':True}],
         'core:description': 'Simulated signed 12-bit SDR I/Q in int16 containers; uncalibrated'},
         'captures': [], 'annotations': []} for name in offsets}
     manifest = {'status': 'running', 'scope': 'live_airsim_rf_recording',
@@ -176,8 +177,8 @@ def run(config_path, output, *, updates=10, advance_ns=10_000_000,
     def local(name):
         return (args.config.parent/name).resolve()
     scene = rt.load_scene(str(local(config['rf_scene'])))
-    scene.tx_array = rt.PlanarArray(num_rows=1, num_cols=1, pattern='hw_dipole', polarization='V')
-    scene.rx_array = rt.PlanarArray(num_rows=1, num_cols=1, pattern='hw_dipole', polarization='V')
+    scene.tx_array = rt.PlanarArray(**input_provenance['antenna_options']['tx'])
+    scene.rx_array = rt.PlanarArray(**input_provenance['antenna_options']['rx'])
     profile = PlutoSDRProfile(**config.get('receiver_profile', {}))
     scene.frequency = profile.carrier_hz
     client = ProjectAirSimClient(address=config['address'])

@@ -29,6 +29,14 @@ editable packages. LLVM/system libraries must be available for propagation; see
 the [container recipe](#container) if using an isolated environment. No simulator
 is needed for the offline point-target example.
 
+## Read recordings without the simulator stack
+
+For an analysis-only environment, install `numpy` and `sigmf==1.13.0` and run
+`examples/process_sigmf.py` on a completed receiver metadata file. The full
+project dependency stack is unnecessary for that example. See the
+[scenario-to-I/Q guide](scenario-to-iq.md) for units, timestamps and raw-code
+scaling. The project test lock includes SigMF to check interoperability.
+
 ## Live CUDA dependencies
 
 The `live` extra declares CuPy and the optional ProjectAirSim client. CUDA-enabled

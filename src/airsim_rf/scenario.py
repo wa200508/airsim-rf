@@ -21,3 +21,22 @@ def propagation_options(config):
             'max_depth': 0 if mode == 'direct' else 1,
             'surface_sampling': mode == 'diffuse-surface',
             'samples_per_link': samples, 'seed': seed}
+
+
+def antenna_options(config):
+    """Single-element TX/RX arrays; omitted settings preserve half-wave dipoles."""
+    antennas=config.get('antennas',{})
+    if not isinstance(antennas,dict) or set(antennas)-{'tx','rx'}:
+        raise ValueError('antennas must contain only tx and rx objects')
+    result={}
+    for side in ('tx','rx'):
+        values=antennas.get(side,{})
+        if not isinstance(values,dict) or set(values)-{'pattern','polarization'}:
+            raise ValueError(f'antennas.{side} accepts pattern and polarization')
+        pattern=values.get('pattern','hw_dipole');polarization=values.get('polarization','V')
+        if pattern not in ('iso','dipole','hw_dipole','tr38901'):
+            raise ValueError(f'antennas.{side}.pattern must be iso, dipole, hw_dipole, or tr38901')
+        if polarization not in ('V','H'):
+            raise ValueError(f'antennas.{side}.polarization must be V or H (one channel)')
+        result[side]={'num_rows':1,'num_cols':1,'pattern':pattern,'polarization':polarization}
+    return result

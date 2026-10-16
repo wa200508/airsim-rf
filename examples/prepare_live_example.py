@@ -26,6 +26,7 @@ def prepare(output, *, address='127.0.0.1', propagation='specular'):
         'home-geo-point':{'latitude':47.641468,'longitude':-122.140165,'altitude':122.},
         'scene-type':'UnrealNative'},indent=2)+'\n')
     config={'address':address,'scene':'scene_rf.jsonc','sim_config':'sim_config','rf_scene':'rf_ground.xml',
+        'antennas':{'tx':{'pattern':'hw_dipole','polarization':'V'},'rx':{'pattern':'hw_dipole','polarization':'V'}},
         'receiver_profile':{'carrier_hz':915_000_000,'sample_rate_hz':fs,'rf_bandwidth_hz':1_000_000},
         'propagation':{'mode':propagation,'samples_per_link':4096 if propagation=='diffuse-surface' else 1028,'seed':42},'radios':{'tx0':{'robot':'Drone1','waveform_npy':'tx0.npy',
             'transmit_power_w':.0001,'baseband_frequency_bounds_hz':[frequency,frequency],'mount_body_m':[0,0,0]},

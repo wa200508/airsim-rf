@@ -222,3 +222,28 @@ def test_reader_rejects_mismatched_metadata(tmp_path):
     meta['captures'][1]['core:sample_start']+=1;path.write_text(json.dumps(meta))
     with pytest.raises(ValueError,match='offsets'):
         list(iter_iq_blocks(tmp_path/'run','rx'))
+
+
+def test_antenna_config_preserves_defaults_and_separates_tx_rx():
+    from airsim_rf.scenario import antenna_options
+    default=antenna_options({})
+    assert default['tx']['pattern']==default['rx']['pattern']=='hw_dipole'
+    configured=antenna_options({'antennas':{'tx':{'pattern':'tr38901','polarization':'H'}}})
+    assert configured['tx']['pattern']=='tr38901' and configured['tx']['polarization']=='H'
+    assert configured['rx']==default['rx']
+    for bad in ({'rx':{'polarization':'VH'}},{'tx':{'pattern':'bogus'}},{'rx':{'rows':2}},[],{'other':{}}):
+        with pytest.raises(ValueError):antenna_options({'antennas':bad})
+
+
+def test_recording_roundtrips_through_official_sigmf(tmp_path):
+    sigmf=pytest.importorskip('sigmf')
+    from airsim_rf.recording import iter_iq_blocks
+    world=TickWorld();robots,receiver,_=fixture(world);output=tmp_path/'capture'
+    record(world,robots,receiver,output,updates=2,advance_ns=10_000_000,max_samples=100000)
+    external=sigmf.fromfile(str(output/'rx.sigmf-meta'),autoscale=False)
+    external.validate()
+    assert external.get_global_field('core:extensions')==[{'name':'airsim_rf','version':'0.1.0','optional':True}]
+    for i,block in enumerate(iter_iq_blocks(output,'rx')):
+        raw=external.read_samples_in_capture(i)
+        np.testing.assert_array_equal(raw,np.full(len(raw),123-456j))
+        np.testing.assert_allclose(raw*.001,block.samples,rtol=2e-7)

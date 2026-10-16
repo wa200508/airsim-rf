@@ -19,3 +19,7 @@ Change the generated gRPC import to `from . import squall_rf_pb2 as squall__rf__
 so it works as part of the package. ProjectAirSim, Sionna RT and the optional
 native AMS SDK remain external dependencies with their own upstream licenses;
 their source pins and native image digests are recorded in `sources.json`.
+
+The optional analysis interoperability dependency [sigmf-python](https://github.com/sigmf/sigmf-python)
+is LGPL-3.0-or-later. It remains an external package; no SigMF library source is
+vendored here. The test lock includes it to check format compatibility.

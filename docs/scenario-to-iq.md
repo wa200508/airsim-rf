@@ -55,8 +55,8 @@ The output directory must be new. It contains:
 The starter places radios at RF (−20, 0, 20) and (20, 0, 20) m over z=0 ground.
 They are **stationary non-physics robots**: this is an integration example, not
 a demonstration of drone flight. Its source has 500,000 unit-power samples at
-2 MS/s: 0.25 s of a +150 kHz baseband tone. The carrier is 915 MHz. The recorder
-currently uses one vertically polarized half-wave dipole per radio.
+2 MS/s: 0.25 s of a +150 kHz baseband tone. The carrier is 915 MHz. The starter
+uses one vertically polarized half-wave dipole per radio.
 
 The generator now explicitly selects `specular`, a direct-plus-ground-reflection
 starter. Existing configurations without a propagation section retain the older
@@ -82,6 +82,22 @@ with 4,096 samples/link. That is a starting budget, **not a convergence guarante
 [power sensitivity](../results/reviews/diffuse-surface-20261012/REPORT.md) can be
 substantial. `samples_per_link` counts attempted diffuse samples, not guaranteed
 valid paths. It does not control the number of recorded I/Q samples.
+
+Set antennas independently for all TXs and all RXs:
+
+```json
+"antennas": {
+  "tx": {"pattern": "tr38901", "polarization": "V"},
+  "rx": {"pattern": "iso", "polarization": "V"}
+}
+```
+
+Patterns are `iso`, `dipole`, `hw_dipole` and `tr38901`; polarization is `V` or
+`H`. Omitted settings preserve `hw_dipole`/`V`. Each radio has one element and
+one polarization channel; per-radio mixed arrays and dual-polarized outputs are
+not exposed by this configuration. `tr38901` boresight is local +x, following
+robot attitude after coordinate conversion. `mount_body_m` offsets position; it
+does not specify an independent antenna pointing rotation.
 
 `--check-config` validates the receiver profile, propagation choices, local files,
 radio IDs, mount coordinates and finite waveforms without contacting a server.
@@ -142,6 +158,23 @@ For sample-relative time, use `n / fs`. Across blocks use
 `(epoch_ns - first_epoch_ns) * 1e-9 + n / fs`, subtracting integer timestamps
 **before** converting to seconds. Avoid converting a large absolute nanosecond
 epoch to floating point and then adding individual sample intervals.
+
+### Use the official SigMF reader without the simulator package
+
+A separate analysis environment only needs NumPy and `sigmf==1.13.0`:
+
+```bash
+python -m pip install numpy sigmf==1.13.0
+python examples/process_sigmf.py recordings/my-first-run/rx0.sigmf-meta
+```
+
+The example disables automatic integer normalization (`autoscale=False`), reads
+capture segments, and applies their volts-per-count values. This path is checked
+against the project reader using actual recordings. [Interoperability evidence](../results/reviews/sigmf-interop-20261015/REPORT.md).
+The [local extension specification](extensions/airsim_rf.sigmf-ext.md) defines
+simulator timestamps, voltage scaling and clipping fields. Core SigMF validation
+checks structure; it does not certify physical calibration or completeness of an
+in-progress capture. Use immutable completed recordings.
 
 ## 4. Process during capture
 

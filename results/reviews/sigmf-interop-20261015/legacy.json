@@ -1,0 +1,9 @@
+{
+  "status": "passed",
+  "sigmf_version": "1.13.0",
+  "receiver": "rx0",
+  "windows": 40,
+  "complex_samples": 960000,
+  "signal_seconds": 0.48,
+  "scope": "official SigMF core validation and raw-code/voltage/timestamp comparison; no external SDR application"
+}

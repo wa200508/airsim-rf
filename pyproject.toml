@@ -18,6 +18,7 @@ airsim-rf-coordinator = "airsim_rf.distributed.coordinator:main"
 airsim = ["projectairsim>=1.1.0"]
 live = ["projectairsim>=1.1.0", "cupy-cuda12x==13.6.0"]
 test = ["pytest>=8.3"]
+interop = ["sigmf==1.13.0"]
 
 [tool.setuptools.packages.find]
 where = ["src"]
