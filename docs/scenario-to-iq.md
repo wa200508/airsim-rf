@@ -26,7 +26,10 @@ space**. Buildings shown in AirSim do not automatically become RF obstructions.
 Keep geometry, origin, meters and scale aligned. Simulator poses use NED
 (north/east/down); RF coordinates use north/west/up: `(x, -y, -z)`.
 `mount_body_m` places a radio relative to its robot's body; rotation and angular
-velocity affect offset mounts. The simple starter has zero offsets.
+velocity affect offset mounts. The simple starter has zero offsets. A
+[turning-flight qualification](../results/reviews/turning-mounts-20261015/REPORT.md)
+checks nonzero mounts on two yawing drones against independently reconstructed
+positions, velocities and recorded direct-path I/Q.
 
 A radio ID such as `tx0` or `rx0` is your experiment's label. Its `robot` field
 names a robot in the simulator scene. Multiple radios may share a robot; one

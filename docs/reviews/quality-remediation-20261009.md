@@ -62,7 +62,7 @@ workloads and measured live behavior rather than additional tuning of this one
 terrain or reinterpreting renderer-only timings as full-system throughput.
 
 
-## Follow-up qualification checklist — updated 14 October 2026
+## Follow-up qualification checklist — updated 15 October 2026
 
 The twelve original findings above are closed. Subsequent live-workflow work has
 its own evidence and narrower qualification boundaries:
@@ -76,7 +76,7 @@ its own evidence and narrower qualification boundaries:
 | Moving diffuse paths | Investigation complete: [GPU replay audit](../../results/reviews/diffuse-stability-20261012/REPORT.md) found sliding sampled surface points and large phase changes despite repeatable caching. An [opt-in fixed-surface solver prototype](../../results/reviews/diffuse-surface-20261012/REPORT.md) now passes motion/power/mesh checks. [Live/SDR integration](../../results/reviews/iq-workflow-20261014/REPORT.md) now passes for stationary capture, callbacks and recording readback. [Moving fixed-surface I/Q](../../results/reviews/moving-iq-20261014/REPORT.md) now passes an independent coherent-sum/filter reference for two controlled drones, including a phase-reset negative control. Broader physical-model qualification remains open. |
 | Scenario assembly and I/Q access | Complete for the stationary starter: [walkthrough](../scenario-to-iq.md), explicit propagation choice, synchronous callback and CPU reader. Distributed SDR transport is not implemented. |
 | Occlusion and path births/deaths | Complete for one controlled direct-path case: [RF screen qualification](../../results/reviews/moving-iq-20261014/REPORT.md) matches analytic visibility and preserves receiver state through disappearance/return. Broader multipath transitions and matched Unreal obstruction geometry remain open. |
-| Explicit turn maneuvers | Open: test changing direction and nonzero mount offsets against measured angular/linear kinematics. |
+| Explicit turn maneuvers | Complete for a controlled two-drone direct-path case: [turning-mount qualification](../../results/reviews/turning-mounts-20261015/REPORT.md) checks nonzero TX/RX offsets against pose finite differences, path geometry and recorded I/Q. Directional patterns and broader multipath maneuvers remain open. |
 | Unreal mesh interoperability | Open: load/export a matching rendered world and demonstrate alignment; the standalone flat-ground Runtime cannot establish this. |
 
 These open entries are qualification gaps, not evidence that their implementations

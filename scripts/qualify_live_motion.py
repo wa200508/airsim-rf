@@ -67,10 +67,16 @@ async def run(args):
         tx=Drone(client,world,'Drone1');rx=Drone(client,world,'Drone2')
         tx.enable_api_control();tx.arm()
         command_origin=int(world.get_sim_time())
-        motion_task=await tx.move_by_velocity_async(v_north=args.velocity, v_east=0,v_down=0,duration=5.)
+        if args.turning_mounts:
+            motion_task=await tx.move_by_velocity_body_frame_async(v_forward=args.velocity,v_right=0,v_down=0,duration=5.,yaw_is_rate=True,yaw=.7)
+        else:
+            motion_task=await tx.move_by_velocity_async(v_north=args.velocity, v_east=0,v_down=0,duration=5.)
         if args.moving_receiver:
             rx.enable_api_control();rx.arm()
-            receiver_task=await rx.move_by_velocity_async(v_north=-args.velocity,v_east=1.,v_down=0,duration=5.)
+            if args.turning_mounts:
+                receiver_task=await rx.move_by_velocity_body_frame_async(v_forward=-args.velocity,v_right=1.,v_down=0,duration=5.,yaw_is_rate=True,yaw=-.5)
+            else:
+                receiver_task=await rx.move_by_velocity_async(v_north=-args.velocity,v_east=1.,v_down=0,duration=5.)
         # Advance two simulated seconds to settle the flight controller before RF capture.
         world.continue_until_sim_time(int(world.get_sim_time())+2_001_000_000,wait_until_complete=True)
         await asyncio.sleep(0)
@@ -115,9 +121,13 @@ async def run(args):
                 message=self.robot.get_ground_truth_kinematics()
                 trajectory.append({'radio':self.name,'sim_time_ns':int(world.get_sim_time()),'kinematics':message})
                 return message
-        provenance={'experiment':'fast-physics moving TX, '+('moving RX, ' if args.moving_receiver else 'stationary RX, ')+('direct + specular + '+args.diffuse+' diffuse' if args.diffuse else 'direct + specular ground' if args.reflection else 'direct path only'),
-            'commanded_rx_velocity_ned_m_s':[-args.velocity,1.,0.] if args.moving_receiver else [0.,0.,0.],
-            'commanded_north_velocity_m_s':args.velocity,'settling_signal_seconds':2.001,
+        mounts={'tx0':[.6,.2,.1],'rx0':[-.4,.3,-.1]} if args.turning_mounts else {'tx0':[0,0,0],'rx0':[0,0,0]}
+        provenance={'mounts_body_m':mounts,'turning_mounts':args.turning_mounts,
+            'velocity_command_frame':'body' if args.turning_mounts else 'NED',
+            'commanded_yaw_rates_rad_s':{'tx0':.7,'rx0':-.5} if args.turning_mounts else {},'experiment':'fast-physics moving TX, '+('moving RX, ' if args.moving_receiver else 'stationary RX, ')+('direct + specular + '+args.diffuse+' diffuse' if args.diffuse else 'direct + specular ground' if args.reflection else 'direct path only'),
+            'commanded_rx_velocity_m_s':[-args.velocity,1.,0.] if args.moving_receiver else [0.,0.,0.],
+            'commanded_north_velocity_m_s':args.velocity if not args.turning_mounts else None,
+            'commanded_forward_velocity_m_s':args.velocity if args.turning_mounts else None,'settling_signal_seconds':2.001,
             'noise_enabled':False,'carrier_hz':profile.carrier_hz,'tone_hz':frequency,
             'source_robot_sha256':sha256(source.read_bytes()).hexdigest(),
             'backend':mi.variant(),'renderer':'basis-cuda','sionna_rt':rt.__version__,
@@ -131,7 +141,7 @@ async def run(args):
             'waveform_complex128_sha256':sha256(values.tobytes()).hexdigest(),
             'waveform_origin_ns':origin-1_000_000_000,'waveform_samples':len(values)}
         manifest=record(world,{'tx0':LoggedRobot(tx,'tx0'),'rx0':LoggedRobot(rx,'rx0')},receiver,
-            args.output/'capture',updates=480//args.window_ms,advance_ns=args.window_ms*1_000_000,max_samples=100000,provenance=provenance)
+            args.output/'capture',updates=480//args.window_ms,advance_ns=args.window_ms*1_000_000,max_samples=100000,provenance=provenance,mounts_body_m=mounts)
         dump(args.output/'trajectory.json',trajectory)
         dump(args.output/'channels.json',channels)
         dump(args.output/'inspection.json',inspect(args.output/'capture'))
@@ -143,8 +153,8 @@ async def run(args):
         codes=np.fromfile(args.output/'capture/rx0.sigmf-data',dtype='<i2').reshape(-1,2)
         iq=codes[:,0]+1j*codes[:,1];offset=0;rows=[]
         for index,row in enumerate(manifest['rows']):
-            ptx,vtx,_=mount_kinematics(trajectory[2*index]['kinematics'])
-            prx,vrx,_=mount_kinematics(trajectory[2*index+1]['kinematics'])
+            ptx,vtx,_=mount_kinematics(trajectory[2*index]['kinematics'],mounts['tx0'])
+            prx,vrx,_=mount_kinematics(trajectory[2*index+1]['kinematics'],mounts['rx0'])
             direction=(prx-ptx)/np.linalg.norm(prx-ptx)
             expected=float(np.dot(vtx-vrx,direction)*profile.carrier_hz/299792458.)
             count=row['samples_per_receiver'];block=iq[offset:offset+count];offset+=count
@@ -162,6 +172,8 @@ async def run(args):
             'doppler_sign_matches_command':all(r['expected_doppler_hz']*args.velocity>0 for r in rows),
             'no_adc_clipping':all(c['airsim_rf:clipped_component_fraction']==0 for c in clipping),
             'flight_command_completed':bool(command_result) and bool(receiver_command_result)}
+        if args.turning_mounts:
+            del checks['doppler_sign_matches_command']
         if args.moving_receiver:
             checks['receiver_motion_exceeds_half_meter']=receiver_displacement>.5
             checks['receiver_has_lateral_motion']=all(abs(r['rx_velocity_rf_m_s'][1])>.1 for r in rows)
@@ -202,11 +214,12 @@ if __name__=='__main__':
     parser.add_argument('--pascal-compat',action='store_true')
     parser.add_argument('--window-ms',type=int,choices=(6,12,24,48),default=12)
     modes=parser.add_mutually_exclusive_group()
+    modes.add_argument('--turning-mounts',action='store_true',help='Body-frame velocity with yaw rates and nonzero radio offsets; requires --moving-receiver')
     modes.add_argument('--occlusion-test',action='store_true',help='Direct path crosses RF-only screen; requires --moving-receiver')
     modes.add_argument('--diffuse',choices=('angular','surface'),help='Include first-order diffuse paths; analyze with analyze_diffuse_iq.py')
     parser.add_argument('--samples-per-link',type=int,default=1024)
     modes.add_argument('--reflection',action='store_true',help='Include the specular ground path, without diffuse scattering')
     parser.add_argument('--moving-receiver',action='store_true',help='Fly RX with opposite north velocity and +1 m/s east command')
     args=parser.parse_args()
-    if args.occlusion_test and not args.moving_receiver:parser.error('--occlusion-test requires --moving-receiver')
+    if (args.occlusion_test or args.turning_mounts) and not args.moving_receiver:parser.error('--occlusion-test/--turning-mounts requires --moving-receiver')
     asyncio.run(run(args))

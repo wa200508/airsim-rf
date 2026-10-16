@@ -1,0 +1,25 @@
+{
+  "status": "passed",
+  "checks": {
+    "each_heading_changes_over_0_1rad": true,
+    "mount_velocity_within_0_05m_s": true,
+    "path_length_within_1mm": true,
+    "doppler_within_0_15Hz": true,
+    "ignoring_mounts_rejected_at_1mm": true
+  },
+  "metrics": {
+    "max_mount_velocity_error_m_s": {
+      "tx0": 0.0002340778760548193,
+      "rx0": 0.00015635451704225375
+    },
+    "heading_change_rad": {
+      "tx0": 0.2521616522986496,
+      "rx0": 0.18113104012807257
+    },
+    "max_path_length_error_m": 6.278418950955711e-06,
+    "max_doppler_finite_difference_error_hz": 0.0007015882130030349,
+    "minimum_error_if_offsets_ignored_m": 0.0024301836380864472
+  },
+  "scope": "actual turning pose/mount positions, finite-difference velocity and direct path geometry; interior time samples",
+  "signal_seconds_per_receiver": 0.48
+}

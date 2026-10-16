@@ -91,7 +91,9 @@ phase continuity under acceleration is not guaranteed. A [two-drone follow-up](.
 also passed direct/specular checks with independent TX and RX motion, including
 lateral RX velocity. A [moving-I/Q follow-up](../results/reviews/moving-iq-20261014/REPORT.md)
 checks fixed-surface diffuse rendering and direct-path disappearance/return behind
-an RF-only screen. General multipath transitions, explicit turns and Unreal mesh
+an RF-only screen. A [turning-mount check](../results/reviews/turning-mounts-20261015/REPORT.md)
+also passes for two yawing drones with nonzero radio offsets and direct paths.
+General multipath transitions, directional-pattern rotation and Unreal mesh
 interoperability remain unqualified.
 The measured workloads are slower than real time; controlled stepping does not
 promise live wall-clock streaming.
