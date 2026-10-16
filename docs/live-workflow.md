@@ -69,8 +69,9 @@ found substantial phase changes beyond the previous snapshot's local-Doppler
 continuation. Direct/specular qualification does not cover this behavior; avoid
 interpreting moving diffuse Doppler spectra as validated sensing observables.
 New generated starters explicitly use `specular`. The opt-in `diffuse-surface`
-mode now works through the live recorder and SDR receiver, but moving coherent
-I/Q with that mode remains unqualified. See [mode choices](scenario-to-iq.md).
+mode now passes a [controlled moving I/Q check](../results/reviews/moving-iq-20261014/REPORT.md)
+against a coherent path sum and continuous filter. This checks rendering of the
+traced paths, not physical diffuse statistics. See [mode choices](scenario-to-iq.md).
 
 CUDA is required for both propagation and rendering; there is no silent CPU
 fallback. Out-of-range delays/Dopplers remain errors. Experimental trimming,
@@ -88,8 +89,10 @@ checked boundary I/Q against the piecewise-channel model at 6–48 ms intervals.
 Small pose-refresh phase corrections remain and grow with longer windows; exact
 phase continuity under acceleration is not guaranteed. A [two-drone follow-up](../results/reviews/moving-receiver-20261011/REPORT.md)
 also passed direct/specular checks with independent TX and RX motion, including
-lateral RX velocity. Diffuse paths, occlusion transitions, explicit turns and
-Unreal mesh interoperability remain unqualified.
+lateral RX velocity. A [moving-I/Q follow-up](../results/reviews/moving-iq-20261014/REPORT.md)
+checks fixed-surface diffuse rendering and direct-path disappearance/return behind
+an RF-only screen. General multipath transitions, explicit turns and Unreal mesh
+interoperability remain unqualified.
 The measured workloads are slower than real time; controlled stepping does not
 promise live wall-clock streaming.
 

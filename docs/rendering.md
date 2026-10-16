@@ -109,5 +109,7 @@ uniform area sampling can require. Select `diffuse-surface` in the live
 configuration to use it through the SDR receiver and recorder; see the
 [scenario walkthrough](scenario-to-iq.md) and
 [stationary integration checks](../results/reviews/iq-workflow-20261014/REPORT.md).
-This does not qualify moving coherent diffuse I/Q or calibrated roughness
-statistics. Mesh, seed and sample-count changes reset its realization.
+A [two-drone coherent I/Q check](../results/reviews/moving-iq-20261014/REPORT.md)
+now passes against a CPU path sum with continuous filtering. Shared traced path
+parameters limit that check to rendering integration, not calibrated roughness
+statistics or general physical diffuse coherence. Mesh, seed and sample-count changes reset its realization.

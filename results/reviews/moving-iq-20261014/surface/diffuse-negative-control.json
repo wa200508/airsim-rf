@@ -1,0 +1,16 @@
+{
+  "status": "passed",
+  "checks": {
+    "injected_reset_rejected_whole_recording": true,
+    "injected_reset_rejected_at_boundaries": true
+  },
+  "scope": "injected pi reset rejection",
+  "whole_iq_nrmse": 1.4432002325817512,
+  "boundary_iq_nrmse": 1.4430701262213954,
+  "path_count_min": 1026,
+  "path_count_max": 1026,
+  "complex_samples": 960000,
+  "signal_seconds_per_receiver": 0.48,
+  "diffuse_mode": "surface",
+  "boundary_samples_each_side": 128
+}

@@ -1,0 +1,16 @@
+{
+  "status": "passed",
+  "checks": {
+    "whole_iq_nrmse_below_1percent": true,
+    "boundary_iq_nrmse_below_1percent": true
+  },
+  "scope": "moving multipath CW rendering, continuous filtering and ADC readback; shared traced paths",
+  "whole_iq_nrmse": 0.0023955371691378527,
+  "boundary_iq_nrmse": 0.0023972786225422865,
+  "path_count_min": 1026,
+  "path_count_max": 1026,
+  "complex_samples": 960000,
+  "signal_seconds_per_receiver": 0.48,
+  "diffuse_mode": "surface",
+  "boundary_samples_each_side": 128
+}

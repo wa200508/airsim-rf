@@ -221,3 +221,7 @@ The [workflow evidence](../results/reviews/iq-workflow-20261014/REPORT.md) check
 all four modes through a real Runtime server, GPU capture, callback, file and CPU
 reader. It does not establish Unreal alignment, distributed SDR transport,
 calibrated hardware behavior or coherent diffuse I/Q under general moving scenes.
+A separate [moving-I/Q qualification](../results/reviews/moving-iq-20261014/REPORT.md)
+checks two controlled drones with fixed-surface scattering and a direct path
+that disappears behind an RF screen. These executable harnesses show how flight
+control and capture share ownership of simulation stepping.

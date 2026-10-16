@@ -1,0 +1,10 @@
+{
+  "capture/rx0.sigmf-data": {
+    "sha256": "a64c13084e0dfce924786430eacb185f7640d2a08a813925663737630b200311",
+    "bytes": 3840000
+  },
+  "channels.json": {
+    "sha256": "feb3c6039887ac900138ed80246e1437cc06ea094844c214a4aff9fabfa769f2",
+    "bytes": 4720879
+  }
+}

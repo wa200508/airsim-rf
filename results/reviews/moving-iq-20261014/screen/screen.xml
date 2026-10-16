@@ -1,0 +1,1 @@
+<scene version="2.1.0"><bsdf type="radio-material" id="screen-material"><float name="relative_permittivity" value="5"/></bsdf><shape type="ply" id="screen"><string name="filename" value="screen.ply"/><ref id="screen-material" name="bsdf"/></shape></scene>

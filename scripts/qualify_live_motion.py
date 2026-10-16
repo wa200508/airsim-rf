@@ -1,4 +1,4 @@
-"""Bounded real Runtime flight + direct/specular SDR qualification.
+"""Bounded real Runtime flight + direct/specular/diffuse SDR qualification.
 
 Requires the pinned Runtime source and a running server. Writes raw recordings
 under output; never commands a physical vehicle. See docs/live-workflow.md.
@@ -75,7 +75,14 @@ async def run(args):
         world.continue_until_sim_time(int(world.get_sim_time())+2_001_000_000,wait_until_complete=True)
         await asyncio.sleep(0)
         origin=int(world.get_sim_time());fs=2_000_000;frequency=150_000
-        scene=rt.load_scene(str(root/'benchmarks/scenes/ground.xml'))
+        rf_scene=root/'benchmarks/scenes/ground.xml'
+        if args.occlusion_test:
+            # A thin RF-only screen intersects the moving link, not either flight path.
+            # Runtime has no matching screen collision geometry.
+            rf_scene=args.output/'screen.xml'
+            (args.output/'screen.ply').write_text('ply\nformat ascii 1.0\nelement vertex 4\nproperty float x\nproperty float y\nproperty float z\nelement face 2\nproperty list uchar int vertex_indices\nend_header\n0 -0.75 0\n0 -0.65 0\n0 -0.65 30\n0 -0.75 30\n3 0 1 2\n3 0 2 3\n')
+            rf_scene.write_text('<scene version="2.1.0"><bsdf type="radio-material" id="screen-material"><float name="relative_permittivity" value="5"/></bsdf><shape type="ply" id="screen"><string name="filename" value="screen.ply"/><ref id="screen-material" name="bsdf"/></shape></scene>')
+        scene=rt.load_scene(str(rf_scene))
         scene.tx_array=rt.PlanarArray(num_rows=1,num_cols=1,pattern='iso',polarization='V')
         scene.rx_array=rt.PlanarArray(num_rows=1,num_cols=1,pattern='iso',polarization='V')
         profile=PlutoSDRProfile(noise_enabled=False);scene.frequency=profile.carrier_hz
@@ -85,7 +92,9 @@ async def run(args):
         emitter=SDREmitter(SampledWaveform(values,fs,origin-1_000_000_000,boundary='zero'),
             transmit_power_w=.01,baseband_frequency_bounds_hz=(frequency,frequency))
         receiver=SDRNetworkReceiver(scene,{'tx0':emitter},profile,renderer='basis-cuda',
-            continuous=True,max_depth=int(args.reflection),samples_per_link=2,
+            continuous=True,max_depth=int(args.reflection or bool(args.diffuse)),
+            samples_per_link=args.samples_per_link if args.diffuse else 2,
+            surface_sampling=args.diffuse=='surface',
             path_solver='single-bounce' if args.reflection else 'first-order-scattering')
         channels=[]
         solver=receiver.solver
@@ -106,17 +115,18 @@ async def run(args):
                 message=self.robot.get_ground_truth_kinematics()
                 trajectory.append({'radio':self.name,'sim_time_ns':int(world.get_sim_time()),'kinematics':message})
                 return message
-        provenance={'experiment':'fast-physics moving TX, '+('moving RX, ' if args.moving_receiver else 'stationary RX, ')+('direct + specular ground' if args.reflection else 'direct path only'),
+        provenance={'experiment':'fast-physics moving TX, '+('moving RX, ' if args.moving_receiver else 'stationary RX, ')+('direct + specular + '+args.diffuse+' diffuse' if args.diffuse else 'direct + specular ground' if args.reflection else 'direct path only'),
             'commanded_rx_velocity_ned_m_s':[-args.velocity,1.,0.] if args.moving_receiver else [0.,0.,0.],
             'commanded_north_velocity_m_s':args.velocity,'settling_signal_seconds':2.001,
             'noise_enabled':False,'carrier_hz':profile.carrier_hz,'tone_hz':frequency,
             'source_robot_sha256':sha256(source.read_bytes()).hexdigest(),
             'backend':mi.variant(),'renderer':'basis-cuda','sionna_rt':rt.__version__,
-            'max_depth':int(args.reflection),'antenna':'isotropic V','transmit_power_w':.01,
+            'max_depth':int(args.reflection or bool(args.diffuse)),
+            'diffuse_mode':args.diffuse,'samples_per_link':args.samples_per_link if args.diffuse else 2,'antenna':'isotropic V','transmit_power_w':.01,
             'requested_window_ms':args.window_ms,'filter_sos':receiver.sos.tolist(),
             'impedance_ohm':profile.impedance_ohm,
             'runtime_source_commit':subprocess.check_output(['git','-C',str(args.runtime_source),'rev-parse','HEAD'],text=True).strip(),
-            'rf_scene':scene_provenance(root/'benchmarks/scenes/ground.xml'),
+            'rf_scene':scene_provenance(rf_scene),'rf_only_screen':args.occlusion_test,
             'sim_config_sha256':{p.name:sha256(p.read_bytes()).hexdigest() for p in sim.glob('*.jsonc')},
             'waveform_complex128_sha256':sha256(values.tobytes()).hexdigest(),
             'waveform_origin_ns':origin-1_000_000_000,'waveform_samples':len(values)}
@@ -140,11 +150,11 @@ async def run(args):
             count=row['samples_per_receiver'];block=iq[offset:offset+count];offset+=count
             # Discard filter/window transition, demodulate known tone, then fit
             # unwrapped phase inside the window. This is not an FFT-bin peak estimate.
-            measured=estimate_tone_offset(block,fs,frequency)
+            measured=estimate_tone_offset(block,fs,frequency) if not args.occlusion_test else None
             rows.append({'sim_time_ns':row['sim_time_ns'],'tx_position_rf_m':ptx.tolist(),
                 'rx_position_rf_m':prx.tolist(),'rx_velocity_rf_m_s':vrx.tolist(),
                 'tx_velocity_rf_m_s':vtx.tolist(),'expected_doppler_hz':expected,
-                'measured_doppler_hz':measured,'error_hz':measured-expected})
+                'measured_doppler_hz':measured,'error_hz':measured-expected if measured is not None else None})
         errors=np.array([r['error_hz'] for r in rows]);displacement=float(np.linalg.norm(np.array(rows[-1]['tx_position_rf_m'])-rows[0]['tx_position_rf_m']))
         receiver_displacement=float(np.linalg.norm(np.array(rows[-1]['rx_position_rf_m'])-rows[0]['rx_position_rf_m']))
         clipping=json.loads((args.output/'capture/rx0.sigmf-meta').read_text())['captures']
@@ -155,14 +165,23 @@ async def run(args):
         if args.moving_receiver:
             checks['receiver_motion_exceeds_half_meter']=receiver_displacement>.5
             checks['receiver_has_lateral_motion']=all(abs(r['rx_velocity_rf_m_s'][1])>.1 for r in rows)
-        if not args.reflection:
+        if not (args.reflection or args.diffuse or args.occlusion_test):
             checks['doppler_error_below_half_hz']=bool(np.max(abs(errors))<.5)
+        if args.occlusion_test:
+            visible=[];observed=[]
+            for row,channel in zip(rows,channels):
+                pt=np.array(row['tx_position_rf_m']);pr=np.array(row['rx_position_rf_m'])
+                fraction=-pt[0]/(pr[0]-pt[0]);hit=pt+fraction*(pr-pt)
+                visible.append(not (0<fraction<1 and -.75<=hit[1]<=-.65 and 0<=hit[2]<=30))
+                observed.append(len(channel['delay_s']))
+            checks['visibility_matches_geometric_screen']=observed==[int(v) for v in visible]
+            checks['path_disappears_and_returns']=sum(a!=b for a,b in zip(visible,visible[1:]))==2
         result={'status':'passed' if all(checks.values()) else 'failed','checks':checks,
-            'scope':('moving Fast Physics recording; composite frequency is not direct-path Doppler' if args.reflection else
+            'scope':('RF-only screen visibility during real flight; no Runtime screen collisions' if args.occlusion_test else 'moving Fast Physics recording; composite frequency is not direct-path Doppler' if (args.reflection or args.diffuse) else
                 'moving Fast Physics pose integration and within-window direct-path Doppler'),
             'signal_seconds_per_receiver':manifest['signal_seconds_per_receiver'],
             'wall_seconds_per_signal_second':manifest['wall_seconds_per_signal_second'],
-            'tx_displacement_m':displacement,'maximum_absolute_doppler_error_hz':None if args.reflection else float(np.max(abs(errors))),
+            'tx_displacement_m':displacement,'maximum_absolute_doppler_error_hz':None if (args.reflection or args.diffuse or args.occlusion_test) else float(np.max(abs(errors))),
             'rx_displacement_m':receiver_displacement,
             'tolerance_hz':.5,'rows':rows}
         dump(args.output/'motion.json',result)
@@ -182,6 +201,12 @@ if __name__=='__main__':
     parser.add_argument('--velocity',type=float,choices=(-3.,3.),default=3.)
     parser.add_argument('--pascal-compat',action='store_true')
     parser.add_argument('--window-ms',type=int,choices=(6,12,24,48),default=12)
-    parser.add_argument('--reflection',action='store_true',help='Include the specular ground path, without diffuse scattering')
+    modes=parser.add_mutually_exclusive_group()
+    modes.add_argument('--occlusion-test',action='store_true',help='Direct path crosses RF-only screen; requires --moving-receiver')
+    modes.add_argument('--diffuse',choices=('angular','surface'),help='Include first-order diffuse paths; analyze with analyze_diffuse_iq.py')
+    parser.add_argument('--samples-per-link',type=int,default=1024)
+    modes.add_argument('--reflection',action='store_true',help='Include the specular ground path, without diffuse scattering')
     parser.add_argument('--moving-receiver',action='store_true',help='Fly RX with opposite north velocity and +1 m/s east command')
-    asyncio.run(run(parser.parse_args()))
+    args=parser.parse_args()
+    if args.occlusion_test and not args.moving_receiver:parser.error('--occlusion-test requires --moving-receiver')
+    asyncio.run(run(args))
