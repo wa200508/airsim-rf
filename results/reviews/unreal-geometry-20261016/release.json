@@ -1,0 +1,7 @@
+{
+  "upstream": "https://github.com/iamaisim/ProjectAirSim/releases/tag/v1.0.1",
+  "asset": "Blocks-Linux-1.0.1.zip",
+  "bytes": 584076048,
+  "sha256": "4a0c7b6de27ed32bdf4de1c31c222c19b796500108b654382b5d76b4ba000040",
+  "mode": "null-RHI; CPU LiDAR; no camera rendering"
+}

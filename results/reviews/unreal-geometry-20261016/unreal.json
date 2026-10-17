@@ -1,0 +1,4781 @@
+{
+  "name": "RFCheckCube",
+  "blocked_center_ned_m": [
+    5,
+    0,
+    -100
+  ],
+  "clear_pose": {
+    "frame_id": "DEFAULT_ID",
+    "translation": {
+      "x": 5.0,
+      "y": 3.0,
+      "z": -100.0
+    },
+    "rotation": {
+      "w": 1.0,
+      "x": -0.0,
+      "y": 0.0,
+      "z": 0.0
+    }
+  },
+  "scale": [
+    2.0,
+    2.0,
+    2.0
+  ],
+  "kinematics": {
+    "accels": {
+      "angular": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "linear": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0
+      }
+    },
+    "pose": {
+      "orientation": {
+        "w": 1.0,
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "position": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": -100.0
+      }
+    },
+    "time_stamp": 0,
+    "twist": {
+      "angular": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "linear": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0
+      }
+    }
+  },
+  "blocked_lidar": [
+    {
+      "time_stamp": 3000000,
+      "point_cloud": [
+        4,
+        0,
+        0,
+        4,
+        0.025133073329925537,
+        0,
+        4,
+        0.050268128514289856,
+        0,
+        4,
+        0.07540715485811234,
+        0,
+        4,
+        0.10055213421583176,
+        0,
+        4,
+        0.1257050633430481,
+        0,
+        4,
+        0.15086792409420013,
+        0,
+        4,
+        0.17604270577430725,
+        0,
+        4,
+        0.2012314349412918,
+        0,
+        4,
+        0.2264360934495926,
+        0,
+        4,
+        0.25165867805480957,
+        0,
+        4,
+        0.2769012153148651,
+        0,
+        4,
+        0.3021657168865204,
+        0,
+        4,
+        0.32745420932769775,
+        0
+      ],
+      "azimuth_elevation_range_cloud": [],
+      "segmentation_cloud": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "intensity_cloud": [
+        1.364640235900879,
+        1.3646323680877686,
+        1.3646087646484375,
+        1.3645691871643066,
+        1.3645139932632446,
+        1.3644429445266724,
+        1.3643560409545898,
+        1.3642535209655762,
+        1.3641350269317627,
+        1.364000916481018,
+        1.3638509511947632,
+        1.3636852502822876,
+        1.3635038137435913,
+        1.3633066415786743
+      ],
+      "laser_index_cloud": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "pose": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": -100
+        },
+        "orientation": {
+          "w": 1,
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      }
+    },
+    {
+      "time_stamp": 6000000,
+      "point_cloud": [],
+      "azimuth_elevation_range_cloud": [],
+      "segmentation_cloud": [],
+      "intensity_cloud": [],
+      "laser_index_cloud": [],
+      "pose": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": -100
+        },
+        "orientation": {
+          "w": 1,
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      }
+    },
+    {
+      "time_stamp": 9000000,
+      "point_cloud": [],
+      "azimuth_elevation_range_cloud": [],
+      "segmentation_cloud": [],
+      "intensity_cloud": [],
+      "laser_index_cloud": [],
+      "pose": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": -100
+        },
+        "orientation": {
+          "w": 1,
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      }
+    },
+    {
+      "time_stamp": 12000000,
+      "point_cloud": [],
+      "azimuth_elevation_range_cloud": [],
+      "segmentation_cloud": [],
+      "intensity_cloud": [],
+      "laser_index_cloud": [],
+      "pose": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": -100
+        },
+        "orientation": {
+          "w": 1,
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      }
+    },
+    {
+      "time_stamp": 15000000,
+      "point_cloud": [],
+      "azimuth_elevation_range_cloud": [],
+      "segmentation_cloud": [],
+      "intensity_cloud": [],
+      "laser_index_cloud": [],
+      "pose": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": -100
+        },
+        "orientation": {
+          "w": 1,
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      }
+    },
+    {
+      "time_stamp": 18000000,
+      "point_cloud": [],
+      "azimuth_elevation_range_cloud": [],
+      "segmentation_cloud": [],
+      "intensity_cloud": [],
+      "laser_index_cloud": [],
+      "pose": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": -100
+        },
+        "orientation": {
+          "w": 1,
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      }
+    },
+    {
+      "time_stamp": 21000000,
+      "point_cloud": [],
+      "azimuth_elevation_range_cloud": [],
+      "segmentation_cloud": [],
+      "intensity_cloud": [],
+      "laser_index_cloud": [],
+      "pose": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": -100
+        },
+        "orientation": {
+          "w": 1,
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      }
+    },
+    {
+      "time_stamp": 24000000,
+      "point_cloud": [],
+      "azimuth_elevation_range_cloud": [],
+      "segmentation_cloud": [],
+      "intensity_cloud": [],
+      "laser_index_cloud": [],
+      "pose": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": -100
+        },
+        "orientation": {
+          "w": 1,
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      }
+    },
+    {
+      "time_stamp": 27000000,
+      "point_cloud": [],
+      "azimuth_elevation_range_cloud": [],
+      "segmentation_cloud": [],
+      "intensity_cloud": [],
+      "laser_index_cloud": [],
+      "pose": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": -100
+        },
+        "orientation": {
+          "w": 1,
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      }
+    },
+    {
+      "time_stamp": 30000000,
+      "point_cloud": [],
+      "azimuth_elevation_range_cloud": [],
+      "segmentation_cloud": [],
+      "intensity_cloud": [],
+      "laser_index_cloud": [],
+      "pose": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": -100
+        },
+        "orientation": {
+          "w": 1,
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      }
+    },
+    {
+      "time_stamp": 33000000,
+      "point_cloud": [],
+      "azimuth_elevation_range_cloud": [],
+      "segmentation_cloud": [],
+      "intensity_cloud": [],
+      "laser_index_cloud": [],
+      "pose": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": -100
+        },
+        "orientation": {
+          "w": 1,
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      }
+    },
+    {
+      "time_stamp": 36000000,
+      "point_cloud": [],
+      "azimuth_elevation_range_cloud": [],
+      "segmentation_cloud": [],
+      "intensity_cloud": [],
+      "laser_index_cloud": [],
+      "pose": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": -100
+        },
+        "orientation": {
+          "w": 1,
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      }
+    },
+    {
+      "time_stamp": 39000000,
+      "point_cloud": [],
+      "azimuth_elevation_range_cloud": [],
+      "segmentation_cloud": [],
+      "intensity_cloud": [],
+      "laser_index_cloud": [],
+      "pose": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": -100
+        },
+        "orientation": {
+          "w": 1,
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      }
+    },
+    {
+      "time_stamp": 42000000,
+      "point_cloud": [],
+      "azimuth_elevation_range_cloud": [],
+      "segmentation_cloud": [],
+      "intensity_cloud": [],
+      "laser_index_cloud": [],
+      "pose": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": -100
+        },
+        "orientation": {
+          "w": 1,
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      }
+    },
+    {
+      "time_stamp": 45000000,
+      "point_cloud": [],
+      "azimuth_elevation_range_cloud": [],
+      "segmentation_cloud": [],
+      "intensity_cloud": [],
+      "laser_index_cloud": [],
+      "pose": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": -100
+        },
+        "orientation": {
+          "w": 1,
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      }
+    },
+    {
+      "time_stamp": 48000000,
+      "point_cloud": [],
+      "azimuth_elevation_range_cloud": [],
+      "segmentation_cloud": [],
+      "intensity_cloud": [],
+      "laser_index_cloud": [],
+      "pose": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": -100
+        },
+        "orientation": {
+          "w": 1,
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      }
+    },
+    {
+      "time_stamp": 51000000,
+      "point_cloud": [],
+      "azimuth_elevation_range_cloud": [],
+      "segmentation_cloud": [],
+      "intensity_cloud": [],
+      "laser_index_cloud": [],
+      "pose": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": -100
+        },
+        "orientation": {
+          "w": 1,
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      }
+    },
+    {
+      "time_stamp": 54000000,
+      "point_cloud": [],
+      "azimuth_elevation_range_cloud": [],
+      "segmentation_cloud": [],
+      "intensity_cloud": [],
+      "laser_index_cloud": [],
+      "pose": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": -100
+        },
+        "orientation": {
+          "w": 1,
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      }
+    },
+    {
+      "time_stamp": 57000000,
+      "point_cloud": [],
+      "azimuth_elevation_range_cloud": [],
+      "segmentation_cloud": [],
+      "intensity_cloud": [],
+      "laser_index_cloud": [],
+      "pose": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": -100
+        },
+        "orientation": {
+          "w": 1,
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      }
+    },
+    {
+      "time_stamp": 60000000,
+      "point_cloud": [],
+      "azimuth_elevation_range_cloud": [],
+      "segmentation_cloud": [],
+      "intensity_cloud": [],
+      "laser_index_cloud": [],
+      "pose": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": -100
+        },
+        "orientation": {
+          "w": 1,
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      }
+    },
+    {
+      "time_stamp": 63000000,
+      "point_cloud": [],
+      "azimuth_elevation_range_cloud": [],
+      "segmentation_cloud": [],
+      "intensity_cloud": [],
+      "laser_index_cloud": [],
+      "pose": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": -100
+        },
+        "orientation": {
+          "w": 1,
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      }
+    },
+    {
+      "time_stamp": 66000000,
+      "point_cloud": [],
+      "azimuth_elevation_range_cloud": [],
+      "segmentation_cloud": [],
+      "intensity_cloud": [],
+      "laser_index_cloud": [],
+      "pose": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": -100
+        },
+        "orientation": {
+          "w": 1,
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      }
+    },
+    {
+      "time_stamp": 69000000,
+      "point_cloud": [],
+      "azimuth_elevation_range_cloud": [],
+      "segmentation_cloud": [],
+      "intensity_cloud": [],
+      "laser_index_cloud": [],
+      "pose": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": -100
+        },
+        "orientation": {
+          "w": 1,
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      }
+    },
+    {
+      "time_stamp": 72000000,
+      "point_cloud": [],
+      "azimuth_elevation_range_cloud": [],
+      "segmentation_cloud": [],
+      "intensity_cloud": [],
+      "laser_index_cloud": [],
+      "pose": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": -100
+        },
+        "orientation": {
+          "w": 1,
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      }
+    },
+    {
+      "time_stamp": 75000000,
+      "point_cloud": [],
+      "azimuth_elevation_range_cloud": [],
+      "segmentation_cloud": [],
+      "intensity_cloud": [],
+      "laser_index_cloud": [],
+      "pose": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": -100
+        },
+        "orientation": {
+          "w": 1,
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      }
+    },
+    {
+      "time_stamp": 78000000,
+      "point_cloud": [],
+      "azimuth_elevation_range_cloud": [],
+      "segmentation_cloud": [],
+      "intensity_cloud": [],
+      "laser_index_cloud": [],
+      "pose": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": -100
+        },
+        "orientation": {
+          "w": 1,
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      }
+    },
+    {
+      "time_stamp": 81000000,
+      "point_cloud": [],
+      "azimuth_elevation_range_cloud": [],
+      "segmentation_cloud": [],
+      "intensity_cloud": [],
+      "laser_index_cloud": [],
+      "pose": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": -100
+        },
+        "orientation": {
+          "w": 1,
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      }
+    },
+    {
+      "time_stamp": 84000000,
+      "point_cloud": [],
+      "azimuth_elevation_range_cloud": [],
+      "segmentation_cloud": [],
+      "intensity_cloud": [],
+      "laser_index_cloud": [],
+      "pose": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": -100
+        },
+        "orientation": {
+          "w": 1,
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      }
+    },
+    {
+      "time_stamp": 87000000,
+      "point_cloud": [],
+      "azimuth_elevation_range_cloud": [],
+      "segmentation_cloud": [],
+      "intensity_cloud": [],
+      "laser_index_cloud": [],
+      "pose": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": -100
+        },
+        "orientation": {
+          "w": 1,
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      }
+    },
+    {
+      "time_stamp": 90000000,
+      "point_cloud": [],
+      "azimuth_elevation_range_cloud": [],
+      "segmentation_cloud": [],
+      "intensity_cloud": [],
+      "laser_index_cloud": [],
+      "pose": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": -100
+        },
+        "orientation": {
+          "w": 1,
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      }
+    },
+    {
+      "time_stamp": 93000000,
+      "point_cloud": [],
+      "azimuth_elevation_range_cloud": [],
+      "segmentation_cloud": [],
+      "intensity_cloud": [],
+      "laser_index_cloud": [],
+      "pose": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": -100
+        },
+        "orientation": {
+          "w": 1,
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      }
+    },
+    {
+      "time_stamp": 96000000,
+      "point_cloud": [],
+      "azimuth_elevation_range_cloud": [],
+      "segmentation_cloud": [],
+      "intensity_cloud": [],
+      "laser_index_cloud": [],
+      "pose": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": -100
+        },
+        "orientation": {
+          "w": 1,
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      }
+    },
+    {
+      "time_stamp": 99000000,
+      "point_cloud": [
+        4,
+        -0.3274579644203186,
+        0,
+        4,
+        -0.3021704852581024,
+        0,
+        4,
+        -0.2769048810005188,
+        0
+      ],
+      "azimuth_elevation_range_cloud": [],
+      "segmentation_cloud": [
+        0,
+        0,
+        0
+      ],
+      "intensity_cloud": [
+        1.3633066415786743,
+        1.3635038137435913,
+        1.3636852502822876
+      ],
+      "laser_index_cloud": [
+        0,
+        0,
+        0
+      ],
+      "pose": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": -100
+        },
+        "orientation": {
+          "w": 1,
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      }
+    },
+    {
+      "time_stamp": 102000000,
+      "point_cloud": [
+        4,
+        -0.2516633868217468,
+        0,
+        4,
+        -0.22644181549549103,
+        0,
+        4,
+        -0.2012360543012619,
+        0,
+        4,
+        -0.17604835331439972,
+        0,
+        4,
+        -0.15087243914604187,
+        0,
+        4,
+        -0.1257106065750122,
+        0,
+        4,
+        -0.10055657476186752,
+        0,
+        4,
+        -0.07541260868310928,
+        0,
+        4,
+        -0.05027247220277786,
+        0,
+        4,
+        -0.02513843961060047,
+        0,
+        4,
+        -4.261057711119065e-06,
+        0,
+        4,
+        0.02512778714299202,
+        0,
+        4,
+        0.05026395246386528,
+        0,
+        4,
+        0.07540195435285568,
+        0,
+        4,
+        0.10054804384708405,
+        0,
+        4,
+        0.1256999522447586,
+        0,
+        4,
+        0.150863915681839,
+        0,
+        4,
+        0.17603766918182373,
+        0,
+        4,
+        0.20122750103473663,
+        0,
+        4,
+        0.22643111646175385,
+        0,
+        4,
+        0.25165480375289917,
+        0,
+        4,
+        0.27689632773399353,
+        0,
+        4,
+        0.30216193199157715,
+        0,
+        4,
+        0.32744938135147095,
+        0
+      ],
+      "azimuth_elevation_range_cloud": [],
+      "segmentation_cloud": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "intensity_cloud": [
+        1.3638509511947632,
+        1.364000916481018,
+        1.3641350269317627,
+        1.3642534017562866,
+        1.3643560409545898,
+        1.3644429445266724,
+        1.3645139932632446,
+        1.3645691871643066,
+        1.3646087646484375,
+        1.3646323680877686,
+        1.364640235900879,
+        1.3646323680877686,
+        1.3646087646484375,
+        1.3645691871643066,
+        1.3645139932632446,
+        1.3644429445266724,
+        1.3643560409545898,
+        1.3642535209655762,
+        1.3641351461410522,
+        1.364000916481018,
+        1.3638509511947632,
+        1.3636853694915771,
+        1.3635039329528809,
+        1.3633067607879639
+      ],
+      "laser_index_cloud": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "pose": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": -100
+        },
+        "orientation": {
+          "w": 1,
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      }
+    },
+    {
+      "time_stamp": 105000000,
+      "point_cloud": [],
+      "azimuth_elevation_range_cloud": [],
+      "segmentation_cloud": [],
+      "intensity_cloud": [],
+      "laser_index_cloud": [],
+      "pose": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": -100
+        },
+        "orientation": {
+          "w": 1,
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      }
+    },
+    {
+      "time_stamp": 108000000,
+      "point_cloud": [],
+      "azimuth_elevation_range_cloud": [],
+      "segmentation_cloud": [],
+      "intensity_cloud": [],
+      "laser_index_cloud": [],
+      "pose": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": -100
+        },
+        "orientation": {
+          "w": 1,
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      }
+    },
+    {
+      "time_stamp": 111000000,
+      "point_cloud": [],
+      "azimuth_elevation_range_cloud": [],
+      "segmentation_cloud": [],
+      "intensity_cloud": [],
+      "laser_index_cloud": [],
+      "pose": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": -100
+        },
+        "orientation": {
+          "w": 1,
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      }
+    },
+    {
+      "time_stamp": 114000000,
+      "point_cloud": [],
+      "azimuth_elevation_range_cloud": [],
+      "segmentation_cloud": [],
+      "intensity_cloud": [],
+      "laser_index_cloud": [],
+      "pose": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": -100
+        },
+        "orientation": {
+          "w": 1,
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      }
+    },
+    {
+      "time_stamp": 117000000,
+      "point_cloud": [],
+      "azimuth_elevation_range_cloud": [],
+      "segmentation_cloud": [],
+      "intensity_cloud": [],
+      "laser_index_cloud": [],
+      "pose": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": -100
+        },
+        "orientation": {
+          "w": 1,
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      }
+    },
+    {
+      "time_stamp": 120000000,
+      "point_cloud": [],
+      "azimuth_elevation_range_cloud": [],
+      "segmentation_cloud": [],
+      "intensity_cloud": [],
+      "laser_index_cloud": [],
+      "pose": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": -100
+        },
+        "orientation": {
+          "w": 1,
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      }
+    },
+    {
+      "time_stamp": 123000000,
+      "point_cloud": [],
+      "azimuth_elevation_range_cloud": [],
+      "segmentation_cloud": [],
+      "intensity_cloud": [],
+      "laser_index_cloud": [],
+      "pose": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": -100
+        },
+        "orientation": {
+          "w": 1,
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      }
+    },
+    {
+      "time_stamp": 126000000,
+      "point_cloud": [],
+      "azimuth_elevation_range_cloud": [],
+      "segmentation_cloud": [],
+      "intensity_cloud": [],
+      "laser_index_cloud": [],
+      "pose": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": -100
+        },
+        "orientation": {
+          "w": 1,
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      }
+    },
+    {
+      "time_stamp": 129000000,
+      "point_cloud": [],
+      "azimuth_elevation_range_cloud": [],
+      "segmentation_cloud": [],
+      "intensity_cloud": [],
+      "laser_index_cloud": [],
+      "pose": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": -100
+        },
+        "orientation": {
+          "w": 1,
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      }
+    },
+    {
+      "time_stamp": 132000000,
+      "point_cloud": [],
+      "azimuth_elevation_range_cloud": [],
+      "segmentation_cloud": [],
+      "intensity_cloud": [],
+      "laser_index_cloud": [],
+      "pose": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": -100
+        },
+        "orientation": {
+          "w": 1,
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      }
+    },
+    {
+      "time_stamp": 135000000,
+      "point_cloud": [],
+      "azimuth_elevation_range_cloud": [],
+      "segmentation_cloud": [],
+      "intensity_cloud": [],
+      "laser_index_cloud": [],
+      "pose": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": -100
+        },
+        "orientation": {
+          "w": 1,
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      }
+    },
+    {
+      "time_stamp": 138000000,
+      "point_cloud": [],
+      "azimuth_elevation_range_cloud": [],
+      "segmentation_cloud": [],
+      "intensity_cloud": [],
+      "laser_index_cloud": [],
+      "pose": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": -100
+        },
+        "orientation": {
+          "w": 1,
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      }
+    },
+    {
+      "time_stamp": 141000000,
+      "point_cloud": [],
+      "azimuth_elevation_range_cloud": [],
+      "segmentation_cloud": [],
+      "intensity_cloud": [],
+      "laser_index_cloud": [],
+      "pose": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": -100
+        },
+        "orientation": {
+          "w": 1,
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      }
+    },
+    {
+      "time_stamp": 144000000,
+      "point_cloud": [],
+      "azimuth_elevation_range_cloud": [],
+      "segmentation_cloud": [],
+      "intensity_cloud": [],
+      "laser_index_cloud": [],
+      "pose": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": -100
+        },
+        "orientation": {
+          "w": 1,
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      }
+    },
+    {
+      "time_stamp": 147000000,
+      "point_cloud": [],
+      "azimuth_elevation_range_cloud": [],
+      "segmentation_cloud": [],
+      "intensity_cloud": [],
+      "laser_index_cloud": [],
+      "pose": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": -100
+        },
+        "orientation": {
+          "w": 1,
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      }
+    },
+    {
+      "time_stamp": 150000000,
+      "point_cloud": [],
+      "azimuth_elevation_range_cloud": [],
+      "segmentation_cloud": [],
+      "intensity_cloud": [],
+      "laser_index_cloud": [],
+      "pose": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": -100
+        },
+        "orientation": {
+          "w": 1,
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      }
+    },
+    {
+      "time_stamp": 153000000,
+      "point_cloud": [],
+      "azimuth_elevation_range_cloud": [],
+      "segmentation_cloud": [],
+      "intensity_cloud": [],
+      "laser_index_cloud": [],
+      "pose": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": -100
+        },
+        "orientation": {
+          "w": 1,
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      }
+    },
+    {
+      "time_stamp": 156000000,
+      "point_cloud": [],
+      "azimuth_elevation_range_cloud": [],
+      "segmentation_cloud": [],
+      "intensity_cloud": [],
+      "laser_index_cloud": [],
+      "pose": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": -100
+        },
+        "orientation": {
+          "w": 1,
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      }
+    },
+    {
+      "time_stamp": 159000000,
+      "point_cloud": [],
+      "azimuth_elevation_range_cloud": [],
+      "segmentation_cloud": [],
+      "intensity_cloud": [],
+      "laser_index_cloud": [],
+      "pose": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": -100
+        },
+        "orientation": {
+          "w": 1,
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      }
+    },
+    {
+      "time_stamp": 162000000,
+      "point_cloud": [],
+      "azimuth_elevation_range_cloud": [],
+      "segmentation_cloud": [],
+      "intensity_cloud": [],
+      "laser_index_cloud": [],
+      "pose": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": -100
+        },
+        "orientation": {
+          "w": 1,
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      }
+    },
+    {
+      "time_stamp": 165000000,
+      "point_cloud": [],
+      "azimuth_elevation_range_cloud": [],
+      "segmentation_cloud": [],
+      "intensity_cloud": [],
+      "laser_index_cloud": [],
+      "pose": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": -100
+        },
+        "orientation": {
+          "w": 1,
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      }
+    },
+    {
+      "time_stamp": 168000000,
+      "point_cloud": [],
+      "azimuth_elevation_range_cloud": [],
+      "segmentation_cloud": [],
+      "intensity_cloud": [],
+      "laser_index_cloud": [],
+      "pose": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": -100
+        },
+        "orientation": {
+          "w": 1,
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      }
+    },
+    {
+      "time_stamp": 171000000,
+      "point_cloud": [],
+      "azimuth_elevation_range_cloud": [],
+      "segmentation_cloud": [],
+      "intensity_cloud": [],
+      "laser_index_cloud": [],
+      "pose": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": -100
+        },
+        "orientation": {
+          "w": 1,
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      }
+    },
+    {
+      "time_stamp": 174000000,
+      "point_cloud": [],
+      "azimuth_elevation_range_cloud": [],
+      "segmentation_cloud": [],
+      "intensity_cloud": [],
+      "laser_index_cloud": [],
+      "pose": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": -100
+        },
+        "orientation": {
+          "w": 1,
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      }
+    },
+    {
+      "time_stamp": 177000000,
+      "point_cloud": [],
+      "azimuth_elevation_range_cloud": [],
+      "segmentation_cloud": [],
+      "intensity_cloud": [],
+      "laser_index_cloud": [],
+      "pose": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": -100
+        },
+        "orientation": {
+          "w": 1,
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      }
+    },
+    {
+      "time_stamp": 180000000,
+      "point_cloud": [],
+      "azimuth_elevation_range_cloud": [],
+      "segmentation_cloud": [],
+      "intensity_cloud": [],
+      "laser_index_cloud": [],
+      "pose": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": -100
+        },
+        "orientation": {
+          "w": 1,
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      }
+    },
+    {
+      "time_stamp": 183000000,
+      "point_cloud": [],
+      "azimuth_elevation_range_cloud": [],
+      "segmentation_cloud": [],
+      "intensity_cloud": [],
+      "laser_index_cloud": [],
+      "pose": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": -100
+        },
+        "orientation": {
+          "w": 1,
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      }
+    },
+    {
+      "time_stamp": 186000000,
+      "point_cloud": [],
+      "azimuth_elevation_range_cloud": [],
+      "segmentation_cloud": [],
+      "intensity_cloud": [],
+      "laser_index_cloud": [],
+      "pose": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": -100
+        },
+        "orientation": {
+          "w": 1,
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      }
+    },
+    {
+      "time_stamp": 189000000,
+      "point_cloud": [],
+      "azimuth_elevation_range_cloud": [],
+      "segmentation_cloud": [],
+      "intensity_cloud": [],
+      "laser_index_cloud": [],
+      "pose": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": -100
+        },
+        "orientation": {
+          "w": 1,
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      }
+    },
+    {
+      "time_stamp": 192000000,
+      "point_cloud": [],
+      "azimuth_elevation_range_cloud": [],
+      "segmentation_cloud": [],
+      "intensity_cloud": [],
+      "laser_index_cloud": [],
+      "pose": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": -100
+        },
+        "orientation": {
+          "w": 1,
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      }
+    },
+    {
+      "time_stamp": 195000000,
+      "point_cloud": [],
+      "azimuth_elevation_range_cloud": [],
+      "segmentation_cloud": [],
+      "intensity_cloud": [],
+      "laser_index_cloud": [],
+      "pose": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": -100
+        },
+        "orientation": {
+          "w": 1,
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      }
+    },
+    {
+      "time_stamp": 198000000,
+      "point_cloud": [],
+      "azimuth_elevation_range_cloud": [],
+      "segmentation_cloud": [],
+      "intensity_cloud": [],
+      "laser_index_cloud": [],
+      "pose": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": -100
+        },
+        "orientation": {
+          "w": 1,
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      }
+    },
+    {
+      "time_stamp": 201000000,
+      "point_cloud": [
+        4,
+        -0.32746440172195435,
+        0,
+        4,
+        -0.30217477679252625,
+        0,
+        4,
+        -0.27691131830215454,
+        0,
+        4,
+        -0.25166764855384827,
+        0,
+        4,
+        -0.22644609212875366,
+        0,
+        4,
+        -0.20124033093452454,
+        0,
+        4,
+        -0.17605262994766235,
+        0,
+        4,
+        -0.1508767157793045,
+        0,
+        4,
+        -0.12571486830711365,
+        0,
+        4,
+        -0.10056083649396896,
+        0,
+        4,
+        -0.07541687041521072,
+        0,
+        4,
+        -0.0502767376601696,
+        0,
+        4,
+        -0.02514270320534706,
+        0,
+        4,
+        -8.52211542223813e-06,
+        0,
+        4,
+        0.02512352727353573,
+        0,
+        4,
+        0.05025969073176384,
+        0,
+        4,
+        0.07539769262075424,
+        0,
+        4,
+        0.10054377466440201,
+        0,
+        4,
+        0.12569567561149597,
+        0,
+        4,
+        0.15085750818252563,
+        0,
+        4,
+        0.1760333925485611,
+        0,
+        4,
+        0.20122109353542328,
+        0,
+        4,
+        0.2264268398284912,
+        0
+      ],
+      "azimuth_elevation_range_cloud": [],
+      "segmentation_cloud": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "intensity_cloud": [
+        1.3633066415786743,
+        1.3635038137435913,
+        1.3636852502822876,
+        1.3638509511947632,
+        1.364000916481018,
+        1.3641350269317627,
+        1.3642534017562866,
+        1.3643560409545898,
+        1.3644429445266724,
+        1.3645139932632446,
+        1.3645691871643066,
+        1.364608645439148,
+        1.3646323680877686,
+        1.364640235900879,
+        1.3646323680877686,
+        1.3646087646484375,
+        1.3645693063735962,
+        1.3645139932632446,
+        1.3644429445266724,
+        1.3643561601638794,
+        1.3642535209655762,
+        1.3641351461410522,
+        1.364000916481018
+      ],
+      "laser_index_cloud": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "pose": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": -100
+        },
+        "orientation": {
+          "w": 1,
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      }
+    },
+    {
+      "time_stamp": 204000000,
+      "point_cloud": [
+        4,
+        0.2516483962535858,
+        0,
+        4,
+        0.27689093351364136,
+        0,
+        4,
+        0.30215543508529663,
+        0,
+        4,
+        0.3274438679218292,
+        0
+      ],
+      "azimuth_elevation_range_cloud": [],
+      "segmentation_cloud": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "intensity_cloud": [
+        1.3638510704040527,
+        1.3636853694915771,
+        1.3635039329528809,
+        1.3633067607879639
+      ],
+      "laser_index_cloud": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "pose": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": -100
+        },
+        "orientation": {
+          "w": 1,
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      }
+    },
+    {
+      "time_stamp": 207000000,
+      "point_cloud": [],
+      "azimuth_elevation_range_cloud": [],
+      "segmentation_cloud": [],
+      "intensity_cloud": [],
+      "laser_index_cloud": [],
+      "pose": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": -100
+        },
+        "orientation": {
+          "w": 1,
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      }
+    },
+    {
+      "time_stamp": 210000000,
+      "point_cloud": [],
+      "azimuth_elevation_range_cloud": [],
+      "segmentation_cloud": [],
+      "intensity_cloud": [],
+      "laser_index_cloud": [],
+      "pose": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": -100
+        },
+        "orientation": {
+          "w": 1,
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      }
+    },
+    {
+      "time_stamp": 213000000,
+      "point_cloud": [],
+      "azimuth_elevation_range_cloud": [],
+      "segmentation_cloud": [],
+      "intensity_cloud": [],
+      "laser_index_cloud": [],
+      "pose": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": -100
+        },
+        "orientation": {
+          "w": 1,
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      }
+    },
+    {
+      "time_stamp": 216000000,
+      "point_cloud": [],
+      "azimuth_elevation_range_cloud": [],
+      "segmentation_cloud": [],
+      "intensity_cloud": [],
+      "laser_index_cloud": [],
+      "pose": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": -100
+        },
+        "orientation": {
+          "w": 1,
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      }
+    },
+    {
+      "time_stamp": 219000000,
+      "point_cloud": [],
+      "azimuth_elevation_range_cloud": [],
+      "segmentation_cloud": [],
+      "intensity_cloud": [],
+      "laser_index_cloud": [],
+      "pose": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": -100
+        },
+        "orientation": {
+          "w": 1,
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      }
+    },
+    {
+      "time_stamp": 222000000,
+      "point_cloud": [],
+      "azimuth_elevation_range_cloud": [],
+      "segmentation_cloud": [],
+      "intensity_cloud": [],
+      "laser_index_cloud": [],
+      "pose": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": -100
+        },
+        "orientation": {
+          "w": 1,
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      }
+    },
+    {
+      "time_stamp": 225000000,
+      "point_cloud": [],
+      "azimuth_elevation_range_cloud": [],
+      "segmentation_cloud": [],
+      "intensity_cloud": [],
+      "laser_index_cloud": [],
+      "pose": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": -100
+        },
+        "orientation": {
+          "w": 1,
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      }
+    },
+    {
+      "time_stamp": 228000000,
+      "point_cloud": [],
+      "azimuth_elevation_range_cloud": [],
+      "segmentation_cloud": [],
+      "intensity_cloud": [],
+      "laser_index_cloud": [],
+      "pose": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": -100
+        },
+        "orientation": {
+          "w": 1,
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      }
+    },
+    {
+      "time_stamp": 231000000,
+      "point_cloud": [],
+      "azimuth_elevation_range_cloud": [],
+      "segmentation_cloud": [],
+      "intensity_cloud": [],
+      "laser_index_cloud": [],
+      "pose": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": -100
+        },
+        "orientation": {
+          "w": 1,
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      }
+    },
+    {
+      "time_stamp": 234000000,
+      "point_cloud": [],
+      "azimuth_elevation_range_cloud": [],
+      "segmentation_cloud": [],
+      "intensity_cloud": [],
+      "laser_index_cloud": [],
+      "pose": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": -100
+        },
+        "orientation": {
+          "w": 1,
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      }
+    },
+    {
+      "time_stamp": 237000000,
+      "point_cloud": [],
+      "azimuth_elevation_range_cloud": [],
+      "segmentation_cloud": [],
+      "intensity_cloud": [],
+      "laser_index_cloud": [],
+      "pose": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": -100
+        },
+        "orientation": {
+          "w": 1,
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      }
+    },
+    {
+      "time_stamp": 240000000,
+      "point_cloud": [],
+      "azimuth_elevation_range_cloud": [],
+      "segmentation_cloud": [],
+      "intensity_cloud": [],
+      "laser_index_cloud": [],
+      "pose": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": -100
+        },
+        "orientation": {
+          "w": 1,
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      }
+    },
+    {
+      "time_stamp": 243000000,
+      "point_cloud": [],
+      "azimuth_elevation_range_cloud": [],
+      "segmentation_cloud": [],
+      "intensity_cloud": [],
+      "laser_index_cloud": [],
+      "pose": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": -100
+        },
+        "orientation": {
+          "w": 1,
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      }
+    },
+    {
+      "time_stamp": 246000000,
+      "point_cloud": [],
+      "azimuth_elevation_range_cloud": [],
+      "segmentation_cloud": [],
+      "intensity_cloud": [],
+      "laser_index_cloud": [],
+      "pose": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": -100
+        },
+        "orientation": {
+          "w": 1,
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      }
+    },
+    {
+      "time_stamp": 249000000,
+      "point_cloud": [],
+      "azimuth_elevation_range_cloud": [],
+      "segmentation_cloud": [],
+      "intensity_cloud": [],
+      "laser_index_cloud": [],
+      "pose": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": -100
+        },
+        "orientation": {
+          "w": 1,
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      }
+    },
+    {
+      "time_stamp": 252000000,
+      "point_cloud": [],
+      "azimuth_elevation_range_cloud": [],
+      "segmentation_cloud": [],
+      "intensity_cloud": [],
+      "laser_index_cloud": [],
+      "pose": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": -100
+        },
+        "orientation": {
+          "w": 1,
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      }
+    },
+    {
+      "time_stamp": 255000000,
+      "point_cloud": [],
+      "azimuth_elevation_range_cloud": [],
+      "segmentation_cloud": [],
+      "intensity_cloud": [],
+      "laser_index_cloud": [],
+      "pose": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": -100
+        },
+        "orientation": {
+          "w": 1,
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      }
+    },
+    {
+      "time_stamp": 258000000,
+      "point_cloud": [],
+      "azimuth_elevation_range_cloud": [],
+      "segmentation_cloud": [],
+      "intensity_cloud": [],
+      "laser_index_cloud": [],
+      "pose": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": -100
+        },
+        "orientation": {
+          "w": 1,
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      }
+    },
+    {
+      "time_stamp": 261000000,
+      "point_cloud": [],
+      "azimuth_elevation_range_cloud": [],
+      "segmentation_cloud": [],
+      "intensity_cloud": [],
+      "laser_index_cloud": [],
+      "pose": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": -100
+        },
+        "orientation": {
+          "w": 1,
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      }
+    },
+    {
+      "time_stamp": 264000000,
+      "point_cloud": [],
+      "azimuth_elevation_range_cloud": [],
+      "segmentation_cloud": [],
+      "intensity_cloud": [],
+      "laser_index_cloud": [],
+      "pose": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": -100
+        },
+        "orientation": {
+          "w": 1,
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      }
+    },
+    {
+      "time_stamp": 267000000,
+      "point_cloud": [],
+      "azimuth_elevation_range_cloud": [],
+      "segmentation_cloud": [],
+      "intensity_cloud": [],
+      "laser_index_cloud": [],
+      "pose": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": -100
+        },
+        "orientation": {
+          "w": 1,
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      }
+    },
+    {
+      "time_stamp": 270000000,
+      "point_cloud": [],
+      "azimuth_elevation_range_cloud": [],
+      "segmentation_cloud": [],
+      "intensity_cloud": [],
+      "laser_index_cloud": [],
+      "pose": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": -100
+        },
+        "orientation": {
+          "w": 1,
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      }
+    },
+    {
+      "time_stamp": 273000000,
+      "point_cloud": [],
+      "azimuth_elevation_range_cloud": [],
+      "segmentation_cloud": [],
+      "intensity_cloud": [],
+      "laser_index_cloud": [],
+      "pose": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": -100
+        },
+        "orientation": {
+          "w": 1,
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      }
+    },
+    {
+      "time_stamp": 276000000,
+      "point_cloud": [],
+      "azimuth_elevation_range_cloud": [],
+      "segmentation_cloud": [],
+      "intensity_cloud": [],
+      "laser_index_cloud": [],
+      "pose": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": -100
+        },
+        "orientation": {
+          "w": 1,
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      }
+    },
+    {
+      "time_stamp": 279000000,
+      "point_cloud": [],
+      "azimuth_elevation_range_cloud": [],
+      "segmentation_cloud": [],
+      "intensity_cloud": [],
+      "laser_index_cloud": [],
+      "pose": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": -100
+        },
+        "orientation": {
+          "w": 1,
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      }
+    },
+    {
+      "time_stamp": 282000000,
+      "point_cloud": [],
+      "azimuth_elevation_range_cloud": [],
+      "segmentation_cloud": [],
+      "intensity_cloud": [],
+      "laser_index_cloud": [],
+      "pose": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": -100
+        },
+        "orientation": {
+          "w": 1,
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      }
+    },
+    {
+      "time_stamp": 285000000,
+      "point_cloud": [],
+      "azimuth_elevation_range_cloud": [],
+      "segmentation_cloud": [],
+      "intensity_cloud": [],
+      "laser_index_cloud": [],
+      "pose": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": -100
+        },
+        "orientation": {
+          "w": 1,
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      }
+    },
+    {
+      "time_stamp": 288000000,
+      "point_cloud": [],
+      "azimuth_elevation_range_cloud": [],
+      "segmentation_cloud": [],
+      "intensity_cloud": [],
+      "laser_index_cloud": [],
+      "pose": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": -100
+        },
+        "orientation": {
+          "w": 1,
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      }
+    },
+    {
+      "time_stamp": 291000000,
+      "point_cloud": [],
+      "azimuth_elevation_range_cloud": [],
+      "segmentation_cloud": [],
+      "intensity_cloud": [],
+      "laser_index_cloud": [],
+      "pose": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": -100
+        },
+        "orientation": {
+          "w": 1,
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      }
+    },
+    {
+      "time_stamp": 294000000,
+      "point_cloud": [],
+      "azimuth_elevation_range_cloud": [],
+      "segmentation_cloud": [],
+      "intensity_cloud": [],
+      "laser_index_cloud": [],
+      "pose": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": -100
+        },
+        "orientation": {
+          "w": 1,
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      }
+    },
+    {
+      "time_stamp": 297000000,
+      "point_cloud": [],
+      "azimuth_elevation_range_cloud": [],
+      "segmentation_cloud": [],
+      "intensity_cloud": [],
+      "laser_index_cloud": [],
+      "pose": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": -100
+        },
+        "orientation": {
+          "w": 1,
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      }
+    },
+    {
+      "time_stamp": 300000000,
+      "point_cloud": [
+        4,
+        -0.32746872305870056,
+        0,
+        4,
+        -0.3021790683269501,
+        0,
+        4,
+        -0.276915580034256,
+        0,
+        4,
+        -0.2516719102859497,
+        0,
+        4,
+        -0.2264503687620163,
+        0,
+        4,
+        -0.20124459266662598,
+        0,
+        4,
+        -0.1760568916797638,
+        0,
+        4,
+        -0.15088097751140594,
+        0,
+        4,
+        -0.1257191300392151,
+        0,
+        4,
+        -0.1005650982260704,
+        0,
+        4,
+        -0.07542113959789276,
+        0,
+        4,
+        -0.05028313025832176,
+        0,
+        4,
+        -0.025146963074803352,
+        0
+      ],
+      "azimuth_elevation_range_cloud": [],
+      "segmentation_cloud": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "intensity_cloud": [
+        1.3633065223693848,
+        1.3635036945343018,
+        1.3636852502822876,
+        1.3638509511947632,
+        1.3640007972717285,
+        1.3641350269317627,
+        1.3642534017562866,
+        1.3643560409545898,
+        1.3644428253173828,
+        1.3645139932632446,
+        1.3645691871643066,
+        1.364608645439148,
+        1.3646323680877686
+      ],
+      "laser_index_cloud": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "pose": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": -100
+        },
+        "orientation": {
+          "w": 1,
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      }
+    }
+  ],
+  "clear_lidar": [
+    {
+      "time_stamp": 303000000,
+      "point_cloud": [],
+      "azimuth_elevation_range_cloud": [],
+      "segmentation_cloud": [],
+      "intensity_cloud": [],
+      "laser_index_cloud": [],
+      "pose": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": -100
+        },
+        "orientation": {
+          "w": 1,
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      }
+    },
+    {
+      "time_stamp": 306000000,
+      "point_cloud": [],
+      "azimuth_elevation_range_cloud": [],
+      "segmentation_cloud": [],
+      "intensity_cloud": [],
+      "laser_index_cloud": [],
+      "pose": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": -100
+        },
+        "orientation": {
+          "w": 1,
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      }
+    },
+    {
+      "time_stamp": 309000000,
+      "point_cloud": [],
+      "azimuth_elevation_range_cloud": [],
+      "segmentation_cloud": [],
+      "intensity_cloud": [],
+      "laser_index_cloud": [],
+      "pose": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": -100
+        },
+        "orientation": {
+          "w": 1,
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      }
+    },
+    {
+      "time_stamp": 312000000,
+      "point_cloud": [],
+      "azimuth_elevation_range_cloud": [],
+      "segmentation_cloud": [],
+      "intensity_cloud": [],
+      "laser_index_cloud": [],
+      "pose": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": -100
+        },
+        "orientation": {
+          "w": 1,
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      }
+    },
+    {
+      "time_stamp": 315000000,
+      "point_cloud": [],
+      "azimuth_elevation_range_cloud": [],
+      "segmentation_cloud": [],
+      "intensity_cloud": [],
+      "laser_index_cloud": [],
+      "pose": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": -100
+        },
+        "orientation": {
+          "w": 1,
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      }
+    },
+    {
+      "time_stamp": 318000000,
+      "point_cloud": [],
+      "azimuth_elevation_range_cloud": [],
+      "segmentation_cloud": [],
+      "intensity_cloud": [],
+      "laser_index_cloud": [],
+      "pose": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": -100
+        },
+        "orientation": {
+          "w": 1,
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      }
+    },
+    {
+      "time_stamp": 321000000,
+      "point_cloud": [],
+      "azimuth_elevation_range_cloud": [],
+      "segmentation_cloud": [],
+      "intensity_cloud": [],
+      "laser_index_cloud": [],
+      "pose": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": -100
+        },
+        "orientation": {
+          "w": 1,
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      }
+    },
+    {
+      "time_stamp": 324000000,
+      "point_cloud": [],
+      "azimuth_elevation_range_cloud": [],
+      "segmentation_cloud": [],
+      "intensity_cloud": [],
+      "laser_index_cloud": [],
+      "pose": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": -100
+        },
+        "orientation": {
+          "w": 1,
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      }
+    },
+    {
+      "time_stamp": 327000000,
+      "point_cloud": [],
+      "azimuth_elevation_range_cloud": [],
+      "segmentation_cloud": [],
+      "intensity_cloud": [],
+      "laser_index_cloud": [],
+      "pose": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": -100
+        },
+        "orientation": {
+          "w": 1,
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      }
+    },
+    {
+      "time_stamp": 330000000,
+      "point_cloud": [],
+      "azimuth_elevation_range_cloud": [],
+      "segmentation_cloud": [],
+      "intensity_cloud": [],
+      "laser_index_cloud": [],
+      "pose": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": -100
+        },
+        "orientation": {
+          "w": 1,
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      }
+    },
+    {
+      "time_stamp": 333000000,
+      "point_cloud": [],
+      "azimuth_elevation_range_cloud": [],
+      "segmentation_cloud": [],
+      "intensity_cloud": [],
+      "laser_index_cloud": [],
+      "pose": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": -100
+        },
+        "orientation": {
+          "w": 1,
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      }
+    },
+    {
+      "time_stamp": 336000000,
+      "point_cloud": [],
+      "azimuth_elevation_range_cloud": [],
+      "segmentation_cloud": [],
+      "intensity_cloud": [],
+      "laser_index_cloud": [],
+      "pose": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": -100
+        },
+        "orientation": {
+          "w": 1,
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      }
+    },
+    {
+      "time_stamp": 339000000,
+      "point_cloud": [],
+      "azimuth_elevation_range_cloud": [],
+      "segmentation_cloud": [],
+      "intensity_cloud": [],
+      "laser_index_cloud": [],
+      "pose": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": -100
+        },
+        "orientation": {
+          "w": 1,
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      }
+    },
+    {
+      "time_stamp": 342000000,
+      "point_cloud": [],
+      "azimuth_elevation_range_cloud": [],
+      "segmentation_cloud": [],
+      "intensity_cloud": [],
+      "laser_index_cloud": [],
+      "pose": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": -100
+        },
+        "orientation": {
+          "w": 1,
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      }
+    },
+    {
+      "time_stamp": 345000000,
+      "point_cloud": [],
+      "azimuth_elevation_range_cloud": [],
+      "segmentation_cloud": [],
+      "intensity_cloud": [],
+      "laser_index_cloud": [],
+      "pose": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": -100
+        },
+        "orientation": {
+          "w": 1,
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      }
+    },
+    {
+      "time_stamp": 348000000,
+      "point_cloud": [],
+      "azimuth_elevation_range_cloud": [],
+      "segmentation_cloud": [],
+      "intensity_cloud": [],
+      "laser_index_cloud": [],
+      "pose": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": -100
+        },
+        "orientation": {
+          "w": 1,
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      }
+    },
+    {
+      "time_stamp": 351000000,
+      "point_cloud": [],
+      "azimuth_elevation_range_cloud": [],
+      "segmentation_cloud": [],
+      "intensity_cloud": [],
+      "laser_index_cloud": [],
+      "pose": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": -100
+        },
+        "orientation": {
+          "w": 1,
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      }
+    },
+    {
+      "time_stamp": 354000000,
+      "point_cloud": [],
+      "azimuth_elevation_range_cloud": [],
+      "segmentation_cloud": [],
+      "intensity_cloud": [],
+      "laser_index_cloud": [],
+      "pose": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": -100
+        },
+        "orientation": {
+          "w": 1,
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      }
+    },
+    {
+      "time_stamp": 357000000,
+      "point_cloud": [],
+      "azimuth_elevation_range_cloud": [],
+      "segmentation_cloud": [],
+      "intensity_cloud": [],
+      "laser_index_cloud": [],
+      "pose": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": -100
+        },
+        "orientation": {
+          "w": 1,
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      }
+    },
+    {
+      "time_stamp": 360000000,
+      "point_cloud": [],
+      "azimuth_elevation_range_cloud": [],
+      "segmentation_cloud": [],
+      "intensity_cloud": [],
+      "laser_index_cloud": [],
+      "pose": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": -100
+        },
+        "orientation": {
+          "w": 1,
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      }
+    },
+    {
+      "time_stamp": 363000000,
+      "point_cloud": [],
+      "azimuth_elevation_range_cloud": [],
+      "segmentation_cloud": [],
+      "intensity_cloud": [],
+      "laser_index_cloud": [],
+      "pose": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": -100
+        },
+        "orientation": {
+          "w": 1,
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      }
+    },
+    {
+      "time_stamp": 366000000,
+      "point_cloud": [],
+      "azimuth_elevation_range_cloud": [],
+      "segmentation_cloud": [],
+      "intensity_cloud": [],
+      "laser_index_cloud": [],
+      "pose": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": -100
+        },
+        "orientation": {
+          "w": 1,
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      }
+    },
+    {
+      "time_stamp": 369000000,
+      "point_cloud": [],
+      "azimuth_elevation_range_cloud": [],
+      "segmentation_cloud": [],
+      "intensity_cloud": [],
+      "laser_index_cloud": [],
+      "pose": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": -100
+        },
+        "orientation": {
+          "w": 1,
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      }
+    },
+    {
+      "time_stamp": 372000000,
+      "point_cloud": [],
+      "azimuth_elevation_range_cloud": [],
+      "segmentation_cloud": [],
+      "intensity_cloud": [],
+      "laser_index_cloud": [],
+      "pose": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": -100
+        },
+        "orientation": {
+          "w": 1,
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      }
+    },
+    {
+      "time_stamp": 375000000,
+      "point_cloud": [],
+      "azimuth_elevation_range_cloud": [],
+      "segmentation_cloud": [],
+      "intensity_cloud": [],
+      "laser_index_cloud": [],
+      "pose": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": -100
+        },
+        "orientation": {
+          "w": 1,
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      }
+    },
+    {
+      "time_stamp": 378000000,
+      "point_cloud": [],
+      "azimuth_elevation_range_cloud": [],
+      "segmentation_cloud": [],
+      "intensity_cloud": [],
+      "laser_index_cloud": [],
+      "pose": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": -100
+        },
+        "orientation": {
+          "w": 1,
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      }
+    },
+    {
+      "time_stamp": 381000000,
+      "point_cloud": [],
+      "azimuth_elevation_range_cloud": [],
+      "segmentation_cloud": [],
+      "intensity_cloud": [],
+      "laser_index_cloud": [],
+      "pose": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": -100
+        },
+        "orientation": {
+          "w": 1,
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      }
+    },
+    {
+      "time_stamp": 384000000,
+      "point_cloud": [],
+      "azimuth_elevation_range_cloud": [],
+      "segmentation_cloud": [],
+      "intensity_cloud": [],
+      "laser_index_cloud": [],
+      "pose": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": -100
+        },
+        "orientation": {
+          "w": 1,
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      }
+    },
+    {
+      "time_stamp": 387000000,
+      "point_cloud": [],
+      "azimuth_elevation_range_cloud": [],
+      "segmentation_cloud": [],
+      "intensity_cloud": [],
+      "laser_index_cloud": [],
+      "pose": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": -100
+        },
+        "orientation": {
+          "w": 1,
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      }
+    },
+    {
+      "time_stamp": 390000000,
+      "point_cloud": [],
+      "azimuth_elevation_range_cloud": [],
+      "segmentation_cloud": [],
+      "intensity_cloud": [],
+      "laser_index_cloud": [],
+      "pose": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": -100
+        },
+        "orientation": {
+          "w": 1,
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      }
+    },
+    {
+      "time_stamp": 393000000,
+      "point_cloud": [],
+      "azimuth_elevation_range_cloud": [],
+      "segmentation_cloud": [],
+      "intensity_cloud": [],
+      "laser_index_cloud": [],
+      "pose": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": -100
+        },
+        "orientation": {
+          "w": 1,
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      }
+    },
+    {
+      "time_stamp": 396000000,
+      "point_cloud": [],
+      "azimuth_elevation_range_cloud": [],
+      "segmentation_cloud": [],
+      "intensity_cloud": [],
+      "laser_index_cloud": [],
+      "pose": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": -100
+        },
+        "orientation": {
+          "w": 1,
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      }
+    },
+    {
+      "time_stamp": 399000000,
+      "point_cloud": [],
+      "azimuth_elevation_range_cloud": [],
+      "segmentation_cloud": [],
+      "intensity_cloud": [],
+      "laser_index_cloud": [],
+      "pose": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": -100
+        },
+        "orientation": {
+          "w": 1,
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      }
+    },
+    {
+      "time_stamp": 402000000,
+      "point_cloud": [],
+      "azimuth_elevation_range_cloud": [],
+      "segmentation_cloud": [],
+      "intensity_cloud": [],
+      "laser_index_cloud": [],
+      "pose": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": -100
+        },
+        "orientation": {
+          "w": 1,
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      }
+    },
+    {
+      "time_stamp": 405000000,
+      "point_cloud": [],
+      "azimuth_elevation_range_cloud": [],
+      "segmentation_cloud": [],
+      "intensity_cloud": [],
+      "laser_index_cloud": [],
+      "pose": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": -100
+        },
+        "orientation": {
+          "w": 1,
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      }
+    },
+    {
+      "time_stamp": 408000000,
+      "point_cloud": [],
+      "azimuth_elevation_range_cloud": [],
+      "segmentation_cloud": [],
+      "intensity_cloud": [],
+      "laser_index_cloud": [],
+      "pose": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": -100
+        },
+        "orientation": {
+          "w": 1,
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      }
+    },
+    {
+      "time_stamp": 411000000,
+      "point_cloud": [],
+      "azimuth_elevation_range_cloud": [],
+      "segmentation_cloud": [],
+      "intensity_cloud": [],
+      "laser_index_cloud": [],
+      "pose": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": -100
+        },
+        "orientation": {
+          "w": 1,
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      }
+    },
+    {
+      "time_stamp": 414000000,
+      "point_cloud": [],
+      "azimuth_elevation_range_cloud": [],
+      "segmentation_cloud": [],
+      "intensity_cloud": [],
+      "laser_index_cloud": [],
+      "pose": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": -100
+        },
+        "orientation": {
+          "w": 1,
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      }
+    },
+    {
+      "time_stamp": 417000000,
+      "point_cloud": [],
+      "azimuth_elevation_range_cloud": [],
+      "segmentation_cloud": [],
+      "intensity_cloud": [],
+      "laser_index_cloud": [],
+      "pose": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": -100
+        },
+        "orientation": {
+          "w": 1,
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      }
+    },
+    {
+      "time_stamp": 420000000,
+      "point_cloud": [],
+      "azimuth_elevation_range_cloud": [],
+      "segmentation_cloud": [],
+      "intensity_cloud": [],
+      "laser_index_cloud": [],
+      "pose": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": -100
+        },
+        "orientation": {
+          "w": 1,
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      }
+    },
+    {
+      "time_stamp": 423000000,
+      "point_cloud": [],
+      "azimuth_elevation_range_cloud": [],
+      "segmentation_cloud": [],
+      "intensity_cloud": [],
+      "laser_index_cloud": [],
+      "pose": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": -100
+        },
+        "orientation": {
+          "w": 1,
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      }
+    },
+    {
+      "time_stamp": 426000000,
+      "point_cloud": [],
+      "azimuth_elevation_range_cloud": [],
+      "segmentation_cloud": [],
+      "intensity_cloud": [],
+      "laser_index_cloud": [],
+      "pose": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": -100
+        },
+        "orientation": {
+          "w": 1,
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      }
+    },
+    {
+      "time_stamp": 429000000,
+      "point_cloud": [],
+      "azimuth_elevation_range_cloud": [],
+      "segmentation_cloud": [],
+      "intensity_cloud": [],
+      "laser_index_cloud": [],
+      "pose": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": -100
+        },
+        "orientation": {
+          "w": 1,
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      }
+    },
+    {
+      "time_stamp": 432000000,
+      "point_cloud": [],
+      "azimuth_elevation_range_cloud": [],
+      "segmentation_cloud": [],
+      "intensity_cloud": [],
+      "laser_index_cloud": [],
+      "pose": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": -100
+        },
+        "orientation": {
+          "w": 1,
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      }
+    },
+    {
+      "time_stamp": 435000000,
+      "point_cloud": [],
+      "azimuth_elevation_range_cloud": [],
+      "segmentation_cloud": [],
+      "intensity_cloud": [],
+      "laser_index_cloud": [],
+      "pose": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": -100
+        },
+        "orientation": {
+          "w": 1,
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      }
+    },
+    {
+      "time_stamp": 438000000,
+      "point_cloud": [],
+      "azimuth_elevation_range_cloud": [],
+      "segmentation_cloud": [],
+      "intensity_cloud": [],
+      "laser_index_cloud": [],
+      "pose": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": -100
+        },
+        "orientation": {
+          "w": 1,
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      }
+    },
+    {
+      "time_stamp": 441000000,
+      "point_cloud": [],
+      "azimuth_elevation_range_cloud": [],
+      "segmentation_cloud": [],
+      "intensity_cloud": [],
+      "laser_index_cloud": [],
+      "pose": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": -100
+        },
+        "orientation": {
+          "w": 1,
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      }
+    },
+    {
+      "time_stamp": 444000000,
+      "point_cloud": [],
+      "azimuth_elevation_range_cloud": [],
+      "segmentation_cloud": [],
+      "intensity_cloud": [],
+      "laser_index_cloud": [],
+      "pose": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": -100
+        },
+        "orientation": {
+          "w": 1,
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      }
+    },
+    {
+      "time_stamp": 447000000,
+      "point_cloud": [],
+      "azimuth_elevation_range_cloud": [],
+      "segmentation_cloud": [],
+      "intensity_cloud": [],
+      "laser_index_cloud": [],
+      "pose": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": -100
+        },
+        "orientation": {
+          "w": 1,
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      }
+    },
+    {
+      "time_stamp": 450000000,
+      "point_cloud": [],
+      "azimuth_elevation_range_cloud": [],
+      "segmentation_cloud": [],
+      "intensity_cloud": [],
+      "laser_index_cloud": [],
+      "pose": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": -100
+        },
+        "orientation": {
+          "w": 1,
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      }
+    },
+    {
+      "time_stamp": 453000000,
+      "point_cloud": [],
+      "azimuth_elevation_range_cloud": [],
+      "segmentation_cloud": [],
+      "intensity_cloud": [],
+      "laser_index_cloud": [],
+      "pose": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": -100
+        },
+        "orientation": {
+          "w": 1,
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      }
+    },
+    {
+      "time_stamp": 456000000,
+      "point_cloud": [],
+      "azimuth_elevation_range_cloud": [],
+      "segmentation_cloud": [],
+      "intensity_cloud": [],
+      "laser_index_cloud": [],
+      "pose": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": -100
+        },
+        "orientation": {
+          "w": 1,
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      }
+    },
+    {
+      "time_stamp": 459000000,
+      "point_cloud": [],
+      "azimuth_elevation_range_cloud": [],
+      "segmentation_cloud": [],
+      "intensity_cloud": [],
+      "laser_index_cloud": [],
+      "pose": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": -100
+        },
+        "orientation": {
+          "w": 1,
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      }
+    },
+    {
+      "time_stamp": 462000000,
+      "point_cloud": [],
+      "azimuth_elevation_range_cloud": [],
+      "segmentation_cloud": [],
+      "intensity_cloud": [],
+      "laser_index_cloud": [],
+      "pose": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": -100
+        },
+        "orientation": {
+          "w": 1,
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      }
+    },
+    {
+      "time_stamp": 465000000,
+      "point_cloud": [],
+      "azimuth_elevation_range_cloud": [],
+      "segmentation_cloud": [],
+      "intensity_cloud": [],
+      "laser_index_cloud": [],
+      "pose": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": -100
+        },
+        "orientation": {
+          "w": 1,
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      }
+    },
+    {
+      "time_stamp": 468000000,
+      "point_cloud": [],
+      "azimuth_elevation_range_cloud": [],
+      "segmentation_cloud": [],
+      "intensity_cloud": [],
+      "laser_index_cloud": [],
+      "pose": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": -100
+        },
+        "orientation": {
+          "w": 1,
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      }
+    },
+    {
+      "time_stamp": 471000000,
+      "point_cloud": [],
+      "azimuth_elevation_range_cloud": [],
+      "segmentation_cloud": [],
+      "intensity_cloud": [],
+      "laser_index_cloud": [],
+      "pose": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": -100
+        },
+        "orientation": {
+          "w": 1,
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      }
+    },
+    {
+      "time_stamp": 474000000,
+      "point_cloud": [],
+      "azimuth_elevation_range_cloud": [],
+      "segmentation_cloud": [],
+      "intensity_cloud": [],
+      "laser_index_cloud": [],
+      "pose": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": -100
+        },
+        "orientation": {
+          "w": 1,
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      }
+    },
+    {
+      "time_stamp": 477000000,
+      "point_cloud": [],
+      "azimuth_elevation_range_cloud": [],
+      "segmentation_cloud": [],
+      "intensity_cloud": [],
+      "laser_index_cloud": [],
+      "pose": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": -100
+        },
+        "orientation": {
+          "w": 1,
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      }
+    },
+    {
+      "time_stamp": 480000000,
+      "point_cloud": [],
+      "azimuth_elevation_range_cloud": [],
+      "segmentation_cloud": [],
+      "intensity_cloud": [],
+      "laser_index_cloud": [],
+      "pose": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": -100
+        },
+        "orientation": {
+          "w": 1,
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      }
+    },
+    {
+      "time_stamp": 483000000,
+      "point_cloud": [],
+      "azimuth_elevation_range_cloud": [],
+      "segmentation_cloud": [],
+      "intensity_cloud": [],
+      "laser_index_cloud": [],
+      "pose": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": -100
+        },
+        "orientation": {
+          "w": 1,
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      }
+    },
+    {
+      "time_stamp": 486000000,
+      "point_cloud": [],
+      "azimuth_elevation_range_cloud": [],
+      "segmentation_cloud": [],
+      "intensity_cloud": [],
+      "laser_index_cloud": [],
+      "pose": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": -100
+        },
+        "orientation": {
+          "w": 1,
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      }
+    },
+    {
+      "time_stamp": 489000000,
+      "point_cloud": [],
+      "azimuth_elevation_range_cloud": [],
+      "segmentation_cloud": [],
+      "intensity_cloud": [],
+      "laser_index_cloud": [],
+      "pose": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": -100
+        },
+        "orientation": {
+          "w": 1,
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      }
+    },
+    {
+      "time_stamp": 492000000,
+      "point_cloud": [],
+      "azimuth_elevation_range_cloud": [],
+      "segmentation_cloud": [],
+      "intensity_cloud": [],
+      "laser_index_cloud": [],
+      "pose": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": -100
+        },
+        "orientation": {
+          "w": 1,
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      }
+    },
+    {
+      "time_stamp": 495000000,
+      "point_cloud": [],
+      "azimuth_elevation_range_cloud": [],
+      "segmentation_cloud": [],
+      "intensity_cloud": [],
+      "laser_index_cloud": [],
+      "pose": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": -100
+        },
+        "orientation": {
+          "w": 1,
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      }
+    },
+    {
+      "time_stamp": 498000000,
+      "point_cloud": [],
+      "azimuth_elevation_range_cloud": [],
+      "segmentation_cloud": [],
+      "intensity_cloud": [],
+      "laser_index_cloud": [],
+      "pose": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": -100
+        },
+        "orientation": {
+          "w": 1,
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      }
+    },
+    {
+      "time_stamp": 501000000,
+      "point_cloud": [],
+      "azimuth_elevation_range_cloud": [],
+      "segmentation_cloud": [],
+      "intensity_cloud": [],
+      "laser_index_cloud": [],
+      "pose": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": -100
+        },
+        "orientation": {
+          "w": 1,
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      }
+    },
+    {
+      "time_stamp": 504000000,
+      "point_cloud": [],
+      "azimuth_elevation_range_cloud": [],
+      "segmentation_cloud": [],
+      "intensity_cloud": [],
+      "laser_index_cloud": [],
+      "pose": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": -100
+        },
+        "orientation": {
+          "w": 1,
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      }
+    },
+    {
+      "time_stamp": 507000000,
+      "point_cloud": [],
+      "azimuth_elevation_range_cloud": [],
+      "segmentation_cloud": [],
+      "intensity_cloud": [],
+      "laser_index_cloud": [],
+      "pose": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": -100
+        },
+        "orientation": {
+          "w": 1,
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      }
+    },
+    {
+      "time_stamp": 510000000,
+      "point_cloud": [],
+      "azimuth_elevation_range_cloud": [],
+      "segmentation_cloud": [],
+      "intensity_cloud": [],
+      "laser_index_cloud": [],
+      "pose": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": -100
+        },
+        "orientation": {
+          "w": 1,
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      }
+    },
+    {
+      "time_stamp": 513000000,
+      "point_cloud": [],
+      "azimuth_elevation_range_cloud": [],
+      "segmentation_cloud": [],
+      "intensity_cloud": [],
+      "laser_index_cloud": [],
+      "pose": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": -100
+        },
+        "orientation": {
+          "w": 1,
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      }
+    },
+    {
+      "time_stamp": 516000000,
+      "point_cloud": [],
+      "azimuth_elevation_range_cloud": [],
+      "segmentation_cloud": [],
+      "intensity_cloud": [],
+      "laser_index_cloud": [],
+      "pose": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": -100
+        },
+        "orientation": {
+          "w": 1,
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      }
+    },
+    {
+      "time_stamp": 519000000,
+      "point_cloud": [],
+      "azimuth_elevation_range_cloud": [],
+      "segmentation_cloud": [],
+      "intensity_cloud": [],
+      "laser_index_cloud": [],
+      "pose": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": -100
+        },
+        "orientation": {
+          "w": 1,
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      }
+    },
+    {
+      "time_stamp": 522000000,
+      "point_cloud": [],
+      "azimuth_elevation_range_cloud": [],
+      "segmentation_cloud": [],
+      "intensity_cloud": [],
+      "laser_index_cloud": [],
+      "pose": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": -100
+        },
+        "orientation": {
+          "w": 1,
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      }
+    },
+    {
+      "time_stamp": 525000000,
+      "point_cloud": [],
+      "azimuth_elevation_range_cloud": [],
+      "segmentation_cloud": [],
+      "intensity_cloud": [],
+      "laser_index_cloud": [],
+      "pose": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": -100
+        },
+        "orientation": {
+          "w": 1,
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      }
+    },
+    {
+      "time_stamp": 528000000,
+      "point_cloud": [],
+      "azimuth_elevation_range_cloud": [],
+      "segmentation_cloud": [],
+      "intensity_cloud": [],
+      "laser_index_cloud": [],
+      "pose": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": -100
+        },
+        "orientation": {
+          "w": 1,
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      }
+    },
+    {
+      "time_stamp": 531000000,
+      "point_cloud": [],
+      "azimuth_elevation_range_cloud": [],
+      "segmentation_cloud": [],
+      "intensity_cloud": [],
+      "laser_index_cloud": [],
+      "pose": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": -100
+        },
+        "orientation": {
+          "w": 1,
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      }
+    },
+    {
+      "time_stamp": 534000000,
+      "point_cloud": [],
+      "azimuth_elevation_range_cloud": [],
+      "segmentation_cloud": [],
+      "intensity_cloud": [],
+      "laser_index_cloud": [],
+      "pose": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": -100
+        },
+        "orientation": {
+          "w": 1,
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      }
+    },
+    {
+      "time_stamp": 537000000,
+      "point_cloud": [],
+      "azimuth_elevation_range_cloud": [],
+      "segmentation_cloud": [],
+      "intensity_cloud": [],
+      "laser_index_cloud": [],
+      "pose": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": -100
+        },
+        "orientation": {
+          "w": 1,
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      }
+    },
+    {
+      "time_stamp": 540000000,
+      "point_cloud": [],
+      "azimuth_elevation_range_cloud": [],
+      "segmentation_cloud": [],
+      "intensity_cloud": [],
+      "laser_index_cloud": [],
+      "pose": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": -100
+        },
+        "orientation": {
+          "w": 1,
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      }
+    },
+    {
+      "time_stamp": 543000000,
+      "point_cloud": [],
+      "azimuth_elevation_range_cloud": [],
+      "segmentation_cloud": [],
+      "intensity_cloud": [],
+      "laser_index_cloud": [],
+      "pose": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": -100
+        },
+        "orientation": {
+          "w": 1,
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      }
+    },
+    {
+      "time_stamp": 546000000,
+      "point_cloud": [],
+      "azimuth_elevation_range_cloud": [],
+      "segmentation_cloud": [],
+      "intensity_cloud": [],
+      "laser_index_cloud": [],
+      "pose": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": -100
+        },
+        "orientation": {
+          "w": 1,
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      }
+    },
+    {
+      "time_stamp": 549000000,
+      "point_cloud": [],
+      "azimuth_elevation_range_cloud": [],
+      "segmentation_cloud": [],
+      "intensity_cloud": [],
+      "laser_index_cloud": [],
+      "pose": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": -100
+        },
+        "orientation": {
+          "w": 1,
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      }
+    },
+    {
+      "time_stamp": 552000000,
+      "point_cloud": [],
+      "azimuth_elevation_range_cloud": [],
+      "segmentation_cloud": [],
+      "intensity_cloud": [],
+      "laser_index_cloud": [],
+      "pose": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": -100
+        },
+        "orientation": {
+          "w": 1,
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      }
+    },
+    {
+      "time_stamp": 555000000,
+      "point_cloud": [],
+      "azimuth_elevation_range_cloud": [],
+      "segmentation_cloud": [],
+      "intensity_cloud": [],
+      "laser_index_cloud": [],
+      "pose": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": -100
+        },
+        "orientation": {
+          "w": 1,
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      }
+    },
+    {
+      "time_stamp": 558000000,
+      "point_cloud": [],
+      "azimuth_elevation_range_cloud": [],
+      "segmentation_cloud": [],
+      "intensity_cloud": [],
+      "laser_index_cloud": [],
+      "pose": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": -100
+        },
+        "orientation": {
+          "w": 1,
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      }
+    },
+    {
+      "time_stamp": 561000000,
+      "point_cloud": [],
+      "azimuth_elevation_range_cloud": [],
+      "segmentation_cloud": [],
+      "intensity_cloud": [],
+      "laser_index_cloud": [],
+      "pose": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": -100
+        },
+        "orientation": {
+          "w": 1,
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      }
+    },
+    {
+      "time_stamp": 564000000,
+      "point_cloud": [],
+      "azimuth_elevation_range_cloud": [],
+      "segmentation_cloud": [],
+      "intensity_cloud": [],
+      "laser_index_cloud": [],
+      "pose": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": -100
+        },
+        "orientation": {
+          "w": 1,
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      }
+    },
+    {
+      "time_stamp": 567000000,
+      "point_cloud": [],
+      "azimuth_elevation_range_cloud": [],
+      "segmentation_cloud": [],
+      "intensity_cloud": [],
+      "laser_index_cloud": [],
+      "pose": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": -100
+        },
+        "orientation": {
+          "w": 1,
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      }
+    },
+    {
+      "time_stamp": 570000000,
+      "point_cloud": [],
+      "azimuth_elevation_range_cloud": [],
+      "segmentation_cloud": [],
+      "intensity_cloud": [],
+      "laser_index_cloud": [],
+      "pose": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": -100
+        },
+        "orientation": {
+          "w": 1,
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      }
+    },
+    {
+      "time_stamp": 573000000,
+      "point_cloud": [],
+      "azimuth_elevation_range_cloud": [],
+      "segmentation_cloud": [],
+      "intensity_cloud": [],
+      "laser_index_cloud": [],
+      "pose": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": -100
+        },
+        "orientation": {
+          "w": 1,
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      }
+    },
+    {
+      "time_stamp": 576000000,
+      "point_cloud": [],
+      "azimuth_elevation_range_cloud": [],
+      "segmentation_cloud": [],
+      "intensity_cloud": [],
+      "laser_index_cloud": [],
+      "pose": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": -100
+        },
+        "orientation": {
+          "w": 1,
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      }
+    },
+    {
+      "time_stamp": 579000000,
+      "point_cloud": [],
+      "azimuth_elevation_range_cloud": [],
+      "segmentation_cloud": [],
+      "intensity_cloud": [],
+      "laser_index_cloud": [],
+      "pose": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": -100
+        },
+        "orientation": {
+          "w": 1,
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      }
+    },
+    {
+      "time_stamp": 582000000,
+      "point_cloud": [],
+      "azimuth_elevation_range_cloud": [],
+      "segmentation_cloud": [],
+      "intensity_cloud": [],
+      "laser_index_cloud": [],
+      "pose": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": -100
+        },
+        "orientation": {
+          "w": 1,
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      }
+    },
+    {
+      "time_stamp": 585000000,
+      "point_cloud": [],
+      "azimuth_elevation_range_cloud": [],
+      "segmentation_cloud": [],
+      "intensity_cloud": [],
+      "laser_index_cloud": [],
+      "pose": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": -100
+        },
+        "orientation": {
+          "w": 1,
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      }
+    },
+    {
+      "time_stamp": 588000000,
+      "point_cloud": [],
+      "azimuth_elevation_range_cloud": [],
+      "segmentation_cloud": [],
+      "intensity_cloud": [],
+      "laser_index_cloud": [],
+      "pose": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": -100
+        },
+        "orientation": {
+          "w": 1,
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      }
+    },
+    {
+      "time_stamp": 591000000,
+      "point_cloud": [],
+      "azimuth_elevation_range_cloud": [],
+      "segmentation_cloud": [],
+      "intensity_cloud": [],
+      "laser_index_cloud": [],
+      "pose": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": -100
+        },
+        "orientation": {
+          "w": 1,
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      }
+    },
+    {
+      "time_stamp": 594000000,
+      "point_cloud": [],
+      "azimuth_elevation_range_cloud": [],
+      "segmentation_cloud": [],
+      "intensity_cloud": [],
+      "laser_index_cloud": [],
+      "pose": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": -100
+        },
+        "orientation": {
+          "w": 1,
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      }
+    },
+    {
+      "time_stamp": 597000000,
+      "point_cloud": [],
+      "azimuth_elevation_range_cloud": [],
+      "segmentation_cloud": [],
+      "intensity_cloud": [],
+      "laser_index_cloud": [],
+      "pose": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": -100
+        },
+        "orientation": {
+          "w": 1,
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      }
+    },
+    {
+      "time_stamp": 600000000,
+      "point_cloud": [],
+      "azimuth_elevation_range_cloud": [],
+      "segmentation_cloud": [],
+      "intensity_cloud": [],
+      "laser_index_cloud": [],
+      "pose": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": -100
+        },
+        "orientation": {
+          "w": 1,
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      }
+    }
+  ]
+}

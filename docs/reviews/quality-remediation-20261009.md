@@ -62,7 +62,7 @@ workloads and measured live behavior rather than additional tuning of this one
 terrain or reinterpreting renderer-only timings as full-system throughput.
 
 
-## Follow-up qualification checklist — updated 15 October 2026
+## Follow-up qualification checklist — updated 16 October 2026
 
 The twelve original findings above are closed. Subsequent live-workflow work has
 its own evidence and narrower qualification boundaries:
@@ -77,7 +77,7 @@ its own evidence and narrower qualification boundaries:
 | Scenario assembly and I/Q access | Complete for the stationary starter: [walkthrough](../scenario-to-iq.md), explicit propagation choice, synchronous callback and CPU reader. The [experimental TCP adapter](../iq-stream.md) now passes one-/two-receiver separate-process delivery and exact recording comparison. Cross-host operation and native external SDR adapters remain unqualified. |
 | Occlusion and path births/deaths | Complete for one controlled direct-path case: [RF screen qualification](../../results/reviews/moving-iq-20261014/REPORT.md) matches analytic visibility and preserves receiver state through disappearance/return. Broader multipath transitions and matched Unreal obstruction geometry remain open. |
 | Explicit turn maneuvers | Complete for a controlled two-drone direct-path case: [turning-mount qualification](../../results/reviews/turning-mounts-20261015/REPORT.md) checks nonzero TX/RX offsets against pose finite differences, path geometry and recorded I/Q. [Directional gain under rotation](../../results/reviews/directional-turns-20261015/REPORT.md) now passes a matched isotropic baseline and independent pattern calculation. Low-level ADC quantization limits are preserved in the report; broader multipath maneuvers remain open. |
-| Unreal mesh interoperability | Open: load/export a matching rendered world and demonstrate alignment; the standalone flat-ground Runtime cannot establish this. |
+| Unreal mesh interoperability | Partial: [real Unreal cube alignment](../../results/reviews/unreal-geometry-20261016/REPORT.md) passes CPU LiDAR vs GPU RF intersections and relocation visibility. The verified Blocks package runs headlessly. Arbitrary triangle export, material mapping and rendered-world alignment remain open; see [handoff requirements](../unreal-geometry.md). |
 
 These open entries are qualification gaps, not evidence that their implementations
 are broken. Fixes should follow observed failures rather than scenario-specific

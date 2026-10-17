@@ -1,0 +1,39 @@
+00:18:16:437 [INFO] Connecting to simulation server at 127.0.0.1
+00:18:16:439 [INFO] Connection opened.
+00:18:16:439 [INFO] Loading scene config: scene.jsonc
+00:18:16:718 [INFO] Getting the list of available topic info from the sim server...
+00:18:16:728 [INFO] Successfully received topic info list.
+00:18:16:728 [INFO] World object updated for the loaded scene '/Sim/RFUnrealGeometry'. Note: Any previous Drone object instances may no longer be valid.
+00:18:16:729 [INFO] Trajectory 'null_trajectory' imported successfully.
+00:18:16:729 [INFO] Initalizing Drone 'Probe'...
+00:18:16:729 [INFO] -------------------------------------------------
+00:18:16:729 [INFO] The following topics can be subscribed to for robot 'Probe':
+00:18:16:730 [INFO]     sensors["lidar1"]["lidar"]
+00:18:16:730 [INFO]     robot_info["actual_pose"]
+00:18:16:730 [INFO]     robot_info["collision_info"]
+00:18:16:730 [INFO]     robot_info["rotor_info"]
+00:18:16:730 [INFO] -------------------------------------------------
+00:18:16:730 [INFO] Drone 'Probe' initialized for World scene '/Sim/RFUnrealGeometry'
+spawned RFCheckCube pose {'frame_id': 'DEFAULT_ID', 'translation': {'x': 5.0, 'y': 0.0, 'z': -100.0}, 'rotation': {'w': 1.0, 'x': -0.0, 'y': 0.0, 'z': 0.0}} scale [2.0, 2.0, 2.0]
+00:18:18:549 [INFO] Disconnecting from simulation server...
+00:18:18:594 [INFO] Disconnected.
+{
+  "status": "passed",
+  "checks": {
+    "unreal_face_at_4m": true,
+    "rf_lidar_hits_within_1mm": true,
+    "blocked_direct_path_absent": true,
+    "relocated_direct_path_present": true,
+    "clear_lidar_messages_received": true,
+    "relocated_cube_outside_lidar_view": true
+  },
+  "scope": "Unreal CPU-LiDAR collision primitive and CUDA RF mesh alignment; null-RHI, no rendered images or arbitrary mesh export",
+  "blocked_points": 81,
+  "maximum_rf_lidar_hit_error_m": 7.633482524212087e-06,
+  "clear_points": 0,
+  "blocked_direct_paths": 0,
+  "clear_direct_paths": 1,
+  "simulation_seconds_per_phase": 0.3,
+  "backend": "cuda_ad_mono_polarized",
+  "sionna_rt": "2.2.0"
+}

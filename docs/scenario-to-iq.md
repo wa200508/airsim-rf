@@ -251,7 +251,9 @@ and the model's power convention are needed for power conversion.
   duration and interpolation margin for actual elapsed physics time.
 - **Geometry:** edit both simulator geometry and RF mesh consistently. The
   standalone Runtime only supplies flat-ground collision; it does not validate
-  an Unreal building/terrain export. Synthetic RF material values are assumptions.
+  an Unreal building/terrain export. The [Unreal cube check](unreal-geometry.md)
+  provides a measured primitive alignment contract; arbitrary export is still
+  separate work. Synthetic RF material values are assumptions.
 - **Motion:** replace the starter non-physics robot with a suitable controller
   configuration and own the flight commands/stepping. Changing RF-only positions
   does not prove a live flight-control workflow.

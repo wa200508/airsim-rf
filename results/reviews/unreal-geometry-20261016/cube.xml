@@ -1,0 +1,1 @@
+<scene version="2.1.0"><bsdf type="radio-material" id="material"><float name="relative_permittivity" value="5"/></bsdf><shape type="ply" id="cube"><string name="filename" value="cube.ply"/><ref id="material" name="bsdf"/><transform name="to_world"><translate x="5" y="0" z="100"/></transform></shape></scene>
