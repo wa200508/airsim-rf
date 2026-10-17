@@ -1,0 +1,58 @@
+{
+  "address": "127.0.0.1",
+  "scene": "scene_rf.jsonc",
+  "sim_config": "sim_config",
+  "rf_scene": "rf_ground.xml",
+  "antennas": {
+    "tx": {
+      "pattern": "tr38901",
+      "polarization": "V"
+    },
+    "rx": {
+      "pattern": "iso",
+      "polarization": "V"
+    }
+  },
+  "receiver_profile": {
+    "carrier_hz": 915000000,
+    "sample_rate_hz": 2000000,
+    "rf_bandwidth_hz": 1000000
+  },
+  "propagation": {
+    "mode": "specular",
+    "samples_per_link": 1028,
+    "seed": 42
+  },
+  "radios": {
+    "tx0": {
+      "robot": "Drone1",
+      "waveform_npy": "tx0.npy",
+      "transmit_power_w": 0.0001,
+      "baseband_frequency_bounds_hz": [
+        150000,
+        150000
+      ],
+      "mount_body_m": [
+        0,
+        0,
+        0
+      ]
+    },
+    "rx0": {
+      "robot": "Drone2",
+      "mount_body_m": [
+        0,
+        0,
+        0
+      ]
+    },
+    "rx1": {
+      "robot": "Drone2",
+      "mount_body_m": [
+        0,
+        0.5,
+        0
+      ]
+    }
+  }
+}

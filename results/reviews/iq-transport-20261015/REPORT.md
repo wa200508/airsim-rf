@@ -46,9 +46,11 @@ The consumer's summary must say complete and the producer must report consumer
 acknowledgement. A complete local recording alone does not prove delivery.
 Capture used the P100-compatible image and real Runtime; the consumer used the
 CPU image without GPU access. The [single summary](single-consumer.json),
-[multi summary](multi-consumer.json), producer/consumer logs, per-case manifests,
+[multi summary](multi-consumer.json), per-case manifests,
 SigMF metadata and [regression log](standard-tests.log) are retained here.
-Raw I/Q stays in ignored local recordings and is compared via its reconstructed
+Temporary producer/consumer console logs expired before publication; retained
+completion summaries and exact sample comparisons provide the delivery evidence.
+The regression suite was rerun for publication. Raw I/Q stays in ignored local recordings and is compared via its reconstructed
 complex64 hashes.
 
 ## Scope
