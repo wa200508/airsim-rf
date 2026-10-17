@@ -8,6 +8,11 @@ removes LiDAR returns and restores the direct RF path.
 This is a shared primitive check. It does not establish arbitrary Unreal mesh
 export, rendered-image alignment or a complete RF model of the Blocks map.
 
+![Plan view of the measured cube and RF link](scenario.svg)
+
+The green lines indicate the LiDAR field-of-view limits, not rays transmitted
+through the obstructing cube. Reproduce with `scripts/plot_unreal_geometry.py`.
+
 ## Physical construction
 
 The non-physics probe sits at NED (0, 0, −100) m, corresponding to RF (0, 0, 100)

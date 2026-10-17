@@ -1,0 +1,1930 @@
+Starting Project AirSim Runtime by IAMAI with topics_port=8989, services_port=8990, ground_height=0 m, ground_clearance=0 m
+[microsoft::projectairsim::simulator] Loading Simulator.
+[microsoft::projectairsim::simulator] Load 'id'.
+[microsoft::projectairsim::simulator] [Sim] 'id' loaded.
+[microsoft::projectairsim::simulator] [Sim] Load 'topics'.
+[microsoft::projectairsim::simulator] [Sim] 'topics' loaded.
+[microsoft::projectairsim::simulator] [Sim] Load 'services'.
+[microsoft::projectairsim::simulator] [Sim] 'services' loaded.
+[microsoft::projectairsim::simulator] [Sim] Load 'default-scene'.
+[microsoft::projectairsim::simulator] [Sim] 'default-scene' loaded.
+[microsoft::projectairsim::simulator] [Sim] Simulator successfully loaded.
+[microsoft::projectairsim::simulator] Setting client authorization public key to ""
+[microsoft::projectairsim::client_authorization] Client authorization public key cleared--all clients accepted and authorization tokens not required
+[SimServer::RegisterServiceMethods] Registering service methods.
+[SimServer::LoadScene] Loading scene.
+[microsoft::projectairsim::simulator] Loading Default Scene
+[microsoft::projectairsim::scene] Loading 'id'.
+[microsoft::projectairsim::scene] [DefaultScene] 'id' loaded.
+[microsoft::projectairsim::scene] [DefaultScene] Loading 'home-geo-point'.
+[microsoft::projectairsim::scene] [DefaultScene] 'home-geo-point' missing or empty. Using default home geo point.
+[microsoft::projectairsim::scene] [DefaultScene] Loading 'wind-settings'.
+[microsoft::projectairsim::scene] [DefaultScene] 'wind-settings' missing or empty. Using default wind setting.
+[microsoft::projectairsim::scene] [DefaultScene] Loading 'clock' settings.
+[microsoft::projectairsim::scene] [DefaultScene] 'clock' missing or empty. Using default clock settings.
+[microsoft::projectairsim::topic_manager] Registered topic /Sim/DefaultScene/clock
+[microsoft::projectairsim::scene] [DefaultScene] Loading 'segmentation' settings.
+[microsoft::projectairsim::scene] [DefaultScene] 'segmentation' missing or empty. Using default segmentation settings.
+[microsoft::projectairsim::scene] Loading 'scene-type'.
+[microsoft::projectairsim::scene] [DefaultScene] 'scene-type' loaded.
+[microsoft::projectairsim::scene] Loading 'tiles-dir'.
+[microsoft::projectairsim::scene] [DefaultScene] 'tiles-dir' loaded.
+[microsoft::projectairsim::scene] Loading 'horizon-tiles-dir'.
+[microsoft::projectairsim::scene] [DefaultScene] 'horizon-tiles-dir' loaded.
+[microsoft::projectairsim::scene] Loading 'tiles-altitude-offset'.
+[microsoft::projectairsim::scene] [DefaultScene] 'tiles-altitude-offset' loaded.
+[microsoft::projectairsim::scene] Loading 'tiles-lod-max'.
+[microsoft::projectairsim::scene] [DefaultScene] 'tiles-lod-max' loaded.
+[microsoft::projectairsim::scene] Loading 'tiles-lod-min'.
+[microsoft::projectairsim::scene] [DefaultScene] 'tiles-lod-min' loaded.
+[microsoft::projectairsim::scene] [DefaultScene] Loading 'actors'.
+[microsoft::projectairsim::scene] [DefaultScene] 'actors' missing or empty.
+[microsoft::projectairsim::scene] [DefaultScene] Loading 'Enviroment Actors'.
+[microsoft::projectairsim::scene] [DefaultScene] 'environment-actors' missing or empty.
+[microsoft::projectairsim::scene] [DefaultScene] Loading 'vr-mode'.
+[microsoft::projectairsim::scene] [DefaultScene][0] 'vr-mode' loaded.
+[microsoft::projectairsim::simulator] [Sim] 'scene' loaded.
+[SimServer::LoadPhysicsWorld] Loading physics bodies for scene 'DefaultScene'.
+[SimServer::LoadControllers] Loading controllers for scene 'DefaultScene'.
+[SimServer::StartSimulator] Starting simulator.
+[microsoft::projectairsim::topic_manager] Topic socket created with id: '1'.
+[microsoft::projectairsim::topic_manager] nng_listen success 'tcp://*:8989'.
+[microsoft::projectairsim::service_manager] Starting ServiceManager
+[microsoft::projectairsim::service_manager] nng socket for services created '2'.
+[microsoft::projectairsim::service_manager] Services active at: 'tcp://*:8990'.
+[SimServer::StartScene] Starting scene.
+Project AirSim Runtime is running. Press Ctrl-C to end.
+[microsoft::projectairsim::topic_manager] Pub-sub client connected; active topic pipes: 1
+[SimServer::SimReloadSceneWithJSON] Reloading scene.
+[SimServer::StopScene] Stopping scene.
+[microsoft::projectairsim::service_manager] Unregistered ALL ServiceMethods
+[SimServer::UnloadScene] Unloading scene.
+[SimServer::UnloadControllers] Unloading controllers.
+[SimServer::UnloadPhysicsWorld] Unloading physics bodies.
+[SimServer::UnloadTileManager] Unloading tile manager.
+[microsoft::projectairsim::topic_manager] Unregistered topic /Sim/DefaultScene/clock
+[SimServer::LoadScene] Loading scene.
+[microsoft::projectairsim::simulator] Loading Scene with JSON Data.
+[microsoft::projectairsim::scene] Loading 'id'.
+[microsoft::projectairsim::scene] [RFMovingQualification] 'id' loaded.
+[microsoft::projectairsim::scene] [RFMovingQualification] Loading 'home-geo-point'.
+[microsoft::projectairsim::scene] [RFMovingQualification] 'clock' settings loaded.
+[microsoft::projectairsim::scene] [RFMovingQualification] Loading 'wind-settings'.
+[microsoft::projectairsim::scene] [RFMovingQualification] 'wind-settings' missing or empty. Using default wind setting.
+[microsoft::projectairsim::scene] [RFMovingQualification] Loading 'clock' settings.
+[microsoft::projectairsim::scene] [RFMovingQualification] 'clock' settings loaded.
+[microsoft::projectairsim::topic_manager] Registered topic /Sim/RFMovingQualification/clock
+[microsoft::projectairsim::scene] [RFMovingQualification] Loading 'segmentation' settings.
+[microsoft::projectairsim::scene] [RFMovingQualification] 'segmentation' missing or empty. Using default segmentation settings.
+[microsoft::projectairsim::scene] Loading 'scene-type'.
+[microsoft::projectairsim::scene] [RFMovingQualification] 'scene-type' loaded.
+[microsoft::projectairsim::scene] Loading 'tiles-dir'.
+[microsoft::projectairsim::scene] [RFMovingQualification] 'tiles-dir' loaded.
+[microsoft::projectairsim::scene] Loading 'horizon-tiles-dir'.
+[microsoft::projectairsim::scene] [RFMovingQualification] 'horizon-tiles-dir' loaded.
+[microsoft::projectairsim::scene] Loading 'tiles-altitude-offset'.
+[microsoft::projectairsim::scene] [RFMovingQualification] 'tiles-altitude-offset' loaded.
+[microsoft::projectairsim::scene] Loading 'tiles-lod-max'.
+[microsoft::projectairsim::scene] [RFMovingQualification] 'tiles-lod-max' loaded.
+[microsoft::projectairsim::scene] Loading 'tiles-lod-min'.
+[microsoft::projectairsim::scene] [RFMovingQualification] 'tiles-lod-min' loaded.
+[microsoft::projectairsim::scene] [RFMovingQualification] Loading 'actors'.
+[microsoft::projectairsim::scene] [RFMovingQualification] Loading 'actor.name'.
+[microsoft::projectairsim::scene] [RFMovingQualification][Drone1] 'actor.name' loaded.
+[microsoft::projectairsim::scene] [RFMovingQualification][Drone1] Loading 'actor.type'.
+[microsoft::projectairsim::scene] [RFMovingQualification][Drone1] 'actor.type' loaded.
+[microsoft::projectairsim::scene] [RFMovingQualification][Drone1] Loading 'actor.origin'.
+[microsoft::projectairsim::scene] [RFMovingQualification][Drone1] 'actor.origin' loaded.
+[microsoft::projectairsim::scene] [RFMovingQualification][Drone1] Loading 'actor'.
+[microsoft::projectairsim::actor::robot] [Drone1] Loading 'physics-type'.
+[microsoft::projectairsim::actor::robot] [Drone1] 'physics-type' loaded.
+[microsoft::projectairsim::actor::robot] [Drone1] Loading 'links'.
+[microsoft::projectairsim::link] Loading 'id'.
+[microsoft::projectairsim::link] [Frame] 'id' loaded.
+[microsoft::projectairsim::link] [Frame]Loading 'inertial'.
+[microsoft::projectairsim::inertial] Loading 'origin'.
+[microsoft::projectairsim::inertial] 'origin' loaded.
+[microsoft::projectairsim::inertial] Loading 'mass'.
+[microsoft::projectairsim::inertial] 'mass' loaded.
+[microsoft::projectairsim::inertial] Loading 'inertia'.
+[microsoft::projectairsim::inertial] 'inertia' loaded.
+[microsoft::projectairsim::inertial] Loading 'aerodynamics'.
+[microsoft::projectairsim::inertial] 'aerodynamics' loaded.
+[microsoft::projectairsim::link] [Frame] 'inertial' loaded.
+[microsoft::projectairsim::link] [Frame]Loading 'collision'.
+[microsoft::projectairsim::collision] Loading 'enabled'.
+[microsoft::projectairsim::collision] 'enabled' loaded.
+[microsoft::projectairsim::collision] Loading 'restitution'.
+[microsoft::projectairsim::collision] 'restitution' loaded.
+[microsoft::projectairsim::collision] Loading 'friction'.
+[microsoft::projectairsim::collision] 'friction' loaded.
+[microsoft::projectairsim::link] [Frame] 'collision' loaded.
+[microsoft::projectairsim::link] [Frame]Loading 'visual'.
+[microsoft::projectairsim::visual] Loading 'origin'.
+[microsoft::projectairsim::visual] 'origin' loaded.
+[microsoft::projectairsim::visual] Loading 'geometry'.
+[microsoft::projectairsim::unreal_mesh] Loading 'name'.
+[microsoft::projectairsim::unreal_mesh] 'name' loaded.
+[microsoft::projectairsim::unreal_mesh] Loading 'scale'.
+[microsoft::projectairsim::unreal_mesh] 'scale' loaded.
+[microsoft::projectairsim::visual] 'geometry' loaded.
+[microsoft::projectairsim::link] [Frame] 'visual' loaded.
+[microsoft::projectairsim::link] Loading 'id'.
+[microsoft::projectairsim::link] [Prop_FL] 'id' loaded.
+[microsoft::projectairsim::link] [Prop_FL]Loading 'inertial'.
+[microsoft::projectairsim::inertial] Loading 'origin'.
+[microsoft::projectairsim::inertial] 'origin' loaded.
+[microsoft::projectairsim::inertial] Loading 'mass'.
+[microsoft::projectairsim::inertial] 'mass' loaded.
+[microsoft::projectairsim::inertial] Loading 'inertia'.
+[microsoft::projectairsim::inertial] 'inertia' loaded.
+[microsoft::projectairsim::inertial] Loading 'aerodynamics'.
+[microsoft::projectairsim::inertial] 'aerodynamics' loaded.
+[microsoft::projectairsim::link] [Prop_FL] 'inertial' loaded.
+[microsoft::projectairsim::link] [Prop_FL]Loading 'collision'.
+[microsoft::projectairsim::collision] Loading 'enabled'.
+[microsoft::projectairsim::collision] 'enabled' loaded.
+[microsoft::projectairsim::collision] Loading 'restitution'.
+[microsoft::projectairsim::collision] 'restitution' loaded.
+[microsoft::projectairsim::collision] Loading 'friction'.
+[microsoft::projectairsim::collision] 'friction' loaded.
+[microsoft::projectairsim::link] [Prop_FL] 'collision' loaded.
+[microsoft::projectairsim::link] [Prop_FL]Loading 'visual'.
+[microsoft::projectairsim::visual] Loading 'origin'.
+[microsoft::projectairsim::visual] 'origin' loaded.
+[microsoft::projectairsim::visual] Loading 'geometry'.
+[microsoft::projectairsim::unreal_mesh] Loading 'name'.
+[microsoft::projectairsim::unreal_mesh] 'name' loaded.
+[microsoft::projectairsim::unreal_mesh] Loading 'scale'.
+[microsoft::projectairsim::unreal_mesh] 'scale' loaded.
+[microsoft::projectairsim::visual] 'geometry' loaded.
+[microsoft::projectairsim::link] [Prop_FL] 'visual' loaded.
+[microsoft::projectairsim::link] Loading 'id'.
+[microsoft::projectairsim::link] [Prop_FR] 'id' loaded.
+[microsoft::projectairsim::link] [Prop_FR]Loading 'inertial'.
+[microsoft::projectairsim::inertial] Loading 'origin'.
+[microsoft::projectairsim::inertial] 'origin' loaded.
+[microsoft::projectairsim::inertial] Loading 'mass'.
+[microsoft::projectairsim::inertial] 'mass' loaded.
+[microsoft::projectairsim::inertial] Loading 'inertia'.
+[microsoft::projectairsim::inertial] 'inertia' loaded.
+[microsoft::projectairsim::inertial] Loading 'aerodynamics'.
+[microsoft::projectairsim::inertial] 'aerodynamics' loaded.
+[microsoft::projectairsim::link] [Prop_FR] 'inertial' loaded.
+[microsoft::projectairsim::link] [Prop_FR]Loading 'collision'.
+[microsoft::projectairsim::collision] Loading 'enabled'.
+[microsoft::projectairsim::collision] 'enabled' loaded.
+[microsoft::projectairsim::collision] Loading 'restitution'.
+[microsoft::projectairsim::collision] 'restitution' loaded.
+[microsoft::projectairsim::collision] Loading 'friction'.
+[microsoft::projectairsim::collision] 'friction' loaded.
+[microsoft::projectairsim::link] [Prop_FR] 'collision' loaded.
+[microsoft::projectairsim::link] [Prop_FR]Loading 'visual'.
+[microsoft::projectairsim::visual] Loading 'origin'.
+[microsoft::projectairsim::visual] 'origin' loaded.
+[microsoft::projectairsim::visual] Loading 'geometry'.
+[microsoft::projectairsim::unreal_mesh] Loading 'name'.
+[microsoft::projectairsim::unreal_mesh] 'name' loaded.
+[microsoft::projectairsim::unreal_mesh] Loading 'scale'.
+[microsoft::projectairsim::unreal_mesh] 'scale' loaded.
+[microsoft::projectairsim::visual] 'geometry' loaded.
+[microsoft::projectairsim::link] [Prop_FR] 'visual' loaded.
+[microsoft::projectairsim::link] Loading 'id'.
+[microsoft::projectairsim::link] [Prop_RL] 'id' loaded.
+[microsoft::projectairsim::link] [Prop_RL]Loading 'inertial'.
+[microsoft::projectairsim::inertial] Loading 'origin'.
+[microsoft::projectairsim::inertial] 'origin' loaded.
+[microsoft::projectairsim::inertial] Loading 'mass'.
+[microsoft::projectairsim::inertial] 'mass' loaded.
+[microsoft::projectairsim::inertial] Loading 'inertia'.
+[microsoft::projectairsim::inertial] 'inertia' loaded.
+[microsoft::projectairsim::inertial] Loading 'aerodynamics'.
+[microsoft::projectairsim::inertial] 'aerodynamics' loaded.
+[microsoft::projectairsim::link] [Prop_RL] 'inertial' loaded.
+[microsoft::projectairsim::link] [Prop_RL]Loading 'collision'.
+[microsoft::projectairsim::collision] Loading 'enabled'.
+[microsoft::projectairsim::collision] 'enabled' loaded.
+[microsoft::projectairsim::collision] Loading 'restitution'.
+[microsoft::projectairsim::collision] 'restitution' loaded.
+[microsoft::projectairsim::collision] Loading 'friction'.
+[microsoft::projectairsim::collision] 'friction' loaded.
+[microsoft::projectairsim::link] [Prop_RL] 'collision' loaded.
+[microsoft::projectairsim::link] [Prop_RL]Loading 'visual'.
+[microsoft::projectairsim::visual] Loading 'origin'.
+[microsoft::projectairsim::visual] 'origin' loaded.
+[microsoft::projectairsim::visual] Loading 'geometry'.
+[microsoft::projectairsim::unreal_mesh] Loading 'name'.
+[microsoft::projectairsim::unreal_mesh] 'name' loaded.
+[microsoft::projectairsim::unreal_mesh] Loading 'scale'.
+[microsoft::projectairsim::unreal_mesh] 'scale' loaded.
+[microsoft::projectairsim::visual] 'geometry' loaded.
+[microsoft::projectairsim::link] [Prop_RL] 'visual' loaded.
+[microsoft::projectairsim::link] Loading 'id'.
+[microsoft::projectairsim::link] [Prop_RR] 'id' loaded.
+[microsoft::projectairsim::link] [Prop_RR]Loading 'inertial'.
+[microsoft::projectairsim::inertial] Loading 'origin'.
+[microsoft::projectairsim::inertial] 'origin' loaded.
+[microsoft::projectairsim::inertial] Loading 'mass'.
+[microsoft::projectairsim::inertial] 'mass' loaded.
+[microsoft::projectairsim::inertial] Loading 'inertia'.
+[microsoft::projectairsim::inertial] 'inertia' loaded.
+[microsoft::projectairsim::inertial] Loading 'aerodynamics'.
+[microsoft::projectairsim::inertial] 'aerodynamics' loaded.
+[microsoft::projectairsim::link] [Prop_RR] 'inertial' loaded.
+[microsoft::projectairsim::link] [Prop_RR]Loading 'collision'.
+[microsoft::projectairsim::collision] Loading 'enabled'.
+[microsoft::projectairsim::collision] 'enabled' loaded.
+[microsoft::projectairsim::collision] Loading 'restitution'.
+[microsoft::projectairsim::collision] 'restitution' loaded.
+[microsoft::projectairsim::collision] Loading 'friction'.
+[microsoft::projectairsim::collision] 'friction' loaded.
+[microsoft::projectairsim::link] [Prop_RR] 'collision' loaded.
+[microsoft::projectairsim::link] [Prop_RR]Loading 'visual'.
+[microsoft::projectairsim::visual] Loading 'origin'.
+[microsoft::projectairsim::visual] 'origin' loaded.
+[microsoft::projectairsim::visual] Loading 'geometry'.
+[microsoft::projectairsim::unreal_mesh] Loading 'name'.
+[microsoft::projectairsim::unreal_mesh] 'name' loaded.
+[microsoft::projectairsim::unreal_mesh] Loading 'scale'.
+[microsoft::projectairsim::unreal_mesh] 'scale' loaded.
+[microsoft::projectairsim::visual] 'geometry' loaded.
+[microsoft::projectairsim::link] [Prop_RR] 'visual' loaded.
+[microsoft::projectairsim::actor::robot] [Drone1] 'links' loaded.
+[microsoft::projectairsim::actor::robot] [Drone1] Loading 'joints'.
+[microsoft::projectairsim::joint] Loading 'id'.
+[microsoft::projectairsim::joint] [Frame_Prop_FL] 'id' loaded.
+[microsoft::projectairsim::joint] [Frame_Prop_FL]Loading 'type'.
+[microsoft::projectairsim::joint] [Frame_Prop_FL] 'type' loaded.
+[microsoft::projectairsim::joint] [Frame_Prop_FL]Loading 'parent-link'.
+[microsoft::projectairsim::joint] [Frame_Prop_FL] 'parent-link' loaded.
+[microsoft::projectairsim::joint] [Frame_Prop_FL]Loading 'child-link'.
+[microsoft::projectairsim::joint] [Frame_Prop_FL] 'child-link' loaded.
+[microsoft::projectairsim::joint] Loading 'origin'.
+[microsoft::projectairsim::joint] 'origin' loaded.
+[microsoft::projectairsim::joint] Loading 'axis'.
+[microsoft::projectairsim::joint] 'axis' loaded.
+[microsoft::projectairsim::joint] Loading 'limit'.
+[microsoft::projectairsim::joint] 'limit' loaded.
+[microsoft::projectairsim::joint] Loading 'parent-dominates'.
+[microsoft::projectairsim::joint] 'parent-dominates' loaded.
+[microsoft::projectairsim::joint] Loading 'spring-constant'.
+[microsoft::projectairsim::joint] 'spring-constant' loaded.
+[microsoft::projectairsim::joint] Loading 'damping-constant'.
+[microsoft::projectairsim::joint] 'damping-constant' loaded.
+[microsoft::projectairsim::joint] Loading 'max-force'.
+[microsoft::projectairsim::joint] 'max-force' loaded.
+[microsoft::projectairsim::joint] Loading 'id'.
+[microsoft::projectairsim::joint] [Frame_Prop_FR] 'id' loaded.
+[microsoft::projectairsim::joint] [Frame_Prop_FR]Loading 'type'.
+[microsoft::projectairsim::joint] [Frame_Prop_FR] 'type' loaded.
+[microsoft::projectairsim::joint] [Frame_Prop_FR]Loading 'parent-link'.
+[microsoft::projectairsim::joint] [Frame_Prop_FR] 'parent-link' loaded.
+[microsoft::projectairsim::joint] [Frame_Prop_FR]Loading 'child-link'.
+[microsoft::projectairsim::joint] [Frame_Prop_FR] 'child-link' loaded.
+[microsoft::projectairsim::joint] Loading 'origin'.
+[microsoft::projectairsim::joint] 'origin' loaded.
+[microsoft::projectairsim::joint] Loading 'axis'.
+[microsoft::projectairsim::joint] 'axis' loaded.
+[microsoft::projectairsim::joint] Loading 'limit'.
+[microsoft::projectairsim::joint] 'limit' loaded.
+[microsoft::projectairsim::joint] Loading 'parent-dominates'.
+[microsoft::projectairsim::joint] 'parent-dominates' loaded.
+[microsoft::projectairsim::joint] Loading 'spring-constant'.
+[microsoft::projectairsim::joint] 'spring-constant' loaded.
+[microsoft::projectairsim::joint] Loading 'damping-constant'.
+[microsoft::projectairsim::joint] 'damping-constant' loaded.
+[microsoft::projectairsim::joint] Loading 'max-force'.
+[microsoft::projectairsim::joint] 'max-force' loaded.
+[microsoft::projectairsim::joint] Loading 'id'.
+[microsoft::projectairsim::joint] [Frame_Prop_RL] 'id' loaded.
+[microsoft::projectairsim::joint] [Frame_Prop_RL]Loading 'type'.
+[microsoft::projectairsim::joint] [Frame_Prop_RL] 'type' loaded.
+[microsoft::projectairsim::joint] [Frame_Prop_RL]Loading 'parent-link'.
+[microsoft::projectairsim::joint] [Frame_Prop_RL] 'parent-link' loaded.
+[microsoft::projectairsim::joint] [Frame_Prop_RL]Loading 'child-link'.
+[microsoft::projectairsim::joint] [Frame_Prop_RL] 'child-link' loaded.
+[microsoft::projectairsim::joint] Loading 'origin'.
+[microsoft::projectairsim::joint] 'origin' loaded.
+[microsoft::projectairsim::joint] Loading 'axis'.
+[microsoft::projectairsim::joint] 'axis' loaded.
+[microsoft::projectairsim::joint] Loading 'limit'.
+[microsoft::projectairsim::joint] 'limit' loaded.
+[microsoft::projectairsim::joint] Loading 'parent-dominates'.
+[microsoft::projectairsim::joint] 'parent-dominates' loaded.
+[microsoft::projectairsim::joint] Loading 'spring-constant'.
+[microsoft::projectairsim::joint] 'spring-constant' loaded.
+[microsoft::projectairsim::joint] Loading 'damping-constant'.
+[microsoft::projectairsim::joint] 'damping-constant' loaded.
+[microsoft::projectairsim::joint] Loading 'max-force'.
+[microsoft::projectairsim::joint] 'max-force' loaded.
+[microsoft::projectairsim::joint] Loading 'id'.
+[microsoft::projectairsim::joint] [Frame_Prop_RR] 'id' loaded.
+[microsoft::projectairsim::joint] [Frame_Prop_RR]Loading 'type'.
+[microsoft::projectairsim::joint] [Frame_Prop_RR] 'type' loaded.
+[microsoft::projectairsim::joint] [Frame_Prop_RR]Loading 'parent-link'.
+[microsoft::projectairsim::joint] [Frame_Prop_RR] 'parent-link' loaded.
+[microsoft::projectairsim::joint] [Frame_Prop_RR]Loading 'child-link'.
+[microsoft::projectairsim::joint] [Frame_Prop_RR] 'child-link' loaded.
+[microsoft::projectairsim::joint] Loading 'origin'.
+[microsoft::projectairsim::joint] 'origin' loaded.
+[microsoft::projectairsim::joint] Loading 'axis'.
+[microsoft::projectairsim::joint] 'axis' loaded.
+[microsoft::projectairsim::joint] Loading 'limit'.
+[microsoft::projectairsim::joint] 'limit' loaded.
+[microsoft::projectairsim::joint] Loading 'parent-dominates'.
+[microsoft::projectairsim::joint] 'parent-dominates' loaded.
+[microsoft::projectairsim::joint] Loading 'spring-constant'.
+[microsoft::projectairsim::joint] 'spring-constant' loaded.
+[microsoft::projectairsim::joint] Loading 'damping-constant'.
+[microsoft::projectairsim::joint] 'damping-constant' loaded.
+[microsoft::projectairsim::joint] Loading 'max-force'.
+[microsoft::projectairsim::joint] 'max-force' loaded.
+[microsoft::projectairsim::actor::robot] [Drone1] 'joints' loaded.
+[microsoft::projectairsim::actor::robot] [Drone1] Loading 'sensors'.
+[microsoft::projectairsim::actor::robot] [Drone1] Loading 'sensors'.
+[microsoft::projectairsim::actor::robot] [Drone1] Loading 'sensor.id'.
+[microsoft::projectairsim::actor::robot] [Drone1][IMU1] 'sensor.id' loaded.
+[microsoft::projectairsim::actor::robot] [Drone1][IMU1] Loading 'sensor.type'.
+[microsoft::projectairsim::actor::robot] [Drone1][IMU1] 'sensor.type' loaded.
+[microsoft::projectairsim::actor::robot] [Drone1][IMU1] Loading 'sensor.enabled'.
+[microsoft::projectairsim::actor::robot] [Drone1][IMU1] 'sensor.enabled' loaded.
+[microsoft::projectairsim::actor::robot] [Drone1][IMU1] Loading 'sensor.parent_link'.
+[microsoft::projectairsim::actor::robot] [Drone1][IMU1] 'sensor.parent_link' loaded.
+[microsoft::projectairsim::actor::robot] [Drone1][IMU1] Loading 'sensor'.
+[microsoft::projectairsim::sensors::imu] [IMU1] Loading 'imu_settings'.
+[microsoft::projectairsim::sensors::imu] Loading Accelerometer.
+[microsoft::projectairsim::sensors::imu] Accelerometer Loaded.
+[microsoft::projectairsim::sensors::imu] Loading Gyroscope.
+[microsoft::projectairsim::sensors::imu] Gyroscope loaded.
+[microsoft::projectairsim::sensors::imu] Loaded IMU
+[microsoft::projectairsim::sensors::imu] [IMU1] 'imu_settings' loaded.
+[microsoft::projectairsim::actor::robot] [Drone1] Loading 'sensor.id'.
+[microsoft::projectairsim::actor::robot] [Drone1][GPS] 'sensor.id' loaded.
+[microsoft::projectairsim::actor::robot] [Drone1][GPS] Loading 'sensor.type'.
+[microsoft::projectairsim::actor::robot] [Drone1][GPS] 'sensor.type' loaded.
+[microsoft::projectairsim::actor::robot] [Drone1][GPS] Loading 'sensor.enabled'.
+[microsoft::projectairsim::actor::robot] [Drone1][GPS] 'sensor.enabled' loaded.
+[microsoft::projectairsim::actor::robot] [Drone1][GPS] Loading 'sensor.parent_link'.
+[microsoft::projectairsim::actor::robot] [Drone1][GPS] 'sensor.parent_link' loaded.
+[microsoft::projectairsim::actor::robot] [Drone1][GPS] Loading 'sensor'.
+[microsoft::projectairsim::sensors::gps] [GPS] Loading 'GPS_settings'.
+[microsoft::projectairsim::sensors::gps] Loaded GPS settings
+[microsoft::projectairsim::sensors::gps] [GPS] 'GPS_settings' loaded.
+[microsoft::projectairsim::actor::robot] [Drone1] Loading 'sensor.id'.
+[microsoft::projectairsim::actor::robot] [Drone1][Barometer] 'sensor.id' loaded.
+[microsoft::projectairsim::actor::robot] [Drone1][Barometer] Loading 'sensor.type'.
+[microsoft::projectairsim::actor::robot] [Drone1][Barometer] 'sensor.type' loaded.
+[microsoft::projectairsim::actor::robot] [Drone1][Barometer] Loading 'sensor.enabled'.
+[microsoft::projectairsim::actor::robot] [Drone1][Barometer] 'sensor.enabled' loaded.
+[microsoft::projectairsim::actor::robot] [Drone1][Barometer] Loading 'sensor.parent_link'.
+[microsoft::projectairsim::actor::robot] [Drone1][Barometer] 'sensor.parent_link' loaded.
+[microsoft::projectairsim::actor::robot] [Drone1][Barometer] Loading 'sensor'.
+[microsoft::projectairsim::sensors::imu] [Barometer] Loading 'barometer_settings'.
+[microsoft::projectairsim::sensors::imu] Loaded Barometer settings
+[microsoft::projectairsim::sensors::imu] [Barometer] 'barometer_settings' loaded.
+[microsoft::projectairsim::actor::robot] [Drone1] Loading 'sensor.id'.
+[microsoft::projectairsim::actor::robot] [Drone1][Magnetometer] 'sensor.id' loaded.
+[microsoft::projectairsim::actor::robot] [Drone1][Magnetometer] Loading 'sensor.type'.
+[microsoft::projectairsim::actor::robot] [Drone1][Magnetometer] 'sensor.type' loaded.
+[microsoft::projectairsim::actor::robot] [Drone1][Magnetometer] Loading 'sensor.enabled'.
+[microsoft::projectairsim::actor::robot] [Drone1][Magnetometer] 'sensor.enabled' loaded.
+[microsoft::projectairsim::actor::robot] [Drone1][Magnetometer] Loading 'sensor.parent_link'.
+[microsoft::projectairsim::actor::robot] [Drone1][Magnetometer] 'sensor.parent_link' loaded.
+[microsoft::projectairsim::actor::robot] [Drone1][Magnetometer] Loading 'sensor'.
+[microsoft::projectairsim::sensors::imu] [Magnetometer] Loading 'magnetometer_settings'.
+[microsoft::projectairsim::sensors::imu] Loaded Magnetometer settings
+[microsoft::projectairsim::sensors::imu] Loading 'origin'.
+[microsoft::projectairsim::sensors::imu] 'origin' missing or empty. Using default.
+[microsoft::projectairsim::sensors::imu] 'origin' loaded.
+[microsoft::projectairsim::sensors::imu] [Magnetometer] 'magnetometer_settings' loaded.
+[microsoft::projectairsim::actor::robot] [Drone1] 'sensors' loaded.
+[microsoft::projectairsim::actor::robot] [Drone1] 'sensors' loaded.
+[microsoft::projectairsim::actor::robot] [Drone1] Loading 'actuators'.
+[microsoft::projectairsim::actor::robot] [Drone1] Loading 'actuators'.
+[microsoft::projectairsim::actor::robot] [Drone1] Loading 'actuator.name'.
+[microsoft::projectairsim::actor::robot] [Drone1][Prop_FL_actuator] 'actuator.name' loaded.
+[microsoft::projectairsim::actor::robot] [Drone1][Prop_FL_actuator] Loading 'actuator.type'.
+[microsoft::projectairsim::actor::robot] [Drone1][Prop_FL_actuator] 'actuator.type' loaded.
+[microsoft::projectairsim::actor::robot] [Drone1][Prop_FL_actuator] Loading 'actuator.enabled'.
+[microsoft::projectairsim::actor::robot] [Drone1][Prop_FL_actuator] 'actuator.enabled' loaded.
+[microsoft::projectairsim::actor::robot] [Drone1][Prop_FL_actuator] Loading 'actuator.parent_link'.
+[microsoft::projectairsim::actor::robot] [Drone1][Prop_FL_actuator] 'actuator.parent_link' loaded.
+[microsoft::projectairsim::actor::robot] [Drone1][Prop_FL_actuator] Loading 'actuator.child_link'.
+[microsoft::projectairsim::actor::robot] [Drone1][Prop_FL_actuator] 'actuator.child_link' loaded.
+[microsoft::projectairsim::actor::robot] [Drone1][Prop_FL_actuator] Loading 'actuator'.
+[microsoft::projectairsim::actuators::rotor] [Prop_FL_actuator] Loading 'rotor_settings'.
+[microsoft::projectairsim::actuators::rotor] Loading 'origin'.
+[microsoft::projectairsim::actuators::rotor] 'origin' loaded.
+[microsoft::projectairsim::actuators::rotor] Loading 'rotor_settings'.
+[microsoft::projectairsim::actuators::rotor] 'rotor_settings' loaded.
+[microsoft::projectairsim::actuators::rotor] [Prop_FL_actuator] 'rotor_settings' loaded.
+[microsoft::projectairsim::actor::robot] [Drone1] Loading 'actuator.name'.
+[microsoft::projectairsim::actor::robot] [Drone1][Prop_FR_actuator] 'actuator.name' loaded.
+[microsoft::projectairsim::actor::robot] [Drone1][Prop_FR_actuator] Loading 'actuator.type'.
+[microsoft::projectairsim::actor::robot] [Drone1][Prop_FR_actuator] 'actuator.type' loaded.
+[microsoft::projectairsim::actor::robot] [Drone1][Prop_FR_actuator] Loading 'actuator.enabled'.
+[microsoft::projectairsim::actor::robot] [Drone1][Prop_FR_actuator] 'actuator.enabled' loaded.
+[microsoft::projectairsim::actor::robot] [Drone1][Prop_FR_actuator] Loading 'actuator.parent_link'.
+[microsoft::projectairsim::actor::robot] [Drone1][Prop_FR_actuator] 'actuator.parent_link' loaded.
+[microsoft::projectairsim::actor::robot] [Drone1][Prop_FR_actuator] Loading 'actuator.child_link'.
+[microsoft::projectairsim::actor::robot] [Drone1][Prop_FR_actuator] 'actuator.child_link' loaded.
+[microsoft::projectairsim::actor::robot] [Drone1][Prop_FR_actuator] Loading 'actuator'.
+[microsoft::projectairsim::actuators::rotor] [Prop_FR_actuator] Loading 'rotor_settings'.
+[microsoft::projectairsim::actuators::rotor] Loading 'origin'.
+[microsoft::projectairsim::actuators::rotor] 'origin' loaded.
+[microsoft::projectairsim::actuators::rotor] Loading 'rotor_settings'.
+[microsoft::projectairsim::actuators::rotor] 'rotor_settings' loaded.
+[microsoft::projectairsim::actuators::rotor] [Prop_FR_actuator] 'rotor_settings' loaded.
+[microsoft::projectairsim::actor::robot] [Drone1] Loading 'actuator.name'.
+[microsoft::projectairsim::actor::robot] [Drone1][Prop_RL_actuator] 'actuator.name' loaded.
+[microsoft::projectairsim::actor::robot] [Drone1][Prop_RL_actuator] Loading 'actuator.type'.
+[microsoft::projectairsim::actor::robot] [Drone1][Prop_RL_actuator] 'actuator.type' loaded.
+[microsoft::projectairsim::actor::robot] [Drone1][Prop_RL_actuator] Loading 'actuator.enabled'.
+[microsoft::projectairsim::actor::robot] [Drone1][Prop_RL_actuator] 'actuator.enabled' loaded.
+[microsoft::projectairsim::actor::robot] [Drone1][Prop_RL_actuator] Loading 'actuator.parent_link'.
+[microsoft::projectairsim::actor::robot] [Drone1][Prop_RL_actuator] 'actuator.parent_link' loaded.
+[microsoft::projectairsim::actor::robot] [Drone1][Prop_RL_actuator] Loading 'actuator.child_link'.
+[microsoft::projectairsim::actor::robot] [Drone1][Prop_RL_actuator] 'actuator.child_link' loaded.
+[microsoft::projectairsim::actor::robot] [Drone1][Prop_RL_actuator] Loading 'actuator'.
+[microsoft::projectairsim::actuators::rotor] [Prop_RL_actuator] Loading 'rotor_settings'.
+[microsoft::projectairsim::actuators::rotor] Loading 'origin'.
+[microsoft::projectairsim::actuators::rotor] 'origin' loaded.
+[microsoft::projectairsim::actuators::rotor] Loading 'rotor_settings'.
+[microsoft::projectairsim::actuators::rotor] 'rotor_settings' loaded.
+[microsoft::projectairsim::actuators::rotor] [Prop_RL_actuator] 'rotor_settings' loaded.
+[microsoft::projectairsim::actor::robot] [Drone1] Loading 'actuator.name'.
+[microsoft::projectairsim::actor::robot] [Drone1][Prop_RR_actuator] 'actuator.name' loaded.
+[microsoft::projectairsim::actor::robot] [Drone1][Prop_RR_actuator] Loading 'actuator.type'.
+[microsoft::projectairsim::actor::robot] [Drone1][Prop_RR_actuator] 'actuator.type' loaded.
+[microsoft::projectairsim::actor::robot] [Drone1][Prop_RR_actuator] Loading 'actuator.enabled'.
+[microsoft::projectairsim::actor::robot] [Drone1][Prop_RR_actuator] 'actuator.enabled' loaded.
+[microsoft::projectairsim::actor::robot] [Drone1][Prop_RR_actuator] Loading 'actuator.parent_link'.
+[microsoft::projectairsim::actor::robot] [Drone1][Prop_RR_actuator] 'actuator.parent_link' loaded.
+[microsoft::projectairsim::actor::robot] [Drone1][Prop_RR_actuator] Loading 'actuator.child_link'.
+[microsoft::projectairsim::actor::robot] [Drone1][Prop_RR_actuator] 'actuator.child_link' loaded.
+[microsoft::projectairsim::actor::robot] [Drone1][Prop_RR_actuator] Loading 'actuator'.
+[microsoft::projectairsim::actuators::rotor] [Prop_RR_actuator] Loading 'rotor_settings'.
+[microsoft::projectairsim::actuators::rotor] Loading 'origin'.
+[microsoft::projectairsim::actuators::rotor] 'origin' loaded.
+[microsoft::projectairsim::actuators::rotor] Loading 'rotor_settings'.
+[microsoft::projectairsim::actuators::rotor] 'rotor_settings' loaded.
+[microsoft::projectairsim::actuators::rotor] [Prop_RR_actuator] 'rotor_settings' loaded.
+[microsoft::projectairsim::actor::robot] [Drone1] 'actuators' loaded.
+[microsoft::projectairsim::actor::robot] [Drone1] 'actuators' loaded.
+[microsoft::projectairsim::actor::robot] [Drone1] Loading 'controller'.
+[microsoft::projectairsim::actor::robot] [Drone1] 'controller' loaded.
+[microsoft::projectairsim::scene] [RFMovingQualification] Loading 'actor.name'.
+[microsoft::projectairsim::scene] [RFMovingQualification][Drone2] 'actor.name' loaded.
+[microsoft::projectairsim::scene] [RFMovingQualification][Drone2] Loading 'actor.type'.
+[microsoft::projectairsim::scene] [RFMovingQualification][Drone2] 'actor.type' loaded.
+[microsoft::projectairsim::scene] [RFMovingQualification][Drone2] Loading 'actor.origin'.
+[microsoft::projectairsim::scene] [RFMovingQualification][Drone2] 'actor.origin' loaded.
+[microsoft::projectairsim::scene] [RFMovingQualification][Drone2] Loading 'actor'.
+[microsoft::projectairsim::actor::robot] [Drone2] Loading 'physics-type'.
+[microsoft::projectairsim::actor::robot] [Drone2] 'physics-type' loaded.
+[microsoft::projectairsim::actor::robot] [Drone2] Loading 'links'.
+[microsoft::projectairsim::link] Loading 'id'.
+[microsoft::projectairsim::link] [Frame] 'id' loaded.
+[microsoft::projectairsim::link] [Frame]Loading 'inertial'.
+[microsoft::projectairsim::inertial] Loading 'origin'.
+[microsoft::projectairsim::inertial] 'origin' loaded.
+[microsoft::projectairsim::inertial] Loading 'mass'.
+[microsoft::projectairsim::inertial] 'mass' loaded.
+[microsoft::projectairsim::inertial] Loading 'inertia'.
+[microsoft::projectairsim::inertial] 'inertia' loaded.
+[microsoft::projectairsim::inertial] Loading 'aerodynamics'.
+[microsoft::projectairsim::inertial] 'aerodynamics' loaded.
+[microsoft::projectairsim::link] [Frame] 'inertial' loaded.
+[microsoft::projectairsim::link] [Frame]Loading 'collision'.
+[microsoft::projectairsim::collision] Loading 'enabled'.
+[microsoft::projectairsim::collision] 'enabled' loaded.
+[microsoft::projectairsim::collision] Loading 'restitution'.
+[microsoft::projectairsim::collision] 'restitution' loaded.
+[microsoft::projectairsim::collision] Loading 'friction'.
+[microsoft::projectairsim::collision] 'friction' loaded.
+[microsoft::projectairsim::link] [Frame] 'collision' loaded.
+[microsoft::projectairsim::link] [Frame]Loading 'visual'.
+[microsoft::projectairsim::visual] Loading 'origin'.
+[microsoft::projectairsim::visual] 'origin' loaded.
+[microsoft::projectairsim::visual] Loading 'geometry'.
+[microsoft::projectairsim::unreal_mesh] Loading 'name'.
+[microsoft::projectairsim::unreal_mesh] 'name' loaded.
+[microsoft::projectairsim::unreal_mesh] Loading 'scale'.
+[microsoft::projectairsim::unreal_mesh] 'scale' loaded.
+[microsoft::projectairsim::visual] 'geometry' loaded.
+[microsoft::projectairsim::link] [Frame] 'visual' loaded.
+[microsoft::projectairsim::link] Loading 'id'.
+[microsoft::projectairsim::link] [Prop_FL] 'id' loaded.
+[microsoft::projectairsim::link] [Prop_FL]Loading 'inertial'.
+[microsoft::projectairsim::inertial] Loading 'origin'.
+[microsoft::projectairsim::inertial] 'origin' loaded.
+[microsoft::projectairsim::inertial] Loading 'mass'.
+[microsoft::projectairsim::inertial] 'mass' loaded.
+[microsoft::projectairsim::inertial] Loading 'inertia'.
+[microsoft::projectairsim::inertial] 'inertia' loaded.
+[microsoft::projectairsim::inertial] Loading 'aerodynamics'.
+[microsoft::projectairsim::inertial] 'aerodynamics' loaded.
+[microsoft::projectairsim::link] [Prop_FL] 'inertial' loaded.
+[microsoft::projectairsim::link] [Prop_FL]Loading 'collision'.
+[microsoft::projectairsim::collision] Loading 'enabled'.
+[microsoft::projectairsim::collision] 'enabled' loaded.
+[microsoft::projectairsim::collision] Loading 'restitution'.
+[microsoft::projectairsim::collision] 'restitution' loaded.
+[microsoft::projectairsim::collision] Loading 'friction'.
+[microsoft::projectairsim::collision] 'friction' loaded.
+[microsoft::projectairsim::link] [Prop_FL] 'collision' loaded.
+[microsoft::projectairsim::link] [Prop_FL]Loading 'visual'.
+[microsoft::projectairsim::visual] Loading 'origin'.
+[microsoft::projectairsim::visual] 'origin' loaded.
+[microsoft::projectairsim::visual] Loading 'geometry'.
+[microsoft::projectairsim::unreal_mesh] Loading 'name'.
+[microsoft::projectairsim::unreal_mesh] 'name' loaded.
+[microsoft::projectairsim::unreal_mesh] Loading 'scale'.
+[microsoft::projectairsim::unreal_mesh] 'scale' loaded.
+[microsoft::projectairsim::visual] 'geometry' loaded.
+[microsoft::projectairsim::link] [Prop_FL] 'visual' loaded.
+[microsoft::projectairsim::link] Loading 'id'.
+[microsoft::projectairsim::link] [Prop_FR] 'id' loaded.
+[microsoft::projectairsim::link] [Prop_FR]Loading 'inertial'.
+[microsoft::projectairsim::inertial] Loading 'origin'.
+[microsoft::projectairsim::inertial] 'origin' loaded.
+[microsoft::projectairsim::inertial] Loading 'mass'.
+[microsoft::projectairsim::inertial] 'mass' loaded.
+[microsoft::projectairsim::inertial] Loading 'inertia'.
+[microsoft::projectairsim::inertial] 'inertia' loaded.
+[microsoft::projectairsim::inertial] Loading 'aerodynamics'.
+[microsoft::projectairsim::inertial] 'aerodynamics' loaded.
+[microsoft::projectairsim::link] [Prop_FR] 'inertial' loaded.
+[microsoft::projectairsim::link] [Prop_FR]Loading 'collision'.
+[microsoft::projectairsim::collision] Loading 'enabled'.
+[microsoft::projectairsim::collision] 'enabled' loaded.
+[microsoft::projectairsim::collision] Loading 'restitution'.
+[microsoft::projectairsim::collision] 'restitution' loaded.
+[microsoft::projectairsim::collision] Loading 'friction'.
+[microsoft::projectairsim::collision] 'friction' loaded.
+[microsoft::projectairsim::link] [Prop_FR] 'collision' loaded.
+[microsoft::projectairsim::link] [Prop_FR]Loading 'visual'.
+[microsoft::projectairsim::visual] Loading 'origin'.
+[microsoft::projectairsim::visual] 'origin' loaded.
+[microsoft::projectairsim::visual] Loading 'geometry'.
+[microsoft::projectairsim::unreal_mesh] Loading 'name'.
+[microsoft::projectairsim::unreal_mesh] 'name' loaded.
+[microsoft::projectairsim::unreal_mesh] Loading 'scale'.
+[microsoft::projectairsim::unreal_mesh] 'scale' loaded.
+[microsoft::projectairsim::visual] 'geometry' loaded.
+[microsoft::projectairsim::link] [Prop_FR] 'visual' loaded.
+[microsoft::projectairsim::link] Loading 'id'.
+[microsoft::projectairsim::link] [Prop_RL] 'id' loaded.
+[microsoft::projectairsim::link] [Prop_RL]Loading 'inertial'.
+[microsoft::projectairsim::inertial] Loading 'origin'.
+[microsoft::projectairsim::inertial] 'origin' loaded.
+[microsoft::projectairsim::inertial] Loading 'mass'.
+[microsoft::projectairsim::inertial] 'mass' loaded.
+[microsoft::projectairsim::inertial] Loading 'inertia'.
+[microsoft::projectairsim::inertial] 'inertia' loaded.
+[microsoft::projectairsim::inertial] Loading 'aerodynamics'.
+[microsoft::projectairsim::inertial] 'aerodynamics' loaded.
+[microsoft::projectairsim::link] [Prop_RL] 'inertial' loaded.
+[microsoft::projectairsim::link] [Prop_RL]Loading 'collision'.
+[microsoft::projectairsim::collision] Loading 'enabled'.
+[microsoft::projectairsim::collision] 'enabled' loaded.
+[microsoft::projectairsim::collision] Loading 'restitution'.
+[microsoft::projectairsim::collision] 'restitution' loaded.
+[microsoft::projectairsim::collision] Loading 'friction'.
+[microsoft::projectairsim::collision] 'friction' loaded.
+[microsoft::projectairsim::link] [Prop_RL] 'collision' loaded.
+[microsoft::projectairsim::link] [Prop_RL]Loading 'visual'.
+[microsoft::projectairsim::visual] Loading 'origin'.
+[microsoft::projectairsim::visual] 'origin' loaded.
+[microsoft::projectairsim::visual] Loading 'geometry'.
+[microsoft::projectairsim::unreal_mesh] Loading 'name'.
+[microsoft::projectairsim::unreal_mesh] 'name' loaded.
+[microsoft::projectairsim::unreal_mesh] Loading 'scale'.
+[microsoft::projectairsim::unreal_mesh] 'scale' loaded.
+[microsoft::projectairsim::visual] 'geometry' loaded.
+[microsoft::projectairsim::link] [Prop_RL] 'visual' loaded.
+[microsoft::projectairsim::link] Loading 'id'.
+[microsoft::projectairsim::link] [Prop_RR] 'id' loaded.
+[microsoft::projectairsim::link] [Prop_RR]Loading 'inertial'.
+[microsoft::projectairsim::inertial] Loading 'origin'.
+[microsoft::projectairsim::inertial] 'origin' loaded.
+[microsoft::projectairsim::inertial] Loading 'mass'.
+[microsoft::projectairsim::inertial] 'mass' loaded.
+[microsoft::projectairsim::inertial] Loading 'inertia'.
+[microsoft::projectairsim::inertial] 'inertia' loaded.
+[microsoft::projectairsim::inertial] Loading 'aerodynamics'.
+[microsoft::projectairsim::inertial] 'aerodynamics' loaded.
+[microsoft::projectairsim::link] [Prop_RR] 'inertial' loaded.
+[microsoft::projectairsim::link] [Prop_RR]Loading 'collision'.
+[microsoft::projectairsim::collision] Loading 'enabled'.
+[microsoft::projectairsim::collision] 'enabled' loaded.
+[microsoft::projectairsim::collision] Loading 'restitution'.
+[microsoft::projectairsim::collision] 'restitution' loaded.
+[microsoft::projectairsim::collision] Loading 'friction'.
+[microsoft::projectairsim::collision] 'friction' loaded.
+[microsoft::projectairsim::link] [Prop_RR] 'collision' loaded.
+[microsoft::projectairsim::link] [Prop_RR]Loading 'visual'.
+[microsoft::projectairsim::visual] Loading 'origin'.
+[microsoft::projectairsim::visual] 'origin' loaded.
+[microsoft::projectairsim::visual] Loading 'geometry'.
+[microsoft::projectairsim::unreal_mesh] Loading 'name'.
+[microsoft::projectairsim::unreal_mesh] 'name' loaded.
+[microsoft::projectairsim::unreal_mesh] Loading 'scale'.
+[microsoft::projectairsim::unreal_mesh] 'scale' loaded.
+[microsoft::projectairsim::visual] 'geometry' loaded.
+[microsoft::projectairsim::link] [Prop_RR] 'visual' loaded.
+[microsoft::projectairsim::actor::robot] [Drone2] 'links' loaded.
+[microsoft::projectairsim::actor::robot] [Drone2] Loading 'joints'.
+[microsoft::projectairsim::joint] Loading 'id'.
+[microsoft::projectairsim::joint] [Frame_Prop_FL] 'id' loaded.
+[microsoft::projectairsim::joint] [Frame_Prop_FL]Loading 'type'.
+[microsoft::projectairsim::joint] [Frame_Prop_FL] 'type' loaded.
+[microsoft::projectairsim::joint] [Frame_Prop_FL]Loading 'parent-link'.
+[microsoft::projectairsim::joint] [Frame_Prop_FL] 'parent-link' loaded.
+[microsoft::projectairsim::joint] [Frame_Prop_FL]Loading 'child-link'.
+[microsoft::projectairsim::joint] [Frame_Prop_FL] 'child-link' loaded.
+[microsoft::projectairsim::joint] Loading 'origin'.
+[microsoft::projectairsim::joint] 'origin' loaded.
+[microsoft::projectairsim::joint] Loading 'axis'.
+[microsoft::projectairsim::joint] 'axis' loaded.
+[microsoft::projectairsim::joint] Loading 'limit'.
+[microsoft::projectairsim::joint] 'limit' loaded.
+[microsoft::projectairsim::joint] Loading 'parent-dominates'.
+[microsoft::projectairsim::joint] 'parent-dominates' loaded.
+[microsoft::projectairsim::joint] Loading 'spring-constant'.
+[microsoft::projectairsim::joint] 'spring-constant' loaded.
+[microsoft::projectairsim::joint] Loading 'damping-constant'.
+[microsoft::projectairsim::joint] 'damping-constant' loaded.
+[microsoft::projectairsim::joint] Loading 'max-force'.
+[microsoft::projectairsim::joint] 'max-force' loaded.
+[microsoft::projectairsim::joint] Loading 'id'.
+[microsoft::projectairsim::joint] [Frame_Prop_FR] 'id' loaded.
+[microsoft::projectairsim::joint] [Frame_Prop_FR]Loading 'type'.
+[microsoft::projectairsim::joint] [Frame_Prop_FR] 'type' loaded.
+[microsoft::projectairsim::joint] [Frame_Prop_FR]Loading 'parent-link'.
+[microsoft::projectairsim::joint] [Frame_Prop_FR] 'parent-link' loaded.
+[microsoft::projectairsim::joint] [Frame_Prop_FR]Loading 'child-link'.
+[microsoft::projectairsim::joint] [Frame_Prop_FR] 'child-link' loaded.
+[microsoft::projectairsim::joint] Loading 'origin'.
+[microsoft::projectairsim::joint] 'origin' loaded.
+[microsoft::projectairsim::joint] Loading 'axis'.
+[microsoft::projectairsim::joint] 'axis' loaded.
+[microsoft::projectairsim::joint] Loading 'limit'.
+[microsoft::projectairsim::joint] 'limit' loaded.
+[microsoft::projectairsim::joint] Loading 'parent-dominates'.
+[microsoft::projectairsim::joint] 'parent-dominates' loaded.
+[microsoft::projectairsim::joint] Loading 'spring-constant'.
+[microsoft::projectairsim::joint] 'spring-constant' loaded.
+[microsoft::projectairsim::joint] Loading 'damping-constant'.
+[microsoft::projectairsim::joint] 'damping-constant' loaded.
+[microsoft::projectairsim::joint] Loading 'max-force'.
+[microsoft::projectairsim::joint] 'max-force' loaded.
+[microsoft::projectairsim::joint] Loading 'id'.
+[microsoft::projectairsim::joint] [Frame_Prop_RL] 'id' loaded.
+[microsoft::projectairsim::joint] [Frame_Prop_RL]Loading 'type'.
+[microsoft::projectairsim::joint] [Frame_Prop_RL] 'type' loaded.
+[microsoft::projectairsim::joint] [Frame_Prop_RL]Loading 'parent-link'.
+[microsoft::projectairsim::joint] [Frame_Prop_RL] 'parent-link' loaded.
+[microsoft::projectairsim::joint] [Frame_Prop_RL]Loading 'child-link'.
+[microsoft::projectairsim::joint] [Frame_Prop_RL] 'child-link' loaded.
+[microsoft::projectairsim::joint] Loading 'origin'.
+[microsoft::projectairsim::joint] 'origin' loaded.
+[microsoft::projectairsim::joint] Loading 'axis'.
+[microsoft::projectairsim::joint] 'axis' loaded.
+[microsoft::projectairsim::joint] Loading 'limit'.
+[microsoft::projectairsim::joint] 'limit' loaded.
+[microsoft::projectairsim::joint] Loading 'parent-dominates'.
+[microsoft::projectairsim::joint] 'parent-dominates' loaded.
+[microsoft::projectairsim::joint] Loading 'spring-constant'.
+[microsoft::projectairsim::joint] 'spring-constant' loaded.
+[microsoft::projectairsim::joint] Loading 'damping-constant'.
+[microsoft::projectairsim::joint] 'damping-constant' loaded.
+[microsoft::projectairsim::joint] Loading 'max-force'.
+[microsoft::projectairsim::joint] 'max-force' loaded.
+[microsoft::projectairsim::joint] Loading 'id'.
+[microsoft::projectairsim::joint] [Frame_Prop_RR] 'id' loaded.
+[microsoft::projectairsim::joint] [Frame_Prop_RR]Loading 'type'.
+[microsoft::projectairsim::joint] [Frame_Prop_RR] 'type' loaded.
+[microsoft::projectairsim::joint] [Frame_Prop_RR]Loading 'parent-link'.
+[microsoft::projectairsim::joint] [Frame_Prop_RR] 'parent-link' loaded.
+[microsoft::projectairsim::joint] [Frame_Prop_RR]Loading 'child-link'.
+[microsoft::projectairsim::joint] [Frame_Prop_RR] 'child-link' loaded.
+[microsoft::projectairsim::joint] Loading 'origin'.
+[microsoft::projectairsim::joint] 'origin' loaded.
+[microsoft::projectairsim::joint] Loading 'axis'.
+[microsoft::projectairsim::joint] 'axis' loaded.
+[microsoft::projectairsim::joint] Loading 'limit'.
+[microsoft::projectairsim::joint] 'limit' loaded.
+[microsoft::projectairsim::joint] Loading 'parent-dominates'.
+[microsoft::projectairsim::joint] 'parent-dominates' loaded.
+[microsoft::projectairsim::joint] Loading 'spring-constant'.
+[microsoft::projectairsim::joint] 'spring-constant' loaded.
+[microsoft::projectairsim::joint] Loading 'damping-constant'.
+[microsoft::projectairsim::joint] 'damping-constant' loaded.
+[microsoft::projectairsim::joint] Loading 'max-force'.
+[microsoft::projectairsim::joint] 'max-force' loaded.
+[microsoft::projectairsim::actor::robot] [Drone2] 'joints' loaded.
+[microsoft::projectairsim::actor::robot] [Drone2] Loading 'sensors'.
+[microsoft::projectairsim::actor::robot] [Drone2] Loading 'sensors'.
+[microsoft::projectairsim::actor::robot] [Drone2] Loading 'sensor.id'.
+[microsoft::projectairsim::actor::robot] [Drone2][IMU1] 'sensor.id' loaded.
+[microsoft::projectairsim::actor::robot] [Drone2][IMU1] Loading 'sensor.type'.
+[microsoft::projectairsim::actor::robot] [Drone2][IMU1] 'sensor.type' loaded.
+[microsoft::projectairsim::actor::robot] [Drone2][IMU1] Loading 'sensor.enabled'.
+[microsoft::projectairsim::actor::robot] [Drone2][IMU1] 'sensor.enabled' loaded.
+[microsoft::projectairsim::actor::robot] [Drone2][IMU1] Loading 'sensor.parent_link'.
+[microsoft::projectairsim::actor::robot] [Drone2][IMU1] 'sensor.parent_link' loaded.
+[microsoft::projectairsim::actor::robot] [Drone2][IMU1] Loading 'sensor'.
+[microsoft::projectairsim::sensors::imu] [IMU1] Loading 'imu_settings'.
+[microsoft::projectairsim::sensors::imu] Loading Accelerometer.
+[microsoft::projectairsim::sensors::imu] Accelerometer Loaded.
+[microsoft::projectairsim::sensors::imu] Loading Gyroscope.
+[microsoft::projectairsim::sensors::imu] Gyroscope loaded.
+[microsoft::projectairsim::sensors::imu] Loaded IMU
+[microsoft::projectairsim::sensors::imu] [IMU1] 'imu_settings' loaded.
+[microsoft::projectairsim::actor::robot] [Drone2] Loading 'sensor.id'.
+[microsoft::projectairsim::actor::robot] [Drone2][GPS] 'sensor.id' loaded.
+[microsoft::projectairsim::actor::robot] [Drone2][GPS] Loading 'sensor.type'.
+[microsoft::projectairsim::actor::robot] [Drone2][GPS] 'sensor.type' loaded.
+[microsoft::projectairsim::actor::robot] [Drone2][GPS] Loading 'sensor.enabled'.
+[microsoft::projectairsim::actor::robot] [Drone2][GPS] 'sensor.enabled' loaded.
+[microsoft::projectairsim::actor::robot] [Drone2][GPS] Loading 'sensor.parent_link'.
+[microsoft::projectairsim::actor::robot] [Drone2][GPS] 'sensor.parent_link' loaded.
+[microsoft::projectairsim::actor::robot] [Drone2][GPS] Loading 'sensor'.
+[microsoft::projectairsim::sensors::gps] [GPS] Loading 'GPS_settings'.
+[microsoft::projectairsim::sensors::gps] Loaded GPS settings
+[microsoft::projectairsim::sensors::gps] [GPS] 'GPS_settings' loaded.
+[microsoft::projectairsim::actor::robot] [Drone2] Loading 'sensor.id'.
+[microsoft::projectairsim::actor::robot] [Drone2][Barometer] 'sensor.id' loaded.
+[microsoft::projectairsim::actor::robot] [Drone2][Barometer] Loading 'sensor.type'.
+[microsoft::projectairsim::actor::robot] [Drone2][Barometer] 'sensor.type' loaded.
+[microsoft::projectairsim::actor::robot] [Drone2][Barometer] Loading 'sensor.enabled'.
+[microsoft::projectairsim::actor::robot] [Drone2][Barometer] 'sensor.enabled' loaded.
+[microsoft::projectairsim::actor::robot] [Drone2][Barometer] Loading 'sensor.parent_link'.
+[microsoft::projectairsim::actor::robot] [Drone2][Barometer] 'sensor.parent_link' loaded.
+[microsoft::projectairsim::actor::robot] [Drone2][Barometer] Loading 'sensor'.
+[microsoft::projectairsim::sensors::imu] [Barometer] Loading 'barometer_settings'.
+[microsoft::projectairsim::sensors::imu] Loaded Barometer settings
+[microsoft::projectairsim::sensors::imu] [Barometer] 'barometer_settings' loaded.
+[microsoft::projectairsim::actor::robot] [Drone2] Loading 'sensor.id'.
+[microsoft::projectairsim::actor::robot] [Drone2][Magnetometer] 'sensor.id' loaded.
+[microsoft::projectairsim::actor::robot] [Drone2][Magnetometer] Loading 'sensor.type'.
+[microsoft::projectairsim::actor::robot] [Drone2][Magnetometer] 'sensor.type' loaded.
+[microsoft::projectairsim::actor::robot] [Drone2][Magnetometer] Loading 'sensor.enabled'.
+[microsoft::projectairsim::actor::robot] [Drone2][Magnetometer] 'sensor.enabled' loaded.
+[microsoft::projectairsim::actor::robot] [Drone2][Magnetometer] Loading 'sensor.parent_link'.
+[microsoft::projectairsim::actor::robot] [Drone2][Magnetometer] 'sensor.parent_link' loaded.
+[microsoft::projectairsim::actor::robot] [Drone2][Magnetometer] Loading 'sensor'.
+[microsoft::projectairsim::sensors::imu] [Magnetometer] Loading 'magnetometer_settings'.
+[microsoft::projectairsim::sensors::imu] Loaded Magnetometer settings
+[microsoft::projectairsim::sensors::imu] Loading 'origin'.
+[microsoft::projectairsim::sensors::imu] 'origin' missing or empty. Using default.
+[microsoft::projectairsim::sensors::imu] 'origin' loaded.
+[microsoft::projectairsim::sensors::imu] [Magnetometer] 'magnetometer_settings' loaded.
+[microsoft::projectairsim::actor::robot] [Drone2] 'sensors' loaded.
+[microsoft::projectairsim::actor::robot] [Drone2] 'sensors' loaded.
+[microsoft::projectairsim::actor::robot] [Drone2] Loading 'actuators'.
+[microsoft::projectairsim::actor::robot] [Drone2] Loading 'actuators'.
+[microsoft::projectairsim::actor::robot] [Drone2] Loading 'actuator.name'.
+[microsoft::projectairsim::actor::robot] [Drone2][Prop_FL_actuator] 'actuator.name' loaded.
+[microsoft::projectairsim::actor::robot] [Drone2][Prop_FL_actuator] Loading 'actuator.type'.
+[microsoft::projectairsim::actor::robot] [Drone2][Prop_FL_actuator] 'actuator.type' loaded.
+[microsoft::projectairsim::actor::robot] [Drone2][Prop_FL_actuator] Loading 'actuator.enabled'.
+[microsoft::projectairsim::actor::robot] [Drone2][Prop_FL_actuator] 'actuator.enabled' loaded.
+[microsoft::projectairsim::actor::robot] [Drone2][Prop_FL_actuator] Loading 'actuator.parent_link'.
+[microsoft::projectairsim::actor::robot] [Drone2][Prop_FL_actuator] 'actuator.parent_link' loaded.
+[microsoft::projectairsim::actor::robot] [Drone2][Prop_FL_actuator] Loading 'actuator.child_link'.
+[microsoft::projectairsim::actor::robot] [Drone2][Prop_FL_actuator] 'actuator.child_link' loaded.
+[microsoft::projectairsim::actor::robot] [Drone2][Prop_FL_actuator] Loading 'actuator'.
+[microsoft::projectairsim::actuators::rotor] [Prop_FL_actuator] Loading 'rotor_settings'.
+[microsoft::projectairsim::actuators::rotor] Loading 'origin'.
+[microsoft::projectairsim::actuators::rotor] 'origin' loaded.
+[microsoft::projectairsim::actuators::rotor] Loading 'rotor_settings'.
+[microsoft::projectairsim::actuators::rotor] 'rotor_settings' loaded.
+[microsoft::projectairsim::actuators::rotor] [Prop_FL_actuator] 'rotor_settings' loaded.
+[microsoft::projectairsim::actor::robot] [Drone2] Loading 'actuator.name'.
+[microsoft::projectairsim::actor::robot] [Drone2][Prop_FR_actuator] 'actuator.name' loaded.
+[microsoft::projectairsim::actor::robot] [Drone2][Prop_FR_actuator] Loading 'actuator.type'.
+[microsoft::projectairsim::actor::robot] [Drone2][Prop_FR_actuator] 'actuator.type' loaded.
+[microsoft::projectairsim::actor::robot] [Drone2][Prop_FR_actuator] Loading 'actuator.enabled'.
+[microsoft::projectairsim::actor::robot] [Drone2][Prop_FR_actuator] 'actuator.enabled' loaded.
+[microsoft::projectairsim::actor::robot] [Drone2][Prop_FR_actuator] Loading 'actuator.parent_link'.
+[microsoft::projectairsim::actor::robot] [Drone2][Prop_FR_actuator] 'actuator.parent_link' loaded.
+[microsoft::projectairsim::actor::robot] [Drone2][Prop_FR_actuator] Loading 'actuator.child_link'.
+[microsoft::projectairsim::actor::robot] [Drone2][Prop_FR_actuator] 'actuator.child_link' loaded.
+[microsoft::projectairsim::actor::robot] [Drone2][Prop_FR_actuator] Loading 'actuator'.
+[microsoft::projectairsim::actuators::rotor] [Prop_FR_actuator] Loading 'rotor_settings'.
+[microsoft::projectairsim::actuators::rotor] Loading 'origin'.
+[microsoft::projectairsim::actuators::rotor] 'origin' loaded.
+[microsoft::projectairsim::actuators::rotor] Loading 'rotor_settings'.
+[microsoft::projectairsim::actuators::rotor] 'rotor_settings' loaded.
+[microsoft::projectairsim::actuators::rotor] [Prop_FR_actuator] 'rotor_settings' loaded.
+[microsoft::projectairsim::actor::robot] [Drone2] Loading 'actuator.name'.
+[microsoft::projectairsim::actor::robot] [Drone2][Prop_RL_actuator] 'actuator.name' loaded.
+[microsoft::projectairsim::actor::robot] [Drone2][Prop_RL_actuator] Loading 'actuator.type'.
+[microsoft::projectairsim::actor::robot] [Drone2][Prop_RL_actuator] 'actuator.type' loaded.
+[microsoft::projectairsim::actor::robot] [Drone2][Prop_RL_actuator] Loading 'actuator.enabled'.
+[microsoft::projectairsim::actor::robot] [Drone2][Prop_RL_actuator] 'actuator.enabled' loaded.
+[microsoft::projectairsim::actor::robot] [Drone2][Prop_RL_actuator] Loading 'actuator.parent_link'.
+[microsoft::projectairsim::actor::robot] [Drone2][Prop_RL_actuator] 'actuator.parent_link' loaded.
+[microsoft::projectairsim::actor::robot] [Drone2][Prop_RL_actuator] Loading 'actuator.child_link'.
+[microsoft::projectairsim::actor::robot] [Drone2][Prop_RL_actuator] 'actuator.child_link' loaded.
+[microsoft::projectairsim::actor::robot] [Drone2][Prop_RL_actuator] Loading 'actuator'.
+[microsoft::projectairsim::actuators::rotor] [Prop_RL_actuator] Loading 'rotor_settings'.
+[microsoft::projectairsim::actuators::rotor] Loading 'origin'.
+[microsoft::projectairsim::actuators::rotor] 'origin' loaded.
+[microsoft::projectairsim::actuators::rotor] Loading 'rotor_settings'.
+[microsoft::projectairsim::actuators::rotor] 'rotor_settings' loaded.
+[microsoft::projectairsim::actuators::rotor] [Prop_RL_actuator] 'rotor_settings' loaded.
+[microsoft::projectairsim::actor::robot] [Drone2] Loading 'actuator.name'.
+[microsoft::projectairsim::actor::robot] [Drone2][Prop_RR_actuator] 'actuator.name' loaded.
+[microsoft::projectairsim::actor::robot] [Drone2][Prop_RR_actuator] Loading 'actuator.type'.
+[microsoft::projectairsim::actor::robot] [Drone2][Prop_RR_actuator] 'actuator.type' loaded.
+[microsoft::projectairsim::actor::robot] [Drone2][Prop_RR_actuator] Loading 'actuator.enabled'.
+[microsoft::projectairsim::actor::robot] [Drone2][Prop_RR_actuator] 'actuator.enabled' loaded.
+[microsoft::projectairsim::actor::robot] [Drone2][Prop_RR_actuator] Loading 'actuator.parent_link'.
+[microsoft::projectairsim::actor::robot] [Drone2][Prop_RR_actuator] 'actuator.parent_link' loaded.
+[microsoft::projectairsim::actor::robot] [Drone2][Prop_RR_actuator] Loading 'actuator.child_link'.
+[microsoft::projectairsim::actor::robot] [Drone2][Prop_RR_actuator] 'actuator.child_link' loaded.
+[microsoft::projectairsim::actor::robot] [Drone2][Prop_RR_actuator] Loading 'actuator'.
+[microsoft::projectairsim::actuators::rotor] [Prop_RR_actuator] Loading 'rotor_settings'.
+[microsoft::projectairsim::actuators::rotor] Loading 'origin'.
+[microsoft::projectairsim::actuators::rotor] 'origin' loaded.
+[microsoft::projectairsim::actuators::rotor] Loading 'rotor_settings'.
+[microsoft::projectairsim::actuators::rotor] 'rotor_settings' loaded.
+[microsoft::projectairsim::actuators::rotor] [Prop_RR_actuator] 'rotor_settings' loaded.
+[microsoft::projectairsim::actor::robot] [Drone2] 'actuators' loaded.
+[microsoft::projectairsim::actor::robot] [Drone2] 'actuators' loaded.
+[microsoft::projectairsim::actor::robot] [Drone2] Loading 'controller'.
+[microsoft::projectairsim::actor::robot] [Drone2] 'controller' loaded.
+[microsoft::projectairsim::scene] [RFMovingQualification] Loading 'Enviroment Actors'.
+[microsoft::projectairsim::scene] [RFMovingQualification] 'environment-actors' missing or empty.
+[microsoft::projectairsim::scene] [RFMovingQualification] Loading 'vr-mode'.
+[microsoft::projectairsim::scene] [RFMovingQualification][0] 'vr-mode' loaded.
+[microsoft::projectairsim::simulator] [Sim] 'scene' loaded.
+[SimServer::LoadPhysicsWorld] Loading physics bodies for scene 'RFMovingQualification'.
+[SimServer::LoadControllers] Loading controllers for scene 'RFMovingQualification'.
+[SimServer::RegisterServiceMethods] Registering service methods.
+[Project AirSim Runtime] Ground collision enabled for robot 'Drone1' with 1 contact probe(s).
+[Project AirSim Runtime] Ground collision enabled for robot 'Drone2' with 1 contact probe(s).
+[SimServer::StartScene] Starting scene.
+[microsoft::projectairsim::topic_manager] Registered topic /Sim/RFMovingQualification/robots/Drone1/actual_pose
+[microsoft::projectairsim::topic_manager] Registered topic /Sim/RFMovingQualification/robots/Drone1/desired_pose
+[microsoft::projectairsim::topic_manager] Registered topic /Sim/RFMovingQualification/robots/Drone1/collision_info
+[microsoft::projectairsim::topic_manager] Registered topic /Sim/RFMovingQualification/robots/Drone1/rotor_info
+[microsoft::projectairsim::topic_manager] Successfully subscribed to topic '/Sim/RFMovingQualification/robots/Drone1/desired_pose'.
+[microsoft::projectairsim::topic_manager] Registered topic /Sim/RFMovingQualification/robots/Drone1/simple_flight/rc_input
+[microsoft::projectairsim::topic_manager] Successfully subscribed to topic '/Sim/RFMovingQualification/robots/Drone1/simple_flight/rc_input'.
+[microsoft::projectairsim::topic_manager] Registered topic /Sim/RFMovingQualification/robots/Drone1/sensors/IMU1/imu_kinematics
+[microsoft::projectairsim::topic_manager] Registered topic /Sim/RFMovingQualification/robots/Drone1/sensors/GPS/gps
+[microsoft::projectairsim::topic_manager] Registered topic /Sim/RFMovingQualification/robots/Drone1/sensors/Barometer/barometer
+[microsoft::projectairsim::topic_manager] Registered topic /Sim/RFMovingQualification/robots/Drone1/sensors/Magnetometer/magnetometer
+[microsoft::projectairsim::topic_manager] Registered topic /Sim/RFMovingQualification/robots/Drone2/actual_pose
+[microsoft::projectairsim::topic_manager] Registered topic /Sim/RFMovingQualification/robots/Drone2/desired_pose
+[microsoft::projectairsim::topic_manager] Registered topic /Sim/RFMovingQualification/robots/Drone2/collision_info
+[microsoft::projectairsim::topic_manager] Registered topic /Sim/RFMovingQualification/robots/Drone2/rotor_info
+[microsoft::projectairsim::topic_manager] Successfully subscribed to topic '/Sim/RFMovingQualification/robots/Drone2/desired_pose'.
+[microsoft::projectairsim::topic_manager] Registered topic /Sim/RFMovingQualification/robots/Drone2/simple_flight/rc_input
+[microsoft::projectairsim::topic_manager] Successfully subscribed to topic '/Sim/RFMovingQualification/robots/Drone2/simple_flight/rc_input'.
+[microsoft::projectairsim::topic_manager] Registered topic /Sim/RFMovingQualification/robots/Drone2/sensors/IMU1/imu_kinematics
+[microsoft::projectairsim::topic_manager] Registered topic /Sim/RFMovingQualification/robots/Drone2/sensors/GPS/gps
+[microsoft::projectairsim::topic_manager] Registered topic /Sim/RFMovingQualification/robots/Drone2/sensors/Barometer/barometer
+[microsoft::projectairsim::topic_manager] Registered topic /Sim/RFMovingQualification/robots/Drone2/sensors/Magnetometer/magnetometer
+[microsoft::projectairsim::topic_manager] Client subscribing to topic /$topics
+[microsoft::projectairsim::scene] Continuing sim time until 2001000000 ns, and then will pause.
+[microsoft::projectairsim::scene] Waiting to reach target sim time.
+[microsoft::projectairsim::scene] Continuing sim time until 2013000000 ns, and then will pause.
+[microsoft::projectairsim::scene] Waiting to reach target sim time.
+[microsoft::projectairsim::scene] Continuing sim time until 2025000000 ns, and then will pause.
+[microsoft::projectairsim::scene] Waiting to reach target sim time.
+[microsoft::projectairsim::scene] Continuing sim time until 2037000000 ns, and then will pause.
+[microsoft::projectairsim::scene] Waiting to reach target sim time.
+[microsoft::projectairsim::scene] Continuing sim time until 2049000000 ns, and then will pause.
+[microsoft::projectairsim::scene] Waiting to reach target sim time.
+[microsoft::projectairsim::scene] Continuing sim time until 2061000000 ns, and then will pause.
+[microsoft::projectairsim::scene] Waiting to reach target sim time.
+[microsoft::projectairsim::scene] Continuing sim time until 2073000000 ns, and then will pause.
+[microsoft::projectairsim::scene] Waiting to reach target sim time.
+[microsoft::projectairsim::scene] Continuing sim time until 2085000000 ns, and then will pause.
+[microsoft::projectairsim::scene] Waiting to reach target sim time.
+[microsoft::projectairsim::scene] Continuing sim time until 2097000000 ns, and then will pause.
+[microsoft::projectairsim::scene] Waiting to reach target sim time.
+[microsoft::projectairsim::scene] Continuing sim time until 2109000000 ns, and then will pause.
+[microsoft::projectairsim::scene] Waiting to reach target sim time.
+[microsoft::projectairsim::scene] Continuing sim time until 2121000000 ns, and then will pause.
+[microsoft::projectairsim::scene] Waiting to reach target sim time.
+[microsoft::projectairsim::scene] Continuing sim time until 2133000000 ns, and then will pause.
+[microsoft::projectairsim::scene] Waiting to reach target sim time.
+[microsoft::projectairsim::scene] Continuing sim time until 2145000000 ns, and then will pause.
+[microsoft::projectairsim::scene] Waiting to reach target sim time.
+[microsoft::projectairsim::scene] Continuing sim time until 2157000000 ns, and then will pause.
+[microsoft::projectairsim::scene] Waiting to reach target sim time.
+[microsoft::projectairsim::scene] Continuing sim time until 2169000000 ns, and then will pause.
+[microsoft::projectairsim::scene] Waiting to reach target sim time.
+[microsoft::projectairsim::scene] Continuing sim time until 2181000000 ns, and then will pause.
+[microsoft::projectairsim::scene] Waiting to reach target sim time.
+[microsoft::projectairsim::scene] Continuing sim time until 2193000000 ns, and then will pause.
+[microsoft::projectairsim::scene] Waiting to reach target sim time.
+[microsoft::projectairsim::scene] Continuing sim time until 2205000000 ns, and then will pause.
+[microsoft::projectairsim::scene] Waiting to reach target sim time.
+[microsoft::projectairsim::scene] Continuing sim time until 2217000000 ns, and then will pause.
+[microsoft::projectairsim::scene] Waiting to reach target sim time.
+[microsoft::projectairsim::scene] Continuing sim time until 2229000000 ns, and then will pause.
+[microsoft::projectairsim::scene] Waiting to reach target sim time.
+[microsoft::projectairsim::scene] Continuing sim time until 2241000000 ns, and then will pause.
+[microsoft::projectairsim::scene] Waiting to reach target sim time.
+[microsoft::projectairsim::scene] Continuing sim time until 2253000000 ns, and then will pause.
+[microsoft::projectairsim::scene] Waiting to reach target sim time.
+[microsoft::projectairsim::scene] Continuing sim time until 2265000000 ns, and then will pause.
+[microsoft::projectairsim::scene] Waiting to reach target sim time.
+[microsoft::projectairsim::scene] Continuing sim time until 2277000000 ns, and then will pause.
+[microsoft::projectairsim::scene] Waiting to reach target sim time.
+[microsoft::projectairsim::scene] Continuing sim time until 2289000000 ns, and then will pause.
+[microsoft::projectairsim::scene] Waiting to reach target sim time.
+[microsoft::projectairsim::scene] Continuing sim time until 2301000000 ns, and then will pause.
+[microsoft::projectairsim::scene] Waiting to reach target sim time.
+[microsoft::projectairsim::scene] Continuing sim time until 2313000000 ns, and then will pause.
+[microsoft::projectairsim::scene] Waiting to reach target sim time.
+[microsoft::projectairsim::scene] Continuing sim time until 2325000000 ns, and then will pause.
+[microsoft::projectairsim::scene] Waiting to reach target sim time.
+[microsoft::projectairsim::scene] Continuing sim time until 2337000000 ns, and then will pause.
+[microsoft::projectairsim::scene] Waiting to reach target sim time.
+[microsoft::projectairsim::scene] Continuing sim time until 2349000000 ns, and then will pause.
+[microsoft::projectairsim::scene] Waiting to reach target sim time.
+[microsoft::projectairsim::scene] Continuing sim time until 2361000000 ns, and then will pause.
+[microsoft::projectairsim::scene] Waiting to reach target sim time.
+[microsoft::projectairsim::scene] Continuing sim time until 2373000000 ns, and then will pause.
+[microsoft::projectairsim::scene] Waiting to reach target sim time.
+[microsoft::projectairsim::scene] Continuing sim time until 2385000000 ns, and then will pause.
+[microsoft::projectairsim::scene] Waiting to reach target sim time.
+[microsoft::projectairsim::scene] Continuing sim time until 2397000000 ns, and then will pause.
+[microsoft::projectairsim::scene] Waiting to reach target sim time.
+[microsoft::projectairsim::scene] Continuing sim time until 2409000000 ns, and then will pause.
+[microsoft::projectairsim::scene] Waiting to reach target sim time.
+[microsoft::projectairsim::scene] Continuing sim time until 2421000000 ns, and then will pause.
+[microsoft::projectairsim::scene] Waiting to reach target sim time.
+[microsoft::projectairsim::scene] Continuing sim time until 2433000000 ns, and then will pause.
+[microsoft::projectairsim::scene] Waiting to reach target sim time.
+[microsoft::projectairsim::scene] Continuing sim time until 2445000000 ns, and then will pause.
+[microsoft::projectairsim::scene] Waiting to reach target sim time.
+[microsoft::projectairsim::scene] Continuing sim time until 2457000000 ns, and then will pause.
+[microsoft::projectairsim::scene] Waiting to reach target sim time.
+[microsoft::projectairsim::scene] Continuing sim time until 2469000000 ns, and then will pause.
+[microsoft::projectairsim::scene] Waiting to reach target sim time.
+[microsoft::projectairsim::scene] Continuing sim time until 2481000000 ns, and then will pause.
+[microsoft::projectairsim::scene] Waiting to reach target sim time.
+[microsoft::projectairsim::scene] Continuing sim time until 5100000000 ns, and then will pause.
+[microsoft::projectairsim::scene] Waiting to reach target sim time.
+[microsoft::projectairsim::topic_manager] Client unsubscribing from topic /$topics
+[microsoft::projectairsim::topic_manager] Pub-sub client disconnected; active topic pipes: 0
+[microsoft::projectairsim::topic_manager] Pub-sub client disconnected--resetting client authorization
+[microsoft::projectairsim::client_authorization] Client authorization token accepted (no client authorization token public key)
+[microsoft::projectairsim::topic_manager] Unsubscribing all topics.
+[microsoft::projectairsim::service_manager] Req-resp client disconnected--resetting client authorization
+[microsoft::projectairsim::client_authorization] Client authorization token accepted (no client authorization token public key)
+[microsoft::projectairsim::topic_manager] Pub-sub client connected; active topic pipes: 1
+[SimServer::SimReloadSceneWithJSON] Reloading scene.
+[SimServer::StopScene] Stopping scene.
+[microsoft::projectairsim::topic_manager] Unregistered topic /Sim/RFMovingQualification/robots/Drone1/actual_pose
+[microsoft::projectairsim::topic_manager] Unregistered topic /Sim/RFMovingQualification/robots/Drone1/desired_pose
+[microsoft::projectairsim::topic_manager] Unregistered topic /Sim/RFMovingQualification/robots/Drone1/collision_info
+[microsoft::projectairsim::topic_manager] Unregistered topic /Sim/RFMovingQualification/robots/Drone1/rotor_info
+[microsoft::projectairsim::topic_manager] Unregistered topic /Sim/RFMovingQualification/robots/Drone1/simple_flight/rc_input
+[microsoft::projectairsim::topic_manager] Unregistered topic /Sim/RFMovingQualification/robots/Drone1/sensors/IMU1/imu_kinematics
+[microsoft::projectairsim::topic_manager] Unregistered topic /Sim/RFMovingQualification/robots/Drone1/sensors/GPS/gps
+[microsoft::projectairsim::topic_manager] Unregistered topic /Sim/RFMovingQualification/robots/Drone1/sensors/Barometer/barometer
+[microsoft::projectairsim::topic_manager] Unregistered topic /Sim/RFMovingQualification/robots/Drone1/sensors/Magnetometer/magnetometer
+[microsoft::projectairsim::topic_manager] Unregistered topic /Sim/RFMovingQualification/robots/Drone2/actual_pose
+[microsoft::projectairsim::topic_manager] Unregistered topic /Sim/RFMovingQualification/robots/Drone2/desired_pose
+[microsoft::projectairsim::topic_manager] Unregistered topic /Sim/RFMovingQualification/robots/Drone2/collision_info
+[microsoft::projectairsim::topic_manager] Unregistered topic /Sim/RFMovingQualification/robots/Drone2/rotor_info
+[microsoft::projectairsim::topic_manager] Unregistered topic /Sim/RFMovingQualification/robots/Drone2/simple_flight/rc_input
+[microsoft::projectairsim::topic_manager] Unregistered topic /Sim/RFMovingQualification/robots/Drone2/sensors/IMU1/imu_kinematics
+[microsoft::projectairsim::topic_manager] Unregistered topic /Sim/RFMovingQualification/robots/Drone2/sensors/GPS/gps
+[microsoft::projectairsim::topic_manager] Unregistered topic /Sim/RFMovingQualification/robots/Drone2/sensors/Barometer/barometer
+[microsoft::projectairsim::topic_manager] Unregistered topic /Sim/RFMovingQualification/robots/Drone2/sensors/Magnetometer/magnetometer
+[microsoft::projectairsim::service_manager] Unregistered ALL ServiceMethods
+[SimServer::UnloadScene] Unloading scene.
+[SimServer::UnloadControllers] Unloading controllers.
+[SimServer::UnloadPhysicsWorld] Unloading physics bodies.
+[SimServer::UnloadTileManager] Unloading tile manager.
+[microsoft::projectairsim::topic_manager] Unregistered topic /Sim/RFMovingQualification/clock
+[SimServer::LoadScene] Loading scene.
+[microsoft::projectairsim::simulator] Loading Scene with JSON Data.
+[microsoft::projectairsim::scene] Loading 'id'.
+[microsoft::projectairsim::scene] [RFMovingQualification] 'id' loaded.
+[microsoft::projectairsim::scene] [RFMovingQualification] Loading 'home-geo-point'.
+[microsoft::projectairsim::scene] [RFMovingQualification] 'clock' settings loaded.
+[microsoft::projectairsim::scene] [RFMovingQualification] Loading 'wind-settings'.
+[microsoft::projectairsim::scene] [RFMovingQualification] 'wind-settings' missing or empty. Using default wind setting.
+[microsoft::projectairsim::scene] [RFMovingQualification] Loading 'clock' settings.
+[microsoft::projectairsim::scene] [RFMovingQualification] 'clock' settings loaded.
+[microsoft::projectairsim::topic_manager] Registered topic /Sim/RFMovingQualification/clock
+[microsoft::projectairsim::scene] [RFMovingQualification] Loading 'segmentation' settings.
+[microsoft::projectairsim::scene] [RFMovingQualification] 'segmentation' missing or empty. Using default segmentation settings.
+[microsoft::projectairsim::scene] Loading 'scene-type'.
+[microsoft::projectairsim::scene] [RFMovingQualification] 'scene-type' loaded.
+[microsoft::projectairsim::scene] Loading 'tiles-dir'.
+[microsoft::projectairsim::scene] [RFMovingQualification] 'tiles-dir' loaded.
+[microsoft::projectairsim::scene] Loading 'horizon-tiles-dir'.
+[microsoft::projectairsim::scene] [RFMovingQualification] 'horizon-tiles-dir' loaded.
+[microsoft::projectairsim::scene] Loading 'tiles-altitude-offset'.
+[microsoft::projectairsim::scene] [RFMovingQualification] 'tiles-altitude-offset' loaded.
+[microsoft::projectairsim::scene] Loading 'tiles-lod-max'.
+[microsoft::projectairsim::scene] [RFMovingQualification] 'tiles-lod-max' loaded.
+[microsoft::projectairsim::scene] Loading 'tiles-lod-min'.
+[microsoft::projectairsim::scene] [RFMovingQualification] 'tiles-lod-min' loaded.
+[microsoft::projectairsim::scene] [RFMovingQualification] Loading 'actors'.
+[microsoft::projectairsim::scene] [RFMovingQualification] Loading 'actor.name'.
+[microsoft::projectairsim::scene] [RFMovingQualification][Drone1] 'actor.name' loaded.
+[microsoft::projectairsim::scene] [RFMovingQualification][Drone1] Loading 'actor.type'.
+[microsoft::projectairsim::scene] [RFMovingQualification][Drone1] 'actor.type' loaded.
+[microsoft::projectairsim::scene] [RFMovingQualification][Drone1] Loading 'actor.origin'.
+[microsoft::projectairsim::scene] [RFMovingQualification][Drone1] 'actor.origin' loaded.
+[microsoft::projectairsim::scene] [RFMovingQualification][Drone1] Loading 'actor'.
+[microsoft::projectairsim::actor::robot] [Drone1] Loading 'physics-type'.
+[microsoft::projectairsim::actor::robot] [Drone1] 'physics-type' loaded.
+[microsoft::projectairsim::actor::robot] [Drone1] Loading 'links'.
+[microsoft::projectairsim::link] Loading 'id'.
+[microsoft::projectairsim::link] [Frame] 'id' loaded.
+[microsoft::projectairsim::link] [Frame]Loading 'inertial'.
+[microsoft::projectairsim::inertial] Loading 'origin'.
+[microsoft::projectairsim::inertial] 'origin' loaded.
+[microsoft::projectairsim::inertial] Loading 'mass'.
+[microsoft::projectairsim::inertial] 'mass' loaded.
+[microsoft::projectairsim::inertial] Loading 'inertia'.
+[microsoft::projectairsim::inertial] 'inertia' loaded.
+[microsoft::projectairsim::inertial] Loading 'aerodynamics'.
+[microsoft::projectairsim::inertial] 'aerodynamics' loaded.
+[microsoft::projectairsim::link] [Frame] 'inertial' loaded.
+[microsoft::projectairsim::link] [Frame]Loading 'collision'.
+[microsoft::projectairsim::collision] Loading 'enabled'.
+[microsoft::projectairsim::collision] 'enabled' loaded.
+[microsoft::projectairsim::collision] Loading 'restitution'.
+[microsoft::projectairsim::collision] 'restitution' loaded.
+[microsoft::projectairsim::collision] Loading 'friction'.
+[microsoft::projectairsim::collision] 'friction' loaded.
+[microsoft::projectairsim::link] [Frame] 'collision' loaded.
+[microsoft::projectairsim::link] [Frame]Loading 'visual'.
+[microsoft::projectairsim::visual] Loading 'origin'.
+[microsoft::projectairsim::visual] 'origin' loaded.
+[microsoft::projectairsim::visual] Loading 'geometry'.
+[microsoft::projectairsim::unreal_mesh] Loading 'name'.
+[microsoft::projectairsim::unreal_mesh] 'name' loaded.
+[microsoft::projectairsim::unreal_mesh] Loading 'scale'.
+[microsoft::projectairsim::unreal_mesh] 'scale' loaded.
+[microsoft::projectairsim::visual] 'geometry' loaded.
+[microsoft::projectairsim::link] [Frame] 'visual' loaded.
+[microsoft::projectairsim::link] Loading 'id'.
+[microsoft::projectairsim::link] [Prop_FL] 'id' loaded.
+[microsoft::projectairsim::link] [Prop_FL]Loading 'inertial'.
+[microsoft::projectairsim::inertial] Loading 'origin'.
+[microsoft::projectairsim::inertial] 'origin' loaded.
+[microsoft::projectairsim::inertial] Loading 'mass'.
+[microsoft::projectairsim::inertial] 'mass' loaded.
+[microsoft::projectairsim::inertial] Loading 'inertia'.
+[microsoft::projectairsim::inertial] 'inertia' loaded.
+[microsoft::projectairsim::inertial] Loading 'aerodynamics'.
+[microsoft::projectairsim::inertial] 'aerodynamics' loaded.
+[microsoft::projectairsim::link] [Prop_FL] 'inertial' loaded.
+[microsoft::projectairsim::link] [Prop_FL]Loading 'collision'.
+[microsoft::projectairsim::collision] Loading 'enabled'.
+[microsoft::projectairsim::collision] 'enabled' loaded.
+[microsoft::projectairsim::collision] Loading 'restitution'.
+[microsoft::projectairsim::collision] 'restitution' loaded.
+[microsoft::projectairsim::collision] Loading 'friction'.
+[microsoft::projectairsim::collision] 'friction' loaded.
+[microsoft::projectairsim::link] [Prop_FL] 'collision' loaded.
+[microsoft::projectairsim::link] [Prop_FL]Loading 'visual'.
+[microsoft::projectairsim::visual] Loading 'origin'.
+[microsoft::projectairsim::visual] 'origin' loaded.
+[microsoft::projectairsim::visual] Loading 'geometry'.
+[microsoft::projectairsim::unreal_mesh] Loading 'name'.
+[microsoft::projectairsim::unreal_mesh] 'name' loaded.
+[microsoft::projectairsim::unreal_mesh] Loading 'scale'.
+[microsoft::projectairsim::unreal_mesh] 'scale' loaded.
+[microsoft::projectairsim::visual] 'geometry' loaded.
+[microsoft::projectairsim::link] [Prop_FL] 'visual' loaded.
+[microsoft::projectairsim::link] Loading 'id'.
+[microsoft::projectairsim::link] [Prop_FR] 'id' loaded.
+[microsoft::projectairsim::link] [Prop_FR]Loading 'inertial'.
+[microsoft::projectairsim::inertial] Loading 'origin'.
+[microsoft::projectairsim::inertial] 'origin' loaded.
+[microsoft::projectairsim::inertial] Loading 'mass'.
+[microsoft::projectairsim::inertial] 'mass' loaded.
+[microsoft::projectairsim::inertial] Loading 'inertia'.
+[microsoft::projectairsim::inertial] 'inertia' loaded.
+[microsoft::projectairsim::inertial] Loading 'aerodynamics'.
+[microsoft::projectairsim::inertial] 'aerodynamics' loaded.
+[microsoft::projectairsim::link] [Prop_FR] 'inertial' loaded.
+[microsoft::projectairsim::link] [Prop_FR]Loading 'collision'.
+[microsoft::projectairsim::collision] Loading 'enabled'.
+[microsoft::projectairsim::collision] 'enabled' loaded.
+[microsoft::projectairsim::collision] Loading 'restitution'.
+[microsoft::projectairsim::collision] 'restitution' loaded.
+[microsoft::projectairsim::collision] Loading 'friction'.
+[microsoft::projectairsim::collision] 'friction' loaded.
+[microsoft::projectairsim::link] [Prop_FR] 'collision' loaded.
+[microsoft::projectairsim::link] [Prop_FR]Loading 'visual'.
+[microsoft::projectairsim::visual] Loading 'origin'.
+[microsoft::projectairsim::visual] 'origin' loaded.
+[microsoft::projectairsim::visual] Loading 'geometry'.
+[microsoft::projectairsim::unreal_mesh] Loading 'name'.
+[microsoft::projectairsim::unreal_mesh] 'name' loaded.
+[microsoft::projectairsim::unreal_mesh] Loading 'scale'.
+[microsoft::projectairsim::unreal_mesh] 'scale' loaded.
+[microsoft::projectairsim::visual] 'geometry' loaded.
+[microsoft::projectairsim::link] [Prop_FR] 'visual' loaded.
+[microsoft::projectairsim::link] Loading 'id'.
+[microsoft::projectairsim::link] [Prop_RL] 'id' loaded.
+[microsoft::projectairsim::link] [Prop_RL]Loading 'inertial'.
+[microsoft::projectairsim::inertial] Loading 'origin'.
+[microsoft::projectairsim::inertial] 'origin' loaded.
+[microsoft::projectairsim::inertial] Loading 'mass'.
+[microsoft::projectairsim::inertial] 'mass' loaded.
+[microsoft::projectairsim::inertial] Loading 'inertia'.
+[microsoft::projectairsim::inertial] 'inertia' loaded.
+[microsoft::projectairsim::inertial] Loading 'aerodynamics'.
+[microsoft::projectairsim::inertial] 'aerodynamics' loaded.
+[microsoft::projectairsim::link] [Prop_RL] 'inertial' loaded.
+[microsoft::projectairsim::link] [Prop_RL]Loading 'collision'.
+[microsoft::projectairsim::collision] Loading 'enabled'.
+[microsoft::projectairsim::collision] 'enabled' loaded.
+[microsoft::projectairsim::collision] Loading 'restitution'.
+[microsoft::projectairsim::collision] 'restitution' loaded.
+[microsoft::projectairsim::collision] Loading 'friction'.
+[microsoft::projectairsim::collision] 'friction' loaded.
+[microsoft::projectairsim::link] [Prop_RL] 'collision' loaded.
+[microsoft::projectairsim::link] [Prop_RL]Loading 'visual'.
+[microsoft::projectairsim::visual] Loading 'origin'.
+[microsoft::projectairsim::visual] 'origin' loaded.
+[microsoft::projectairsim::visual] Loading 'geometry'.
+[microsoft::projectairsim::unreal_mesh] Loading 'name'.
+[microsoft::projectairsim::unreal_mesh] 'name' loaded.
+[microsoft::projectairsim::unreal_mesh] Loading 'scale'.
+[microsoft::projectairsim::unreal_mesh] 'scale' loaded.
+[microsoft::projectairsim::visual] 'geometry' loaded.
+[microsoft::projectairsim::link] [Prop_RL] 'visual' loaded.
+[microsoft::projectairsim::link] Loading 'id'.
+[microsoft::projectairsim::link] [Prop_RR] 'id' loaded.
+[microsoft::projectairsim::link] [Prop_RR]Loading 'inertial'.
+[microsoft::projectairsim::inertial] Loading 'origin'.
+[microsoft::projectairsim::inertial] 'origin' loaded.
+[microsoft::projectairsim::inertial] Loading 'mass'.
+[microsoft::projectairsim::inertial] 'mass' loaded.
+[microsoft::projectairsim::inertial] Loading 'inertia'.
+[microsoft::projectairsim::inertial] 'inertia' loaded.
+[microsoft::projectairsim::inertial] Loading 'aerodynamics'.
+[microsoft::projectairsim::inertial] 'aerodynamics' loaded.
+[microsoft::projectairsim::link] [Prop_RR] 'inertial' loaded.
+[microsoft::projectairsim::link] [Prop_RR]Loading 'collision'.
+[microsoft::projectairsim::collision] Loading 'enabled'.
+[microsoft::projectairsim::collision] 'enabled' loaded.
+[microsoft::projectairsim::collision] Loading 'restitution'.
+[microsoft::projectairsim::collision] 'restitution' loaded.
+[microsoft::projectairsim::collision] Loading 'friction'.
+[microsoft::projectairsim::collision] 'friction' loaded.
+[microsoft::projectairsim::link] [Prop_RR] 'collision' loaded.
+[microsoft::projectairsim::link] [Prop_RR]Loading 'visual'.
+[microsoft::projectairsim::visual] Loading 'origin'.
+[microsoft::projectairsim::visual] 'origin' loaded.
+[microsoft::projectairsim::visual] Loading 'geometry'.
+[microsoft::projectairsim::unreal_mesh] Loading 'name'.
+[microsoft::projectairsim::unreal_mesh] 'name' loaded.
+[microsoft::projectairsim::unreal_mesh] Loading 'scale'.
+[microsoft::projectairsim::unreal_mesh] 'scale' loaded.
+[microsoft::projectairsim::visual] 'geometry' loaded.
+[microsoft::projectairsim::link] [Prop_RR] 'visual' loaded.
+[microsoft::projectairsim::actor::robot] [Drone1] 'links' loaded.
+[microsoft::projectairsim::actor::robot] [Drone1] Loading 'joints'.
+[microsoft::projectairsim::joint] Loading 'id'.
+[microsoft::projectairsim::joint] [Frame_Prop_FL] 'id' loaded.
+[microsoft::projectairsim::joint] [Frame_Prop_FL]Loading 'type'.
+[microsoft::projectairsim::joint] [Frame_Prop_FL] 'type' loaded.
+[microsoft::projectairsim::joint] [Frame_Prop_FL]Loading 'parent-link'.
+[microsoft::projectairsim::joint] [Frame_Prop_FL] 'parent-link' loaded.
+[microsoft::projectairsim::joint] [Frame_Prop_FL]Loading 'child-link'.
+[microsoft::projectairsim::joint] [Frame_Prop_FL] 'child-link' loaded.
+[microsoft::projectairsim::joint] Loading 'origin'.
+[microsoft::projectairsim::joint] 'origin' loaded.
+[microsoft::projectairsim::joint] Loading 'axis'.
+[microsoft::projectairsim::joint] 'axis' loaded.
+[microsoft::projectairsim::joint] Loading 'limit'.
+[microsoft::projectairsim::joint] 'limit' loaded.
+[microsoft::projectairsim::joint] Loading 'parent-dominates'.
+[microsoft::projectairsim::joint] 'parent-dominates' loaded.
+[microsoft::projectairsim::joint] Loading 'spring-constant'.
+[microsoft::projectairsim::joint] 'spring-constant' loaded.
+[microsoft::projectairsim::joint] Loading 'damping-constant'.
+[microsoft::projectairsim::joint] 'damping-constant' loaded.
+[microsoft::projectairsim::joint] Loading 'max-force'.
+[microsoft::projectairsim::joint] 'max-force' loaded.
+[microsoft::projectairsim::joint] Loading 'id'.
+[microsoft::projectairsim::joint] [Frame_Prop_FR] 'id' loaded.
+[microsoft::projectairsim::joint] [Frame_Prop_FR]Loading 'type'.
+[microsoft::projectairsim::joint] [Frame_Prop_FR] 'type' loaded.
+[microsoft::projectairsim::joint] [Frame_Prop_FR]Loading 'parent-link'.
+[microsoft::projectairsim::joint] [Frame_Prop_FR] 'parent-link' loaded.
+[microsoft::projectairsim::joint] [Frame_Prop_FR]Loading 'child-link'.
+[microsoft::projectairsim::joint] [Frame_Prop_FR] 'child-link' loaded.
+[microsoft::projectairsim::joint] Loading 'origin'.
+[microsoft::projectairsim::joint] 'origin' loaded.
+[microsoft::projectairsim::joint] Loading 'axis'.
+[microsoft::projectairsim::joint] 'axis' loaded.
+[microsoft::projectairsim::joint] Loading 'limit'.
+[microsoft::projectairsim::joint] 'limit' loaded.
+[microsoft::projectairsim::joint] Loading 'parent-dominates'.
+[microsoft::projectairsim::joint] 'parent-dominates' loaded.
+[microsoft::projectairsim::joint] Loading 'spring-constant'.
+[microsoft::projectairsim::joint] 'spring-constant' loaded.
+[microsoft::projectairsim::joint] Loading 'damping-constant'.
+[microsoft::projectairsim::joint] 'damping-constant' loaded.
+[microsoft::projectairsim::joint] Loading 'max-force'.
+[microsoft::projectairsim::joint] 'max-force' loaded.
+[microsoft::projectairsim::joint] Loading 'id'.
+[microsoft::projectairsim::joint] [Frame_Prop_RL] 'id' loaded.
+[microsoft::projectairsim::joint] [Frame_Prop_RL]Loading 'type'.
+[microsoft::projectairsim::joint] [Frame_Prop_RL] 'type' loaded.
+[microsoft::projectairsim::joint] [Frame_Prop_RL]Loading 'parent-link'.
+[microsoft::projectairsim::joint] [Frame_Prop_RL] 'parent-link' loaded.
+[microsoft::projectairsim::joint] [Frame_Prop_RL]Loading 'child-link'.
+[microsoft::projectairsim::joint] [Frame_Prop_RL] 'child-link' loaded.
+[microsoft::projectairsim::joint] Loading 'origin'.
+[microsoft::projectairsim::joint] 'origin' loaded.
+[microsoft::projectairsim::joint] Loading 'axis'.
+[microsoft::projectairsim::joint] 'axis' loaded.
+[microsoft::projectairsim::joint] Loading 'limit'.
+[microsoft::projectairsim::joint] 'limit' loaded.
+[microsoft::projectairsim::joint] Loading 'parent-dominates'.
+[microsoft::projectairsim::joint] 'parent-dominates' loaded.
+[microsoft::projectairsim::joint] Loading 'spring-constant'.
+[microsoft::projectairsim::joint] 'spring-constant' loaded.
+[microsoft::projectairsim::joint] Loading 'damping-constant'.
+[microsoft::projectairsim::joint] 'damping-constant' loaded.
+[microsoft::projectairsim::joint] Loading 'max-force'.
+[microsoft::projectairsim::joint] 'max-force' loaded.
+[microsoft::projectairsim::joint] Loading 'id'.
+[microsoft::projectairsim::joint] [Frame_Prop_RR] 'id' loaded.
+[microsoft::projectairsim::joint] [Frame_Prop_RR]Loading 'type'.
+[microsoft::projectairsim::joint] [Frame_Prop_RR] 'type' loaded.
+[microsoft::projectairsim::joint] [Frame_Prop_RR]Loading 'parent-link'.
+[microsoft::projectairsim::joint] [Frame_Prop_RR] 'parent-link' loaded.
+[microsoft::projectairsim::joint] [Frame_Prop_RR]Loading 'child-link'.
+[microsoft::projectairsim::joint] [Frame_Prop_RR] 'child-link' loaded.
+[microsoft::projectairsim::joint] Loading 'origin'.
+[microsoft::projectairsim::joint] 'origin' loaded.
+[microsoft::projectairsim::joint] Loading 'axis'.
+[microsoft::projectairsim::joint] 'axis' loaded.
+[microsoft::projectairsim::joint] Loading 'limit'.
+[microsoft::projectairsim::joint] 'limit' loaded.
+[microsoft::projectairsim::joint] Loading 'parent-dominates'.
+[microsoft::projectairsim::joint] 'parent-dominates' loaded.
+[microsoft::projectairsim::joint] Loading 'spring-constant'.
+[microsoft::projectairsim::joint] 'spring-constant' loaded.
+[microsoft::projectairsim::joint] Loading 'damping-constant'.
+[microsoft::projectairsim::joint] 'damping-constant' loaded.
+[microsoft::projectairsim::joint] Loading 'max-force'.
+[microsoft::projectairsim::joint] 'max-force' loaded.
+[microsoft::projectairsim::actor::robot] [Drone1] 'joints' loaded.
+[microsoft::projectairsim::actor::robot] [Drone1] Loading 'sensors'.
+[microsoft::projectairsim::actor::robot] [Drone1] Loading 'sensors'.
+[microsoft::projectairsim::actor::robot] [Drone1] Loading 'sensor.id'.
+[microsoft::projectairsim::actor::robot] [Drone1][IMU1] 'sensor.id' loaded.
+[microsoft::projectairsim::actor::robot] [Drone1][IMU1] Loading 'sensor.type'.
+[microsoft::projectairsim::actor::robot] [Drone1][IMU1] 'sensor.type' loaded.
+[microsoft::projectairsim::actor::robot] [Drone1][IMU1] Loading 'sensor.enabled'.
+[microsoft::projectairsim::actor::robot] [Drone1][IMU1] 'sensor.enabled' loaded.
+[microsoft::projectairsim::actor::robot] [Drone1][IMU1] Loading 'sensor.parent_link'.
+[microsoft::projectairsim::actor::robot] [Drone1][IMU1] 'sensor.parent_link' loaded.
+[microsoft::projectairsim::actor::robot] [Drone1][IMU1] Loading 'sensor'.
+[microsoft::projectairsim::sensors::imu] [IMU1] Loading 'imu_settings'.
+[microsoft::projectairsim::sensors::imu] Loading Accelerometer.
+[microsoft::projectairsim::sensors::imu] Accelerometer Loaded.
+[microsoft::projectairsim::sensors::imu] Loading Gyroscope.
+[microsoft::projectairsim::sensors::imu] Gyroscope loaded.
+[microsoft::projectairsim::sensors::imu] Loaded IMU
+[microsoft::projectairsim::sensors::imu] [IMU1] 'imu_settings' loaded.
+[microsoft::projectairsim::actor::robot] [Drone1] Loading 'sensor.id'.
+[microsoft::projectairsim::actor::robot] [Drone1][GPS] 'sensor.id' loaded.
+[microsoft::projectairsim::actor::robot] [Drone1][GPS] Loading 'sensor.type'.
+[microsoft::projectairsim::actor::robot] [Drone1][GPS] 'sensor.type' loaded.
+[microsoft::projectairsim::actor::robot] [Drone1][GPS] Loading 'sensor.enabled'.
+[microsoft::projectairsim::actor::robot] [Drone1][GPS] 'sensor.enabled' loaded.
+[microsoft::projectairsim::actor::robot] [Drone1][GPS] Loading 'sensor.parent_link'.
+[microsoft::projectairsim::actor::robot] [Drone1][GPS] 'sensor.parent_link' loaded.
+[microsoft::projectairsim::actor::robot] [Drone1][GPS] Loading 'sensor'.
+[microsoft::projectairsim::sensors::gps] [GPS] Loading 'GPS_settings'.
+[microsoft::projectairsim::sensors::gps] Loaded GPS settings
+[microsoft::projectairsim::sensors::gps] [GPS] 'GPS_settings' loaded.
+[microsoft::projectairsim::actor::robot] [Drone1] Loading 'sensor.id'.
+[microsoft::projectairsim::actor::robot] [Drone1][Barometer] 'sensor.id' loaded.
+[microsoft::projectairsim::actor::robot] [Drone1][Barometer] Loading 'sensor.type'.
+[microsoft::projectairsim::actor::robot] [Drone1][Barometer] 'sensor.type' loaded.
+[microsoft::projectairsim::actor::robot] [Drone1][Barometer] Loading 'sensor.enabled'.
+[microsoft::projectairsim::actor::robot] [Drone1][Barometer] 'sensor.enabled' loaded.
+[microsoft::projectairsim::actor::robot] [Drone1][Barometer] Loading 'sensor.parent_link'.
+[microsoft::projectairsim::actor::robot] [Drone1][Barometer] 'sensor.parent_link' loaded.
+[microsoft::projectairsim::actor::robot] [Drone1][Barometer] Loading 'sensor'.
+[microsoft::projectairsim::sensors::imu] [Barometer] Loading 'barometer_settings'.
+[microsoft::projectairsim::sensors::imu] Loaded Barometer settings
+[microsoft::projectairsim::sensors::imu] [Barometer] 'barometer_settings' loaded.
+[microsoft::projectairsim::actor::robot] [Drone1] Loading 'sensor.id'.
+[microsoft::projectairsim::actor::robot] [Drone1][Magnetometer] 'sensor.id' loaded.
+[microsoft::projectairsim::actor::robot] [Drone1][Magnetometer] Loading 'sensor.type'.
+[microsoft::projectairsim::actor::robot] [Drone1][Magnetometer] 'sensor.type' loaded.
+[microsoft::projectairsim::actor::robot] [Drone1][Magnetometer] Loading 'sensor.enabled'.
+[microsoft::projectairsim::actor::robot] [Drone1][Magnetometer] 'sensor.enabled' loaded.
+[microsoft::projectairsim::actor::robot] [Drone1][Magnetometer] Loading 'sensor.parent_link'.
+[microsoft::projectairsim::actor::robot] [Drone1][Magnetometer] 'sensor.parent_link' loaded.
+[microsoft::projectairsim::actor::robot] [Drone1][Magnetometer] Loading 'sensor'.
+[microsoft::projectairsim::sensors::imu] [Magnetometer] Loading 'magnetometer_settings'.
+[microsoft::projectairsim::sensors::imu] Loaded Magnetometer settings
+[microsoft::projectairsim::sensors::imu] Loading 'origin'.
+[microsoft::projectairsim::sensors::imu] 'origin' missing or empty. Using default.
+[microsoft::projectairsim::sensors::imu] 'origin' loaded.
+[microsoft::projectairsim::sensors::imu] [Magnetometer] 'magnetometer_settings' loaded.
+[microsoft::projectairsim::actor::robot] [Drone1] 'sensors' loaded.
+[microsoft::projectairsim::actor::robot] [Drone1] 'sensors' loaded.
+[microsoft::projectairsim::actor::robot] [Drone1] Loading 'actuators'.
+[microsoft::projectairsim::actor::robot] [Drone1] Loading 'actuators'.
+[microsoft::projectairsim::actor::robot] [Drone1] Loading 'actuator.name'.
+[microsoft::projectairsim::actor::robot] [Drone1][Prop_FL_actuator] 'actuator.name' loaded.
+[microsoft::projectairsim::actor::robot] [Drone1][Prop_FL_actuator] Loading 'actuator.type'.
+[microsoft::projectairsim::actor::robot] [Drone1][Prop_FL_actuator] 'actuator.type' loaded.
+[microsoft::projectairsim::actor::robot] [Drone1][Prop_FL_actuator] Loading 'actuator.enabled'.
+[microsoft::projectairsim::actor::robot] [Drone1][Prop_FL_actuator] 'actuator.enabled' loaded.
+[microsoft::projectairsim::actor::robot] [Drone1][Prop_FL_actuator] Loading 'actuator.parent_link'.
+[microsoft::projectairsim::actor::robot] [Drone1][Prop_FL_actuator] 'actuator.parent_link' loaded.
+[microsoft::projectairsim::actor::robot] [Drone1][Prop_FL_actuator] Loading 'actuator.child_link'.
+[microsoft::projectairsim::actor::robot] [Drone1][Prop_FL_actuator] 'actuator.child_link' loaded.
+[microsoft::projectairsim::actor::robot] [Drone1][Prop_FL_actuator] Loading 'actuator'.
+[microsoft::projectairsim::actuators::rotor] [Prop_FL_actuator] Loading 'rotor_settings'.
+[microsoft::projectairsim::actuators::rotor] Loading 'origin'.
+[microsoft::projectairsim::actuators::rotor] 'origin' loaded.
+[microsoft::projectairsim::actuators::rotor] Loading 'rotor_settings'.
+[microsoft::projectairsim::actuators::rotor] 'rotor_settings' loaded.
+[microsoft::projectairsim::actuators::rotor] [Prop_FL_actuator] 'rotor_settings' loaded.
+[microsoft::projectairsim::actor::robot] [Drone1] Loading 'actuator.name'.
+[microsoft::projectairsim::actor::robot] [Drone1][Prop_FR_actuator] 'actuator.name' loaded.
+[microsoft::projectairsim::actor::robot] [Drone1][Prop_FR_actuator] Loading 'actuator.type'.
+[microsoft::projectairsim::actor::robot] [Drone1][Prop_FR_actuator] 'actuator.type' loaded.
+[microsoft::projectairsim::actor::robot] [Drone1][Prop_FR_actuator] Loading 'actuator.enabled'.
+[microsoft::projectairsim::actor::robot] [Drone1][Prop_FR_actuator] 'actuator.enabled' loaded.
+[microsoft::projectairsim::actor::robot] [Drone1][Prop_FR_actuator] Loading 'actuator.parent_link'.
+[microsoft::projectairsim::actor::robot] [Drone1][Prop_FR_actuator] 'actuator.parent_link' loaded.
+[microsoft::projectairsim::actor::robot] [Drone1][Prop_FR_actuator] Loading 'actuator.child_link'.
+[microsoft::projectairsim::actor::robot] [Drone1][Prop_FR_actuator] 'actuator.child_link' loaded.
+[microsoft::projectairsim::actor::robot] [Drone1][Prop_FR_actuator] Loading 'actuator'.
+[microsoft::projectairsim::actuators::rotor] [Prop_FR_actuator] Loading 'rotor_settings'.
+[microsoft::projectairsim::actuators::rotor] Loading 'origin'.
+[microsoft::projectairsim::actuators::rotor] 'origin' loaded.
+[microsoft::projectairsim::actuators::rotor] Loading 'rotor_settings'.
+[microsoft::projectairsim::actuators::rotor] 'rotor_settings' loaded.
+[microsoft::projectairsim::actuators::rotor] [Prop_FR_actuator] 'rotor_settings' loaded.
+[microsoft::projectairsim::actor::robot] [Drone1] Loading 'actuator.name'.
+[microsoft::projectairsim::actor::robot] [Drone1][Prop_RL_actuator] 'actuator.name' loaded.
+[microsoft::projectairsim::actor::robot] [Drone1][Prop_RL_actuator] Loading 'actuator.type'.
+[microsoft::projectairsim::actor::robot] [Drone1][Prop_RL_actuator] 'actuator.type' loaded.
+[microsoft::projectairsim::actor::robot] [Drone1][Prop_RL_actuator] Loading 'actuator.enabled'.
+[microsoft::projectairsim::actor::robot] [Drone1][Prop_RL_actuator] 'actuator.enabled' loaded.
+[microsoft::projectairsim::actor::robot] [Drone1][Prop_RL_actuator] Loading 'actuator.parent_link'.
+[microsoft::projectairsim::actor::robot] [Drone1][Prop_RL_actuator] 'actuator.parent_link' loaded.
+[microsoft::projectairsim::actor::robot] [Drone1][Prop_RL_actuator] Loading 'actuator.child_link'.
+[microsoft::projectairsim::actor::robot] [Drone1][Prop_RL_actuator] 'actuator.child_link' loaded.
+[microsoft::projectairsim::actor::robot] [Drone1][Prop_RL_actuator] Loading 'actuator'.
+[microsoft::projectairsim::actuators::rotor] [Prop_RL_actuator] Loading 'rotor_settings'.
+[microsoft::projectairsim::actuators::rotor] Loading 'origin'.
+[microsoft::projectairsim::actuators::rotor] 'origin' loaded.
+[microsoft::projectairsim::actuators::rotor] Loading 'rotor_settings'.
+[microsoft::projectairsim::actuators::rotor] 'rotor_settings' loaded.
+[microsoft::projectairsim::actuators::rotor] [Prop_RL_actuator] 'rotor_settings' loaded.
+[microsoft::projectairsim::actor::robot] [Drone1] Loading 'actuator.name'.
+[microsoft::projectairsim::actor::robot] [Drone1][Prop_RR_actuator] 'actuator.name' loaded.
+[microsoft::projectairsim::actor::robot] [Drone1][Prop_RR_actuator] Loading 'actuator.type'.
+[microsoft::projectairsim::actor::robot] [Drone1][Prop_RR_actuator] 'actuator.type' loaded.
+[microsoft::projectairsim::actor::robot] [Drone1][Prop_RR_actuator] Loading 'actuator.enabled'.
+[microsoft::projectairsim::actor::robot] [Drone1][Prop_RR_actuator] 'actuator.enabled' loaded.
+[microsoft::projectairsim::actor::robot] [Drone1][Prop_RR_actuator] Loading 'actuator.parent_link'.
+[microsoft::projectairsim::actor::robot] [Drone1][Prop_RR_actuator] 'actuator.parent_link' loaded.
+[microsoft::projectairsim::actor::robot] [Drone1][Prop_RR_actuator] Loading 'actuator.child_link'.
+[microsoft::projectairsim::actor::robot] [Drone1][Prop_RR_actuator] 'actuator.child_link' loaded.
+[microsoft::projectairsim::actor::robot] [Drone1][Prop_RR_actuator] Loading 'actuator'.
+[microsoft::projectairsim::actuators::rotor] [Prop_RR_actuator] Loading 'rotor_settings'.
+[microsoft::projectairsim::actuators::rotor] Loading 'origin'.
+[microsoft::projectairsim::actuators::rotor] 'origin' loaded.
+[microsoft::projectairsim::actuators::rotor] Loading 'rotor_settings'.
+[microsoft::projectairsim::actuators::rotor] 'rotor_settings' loaded.
+[microsoft::projectairsim::actuators::rotor] [Prop_RR_actuator] 'rotor_settings' loaded.
+[microsoft::projectairsim::actor::robot] [Drone1] 'actuators' loaded.
+[microsoft::projectairsim::actor::robot] [Drone1] 'actuators' loaded.
+[microsoft::projectairsim::actor::robot] [Drone1] Loading 'controller'.
+[microsoft::projectairsim::actor::robot] [Drone1] 'controller' loaded.
+[microsoft::projectairsim::scene] [RFMovingQualification] Loading 'actor.name'.
+[microsoft::projectairsim::scene] [RFMovingQualification][Drone2] 'actor.name' loaded.
+[microsoft::projectairsim::scene] [RFMovingQualification][Drone2] Loading 'actor.type'.
+[microsoft::projectairsim::scene] [RFMovingQualification][Drone2] 'actor.type' loaded.
+[microsoft::projectairsim::scene] [RFMovingQualification][Drone2] Loading 'actor.origin'.
+[microsoft::projectairsim::scene] [RFMovingQualification][Drone2] 'actor.origin' loaded.
+[microsoft::projectairsim::scene] [RFMovingQualification][Drone2] Loading 'actor'.
+[microsoft::projectairsim::actor::robot] [Drone2] Loading 'physics-type'.
+[microsoft::projectairsim::actor::robot] [Drone2] 'physics-type' loaded.
+[microsoft::projectairsim::actor::robot] [Drone2] Loading 'links'.
+[microsoft::projectairsim::link] Loading 'id'.
+[microsoft::projectairsim::link] [Frame] 'id' loaded.
+[microsoft::projectairsim::link] [Frame]Loading 'inertial'.
+[microsoft::projectairsim::inertial] Loading 'origin'.
+[microsoft::projectairsim::inertial] 'origin' loaded.
+[microsoft::projectairsim::inertial] Loading 'mass'.
+[microsoft::projectairsim::inertial] 'mass' loaded.
+[microsoft::projectairsim::inertial] Loading 'inertia'.
+[microsoft::projectairsim::inertial] 'inertia' loaded.
+[microsoft::projectairsim::inertial] Loading 'aerodynamics'.
+[microsoft::projectairsim::inertial] 'aerodynamics' loaded.
+[microsoft::projectairsim::link] [Frame] 'inertial' loaded.
+[microsoft::projectairsim::link] [Frame]Loading 'collision'.
+[microsoft::projectairsim::collision] Loading 'enabled'.
+[microsoft::projectairsim::collision] 'enabled' loaded.
+[microsoft::projectairsim::collision] Loading 'restitution'.
+[microsoft::projectairsim::collision] 'restitution' loaded.
+[microsoft::projectairsim::collision] Loading 'friction'.
+[microsoft::projectairsim::collision] 'friction' loaded.
+[microsoft::projectairsim::link] [Frame] 'collision' loaded.
+[microsoft::projectairsim::link] [Frame]Loading 'visual'.
+[microsoft::projectairsim::visual] Loading 'origin'.
+[microsoft::projectairsim::visual] 'origin' loaded.
+[microsoft::projectairsim::visual] Loading 'geometry'.
+[microsoft::projectairsim::unreal_mesh] Loading 'name'.
+[microsoft::projectairsim::unreal_mesh] 'name' loaded.
+[microsoft::projectairsim::unreal_mesh] Loading 'scale'.
+[microsoft::projectairsim::unreal_mesh] 'scale' loaded.
+[microsoft::projectairsim::visual] 'geometry' loaded.
+[microsoft::projectairsim::link] [Frame] 'visual' loaded.
+[microsoft::projectairsim::link] Loading 'id'.
+[microsoft::projectairsim::link] [Prop_FL] 'id' loaded.
+[microsoft::projectairsim::link] [Prop_FL]Loading 'inertial'.
+[microsoft::projectairsim::inertial] Loading 'origin'.
+[microsoft::projectairsim::inertial] 'origin' loaded.
+[microsoft::projectairsim::inertial] Loading 'mass'.
+[microsoft::projectairsim::inertial] 'mass' loaded.
+[microsoft::projectairsim::inertial] Loading 'inertia'.
+[microsoft::projectairsim::inertial] 'inertia' loaded.
+[microsoft::projectairsim::inertial] Loading 'aerodynamics'.
+[microsoft::projectairsim::inertial] 'aerodynamics' loaded.
+[microsoft::projectairsim::link] [Prop_FL] 'inertial' loaded.
+[microsoft::projectairsim::link] [Prop_FL]Loading 'collision'.
+[microsoft::projectairsim::collision] Loading 'enabled'.
+[microsoft::projectairsim::collision] 'enabled' loaded.
+[microsoft::projectairsim::collision] Loading 'restitution'.
+[microsoft::projectairsim::collision] 'restitution' loaded.
+[microsoft::projectairsim::collision] Loading 'friction'.
+[microsoft::projectairsim::collision] 'friction' loaded.
+[microsoft::projectairsim::link] [Prop_FL] 'collision' loaded.
+[microsoft::projectairsim::link] [Prop_FL]Loading 'visual'.
+[microsoft::projectairsim::visual] Loading 'origin'.
+[microsoft::projectairsim::visual] 'origin' loaded.
+[microsoft::projectairsim::visual] Loading 'geometry'.
+[microsoft::projectairsim::unreal_mesh] Loading 'name'.
+[microsoft::projectairsim::unreal_mesh] 'name' loaded.
+[microsoft::projectairsim::unreal_mesh] Loading 'scale'.
+[microsoft::projectairsim::unreal_mesh] 'scale' loaded.
+[microsoft::projectairsim::visual] 'geometry' loaded.
+[microsoft::projectairsim::link] [Prop_FL] 'visual' loaded.
+[microsoft::projectairsim::link] Loading 'id'.
+[microsoft::projectairsim::link] [Prop_FR] 'id' loaded.
+[microsoft::projectairsim::link] [Prop_FR]Loading 'inertial'.
+[microsoft::projectairsim::inertial] Loading 'origin'.
+[microsoft::projectairsim::inertial] 'origin' loaded.
+[microsoft::projectairsim::inertial] Loading 'mass'.
+[microsoft::projectairsim::inertial] 'mass' loaded.
+[microsoft::projectairsim::inertial] Loading 'inertia'.
+[microsoft::projectairsim::inertial] 'inertia' loaded.
+[microsoft::projectairsim::inertial] Loading 'aerodynamics'.
+[microsoft::projectairsim::inertial] 'aerodynamics' loaded.
+[microsoft::projectairsim::link] [Prop_FR] 'inertial' loaded.
+[microsoft::projectairsim::link] [Prop_FR]Loading 'collision'.
+[microsoft::projectairsim::collision] Loading 'enabled'.
+[microsoft::projectairsim::collision] 'enabled' loaded.
+[microsoft::projectairsim::collision] Loading 'restitution'.
+[microsoft::projectairsim::collision] 'restitution' loaded.
+[microsoft::projectairsim::collision] Loading 'friction'.
+[microsoft::projectairsim::collision] 'friction' loaded.
+[microsoft::projectairsim::link] [Prop_FR] 'collision' loaded.
+[microsoft::projectairsim::link] [Prop_FR]Loading 'visual'.
+[microsoft::projectairsim::visual] Loading 'origin'.
+[microsoft::projectairsim::visual] 'origin' loaded.
+[microsoft::projectairsim::visual] Loading 'geometry'.
+[microsoft::projectairsim::unreal_mesh] Loading 'name'.
+[microsoft::projectairsim::unreal_mesh] 'name' loaded.
+[microsoft::projectairsim::unreal_mesh] Loading 'scale'.
+[microsoft::projectairsim::unreal_mesh] 'scale' loaded.
+[microsoft::projectairsim::visual] 'geometry' loaded.
+[microsoft::projectairsim::link] [Prop_FR] 'visual' loaded.
+[microsoft::projectairsim::link] Loading 'id'.
+[microsoft::projectairsim::link] [Prop_RL] 'id' loaded.
+[microsoft::projectairsim::link] [Prop_RL]Loading 'inertial'.
+[microsoft::projectairsim::inertial] Loading 'origin'.
+[microsoft::projectairsim::inertial] 'origin' loaded.
+[microsoft::projectairsim::inertial] Loading 'mass'.
+[microsoft::projectairsim::inertial] 'mass' loaded.
+[microsoft::projectairsim::inertial] Loading 'inertia'.
+[microsoft::projectairsim::inertial] 'inertia' loaded.
+[microsoft::projectairsim::inertial] Loading 'aerodynamics'.
+[microsoft::projectairsim::inertial] 'aerodynamics' loaded.
+[microsoft::projectairsim::link] [Prop_RL] 'inertial' loaded.
+[microsoft::projectairsim::link] [Prop_RL]Loading 'collision'.
+[microsoft::projectairsim::collision] Loading 'enabled'.
+[microsoft::projectairsim::collision] 'enabled' loaded.
+[microsoft::projectairsim::collision] Loading 'restitution'.
+[microsoft::projectairsim::collision] 'restitution' loaded.
+[microsoft::projectairsim::collision] Loading 'friction'.
+[microsoft::projectairsim::collision] 'friction' loaded.
+[microsoft::projectairsim::link] [Prop_RL] 'collision' loaded.
+[microsoft::projectairsim::link] [Prop_RL]Loading 'visual'.
+[microsoft::projectairsim::visual] Loading 'origin'.
+[microsoft::projectairsim::visual] 'origin' loaded.
+[microsoft::projectairsim::visual] Loading 'geometry'.
+[microsoft::projectairsim::unreal_mesh] Loading 'name'.
+[microsoft::projectairsim::unreal_mesh] 'name' loaded.
+[microsoft::projectairsim::unreal_mesh] Loading 'scale'.
+[microsoft::projectairsim::unreal_mesh] 'scale' loaded.
+[microsoft::projectairsim::visual] 'geometry' loaded.
+[microsoft::projectairsim::link] [Prop_RL] 'visual' loaded.
+[microsoft::projectairsim::link] Loading 'id'.
+[microsoft::projectairsim::link] [Prop_RR] 'id' loaded.
+[microsoft::projectairsim::link] [Prop_RR]Loading 'inertial'.
+[microsoft::projectairsim::inertial] Loading 'origin'.
+[microsoft::projectairsim::inertial] 'origin' loaded.
+[microsoft::projectairsim::inertial] Loading 'mass'.
+[microsoft::projectairsim::inertial] 'mass' loaded.
+[microsoft::projectairsim::inertial] Loading 'inertia'.
+[microsoft::projectairsim::inertial] 'inertia' loaded.
+[microsoft::projectairsim::inertial] Loading 'aerodynamics'.
+[microsoft::projectairsim::inertial] 'aerodynamics' loaded.
+[microsoft::projectairsim::link] [Prop_RR] 'inertial' loaded.
+[microsoft::projectairsim::link] [Prop_RR]Loading 'collision'.
+[microsoft::projectairsim::collision] Loading 'enabled'.
+[microsoft::projectairsim::collision] 'enabled' loaded.
+[microsoft::projectairsim::collision] Loading 'restitution'.
+[microsoft::projectairsim::collision] 'restitution' loaded.
+[microsoft::projectairsim::collision] Loading 'friction'.
+[microsoft::projectairsim::collision] 'friction' loaded.
+[microsoft::projectairsim::link] [Prop_RR] 'collision' loaded.
+[microsoft::projectairsim::link] [Prop_RR]Loading 'visual'.
+[microsoft::projectairsim::visual] Loading 'origin'.
+[microsoft::projectairsim::visual] 'origin' loaded.
+[microsoft::projectairsim::visual] Loading 'geometry'.
+[microsoft::projectairsim::unreal_mesh] Loading 'name'.
+[microsoft::projectairsim::unreal_mesh] 'name' loaded.
+[microsoft::projectairsim::unreal_mesh] Loading 'scale'.
+[microsoft::projectairsim::unreal_mesh] 'scale' loaded.
+[microsoft::projectairsim::visual] 'geometry' loaded.
+[microsoft::projectairsim::link] [Prop_RR] 'visual' loaded.
+[microsoft::projectairsim::actor::robot] [Drone2] 'links' loaded.
+[microsoft::projectairsim::actor::robot] [Drone2] Loading 'joints'.
+[microsoft::projectairsim::joint] Loading 'id'.
+[microsoft::projectairsim::joint] [Frame_Prop_FL] 'id' loaded.
+[microsoft::projectairsim::joint] [Frame_Prop_FL]Loading 'type'.
+[microsoft::projectairsim::joint] [Frame_Prop_FL] 'type' loaded.
+[microsoft::projectairsim::joint] [Frame_Prop_FL]Loading 'parent-link'.
+[microsoft::projectairsim::joint] [Frame_Prop_FL] 'parent-link' loaded.
+[microsoft::projectairsim::joint] [Frame_Prop_FL]Loading 'child-link'.
+[microsoft::projectairsim::joint] [Frame_Prop_FL] 'child-link' loaded.
+[microsoft::projectairsim::joint] Loading 'origin'.
+[microsoft::projectairsim::joint] 'origin' loaded.
+[microsoft::projectairsim::joint] Loading 'axis'.
+[microsoft::projectairsim::joint] 'axis' loaded.
+[microsoft::projectairsim::joint] Loading 'limit'.
+[microsoft::projectairsim::joint] 'limit' loaded.
+[microsoft::projectairsim::joint] Loading 'parent-dominates'.
+[microsoft::projectairsim::joint] 'parent-dominates' loaded.
+[microsoft::projectairsim::joint] Loading 'spring-constant'.
+[microsoft::projectairsim::joint] 'spring-constant' loaded.
+[microsoft::projectairsim::joint] Loading 'damping-constant'.
+[microsoft::projectairsim::joint] 'damping-constant' loaded.
+[microsoft::projectairsim::joint] Loading 'max-force'.
+[microsoft::projectairsim::joint] 'max-force' loaded.
+[microsoft::projectairsim::joint] Loading 'id'.
+[microsoft::projectairsim::joint] [Frame_Prop_FR] 'id' loaded.
+[microsoft::projectairsim::joint] [Frame_Prop_FR]Loading 'type'.
+[microsoft::projectairsim::joint] [Frame_Prop_FR] 'type' loaded.
+[microsoft::projectairsim::joint] [Frame_Prop_FR]Loading 'parent-link'.
+[microsoft::projectairsim::joint] [Frame_Prop_FR] 'parent-link' loaded.
+[microsoft::projectairsim::joint] [Frame_Prop_FR]Loading 'child-link'.
+[microsoft::projectairsim::joint] [Frame_Prop_FR] 'child-link' loaded.
+[microsoft::projectairsim::joint] Loading 'origin'.
+[microsoft::projectairsim::joint] 'origin' loaded.
+[microsoft::projectairsim::joint] Loading 'axis'.
+[microsoft::projectairsim::joint] 'axis' loaded.
+[microsoft::projectairsim::joint] Loading 'limit'.
+[microsoft::projectairsim::joint] 'limit' loaded.
+[microsoft::projectairsim::joint] Loading 'parent-dominates'.
+[microsoft::projectairsim::joint] 'parent-dominates' loaded.
+[microsoft::projectairsim::joint] Loading 'spring-constant'.
+[microsoft::projectairsim::joint] 'spring-constant' loaded.
+[microsoft::projectairsim::joint] Loading 'damping-constant'.
+[microsoft::projectairsim::joint] 'damping-constant' loaded.
+[microsoft::projectairsim::joint] Loading 'max-force'.
+[microsoft::projectairsim::joint] 'max-force' loaded.
+[microsoft::projectairsim::joint] Loading 'id'.
+[microsoft::projectairsim::joint] [Frame_Prop_RL] 'id' loaded.
+[microsoft::projectairsim::joint] [Frame_Prop_RL]Loading 'type'.
+[microsoft::projectairsim::joint] [Frame_Prop_RL] 'type' loaded.
+[microsoft::projectairsim::joint] [Frame_Prop_RL]Loading 'parent-link'.
+[microsoft::projectairsim::joint] [Frame_Prop_RL] 'parent-link' loaded.
+[microsoft::projectairsim::joint] [Frame_Prop_RL]Loading 'child-link'.
+[microsoft::projectairsim::joint] [Frame_Prop_RL] 'child-link' loaded.
+[microsoft::projectairsim::joint] Loading 'origin'.
+[microsoft::projectairsim::joint] 'origin' loaded.
+[microsoft::projectairsim::joint] Loading 'axis'.
+[microsoft::projectairsim::joint] 'axis' loaded.
+[microsoft::projectairsim::joint] Loading 'limit'.
+[microsoft::projectairsim::joint] 'limit' loaded.
+[microsoft::projectairsim::joint] Loading 'parent-dominates'.
+[microsoft::projectairsim::joint] 'parent-dominates' loaded.
+[microsoft::projectairsim::joint] Loading 'spring-constant'.
+[microsoft::projectairsim::joint] 'spring-constant' loaded.
+[microsoft::projectairsim::joint] Loading 'damping-constant'.
+[microsoft::projectairsim::joint] 'damping-constant' loaded.
+[microsoft::projectairsim::joint] Loading 'max-force'.
+[microsoft::projectairsim::joint] 'max-force' loaded.
+[microsoft::projectairsim::joint] Loading 'id'.
+[microsoft::projectairsim::joint] [Frame_Prop_RR] 'id' loaded.
+[microsoft::projectairsim::joint] [Frame_Prop_RR]Loading 'type'.
+[microsoft::projectairsim::joint] [Frame_Prop_RR] 'type' loaded.
+[microsoft::projectairsim::joint] [Frame_Prop_RR]Loading 'parent-link'.
+[microsoft::projectairsim::joint] [Frame_Prop_RR] 'parent-link' loaded.
+[microsoft::projectairsim::joint] [Frame_Prop_RR]Loading 'child-link'.
+[microsoft::projectairsim::joint] [Frame_Prop_RR] 'child-link' loaded.
+[microsoft::projectairsim::joint] Loading 'origin'.
+[microsoft::projectairsim::joint] 'origin' loaded.
+[microsoft::projectairsim::joint] Loading 'axis'.
+[microsoft::projectairsim::joint] 'axis' loaded.
+[microsoft::projectairsim::joint] Loading 'limit'.
+[microsoft::projectairsim::joint] 'limit' loaded.
+[microsoft::projectairsim::joint] Loading 'parent-dominates'.
+[microsoft::projectairsim::joint] 'parent-dominates' loaded.
+[microsoft::projectairsim::joint] Loading 'spring-constant'.
+[microsoft::projectairsim::joint] 'spring-constant' loaded.
+[microsoft::projectairsim::joint] Loading 'damping-constant'.
+[microsoft::projectairsim::joint] 'damping-constant' loaded.
+[microsoft::projectairsim::joint] Loading 'max-force'.
+[microsoft::projectairsim::joint] 'max-force' loaded.
+[microsoft::projectairsim::actor::robot] [Drone2] 'joints' loaded.
+[microsoft::projectairsim::actor::robot] [Drone2] Loading 'sensors'.
+[microsoft::projectairsim::actor::robot] [Drone2] Loading 'sensors'.
+[microsoft::projectairsim::actor::robot] [Drone2] Loading 'sensor.id'.
+[microsoft::projectairsim::actor::robot] [Drone2][IMU1] 'sensor.id' loaded.
+[microsoft::projectairsim::actor::robot] [Drone2][IMU1] Loading 'sensor.type'.
+[microsoft::projectairsim::actor::robot] [Drone2][IMU1] 'sensor.type' loaded.
+[microsoft::projectairsim::actor::robot] [Drone2][IMU1] Loading 'sensor.enabled'.
+[microsoft::projectairsim::actor::robot] [Drone2][IMU1] 'sensor.enabled' loaded.
+[microsoft::projectairsim::actor::robot] [Drone2][IMU1] Loading 'sensor.parent_link'.
+[microsoft::projectairsim::actor::robot] [Drone2][IMU1] 'sensor.parent_link' loaded.
+[microsoft::projectairsim::actor::robot] [Drone2][IMU1] Loading 'sensor'.
+[microsoft::projectairsim::sensors::imu] [IMU1] Loading 'imu_settings'.
+[microsoft::projectairsim::sensors::imu] Loading Accelerometer.
+[microsoft::projectairsim::sensors::imu] Accelerometer Loaded.
+[microsoft::projectairsim::sensors::imu] Loading Gyroscope.
+[microsoft::projectairsim::sensors::imu] Gyroscope loaded.
+[microsoft::projectairsim::sensors::imu] Loaded IMU
+[microsoft::projectairsim::sensors::imu] [IMU1] 'imu_settings' loaded.
+[microsoft::projectairsim::actor::robot] [Drone2] Loading 'sensor.id'.
+[microsoft::projectairsim::actor::robot] [Drone2][GPS] 'sensor.id' loaded.
+[microsoft::projectairsim::actor::robot] [Drone2][GPS] Loading 'sensor.type'.
+[microsoft::projectairsim::actor::robot] [Drone2][GPS] 'sensor.type' loaded.
+[microsoft::projectairsim::actor::robot] [Drone2][GPS] Loading 'sensor.enabled'.
+[microsoft::projectairsim::actor::robot] [Drone2][GPS] 'sensor.enabled' loaded.
+[microsoft::projectairsim::actor::robot] [Drone2][GPS] Loading 'sensor.parent_link'.
+[microsoft::projectairsim::actor::robot] [Drone2][GPS] 'sensor.parent_link' loaded.
+[microsoft::projectairsim::actor::robot] [Drone2][GPS] Loading 'sensor'.
+[microsoft::projectairsim::sensors::gps] [GPS] Loading 'GPS_settings'.
+[microsoft::projectairsim::sensors::gps] Loaded GPS settings
+[microsoft::projectairsim::sensors::gps] [GPS] 'GPS_settings' loaded.
+[microsoft::projectairsim::actor::robot] [Drone2] Loading 'sensor.id'.
+[microsoft::projectairsim::actor::robot] [Drone2][Barometer] 'sensor.id' loaded.
+[microsoft::projectairsim::actor::robot] [Drone2][Barometer] Loading 'sensor.type'.
+[microsoft::projectairsim::actor::robot] [Drone2][Barometer] 'sensor.type' loaded.
+[microsoft::projectairsim::actor::robot] [Drone2][Barometer] Loading 'sensor.enabled'.
+[microsoft::projectairsim::actor::robot] [Drone2][Barometer] 'sensor.enabled' loaded.
+[microsoft::projectairsim::actor::robot] [Drone2][Barometer] Loading 'sensor.parent_link'.
+[microsoft::projectairsim::actor::robot] [Drone2][Barometer] 'sensor.parent_link' loaded.
+[microsoft::projectairsim::actor::robot] [Drone2][Barometer] Loading 'sensor'.
+[microsoft::projectairsim::sensors::imu] [Barometer] Loading 'barometer_settings'.
+[microsoft::projectairsim::sensors::imu] Loaded Barometer settings
+[microsoft::projectairsim::sensors::imu] [Barometer] 'barometer_settings' loaded.
+[microsoft::projectairsim::actor::robot] [Drone2] Loading 'sensor.id'.
+[microsoft::projectairsim::actor::robot] [Drone2][Magnetometer] 'sensor.id' loaded.
+[microsoft::projectairsim::actor::robot] [Drone2][Magnetometer] Loading 'sensor.type'.
+[microsoft::projectairsim::actor::robot] [Drone2][Magnetometer] 'sensor.type' loaded.
+[microsoft::projectairsim::actor::robot] [Drone2][Magnetometer] Loading 'sensor.enabled'.
+[microsoft::projectairsim::actor::robot] [Drone2][Magnetometer] 'sensor.enabled' loaded.
+[microsoft::projectairsim::actor::robot] [Drone2][Magnetometer] Loading 'sensor.parent_link'.
+[microsoft::projectairsim::actor::robot] [Drone2][Magnetometer] 'sensor.parent_link' loaded.
+[microsoft::projectairsim::actor::robot] [Drone2][Magnetometer] Loading 'sensor'.
+[microsoft::projectairsim::sensors::imu] [Magnetometer] Loading 'magnetometer_settings'.
+[microsoft::projectairsim::sensors::imu] Loaded Magnetometer settings
+[microsoft::projectairsim::sensors::imu] Loading 'origin'.
+[microsoft::projectairsim::sensors::imu] 'origin' missing or empty. Using default.
+[microsoft::projectairsim::sensors::imu] 'origin' loaded.
+[microsoft::projectairsim::sensors::imu] [Magnetometer] 'magnetometer_settings' loaded.
+[microsoft::projectairsim::actor::robot] [Drone2] 'sensors' loaded.
+[microsoft::projectairsim::actor::robot] [Drone2] 'sensors' loaded.
+[microsoft::projectairsim::actor::robot] [Drone2] Loading 'actuators'.
+[microsoft::projectairsim::actor::robot] [Drone2] Loading 'actuators'.
+[microsoft::projectairsim::actor::robot] [Drone2] Loading 'actuator.name'.
+[microsoft::projectairsim::actor::robot] [Drone2][Prop_FL_actuator] 'actuator.name' loaded.
+[microsoft::projectairsim::actor::robot] [Drone2][Prop_FL_actuator] Loading 'actuator.type'.
+[microsoft::projectairsim::actor::robot] [Drone2][Prop_FL_actuator] 'actuator.type' loaded.
+[microsoft::projectairsim::actor::robot] [Drone2][Prop_FL_actuator] Loading 'actuator.enabled'.
+[microsoft::projectairsim::actor::robot] [Drone2][Prop_FL_actuator] 'actuator.enabled' loaded.
+[microsoft::projectairsim::actor::robot] [Drone2][Prop_FL_actuator] Loading 'actuator.parent_link'.
+[microsoft::projectairsim::actor::robot] [Drone2][Prop_FL_actuator] 'actuator.parent_link' loaded.
+[microsoft::projectairsim::actor::robot] [Drone2][Prop_FL_actuator] Loading 'actuator.child_link'.
+[microsoft::projectairsim::actor::robot] [Drone2][Prop_FL_actuator] 'actuator.child_link' loaded.
+[microsoft::projectairsim::actor::robot] [Drone2][Prop_FL_actuator] Loading 'actuator'.
+[microsoft::projectairsim::actuators::rotor] [Prop_FL_actuator] Loading 'rotor_settings'.
+[microsoft::projectairsim::actuators::rotor] Loading 'origin'.
+[microsoft::projectairsim::actuators::rotor] 'origin' loaded.
+[microsoft::projectairsim::actuators::rotor] Loading 'rotor_settings'.
+[microsoft::projectairsim::actuators::rotor] 'rotor_settings' loaded.
+[microsoft::projectairsim::actuators::rotor] [Prop_FL_actuator] 'rotor_settings' loaded.
+[microsoft::projectairsim::actor::robot] [Drone2] Loading 'actuator.name'.
+[microsoft::projectairsim::actor::robot] [Drone2][Prop_FR_actuator] 'actuator.name' loaded.
+[microsoft::projectairsim::actor::robot] [Drone2][Prop_FR_actuator] Loading 'actuator.type'.
+[microsoft::projectairsim::actor::robot] [Drone2][Prop_FR_actuator] 'actuator.type' loaded.
+[microsoft::projectairsim::actor::robot] [Drone2][Prop_FR_actuator] Loading 'actuator.enabled'.
+[microsoft::projectairsim::actor::robot] [Drone2][Prop_FR_actuator] 'actuator.enabled' loaded.
+[microsoft::projectairsim::actor::robot] [Drone2][Prop_FR_actuator] Loading 'actuator.parent_link'.
+[microsoft::projectairsim::actor::robot] [Drone2][Prop_FR_actuator] 'actuator.parent_link' loaded.
+[microsoft::projectairsim::actor::robot] [Drone2][Prop_FR_actuator] Loading 'actuator.child_link'.
+[microsoft::projectairsim::actor::robot] [Drone2][Prop_FR_actuator] 'actuator.child_link' loaded.
+[microsoft::projectairsim::actor::robot] [Drone2][Prop_FR_actuator] Loading 'actuator'.
+[microsoft::projectairsim::actuators::rotor] [Prop_FR_actuator] Loading 'rotor_settings'.
+[microsoft::projectairsim::actuators::rotor] Loading 'origin'.
+[microsoft::projectairsim::actuators::rotor] 'origin' loaded.
+[microsoft::projectairsim::actuators::rotor] Loading 'rotor_settings'.
+[microsoft::projectairsim::actuators::rotor] 'rotor_settings' loaded.
+[microsoft::projectairsim::actuators::rotor] [Prop_FR_actuator] 'rotor_settings' loaded.
+[microsoft::projectairsim::actor::robot] [Drone2] Loading 'actuator.name'.
+[microsoft::projectairsim::actor::robot] [Drone2][Prop_RL_actuator] 'actuator.name' loaded.
+[microsoft::projectairsim::actor::robot] [Drone2][Prop_RL_actuator] Loading 'actuator.type'.
+[microsoft::projectairsim::actor::robot] [Drone2][Prop_RL_actuator] 'actuator.type' loaded.
+[microsoft::projectairsim::actor::robot] [Drone2][Prop_RL_actuator] Loading 'actuator.enabled'.
+[microsoft::projectairsim::actor::robot] [Drone2][Prop_RL_actuator] 'actuator.enabled' loaded.
+[microsoft::projectairsim::actor::robot] [Drone2][Prop_RL_actuator] Loading 'actuator.parent_link'.
+[microsoft::projectairsim::actor::robot] [Drone2][Prop_RL_actuator] 'actuator.parent_link' loaded.
+[microsoft::projectairsim::actor::robot] [Drone2][Prop_RL_actuator] Loading 'actuator.child_link'.
+[microsoft::projectairsim::actor::robot] [Drone2][Prop_RL_actuator] 'actuator.child_link' loaded.
+[microsoft::projectairsim::actor::robot] [Drone2][Prop_RL_actuator] Loading 'actuator'.
+[microsoft::projectairsim::actuators::rotor] [Prop_RL_actuator] Loading 'rotor_settings'.
+[microsoft::projectairsim::actuators::rotor] Loading 'origin'.
+[microsoft::projectairsim::actuators::rotor] 'origin' loaded.
+[microsoft::projectairsim::actuators::rotor] Loading 'rotor_settings'.
+[microsoft::projectairsim::actuators::rotor] 'rotor_settings' loaded.
+[microsoft::projectairsim::actuators::rotor] [Prop_RL_actuator] 'rotor_settings' loaded.
+[microsoft::projectairsim::actor::robot] [Drone2] Loading 'actuator.name'.
+[microsoft::projectairsim::actor::robot] [Drone2][Prop_RR_actuator] 'actuator.name' loaded.
+[microsoft::projectairsim::actor::robot] [Drone2][Prop_RR_actuator] Loading 'actuator.type'.
+[microsoft::projectairsim::actor::robot] [Drone2][Prop_RR_actuator] 'actuator.type' loaded.
+[microsoft::projectairsim::actor::robot] [Drone2][Prop_RR_actuator] Loading 'actuator.enabled'.
+[microsoft::projectairsim::actor::robot] [Drone2][Prop_RR_actuator] 'actuator.enabled' loaded.
+[microsoft::projectairsim::actor::robot] [Drone2][Prop_RR_actuator] Loading 'actuator.parent_link'.
+[microsoft::projectairsim::actor::robot] [Drone2][Prop_RR_actuator] 'actuator.parent_link' loaded.
+[microsoft::projectairsim::actor::robot] [Drone2][Prop_RR_actuator] Loading 'actuator.child_link'.
+[microsoft::projectairsim::actor::robot] [Drone2][Prop_RR_actuator] 'actuator.child_link' loaded.
+[microsoft::projectairsim::actor::robot] [Drone2][Prop_RR_actuator] Loading 'actuator'.
+[microsoft::projectairsim::actuators::rotor] [Prop_RR_actuator] Loading 'rotor_settings'.
+[microsoft::projectairsim::actuators::rotor] Loading 'origin'.
+[microsoft::projectairsim::actuators::rotor] 'origin' loaded.
+[microsoft::projectairsim::actuators::rotor] Loading 'rotor_settings'.
+[microsoft::projectairsim::actuators::rotor] 'rotor_settings' loaded.
+[microsoft::projectairsim::actuators::rotor] [Prop_RR_actuator] 'rotor_settings' loaded.
+[microsoft::projectairsim::actor::robot] [Drone2] 'actuators' loaded.
+[microsoft::projectairsim::actor::robot] [Drone2] 'actuators' loaded.
+[microsoft::projectairsim::actor::robot] [Drone2] Loading 'controller'.
+[microsoft::projectairsim::actor::robot] [Drone2] 'controller' loaded.
+[microsoft::projectairsim::scene] [RFMovingQualification] Loading 'Enviroment Actors'.
+[microsoft::projectairsim::scene] [RFMovingQualification] 'environment-actors' missing or empty.
+[microsoft::projectairsim::scene] [RFMovingQualification] Loading 'vr-mode'.
+[microsoft::projectairsim::scene] [RFMovingQualification][0] 'vr-mode' loaded.
+[microsoft::projectairsim::simulator] [Sim] 'scene' loaded.
+[SimServer::LoadPhysicsWorld] Loading physics bodies for scene 'RFMovingQualification'.
+[SimServer::LoadControllers] Loading controllers for scene 'RFMovingQualification'.
+[SimServer::RegisterServiceMethods] Registering service methods.
+[Project AirSim Runtime] Ground collision enabled for robot 'Drone1' with 1 contact probe(s).
+[Project AirSim Runtime] Ground collision enabled for robot 'Drone2' with 1 contact probe(s).
+[SimServer::StartScene] Starting scene.
+[microsoft::projectairsim::topic_manager] Registered topic /Sim/RFMovingQualification/robots/Drone1/actual_pose
+[microsoft::projectairsim::topic_manager] Registered topic /Sim/RFMovingQualification/robots/Drone1/desired_pose
+[microsoft::projectairsim::topic_manager] Registered topic /Sim/RFMovingQualification/robots/Drone1/collision_info
+[microsoft::projectairsim::topic_manager] Registered topic /Sim/RFMovingQualification/robots/Drone1/rotor_info
+[microsoft::projectairsim::topic_manager] Successfully subscribed to topic '/Sim/RFMovingQualification/robots/Drone1/desired_pose'.
+[microsoft::projectairsim::topic_manager] Registered topic /Sim/RFMovingQualification/robots/Drone1/simple_flight/rc_input
+[microsoft::projectairsim::topic_manager] Successfully subscribed to topic '/Sim/RFMovingQualification/robots/Drone1/simple_flight/rc_input'.
+[microsoft::projectairsim::topic_manager] Registered topic /Sim/RFMovingQualification/robots/Drone1/sensors/IMU1/imu_kinematics
+[microsoft::projectairsim::topic_manager] Registered topic /Sim/RFMovingQualification/robots/Drone1/sensors/GPS/gps
+[microsoft::projectairsim::topic_manager] Registered topic /Sim/RFMovingQualification/robots/Drone1/sensors/Barometer/barometer
+[microsoft::projectairsim::topic_manager] Registered topic /Sim/RFMovingQualification/robots/Drone1/sensors/Magnetometer/magnetometer
+[microsoft::projectairsim::topic_manager] Registered topic /Sim/RFMovingQualification/robots/Drone2/actual_pose
+[microsoft::projectairsim::topic_manager] Registered topic /Sim/RFMovingQualification/robots/Drone2/desired_pose
+[microsoft::projectairsim::topic_manager] Registered topic /Sim/RFMovingQualification/robots/Drone2/collision_info
+[microsoft::projectairsim::topic_manager] Registered topic /Sim/RFMovingQualification/robots/Drone2/rotor_info
+[microsoft::projectairsim::topic_manager] Successfully subscribed to topic '/Sim/RFMovingQualification/robots/Drone2/desired_pose'.
+[microsoft::projectairsim::topic_manager] Registered topic /Sim/RFMovingQualification/robots/Drone2/simple_flight/rc_input
+[microsoft::projectairsim::topic_manager] Successfully subscribed to topic '/Sim/RFMovingQualification/robots/Drone2/simple_flight/rc_input'.
+[microsoft::projectairsim::topic_manager] Registered topic /Sim/RFMovingQualification/robots/Drone2/sensors/IMU1/imu_kinematics
+[microsoft::projectairsim::topic_manager] Registered topic /Sim/RFMovingQualification/robots/Drone2/sensors/GPS/gps
+[microsoft::projectairsim::topic_manager] Registered topic /Sim/RFMovingQualification/robots/Drone2/sensors/Barometer/barometer
+[microsoft::projectairsim::topic_manager] Registered topic /Sim/RFMovingQualification/robots/Drone2/sensors/Magnetometer/magnetometer
+[microsoft::projectairsim::topic_manager] Client subscribing to topic /$topics
+[microsoft::projectairsim::scene] Continuing sim time until 2001000000 ns, and then will pause.
+[microsoft::projectairsim::scene] Waiting to reach target sim time.
+[microsoft::projectairsim::scene] Continuing sim time until 2013000000 ns, and then will pause.
+[microsoft::projectairsim::scene] Waiting to reach target sim time.
+[microsoft::projectairsim::scene] Continuing sim time until 2025000000 ns, and then will pause.
+[microsoft::projectairsim::scene] Waiting to reach target sim time.
+[microsoft::projectairsim::scene] Continuing sim time until 2037000000 ns, and then will pause.
+[microsoft::projectairsim::scene] Waiting to reach target sim time.
+[microsoft::projectairsim::scene] Continuing sim time until 2049000000 ns, and then will pause.
+[microsoft::projectairsim::scene] Waiting to reach target sim time.
+[microsoft::projectairsim::scene] Continuing sim time until 2061000000 ns, and then will pause.
+[microsoft::projectairsim::scene] Waiting to reach target sim time.
+[microsoft::projectairsim::scene] Continuing sim time until 2073000000 ns, and then will pause.
+[microsoft::projectairsim::scene] Waiting to reach target sim time.
+[microsoft::projectairsim::scene] Continuing sim time until 2085000000 ns, and then will pause.
+[microsoft::projectairsim::scene] Waiting to reach target sim time.
+[microsoft::projectairsim::scene] Continuing sim time until 2097000000 ns, and then will pause.
+[microsoft::projectairsim::scene] Waiting to reach target sim time.
+[microsoft::projectairsim::scene] Continuing sim time until 2109000000 ns, and then will pause.
+[microsoft::projectairsim::scene] Waiting to reach target sim time.
+[microsoft::projectairsim::scene] Continuing sim time until 2121000000 ns, and then will pause.
+[microsoft::projectairsim::scene] Waiting to reach target sim time.
+[microsoft::projectairsim::scene] Continuing sim time until 2133000000 ns, and then will pause.
+[microsoft::projectairsim::scene] Waiting to reach target sim time.
+[microsoft::projectairsim::scene] Continuing sim time until 2145000000 ns, and then will pause.
+[microsoft::projectairsim::scene] Waiting to reach target sim time.
+[microsoft::projectairsim::scene] Continuing sim time until 2157000000 ns, and then will pause.
+[microsoft::projectairsim::scene] Waiting to reach target sim time.
+[microsoft::projectairsim::scene] Continuing sim time until 2169000000 ns, and then will pause.
+[microsoft::projectairsim::scene] Waiting to reach target sim time.
+[microsoft::projectairsim::scene] Continuing sim time until 2181000000 ns, and then will pause.
+[microsoft::projectairsim::scene] Waiting to reach target sim time.
+[microsoft::projectairsim::scene] Continuing sim time until 2193000000 ns, and then will pause.
+[microsoft::projectairsim::scene] Waiting to reach target sim time.
+[microsoft::projectairsim::scene] Continuing sim time until 2205000000 ns, and then will pause.
+[microsoft::projectairsim::scene] Waiting to reach target sim time.
+[microsoft::projectairsim::scene] Continuing sim time until 2217000000 ns, and then will pause.
+[microsoft::projectairsim::scene] Waiting to reach target sim time.
+[microsoft::projectairsim::scene] Continuing sim time until 2229000000 ns, and then will pause.
+[microsoft::projectairsim::scene] Waiting to reach target sim time.
+[microsoft::projectairsim::scene] Continuing sim time until 2241000000 ns, and then will pause.
+[microsoft::projectairsim::scene] Waiting to reach target sim time.
+[microsoft::projectairsim::scene] Continuing sim time until 2253000000 ns, and then will pause.
+[microsoft::projectairsim::scene] Waiting to reach target sim time.
+[microsoft::projectairsim::scene] Continuing sim time until 2265000000 ns, and then will pause.
+[microsoft::projectairsim::scene] Waiting to reach target sim time.
+[microsoft::projectairsim::scene] Continuing sim time until 2277000000 ns, and then will pause.
+[microsoft::projectairsim::scene] Waiting to reach target sim time.
+[microsoft::projectairsim::scene] Continuing sim time until 2289000000 ns, and then will pause.
+[microsoft::projectairsim::scene] Waiting to reach target sim time.
+[microsoft::projectairsim::scene] Continuing sim time until 2301000000 ns, and then will pause.
+[microsoft::projectairsim::scene] Waiting to reach target sim time.
+[microsoft::projectairsim::scene] Continuing sim time until 2313000000 ns, and then will pause.
+[microsoft::projectairsim::scene] Waiting to reach target sim time.
+[microsoft::projectairsim::scene] Continuing sim time until 2325000000 ns, and then will pause.
+[microsoft::projectairsim::scene] Waiting to reach target sim time.
+[microsoft::projectairsim::scene] Continuing sim time until 2337000000 ns, and then will pause.
+[microsoft::projectairsim::scene] Waiting to reach target sim time.
+[microsoft::projectairsim::scene] Continuing sim time until 2349000000 ns, and then will pause.
+[microsoft::projectairsim::scene] Waiting to reach target sim time.
+[microsoft::projectairsim::scene] Continuing sim time until 2361000000 ns, and then will pause.
+[microsoft::projectairsim::scene] Waiting to reach target sim time.
+[microsoft::projectairsim::scene] Continuing sim time until 2373000000 ns, and then will pause.
+[microsoft::projectairsim::scene] Waiting to reach target sim time.
+[microsoft::projectairsim::scene] Continuing sim time until 2385000000 ns, and then will pause.
+[microsoft::projectairsim::scene] Waiting to reach target sim time.
+[microsoft::projectairsim::scene] Continuing sim time until 2397000000 ns, and then will pause.
+[microsoft::projectairsim::scene] Waiting to reach target sim time.
+[microsoft::projectairsim::scene] Continuing sim time until 2409000000 ns, and then will pause.
+[microsoft::projectairsim::scene] Waiting to reach target sim time.
+[microsoft::projectairsim::scene] Continuing sim time until 2421000000 ns, and then will pause.
+[microsoft::projectairsim::scene] Waiting to reach target sim time.
+[microsoft::projectairsim::scene] Continuing sim time until 2433000000 ns, and then will pause.
+[microsoft::projectairsim::scene] Waiting to reach target sim time.
+[microsoft::projectairsim::scene] Continuing sim time until 2445000000 ns, and then will pause.
+[microsoft::projectairsim::scene] Waiting to reach target sim time.
+[microsoft::projectairsim::scene] Continuing sim time until 2457000000 ns, and then will pause.
+[microsoft::projectairsim::scene] Waiting to reach target sim time.
+[microsoft::projectairsim::scene] Continuing sim time until 2469000000 ns, and then will pause.
+[microsoft::projectairsim::scene] Waiting to reach target sim time.
+[microsoft::projectairsim::scene] Continuing sim time until 2481000000 ns, and then will pause.
+[microsoft::projectairsim::scene] Waiting to reach target sim time.
+[microsoft::projectairsim::scene] Continuing sim time until 5100000000 ns, and then will pause.
+[microsoft::projectairsim::scene] Waiting to reach target sim time.
+[microsoft::projectairsim::topic_manager] Client unsubscribing from topic /$topics
+[microsoft::projectairsim::topic_manager] Pub-sub client disconnected; active topic pipes: 0
+[microsoft::projectairsim::topic_manager] Pub-sub client disconnected--resetting client authorization
+[microsoft::projectairsim::client_authorization] Client authorization token accepted (no client authorization token public key)
+[microsoft::projectairsim::topic_manager] Unsubscribing all topics.
+[microsoft::projectairsim::service_manager] Req-resp client disconnected--resetting client authorization
+[microsoft::projectairsim::client_authorization] Client authorization token accepted (no client authorization token public key)

@@ -94,7 +94,8 @@ checks fixed-surface diffuse rendering and direct-path disappearance/return behi
 an RF-only screen. A [turning-mount check](../results/reviews/turning-mounts-20261015/REPORT.md)
 also passes for two yawing drones with nonzero radio offsets and direct paths.
 [Directional pattern rotation](../results/reviews/directional-turns-20261015/REPORT.md)
-also passes a matched-flight gain check. General multipath transitions and
+also passes a matched-flight gain check. [Combined multipath turns](../results/reviews/turning-multipath-20261016/REPORT.md)
+pass controlled specular and directional fixed-surface cases. General multipath transitions and
 Unreal mesh interoperability remain unqualified.
 The measured workloads are slower than real time; controlled stepping does not
 promise live wall-clock streaming.
