@@ -204,7 +204,9 @@ configuration order. A slow callback slows wall execution; its time is included
 in recorded service time. An exception stops capture and marks the manifest
 failed, retaining already written data. Copy arrays if retaining them for later
 use. This is an **in-process sample stream**, not UDP, a physical SDR driver, or
-a promise of real-time delivery.
+a promise of real-time delivery. To process in a separate process, use the
+[experimental TCP adapter](iq-stream.md), which retains recordings and checks
+explicit consumer completion.
 
 `capture.input_iq_volts` is the pre-ADC filtered signal; `adc_iq_volts` is the
 quantized/reconstructed signal; `adc_codes` is an `(N, 2)` signed int16 I,Q array.

@@ -88,7 +88,9 @@ to a synchronous Python callback after saving it. The simulator remains paused
 while user processing runs. `airsim_rf.recording.iter_iq_blocks` streams complete
 recordings into CPU NumPy arrays with sample rate, sample offset, integer
 simulator epoch and per-window voltage scaling. These interfaces share the same
-post-ADC samples; neither is a network transport or physical SDR driver.
+post-ADC samples; neither alone is a network transport or physical SDR driver. The
+[experimental TCP adapter](iq-stream.md) sends these same voltage blocks to a
+separate consumer with backpressure and explicit completion acknowledgement.
 See the [scenario-to-I/Q walkthrough](scenario-to-iq.md) for runnable examples.
 
 ## Distributed interfaces

@@ -8,6 +8,7 @@ models and an AMS-GRA radar worker; continuous SDR uses a separate capture API.
 | --- | --- |
 | Run an offline example | [Setup](docs/setup.md#reproduce) |
 | Build a scenario and process its I/Q | [Scenario-to-I/Q walkthrough](docs/scenario-to-iq.md) |
+| Feed a separate signal processor | [TCP I/Q adapter](docs/iq-stream.md) |
 | Configure the live recorder and server | [Live workflow reference](docs/live-workflow.md) |
 | Understand the physical scenarios and plots | [Sensing gallery](docs/sensing-plots.md) |
 | Reproduce measured GPU performance | [Benchmark setup](docs/setup.md#p100-basis-profiling) |

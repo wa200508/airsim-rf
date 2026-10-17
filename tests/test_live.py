@@ -247,3 +247,46 @@ def test_recording_roundtrips_through_official_sigmf(tmp_path):
         raw=external.read_samples_in_capture(i)
         np.testing.assert_array_equal(raw,np.full(len(raw),123-456j))
         np.testing.assert_allclose(raw*.001,block.samples,rtol=2e-7)
+
+
+def test_recording_volts_exactly_match_adc_model_rounding(tmp_path):
+    from airsim_rf.sdr import quantize_iq
+    from airsim_rf.recording import iter_iq_blocks
+    world=TickWorld();robots,receiver,_=fixture(world)
+    analog=np.linspace(-.003,.003,24000)*(1+0.71j)
+    codes,volts,scale,clipping=quantize_iq(analog,full_scale_dbm=-30)
+    receiver.capture=lambda epoch,num_samples: {'rx':SimpleNamespace(adc_codes=codes,
+        sim_time_ns=epoch,volts_per_count=scale,clipped_component_fraction=clipping)}
+    record(world,robots,receiver,tmp_path/'run',updates=1,advance_ns=10_000_000,max_samples=100000)
+    block=next(iter_iq_blocks(tmp_path/'run','rx'))
+    np.testing.assert_array_equal(block.samples,volts)
+
+
+def test_transport_disconnect_marks_recording_failed(tmp_path):
+    import socket
+    import threading
+    from concurrent.futures import ThreadPoolExecutor
+    from airsim_rf.iq_stream import IQStreamWriter,iter_stream
+    world=TickWorld();robots,receiver,_=fixture(world)
+    original=receiver.capture
+    def capture(epoch,*,num_samples):
+        values=original(epoch,num_samples=num_samples)
+        for value in values.values():
+            value.adc_iq_volts=(value.adc_codes[:,0]+1j*value.adc_codes[:,1])*.001
+            value.actual_sample_rate_hz=2e6
+        return values
+    receiver.capture=capture
+    a,b=socket.socketpair();a.settimeout(2);b.settimeout(2);closed=threading.Event()
+    with a,b,ThreadPoolExecutor(1) as pool:
+        def consumer():
+            next(iter_stream(b));b.close();closed.set()
+        future=pool.submit(consumer);writer=IQStreamWriter(a,carrier_hz=915e6)
+        def callback(name,value):
+            writer.send_capture(name,value)
+            assert closed.wait(2)
+        with pytest.raises(OSError):
+            record(world,robots,receiver,tmp_path/'run',updates=3,advance_ns=10_000_000,max_samples=100000,on_capture=callback)
+        future.result(timeout=2)
+    manifest=json.loads((tmp_path/'run/manifest.json').read_text())
+    assert manifest['status']=='failed'
+    assert (tmp_path/'run/rx.sigmf-data').stat().st_size>0

@@ -81,9 +81,12 @@ def iter_iq_blocks(directory, receiver='rx0', *, units='volts'):
             codes = codes.reshape(-1, 2)
             if np.any(codes < -2048) or np.any(codes > 2047):
                 raise ValueError('Recording contains codes outside the signed 12-bit range')
-            samples = codes[:, 0].astype(np.complex64)
+            # Match the ADC model: apply the recorded scale in float64, then
+            # round once to the public complex64 representation.
+            samples = codes[:, 0].astype(np.complex128 if units == 'volts' else np.complex64)
             samples.imag = codes[:, 1]
             if units == 'volts':
                 samples *= capture['airsim_rf:volts_per_count']
+                samples = samples.astype(np.complex64)
             yield RecordedIQBlock(samples, capture['core:sample_start'], row['sim_time_ns'],
                 fs, capture['core:frequency'], units, capture['airsim_rf:clipped_component_fraction'])

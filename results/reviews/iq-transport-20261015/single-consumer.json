@@ -1,0 +1,11 @@
+{
+  "status": "complete",
+  "frames": 3,
+  "receivers": {
+    "rx0": {
+      "samples": 72000,
+      "signal_seconds": 0.036,
+      "complex64_sha256": "69316a6b6776ae072fd170c97c6822821c72363a2249762427be9dfce87206ae"
+    }
+  }
+}
