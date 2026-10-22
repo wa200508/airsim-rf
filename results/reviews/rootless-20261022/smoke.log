@@ -1,0 +1,1 @@
+PASS: real rootless host/container writes, host UID ownership, non-root service, private DNS/bridge and loopback port publication. GPU not exercised.

@@ -56,3 +56,78 @@ def test_mission_button_requires_ready_and_never_launches_containers(tmp_path,mo
 def test_start_api_rejects_before_readiness(tmp_path):
     obj=instance(tmp_path)
     with pytest.raises(ValueError,match='Services must be ready'):obj.action('start')
+
+
+def test_rootless_uid_maps_workspace_to_login_user(tmp_path,monkeypatch):
+    obj=instance(tmp_path)
+    monkeypatch.setattr(obj,'command',lambda command:SimpleNamespace(stdout='["name=rootless"]'))
+    obj.configure_docker()
+    assert obj.rootless and obj.uid()=='0:0'
+
+
+def test_rootless_workspace_is_tested_both_directions(tmp_path,monkeypatch):
+    obj=instance(tmp_path);obj.rootless=True;calls=[]
+    def command(arguments,**kwargs):
+        calls.append(arguments)
+        marker=obj.run/'.dashboard-access-check'
+        assert marker.read_text()=='host-wrote'
+        marker.write_text('container-wrote')
+        return SimpleNamespace(returncode=0,stderr='')
+    monkeypatch.setattr(obj,'command',command)
+    obj.check_workspace()
+    assert calls[0][calls[0].index('--user')+1]=='0:0'
+    assert not (obj.run/'.dashboard-access-check').exists()
+
+
+def test_workspace_permission_failure_is_actionable_and_not_ready(tmp_path,monkeypatch):
+    obj=instance(tmp_path);obj.rootless=True
+    monkeypatch.setattr(obj,'command',lambda *a,**kw:SimpleNamespace(returncode=1,stderr='Permission denied'))
+    with pytest.raises(RuntimeError,match='fresh --run-dir'):obj.check_workspace()
+    assert not obj.ready
+
+
+def test_rootless_gpu_prefers_cdi_and_falls_back_only_to_working_gpu_runtime(tmp_path,monkeypatch):
+    obj=instance(tmp_path);obj.rootless=True;attempts=[]
+    def command(arguments,**kwargs):
+        attempts.append(arguments)
+        return SimpleNamespace(returncode=1 if '--device' in arguments else 0,stderr='unresolvable CDI device',stdout='')
+    monkeypatch.setattr(obj,'command',command)
+    obj.check_gpu()
+    assert '--device' in attempts[0] and '--gpus' in attempts[1]
+    assert obj.gpu_options==['--gpus','device=0']
+    assert all('--user' in command and command[command.index('--user')+1]=='0:0' for command in attempts)
+
+
+def test_gpu_failure_never_turns_into_cpu_fallback(tmp_path,monkeypatch):
+    obj=instance(tmp_path);obj.rootless=True
+    monkeypatch.setattr(obj,'command',lambda *a,**kw:SimpleNamespace(returncode=1,stderr='Permission denied on GPU',stdout=''))
+    with pytest.raises(RuntimeError,match='No CPU fallback'):obj.check_gpu()
+    assert not obj.ready and obj.gpu_options==[]
+
+
+def test_rootless_services_share_bridge_and_start_before_readiness_waits(tmp_path,monkeypatch):
+    import io
+    obj=instance(tmp_path);obj.args.iq_port=18811;obj.rootless=True
+    obj.gpu_options=['--device','nvidia.com/gpu=0']
+    for name in ('configure_docker','pull_images','check_workspace','check_gpu','prepare'):
+        monkeypatch.setattr(obj,name,lambda:None)
+    monkeypatch.setattr(obj,'command',lambda *a,**kw:SimpleNamespace(returncode=0,stdout='network',stderr=''))
+    commands={}
+    def launch(part,command):
+        commands[part]=command;obj.processes[part]=SimpleNamespace(poll=lambda:None)
+    monkeypatch.setattr(obj,'launch',launch)
+    def wait(*a,**kw):assert len(commands)==3
+    monkeypatch.setattr(obj,'wait_port',wait)
+    monkeypatch.setattr(obj,'read',lambda name:{'status':'ready'})
+    class Response(io.BytesIO):status=200
+    monkeypatch.setattr(dashboard,'urlopen',lambda *a,**kw:Response(b'{"complete_windows":1}'))
+    obj.bootstrap()
+    assert obj.ready and obj.network_created
+    for part,command in commands.items():
+        assert command[command.index('--network')+1]==obj.network
+        assert 'host' not in command
+        assert command[command.index('--user')+1]==('10001:10001' if part=='sim' else '0:0')
+    rf=commands['rf']
+    assert rf[rf.index('--address')+1]=='projectairsim'
+    assert rf[rf.index('--skill-host')+1]=='rf-skill'
+    assert rf[rf.index('--skill-port')+1]=='8811'

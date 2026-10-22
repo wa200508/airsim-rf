@@ -13,7 +13,10 @@ import subprocess
 import threading
 import time
 from urllib.error import URLError
-from urllib.request import urlopen
+from urllib.request import ProxyHandler,build_opener
+
+# These HTTP calls only target our own published loopback service ports.
+urlopen=build_opener(ProxyHandler({})).open
 import webbrowser
 
 
@@ -23,7 +26,8 @@ class Dashboard:
         self.token=secrets.token_urlsafe(24);self.lock=threading.Lock();self.events=deque(maxlen=40);self.busy=False;self.error=None
         self.processes={};self.last_skill={};self.ready=False;self.mission_started=False;self.image_tags={name:getattr(args,name) for name in ('sim_image','skill_image','rf_image')};self.names={part:f'airsim-rf-dashboard-{part}-{args.port}' for part in ('sim','rf','skill')}
         self.log('Preparing separate simulator, GPU RF and MUSIC skill containers.')
-        if os.getuid()==0:os.chown(self.run,10001,10001)
+        self.rootless=False;self.gpu_options=[];self.network_created=False
+        self.network='airsim-rf-dashboard-'+str(args.port)+'-'+secrets.token_hex(4)
 
     def log(self,message):self.events.append({'time':time.strftime('%H:%M:%S'),'message':str(message)})
     def command(self,args,check=True):
@@ -48,12 +52,53 @@ class Dashboard:
                 with socket.create_connection(('127.0.0.1',port),timeout=.3):return
             except OSError:time.sleep(.25)
         raise RuntimeError(f'Process did not listen on localhost:{port}; check run logs')
+    def configure_docker(self):
+        options=json.loads(self.command(['docker','info','--format','{{json .SecurityOptions}}']).stdout) or []
+        self.rootless=any(option in ('rootless','name=rootless') for option in options)
+        # In a rootless user namespace UID 0 maps to the calling host user.
+        # Passing that host UID instead would map to an unrelated subordinate UID.
+        if not self.rootless and os.getuid()==0:os.chown(self.run,10001,10001)
+        self.log('Using '+('rootless' if self.rootless else 'rootful')+' Docker with a private service network')
     def uid(self):
+        if self.rootless:return '0:0'
         return f'{os.getuid()}:{os.getgid()}' if os.getuid() else '10001:10001'
     def prepare(self):
         script='from airsim_rf.dashboard_scenario import prepare; prepare("/run", "/opt/airsim-rf/.deps/ProjectAirSim")'
         self.command(['docker','run','--rm','--network','none','--user',self.uid(),'-e','HOME=/tmp',
             '-v',f'{self.run}:/run','--entrypoint','python',self.args.rf_image,'-c',script])
+    def check_workspace(self):
+        marker=self.run/'.dashboard-access-check'
+        try:
+            marker.write_text('host-wrote')
+            if not self.rootless and os.getuid()==0:os.chown(marker,10001,10001)
+        except OSError as error:
+            raise RuntimeError('The run directory is not writable by your login user; choose a fresh --run-dir. '+str(error)) from error
+        script='from pathlib import Path; p=Path("/run/.dashboard-access-check"); assert p.read_text()=="host-wrote"; p.write_text("container-wrote")'
+        try:
+            result=self.command(['docker','run','--rm','--network','none','--user',self.uid(),
+                '-v',f'{self.run}:/run','--entrypoint','python',self.args.rf_image,'-c',script],check=False)
+            if result.returncode or marker.read_text()!='container-wrote':
+                raise RuntimeError('Container cannot read/write the host run directory. '
+                    'Use the Docker context owned by your login user; do not run the launcher with sudo. '
+                    'Choose a fresh --run-dir if older files have wrong ownership. Details: '+result.stderr[-1500:])
+        finally:
+            marker.unlink(missing_ok=True)
+    def check_gpu(self):
+        mode=getattr(self.args,'gpu_mode','auto')
+        device=getattr(self.args,'gpu_device','0')
+        options={'cdi':['--device','nvidia.com/gpu='+device],'gpus':['--gpus','all' if device=='all' else 'device='+device]}
+        candidates=([mode] if mode!='auto' else ['cdi','gpus'] if self.rootless else ['gpus','cdi'])
+        failures=[]
+        script='import cupy as cp; assert cp.cuda.runtime.getDeviceCount()>0; assert int(cp.arange(16).sum().get())==120; print("CUDA device and kernel passed")'
+        for candidate in candidates:
+            result=self.command(['docker','run','--rm','--network','none','--user',self.uid(),*options[candidate],
+                '-e','HOME=/tmp','--entrypoint','python',self.args.rf_image,
+                '-m','airsim_rf.cuda_launch','-c',script],check=False)
+            if result.returncode==0:
+                self.gpu_options=options[candidate];self.log('GPU passthrough checked using '+candidate);return
+            failures.append(candidate+': '+(result.stderr or result.stdout)[-1800:])
+        raise RuntimeError('GPU passthrough failed before service launch. Rootless Docker needs NVIDIA CDI '
+            'or a rootless-configured NVIDIA runtime; see the README rootless section. No CPU fallback. '+ '\n'.join(failures))
     def pull_images(self):
         revisions=[]
         for name in ('sim_image','skill_image','rf_image'):
@@ -70,31 +115,37 @@ class Dashboard:
         self.log('Verified all three images at revision '+revisions[0])
     def bootstrap(self):
         self.ready=False;self.mission_started=False;self.last_skill={}
-        self.command(['docker','info','--format','{{.ServerVersion}}'])
+        self.configure_docker()
         self.pull_images()
-        for port in (8989,8990,self.args.iq_port,self.args.skill_port,self.args.control_port):
+        self.check_workspace()
+        self.check_gpu()
+        for port in (self.args.port,8989,8990,self.args.iq_port,self.args.skill_port,self.args.control_port):
             with socket.socket() as test:
                 if test.connect_ex(('127.0.0.1',port))==0:raise RuntimeError(f'Port {port} already in use')
         for name in ('producer.json','camera.jpg'):
             path=self.run/name
             if path.exists():path.replace(self.run/(name+'.previous'))
         self.prepare();self.write_command(start=False,paused=False,stop=False)
-        sim=['docker','run','--rm','--init','--name',self.names['sim'],'--user',self.uid(),'--shm-size','1g',
+        self.command(['docker','network','create','--label','org.airsim-rf.dashboard=1',self.network])
+        self.network_created=True
+        sim=['docker','run','--rm','--init','--name',self.names['sim'],'--network',self.network,'--network-alias','projectairsim',
+             '--user',('10001:10001' if self.rootless else self.uid()),'--shm-size','1g',
              '-p','127.0.0.1:8989:8989','-p','127.0.0.1:8990:8990',self.args.sim_image]
         if self.args.no_render:
             sim[sim.index(self.args.sim_image):sim.index(self.args.sim_image)]=['--entrypoint','/opt/blocks/Blocks/Binaries/Linux/Blocks-Linux-Shipping']
             sim+=['Blocks','-nullrhi','-nosound','-unattended']
         # Start the independent containers without serial readiness waits.
         self.launch('sim',sim)
-        self.launch('skill',['docker','run','--rm','--init','--name',self.names['skill'],'--user',self.uid(),
+        self.launch('skill',['docker','run','--rm','--init','--name',self.names['skill'],'--network',self.network,'--network-alias','rf-skill','--user',self.uid(),
              '-p',f'127.0.0.1:{self.args.iq_port}:8811','-p',f'127.0.0.1:{self.args.skill_port}:8812',
              '-p',f'127.0.0.1:{self.args.control_port}:8813',
              '-v',f'{self.run}/arrays.json:/config/arrays.json:ro',self.args.skill_image])
-        self.launch('rf',['docker','run','--rm','--init','--name',self.names['rf'],'--gpus','device=0','--network','host',
+        self.launch('rf',['docker','run','--rm','--init','--name',self.names['rf'],*self.gpu_options,'--network',self.network,
             '--user',self.uid(),'--tmpfs','/.drjit:rw,mode=1777','-e','HOME=/tmp',
             '-v',f'{self.run}:/run','--entrypoint','/opt/airsim-rf/.venv/bin/python',self.args.rf_image,
             '-m','airsim_rf.cuda_launch','-m','airsim_rf.dashboard_producer','--run-dir','/run',
-            '--duration',str(self.args.duration),'--skill-port',str(self.args.iq_port),'--wait-for-mission',
+            '--duration',str(self.args.duration),'--address','projectairsim','--skill-host','rf-skill',
+            '--skill-port','8811','--wait-for-mission',
             '--ready-timeout',str(self.args.ready_timeout),*(['--no-render'] if self.args.no_render else []),
             *(['--pascal-compat'] if self.args.pascal_compat else [])])
         self.wait_port(8989,self.args.ready_timeout,part='sim')
@@ -119,7 +170,8 @@ class Dashboard:
         self.log('Starting mission in the already prepared containers')
     def stop(self):
         self.ready=False;self.mission_started=False
-        self.write_command(stop=True)
+        try:self.write_command(stop=True)
+        except OSError as error:self.log('Could not write stop command: '+str(error))
         process=self.processes.get('rf')
         if process:
             try:process.wait(timeout=8)
@@ -129,6 +181,13 @@ class Dashboard:
                 self.command(['docker','stop','-t','5',self.names[part]],check=False)
                 try:self.processes[part].wait(timeout=5)
                 except subprocess.TimeoutExpired:self.processes[part].terminate()
+        if self.network_created:
+            for _ in range(20):
+                result=self.command(['docker','network','rm',self.network],check=False)
+                if result.returncode==0:
+                    self.network_created=False;break
+                time.sleep(.25)
+            if self.network_created:self.log('Could not remove task network yet: '+self.network)
         self.log('Stopped task-owned processes')
     def action(self,name):
         with self.lock:
@@ -171,6 +230,8 @@ def main():
     parser.add_argument('--duration',type=float,default=120);parser.add_argument('--pascal-compat',action='store_true')
     parser.add_argument('--no-render',action='store_true',help='Explicit diagnostic mode: no Unreal camera image')
     parser.add_argument('--ready-timeout',type=float,default=300)
+    parser.add_argument('--gpu-mode',choices=('auto','cdi','gpus'),default='auto')
+    parser.add_argument('--gpu-device',default='0',help='NVIDIA device index or UUID')
     registry='ghcr.io/wa200508/airsim-rf'
     parser.add_argument('--sim-image',default=registry+':dashboard-render');parser.add_argument('--rf-image',default=registry+':dashboard-gpu')
     parser.add_argument('--skill-image',default=registry+':dashboard-skill')
@@ -209,7 +270,9 @@ def main():
             try:dashboard.action(self.path.removeprefix('/api/'));self.send_response(202);self.end_headers()
             except ValueError as error:self.send_error(409,str(error))
         def log_message(self,*args):pass
-    server=ThreadingHTTPServer(('127.0.0.1',args.port),Handler)
+    try:server=ThreadingHTTPServer(('127.0.0.1',args.port),Handler)
+    except BaseException:
+        dashboard.stop();raise
     print(f'RF mission dashboard: http://localhost:{args.port}',flush=True)
     if args.open:webbrowser.open(f'http://localhost:{args.port}')
     def shutdown(*_):threading.Thread(target=server.shutdown,daemon=True).start()

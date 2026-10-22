@@ -51,6 +51,43 @@ RF_DASHBOARD_PYTHON="$PWD/.venv/bin/python" bash scripts/run_dashboard.sh --open
 The selected host Python is printed at startup. GPU/numerical dependencies
 remain inside the containers; the host environment is used only for the launcher.
 
+### Rootless Docker
+
+The launcher detects rootless Docker automatically and preserves your selected
+Docker context and `DOCKER_HOST`. Do **not** run the script with `sudo`:
+
+```bash
+docker context use rootless
+docker info --format '{{json .SecurityOptions}}'
+source .venv/bin/activate
+bash scripts/run_dashboard.sh --open
+```
+
+The security options should include `name=rootless`. The launcher uses the
+correct user-namespace UID for shared-file writes, checks host/container access
+in both directions, and connects the services through a dedicated Docker bridge
+network. It does not use `--network host` or change directory permissions to 777.
+The simulator remains a non-root container user because Unreal requires that.
+
+For NVIDIA access, install NVIDIA Container Toolkit and ensure either native
+CDI or NVIDIA's rootless runtime is configured. Auto mode first tries CDI for
+rootless Docker, then tests the legacy GPU runtime; it accepts only a working
+GPU device/kernel. You can explicitly select either:
+
+```bash
+bash scripts/run_dashboard.sh --gpu-mode cdi --open
+# Or, with NVIDIA's rootless legacy runtime configured:
+bash scripts/run_dashboard.sh --gpu-mode gpus --open
+```
+
+See [rootless setup and permission troubleshooting](docs/dashboard.md#rootless-docker)
+for NVIDIA setup references. If an older run directory has files owned by the
+wrong mapped UID, choose a new directory with `--run-dir "$HOME/airsim-rf-runs/rootless"`;
+the launcher checks access before starting the services. From a checkout the
+script uses the current checkout launcher, so launcher fixes take effect after
+`git pull` without waiting for a rebuilt image. Standalone downloads use the
+launcher embedded in the published image.
+
 The script pulls and verifies three published images:
 
 - `ghcr.io/wa200508/airsim-rf:dashboard-render` — ProjectAirSim and camera.

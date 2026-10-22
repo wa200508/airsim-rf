@@ -75,3 +75,23 @@ def test_broken_active_environment_fails_before_any_docker_operations(tmp_path):
     result=run(env)
     assert result.returncode!=0 and 'Active virtual environment' in result.stderr
     assert calls(env)==[]
+
+
+def test_standalone_script_extracts_launcher_when_no_checkout_exists(tmp_path):
+    env,_=fixture_tools(tmp_path)
+    standalone=tmp_path/'downloaded/run_dashboard.sh';standalone.parent.mkdir()
+    standalone.write_text((ROOT/'scripts/run_dashboard.sh').read_text())
+    result=subprocess.run(['bash',str(standalone),'--duration','12'],env=env,capture_output=True,text=True)
+    assert result.returncode==0,result.stderr
+    events=calls(env)
+    assert any(e[:3]==['docker','pull','ghcr.io/wa200508/airsim-rf:dashboard-gpu'] for e in events)
+    assert any(e[:2]==['docker','cp'] for e in events)
+    assert events[-1][0]=='system-python' and events[-1][1].endswith('/cache/airsim-rf-dashboard/dashboard.py')
+
+
+def test_checkout_uses_current_launcher_instead_of_image_embedded_copy(tmp_path):
+    env,_=fixture_tools(tmp_path)
+    assert run(env).returncode==0
+    events=calls(env)
+    assert events[-1][1]==str(ROOT/'scripts/launch_dashboard.py')
+    assert not any(e[0]=='docker' for e in events)

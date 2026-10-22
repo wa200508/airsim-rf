@@ -1,0 +1,29 @@
+{
+  "daemon_version": "28.5.2",
+  "security_options": [
+    "name=seccomp,profile=builtin",
+    "name=rootless",
+    "name=cgroupns"
+  ],
+  "storage_driver": "vfs",
+  "test_host_uid": 1000,
+  "workspace_container_uid": 0,
+  "simulator_standin_uid": 10001,
+  "result": "passed",
+  "gpu_exercised": false,
+  "full_dashboard_mission_exercised": false,
+  "test_environment": "Disposable Docker-in-Docker lab; dockerd runs as rootless user 1000. Outer lab provisioning used privileges to provide user namespaces/TUN; dashboard/test service containers did not.",
+  "checks": [
+    "old host-UID mapping rejected with PermissionError",
+    "host and container bidirectional writes",
+    "host file ownership retained",
+    "non-root service starts",
+    "private Docker bridge and service DNS",
+    "published host-loopback port reachable"
+  ],
+  "source_sha256": {
+    "src/airsim_rf/dashboard.py": "0da160dea2195cf1211d60270e80c3ca65194cb168bd7d8375ef88f23523a1eb",
+    "scripts/run_dashboard.sh": "edf8b86115db9209b165220d18ada021d003b273f34ec0de47a717c516564954",
+    "scripts/check_rootless_dashboard.sh": "650b802bbda892a5baa87cf63361c5b33a103f1c8985b79d60f29acebf36c7d0"
+  }
+}

@@ -56,8 +56,9 @@ up its task-owned containers. Logs and metadata are in `recordings/dashboard`.
 Use `--run-dir` for another output directory, `--duration 12` for a short flight,
 or `--ready-timeout 600` for slower first-use compilation.
 
-All service ports are published to loopback; the RF container uses host
-networking for the simulator and skill connections. The camera uses bundled
+All service ports are published to loopback. All three containers use a private
+Docker bridge with internal service DNS names; they do not depend on the
+host network namespace. The camera uses bundled
 software Vulkan/Xvfb; the GPU is used for RF. The published service images share
 pinned runtime dependencies and assets, but run as independent containers.
 CPU CI qualifies packaging and supervision; live GPU readiness is checked on
@@ -131,3 +132,80 @@ image also includes a software Vulkan/X display path for qualification.
 The Chase camera is gimballed inward from 100 m outside and 65 m above the
 airborne transmitter, aimed between the drone and the two ground receivers.
 Actual body attitude is removed from the relative camera transform. TX/RX la
+## Rootless Docker
+
+Use the rootless context owned by your login user, with no `sudo docker`:
+
+```bash
+docker context use rootless
+docker info --format '{{json .SecurityOptions}}'
+bash scripts/run_dashboard.sh --open
+```
+
+The launcher reads Docker security options to detect rootless mode. RF, skill
+and scene-preparation containers use namespace UID 0, which maps to the
+non-root login user on the host. Passing the host UID as the container UID
+would instead select an unrelated subordinate UID and cause bind-mount
+permission errors. The Unreal simulator uses namespace UID 10001 and reads
+only its packaged assets. No dashboard container needs `--privileged`.
+
+A temporary file confirms that the host can write a marker, the container can
+read and replace it, and the host can read the result. A failure stops startup
+with directory/context guidance. Existing wrong-owner files are not recursively
+chowned or made world-writable: use a new `--run-dir`, or repair an old directory
+using your administrator's normal ownership procedures.
+
+The containers communicate through a task-owned Docker bridge and the aliases
+`projectairsim` and `rf-skill`. The RF service connects directly to container
+ports 8989/8990 and 8811, even when published host ports differ. This avoids
+rootless host-network and host-loopback routing assumptions. Only the launcher’s
+network and containers are removed on shutdown.
+
+### NVIDIA access
+
+With Docker 28.3+ and a recent NVIDIA Container Toolkit, native CDI is the
+preferred rootless path. Toolkit 1.18+ normally refreshes its CDI specification
+automatically. Check the device list and GPU access:
+
+```bash
+nvidia-ctk cdi list
+docker run --rm --device=nvidia.com/gpu=0 ubuntu:24.04 nvidia-smi
+bash scripts/run_dashboard.sh --gpu-mode cdi --open
+```
+
+If CDI devices are missing, follow the official
+[NVIDIA CDI guide](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/cdi-support.html).
+For installations using the legacy `--gpus` runtime, NVIDIA documents this
+rootless configuration (these are host administration steps; the launcher
+does not change daemon/runtime configuration):
+
+```bash
+nvidia-ctk runtime configure --runtime=docker --config="$HOME/.config/docker/daemon.json"
+systemctl --user restart docker
+sudo nvidia-ctk config --set nvidia-container-cli.no-cgroups --in-place
+bash scripts/run_dashboard.sh --gpu-mode gpus --open
+```
+
+See NVIDIA's [rootless installation instructions](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html#rootless-mode)
+and Docker's [rootless documentation](https://docs.docker.com/engine/security/rootless/).
+The legacy `no-cgroups` setting is system-wide; follow NVIDIA's guidance for
+hosts that also run rootful GPU workloads.
+
+Default `--gpu-mode auto` tests CDI first on rootless Docker and then the legacy
+runtime. A real CuPy device/kernel check must pass before any service starts;
+full OptiX, scene-I/Q, camera and skill checks still gate Launch mission.
+`--gpu-device 0` selects the GPU index or UUID (`all` is also accepted). A driver
+or device permission failure is reported explicitly; there is no CPU fallback.
+
+### Check rootless permissions and networking without a GPU
+
+```bash
+sh scripts/check_rootless_dashboard.sh
+```
+
+This optional diagnostic uses small temporary CPU containers to reproduce the
+old UID failure and verify the corrected mount permissions, non-root service,
+private service DNS and published loopback port. It cleans up its test containers
+and network. [Recorded rootless qualification](../results/reviews/rootless-20261022/REPORT.md)
+passed these checks on a real rootless daemon; full NVIDIA execution remains a
+host-specific startup check rather than a claim from the CPU test environment.

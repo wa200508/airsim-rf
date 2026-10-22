@@ -22,6 +22,11 @@ fi
 "$rf_dashboard_python" -c 'import sys; sys.exit(0 if sys.version_info >= (3, 10) else "Dashboard launcher requires Python 3.10+")'
 printf 'Dashboard host Python: %s\n' "$rf_dashboard_python"
 rf_dashboard_image="${RF_DASHBOARD_IMAGE:-ghcr.io/wa200508/airsim-rf:dashboard-gpu}"
+# Prefer updated checkout code so a launcher-only fix does not wait for image publication.
+rf_dashboard_repo="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+if [[ -f "$rf_dashboard_repo/src/airsim_rf/dashboard.py" && -f "$rf_dashboard_repo/scripts/launch_dashboard.py" ]]; then
+  exec "$rf_dashboard_python" "$rf_dashboard_repo/scripts/launch_dashboard.py" --pascal-compat --rf-image "$rf_dashboard_image" "$@"
+fi
 rf_dashboard_cache="${XDG_CACHE_HOME:-$HOME/.cache}/airsim-rf-dashboard"
 mkdir -p "$rf_dashboard_cache"
 docker pull "$rf_dashboard_image"
