@@ -6,22 +6,34 @@ build-backend = "setuptools.build_meta"
 name = "airsim-rf"
 version = "0.2.0"
 description = "Experimental ProjectAirSim / Sionna RT complex voltage receiver"
+readme = "README.md"
+license = "MIT"
+license-files = ["LICENSE", "THIRD_PARTY_NOTICES.md"]
 requires-python = ">=3.10"
 dependencies = ["numpy>=1.26", "scipy>=1.14.1", "sionna-rt==2.2.0", "grpcio>=1.84,<2", "protobuf>=7.36.2,<8"]
 
 [project.scripts]
+airsim-rf = "airsim_rf.cli:main"
+airsim-rf-cuda = "airsim_rf.cuda_launch:main"
+airsim-rf-import-usd = "airsim_rf.usd_geometry:main"
+airsim-rf-geometry-plan = "airsim_rf.geometry_sync:main"
 airsim-rf-live = "airsim_rf.live:main"
 airsim-rf-worker = "airsim_rf.distributed.worker:main"
 airsim-rf-coordinator = "airsim_rf.distributed.coordinator:main"
 
 [project.optional-dependencies]
+geometry = ["usd-core>=24.8,<27"]
 airsim = ["projectairsim>=1.1.0"]
 live = ["projectairsim>=1.1.0", "cupy-cuda12x==13.6.0"]
 test = ["pytest>=8.3"]
 interop = ["sigmf==1.13.0"]
+tracking = ["doa-py==0.5.0", "filterpy==1.4.5"]
 
 [tool.setuptools.packages.find]
 where = ["src"]
+
+[tool.setuptools.package-data]
+airsim_rf = ["assets/*.usda", "assets/*.json", "assets/*.xml", "assets/*.ply"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

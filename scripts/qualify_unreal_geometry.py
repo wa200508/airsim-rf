@@ -9,6 +9,17 @@ from pathlib import Path
 from projectairsim import ProjectAirSimClient,World,Drone
 parser=argparse.ArgumentParser(description=__doc__);parser.add_argument('--output',type=Path,required=True);parser.add_argument('--pascal-compat',action='store_true');args=parser.parse_args()
 root=args.output;root.mkdir(parents=True,exist_ok=False);sim=root/'sim';sim.mkdir()
+# Shared geometry drives BOTH the simulator placement and RF export.
+# This path is authored but has not been rerun since the geometry refactor.
+from airsim_rf.geometry import export_sionna_geometry
+from airsim_rf.geometry_sync import placement_plan
+geometry=json.loads((Path(__file__).resolve().parents[1]/'examples/config/shared-geometry.json').read_text())
+bindings={'version':1,'objects':{'cube':{'simulator':{
+ 'object_name':'RFCheckCube','asset_path':'Cube',
+ 'local_to_actor_m':[[.5,0,0,0],[0,.5,0,0],[0,0,.5,0],[0,0,0,1]],
+ 'asset_provenance':'Pinned Blocks centered one-metre Cube, matching box collision'}}}}
+placement=placement_plan(geometry,bindings)['objects'][0]
+export_sionna_geometry(geometry,root/'rf',bindings=bindings)
 robot={'physics-type':'non-physics','links':[{'name':'Frame','collision':{'enabled':False}}],
  'sensors':[{'id':'lidar1','type':'lidar','lidar-type':'generic_cylindrical','enabled':True,'parent-link':'Frame','number-of-channels':1,'range':20,'points-per-second':10000,'horizontal-rotation-frequency':10,'horizontal-fov-start-deg':-5,'horizontal-fov-end-deg':5,'vertical-fov-upper-deg':0,'vertical-fov-lower-deg':0,'disable-self-hits':True,'draw-debug-points':False,'report-point-cloud':True,'report-no-return-points':False,'origin':{'xyz':'0 0 0','rpy-deg':'0 0 0'}}]}
 (sim/'robot.jsonc').write_text(json.dumps(robot))
@@ -17,8 +28,7 @@ scene={'id':'RFUnrealGeometry','scene-type':'UnrealNative','actors':[{'type':'ro
 client=ProjectAirSimClient(address='127.0.0.1');client.connect();messages=[]
 try:
  world=World(client,'scene.jsonc',sim_config_path=str(sim.resolve()));world.pause();drone=Drone(client,world,'Probe')
- pose={'frame_id':'DEFAULT_ID','translation':{'x':5.,'y':0.,'z':-100.},'rotation':{'w':1.,'x':0.,'y':0.,'z':0.}}
- name=world.spawn_object('RFCheckCube','Cube',pose,[2.,2.,2.],False)
+ name=world.spawn_object(placement['object_name'],placement['asset_path'],placement['pose'],placement['scale'],False)
  print('spawned',name,'pose',world.get_object_pose(name),'scale',world.get_object_scale(name),flush=True)
  client.subscribe(drone.sensors['lidar1']['lidar'],lambda _,message:messages.append(message));time.sleep(.2)
  for _ in range(10):
@@ -39,11 +49,7 @@ if args.pascal_compat:
  enable_pascal_compat()
 import sionna.rt as rt
 from airsim_rf.single_bounce import SingleBouncePathSolver
-vertices=[[-1,-1,-1],[1,-1,-1],[1,1,-1],[-1,1,-1],[-1,-1,1],[1,-1,1],[1,1,1],[-1,1,1]]
-faces=[[0,2,1],[0,3,2],[4,5,6],[4,6,7],[0,1,5],[0,5,4],[1,2,6],[1,6,5],[2,3,7],[2,7,6],[3,0,4],[3,4,7]]
-(root/'cube.ply').write_text('ply\nformat ascii 1.0\nelement vertex 8\nproperty float x\nproperty float y\nproperty float z\nelement face 12\nproperty list uchar int vertex_indices\nend_header\n'+'\n'.join(' '.join(map(str,v)) for v in vertices)+'\n'+'\n'.join('3 '+' '.join(map(str,f)) for f in faces)+'\n')
-(root/'cube.xml').write_text('<scene version="2.1.0"><bsdf type="radio-material" id="material"><float name="relative_permittivity" value="5"/></bsdf><shape type="ply" id="cube"><string name="filename" value="cube.ply"/><ref id="material" name="bsdf"/><transform name="to_world"><translate x="5" y="0" z="100"/></transform></shape></scene>')
-scene=rt.load_scene(str(root/'cube.xml'))
+scene=rt.load_scene(str(root/'rf/scene.xml'),merge_shapes=False)
 scene.tx_array=rt.PlanarArray(num_rows=1,num_cols=1,pattern='iso',polarization='V');scene.rx_array=scene.tx_array
 scene.add(rt.Transmitter('tx',position=[0,0,100]));scene.add(rt.Receiver('rx',position=[10,0,100]))
 points=np.concatenate([np.array(m['point_cloud']).reshape(-1,3) for m in blocked])

@@ -4,6 +4,18 @@ Use Python **3.12** for the tested lock. The package declares a wider Python
 range, but that declaration is not a tested environment matrix. The simulator
 server is a separate component; installing the Python client does not launch it.
 
+Start with the [complete shared-scene quickstart](quickstart.md) for the local
+RF/SDR workflow. It covers all input assets, offline preflight, the dedicated
+Blocks server, GPU recording and CPU I/Q consumption. The
+[capability matrix](capabilities.md) and [troubleshooting guide](troubleshooting.md)
+define tested scope and corrective actions.
+
+Native CPU prerequisites include Git, Python 3.12 with venv/pip, and a supported
+LLVM library for CPU propagation. The Docker CPU recipe below installs
+`libllvm19`, `libatomic1`, `libgl1` and `libglib2.0-0t64` on Debian trixie. A
+fresh Python environment in that OS image is the qualified native-library base;
+other host operating-system combinations require their own checks.
+
 | Workflow | Environment | Status |
 | --- | --- | --- |
 | Offline examples/tests | Standard locked Sionna RT stack, LLVM | CPU CI and offline tests |
@@ -18,7 +30,7 @@ server is a separate component; installing the Python client does not launch it.
 ```bash
 git clone https://github.com/wa200508/airsim-rf.git
 cd airsim-rf
-python3.12 scripts/bootstrap.py
+python3.12 scripts/bootstrap.py --geometry
 .venv/bin/python -m pytest tests -q
 .venv/bin/python examples/distance2gol_radar.py
 ```
@@ -28,6 +40,15 @@ from `sources.json` into ignored `.deps/` paths. It installs the tested lock and
 editable packages. LLVM/system libraries must be available for propagation; see
 the [container recipe](#container) if using an isolated environment. No simulator
 is needed for the offline point-target example.
+
+`--geometry` adds the qualified `usd-core==26.8` dependency from
+`requirements-geometry.txt`; omit it for the ground-only/radar path. The
+installed commands include `airsim-rf example`, `preflight`, `inspect` and
+`process`, plus `airsim-rf-live` and `airsim-rf-cuda`. See
+[their interfaces](interfaces.md). Build a local wheel with
+`python -m pip wheel --no-deps --wheel-dir /tmp/airsim-rf-local .`; this does
+not publish it. Bundled scene assets use package resources and do not depend on
+the current directory being this checkout.
 
 ## Read recordings without the simulator stack
 

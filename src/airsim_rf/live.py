@@ -11,29 +11,88 @@ def validate_inputs(config_path):
     import numpy as np
     from .terrain import scene_provenance
     from .scenario import propagation_options, antenna_options
+    from .geometry import read_bundle
     from .sdr import PlutoSDRProfile
     import re
     path=Path(config_path).resolve();config=json.loads(path.read_text())
+    required={'address','scene','sim_config','rf_scene','receiver_profile','radios'}
+    allowed=required|{'antennas','propagation','samples_per_link','geometry_bundle','geometry_placement'}
+    if not isinstance(config,dict) or required-set(config) or set(config)-allowed:
+        raise ValueError(f'Live configuration requires {sorted(required)}; missing/unknown keys: '
+                         f'{sorted(required-set(config)) if isinstance(config,dict) else "not an object"} / '
+                         f'{sorted(set(config)-allowed) if isinstance(config,dict) else "not an object"}')
+    for key in ('address','scene','sim_config','rf_scene'):
+        if not isinstance(config[key],str) or not config[key].strip():
+            raise ValueError(f'{key} must be a nonempty string')
     local=lambda name: (path.parent/name).resolve()
     options=propagation_options(config);antennas=antenna_options(config)
-    profile=config['receiver_profile'];rate=PlutoSDRProfile(**profile).sample_rate_hz
+    profile=config['receiver_profile']
+    if not isinstance(profile,dict):
+        raise ValueError('receiver_profile must be an object of PlutoSDRProfile settings')
+    try:
+        rate=PlutoSDRProfile(**profile).sample_rate_hz
+    except TypeError as error:
+        raise ValueError(f'Invalid receiver_profile settings: {error}') from error
     if not np.isfinite(rate) or rate <= 0:
         raise ValueError('Positive finite sample rate required')
     config_dir=local(config['sim_config'])
     scene=(config_dir/config['scene']).resolve()
     if not scene.is_file():
         raise ValueError(f'Missing ProjectAirSim scene configuration: {scene}')
+    from .preflight import read_sim_config
+    simulator=read_sim_config(scene)
+    actors=simulator.get('actors',[])
+    if not isinstance(actors,list) or any(not isinstance(actor,dict) for actor in actors):
+        raise ValueError('Simulator scene actors must be a list of objects')
+    names=[actor.get('name') for actor in actors if actor.get('type')=='robot']
+    if any(not isinstance(name,str) or not name for name in names) or len(names)!=len(set(names)):
+        raise ValueError('Simulator robot names must be nonempty and unique')
+    for actor in actors:
+        if actor.get('type')=='robot':
+            robot_config=actor.get('robot-config')
+            if not isinstance(robot_config,str) or not (config_dir/robot_config).is_file():
+                raise ValueError(f'{actor.get("name")}: missing robot-config file relative to sim_config: {robot_config!r}')
+    geometry = None
+    placement_mode = config.get('geometry_placement', 'existing')
+    if placement_mode not in ('existing', 'spawn'):
+        raise ValueError('geometry_placement must be existing or spawn')
+    if 'geometry_placement' in config and 'geometry_bundle' not in config:
+        raise ValueError('geometry_placement requires geometry_bundle')
+    if 'geometry_bundle' in config:
+        bundle = local(config['geometry_bundle'])
+        document, manifest, bindings = read_bundle(bundle)
+        if local(config['rf_scene']) != bundle/'scene.xml':
+            raise ValueError('rf_scene must point to geometry_bundle/scene.xml')
+        if bindings is None:
+            raise ValueError('Live geometry bundle requires simulator bindings')
+        from .geometry_sync import AirSimGeometryBinding
+        AirSimGeometryBinding(document, bindings)
+        geometry = {'manifest': manifest, 'bindings': bindings,
+                    'placement': placement_mode,
+                    'policy': 'static bound objects; pose/scale checked at interval start and end'}
     radios=config['radios'];sources={}
+    if not isinstance(radios,dict) or not radios:
+        raise ValueError('radios must be a nonempty object mapping radio IDs to settings')
     for name,radio in radios.items():
         if not re.fullmatch(r'[A-Za-z0-9][A-Za-z0-9_-]*',name):
             raise ValueError('Radio IDs must use letters, digits, underscores or hyphens')
+        if not isinstance(radio,dict) or set(radio)-{'robot','mount_body_m','waveform_npy','transmit_power_w','baseband_frequency_bounds_hz'}:
+            raise ValueError(f'{name}: radio settings contain unknown keys or are not an object')
         if not isinstance(radio.get('robot'),str) or not radio['robot'].strip():
             raise ValueError(f'{name}: robot name is required')
+        if radio['robot'] not in names:
+            raise ValueError(f'{name}: robot {radio["robot"]!r} is absent from simulator scene {scene.name}')
         mount=np.asarray(radio.get('mount_body_m',[0,0,0]),dtype=float)
         if mount.shape!=(3,) or not np.isfinite(mount).all():
             raise ValueError(f'{name}: mount_body_m must contain three finite coordinates')
         if 'waveform_npy' not in radio:
+            if set(radio)&{'transmit_power_w','baseband_frequency_bounds_hz'}:
+                raise ValueError(f'{name}: transmitter settings require waveform_npy')
             continue
+        if not {'transmit_power_w','baseband_frequency_bounds_hz'} <= set(radio):
+            raise ValueError(f'{name}: waveform_npy requires transmit_power_w and baseband_frequency_bounds_hz')
+        if not isinstance(radio['waveform_npy'],str) or not radio['waveform_npy']:
+            raise ValueError(f'{name}: waveform_npy must be a file path string')
         waveform=local(radio['waveform_npy']);values=np.load(waveform,allow_pickle=False)
         if values.ndim!=1 or not np.iscomplexobj(values) or not values.size or not np.isfinite(values).all():
             raise ValueError(f'{name}: nonempty finite 1-D complex waveform required')
@@ -45,13 +104,13 @@ def validate_inputs(config_path):
     if not sources or len(sources)==len(radios):
         raise ValueError('At least one transmitter and receiver required')
     return {'propagation_options':options, 'antenna_options':antennas, 'configuration_sha256':sha256(path.read_bytes()).hexdigest(),
-        'rf_scene':scene_provenance(local(config['rf_scene'])),
+        'rf_scene':scene_provenance(local(config['rf_scene'])), 'geometry_bundle': geometry,
         'sim_config_sha256':{str(p.relative_to(config_dir)):sha256(p.read_bytes()).hexdigest() for p in config_dir.rglob('*.json*')},
         'waveforms':sources}
 
 
 def record(world, robots, receiver, output, *, updates, advance_ns, max_samples,
-           mounts_body_m=None, provenance=None, on_capture=None):
+           mounts_body_m=None, provenance=None, on_capture=None, geometry_binding=None):
     """Write contiguous ci16_le captures; checkpoint metadata after every update."""
     from .sdr_bridge import AirSimSDRBridge
     if not receiver.continuous:
@@ -60,7 +119,8 @@ def record(world, robots, receiver, output, *, updates, advance_ns, max_samples,
         raise ValueError('Counts and interval must be positive')
     output = Path(output)
     output.mkdir(parents=True, exist_ok=False)
-    bridge = AirSimSDRBridge(world, robots, receiver, mounts_body_m=mounts_body_m)
+    bridge = AirSimSDRBridge(world, robots, receiver, mounts_body_m=mounts_body_m,
+        geometry_guard=geometry_binding.require_static_match if geometry_binding is not None else None)
     rows, offsets = [], {name: 0 for name in receiver.scene.receivers}
     metadata = {name: {'global': {'core:datatype': 'ci16_le',
         'core:version': '1.2.6', 'core:sample_rate': receiver.profile.sample_rate_hz,
@@ -98,6 +158,8 @@ def record(world, robots, receiver, output, *, updates, advance_ns, max_samples,
                 raise RuntimeError('Receiver sample counts differ')
             row = {'sim_time_ns': next(iter(captures.values())).sim_time_ns,
                    'samples_per_receiver': counts.pop()}
+            if geometry_binding is not None:
+                row['geometry'] = bridge.geometry_report
             rows.append(row)
             checkpoint()
             if on_capture is not None:
@@ -131,13 +193,16 @@ def main():
         parser.error('Counts and interval must be positive')
     if not args.check_config and args.output is None:
         parser.error('--output is required when recording')
-    if args.check_config:
-        input_provenance=validate_inputs(args.config)
-        print(json.dumps(input_provenance,indent=2))
-        return
-    result = run(args.config, args.output, updates=args.updates, advance_ns=args.advance_ns,
-        max_samples=args.max_samples, pascal_compat=args.pascal_compat)
-    print(json.dumps({k: v for k, v in result.items() if k != 'rows'}, indent=2))
+    try:
+        if args.check_config:
+            input_provenance=validate_inputs(args.config)
+            print(json.dumps(input_provenance,indent=2))
+            return
+        result = run(args.config, args.output, updates=args.updates, advance_ns=args.advance_ns,
+            max_samples=args.max_samples, pascal_compat=args.pascal_compat)
+        print(json.dumps({k: v for k, v in result.items() if k != 'rows'}, indent=2))
+    except (ValueError,TypeError,KeyError,OSError,RuntimeError,ImportError) as error:
+        parser.exit(2,f'airsim-rf-live: {error}\nRun airsim-rf preflight with the same configuration and capture counts to diagnose setup.\n')
 
 
 def run(config_path, output, *, updates=10, advance_ns=10_000_000,
@@ -158,7 +223,9 @@ def run(config_path, output, *, updates=10, advance_ns=10_000_000,
         advance_ns=advance_ns, max_samples=max_samples, pascal_compat=pascal_compat)
     if args.output.exists():
         raise ValueError(f'Output already exists; choose a new recording directory: {args.output}')
-    input_provenance=validate_inputs(args.config)
+    from .preflight import check
+    preflight_report=check(args.config,output=args.output,updates=updates,advance_ns=advance_ns,max_samples=max_samples)
+    input_provenance=preflight_report['inputs']
     config = json.loads(args.config.read_text())
     import mitsuba as mi
     mi.set_variant('cuda_ad_mono_polarized')
@@ -176,7 +243,17 @@ def run(config_path, output, *, updates=10, advance_ns=10_000_000,
     from .sdr import PlutoSDRProfile, SDREmitter, SDRNetworkReceiver
     def local(name):
         return (args.config.parent/name).resolve()
-    scene = rt.load_scene(str(local(config['rf_scene'])))
+    geometry_binding = None
+    if 'geometry_bundle' in config:
+        from .geometry import read_bundle
+        from .geometry_sync import AirSimGeometryBinding
+        document, manifest, bindings = read_bundle(local(config['geometry_bundle']))
+        geometry_binding = AirSimGeometryBinding(document, bindings)
+        scene = rt.load_scene(str(local(config['rf_scene'])), merge_shapes=False)
+        if set(scene.objects) != set(manifest['object_map'].values()):
+            raise RuntimeError('Sionna object identities differ from the geometry bundle; adapter qualification required')
+    else:
+        scene = rt.load_scene(str(local(config['rf_scene'])))
     scene.tx_array = rt.PlanarArray(**input_provenance['antenna_options']['tx'])
     scene.rx_array = rt.PlanarArray(**input_provenance['antenna_options']['rx'])
     profile = PlutoSDRProfile(**config.get('receiver_profile', {}))
@@ -186,6 +263,12 @@ def run(config_path, output, *, updates=10, advance_ns=10_000_000,
     try:
         world = World(client, config['scene'], sim_config_path=str(local(config['sim_config'])))
         world.pause()
+        if geometry_binding is not None:
+            if config.get('geometry_placement', 'existing') == 'spawn':
+                from .geometry_sync import spawn_placements
+                spawn_placements(world, geometry_binding.plan)
+            # Existing mode only reads actors; spawning requires explicit config.
+            geometry_binding.require_static_match(world, int(world.get_sim_time()))
         origin = int(world.get_sim_time())
         emitters, robots = {}, {}
         for name, radio in config['radios'].items():
@@ -204,7 +287,8 @@ def run(config_path, output, *, updates=10, advance_ns=10_000_000,
         mounts = {n: r.get('mount_body_m', [0, 0, 0]) for n, r in config['radios'].items()}
         result = record(world, robots, receiver, args.output, updates=args.updates,
             advance_ns=args.advance_ns, max_samples=args.max_samples, mounts_body_m=mounts, on_capture=on_capture,
-            provenance={'inputs':input_provenance, 'configuration': config, 'propagation_backend': mi.variant(),
+            geometry_binding=geometry_binding,
+            provenance={'inputs':input_provenance, 'preflight_plan':preflight_report['plan'], 'configuration': config, 'propagation_backend': mi.variant(),
                 'renderer': 'basis-cuda', 'pascal_compat': args.pascal_compat,
                 'sionna_rt': rt.__version__, 'mitsuba': mi.__version__,
                 'drjit': dr.__version__, 'cupy': cp.__version__})

@@ -22,6 +22,20 @@ def test_phase_estimator_rejects_zero_signal():
         motion.estimate_tone_offset(np.zeros(24000,dtype=complex),2e6,150000)
 
 
+def test_turning_lateral_motion_allows_direction_reversals():
+    heading=np.linspace(0,2*np.pi,801)
+    velocities=np.column_stack((3*np.cos(heading),3*np.sin(heading),np.zeros(len(heading))))
+    assert motion.receiver_lateral_motion(velocities,turning=True)[0]
+    assert not motion.receiver_lateral_motion(velocities,turning=False)[0]
+    # A stationary or brief isolated velocity spike does not establish a turn.
+    velocities[:]=0
+    assert not motion.receiver_lateral_motion(velocities,turning=True)[0]
+    velocities[0,1]=1.
+    assert not motion.receiver_lateral_motion(velocities,turning=True)[0]
+    velocities[:,1]=1.
+    assert motion.receiver_lateral_motion(velocities,turning=False)[0]
+
+
 def test_boundary_phase_fit_detects_reset():
     spec=importlib.util.spec_from_file_location('phase',Path(__file__).resolve().parents[1]/'scripts/analyze_live_phase.py')
     phase=importlib.util.module_from_spec(spec);spec.loader.exec_module(phase)

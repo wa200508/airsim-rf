@@ -29,7 +29,7 @@ RUN --mount=type=secret,id=proxy_ca,mode=0444 \
     rm -rf /var/lib/apt/lists/*
 
 WORKDIR /opt/airsim-rf
-COPY --chmod=755 pyproject.toml requirements-lock.txt sources.json ./
+COPY --chmod=755 pyproject.toml requirements-lock.txt requirements-geometry.txt sources.json README.md LICENSE THIRD_PARTY_NOTICES.md ./
 COPY --chmod=755 scripts/bootstrap.py scripts/bootstrap.py
 COPY --chmod=755 src/ src/
 RUN --mount=type=secret,id=proxy_ca \
@@ -40,7 +40,8 @@ RUN --mount=type=secret,id=proxy_ca \
                GIT_SSL_CAINFO=/run/secrets/proxy_ca \
                REQUESTS_CA_BUNDLE=/run/secrets/proxy_ca; \
     fi; \
-    /usr/local/bin/python scripts/bootstrap.py; \
+    /usr/local/bin/python scripts/bootstrap.py --geometry; \
+    /opt/airsim-rf/.venv/bin/python -m pip wheel --no-deps --wheel-dir /opt/airsim-rf/local-wheel /opt/airsim-rf; \
     rm -rf /root/.cache/pip; \
     groupadd --gid 10001 rf; \
     useradd --uid 10001 --gid rf --create-home rf; \

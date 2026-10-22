@@ -1,0 +1,212 @@
+{
+  "profile_version": 1,
+  "scene_id": "SharedMeshTurnScreen",
+  "revision": "1",
+  "geometry_kind": "shared",
+  "stage_up_axis": "Z",
+  "stage_meters_to_ned_m": [
+    [
+      1,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      -1,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      -1,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      1
+    ]
+  ],
+  "geodetic_anchor": {
+    "latitude_deg": 47.641468,
+    "longitude_deg": -122.140165,
+    "altitude_hae_m": 122.0
+  },
+  "materials": {
+    "dielectric": {
+      "relative_permittivity": 5.0,
+      "conductivity_s_m": 0.0,
+      "assumption": "Illustrative constant lossless dielectric; no physical calibration implied."
+    }
+  },
+  "objects": {
+    "Ground": {
+      "prim_path": "/World/Ground",
+      "material": "dielectric",
+      "simulator": {
+        "object_name": "RFSharedGround",
+        "asset_path": "generated:glb",
+        "local_to_actor_m": [
+          [
+            1,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            -1,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            -1,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            1
+          ]
+        ],
+        "asset_provenance": "Shared USD triangles baked by Blocks client-mesh adapter v1; collision equivalence qualified by independent LiDAR rays in pinned Blocks 1.0.1."
+      },
+      "identities": {
+        "dis_entity_id": null,
+        "oms_system_id": null,
+        "oms_subsystem_id": null,
+        "rf_aperture_ids": []
+      }
+    },
+    "Building": {
+      "prim_path": "/World/Building",
+      "material": "dielectric",
+      "simulator": {
+        "object_name": "RFSharedBuilding",
+        "asset_path": "generated:glb",
+        "local_to_actor_m": [
+          [
+            1,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            -1,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            -1,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            1
+          ]
+        ],
+        "asset_provenance": "Shared USD triangles baked by Blocks client-mesh adapter v1; collision equivalence qualified by independent LiDAR rays in pinned Blocks 1.0.1."
+      },
+      "identities": {
+        "dis_entity_id": null,
+        "oms_system_id": null,
+        "oms_subsystem_id": null,
+        "rf_aperture_ids": []
+      }
+    },
+    "Wall": {
+      "prim_path": "/World/Wall",
+      "material": "dielectric",
+      "simulator": {
+        "object_name": "RFSharedWall",
+        "asset_path": "generated:glb",
+        "local_to_actor_m": [
+          [
+            1,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            -1,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            -1,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            1
+          ]
+        ],
+        "asset_provenance": "Shared USD triangles baked by Blocks client-mesh adapter v1; collision equivalence qualified by independent LiDAR rays in pinned Blocks 1.0.1."
+      },
+      "identities": {
+        "dis_entity_id": null,
+        "oms_system_id": null,
+        "oms_subsystem_id": null,
+        "rf_aperture_ids": []
+      }
+    },
+    "Screen": {
+      "prim_path": "/World/Screen",
+      "material": "dielectric",
+      "simulator": {
+        "object_name": "RFSharedScreen",
+        "asset_path": "generated:glb",
+        "local_to_actor_m": [
+          [
+            1,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            -1,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            -1,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            1
+          ]
+        ],
+        "asset_provenance": "Shared USD triangles baked by Blocks client-mesh adapter v1; collision equivalence qualified by independent LiDAR rays in pinned Blocks 1.0.1."
+      },
+      "identities": {
+        "dis_entity_id": null,
+        "oms_system_id": null,
+        "oms_subsystem_id": null,
+        "rf_aperture_ids": []
+      }
+    }
+  },
+  "exclusions": {}
+}

@@ -6,6 +6,11 @@ models and an AMS-GRA radar worker; continuous SDR uses a separate capture API.
 
 | Goal | Start here |
 | --- | --- |
+| Complete setup → matching geometry → recording → CPU processor | [Shared-scene quickstart](docs/quickstart.md) |
+| Check what is qualified and what remains open | [Capability and acceptance matrix](docs/capabilities.md) |
+| Integrate waveforms, radios and processing code | [Configuration and API interfaces](docs/interfaces.md) |
+| Diagnose setup or capture failures | [Troubleshooting](docs/troubleshooting.md) |
+| Run MUSIC AoA and emitter tracking on modulated I/Q | [Python challenge-inspired example](docs/aoa-emitter-tracking.md) |
 | Run an offline example | [Setup](docs/setup.md#reproduce) |
 | Build a scenario and process its I/Q | [Scenario-to-I/Q walkthrough](docs/scenario-to-iq.md) |
 | Feed a separate signal processor | [TCP I/Q adapter](docs/iq-stream.md) |
@@ -15,6 +20,11 @@ models and an AMS-GRA radar worker; continuous SDR uses a separate capture API.
 
 Live capture requires a separate ProjectAirSim server. Numerical/operator tests,
 device qualification and actual server interoperability are distinct claims.
+The installed `airsim-rf` command generates complete bundled inputs, checks a
+capture plan, inspects recordings and reads I/Q on CPU. The shared-geometry
+workflow uses static environment meshes with moving radios; priority 1 is
+[qualified](results/reviews/priority1-20261020/REPORT.md). This is a local
+experimental package; no publication or delivery is part of consolidation.
 
 The latest measured 100-TX × 10-RX workload costs **44.68 wall seconds per
 simulated signal second** on one P100: 11.1696 wall seconds for 0.250 signal

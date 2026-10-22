@@ -1,0 +1,46 @@
+{
+  "review_date": "2026-10-18",
+  "scope": "Public standards and pinned source inspection; no runtime conformance claim",
+  "files": {
+    "ASK 6.0a Start Here Guide.pdf": {
+      "sha256": "ceaa39dda33f031b4fde8473d15bd47504c2b6a432a3a2da4f7d8b69794b934e",
+      "bytes": 357546
+    },
+    "ASK_6.0a_ICD.pdf": {
+      "sha256": "bcff367114681e9d5cad09e419ae935b515345fc8b4ce918bf6700cf259cf2e1",
+      "bytes": 18769690
+    },
+    "Compliance_Assessment_Approach.pdf": {
+      "sha256": "613bd1d868068a0645400992e7f6325841db8cce3ba0cc004d657f0bebef90aa",
+      "bytes": 835075
+    },
+    "RF_MEL_IDD.pdf": {
+      "sha256": "7a9cad3795627e9257ebf4f3bf88dc9c8e448f67424390eca1ad27fdb5ba4247",
+      "bytes": 6889571
+    },
+    "Software_Architecture.pdf": {
+      "sha256": "d5b6d70061a6cdd06a2ade5823fb652e90185dbbc1a604949cdd2d24ab3a97f9",
+      "bytes": 960874
+    },
+    "Time_Distribution.pdf": {
+      "sha256": "79dbb0c39fe132b46e32d68ee7f9eca5227992c1a0db078719be4fb4bed1b702",
+      "bytes": 648779
+    },
+    "sleet-README.md": {
+      "sha256": "9d9bb89b21fd975abed74a300ac1941c33ce358ffbb86a84728e7c7d433390f5",
+      "bytes": 5608
+    },
+    "squall-SquallDataMEL.cc": {
+      "sha256": "8f919121076305f76bc6dc3fb6e114a40f7f0c7f5d3164abc65ab93e24fb7e18",
+      "bytes": 5224
+    },
+    "supercell-Cargo.toml": {
+      "sha256": "2e6264044ca89118de2a0b4fd8c7d1913a0d970ed13542c30e0f6d33f2bcbfb1",
+      "bytes": 2696
+    },
+    "worldview-README.md": {
+      "sha256": "8a8caf2f1b88fe6948e1d9bdd5d8da94ecab72e86384761bdd46bd79b52f0862",
+      "bytes": 7622
+    }
+  }
+}

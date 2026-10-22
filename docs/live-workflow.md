@@ -1,7 +1,8 @@
 # Live AirSim-to-SDR recording
 
-Start with the [scenario-to-I/Q walkthrough](scenario-to-iq.md) for complete
-inputs, propagation choices, a CPU recording reader and a live processing callback.
+Start with the [shared-scene quickstart](quickstart.md) for the current complete
+installed-package workflow. The [scenario-to-I/Q walkthrough](scenario-to-iq.md)
+adds propagation choices, CPU processing and a live callback.
 
 `airsim-rf-live` connects to ProjectAirSim, snapshots paused robot kinematics,
 traces scene paths on CUDA/OptiX, renders private sampled inputs on CUDA, and
@@ -95,10 +96,32 @@ an RF-only screen. A [turning-mount check](../results/reviews/turning-mounts-202
 also passes for two yawing drones with nonzero radio offsets and direct paths.
 [Directional pattern rotation](../results/reviews/directional-turns-20261015/REPORT.md)
 also passes a matched-flight gain check. [Combined multipath turns](../results/reviews/turning-multipath-20261016/REPORT.md)
-pass controlled specular and directional fixed-surface cases. General multipath transitions and
-Unreal mesh interoperability remain unqualified.
+pass controlled specular and directional fixed-surface cases. The [shared geometry closure](../results/reviews/priority1-20261020/REPORT.md)
+now qualifies matching nonprimitive collision/RF meshes and combined turning,
+obstruction and first-order reflections. General diffuse transitions and arbitrary
+existing-world extraction remain open.
 The measured workloads are slower than real time; controlled stepping does not
 promise live wall-clock streaming.
+
+The motion qualification helper accepts `--duration-ms` to set total capture
+time, provided it is divisible by `--window-ms` (6, 12, 24 or 48 ms). It defaults
+to 480 ms, matching the cited motion reports. Longer captures also extend the
+flight command and source waveform, and can expose long-run timing or channel
+stability issues that a short integration check cannot. The helper uses CUDA for
+RF propagation and rendering; `scripts/inspect_live_recording.py` and the
+recording analyzers can inspect completed captures on CPU.
+
+A [4.8-second two-drone specular capture](../results/reviews/longrun-20261017/REPORT.md)
+now passes 400-window continuity, coherent I/Q and boundary checks, extending the
+short-flight evidence by ten times. The inspector and coherent-I/Q analyzer
+process sample data one window at a time; channel and recording metadata still
+grow with capture length. A [longer turning and screen follow-up](../results/reviews/longrun-turns-20261017/REPORT.md)
+adds a 9.6-second direct-path turn with offset mounts and a separate 4.8-second
+screen capture. The analyzer now checks each path-count transition individually,
+so aggregate boundary error cannot hide a bad disappearance or return. These
+earlier controlled cases do not qualify diffuse-path transitions or arbitrary
+terrain. Combined turning/obstruction with specular reflection is now qualified
+by the shared-geometry closure linked above.
 
 ## Complete two-radio first run
 
@@ -119,7 +142,10 @@ The generator writes a unit-power +150 kHz complex CW waveform: 500,000 samples
 at 2 MS/s, covering 0.25 s; `radios.json`; a ground XML/PLY; and two robot/scene
 configuration files. The RF material is synthetic. The waveform duration leaves
 margin for ten requested 10 ms steps with the scene's 3 ms physics-clock ticks.
-`--check-config` requires neither GPU nor server. It checks finite source values,
+`--check-config` requires neither GPU nor server. The newer
+`airsim-rf preflight` also checks the planned capture counts, source duration,
+physics-clock alignment and optional output space. The live runner performs that
+plan check before connecting. It checks finite source values,
 frequency bounds and local files, and prints source/geometry/configuration hashes.
 
 The standalone **ProjectAirSim Runtime** uses the actual ProjectAirSim server and
@@ -171,3 +197,17 @@ The inspector verifies byte/sample counts, signed ADC range, per-window metadata
 and timestamp continuity. It also reports the final-window spectral peak. For
 the +150 kHz smoke input, compare the peak with 150,000 Hz within its reported FFT
 bin spacing; this is a spectral sanity check, not calibrated analog validation.
+
+## Optional shared OpenUSD geometry
+
+The [OpenUSD geometry workflow](openusd-workflow.md) describes an optional
+`geometry_bundle` configuration alongside `rf_scene`. It adds bundle integrity,
+simulator pose/scale readback, preserved RF object identities and per-window
+geometry provenance. It is restricted to static environment geometry with moving
+radios. The [geometry closure qualification](../results/reviews/priority1-20261020/REPORT.md)
+passes nonprimitive collision/RF intersections and complete moving/turning
+recordings with first-order reflection and obstruction together. Generated GLB
+meshes use the same USD triangles as RF. Environment edits require a new bundle,
+scene and receiver at a recording boundary; continuous dynamic obstacles remain
+unsupported. Actor creation requires explicit `geometry_placement: "spawn"` or a
+separate placement call; the default mode only reads existing actors.

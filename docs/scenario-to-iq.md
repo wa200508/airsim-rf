@@ -1,5 +1,9 @@
 # Build a scenario and use its I/Q
 
+For the current complete installed-package path with matching shared geometry,
+start with the [shared-scene quickstart](quickstart.md). This page retains the
+ground-only workflow and expands the waveform/processing interfaces.
+
 Start with one transmitter, one receiver and flat ground. First record a known
 150 kHz tone; then replace the waveform, scene or processing function one at a
 time. You can analyze a saved recording on a CPU without running AirSim or a GPU.
@@ -251,9 +255,9 @@ and the model's power convention are needed for power conversion.
   duration and interpolation margin for actual elapsed physics time.
 - **Geometry:** edit both simulator geometry and RF mesh consistently. The
   standalone Runtime only supplies flat-ground collision; it does not validate
-  an Unreal building/terrain export. The [Unreal cube check](unreal-geometry.md)
-  provides a measured primitive alignment contract; arbitrary export is still
-  separate work. Synthetic RF material values are assumptions.
+  an Unreal building/terrain export. The [shared USD/GLB workflow](openusd-workflow.md) now qualifies nonprimitive
+  matching geometry and moving radios. Arbitrary existing-world extraction is
+  still a separate source adapter. Synthetic RF material values are assumptions.
 - **Motion:** replace the starter non-physics robot with a suitable controller
   configuration and own the flight commands/stepping. Changing RF-only positions
   does not prove a live flight-control workflow.

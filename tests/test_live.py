@@ -131,7 +131,16 @@ def test_recording_inspector_rejects_timestamp_discontinuity(tmp_path):
     tool=importlib.util.module_from_spec(spec);spec.loader.exec_module(tool)
     world=TickWorld();robots,receiver,_=fixture(world)
     directory=tmp_path/'run';record(world,robots,receiver,directory,updates=2,advance_ns=10_000_000,max_samples=100000)
-    assert tool.inspect(directory)['updates']==2
+    report=tool.inspect(directory)
+    assert report['updates']==2
+    from hashlib import sha256
+    data=(directory/'rx.sigmf-data').read_bytes()
+    receiver_report=report['receivers']['rx']
+    assert receiver_report['data_sha256']==sha256(data).hexdigest()
+    assert receiver_report['data_bytes']==len(data)
+    assert receiver_report['adc_component_min']==-456
+    assert receiver_report['adc_component_max']==123
+    assert receiver_report['nonzero_complex_sample_fraction']==1.
     path=directory/'manifest.json';manifest=json.loads(path.read_text());manifest['rows'][1]['sim_time_ns']+=500
     path.write_text(json.dumps(manifest))
     with pytest.raises(ValueError,match='contiguous'):
@@ -290,3 +299,37 @@ def test_transport_disconnect_marks_recording_failed(tmp_path):
     manifest=json.loads((tmp_path/'run/manifest.json').read_text())
     assert manifest['status']=='failed'
     assert (tmp_path/'run/rx.sigmf-data').stat().st_size>0
+
+
+def test_geometry_guard_checks_both_epochs_and_preserves_start_report():
+    world = TickWorld()
+    robots, receiver, calls = fixture(world)
+    epochs = []
+    def guard(observed_world, epoch):
+        assert observed_world is world
+        assert epoch == world.time
+        epochs.append(epoch)
+        return {'sim_time_ns': epoch, 'geometry_sha256': 'static-scene'}
+    bridge = AirSimSDRBridge(world, robots, receiver, geometry_guard=guard)
+    start = world.time
+    bridge.capture_elapsed(advance_ns=10_000_000)
+    assert epochs == [start, start + 12_000_000]
+    assert bridge.geometry_report['sim_time_ns'] == start
+    assert calls == [(start, 24000)]
+
+
+@pytest.mark.parametrize('fail_at', [1, 2])
+def test_geometry_guard_failure_prevents_iq_generation(fail_at):
+    world = TickWorld()
+    robots, receiver, calls = fixture(world)
+    epochs = []
+    def guard(observed_world, epoch):
+        epochs.append(epoch)
+        if len(epochs) == fail_at:
+            raise RuntimeError('static geometry changed')
+        return {'sim_time_ns': epoch}
+    bridge = AirSimSDRBridge(world, robots, receiver, geometry_guard=guard)
+    with pytest.raises(RuntimeError, match='static geometry changed'):
+        bridge.capture_elapsed(advance_ns=10_000_000)
+    assert len(epochs) == fail_at
+    assert calls == []

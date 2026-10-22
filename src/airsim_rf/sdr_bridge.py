@@ -3,9 +3,11 @@ from .bridge import mount_kinematics
 
 
 class AirSimSDRBridge:
-    def __init__(self, world, robots, receiver, *, mounts_body_m=None):
+    def __init__(self, world, robots, receiver, *, mounts_body_m=None, geometry_guard=None):
         """Map scene radio names to ProjectAirSim robot handles and body offsets."""
         self.world, self.receiver = world, receiver
+        self.geometry_guard = geometry_guard
+        self.geometry_report = None
         self.robots = dict(robots)
         self.devices = dict(receiver.scene.transmitters) | dict(receiver.scene.receivers)
         if set(self.robots) != set(self.devices):
@@ -24,6 +26,8 @@ class AirSimSDRBridge:
         for name, robot in self.robots.items():
             data = robot.get_ground_truth_kinematics()
             poses[name] = mount_kinematics(data, self.mounts[name])
+        if self.geometry_guard is not None:
+            self.geometry_report = self.geometry_guard(self.world, int(epoch))
         if not self.world.is_paused() or self.world.get_sim_time() != epoch:
             raise RuntimeError("AirSim advanced while collecting the network snapshot")
         for name, (position, velocity, orientation) in poses.items():
@@ -57,6 +61,10 @@ class AirSimSDRBridge:
         end = int(self.world.get_sim_time())
         if not self.world.is_paused() or end < start + advance_ns:
             raise RuntimeError("AirSim did not advance to the target and pause")
+        if self.geometry_guard is not None:
+            # Check the static-scene assumption again before generating samples.
+            # Start and end checks do not prove absence of transient mid-step motion.
+            self.geometry_guard(self.world, end)
         samples = (end - start) * rate / 1e9
         count = round(samples)
         if count < 1 or abs(samples - count) > 1e-6:

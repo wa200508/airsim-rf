@@ -23,3 +23,11 @@ their source pins and native image digests are recorded in `sources.json`.
 The optional analysis interoperability dependency [sigmf-python](https://github.com/sigmf/sigmf-python)
 is LGPL-3.0-or-later. It remains an external package; no SigMF library source is
 vendored here. The test lock includes it to check format compatibility.
+
+The optional tracking example calls [doa_py](https://github.com/zhiim/doa_py)
+0.5.0 (MIT, Copyright 2024 Qian Xu) for MUSIC direction finding and
+[FilterPy](https://github.com/rlabbe/filterpy) 1.4.5 (MIT, Copyright 2015
+Roger R. Labbe Jr) for Kalman filtering. Both remain external dependencies;
+their source is not vendored. The MathWorks SDR Challenge/MUSIC/tracking
+examples are linked as references; no MathWorks example source or toolbox
+implementation is copied or bundled.

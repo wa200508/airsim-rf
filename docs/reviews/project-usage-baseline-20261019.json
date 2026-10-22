@@ -1,0 +1,117 @@
+{
+  "scope": "Selected completed turns in this project chat; account counters may include concurrent usage and rounding/delay. Reasoning tokens are a subset of output tokens. Raw chats/account identifiers omitted.",
+  "samples": [
+    {
+      "work": "ASE standards research",
+      "started_utc": "2026-10-19T00:48:25.169Z",
+      "model": "gpt-6-astra",
+      "reasoning_effort": "medium",
+      "tokens": {
+        "input_tokens": 2215699,
+        "cached_input_tokens": 2148992,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 7276,
+        "reasoning_output_tokens": 450,
+        "total_tokens": 2222975,
+        "uncached_input_tokens": 66707
+      },
+      "ended_utc": "2026-10-19T00:51:31.430Z",
+      "first_observed_usage": {
+        "five_hour_used_percent": 18.0,
+        "weekly_used_percent": 18.0
+      },
+      "last_observed_usage": {
+        "five_hour_used_percent": 45.0,
+        "weekly_used_percent": 23.0
+      },
+      "observed_increase_percentage_points": {
+        "five_hour_used_percent": 27.0,
+        "weekly_used_percent": 5.0
+      }
+    },
+    {
+      "work": "OpenUSD implementation",
+      "started_utc": "2026-10-19T00:53:44.160Z",
+      "model": "gpt-6-astra",
+      "reasoning_effort": "medium",
+      "tokens": {
+        "input_tokens": 3204724,
+        "cached_input_tokens": 3160192,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 20507,
+        "reasoning_output_tokens": 3627,
+        "total_tokens": 3225231,
+        "uncached_input_tokens": 44532
+      },
+      "ended_utc": "2026-10-19T01:00:24.442Z",
+      "first_observed_usage": {
+        "five_hour_used_percent": 47.0,
+        "weekly_used_percent": 23.0
+      },
+      "last_observed_usage": {
+        "five_hour_used_percent": 87.0,
+        "weekly_used_percent": 29.0
+      },
+      "observed_increase_percentage_points": {
+        "five_hour_used_percent": 40.0,
+        "weekly_used_percent": 6.0
+      }
+    },
+    {
+      "work": "Shared-scene GPU qualification",
+      "started_utc": "2026-10-20T00:54:00.507Z",
+      "model": "gpt-6-astra",
+      "reasoning_effort": "medium",
+      "tokens": {
+        "input_tokens": 4999152,
+        "cached_input_tokens": 4756736,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 17372,
+        "reasoning_output_tokens": 2086,
+        "total_tokens": 5016524,
+        "uncached_input_tokens": 242416
+      },
+      "ended_utc": "2026-10-20T01:02:19.573Z",
+      "first_observed_usage": {
+        "five_hour_used_percent": 0.0,
+        "weekly_used_percent": 31.0
+      },
+      "last_observed_usage": {
+        "five_hour_used_percent": 59.0,
+        "weekly_used_percent": 40.0
+      },
+      "observed_increase_percentage_points": {
+        "five_hour_used_percent": 59.0,
+        "weekly_used_percent": 9.0
+      }
+    },
+    {
+      "work": "Priority estimate documentation",
+      "started_utc": "2026-10-20T01:10:42.107Z",
+      "model": "gpt-6-astra",
+      "reasoning_effort": "medium",
+      "tokens": {
+        "input_tokens": 288116,
+        "cached_input_tokens": 283904,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 1794,
+        "reasoning_output_tokens": 103,
+        "total_tokens": 289910,
+        "uncached_input_tokens": 4212
+      },
+      "ended_utc": "2026-10-20T01:11:34.676Z",
+      "first_observed_usage": {
+        "five_hour_used_percent": 78.0,
+        "weekly_used_percent": 43.0
+      },
+      "last_observed_usage": {
+        "five_hour_used_percent": 81.0,
+        "weekly_used_percent": 44.0
+      },
+      "observed_increase_percentage_points": {
+        "five_hour_used_percent": 3.0,
+        "weekly_used_percent": 1.0
+      }
+    }
+  ]
+}

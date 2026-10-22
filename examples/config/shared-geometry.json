@@ -1,0 +1,155 @@
+{
+  "schema_version": 1,
+  "scene_id": "SharedCube",
+  "revision": "1",
+  "source": {
+    "adapter": "shared-example",
+    "version": "1",
+    "asset": "unit-cube",
+    "revision": "1",
+    "geometry_kind": "shared"
+  },
+  "materials": {
+    "wall": {
+      "relative_permittivity": 5.0,
+      "conductivity_s_m": 0.0,
+      "assumption": "Illustrative lossless dielectric, not calibrated concrete."
+    }
+  },
+  "objects": [
+    {
+      "id": "cube",
+      "material": "wall",
+      "vertices_local": [
+        [
+          -1,
+          -1,
+          -1
+        ],
+        [
+          1,
+          -1,
+          -1
+        ],
+        [
+          1,
+          1,
+          -1
+        ],
+        [
+          -1,
+          1,
+          -1
+        ],
+        [
+          -1,
+          -1,
+          1
+        ],
+        [
+          1,
+          -1,
+          1
+        ],
+        [
+          1,
+          1,
+          1
+        ],
+        [
+          -1,
+          1,
+          1
+        ]
+      ],
+      "faces": [
+        [
+          0,
+          2,
+          1
+        ],
+        [
+          0,
+          3,
+          2
+        ],
+        [
+          4,
+          5,
+          6
+        ],
+        [
+          4,
+          6,
+          7
+        ],
+        [
+          0,
+          1,
+          5
+        ],
+        [
+          0,
+          5,
+          4
+        ],
+        [
+          1,
+          2,
+          6
+        ],
+        [
+          1,
+          6,
+          5
+        ],
+        [
+          2,
+          3,
+          7
+        ],
+        [
+          2,
+          7,
+          6
+        ],
+        [
+          3,
+          0,
+          4
+        ],
+        [
+          3,
+          4,
+          7
+        ]
+      ],
+      "local_to_ned_m": [
+        [
+          1,
+          0,
+          0,
+          5
+        ],
+        [
+          0,
+          1,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          1,
+          -100
+        ],
+        [
+          0,
+          0,
+          0,
+          1
+        ]
+      ]
+    }
+  ]
+}

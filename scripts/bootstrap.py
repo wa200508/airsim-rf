@@ -1,4 +1,5 @@
 """Install pinned external source dependencies for the standalone RF project."""
+import argparse
 import json
 from pathlib import Path
 import shutil
@@ -29,6 +30,9 @@ def checkout_dependency(root, pin, name, sparse_paths=None):
 
 
 def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--geometry', action='store_true', help='Install the qualified OpenUSD pin for shared geometry')
+    args = parser.parse_args()
     root = Path(__file__).resolve().parents[1]
     source = json.loads((root/"sources.json").read_text())
     if sys.version_info[:2] != (3, 12):
@@ -42,10 +46,11 @@ def main():
     python = environment/("Scripts/python.exe" if sys.platform == "win32" else "bin/python")
     installer = ([shutil.which("uv"), "pip", "install", "--python", str(python)] if shutil.which("uv")
                  else [str(python), "-m", "pip", "install"])
-    run(installer + ["-r", root/"requirements-lock.txt", "-e", dep,
+    extra = ["-r", root/"requirements-geometry.txt"] if args.geometry else []
+    run(installer + ["-r", root/"requirements-lock.txt", *extra, "-e", dep,
                      "-e", airs/"client/python/projectairsim", "-e", root])
     print(f"Ready. Run {python} -m pytest {root/'tests'}")
-    print(f"RF example: {python} {root/'examples/distance2gol_radar.py'}")
+    print(f"RF example: {python} -m airsim_rf.cli example --geometry {'shared' if args.geometry else 'ground'} --output recordings/demo")
     print("A simulator must be built or downloaded separately for live AirSim captures.")
 
 

@@ -39,9 +39,12 @@ def analyze(directory):
         heading_changes[name]=float(abs(heading[-2]-heading[1]))
     ranges=np.linalg.norm(positions['rx0']-positions['tx0'],axis=1)
     expected_doppler=-np.gradient(ranges,time,edge_order=2)*p['carrier_hz']/C
-    if any(len(c['delay_s'])!=1 for c in channels):raise ValueError('Exactly one direct path required')
-    lengths=np.array([c['delay_s'][0]*C for c in channels])
-    doppler=np.array([c['doppler_hz'][0] for c in channels])
+    if any(not c['delay_s'] for c in channels):raise ValueError('A visible direct path required in every window')
+    # Select by independent pose-derived range rather than solver path order.
+    # Reflections are allowed, but a direct candidate must satisfy the same gate.
+    direct=[int(np.argmin(abs(np.asarray(c['delay_s'])*C-distance))) for c,distance in zip(channels,ranges)]
+    lengths=np.array([c['delay_s'][i]*C for c,i in zip(channels,direct)])
+    doppler=np.array([c['doppler_hz'][i] for c,i in zip(channels,direct)])
     centers={name:np.array([mount_position(r['kinematics'],[0,0,0]) for r in trajectory[index::2]])
              for index,name in enumerate(('tx0','rx0'))}
     center_ranges=np.linalg.norm(centers['rx0']-centers['tx0'],axis=1)

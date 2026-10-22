@@ -1,0 +1,171 @@
+{
+  "profile_version": 1,
+  "scene_id": "SharedWorld",
+  "revision": "1",
+  "geometry_kind": "shared",
+  "stage_up_axis": "Z",
+  "stage_meters_to_ned_m": [
+    [
+      1,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      -1,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      -1,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      1
+    ]
+  ],
+  "geodetic_anchor": {
+    "latitude_deg": 47.641468,
+    "longitude_deg": -122.140165,
+    "altitude_hae_m": 122.0
+  },
+  "materials": {
+    "dielectric": {
+      "relative_permittivity": 5.0,
+      "conductivity_s_m": 0.0,
+      "assumption": "Illustrative constant lossless dielectric; no physical calibration implied."
+    }
+  },
+  "objects": {
+    "Ground": {
+      "prim_path": "/World/Ground",
+      "material": "dielectric",
+      "simulator": {
+        "object_name": "RFSharedGround",
+        "asset_path": "Cube",
+        "local_to_actor_m": [
+          [
+            1,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            -1,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            -1,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            1
+          ]
+        ],
+        "asset_provenance": "Requires packaged Unreal Cube with centered 1 m edge and matching box collision. Prior Blocks primitive check is related evidence; this asset/profile combination is not qualified."
+      },
+      "identities": {
+        "dis_entity_id": null,
+        "oms_system_id": null,
+        "oms_subsystem_id": null,
+        "rf_aperture_ids": []
+      }
+    },
+    "Building": {
+      "prim_path": "/World/Building",
+      "material": "dielectric",
+      "simulator": {
+        "object_name": "RFSharedBuilding",
+        "asset_path": "Cube",
+        "local_to_actor_m": [
+          [
+            1,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            -1,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            -1,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            1
+          ]
+        ],
+        "asset_provenance": "Requires packaged Unreal Cube with centered 1 m edge and matching box collision. Prior Blocks primitive check is related evidence; this asset/profile combination is not qualified."
+      },
+      "identities": {
+        "dis_entity_id": null,
+        "oms_system_id": null,
+        "oms_subsystem_id": null,
+        "rf_aperture_ids": []
+      }
+    },
+    "Wall": {
+      "prim_path": "/World/Wall",
+      "material": "dielectric",
+      "simulator": {
+        "object_name": "RFSharedWall",
+        "asset_path": "Cube",
+        "local_to_actor_m": [
+          [
+            1,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            -1,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            -1,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            1
+          ]
+        ],
+        "asset_provenance": "Requires packaged Unreal Cube with centered 1 m edge and matching box collision. Prior Blocks primitive check is related evidence; this asset/profile combination is not qualified."
+      },
+      "identities": {
+        "dis_entity_id": null,
+        "oms_system_id": null,
+        "oms_subsystem_id": null,
+        "rf_aperture_ids": []
+      }
+    }
+  },
+  "exclusions": {}
+}

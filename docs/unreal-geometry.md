@@ -1,5 +1,17 @@
 # Unreal geometry integration
 
+The [OpenUSD workflow](openusd-workflow.md) provides a common-source route for
+nonprimitive geometry: import explicit USD triangles once, spawn generated GLB
+meshes in Blocks, and export matching PLY/XML for RF. The
+[20 October qualification](../results/reviews/priority1-20261020/REPORT.md)
+passes independent collision/RF rays and combined moving turns, obstruction,
+first-order reflections and recorded I/Q. Static revision/reload boundaries are
+qualified; continuous moving-obstacle synchronization remains unsupported.
+
+The qualification script below was refactored to use common geometry on
+18 October 2026 and has not been rerun. Its historical report applies to the
+earlier implementation; repeat qualification before relying on the new path.
+
 The normal Runtime starter is sufficient for API/physics integration, but it
 cannot establish that an Unreal world matches the RF mesh. A real headless
 Blocks package now passes a [controlled cube alignment check](../results/reviews/unreal-geometry-20261016/REPORT.md).
@@ -56,8 +68,12 @@ Keep these requirements with the scene assets, rather than relying on a screensh
   dielectric permittivity, conductivity or measured roughness.
 - Measured control points and ray intersections on multiple nonparallel surfaces,
   plus an obstruction transition checked independently in both representations.
-- A documented policy for moving objects: update the RF geometry at each channel
-  snapshot and invalidate cached meshes when geometry changes.
+- An explicit change policy. The qualified workflow freezes environment actors
+  for a recording and rejects observed pose/scale changes before I/Q generation.
+  At a recording boundary, export a new bundle, respawn/rebind matching actors,
+  and create a fresh RF scene and receiver. Continuous moving obstacles would
+  additionally require per-snapshot geometry updates and cache invalidation;
+  that capability is not implemented.
 
 The present server APIs expose object poses/scales and asset spawning. The inspected
 world API does not provide a general triangle-export endpoint. An editor/offline

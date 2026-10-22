@@ -14,3 +14,10 @@ research
 !src/airsim_rf/research
 !src/airsim_rf/research/**
 results/profiling
+recordings
+build
+dist
+*.whl
+*.npy
+*.sigmf-data
+results/reviews/**/channels.json
