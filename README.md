@@ -103,6 +103,12 @@ download is required. First startup can take several minutes to pull images
 and compile GPU kernels. A failed check prints an error and log location
 instead of presenting a ready mission.
 
+The dashboard web server runs directly in your **host Python process** and
+listens on **127.0.0.1:8765**. Open it in a browser on that same host; no Docker
+IP address, container shell or dashboard port mapping is needed. The private
+Docker network connects only the simulator, RF service and processing skill.
+Use `--port 8766` if the default dashboard port is occupied.
+
 Open **http://localhost:8765** if the browser does not open automatically,
 then click **Launch mission**. Pause/Resume controls the simulation; Stop shuts
 down the task-owned containers. Use **Prepare services** to initialize a new

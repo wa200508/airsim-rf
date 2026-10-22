@@ -56,6 +56,16 @@ up its task-owned containers. Logs and metadata are in `recordings/dashboard`.
 Use `--run-dir` for another output directory, `--duration 12` for a short flight,
 or `--ready-timeout 600` for slower first-use compilation.
 
+The dashboard HTTP server runs in the **host Python process**, bound directly
+to `127.0.0.1:8765`. A browser on the Docker host can open
+**http://localhost:8765** without entering a container or finding a Docker IP.
+The UI is served outside the Docker network for both rootful and rootless
+Docker. To choose another host port, run
+`bash scripts/run_dashboard.sh --open --port 8766` and open
+`http://localhost:8766`. The loopback binding is for browsers on the same
+machine; when running on a remote machine, forward its dashboard port over SSH
+(`ssh -N -L 8765:127.0.0.1:8765 user@simulation-host`) and open localhost locally.
+
 All service ports are published to loopback. All three containers use a private
 Docker bridge with internal service DNS names; they do not depend on the
 host network namespace. The camera uses bundled
