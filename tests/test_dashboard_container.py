@@ -17,7 +17,7 @@ def instance(tmp_path):
 
 def test_preparation_uses_packaged_rf_image_without_checkout_mount(tmp_path,monkeypatch):
     obj=instance(tmp_path);calls=[]
-    monkeypatch.setattr(obj,'command',lambda command:calls.append(command))
+    monkeypatch.setattr(obj,'command',lambda command,**kw:calls.append(command))
     obj.prepare()
     assert '--entrypoint' in calls[0]
     assert 'registry:gpu' in calls[0]
@@ -26,18 +26,20 @@ def test_preparation_uses_packaged_rf_image_without_checkout_mount(tmp_path,monk
 
 def test_image_pull_inspection_pins_matching_revisions(tmp_path,monkeypatch):
     obj=instance(tmp_path);calls=[]
-    monkeypatch.setattr(dashboard.subprocess,'run',lambda command,**kw:calls.append(command))
-    monkeypatch.setattr(obj,'command',lambda command:SimpleNamespace(stdout=json.dumps([
-        {'Id':'sha256:'+command[-1].split(':')[-1],'Config':{'Labels':{'org.opencontainers.image.revision':'abc'}}}])))
+    def command(arguments,**kw):
+        calls.append(arguments)
+        return SimpleNamespace(stdout=json.dumps([
+            {'Id':'sha256:'+arguments[-1].split(':')[-1],'Config':{'Labels':{'org.opencontainers.image.revision':'abc'}}}]))
+    monkeypatch.setattr(obj,'command',command)
     obj.pull_images()
-    assert len(calls)==3 and all(command[:2]==['docker','pull'] for command in calls)
+    assert len([c for c in calls if c[:2]==['docker','pull']])==3
     assert obj.args.rf_image=='sha256:gpu'
 
 
 def test_mismatched_images_fail_before_ready(tmp_path,monkeypatch):
     obj=instance(tmp_path)
     monkeypatch.setattr(dashboard.subprocess,'run',lambda *a,**kw:None)
-    monkeypatch.setattr(obj,'command',lambda command:SimpleNamespace(stdout=json.dumps([
+    monkeypatch.setattr(obj,'command',lambda command,**kw:SimpleNamespace(stdout=json.dumps([
         {'Id':'sha256:id','Config':{'Labels':{'org.opencontainers.image.revision':command[-1]}}}])))
     with pytest.raises(RuntimeError,match='revisions differ'):obj.pull_images()
     assert not obj.ready
@@ -121,7 +123,13 @@ def test_rootless_services_share_bridge_and_start_before_readiness_waits(tmp_pat
     monkeypatch.setattr(obj,'read',lambda name:{'status':'ready'})
     class Response(io.BytesIO):status=200
     monkeypatch.setattr(dashboard,'urlopen',lambda *a,**kw:Response(b'{"complete_windows":1}'))
-    obj.bootstrap()
+    import socket
+    # Preparing another mission must not reject the HTTP listener already
+    # owned by this dashboard process.
+    with socket.socket() as listener:
+        listener.bind(('127.0.0.1',0));listener.listen()
+        obj.args.port=listener.getsockname()[1]
+        obj.bootstrap()
     assert obj.ready and obj.network_created
     for part,command in commands.items():
         assert command[command.index('--network')+1]==obj.network

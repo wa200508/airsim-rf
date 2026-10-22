@@ -1,6 +1,7 @@
 """Shared terrain and a 250 m left-hand orbit for the localhost use case."""
 import json
 from pathlib import Path
+import tempfile
 import numpy as np
 from scipy.signal import firwin, upfirdn
 FS=2_000_000
@@ -53,7 +54,19 @@ def prepare(output,runtime_source):
         'materials':{name:{'relative_permittivity':value,'conductivity_s_m':.01,'assumption':'Illustrative uncalibrated dielectric'} for name,value in [('earth',5.),('rock',6.)]},'objects':objects}
     bindings={'version':1,'geodetic_anchor':{'latitude':47.641468,'longitude':-122.140165,'altitude_m':122.},
         'objects':{obj['id']:{'simulator':{'object_name':obj['id'],'asset_path':'generated:glb','local_to_actor_m':np.eye(4).tolist(),'asset_provenance':'Same triangles in Unreal and RF'}} for obj in objects}}
-    export_sionna_geometry(geometry,output/'bundle',provenance={'scope':'dashboard shared terrain'},bindings=bindings)
+    # The exporter deliberately requires a fresh directory. Build there first,
+    # then replace only our generated bundle; keep logs and recorded I/Q intact.
+    with tempfile.TemporaryDirectory(prefix='.prepare-',dir=output) as temporary:
+        staging=Path(temporary);target=output/'bundle';previous=staging/'previous'
+        export_sionna_geometry(geometry,staging/'bundle',provenance={'scope':'dashboard shared terrain'},bindings=bindings)
+        if target.is_symlink() or (target.exists() and not target.is_dir()):
+            raise ValueError('Dashboard bundle path must be a directory; choose a fresh --run-dir')
+        replaced=target.exists()
+        if replaced:target.rename(previous)
+        try:(staging/'bundle').rename(target)
+        except BaseException:
+            if replaced:previous.rename(target)
+            raise
     atomic_json(output/'placement.json',placement_plan(geometry,bindings))
     offsets=(np.arange(4)-1.5)*299792458./CARRIER/2
     arrays={'schema_version':1,'sample_rate_hz':FS,'carrier_hz':CARRIER,'sites':[{'id':f'site{i}','channels':[f'site{i}_e{j}' for j in range(4)],'center_rf_m':[0.,float(y),float(terrain.elevation_at(0,y)+8)],'yaw_rad':0.,'element_offsets_m':offsets.tolist(),'calibration_complex':[[1.,0.]]*4} for i,y in enumerate((-25,25))],

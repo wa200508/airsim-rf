@@ -1,0 +1,14 @@
+{
+  "status": "passed",
+  "checks": {
+    "repeated_preparation_same_directory": true,
+    "active_probe_cancelled_and_reaped": true,
+    "all_three_service_containers_removed": true,
+    "owned_network_removed": true,
+    "reopen_and_prepare_same_directory": true,
+    "label_scoped_stale_resource_recovery": true,
+    "recorded_data_preserved": true
+  },
+  "rootless": false,
+  "scope": "Actual Docker lifecycle and scene export; CPU service stand-ins, no CUDA or full RF mission"
+}

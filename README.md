@@ -115,6 +115,13 @@ down the task-owned containers. Use **Prepare services** to initialize a new
 mission after stopping. Closing the launcher also cleans up its containers.
 Logs and run products are stored in `recordings/dashboard` on the host.
 
+Quit the launcher with **Ctrl+C** to close the dashboard and remove its containers
+and private network. Cleanup also runs on termination, terminal hangup, and
+startup failure. Closing only the browser tab leaves the launcher running.
+You can relaunch using the same run directory: generated geometry is rebuilt
+safely, and recordings/logs are retained. **Stop** keeps the dashboard open so
+you can use **Prepare services** for another mission.
+
 For a short mission or slower first-use compilation:
 
 ```bash

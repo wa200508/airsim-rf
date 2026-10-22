@@ -4,6 +4,8 @@ import os
 from pathlib import Path
 import subprocess
 import sys
+import signal
+import time
 
 ROOT=Path(__file__).resolve().parents[1]
 
@@ -95,3 +97,34 @@ def test_checkout_uses_current_launcher_instead_of_image_embedded_copy(tmp_path)
     events=calls(env)
     assert events[-1][1]==str(ROOT/'scripts/launch_dashboard.py')
     assert not any(e[0]=='docker' for e in events)
+
+
+def test_standalone_interrupted_extraction_removes_source_container(tmp_path):
+    env,_=fixture_tools(tmp_path)
+    standalone=tmp_path/'downloaded/run_dashboard.sh';standalone.parent.mkdir()
+    standalone.write_text((ROOT/'scripts/run_dashboard.sh').read_text())
+    docker=tmp_path/'bin/docker'
+    docker.write_text(f'''#!{sys.executable}
+import json,os,sys,time
+with open(os.environ['CALLS'],'a') as stream: stream.write(json.dumps(['docker',*sys.argv[1:]])+'\\n')
+if sys.argv[1]=='cp':
+    with open(os.environ['CALLS']+'.pid','w') as stream: stream.write(str(os.getpid()))
+    time.sleep(60)
+''')
+    child=subprocess.Popen(['bash',str(standalone)],env=env,stdout=subprocess.PIPE,stderr=subprocess.PIPE,text=True)
+    marker=Path(env['CALLS']+'.pid')
+    try:
+        deadline=time.monotonic()+5
+        while not marker.exists() and child.poll() is None and time.monotonic()<deadline:time.sleep(.02)
+        assert marker.exists()
+        child.send_signal(signal.SIGTERM)
+        child.communicate(timeout=5)
+        assert child.returncode==143
+        events=calls(env)
+        create=next(e for e in events if e[:2]==['docker','create'])
+        name=create[create.index('--name')+1]
+        assert ['docker','rm','-f',name] in events
+        import pytest
+        with pytest.raises(ProcessLookupError):os.kill(int(marker.read_text()),0)
+    finally:
+        if child.poll() is None:child.kill();child.communicate()

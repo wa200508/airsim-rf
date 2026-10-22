@@ -2,7 +2,8 @@
 import argparse
 from collections import deque
 from http.server import BaseHTTPRequestHandler,ThreadingHTTPServer
-from importlib.resources import files
+import fcntl
+from hashlib import sha256
 import json
 import os
 from pathlib import Path
@@ -10,6 +11,7 @@ import secrets
 import signal
 import socket
 import subprocess
+import sys
 import threading
 import time
 from urllib.error import URLError
@@ -20,6 +22,10 @@ urlopen=build_opener(ProxyHandler({})).open
 import webbrowser
 
 
+class DashboardShutdown(SystemExit):
+    """Unwind startup or the HTTP loop through the same cleanup path."""
+
+
 class Dashboard:
     def __init__(self,args):
         self.args=args;self.root=args.repo.resolve();self.run=args.run_dir.resolve();self.run.mkdir(parents=True,exist_ok=True)
@@ -28,15 +34,53 @@ class Dashboard:
         self.log('Preparing separate simulator, GPU RF and MUSIC skill containers.')
         self.rootless=False;self.gpu_options=[];self.network_created=False
         self.network='airsim-rf-dashboard-'+str(args.port)+'-'+secrets.token_hex(4)
+        self.session=secrets.token_hex(8)
+        self.run_key=sha256(str(self.run).encode()).hexdigest()
+        self.names={part:name+'-'+self.session for part,name in self.names.items()}
+        self.owned_names=set();self.shutdown_event=threading.Event()
+        self.operation_lock=threading.RLock();self.run_lock=None;self.owns_run=False
+
+    def acquire_run(self):
+        self.run_lock=(self.run/'.dashboard.lock').open('a')
+        try:fcntl.flock(self.run_lock,fcntl.LOCK_EX|fcntl.LOCK_NB)
+        except BlockingIOError:
+            self.run_lock.close();self.run_lock=None
+            raise RuntimeError('Another dashboard launcher owns this run directory. '
+                f'Open http://localhost:{self.args.port} or stop that launcher first.') from None
+        self.owns_run=True
+
+    def labels(self):
+        return ['--label','org.airsim-rf.dashboard.session='+self.session,
+                '--label','org.airsim-rf.dashboard.run='+self.run_key]
+
+    def ensure_running(self):
+        if self.shutdown_event.is_set():raise RuntimeError('Dashboard is shutting down')
 
     def log(self,message):self.events.append({'time':time.strftime('%H:%M:%S'),'message':str(message)})
-    def command(self,args,check=True):
-        result=subprocess.run(args,cwd=self.root,capture_output=True,text=True,timeout=self.args.ready_timeout)
-        if check and result.returncode:raise RuntimeError((result.stderr or result.stdout)[-2500:])
+    def command(self,args,check=True,live=False):
+        self.ensure_running()
+        deadline=time.monotonic()+self.args.ready_timeout
+        with subprocess.Popen(args,cwd=self.root,stdout=None if live else subprocess.PIPE,
+                              stderr=None if live else subprocess.PIPE,text=True) as process:
+            try:
+                while True:
+                    self.ensure_running()
+                    try:stdout,stderr=process.communicate(timeout=.2);break
+                    except subprocess.TimeoutExpired:
+                        if time.monotonic()>deadline:raise TimeoutError('Timed out: '+' '.join(args[:3]))
+            except BaseException:
+                process.kill();process.communicate();raise
+        result=subprocess.CompletedProcess(args,process.returncode,stdout or '',stderr or '')
+        if check and result.returncode:raise RuntimeError((result.stderr or result.stdout)[-2500:] or 'Command failed: '+' '.join(args[:3]))
         return result
+    def one_shot(self,args,check=True):
+        name='airsim-rf-dashboard-probe-'+self.session+'-'+secrets.token_hex(3)
+        self.owned_names.add(name)
+        return self.command(['docker','run','--rm','--name',name,*self.labels(),*args],check=check)
     def launch(self,part,args):
-        log=(self.run/f'{part}.log').open('a')
-        process=subprocess.Popen(args,cwd=self.root,stdout=log,stderr=subprocess.STDOUT,start_new_session=True)
+        self.ensure_running();self.owned_names.add(self.names[part])
+        with (self.run/f'{part}.log').open('a') as log:
+            process=subprocess.Popen(args,cwd=self.root,stdout=log,stderr=subprocess.STDOUT,start_new_session=True)
         self.processes[part]=process;return process
     def read(self,name):
         try:return json.loads((self.run/name).read_text())
@@ -46,6 +90,7 @@ class Dashboard:
     def wait_port(self,port,timeout=60,part=None):
         deadline=time.monotonic()+timeout
         while time.monotonic()<deadline:
+            self.ensure_running()
             if part and self.processes[part].poll() is not None:
                 raise RuntimeError(f'{part} exited before readiness; see {self.run}/{part}.log')
             try:
@@ -64,7 +109,7 @@ class Dashboard:
         return f'{os.getuid()}:{os.getgid()}' if os.getuid() else '10001:10001'
     def prepare(self):
         script='from airsim_rf.dashboard_scenario import prepare; prepare("/run", "/opt/airsim-rf/.deps/ProjectAirSim")'
-        self.command(['docker','run','--rm','--network','none','--user',self.uid(),'-e','HOME=/tmp',
+        self.one_shot(['--network','none','--user',self.uid(),'-e','HOME=/tmp',
             '-v',f'{self.run}:/run','--entrypoint','python',self.args.rf_image,'-c',script])
     def check_workspace(self):
         marker=self.run/'.dashboard-access-check'
@@ -75,7 +120,7 @@ class Dashboard:
             raise RuntimeError('The run directory is not writable by your login user; choose a fresh --run-dir. '+str(error)) from error
         script='from pathlib import Path; p=Path("/run/.dashboard-access-check"); assert p.read_text()=="host-wrote"; p.write_text("container-wrote")'
         try:
-            result=self.command(['docker','run','--rm','--network','none','--user',self.uid(),
+            result=self.one_shot(['--network','none','--user',self.uid(),
                 '-v',f'{self.run}:/run','--entrypoint','python',self.args.rf_image,'-c',script],check=False)
             if result.returncode or marker.read_text()!='container-wrote':
                 raise RuntimeError('Container cannot read/write the host run directory. '
@@ -91,7 +136,7 @@ class Dashboard:
         failures=[]
         script='import cupy as cp; assert cp.cuda.runtime.getDeviceCount()>0; assert int(cp.arange(16).sum().get())==120; print("CUDA device and kernel passed")'
         for candidate in candidates:
-            result=self.command(['docker','run','--rm','--network','none','--user',self.uid(),*options[candidate],
+            result=self.one_shot(['--network','none','--user',self.uid(),*options[candidate],
                 '-e','HOME=/tmp','--entrypoint','python',self.args.rf_image,
                 '-m','airsim_rf.cuda_launch','-c',script],check=False)
             if result.returncode==0:
@@ -104,7 +149,7 @@ class Dashboard:
         for name in ('sim_image','skill_image','rf_image'):
             image=self.image_tags[name]
             self.log('Pulling '+image)
-            subprocess.run(['docker','pull',image],check=True,cwd=self.root)
+            self.command(['docker','pull',image],live=True)
             metadata=json.loads(self.command(['docker','image','inspect',image]).stdout)[0]
             revision=metadata.get('Config',{}).get('Labels',{}).get('org.opencontainers.image.revision')
             revisions.append(revision)
@@ -113,22 +158,33 @@ class Dashboard:
         if len(set(revisions))!=1 or revisions[0] in (None,'unknown',''):
             raise RuntimeError('Dashboard image revisions differ or are unversioned; retry after publication completes')
         self.log('Verified all three images at revision '+revisions[0])
+    def cleanup_stale(self):
+        # The run-directory flock establishes that no live launcher owns these
+        # resources. Labels restrict recovery to this exact run directory.
+        selector='label=org.airsim-rf.dashboard.run='+self.run_key
+        ids=self.command(['docker','ps','-aq','--filter',selector]).stdout.split()
+        if ids:self.command(['docker','rm','-f',*ids]);self.log('Removed containers from an interrupted launch')
+        ids=self.command(['docker','network','ls','-q','--filter',selector]).stdout.split()
+        if ids:self.command(['docker','network','rm',*ids]);self.log('Removed networks from an interrupted launch')
     def bootstrap(self):
         self.ready=False;self.mission_started=False;self.last_skill={}
         self.configure_docker()
+        if self.owns_run:self.cleanup_stale()
         self.pull_images()
         self.check_workspace()
         self.check_gpu()
-        for port in (self.args.port,8989,8990,self.args.iq_port,self.args.skill_port,self.args.control_port):
+        # The host HTTP server already owns args.port, including when the UI's
+        # Prepare services button starts a second mission.
+        for port in (8989,8990,self.args.iq_port,self.args.skill_port,self.args.control_port):
             with socket.socket() as test:
                 if test.connect_ex(('127.0.0.1',port))==0:raise RuntimeError(f'Port {port} already in use')
         for name in ('producer.json','camera.jpg'):
             path=self.run/name
             if path.exists():path.replace(self.run/(name+'.previous'))
         self.prepare();self.write_command(start=False,paused=False,stop=False)
-        self.command(['docker','network','create','--label','org.airsim-rf.dashboard=1',self.network])
         self.network_created=True
-        sim=['docker','run','--rm','--init','--name',self.names['sim'],'--network',self.network,'--network-alias','projectairsim',
+        self.command(['docker','network','create',*self.labels(),self.network])
+        sim=['docker','run','--rm','--init','--name',self.names['sim'],*self.labels(),'--network',self.network,'--network-alias','projectairsim',
              '--user',('10001:10001' if self.rootless else self.uid()),'--shm-size','1g',
              '-p','127.0.0.1:8989:8989','-p','127.0.0.1:8990:8990',self.args.sim_image]
         if self.args.no_render:
@@ -136,11 +192,11 @@ class Dashboard:
             sim+=['Blocks','-nullrhi','-nosound','-unattended']
         # Start the independent containers without serial readiness waits.
         self.launch('sim',sim)
-        self.launch('skill',['docker','run','--rm','--init','--name',self.names['skill'],'--network',self.network,'--network-alias','rf-skill','--user',self.uid(),
+        self.launch('skill',['docker','run','--rm','--init','--name',self.names['skill'],*self.labels(),'--network',self.network,'--network-alias','rf-skill','--user',self.uid(),
              '-p',f'127.0.0.1:{self.args.iq_port}:8811','-p',f'127.0.0.1:{self.args.skill_port}:8812',
              '-p',f'127.0.0.1:{self.args.control_port}:8813',
              '-v',f'{self.run}/arrays.json:/config/arrays.json:ro',self.args.skill_image])
-        self.launch('rf',['docker','run','--rm','--init','--name',self.names['rf'],*self.gpu_options,'--network',self.network,
+        self.launch('rf',['docker','run','--rm','--init','--name',self.names['rf'],*self.labels(),*self.gpu_options,'--network',self.network,
             '--user',self.uid(),'--tmpfs','/.drjit:rw,mode=1777','-e','HOME=/tmp',
             '-v',f'{self.run}:/run','--workdir','/run','--entrypoint','/opt/airsim-rf/.venv/bin/python',self.args.rf_image,
             '-m','airsim_rf.cuda_launch','-m','airsim_rf.dashboard_producer','--run-dir','/run',
@@ -152,6 +208,7 @@ class Dashboard:
         self.wait_port(self.args.skill_port,self.args.ready_timeout,part='skill')
         deadline=time.monotonic()+self.args.ready_timeout
         while time.monotonic()<deadline:
+            self.ensure_running()
             for part,process in self.processes.items():
                 if process.poll() is not None:raise RuntimeError(f'{part} failed startup; see {self.run}/{part}.log')
             state=self.read('producer.json')
@@ -169,6 +226,21 @@ class Dashboard:
         self.write_command(start=True,paused=False,stop=False);self.mission_started=True
         self.log('Starting mission in the already prepared containers')
     def stop(self):
+        with self.operation_lock:self._stop()
+    def cleanup_command(self,args):
+        try:
+            result=subprocess.run(args,cwd=self.root,capture_output=True,text=True,timeout=8)
+            unexpected=[line for line in result.stderr.splitlines()
+                if 'no such container' not in line.lower() and 'not found' not in line.lower()
+                and 'already in progress' not in line.lower()]
+            if result.returncode and unexpected:
+                message='Cleanup needs attention: '+'\n'.join(unexpected)[-1500:]
+                self.log(message);print(message,file=sys.stderr,flush=True)
+            return result
+        except (OSError,subprocess.TimeoutExpired) as error:
+            message='Cleanup command failed: '+str(error)
+            self.log(message);print(message,file=sys.stderr,flush=True);return None
+    def _stop(self):
         self.ready=False;self.mission_started=False
         try:self.write_command(stop=True)
         except OSError as error:self.log('Could not write stop command: '+str(error))
@@ -176,19 +248,31 @@ class Dashboard:
         if process:
             try:process.wait(timeout=8)
             except subprocess.TimeoutExpired:pass
-        for part in ('rf','skill','sim'):
-            if part in self.processes:
-                self.command(['docker','stop','-t','5',self.names[part]],check=False)
-                try:self.processes[part].wait(timeout=5)
-                except subprocess.TimeoutExpired:self.processes[part].terminate()
+        services=[self.names[part] for part in self.processes]
+        if services:self.cleanup_command(['docker','stop','-t','5',*services])
+        owned=sorted(self.owned_names|set(services))
+        if owned:self.cleanup_command(['docker','rm','-f',*owned])
+        for process in self.processes.values():
+            try:process.wait(timeout=2)
+            except subprocess.TimeoutExpired:
+                process.terminate()
+                try:process.wait(timeout=2)
+                except subprocess.TimeoutExpired:process.kill();process.wait(timeout=2)
         if self.network_created:
-            for _ in range(20):
-                result=self.command(['docker','network','rm',self.network],check=False)
-                if result.returncode==0:
+            for _ in range(3):
+                result=self.cleanup_command(['docker','network','rm',self.network])
+                if result is not None and (result.returncode==0 or 'not found' in result.stderr):
                     self.network_created=False;break
                 time.sleep(.25)
             if self.network_created:self.log('Could not remove task network yet: '+self.network)
         self.log('Stopped task-owned processes')
+    def close(self):
+        self.shutdown_event.set()
+        try:
+            if self.owns_run:self.stop()
+        finally:
+            if self.run_lock:self.run_lock.close();self.run_lock=None
+            self.owns_run=False
     def action(self,name):
         with self.lock:
             if self.busy:raise ValueError('A process action is already running')
@@ -196,15 +280,17 @@ class Dashboard:
             if name=='start' and (not self.ready or self.mission_started):raise ValueError('Services must be ready before mission launch')
             self.busy=True;self.error=None
         def work():
-            try:
-                if name=='prepare':self.stop();self.processes={};self.bootstrap()
-                elif name=='start':self.start()
-                elif name=='stop':self.stop()
-                else:self.write_command(start=True,paused=name=='pause',stop=False);self.log('Simulation '+('paused' if name=='pause' else 'resumed'))
-            except Exception as error:
-                self.error=str(error);self.log(error)
-                if name in ('start','prepare') and self.processes:self.stop()
-            finally:self.busy=False
+            with self.operation_lock:
+                try:
+                    self.ensure_running()
+                    if name=='prepare':self.stop();self.processes={};self.bootstrap()
+                    elif name=='start':self.start()
+                    elif name=='stop':self.stop()
+                    else:self.write_command(start=True,paused=name=='pause',stop=False);self.log('Simulation '+('paused' if name=='pause' else 'resumed'))
+                except Exception as error:
+                    self.error=str(error);self.log(error)
+                    if name in ('start','prepare'):self.stop()
+                finally:self.busy=False
         threading.Thread(target=work,daemon=True).start()
     def snapshot(self):
         skill={}
@@ -243,9 +329,6 @@ def main():
     ports=(args.port,args.iq_port,args.skill_port,args.control_port,8989,8990)
     if len(set(ports))!=len(ports):parser.error('dashboard, I/Q, skill HTTP, control and simulator ports must be distinct')
     dashboard=Dashboard(args)
-    try:dashboard.bootstrap()
-    except BaseException:
-        dashboard.stop();raise
     assets=Path(__file__).with_name('dashboard_static')
     class Handler(BaseHTTPRequestHandler):
         def do_GET(self):
@@ -270,15 +353,31 @@ def main():
             try:dashboard.action(self.path.removeprefix('/api/'));self.send_response(202);self.end_headers()
             except ValueError as error:self.send_error(409,str(error))
         def log_message(self,*args):pass
-    try:server=ThreadingHTTPServer(('127.0.0.1',args.port),Handler)
-    except BaseException:
-        dashboard.stop();raise
-    print(f'RF mission dashboard: http://localhost:{args.port}',flush=True)
-    if args.open:webbrowser.open(f'http://localhost:{args.port}')
-    def shutdown(*_):threading.Thread(target=server.shutdown,daemon=True).start()
-    signal.signal(signal.SIGTERM,shutdown);signal.signal(signal.SIGINT,shutdown)
-    try:server.serve_forever()
-    finally:dashboard.stop();server.server_close()
+    server=None;previous_handlers={}
+    def shutdown(*_):raise DashboardShutdown()
+    try:
+        # Install before image pulls, one-shot preparation and container launch,
+        # not only after bootstrap. Terminal close also sends SIGHUP.
+        for name in ('SIGINT','SIGTERM','SIGHUP'):
+            number=getattr(signal,name,None)
+            if number is not None:previous_handlers[number]=signal.signal(number,shutdown)
+        dashboard.acquire_run()
+        try:server=ThreadingHTTPServer(('127.0.0.1',args.port),Handler)
+        except OSError as error:
+            raise RuntimeError(f'Cannot open dashboard at http://localhost:{args.port}; '
+                'stop the existing launcher or select another --port. '+str(error)) from error
+        dashboard.bootstrap()
+        print(f'RF mission dashboard: http://localhost:{args.port}',flush=True)
+        if args.open:webbrowser.open(f'http://localhost:{args.port}')
+        server.serve_forever()
+    except DashboardShutdown:
+        print('Stopping dashboard and cleaning up its containers and network...',flush=True)
+    finally:
+        for number in previous_handlers:signal.signal(number,signal.SIG_IGN)
+        try:dashboard.close()
+        finally:
+            if server:server.server_close()
+            for number,handler in previous_handlers.items():signal.signal(number,handler)
 
 
 if __name__=='__main__':main()

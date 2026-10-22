@@ -143,3 +143,36 @@ def test_prepared_scene_reuses_demo_terrain_and_explicit_camera_gimbal(tmp_path)
     robot=json.loads((tmp_path/'sim_config/orbit.jsonc').read_text())
     assert not any(robot['sensors'][0]['gimbal'].values())
     assert ALTITUDE>expected.heights_m.max()
+
+
+def test_preparation_reuses_run_directory_and_recovers_partial_bundle(tmp_path):
+    pytest.importorskip('commentjson')
+    from airsim_rf.dashboard_scenario import prepare
+    from airsim_rf.geometry import read_bundle
+    source=Path('.deps/ProjectAirSim-runtime')
+    prepare(tmp_path,source)
+    _,first,_=read_bundle(tmp_path/'bundle')
+    recording=tmp_path/'recorded.iq';recording.write_bytes(b'keep recorded data')
+    prepare(tmp_path,source)
+    _,second,_=read_bundle(tmp_path/'bundle')
+    assert first['scene_sha256']==second['scene_sha256']
+    # Simulate an interrupted old export, with its completion marker missing.
+    (tmp_path/'bundle/manifest.json').unlink()
+    prepare(tmp_path,source)
+    _,third,_=read_bundle(tmp_path/'bundle')
+    assert third['scene_sha256']==first['scene_sha256']
+    assert recording.read_bytes()==b'keep recorded data'
+    assert not list(tmp_path.glob('.prepare-*'))
+
+
+def test_failed_geometry_export_preserves_previous_bundle(tmp_path,monkeypatch):
+    pytest.importorskip('commentjson')
+    from airsim_rf.dashboard_scenario import prepare
+    from airsim_rf import geometry
+    prepare(tmp_path,Path('.deps/ProjectAirSim-runtime'))
+    previous=(tmp_path/'bundle/manifest.json').read_bytes()
+    def fail(*args,**kwargs):raise OSError('Simulated interrupted export')
+    monkeypatch.setattr(geometry,'export_sionna_geometry',fail)
+    with pytest.raises(OSError,match='interrupted export'):
+        prepare(tmp_path,Path('.deps/ProjectAirSim-runtime'))
+    assert (tmp_path/'bundle/manifest.json').read_bytes()==previous

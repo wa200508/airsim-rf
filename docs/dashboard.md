@@ -70,6 +70,33 @@ up its task-owned containers. Logs and metadata are in `recordings/dashboard`.
 Use `--run-dir` for another output directory, `--duration 12` for a short flight,
 or `--ready-timeout 600` for slower first-use compilation.
 
+Quit the host launcher with **Ctrl+C**. SIGTERM and terminal SIGHUP use the same
+cleanup path, including during image pulls, preparation and service startup.
+Cleanup stops/removes the three service containers and any active temporary
+probe/preparation containers, reaps Docker client processes, removes the private
+network and releases the host HTTP socket and run-directory lock. Cleanup errors
+are printed, and later cleanup steps still run if one Docker command fails.
+The standalone script also removes its extraction container if interrupted.
+Closing a browser tab alone leaves the launcher running; **Stop** intentionally
+keeps the web dashboard open for **Prepare services**.
+
+The same `--run-dir` can be reused. Preparation builds a new geometry bundle in
+a staging directory and replaces the previous generated bundle only after export
+finishes; a partial previous bundle is replaced too. It retains recordings and
+logs rather than deleting the run directory. Do not delete `/run/bundle` inside a
+container to make normal restarts work. A filesystem lock prevents simultaneous
+launchers from changing the same directory. After an untrappable SIGKILL or a
+host crash, a later launcher holding that lock removes leftover containers and
+networks carrying its run-directory label. It does not prune unrelated Docker
+resources; resources from older, unlabeled launcher versions are outside that
+automatic recovery mechanism.
+
+`python3 scripts/qualify_dashboard_lifecycle.py --image ghcr.io/wa200508/airsim-rf:dashboard-gpu`
+checks repeated preparation, cancellation, cleanup, reopening and stale-resource
+recovery against real Docker. It uses CPU stand-ins for the services and does
+not require or qualify CUDA. CI runs this check with its freshly built CPU image.
+See the [recorded lifecycle results](../results/reviews/dashboard-lifecycle-20261022/REPORT.md).
+
 The dashboard HTTP server runs in the **host Python process**, bound directly
 to `127.0.0.1:8765`. A browser on the Docker host can open
 **http://localhost:8765** without entering a container or finding a Docker IP.

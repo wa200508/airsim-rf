@@ -29,11 +29,34 @@ if [[ -f "$rf_dashboard_repo/src/airsim_rf/dashboard.py" && -f "$rf_dashboard_re
 fi
 rf_dashboard_cache="${XDG_CACHE_HOME:-$HOME/.cache}/airsim-rf-dashboard"
 mkdir -p "$rf_dashboard_cache"
-docker pull "$rf_dashboard_image"
-rf_dashboard_source=$(docker create --entrypoint python "$rf_dashboard_image" -c pass)
-trap 'docker rm -f "$rf_dashboard_source" >/dev/null' EXIT
-docker cp "$rf_dashboard_source:/opt/airsim-rf/src/airsim_rf/dashboard.py" "$rf_dashboard_cache/dashboard.py"
-docker cp "$rf_dashboard_source:/opt/airsim-rf/src/airsim_rf/dashboard_static" "$rf_dashboard_cache/"
-docker rm "$rf_dashboard_source" >/dev/null
-trap - EXIT
+# Keep the source container identifiable even if interrupted before `create`
+# returns. A background child plus wait lets Bash handle TERM/HUP immediately.
+rf_dashboard_source="airsim-rf-dashboard-source-${UID}-$$-${RANDOM}"
+rf_dashboard_child=''
+rf_dashboard_cleanup() {
+  if [[ -n "$rf_dashboard_child" ]]; then
+    kill "$rf_dashboard_child" 2>/dev/null || true
+    wait "$rf_dashboard_child" 2>/dev/null || true
+    rf_dashboard_child=''
+  fi
+  docker rm -f "$rf_dashboard_source" >/dev/null 2>&1 || true
+}
+rf_dashboard_docker() {
+  docker "$@" &
+  rf_dashboard_child=$!
+  local rf_dashboard_status=0
+  wait "$rf_dashboard_child" || rf_dashboard_status=$?
+  rf_dashboard_child=''
+  return "$rf_dashboard_status"
+}
+trap rf_dashboard_cleanup EXIT
+trap 'exit 130' INT
+trap 'exit 143' TERM
+trap 'exit 129' HUP
+rf_dashboard_docker pull "$rf_dashboard_image"
+rf_dashboard_docker create --name "$rf_dashboard_source" --entrypoint python "$rf_dashboard_image" -c pass
+rf_dashboard_docker cp "$rf_dashboard_source:/opt/airsim-rf/src/airsim_rf/dashboard.py" "$rf_dashboard_cache/dashboard.py"
+rf_dashboard_docker cp "$rf_dashboard_source:/opt/airsim-rf/src/airsim_rf/dashboard_static" "$rf_dashboard_cache/"
+rf_dashboard_cleanup
+trap - EXIT INT TERM HUP
 exec "$rf_dashboard_python" "$rf_dashboard_cache/dashboard.py" --pascal-compat --rf-image "$rf_dashboard_image" "$@"

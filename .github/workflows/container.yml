@@ -37,6 +37,8 @@ jobs:
           cache-to: type=gha,mode=max
       - name: Run tests offline as the container user
         run: docker run --rm --network none airsim-rf:test
+      - name: Verify real Docker dashboard cleanup and repeat launch
+        run: python3 scripts/qualify_dashboard_lifecycle.py --image airsim-rf:test
       - name: Check installed wheel and bundled examples outside the checkout
         run: |
           docker run --rm --network none airsim-rf:test \
