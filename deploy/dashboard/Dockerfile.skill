@@ -1,0 +1,14 @@
+# Separate CPU consumer; neither an AirSim server nor a CUDA device is required.
+ARG BASE_IMAGE=airsim-rf:priority2-local
+FROM ${BASE_IMAGE}
+USER root
+COPY requirements-tracking-lock.txt /opt/skill/requirements-tracking-lock.txt
+RUN /opt/airsim-rf/.venv/bin/python -m pip install -r /opt/skill/requirements-tracking-lock.txt
+COPY src/airsim_rf /opt/skill/src/airsim_rf
+ENV PYTHONPATH=/opt/skill/src HOME=/tmp MPLCONFIGDIR=/tmp/matplotlib
+USER 10001:10001
+EXPOSE 8811 8812 8813
+HEALTHCHECK --interval=5s --timeout=3s CMD python -c "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8812/health',timeout=2)"
+ENTRYPOINT ["python", "-m", "airsim_rf.dashboard_skill"]
+CMD ["--arrays", "/config/arrays.json"]
+LABEL org.opencontainers.image.title="airsim-rf MUSIC RF Skill" org.opencontainers.image.description="SQUALL control protobuf; coherent framed TCP metadata extension; CPU MUSIC processing"

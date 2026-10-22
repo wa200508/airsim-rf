@@ -4,6 +4,18 @@ ProjectAirSim poses → Sionna propagation → complex I/Q → receiver filterin
 noise and ADC → timestamped SDR recordings. The project also provides radar
 models and an AMS-GRA radar worker; continuous SDR uses a separate capture API.
 
+The primary workflow is the [localhost RF mission dashboard](docs/dashboard.md):
+a large left-hand drone orbit in ProjectAirSim, shared-terrain multipath through
+Sionna, and received I/Q processed by a separate Docker MUSIC RF Skill. The
+Python launcher displays the actual simulator camera, RF spectra/MUSIC diagnostics
+and measured simulation-to-skill throughput.
+
+```bash
+python3 scripts/launch_dashboard.py --build --pascal-compat --open
+```
+
+See the guide for the qualified local base images and prerequisite assets.
+
 | Goal | Start here |
 | --- | --- |
 | Complete setup → matching geometry → recording → CPU processor | [Shared-scene quickstart](docs/quickstart.md) |
