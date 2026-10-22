@@ -38,3 +38,19 @@ def test_skill_rejects_channels_with_different_simulation_epochs(tmp_path):
     name='s1e3';blocks[name]=StreamIQBlock(name,np.ones(4096,dtype=np.complex64),0,120000000,FS,915e6,0)
     with pytest.raises(ValueError,match='epochs'):skill.process(blocks)
     assert skill.state['complete_windows']==0
+
+
+def test_visual_glb_has_stable_positions_and_an_orthogonal_tangent_frame():
+    import json,struct
+    from airsim_rf.glb_geometry import triangle_glb
+    data=triangle_glb([[0,0,0],[1,0,0],[0,1,0]],[[0,1,2]],
+                      base_color_rgba=[.3,.4,.2,1],emissive_rgb=[.07,.1,.04])
+    size=struct.unpack_from('<I',data,12)[0];doc=json.loads(data[20:20+size]);binary=20+size+8
+    def read(index,width):
+        view=doc['bufferViews'][doc['accessors'][index]['bufferView']]
+        return np.frombuffer(data,dtype='<f4',count=3*width,offset=binary+view['byteOffset']).reshape(3,width)
+    np.testing.assert_array_equal(read(0,3),[[0,0,0],[1,0,0],[0,0,1]])
+    normal=read(1,3);tangent=read(4,4)
+    np.testing.assert_allclose(np.linalg.norm(tangent[:,:3],axis=1),1)
+    np.testing.assert_allclose(np.sum(normal*tangent[:,:3],axis=1),0,atol=1e-7)
+    assert doc['materials'][0]['emissiveFactor']==[.07,.1,.04]

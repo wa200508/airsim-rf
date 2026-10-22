@@ -1,0 +1,46 @@
+# Optional equivalent deployment after the launcher has prepared RUN_DIR.
+services:
+  projectairsim:
+    image: airsim-rf:dashboard-render
+    user: "${LOCAL_UID:-1000}:${LOCAL_GID:-1000}"
+    volumes:
+      - ${BLOCKS_DIR:?Set the absolute extracted Blocks directory}:/blocks:ro
+    working_dir: /blocks
+    ports: ["127.0.0.1:8989:8989", "127.0.0.1:8990:8990"]
+    healthcheck:
+      test: [CMD, python, -c, "import socket; socket.create_connection(('127.0.0.1',8990),2).close()"]
+      interval: 2s
+      timeout: 3s
+      retries: 45
+  rf-skill:
+    image: airsim-rf:music-skill
+    user: "${LOCAL_UID:-1000}:${LOCAL_GID:-1000}"
+    volumes:
+      - ${RUN_DIR:?Set the absolute prepared run directory}/arrays.json:/config/arrays.json:ro
+    ports: ["127.0.0.1:8811:8811", "127.0.0.1:8812:8812", "127.0.0.1:8813:8813"]
+    read_only: true
+    tmpfs: [/tmp]
+  airsim-rf:
+    image: airsim-rf:p100-modern-gpu
+    user: "${LOCAL_UID:-1000}:${LOCAL_GID:-1000}"
+    network_mode: host
+    environment:
+      HOME: /tmp
+      PYTHONPATH: /work/repo/src:/work/repo/.deps/openusd-26.8
+    volumes:
+      - ${REPO_DIR:?Set the absolute checkout path}:/work/repo:ro
+      - ${RUN_DIR:?Set the absolute prepared run directory}:/run
+    tmpfs: ["/.drjit:mode=1777"]
+    working_dir: /tmp
+    entrypoint: [/opt/airsim-rf/.venv/bin/python, -m, airsim_rf.cuda_launch, -m, airsim_rf.dashboard_producer]
+    command: [--run-dir, /run, --duration, "${DURATION_SECONDS:-120}", --pascal-compat]
+    depends_on:
+      projectairsim: {condition: service_healthy}
+      rf-skill: {condition: service_healthy}
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              device_ids: ['0']
+              capabilities: [gpu]

@@ -20,7 +20,7 @@ class Dashboard:
     def __init__(self,args):
         self.args=args;self.root=args.repo.resolve();self.run=args.run_dir.resolve();self.run.mkdir(parents=True,exist_ok=True)
         self.token=secrets.token_urlsafe(24);self.lock=threading.Lock();self.events=deque(maxlen=40);self.busy=False;self.error=None
-        self.processes={};self.names={part:f'airsim-rf-dashboard-{part}-{args.port}' for part in ('sim','rf','skill')}
+        self.processes={};self.last_skill={};self.names={part:f'airsim-rf-dashboard-{part}-{args.port}' for part in ('sim','rf','skill')}
         self.log('Dashboard ready; prepare and start the three processes.')
 
     def log(self,message):self.events.append({'time':time.strftime('%H:%M:%S'),'message':str(message)})
@@ -53,7 +53,7 @@ class Dashboard:
             '-e','HOME=/tmp','-e','PYTHONPATH=/work/repo/src:/work/repo/.deps/openusd-26.8',
             '-v',f'{self.root}:/work/repo:ro','-v',f'{self.run}:/run','-w','/tmp',self.args.cpu_image,'python','-c',script])
     def start(self):
-        self.prepare()
+        self.prepare();self.last_skill={}
         for name in ('producer.json','camera.jpg'):
             path=self.run/name
             if path.exists():path.replace(self.run/(name+'.previous'))
@@ -116,7 +116,9 @@ class Dashboard:
         skill={}
         try:
             with urlopen(f'http://127.0.0.1:{self.args.skill_port}/status',timeout=.4) as response:skill=json.load(response)
-        except (OSError,ValueError,URLError):pass
+            self.last_skill=skill
+        except (OSError,ValueError,URLError):
+            if self.last_skill:skill={**self.last_skill,'status':'offline','payload_bytes_per_second':0.}
         producer=self.read('producer.json')
         processes={part:{'pid':p.pid,'state':'running' if p.poll() is None else 'exited','exit_code':p.poll(),'container':self.names[part]} for part,p in self.processes.items()}
         camera=self.run/'camera.jpg'

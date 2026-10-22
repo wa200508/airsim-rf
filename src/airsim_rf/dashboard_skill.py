@@ -23,7 +23,7 @@ class Skill:
     def __init__(self,arrays):
         self.arrays=read_arrays(arrays);self.lock=threading.Lock();self.started=time.monotonic()
         self.state={'status':'listening','payload_bytes':0,'complex_samples':0,'complete_windows':0,'payload_bytes_per_second':0.,'bearings':[],'history':[]}
-        self.mode=4;self.traffic=deque();self.history=deque(maxlen=120)
+        self.mode=4;self.traffic=deque();self.history=deque(maxlen=1000);self.waterfall=deque(maxlen=60)
 
     def snapshot(self):
         with self.lock:
@@ -57,13 +57,14 @@ class Skill:
         while len(self.traffic)>1 and self.traffic[0][0]<now-3:self.traffic.popleft()
         elapsed=now-self.traffic[0][0]
         rate=(self.state['payload_bytes']-self.traffic[0][1])/elapsed if elapsed>.01 else 0.
+        self.waterfall.append({'sim_time_ns':first.sim_time_ns,'psd_db':psd['density_db_v2_hz']})
         self.history.append({'sim_time_ns':first.sim_time_ns,'angles_deg':[b['angle_deg'] if b['detected'] else None for b in bearings],
             'detected':[b['detected'] for b in bearings],'payload_bytes':self.state['payload_bytes'],'sample_start':first.sample_start})
         with self.lock:
             self.state.update(status='processing',complete_windows=self.state['complete_windows']+1,
                 sim_time_ns=first.sim_time_ns,sample_start=first.sample_start,samples_per_channel=len(first.samples),
                 payload_bytes_per_second=rate,bearings=bearings,psd=psd,angle_grid_deg=grid.tolist(),music_db=curves,
-                eigenvalues_db=eigen,phase_rad=phase,history=list(self.history),updated_monotonic=now,
+                eigenvalues_db=eigen,phase_rad=phase,history=list(self.history),waterfall=list(self.waterfall),updated_monotonic=now,
                 processing_latency_ms=(now-start)*1000,source='received ADC complex volts; no emitter truth',
                 ambiguity='ULA cone angle; full-circle front/back and elevation ambiguities; multipath peaks are candidates')
 
@@ -74,7 +75,7 @@ class Skill:
             while True:
                 conn,_=server.accept();pending={};epoch=None
                 with conn:
-                    conn.settimeout(120)
+                    conn.settimeout(3600)
                     try:
                         for block in iter_stream(conn):
                             if block.receiver not in names or block.receiver in pending:raise ValueError('Unknown or duplicate array channel')

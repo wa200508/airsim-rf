@@ -46,20 +46,30 @@ async def run(args):
         except Exception as error:state['camera_error']=str(error)
     try:
         world=World(client,'scene.jsonc',sim_config_path=str((output/'sim_config').resolve()));world.pause()
-        binding=AirSimGeometryBinding(document,bindings);spawn_placements(world,binding.plan)
+        binding=AirSimGeometryBinding(document,bindings)
+        # Presentation-only glTF appearance; RF dielectric settings remain in
+        # the shared geometry document. A little emission keeps dynamically
+        # imported meshes visible in the packaged map's baked lighting.
+        for obj in binding.plan['objects']:
+            terrain=obj['id']=='Terrain'
+            obj['mesh']['base_color_rgba']=[.34,.48,.22,1.] if terrain else [.48,.32,.20,1.]
+            obj['mesh']['emissive_rgb']=[.07,.10,.045] if terrain else [.12,.075,.035]
+        spawn_placements(world,binding.plan)
         binding.require_static_match(world,int(world.get_sim_time()))
-        visual={}
-        for name in ('Terrain','RidgeScreen'):
-            try:visual[name]=world.set_object_material(name,'/Engine/BasicShapes/BasicShapeMaterial.BasicShapeMaterial')
-            except Exception as error:visual[name]=str(error)
-        state['visual_materials']=visual
         drone=Drone(client,world,'OrbitDrone')
         client.subscribe(drone.sensors['Chase']['scene_camera'],image_received)
         drone.enable_api_control();drone.arm()
-        motion=await drone.move_by_velocity_body_frame_z_async(v_forward=SPEED,v_right=0,z=-160.,duration=args.duration+5,yaw_is_rate=True,yaw=-SPEED/RADIUS)
+        settle=await drone.move_by_velocity_z_async(v_north=0,v_east=0,z=-160.,duration=2.1,yaw_is_rate=False,yaw=-np.pi/2)
         world.continue_until_sim_time(int(world.get_sim_time())+2_001_000_000,wait_until_complete=True)
         await asyncio.sleep(.1)
-        origin=int(world.get_sim_time());scene=rt.load_scene(str(output/'bundle/scene.xml'),merge_shapes=False)
+        origin=int(world.get_sim_time())
+        cycles=int(np.ceil(args.duration/(2*np.pi*RADIUS/SPEED)))+1
+        angles=np.linspace(0,cycles*2*np.pi,cycles*120+1)
+        path=[[float(RADIUS*np.cos(a)),float(-RADIUS*np.sin(a)),-160.] for a in angles]
+        motion=await drone.move_on_path_async(path=path,velocity=SPEED,timeout_sec=args.duration+10,
+            yaw_control_mode=1,yaw_is_rate=False,yaw=0,lookahead=12.,adaptive_lookahead=0.)
+        await asyncio.sleep(0)
+        scene=rt.load_scene(str(output/'bundle/scene.xml'),merge_shapes=False)
         scene.tx_array=rt.PlanarArray(num_rows=1,num_cols=1,pattern='iso',polarization='V');scene.rx_array=scene.tx_array
         scene.add(rt.Transmitter('tx0',position=[250,0,160]))
         for site in arrays['sites']:
@@ -77,6 +87,7 @@ async def run(args):
                 if not command.get('paused'):break
                 state['status']='paused';atomic_json(output/'producer.json',state);await asyncio.sleep(.2)
             if command.get('stop'):break
+            if motion.done():motion.result()
             epoch=int(world.get_sim_time());position,velocity,orientation=mount_kinematics(drone.get_ground_truth_kinematics())
             scene.transmitters['tx0'].position=position.tolist();scene.transmitters['tx0'].velocity=velocity.tolist();scene.transmitters['tx0'].orientation=orientation.tolist()
             samples,reference=waveform_window(epoch,count,origin)

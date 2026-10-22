@@ -63,11 +63,15 @@ def prepare(output,runtime_source):
         'scope':'Ideal coherent ULAs; full-circle azimuth/elevation ambiguities remain explicit'}
     atomic_json(output/'arrays.json',arrays)
     source=Path(runtime_source)/'client/python/example_user_scripts/sim_config/robot_quadrotor_fastphysics_sensors.jsonc'
-    robot=commentjson.loads(source.read_text());robot['sensors']=[s for s in robot['sensors'] if s['id']=='Chase']
-    camera=robot['sensors'][0];camera['capture-interval']=.12;camera['origin']={'xyz':'-35 0 -18','rpy-deg':'0 -25 0'}
+    if not source.exists():
+        source=Path('/opt/airsim-rf/.deps/ProjectAirSim/client/python/example_user_scripts/sim_config/robot_quadrotor_fastphysics_sensors.jsonc')
+    if not source.exists():raise ValueError('Pinned ProjectAirSim robot template is missing; rebuild the qualified CPU base image')
+    robot=commentjson.loads(source.read_text());robot['controller']['simple-flight-api-settings']['parameters']={'MPC_XY_VEL_MAX':30.}
+    robot['sensors']=[s for s in robot['sensors'] if s['id']=='Chase']
+    camera=robot['sensors'][0];camera['capture-interval']=.12;camera['origin']={'xyz':'-12 0 -5','rpy-deg':'0 -23 0'}
     camera['capture-settings'][0].update(width=960,height=540,compress=False)
     sim=output/'sim_config';sim.mkdir(exist_ok=True);atomic_json(sim/'orbit.jsonc',robot)
     atomic_json(sim/'scene.jsonc',{'id':'OrbitDashboard','scene-type':'UnrealNative','actors':[{'type':'robot','name':'OrbitDrone','origin':{'xyz':'250 0 -160','rpy-deg':'0 0 -90'},'robot-config':'orbit.jsonc'}],
         'clock':{'type':'steppable','step-ns':3_000_000,'real-time-update-rate':3_000_000,'pause-on-start':True},'home-geo-point':{'latitude':47.641468,'longitude':-122.140165,'altitude':122.}})
-    atomic_json(output/'scenario.json',{'radius_m':RADIUS,'speed_m_s':SPEED,'turn':'left','period_s':2*np.pi*RADIUS/SPEED,'terrain_width_m':1200,'advance_ns':ADVANCE_NS,'source':'ProjectAirSim Fast Physics actual pose readback','screen':'Shared ridge at north 150 m, 10 × 170 × 85 m','propagation':'direct visibility + retained first-order specular paths'})
+    atomic_json(output/'scenario.json',{'radius_m':RADIUS,'speed_m_s':SPEED,'turn':'left','period_s':2*np.pi*RADIUS/SPEED,'terrain_width_m':1200,'advance_ns':ADVANCE_NS,'source':'ProjectAirSim Fast Physics actual pose readback; native closed-loop carrot follower on a 250 m circle','screen':'Shared ridge at north 150 m, 10 × 170 × 85 m','propagation':'direct visibility + retained first-order specular paths'})
     return arrays

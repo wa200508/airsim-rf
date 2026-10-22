@@ -10,7 +10,7 @@ camera. Camera or sensing failure is displayed separately from stream delivery.
 ## Prepare and launch
 
 Use the qualified Linux/Docker/NVIDIA environment in [setup](setup.md), with the
-pinned ProjectAirSim source and Blocks asset already prepared. The CPU base image
+pinned ProjectAirSim client source (included in the CPU base image) and Blocks asset already prepared. The CPU base image
 is `airsim-rf:priority2-local`; the P100 producer image is
 `airsim-rf:p100-modern-gpu`. Their qualification and build commands are in setup.
 Then, from the checkout:
@@ -30,19 +30,26 @@ its processes. Do not run another stepping owner against this dedicated world.
 All HTTP/control ports are published to loopback. Defaults are dashboard 8765,
 AirSim 8989/8990, coherent I/Q 8811, skill HTTP 8812 and SQUALL control 8813.
 The RF deployment uses host networking to reach the local simulator and skill.
+The equivalent [three-service Compose file](../deploy/dashboard/compose.yaml)
+is supplied for integration after the launcher has generated the run directory.
+Do not start Compose and the launcher against the same ports simultaneously.
 
 Default duration is 120 simulated seconds, about two 62.8-second orbits. Use
 `--duration 12` for a bounded check. Runtime speed depends on rendering and RF
 processing; no real-time claim is made. Logs, actual poses, camera frames,
 geometry bundle and receiver metadata are stored in `recordings/dashboard`.
+Camera appearance uses presentation-only glTF color/emission; these values do
+not set RF dielectric properties. Explicit UVs and tangent frames keep imported
+meshes visible in the packaged renderer.
 Use `--run-dir` for separate runs. The first run exports and places the same
 terrain and ridge triangles in Unreal and RF.
 
 ## Scene and signal interpretation
 
-The drone starts at RF `(250,0,160)` metres over ground around z=100 m. A Fast
-Physics controller receives 25 m/s body-forward and −0.1 rad/s NED yaw-rate
-commands: a large left-hand circle. Actual simulator pose and velocity readback,
+The drone starts at RF `(250,0,160)` metres over ground around z=100 m. The native
+Fast Physics path follower follows a 250 m radius left-hand circle sampled at
+3° waypoint intervals, with a 25 m/s speed command, 12 m lookahead and heading
+aligned to flight direction. Actual simulator pose and velocity readback,
 rather than the ideal commanded circle, drive Sionna. The shared terrain spans
 1.2 km; a 10 × 170 × 85 m ridge at north 150 m shadows part of the orbit without
 intersecting the nominal flight path. The RF solver retains direct visibility

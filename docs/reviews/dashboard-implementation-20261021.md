@@ -35,3 +35,14 @@ update status docs, push final changes on main. Earlier auto-review rejected
 broad staging of historical results and a potential duplicate simulator launch.
 The safe alternatives are explicit reviewed source-file staging and restarting
 only owned probe containers, with one Unreal process per container.
+
+
+Live integration update: the real Unreal camera and 100-window acknowledged
+I/Q transfer passed, with 1.536 GB received by the CPU skill. A separate
+altitude-hold run explicitly showed 100 blocked/no-detection windows while all
+I/Q remained delivered. Native MoveOnPath now supplies the actual circular route;
+its ForwardOnly mode requires an absolute-yaw configuration. Visual GLB emission,
+UVs and tangent frames fix black imported terrain without changing RF vertices.
+The final 90-second circular-flight qualification is running. Pause held actual
+simulation epoch and payload counters across a two-second check while all three
+processes remained alive; Resume continued delivery. See local dashboard evidence.
