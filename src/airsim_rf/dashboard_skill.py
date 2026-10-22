@@ -33,12 +33,20 @@ class Skill:
                 frame=next((frame for frame in reversed(self.frames) if frame['sim_time_ns']==epoch_ns),None)
                 if frame is None:raise KeyError(epoch_ns)
                 result=dict(frame)
-                for key in ('history','waterfall'):
-                    result[key]=[row for row in self.state.get(key,[]) if row['sim_time_ns']<=epoch_ns]
-        result['uptime_s']=time.monotonic()-self.started
-        result['seconds_since_update']=time.monotonic()-result.pop('updated_monotonic',self.started)
-        if result['seconds_since_update']>3:result['payload_bytes_per_second']=0.
+        # Per-epoch snapshots stay immutable while the display waits for video.
+        # Only live service status has an aging rate/clock.
+        if epoch_ns is None:
+            result['uptime_s']=time.monotonic()-self.started
+            result['seconds_since_update']=time.monotonic()-result.pop('updated_monotonic',self.started)
+            if result['seconds_since_update']>3:result['payload_bytes_per_second']=0.
         return result
+
+    def epoch_status(self,epoch_ns):
+        with self.lock:
+            if self.state['status']=='failed':raise RuntimeError(self.state.get('error','RF skill failed'))
+            frame=next((frame for frame in reversed(self.frames) if frame['sim_time_ns']==epoch_ns),None)
+            if frame is None:raise KeyError(epoch_ns)
+            return {key:frame[key] for key in ('sim_time_ns','complete_windows')}
 
     def process(self,blocks):
         start=time.monotonic();names=[n for s in self.arrays['sites'] for n in s['channels']]
@@ -75,7 +83,7 @@ class Skill:
                 eigenvalues_db=eigen,phase_rad=phase,history=list(self.history),waterfall=list(self.waterfall),updated_monotonic=now,
                 processing_latency_ms=(now-start)*1000,source='received ADC complex volts; no emitter truth',
                 ambiguity='ULA cone angle; full-circle front/back and elevation ambiguities; multipath peaks are candidates')
-            self.frames.append({key:value for key,value in self.state.items() if key not in ('history','waterfall')})
+            self.frames.append({key:value for key,value in self.state.items() if key!='updated_monotonic'})
 
     def healthy(self):
         state=self.snapshot()
@@ -147,8 +155,10 @@ def main():
             try:
                 if self.path in ('/health','/status'):state=skill.snapshot()
                 elif self.path.startswith('/frames/'):state=skill.snapshot(int(self.path.removeprefix('/frames/')))
+                elif self.path.startswith('/epochs/'):state=skill.epoch_status(int(self.path.removeprefix('/epochs/')))
                 else:self.send_error(404);return
             except (KeyError,ValueError):self.send_error(404,'No diagnostics for that simulation epoch');return
+            except RuntimeError as error:self.send_error(503,str(error));return
             data=json.dumps(state,allow_nan=False).encode();self.send_response(503 if self.path=='/health' and not skill.healthy() else 200)
             self.send_header('Content-Type','application/json');self.send_header('Content-Length',str(len(data)));self.end_headers();self.wfile.write(data)
         def log_message(self,*args):pass

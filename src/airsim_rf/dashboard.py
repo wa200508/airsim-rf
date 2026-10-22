@@ -38,6 +38,17 @@ def select_display_frame(history,available_epochs,camera_time_ns,max_offset_ns):
     return selected if abs(selected['sim_time_ns']-camera_time_ns)<=max_offset_ns else None
 
 
+def select_display_pair(history,available_epochs,cameras,max_offset_ns,minimum_epoch=None):
+    """Newest complete RF epoch with its closest retained camera; never rewind."""
+    pairs=[]
+    for camera in cameras:
+        row=select_display_frame(history,available_epochs,camera.get('sim_time_ns'),max_offset_ns)
+        if row is not None and (minimum_epoch is None or row['sim_time_ns']>=minimum_epoch):
+            pairs.append((row,camera))
+    return max(pairs,key=lambda pair:(pair[0]['sim_time_ns'],
+        -abs(pair[1]['sim_time_ns']-pair[0]['sim_time_ns'])),default=None)
+
+
 class Dashboard:
     def __init__(self,args):
         self.args=args;self.root=args.repo.resolve();self.run=args.run_dir.resolve();self.run.mkdir(parents=True,exist_ok=True)
@@ -214,7 +225,7 @@ class Dashboard:
             '-v',f'{self.run}:/run','--workdir','/run','--entrypoint','/opt/airsim-rf/.venv/bin/python',self.args.rf_image,
             '-m','airsim_rf.cuda_launch','-m','airsim_rf.dashboard_producer','--run-dir','/run',
             '--duration',str(self.args.duration),'--address','projectairsim','--skill-host','rf-skill',
-            '--skill-port','8811','--wait-for-mission',
+            '--skill-port','8811','--skill-http-port','8812','--wait-for-mission',
             '--ready-timeout',str(self.args.ready_timeout),*(['--no-render'] if self.args.no_render else []),
             *(['--pascal-compat'] if self.args.pascal_compat else [])])
         self.wait_port(8989,self.args.ready_timeout,part='sim')
@@ -315,32 +326,50 @@ class Dashboard:
         producer=self.read('producer.json')
         transport=skill;camera_metadata=self.read('camera.json')
         no_render=self.args.no_render
-        camera_time=skill.get('sim_time_ns') if no_render else camera_metadata.get('sim_time_ns')
-        row=select_display_frame(producer.get('history',[]),skill.get('available_epochs',[]),camera_time,60_000_000)
-        if not no_render and camera_metadata.get('geometry_sha256')!=producer.get('geometry_sha256'):row=None
-        if row is not None:
+        cameras=([{'sim_time_ns':skill.get('sim_time_ns')}] if no_render else
+            [camera for camera in camera_metadata.get('history',[camera_metadata])
+             if camera.get('geometry_sha256')==producer.get('geometry_sha256') and
+                (self.run/'camera'/(camera.get('key','')+'.jpg')).is_file()])
+        previous=self.last_display
+        pair=select_display_pair(producer.get('history',[]),skill.get('available_epochs',[]),cameras,60_000_000,
+            None if previous is None else previous['row']['sim_time_ns'])
+        if pair is not None:
+            row,camera_metadata=pair
+            # Keep the closest image even if a late callback arrives out of order.
+            if previous is not None and row['sim_time_ns']==previous['row']['sim_time_ns'] and not no_render:
+                old_offset=abs(previous['camera']['sim_time_ns']-row['sim_time_ns'])
+                if abs(camera_metadata['sim_time_ns']-row['sim_time_ns'])>=old_offset:
+                    camera_metadata=previous['camera']
             try:
-                with urlopen(f'http://127.0.0.1:{self.args.skill_port}/frames/{row["sim_time_ns"]}',timeout=.4) as response:
-                    diagnostics=json.load(response)
+                if previous is not None and row['sim_time_ns']==previous['row']['sim_time_ns']:
+                    diagnostics=previous['skill'];frame_producer=previous['producer']
+                else:
+                    with urlopen(f'http://127.0.0.1:{self.args.skill_port}/frames/{row["sim_time_ns"]}',timeout=.4) as response:
+                        diagnostics=json.load(response)
+                    frame_producer={**producer,**row,'history':[r for r in producer.get('history',[]) if r['sim_time_ns']<=row['sim_time_ns']]}
                 if diagnostics.get('sim_time_ns')==row['sim_time_ns']:
-                    self.last_display={'row':row,'skill':diagnostics,'camera':camera_metadata}
+                    self.last_display={'row':row,'skill':diagnostics,'producer':frame_producer,'camera':camera_metadata}
             except (OSError,ValueError,URLError):pass
         display=self.last_display
         synchronization={'status':'waiting','latest_rf_sim_time_ns':transport.get('sim_time_ns')}
         skill={}
         if display is not None:
-            row=display['row'];skill={**display['skill'],'status':transport.get('status')}
-            producer={**producer,**row,'history':[r for r in producer.get('history',[]) if r['sim_time_ns']<=row['sim_time_ns']]}
+            row=display['row'];skill=display['skill']
+            # Service lifecycle controls stay live; all mission measurements,
+            # including counters/speed/history, come from the presented frame.
+            producer={**display['producer'],'status':producer.get('status'),'error':producer.get('error')}
             camera_metadata=display['camera']
             synchronization.update(status='matched',rf_sim_time_ns=row['sim_time_ns'],
                 camera_sim_time_ns=None if no_render else camera_metadata.get('sim_time_ns'),
                 offset_ms=None if no_render else (camera_metadata['sim_time_ns']-row['sim_time_ns'])/1e6)
+        else:
+            producer={key:producer[key] for key in ('status','error','presentation_session') if key in producer}
         processes={part:{'pid':p.pid,'state':'running' if p.poll() is None else 'exited','exit_code':p.poll(),'container':self.names[part]} for part,p in self.processes.items()}
         key=camera_metadata.get('key','')
         camera=self.run/'camera'/(key+'.jpg')
         camera_available=display is not None and not no_render and camera.is_file()
         return {'processes':processes,'producer':producer,'skill':skill,'scenario':self.read('scenario.json'),
-                'transport':transport,'synchronization':synchronization,
+                'transport':skill,'service_health':{'skill_status':transport.get('status'),'skill_error':transport.get('error')},'synchronization':synchronization,
                 'camera':{'available':camera_available,'age_s':time.time()-camera.stat().st_mtime if camera_available else None,
                     'url':'/camera.jpg?frame='+key,'source':'Timestamped ProjectAirSim Chase scene_camera'},
                 'ready':self.ready and all(p.poll() is None for p in self.processes.values()) and transport.get('status') not in ('offline','failed'),'mission_started':self.mission_started,'busy':self.busy,'error':self.error,'events':list(self.events),'no_render':self.args.no_render,

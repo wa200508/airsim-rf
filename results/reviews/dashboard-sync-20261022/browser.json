@@ -1,0 +1,15 @@
+{
+  "test": "Real Chromium: actual shipped HTML/JS; controlled JSON and JPEG delivery, not a scientific mission",
+  "delayed_camera_ms": 1100,
+  "held_fields": [
+    "image",
+    "clock",
+    "position",
+    "window count",
+    "payload count",
+    "PSD canvas"
+  ],
+  "held_identical": true,
+  "advanced_together": true,
+  "javascript_errors": []
+}

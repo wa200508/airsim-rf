@@ -25,6 +25,8 @@ jobs:
       - uses: actions/checkout@v4
       - name: Check maintained documentation links
         run: python3 scripts/check_docs.py
+      - name: Check synchronized dashboard presentation with delayed video
+        run: node --test tests/dashboard_presentation.test.cjs
       - uses: docker/setup-buildx-action@v3
       - name: Build CPU image
         uses: docker/build-push-action@v6

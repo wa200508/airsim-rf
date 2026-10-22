@@ -26,6 +26,7 @@ async def run(args):
     from .bridge import mount_kinematics,normalize_kinematics
     from .dashboard_view import queue_chase_camera_pose,radio_marker_glb
     from .dashboard_geometry import isolate_blocks_scene,require_rf_mesh_match,link_geometry
+    from .dashboard_sync import wait_for_skill_epoch,advance_after_skill
     from .geometry import read_bundle
     from .geometry_sync import AirSimGeometryBinding,spawn_placements
     from .iq_stream import IQStreamWriter
@@ -50,7 +51,8 @@ async def run(args):
     atomic_json(output/'producer.json',state)
     writer=None;sock=None;motion=None;flight_client=None
     camera_counter=[0];last_camera=[0.];history=[]
-    camera_session=secrets.token_hex(8);camera_files=[]
+    camera_session=secrets.token_hex(8);camera_files=[];camera_history=[]
+    state['presentation_session']=camera_session
     (output/'camera').mkdir(exist_ok=True)
     site_positions=[site['center_rf_m'] for site in arrays['sites']]
     def image_received(_,message):
@@ -60,12 +62,17 @@ async def run(args):
             if success:
                 epoch=int(message['time_stamp']);key=camera_session+'-'+str(epoch)
                 path=output/'camera'/(key+'.jpg');temp=path.with_suffix('.tmp')
+                if path.exists():return  # Published URLs are immutable.
                 temp.write_bytes(jpeg.tobytes());temp.replace(path)
                 temp=output/'camera.tmp';temp.write_bytes(jpeg.tobytes());temp.replace(output/'camera.jpg')
                 camera_counter[0]+=1;last_camera[0]=time.monotonic()
-                atomic_json(output/'camera.json',{'key':key,'sim_time_ns':epoch,'frames':camera_counter[0],
+                metadata={'key':key,'sim_time_ns':epoch,'frames':camera_counter[0],
                     'position_ned_m':[message['pos_'+axis] for axis in ('x','y','z')],
-                    'geometry_sha256':bundle['scene_sha256']})
+                    'geometry_sha256':bundle['scene_sha256']}
+                camera_history[:]=[frame for frame in camera_history if frame['key']!=key]
+                camera_history.append(metadata);del camera_history[:-128]
+                atomic_json(output/'camera.json',{**metadata,'history':list(camera_history)})
+                if path in camera_files:camera_files.remove(path)
                 camera_files.append(path)
                 if len(camera_files)>128:camera_files.pop(0).unlink(missing_ok=True)
         except Exception as error:state['camera_error']=str(error)
@@ -147,6 +154,8 @@ async def run(args):
                 if time.monotonic()>deadline:raise RuntimeError('RF skill ingress did not become ready')
                 await asyncio.sleep(.25)
         sock.settimeout(120);writer=IQStreamWriter(sock,carrier_hz=CARRIER)
+        def stop_requested():
+            return (output/'command.json').exists() and json.loads((output/'command.json').read_text()).get('stop',False)
         prepared_captures=None
         if args.wait_for_mission:
             # Exercise the actual configured scene, eight-channel block and data
@@ -163,6 +172,9 @@ async def run(args):
             prepared_captures=receiver.capture(epoch,num_samples=count)
             row=record_frame(epoch,position,prepared_captures)
             for name,capture in prepared_captures.items():writer.send_capture(name,capture)
+            if not await wait_for_skill_epoch(args.skill_host,args.skill_http_port,epoch,stop_requested):return
+            row.update(windows=1,velocity_rf_m_s=velocity.tolist(),camera_frames=camera_counter[0],
+                wall_elapsed_s=0.,simulation_speed=0.,raw_payload_bytes=count*8*8)
             if not args.no_render:
                 deadline=time.monotonic()+30
                 while not camera_counter[0] and time.monotonic()<deadline:await asyncio.sleep(.1)
@@ -206,8 +218,12 @@ async def run(args):
                 camera_frames=camera_counter[0],camera_age_s=None if not last_camera[0] else time.monotonic()-last_camera[0],
                 camera_framing='Timestamped raw Chase image; physical RX beacons; no projected labels through terrain',
                 geometry_sha256=bundle['scene_sha256'],raw_payload_bytes=(index+1)*count*8*8)
+            # Retain measurements for this epoch, including counters and speed;
+            # the host must not mix them with a newer producer state.
+            row.update({key:state[key] for key in ('windows','velocity_rf_m_s','retained_paths',
+                'wall_elapsed_s','simulation_speed','camera_frames','camera_age_s','raw_payload_bytes')})
             atomic_json(output/'producer.json',state)
-            world.continue_until_sim_time(epoch+ADVANCE_NS,wait_until_complete=True)
+            if not await advance_after_skill(world,epoch,ADVANCE_NS,args.skill_host,args.skill_http_port,stop_requested):break
             await asyncio.sleep(0)
         totals=writer.finish();writer=None
         state['acknowledged_sample_totals']=totals
@@ -229,6 +245,7 @@ def main():
     parser=argparse.ArgumentParser(description=__doc__);parser.add_argument('--run-dir',type=Path,required=True)
     parser.add_argument('--duration',type=float,default=120);parser.add_argument('--address',default='127.0.0.1')
     parser.add_argument('--skill-host',default='127.0.0.1');parser.add_argument('--skill-port',type=int,default=8811)
+    parser.add_argument('--skill-http-port',type=int,default=8812)
     parser.add_argument('--pascal-compat',action='store_true')
     parser.add_argument('--wait-for-mission',action='store_true')
     parser.add_argument('--ready-timeout',type=float,default=600)

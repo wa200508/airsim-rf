@@ -196,3 +196,73 @@ def test_skill_keeps_diagnostics_for_a_delayed_camera_epoch(tmp_path):
     assert old['psd']==original['psd']
     assert old['psd']!=skill.snapshot()['psd']
     assert all(row['sim_time_ns']==0 for row in old['history']+old['waterfall'])
+    assert old==original
+    # Old waterfall rows must survive eviction from the live rolling waterfall.
+    skill.state['waterfall']=[];skill.state['history']=[]
+    assert skill.snapshot(0)==original
+    assert skill.epoch_status(0)=={'sim_time_ns':0,'complete_windows':1}
+    with pytest.raises(KeyError):skill.epoch_status(999)
+    skill.state.update(status='failed',error='processing failed')
+    with pytest.raises(RuntimeError,match='processing failed'):skill.epoch_status(0)
+
+
+def test_real_skill_ingress_and_http_gate_release_flight_only_after_eight_channels(tmp_path):
+    """Real TCP -> MUSIC/PSD -> HTTP epoch ACK; only the AirSim step is stubbed."""
+    pytest.importorskip('doa_py');pytest.importorskip('grpc')
+    import asyncio,json,socket,subprocess,sys,time
+    from types import SimpleNamespace
+    from urllib.error import URLError
+    from urllib.request import ProxyHandler,build_opener
+    from airsim_rf.dashboard_sync import advance_after_skill
+    from airsim_rf.iq_stream import IQStreamWriter
+    arrays={'schema_version':1,'sample_rate_hz':FS,'carrier_hz':915e6,'sites':[
+        {'id':str(i),'channels':[f's{i}e{j}' for j in range(4)],'center_rf_m':[0,i*20,110],'yaw_rad':0,
+         'element_offsets_m':(np.arange(4)*299792458./915e6/2).tolist(),'calibration_complex':[[1,0]]*4} for i in range(2)]}
+    path=tmp_path/'arrays.json';path.write_text(json.dumps(arrays))
+    reservations=[socket.socket() for _ in range(3)]
+    for reservation in reservations:reservation.bind(('127.0.0.1',0))
+    iq_port,http_port,control_port=[reservation.getsockname()[1] for reservation in reservations]
+    for reservation in reservations:reservation.close()
+    request=build_opener(ProxyHandler({})).open;steps=[]
+    class World:
+        def continue_until_sim_time(self,epoch,wait_until_complete):steps.append(epoch)
+    with (tmp_path/'skill.log').open('w+') as log:
+        process=subprocess.Popen([sys.executable,'-m','airsim_rf.dashboard_skill','--arrays',str(path),
+            '--iq-port',str(iq_port),'--http-port',str(http_port),'--control-address',f'127.0.0.1:{control_port}'],stdout=log,stderr=log)
+        try:
+            deadline=time.monotonic()+30
+            while True:
+                try:
+                    with request(f'http://127.0.0.1:{http_port}/health',timeout=.5) as response:
+                        if json.load(response)['ingress_ready']:break
+                except (OSError,URLError):pass
+                if process.poll() is not None or time.monotonic()>deadline:
+                    log.seek(0);pytest.fail('Skill startup failed: '+log.read())
+                time.sleep(.05)
+            with socket.create_connection(('127.0.0.1',iq_port),timeout=10) as connection:
+                writer=IQStreamWriter(connection,carrier_hz=915e6)
+                names=[name for site in arrays['sites'] for name in site['channels']]
+                rng=np.random.default_rng(42)
+                samples=(.001*np.exp(2j*np.pi*10000*np.arange(240000)/FS)+
+                    1e-6*(rng.normal(size=240000)+1j*rng.normal(size=240000))).astype(np.complex64)
+                async def run_windows():
+                    for index in range(2):
+                        epoch=index*120000000
+                        task=asyncio.create_task(advance_after_skill(World(),epoch,120000000,'127.0.0.1',http_port,lambda:False,timeout=20))
+                        capture=SimpleNamespace(adc_iq_volts=samples,sim_time_ns=epoch,actual_sample_rate_hz=FS,clipped_component_fraction=0.)
+                        for name in names[:-1]:writer.send_capture(name,capture)
+                        await asyncio.sleep(.15)
+                        assert not task.done() and len(steps)==index
+                        writer.send_capture(names[-1],capture)
+                        assert await task
+                        with request(f'http://127.0.0.1:{http_port}/frames/{epoch}',timeout=2) as response:frame=json.load(response)
+                        assert frame['sim_time_ns']==epoch and frame['complete_windows']==index+1
+                        assert frame['payload_bytes']==(index+1)*8*240000*8
+                        assert len(frame['bearings'])==2 and frame['psd']['frequency_khz']
+                asyncio.run(run_windows())
+                assert writer.finish()=={name:480000 for name in names}
+            assert steps==[120000000,240000000]
+        finally:
+            process.terminate()
+            try:process.wait(timeout=5)
+            except subprocess.TimeoutExpired:process.kill();process.wait()

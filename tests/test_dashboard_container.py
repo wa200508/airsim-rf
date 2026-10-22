@@ -148,6 +148,7 @@ def test_rootless_services_share_bridge_and_start_before_readiness_waits(tmp_pat
     assert rf[rf.index('--address')+1]=='projectairsim'
     assert rf[rf.index('--skill-host')+1]=='rf-skill'
     assert rf[rf.index('--skill-port')+1]=='8811'
+    assert rf[rf.index('--skill-http-port')+1]=='8812'
 
 
 def test_display_matches_camera_time_to_older_iq_not_latest_transport(tmp_path,monkeypatch):
@@ -161,16 +162,58 @@ def test_display_matches_camera_time_to_older_iq_not_latest_transport(tmp_path,m
     monkeypatch.setattr(obj,'read',lambda name:records.get(name,{}))
     def request(url,**kwargs):
         value=({'status':'processing','sim_time_ns':200,'available_epochs':[100,200],'payload_bytes':999}
-            if url.endswith('/status') else {'sim_time_ns':100,'psd':{'from_epoch':100}})
+            if url.endswith('/status') else {'sim_time_ns':100,'payload_bytes':123,'complete_windows':1,'psd':{'from_epoch':100}})
         return io.BytesIO(json.dumps(value).encode())
     monkeypatch.setattr(dashboard,'urlopen',request)
     state=obj.snapshot()
     assert state['producer']['position_rf_m']==[1,0,200]
     assert state['skill']['sim_time_ns']==100
-    assert state['transport']['sim_time_ns']==200 and state['transport']['payload_bytes']==999
+    assert state['transport']['sim_time_ns']==100 and state['transport']['payload_bytes']==123
+    assert state['synchronization']['latest_rf_sim_time_ns']==200
     assert state['camera']['url']=='/camera.jpg?frame='+key
     assert state['synchronization']['offset_ms']==0
     assert state['camera']['available']
+
+    # New video can arrive before the skill has finished the next RF window.
+    # Keep every measurement, counter and the image on the previous pair.
+    newer='0123456789abcdef-120000200'
+    (obj.run/'camera'/(newer+'.jpg')).write_bytes(b'newer image')
+    records['camera.json']={'key':newer,'sim_time_ns':120000200,'geometry_sha256':'g'}
+    records['producer.json']['windows']=999
+    records['producer.json']['simulation_speed']=99
+    held=obj.snapshot()
+    assert held['camera']['url']==state['camera']['url']
+    assert held['skill']==state['skill'] and held['transport']==state['transport']
+    assert held['producer']==state['producer']
+
+
+def test_buffered_camera_finds_completed_rf_despite_newer_video(tmp_path,monkeypatch):
+    import io
+    obj=instance(tmp_path);old='0123456789abcdef-120000000';new='0123456789abcdef-240000000'
+    (obj.run/'camera').mkdir()
+    for key in (old,new):(obj.run/'camera'/(key+'.jpg')).write_bytes(b'image')
+    cameras=[{'key':key,'sim_time_ns':epoch,'geometry_sha256':'g'} for key,epoch in ((old,120000000),(new,240000000))]
+    records={'producer.json':{'status':'running','geometry_sha256':'g','windows':3,'simulation_speed':30,'history':[
+        {'sim_time_ns':120000000,'position_rf_m':[1,0,200],'windows':2,'simulation_speed':2},
+        {'sim_time_ns':240000000,'position_rf_m':[2,0,200],'windows':3,'simulation_speed':30}]},
+        'camera.json':{**cameras[-1],'history':cameras},'scenario.json':{}}
+    monkeypatch.setattr(obj,'read',lambda name:records.get(name,{}))
+    def request(url,**kwargs):
+        value=({'status':'processing','sim_time_ns':120000000,'available_epochs':[120000000]}
+            if url.endswith('/status') else {'sim_time_ns':120000000,'complete_windows':2})
+        return io.BytesIO(json.dumps(value).encode())
+    monkeypatch.setattr(dashboard,'urlopen',request)
+    state=obj.snapshot()
+    assert state['camera']['url'].endswith(old)
+    assert state['producer']['windows']==state['skill']['complete_windows']==2
+    assert state['producer']['simulation_speed']==2
+
+
+def test_pair_selection_never_rewinds_and_prefers_closest_image():
+    history=[{'sim_time_ns':120000000},{'sim_time_ns':240000000}]
+    cameras=[{'sim_time_ns':125000000},{'sim_time_ns':270000000},{'sim_time_ns':239000000}]
+    assert dashboard.select_display_pair(history,[120000000,240000000],cameras,60000000)==(history[1],cameras[2])
+    assert dashboard.select_display_pair(history,[120000000],cameras,60000000,240000000) is None
 
 
 def test_display_rejects_large_clock_offsets_and_missing_diagnostic_epochs():

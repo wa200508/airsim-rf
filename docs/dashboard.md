@@ -176,21 +176,43 @@ amber lines and intersection crosses show blocked receiver-to-transmitter rays;
 the camera's own view direction is a separate geometric question.
 
 Camera frames carry their **simulation timestamps**, and image URLs identify
-immutable frames. The skill retains 128 per-window diagnostic snapshots. The
-host selects a matching RF truth/skill epoch nearest the image's timestamp,
-within 60 ms (half a 120 ms update interval). It shows the measured camera/RF offset and
-how far the displayed RF epoch trails the newest result. These are bounded-time
-pairs, not a claim of identical capture times. When no pair is available it waits
-or keeps the last paired view; it never combines a newer image with unrelated
-latest plots. Projected radio labels are removed so they cannot show through a
-hill. Live transport counters remain current and separate from the paired
-spectrum/MUSIC diagnostics. Alignment affects presentation, not generated I/Q,
-waveforms, terrain, trajectory, reflection order or receiver sensitivity.
+immutable frames. Both camera and skill retain 128 timestamped frames. The host
+chooses the newest completed RF truth/skill epoch that has a camera within 60 ms
+(half a 120 ms update interval), using the closest image. Buffered older images
+remain eligible when the newest camera is ahead of processing. Presentation
+never rewinds within a mission. It shows the measured camera/RF offset and how
+far the displayed RF epoch trails the newest result. These are bounded-time
+pairs, not a claim of identical capture times: propagation uses the window-start
+pose; MUSIC/PSD use its first 12 ms of samples.
+
+The stepping owner now waits for `/epochs/<sim_time_ns>` on the skill's internal
+HTTP endpoint before advancing the next 120 ms of flight. An epoch is acknowledged
+only after all eight channels arrive and covariance, MUSIC, PSD and diagnostics
+finish. TCP send completion alone does not release the barrier. Stop cancels
+the wait, a processing failure aborts, and a 120-second timeout fails explicitly.
+The internal HTTP port defaults to 8812 (`--skill-http-port` on the producer);
+it does not depend on the host's published port number. Camera pose updates
+remain asynchronous so a paused simulator cannot deadlock waiting for rendering.
+
+The browser loads and decodes the selected immutable JPEG first, then commits
+it with the map, clock, position, visibility, RF plots, waterfall, throughput,
+payload/window counters and processing latency in one animation frame. Failed
+or delayed images hold the entire previous mission view. Per-epoch diagnostics
+include frozen histories and counters; they do not age or change while held.
+Service health, errors and mission controls stay live so a stalled mission can
+still be stopped. Projected radio labels are removed so they cannot show through
+a hill. This coordination can reduce simulation/wall-clock speed; it does not
+change generated samples, waveform continuity, Doppler, terrain, trajectory,
+reflection order or receiver sensitivity. The scene update remains 120 ms;
+this dashboard does not claim 120 Hz operation.
 The camera overlay and waterfall use the same mission-relative T+ origin.
 See the [shared-scene and occlusion validation](../results/reviews/dashboard-scene-20261022/REPORT.md)
 for independent probe measurements, the orbit scan and echo-only I/Q regression.
+See the [synchronization validation](../results/reviews/dashboard-sync-20261022/REPORT.md)
+for delayed-camera browser checks and the real TCP/MUSIC/HTTP stepping-barrier test.
 
-The speedometer counts actual received cf32 payload bytes per wall second;
+The speedometer shows actual received cf32 payload bytes per wall second measured
+at the displayed RF epoch (it is held with that frame);
 configured rate and simulation/wall-clock ratio are separate. Eight channels at
 2 MS/s require 128 MB/s of cf32 payload at real time. It does not count camera
 traffic, headers, bytes only attempted by the sender, or simulated seconds as

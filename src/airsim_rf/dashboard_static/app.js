@@ -1,5 +1,5 @@
 'use strict';
-let token='',lastFrame=-1,lastWindow=-1,lastStatus=null,waterRows=[];
+let token='',lastFrame=-1,lastWindow=-1,lastStatus=null,lastControlStatus=null,waterRows=[],presentationGeneration=0;
 const $=id=>document.getElementById(id);
 function surface(id){const canvas=$(id),ratio=devicePixelRatio||1,rect=canvas.getBoundingClientRect();canvas.width=Math.round(rect.width*ratio);canvas.height=Math.round(rect.height*ratio);const ctx=canvas.getContext('2d');ctx.scale(ratio,ratio);return [ctx,rect.width,rect.height];}
 function graph(id,x,curves,rangeX,rangeY,colors=['#55d7d0','#e6b96c'],points=false){
@@ -29,14 +29,16 @@ function groundtrack(p,scenario){const [ctx,w,h]=surface('groundtrack'),cx=w/2,c
   if(p.position_rf_m){const [tx,ty]=point(p.position_rf_m);ctx.strokeStyle=site.direct_elements?'#55d7d0':'#e6b96c';ctx.setLineDash(site.direct_elements?[]:[4,4]);ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(tx,ty);ctx.stroke();ctx.setLineDash([]);}
   if(site.blocker_rf_m){const [bx,by]=point(site.blocker_rf_m);ctx.strokeStyle='#ffae65';ctx.beginPath();ctx.moveTo(bx-4,by-4);ctx.lineTo(bx+4,by+4);ctx.moveTo(bx-4,by+4);ctx.lineTo(bx+4,by-4);ctx.stroke();}});
 }
-async function action(name){try{const response=await fetch('/api/'+name,{method:'POST',headers:{'X-Dashboard-Token':token}});if(!response.ok)throw Error(await response.text());}catch(error){$('error').textContent=error.message;$('error').hidden=false;}}
-$('prepare').onclick=()=>action('prepare');$('start').onclick=()=>action('start');$('stop').onclick=()=>action('stop');$('pause').onclick=()=>action(lastStatus?.producer.status==='paused'?'resume':'pause');
-function render(state){lastStatus=state;token=state.token;const s=state.skill,p=state.producer,transport=state.transport||s,sync=state.synchronization||{};const running=Object.values(state.processes).some(v=>v.state==='running');
+async function action(name){if(name==='prepare')presentationGeneration++;try{const response=await fetch('/api/'+name,{method:'POST',headers:{'X-Dashboard-Token':token}});if(!response.ok)throw Error(await response.text());}catch(error){$('error').textContent=error.message;$('error').hidden=false;}}
+$('prepare').onclick=()=>action('prepare');$('start').onclick=()=>action('start');$('stop').onclick=()=>action('stop');$('pause').onclick=()=>action(lastControlStatus?.producer.status==='paused'?'resume':'pause');
+function renderControls(state){lastControlStatus=state;token=state.token;const p=state.producer,health=state.service_health||{},running=Object.values(state.processes).some(v=>v.state==='running');
  $('start').disabled=state.busy||!state.ready||state.mission_started;$('prepare').disabled=state.busy||state.ready;$('connection').textContent=state.ready?'SERVICES READY':state.busy?'PREPARING':'NOT READY';$('stop').disabled=state.busy||!running;$('pause').disabled=state.busy||p.status!=='running'&&p.status!=='paused';$('pause').textContent=p.status==='paused'?'Resume':'Pause';
- $('error').hidden=!state.error&&!p.error&&!transport.error;$('error').textContent=state.error||p.error||transport.error||'';
+ $('error').hidden=!state.error&&!p.error&&!health.skill_error;$('error').textContent=state.error||p.error||health.skill_error||'';
  for(const part of ['sim','rf','skill']){const element=document.querySelector(`[data-process="${part}"]`),process=state.processes[part],badge=element.querySelector('.status');badge.textContent=process?process.state.toUpperCase():'OFFLINE';badge.classList.toggle('on',process?.state==='running');element.querySelector('.identity').textContent=process?`${process.container||part} · PID ${process.pid}`:['Ready for launch','CUDA deployment','Coherent TCP metadata extension'][['sim','rf','skill'].indexOf(part)];}
+}
+function render(state){lastStatus=state;renderControls(state);const s=state.skill,p=state.producer,transport=s,sync=state.synchronization||{};
  $('clock').textContent=sync.status==='matched'?`RF T+ ${(p.sim_elapsed_s||0).toFixed(3)} s`+(!state.no_render?` / view T+ ${((sync.camera_sim_time_ns-(p.origin_ns||0))/1e9).toFixed(3)} s`:''):'WAITING FOR MATCHED TIMES';$('position').textContent=sync.status==='matched'&&p.position_rf_m?`N ${p.position_rf_m[0].toFixed(1)} / W ${p.position_rf_m[1].toFixed(1)} / UP ${p.position_rf_m[2].toFixed(1)} m`:'NO MATCHED PLATFORM TELEMETRY';
- if(state.camera.available){$('camera').hidden=false;$('camera-empty').hidden=true;if(lastFrame!==state.camera.url){$('camera').src=state.camera.url;lastFrame=state.camera.url;}$('camera-status').textContent=p.status==='paused'?'PAUSED FRAME':p.status==='complete'?'LAST FRAME':state.camera.age_s>3?'CAMERA LAG':'AIRSIM CAMERA';$('camera-status').classList.toggle('warning',state.camera.age_s>3);}else{$('camera').hidden=true;$('camera-empty').hidden=false;$('camera-status').textContent=state.no_render?'RENDERING DISABLED':'WAITING FOR MATCHED CAMERA';}
+ if(state.camera.available){$('camera').hidden=false;$('camera-empty').hidden=true;$('camera-status').textContent=p.status==='paused'?'PAUSED FRAME':p.status==='complete'?'LAST FRAME':state.camera.age_s>3?'CAMERA LAG':'AIRSIM CAMERA';$('camera-status').classList.toggle('warning',state.camera.age_s>3);}else{$('camera').hidden=true;$('camera-empty').hidden=false;$('camera-status').textContent=state.no_render?'RENDERING DISABLED':'WAITING FOR MATCHED CAMERA';}
  const visible=sync.status==='matched'?p.direct_visible:null;$('visibility').innerHTML=visible?`<i style="background:${visible.every(Boolean)?'#55d7d0':'#e6b96c'}"></i> Receiver direct paths: ${visible.map((v,i)=>'S'+i+' '+(v?'clear':'blocked')).join(' / ')}`:'<i></i> Visibility: awaiting matched geometry';
  const lag=sync.status==='matched'?Math.max(0,(sync.latest_rf_sim_time_ns-sync.rf_sim_time_ns)/1e9):null;
  $('sync-status').textContent=sync.status==='matched'?(state.no_render?'RF EPOCH MATCHED':`CAMERA / RF Δ ${sync.offset_ms.toFixed(0)} ms`):'WAITING FOR MATCHED TIMES';
@@ -54,5 +56,25 @@ function render(state){lastStatus=state;token=state.token;const s=state.skill,p=
  }else waterRows=[];waterfall();
  $('events').replaceChildren(...state.events.map(e=>{const row=document.createElement('div');row.textContent=e.time+'  '+e.message;return row;}));
 }
-async function poll(){try{const response=await fetch('/api/status');if(!response.ok)throw Error('Status endpoint unavailable');render(await response.json());$('connection').textContent='LOCALHOST · CONNECTED';}catch(e){$('connection').textContent='DISCONNECTED';}setTimeout(poll,700);}
+async function present(state){
+ renderControls(state);
+ const generation=presentationGeneration,epoch=state.synchronization?.rf_sim_time_ns;
+ if(lastStatus?.producer.presentation_session===state.producer.presentation_session&&epoch<lastStatus?.synchronization?.rf_sim_time_ns)return;
+ let prepared=null;
+ if(state.camera.available&&lastFrame!==state.camera.url){
+  prepared=$('camera').cloneNode(false);prepared.src=state.camera.url;
+  let timer;
+  try{await Promise.race([prepared.decode(),new Promise((_,reject)=>{timer=setTimeout(()=>reject(Error('Camera image is delayed; holding synchronized frame')),6000);})]);}
+  finally{clearTimeout(timer);}
+ }
+ if(generation!==presentationGeneration)return;
+ await new Promise(resolve=>requestAnimationFrame(()=>{
+  if(generation===presentationGeneration){
+   if(prepared){$('camera').replaceWith(prepared);lastFrame=state.camera.url;}
+   render(state);
+  }
+  resolve();
+ }));
+}
+async function poll(){try{const response=await fetch('/api/status',{signal:AbortSignal.timeout(4000)});if(!response.ok)throw Error('Status endpoint unavailable');await present(await response.json());$('connection').textContent='LOCALHOST · CONNECTED';}catch(e){$('connection').textContent=e.message.startsWith('Camera image')?'WAITING FOR CAMERA · FRAME HELD':'DISCONNECTED · FRAME HELD';}setTimeout(poll,200);}
 window.addEventListener('resize',()=>lastStatus&&render(lastStatus));poll();

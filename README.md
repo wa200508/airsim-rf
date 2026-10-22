@@ -119,8 +119,11 @@ The terrain map below the camera uses the same DEM as AirSim and Sionna and
 shows receiver sight lines and terrain intersections. Each receiver reports
 direct elements and reflected paths; a blocked direct path can still deliver
 echoes, or only receiver noise when no modeled echo exists. Camera and RF plots
-are paired by simulation timestamps, with their time offset displayed. Live
-transport counters remain separate from those paired diagnostics.
+are paired by simulation timestamps, with their time offset displayed (at most
+60 ms). The simulator waits for each RF window's skill processing before
+advancing. The browser decodes the paired image before updating the camera,
+terrain map, plots, clock and counters together; if either stream falls behind,
+it holds the last synchronized view. This favors alignment over wall-clock speed.
 
 Quit the launcher with **Ctrl+C** to close the dashboard and remove its containers
 and private network. Cleanup also runs on termination, terminal hangup, and
