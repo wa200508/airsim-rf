@@ -176,3 +176,23 @@ def test_failed_geometry_export_preserves_previous_bundle(tmp_path,monkeypatch):
     with pytest.raises(OSError,match='interrupted export'):
         prepare(tmp_path,Path('.deps/ProjectAirSim-runtime'))
     assert (tmp_path/'bundle/manifest.json').read_bytes()==previous
+
+
+def test_skill_keeps_diagnostics_for_a_delayed_camera_epoch(tmp_path):
+    pytest.importorskip('doa_py')
+    import json
+    from airsim_rf.dashboard_skill import Skill
+    arrays={'schema_version':1,'sample_rate_hz':FS,'carrier_hz':915e6,'sites':[
+        {'id':str(i),'channels':[f's{i}e{j}' for j in range(4)],'center_rf_m':[0,i*20,110],'yaw_rad':0,
+         'element_offsets_m':(np.arange(4)*299792458./915e6/2).tolist(),'calibration_complex':[[1,0]]*4} for i in range(2)]}
+    path=tmp_path/'arrays.json';path.write_text(json.dumps(arrays));skill=Skill(path)
+    def blocks(epoch,frequency):
+        rng=np.random.default_rng(42);t=np.arange(4096)/FS
+        return {n:StreamIQBlock(n,(.001*np.exp(2j*np.pi*frequency*t)+1e-6*(rng.normal(size=len(t))+1j*rng.normal(size=len(t)))).astype(np.complex64),
+            0,epoch,FS,915e6,0) for site in arrays['sites'] for n in site['channels']}
+    skill.process(blocks(0,10000));original=skill.snapshot(0)
+    skill.process(blocks(120000000,50000));old=skill.snapshot(0)
+    assert skill.snapshot()['available_epochs']==[0,120000000]
+    assert old['psd']==original['psd']
+    assert old['psd']!=skill.snapshot()['psd']
+    assert all(row['sim_time_ns']==0 for row in old['history']+old['waterfall'])

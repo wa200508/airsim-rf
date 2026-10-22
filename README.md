@@ -115,6 +115,13 @@ down the task-owned containers. Use **Prepare services** to initialize a new
 mission after stopping. Closing the launcher also cleans up its containers.
 Logs and run products are stored in `recordings/dashboard` on the host.
 
+The terrain map below the camera uses the same DEM as AirSim and Sionna and
+shows receiver sight lines and terrain intersections. Each receiver reports
+direct elements and reflected paths; a blocked direct path can still deliver
+echoes, or only receiver noise when no modeled echo exists. Camera and RF plots
+are paired by simulation timestamps, with their time offset displayed. Live
+transport counters remain separate from those paired diagnostics.
+
 Quit the launcher with **Ctrl+C** to close the dashboard and remove its containers
 and private network. Cleanup also runs on termination, terminal hangup, and
 startup failure. Closing only the browser tab leaves the launcher running.
@@ -125,7 +132,7 @@ you can use **Prepare services** for another mission.
 For a short mission or slower first-use compilation:
 
 ```bash
-bash scripts/run_dashboard.sh --open --duration 12 --ready-timeout 600
+bash scripts/run_dashboard.sh --open --duration 12 --ready-timeout 1200
 ```
 
 See the [dashboard guide](docs/dashboard.md) for image overrides, output

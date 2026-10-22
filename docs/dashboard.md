@@ -42,6 +42,10 @@ frame, skill health/ingress, configured geometry, CUDA/OptiX propagation and a
 CPU-referenced CuPy render. A full initial scene-derived eight-channel ADC block
 is delivered to and processed by the skill as a stationary startup snapshot.
 That same window is reused at mission T+0 without duplicate transmission.
+Before importing the DEM, the dedicated dashboard world removes the pinned
+Blocks map's physical buildings, primitives and ground. Sky/lighting and engine
+infrastructure remain. Clearing the native map and compiling kernels can take
+several minutes; the default preparation timeout is 600 seconds.
 The RF service connects to the prepared simulator
 and skill, then waits with the world paused. Only after this succeeds is
 **Launch mission** enabled at http://localhost:8765. It releases the prepared
@@ -58,7 +62,10 @@ the writable `/run` directory for the SDK's `projectairsim_client.log`.
 CI also runs `scripts/qualify_dashboard_camera.py` in the dashboard GPU image
 without an NVIDIA device: packaged Unreal/software Vulkan, ten paused camera
 updates, 1.2 simulated seconds, and a real 960×540 image with the requested camera
-position. This checks SDK/render integration; it does not qualify RF or a full
+position. Independent CPU LiDAR probes check clear and terrain-blocked receiver
+sight lines and three asymmetric terrain elevations against the shared triangle
+mesh within 1 mm. Sionna's loaded mesh vertices and topology are also checked.
+This checks SDK/render/geometry integration; it does not qualify a full
 GPU mission. See the [recorded camera regression](../results/reviews/dashboard-camera-20261022/REPORT.md).
 
 Failures stop task-owned containers and print the error/log location instead of
@@ -68,7 +75,7 @@ later failures. Stop shuts down the three containers. Use **Prepare services**
 to prepare a new mission after stopping. Closing the host launcher also cleans
 up its task-owned containers. Logs and metadata are in `recordings/dashboard`.
 Use `--run-dir` for another output directory, `--duration 12` for a short flight,
-or `--ready-timeout 600` for slower first-use compilation.
+or `--ready-timeout 1200` for slower first-use compilation.
 
 Quit the host launcher with **Ctrl+C**. SIGTERM and terminal SIGHUP use the same
 cleanup path, including during image pulls, preparation and service startup.
@@ -151,6 +158,37 @@ The demo does not infer successful sensing from the existence of a peak. The
 visibility indicator is an independent shared-triangle direct-ray diagnostic,
 not information supplied to MUSIC. When the direct path is blocked, propagation
 and thermal receiver noise still produce ADC I/Q and data-plane traffic.
+
+Each RF window verifies the AirSim terrain actor's transform, and compares
+Sionna's actual direct-path count for **each of the eight antenna elements** with
+independent intersections of the shared triangles. A mismatch fails capture.
+The dashboard reports direct elements and reflected paths per element, rather
+than inferring a direct path from MUSIC detection or received power. A blocked
+link retains every supported first-order specular echo; if none exists in this
+model, it contains receiver noise. Diffuse scattering, diffraction and terrain
+transmission remain disabled. A visible/strong echo or a MUSIC candidate does
+not establish an unobstructed direct path. The point-antenna RF model excludes
+vehicle bodies and presentation-only receiver beacons.
+
+The 2D map is below the camera, using the actual DEM grid and receiver positions
+exported by preparation. The old hard-coded orange screen is removed. Dashed
+amber lines and intersection crosses show blocked receiver-to-transmitter rays;
+the camera's own view direction is a separate geometric question.
+
+Camera frames carry their **simulation timestamps**, and image URLs identify
+immutable frames. The skill retains 128 per-window diagnostic snapshots. The
+host selects a matching RF truth/skill epoch nearest the image's timestamp,
+within 60 ms (half a 120 ms update interval). It shows the measured camera/RF offset and
+how far the displayed RF epoch trails the newest result. These are bounded-time
+pairs, not a claim of identical capture times. When no pair is available it waits
+or keeps the last paired view; it never combines a newer image with unrelated
+latest plots. Projected radio labels are removed so they cannot show through a
+hill. Live transport counters remain current and separate from the paired
+spectrum/MUSIC diagnostics. Alignment affects presentation, not generated I/Q,
+waveforms, terrain, trajectory, reflection order or receiver sensitivity.
+The camera overlay and waterfall use the same mission-relative T+ origin.
+See the [shared-scene and occlusion validation](../results/reviews/dashboard-scene-20261022/REPORT.md)
+for independent probe measurements, the orbit scan and echo-only I/Q regression.
 
 The speedometer counts actual received cf32 payload bytes per wall second;
 configured rate and simulation/wall-clock ratio are separate. Eight channels at

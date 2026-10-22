@@ -151,7 +151,7 @@ class SDRNetworkReceiver:
                  profile=PlutoSDRProfile(), *, clocks=None, path_solver="first-order-scattering",
                  max_depth=1, samples_per_link=1028, seed=42, renderer="numpy",
                  path_tile=128, sample_tile=32, accumulation="partial",
-                 replay=True, max_render_lanes=1_000_000, link_diagnostics=True,
+                 replay=True, max_render_lanes=1_000_000, link_diagnostics=True, path_diagnostics=False,
                  batch_reduction="auto", continuous=False, max_delay_s=100e-6,
                  max_doppler_hz=2500., block_samples=2048, fft_workers=2, profile_rendering=False, reuse_render_buffers=True, cache_scattering_samples=True, fused_projection=False, adaptive_temporal=None, cuda_delay_map='double', trim_delay_support=False, projection_lanes=None, fft_policy='scipy', surface_sampling=False):
         if not isinstance(surface_sampling, bool):
@@ -189,6 +189,7 @@ class SDRNetworkReceiver:
         if not isinstance(link_diagnostics, bool):
             raise ValueError("link_diagnostics must be boolean")
         self.link_diagnostics = link_diagnostics
+        if not isinstance(path_diagnostics,bool):raise ValueError('path_diagnostics must be boolean')
         self.batched_renderer = None
         if renderer.startswith("batched-"):
             from .batched_rendering import BatchedPathRenderer
@@ -256,6 +257,8 @@ class SDRNetworkReceiver:
         self.rngs = {name: np.random.default_rng(child) for name, child in
                      zip(self.rx_names, np.random.SeedSequence(seed).spawn(len(self.rx_names)))}
         self.filter_states = {name: np.zeros((len(self.sos), 2), dtype=np.complex128) for name in self.rx_names}
+        self.path_diagnostics=path_diagnostics
+        self.last_path_diagnostics={}
         self.last_receiver_ms = 0.
         self.last_channel_ms = 0.
         self.last_render_ms = 0.
@@ -285,6 +288,15 @@ class SDRNetworkReceiver:
                 if tau.ndim == 5:
                     tau = tau[:, 0, :, 0, :]
                 doppler = paths.doppler.numpy()
+                if self.path_diagnostics:
+                    from sionna.rt.constants import InteractionType
+                    interactions=paths.interactions.numpy()
+                    interactions=interactions.reshape((interactions.shape[0],*tau.shape))
+                    direct=(tau>=0)&np.all(interactions==int(InteractionType.NONE),axis=0)
+                    self.last_path_diagnostics={name:{tx:{
+                        'direct_paths':int(direct[ri,ti].sum()),
+                        'reflected_paths':int(((tau[ri,ti]>=0)&~direct[ri,ti]).sum())}
+                        for ti,tx in enumerate(self.tx_names)} for ri,name in enumerate(self.rx_names)}
         self.last_channel_ms = 1000*(perf_counter()-start)
         captures = {}
         self.last_render_ms = 0.

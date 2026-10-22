@@ -6,6 +6,7 @@ import fcntl
 from hashlib import sha256
 import json
 import os
+import re
 from pathlib import Path
 import secrets
 import signal
@@ -16,6 +17,7 @@ import threading
 import time
 from urllib.error import URLError
 from urllib.request import ProxyHandler,build_opener
+from urllib.parse import urlsplit,parse_qs
 
 # These HTTP calls only target our own published loopback service ports.
 urlopen=build_opener(ProxyHandler({})).open
@@ -24,6 +26,16 @@ import webbrowser
 
 class DashboardShutdown(SystemExit):
     """Unwind startup or the HTTP loop through the same cleanup path."""
+
+
+def select_display_frame(history,available_epochs,camera_time_ns,max_offset_ns):
+    """Match display diagnostics to image simulation time, never wall time."""
+    if camera_time_ns is None:return None
+    available=set(available_epochs)
+    candidates=[row for row in history if row.get('sim_time_ns') in available]
+    if not candidates:return None
+    selected=min(candidates,key=lambda row:abs(row['sim_time_ns']-camera_time_ns))
+    return selected if abs(selected['sim_time_ns']-camera_time_ns)<=max_offset_ns else None
 
 
 class Dashboard:
@@ -39,6 +51,7 @@ class Dashboard:
         self.names={part:name+'-'+self.session for part,name in self.names.items()}
         self.owned_names=set();self.shutdown_event=threading.Event()
         self.operation_lock=threading.RLock();self.run_lock=None;self.owns_run=False
+        self.last_display=None
 
     def acquire_run(self):
         self.run_lock=(self.run/'.dashboard.lock').open('a')
@@ -167,7 +180,7 @@ class Dashboard:
         ids=self.command(['docker','network','ls','-q','--filter',selector]).stdout.split()
         if ids:self.command(['docker','network','rm',*ids]);self.log('Removed networks from an interrupted launch')
     def bootstrap(self):
-        self.ready=False;self.mission_started=False;self.last_skill={}
+        self.ready=False;self.mission_started=False;self.last_skill={};self.last_display=None
         self.configure_docker()
         if self.owns_run:self.cleanup_stale()
         self.pull_images()
@@ -178,7 +191,7 @@ class Dashboard:
         for port in (8989,8990,self.args.iq_port,self.args.skill_port,self.args.control_port):
             with socket.socket() as test:
                 if test.connect_ex(('127.0.0.1',port))==0:raise RuntimeError(f'Port {port} already in use')
-        for name in ('producer.json','camera.jpg'):
+        for name in ('producer.json','camera.jpg','camera.json'):
             path=self.run/name
             if path.exists():path.replace(self.run/(name+'.previous'))
         self.prepare();self.write_command(start=False,paused=False,stop=False)
@@ -300,11 +313,37 @@ class Dashboard:
         except (OSError,ValueError,URLError):
             if self.last_skill:skill={**self.last_skill,'status':'offline','payload_bytes_per_second':0.}
         producer=self.read('producer.json')
+        transport=skill;camera_metadata=self.read('camera.json')
+        no_render=self.args.no_render
+        camera_time=skill.get('sim_time_ns') if no_render else camera_metadata.get('sim_time_ns')
+        row=select_display_frame(producer.get('history',[]),skill.get('available_epochs',[]),camera_time,60_000_000)
+        if not no_render and camera_metadata.get('geometry_sha256')!=producer.get('geometry_sha256'):row=None
+        if row is not None:
+            try:
+                with urlopen(f'http://127.0.0.1:{self.args.skill_port}/frames/{row["sim_time_ns"]}',timeout=.4) as response:
+                    diagnostics=json.load(response)
+                if diagnostics.get('sim_time_ns')==row['sim_time_ns']:
+                    self.last_display={'row':row,'skill':diagnostics,'camera':camera_metadata}
+            except (OSError,ValueError,URLError):pass
+        display=self.last_display
+        synchronization={'status':'waiting','latest_rf_sim_time_ns':transport.get('sim_time_ns')}
+        skill={}
+        if display is not None:
+            row=display['row'];skill={**display['skill'],'status':transport.get('status')}
+            producer={**producer,**row,'history':[r for r in producer.get('history',[]) if r['sim_time_ns']<=row['sim_time_ns']]}
+            camera_metadata=display['camera']
+            synchronization.update(status='matched',rf_sim_time_ns=row['sim_time_ns'],
+                camera_sim_time_ns=None if no_render else camera_metadata.get('sim_time_ns'),
+                offset_ms=None if no_render else (camera_metadata['sim_time_ns']-row['sim_time_ns'])/1e6)
         processes={part:{'pid':p.pid,'state':'running' if p.poll() is None else 'exited','exit_code':p.poll(),'container':self.names[part]} for part,p in self.processes.items()}
-        camera=self.run/'camera.jpg'
+        key=camera_metadata.get('key','')
+        camera=self.run/'camera'/(key+'.jpg')
+        camera_available=display is not None and not no_render and camera.is_file()
         return {'processes':processes,'producer':producer,'skill':skill,'scenario':self.read('scenario.json'),
-                'camera':{'available':camera.exists(),'age_s':time.time()-camera.stat().st_mtime if camera.exists() else None,'source':'ProjectAirSim Chase scene_camera'},
-                'ready':self.ready and all(p.poll() is None for p in self.processes.values()) and skill.get('status') not in ('offline','failed'),'mission_started':self.mission_started,'busy':self.busy,'error':self.error,'events':list(self.events),'no_render':self.args.no_render,
+                'transport':transport,'synchronization':synchronization,
+                'camera':{'available':camera_available,'age_s':time.time()-camera.stat().st_mtime if camera_available else None,
+                    'url':'/camera.jpg?frame='+key,'source':'Timestamped ProjectAirSim Chase scene_camera'},
+                'ready':self.ready and all(p.poll() is None for p in self.processes.values()) and transport.get('status') not in ('offline','failed'),'mission_started':self.mission_started,'busy':self.busy,'error':self.error,'events':list(self.events),'no_render':self.args.no_render,
                 'run_directory':str(self.run),'token':self.token}
 
 
@@ -315,7 +354,7 @@ def main():
     parser.add_argument('--skill-port',type=int,default=8812);parser.add_argument('--control-port',type=int,default=8813)
     parser.add_argument('--duration',type=float,default=120);parser.add_argument('--pascal-compat',action='store_true')
     parser.add_argument('--no-render',action='store_true',help='Explicit diagnostic mode: no Unreal camera image')
-    parser.add_argument('--ready-timeout',type=float,default=300)
+    parser.add_argument('--ready-timeout',type=float,default=600)
     parser.add_argument('--gpu-mode',choices=('auto','cdi','gpus'),default='auto')
     parser.add_argument('--gpu-device',default='0',help='NVIDIA device index or UUID')
     registry='ghcr.io/wa200508/airsim-rf'
@@ -333,8 +372,10 @@ def main():
     class Handler(BaseHTTPRequestHandler):
         def do_GET(self):
             if self.path=='/api/status':data=json.dumps(dashboard.snapshot(),allow_nan=False).encode();kind='application/json'
-            elif self.path.startswith('/camera.jpg'):
-                try:data=(dashboard.run/'camera.jpg').read_bytes();kind='image/jpeg'
+            elif urlsplit(self.path).path=='/camera.jpg':
+                key=parse_qs(urlsplit(self.path).query).get('frame',[''])[0]
+                if not re.fullmatch(r'[0-9a-f]{16}-[0-9]+',key):self.send_error(404);return
+                try:data=(dashboard.run/'camera'/(key+'.jpg')).read_bytes();kind='image/jpeg'
                 except OSError:self.send_error(404,'No ProjectAirSim camera frame received');return
             elif self.path in ('/','/app.js','/style.css'):
                 name={'/':'index.html','/app.js':'app.js','/style.css':'style.css'}[self.path]

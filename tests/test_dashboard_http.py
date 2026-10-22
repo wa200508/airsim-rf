@@ -35,6 +35,9 @@ sys.argv = ['dashboard', '--port', sys.argv[2], '--run-dir', sys.argv[3]]
 module.main()
 '''
         with tempfile.TemporaryDirectory() as run_dir:
+            image_path=Path(run_dir)/'camera/0123456789abcdef-100.jpg'
+            image_path.parent.mkdir();image_path.write_bytes(b'immutable epoch 100 image')
+            (Path(run_dir)/'camera.jpg').write_bytes(b'latest unpaired image')
             process = subprocess.Popen(
                 [sys.executable, '-c', child, str(ROOT / 'src/airsim_rf/dashboard.py'),
                  str(port), run_dir], stdout=subprocess.PIPE, stderr=subprocess.PIPE,
@@ -63,6 +66,8 @@ module.main()
                         self.assertTrue(response.read())
                 with opener.open(base + '/api/status', timeout=2) as response:
                     self.assertEqual(json.load(response), {'transport_test': 'host-loopback'})
+                with opener.open(base + '/camera.jpg?frame=0123456789abcdef-100',timeout=2) as response:
+                    self.assertEqual(response.read(),b'immutable epoch 100 image')
             finally:
                 process.terminate()
                 try:

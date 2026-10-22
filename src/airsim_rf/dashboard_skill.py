@@ -23,11 +23,18 @@ class Skill:
     def __init__(self,arrays):
         self.arrays=read_arrays(arrays);self.lock=threading.Lock();self.started=time.monotonic()
         self.state={'status':'starting','ingress_ready':False,'payload_bytes':0,'complex_samples':0,'complete_windows':0,'payload_bytes_per_second':0.,'bearings':[],'history':[]}
-        self.mode=4;self.traffic=deque();self.history=deque(maxlen=1000);self.waterfall=deque(maxlen=60)
+        self.mode=4;self.traffic=deque();self.history=deque(maxlen=1000);self.waterfall=deque(maxlen=60);self.frames=deque(maxlen=128)
 
-    def snapshot(self):
+    def snapshot(self,epoch_ns=None):
         with self.lock:
-            result=dict(self.state)
+            if epoch_ns is None:
+                result=dict(self.state);result['available_epochs']=[frame['sim_time_ns'] for frame in self.frames]
+            else:
+                frame=next((frame for frame in reversed(self.frames) if frame['sim_time_ns']==epoch_ns),None)
+                if frame is None:raise KeyError(epoch_ns)
+                result=dict(frame)
+                for key in ('history','waterfall'):
+                    result[key]=[row for row in self.state.get(key,[]) if row['sim_time_ns']<=epoch_ns]
         result['uptime_s']=time.monotonic()-self.started
         result['seconds_since_update']=time.monotonic()-result.pop('updated_monotonic',self.started)
         if result['seconds_since_update']>3:result['payload_bytes_per_second']=0.
@@ -46,6 +53,7 @@ class Skill:
             # bounds covariance/plot latency without changing the producer rate.
             matrix=np.stack([blocks[n].samples[:24000]/g for n,g in zip(site['channels'],gain)])
             result=estimate_bearing(matrix,site['element_offsets_m'],first.carrier_hz,grid_deg=grid)
+            result['received_power_dbm']=float(10*np.log10(max(float(np.mean(abs(matrix)**2))/50,1e-30)*1000))
             bearings.append(result)
             curves.append(spatial_spectrum(matrix,site['element_offsets_m'],first.carrier_hz,grid).tolist())
             eig=np.linalg.eigvalsh(np.cov(matrix))[::-1];eigen.append((10*np.log10(np.maximum(eig/eig[0],1e-12))).tolist())
@@ -67,6 +75,7 @@ class Skill:
                 eigenvalues_db=eigen,phase_rad=phase,history=list(self.history),waterfall=list(self.waterfall),updated_monotonic=now,
                 processing_latency_ms=(now-start)*1000,source='received ADC complex volts; no emitter truth',
                 ambiguity='ULA cone angle; full-circle front/back and elevation ambiguities; multipath peaks are candidates')
+            self.frames.append({key:value for key,value in self.state.items() if key not in ('history','waterfall')})
 
     def healthy(self):
         state=self.snapshot()
@@ -135,8 +144,12 @@ def main():
     threading.Thread(target=skill.serve_stream,args=(args.iq_port,),daemon=True).start()
     class Handler(BaseHTTPRequestHandler):
         def do_GET(self):
-            if self.path not in ('/health','/status'):self.send_error(404);return
-            data=json.dumps(skill.snapshot(),allow_nan=False).encode();self.send_response(503 if self.path=='/health' and not skill.healthy() else 200)
+            try:
+                if self.path in ('/health','/status'):state=skill.snapshot()
+                elif self.path.startswith('/frames/'):state=skill.snapshot(int(self.path.removeprefix('/frames/')))
+                else:self.send_error(404);return
+            except (KeyError,ValueError):self.send_error(404,'No diagnostics for that simulation epoch');return
+            data=json.dumps(state,allow_nan=False).encode();self.send_response(503 if self.path=='/health' and not skill.healthy() else 200)
             self.send_header('Content-Type','application/json');self.send_header('Content-Length',str(len(data)));self.end_headers();self.wfile.write(data)
         def log_message(self,*args):pass
     try:ThreadingHTTPServer(('0.0.0.0',args.http_port),Handler).serve_forever()

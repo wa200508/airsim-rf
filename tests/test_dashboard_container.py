@@ -124,6 +124,14 @@ def test_rootless_services_share_bridge_and_start_before_readiness_waits(tmp_pat
     class Response(io.BytesIO):status=200
     monkeypatch.setattr(dashboard,'urlopen',lambda *a,**kw:Response(b'{"complete_windows":1}'))
     import socket
+    original_socket=socket.socket
+    class TestSocket(original_socket):
+        def connect_ex(self,address):
+            # These services are stubbed; an unrelated local simulator must not
+            # affect this launch-command contract test.
+            if address[1] in (8989,8990,obj.args.iq_port,obj.args.skill_port,obj.args.control_port):return 111
+            return super().connect_ex(address)
+    monkeypatch.setattr(dashboard.socket,'socket',TestSocket)
     # Preparing another mission must not reject the HTTP listener already
     # owned by this dashboard process.
     with socket.socket() as listener:
@@ -140,3 +148,36 @@ def test_rootless_services_share_bridge_and_start_before_readiness_waits(tmp_pat
     assert rf[rf.index('--address')+1]=='projectairsim'
     assert rf[rf.index('--skill-host')+1]=='rf-skill'
     assert rf[rf.index('--skill-port')+1]=='8811'
+
+
+def test_display_matches_camera_time_to_older_iq_not_latest_transport(tmp_path,monkeypatch):
+    import io
+    obj=instance(tmp_path);key='0123456789abcdef-100'
+    (obj.run/'camera').mkdir();(obj.run/'camera'/(key+'.jpg')).write_bytes(b'image at 100')
+    records={'producer.json':{'status':'running','geometry_sha256':'g','history':[
+        {'sim_time_ns':100,'position_rf_m':[1,0,200]},
+        {'sim_time_ns':200,'position_rf_m':[2,0,200]}]},
+        'camera.json':{'key':key,'sim_time_ns':100,'geometry_sha256':'g'},'scenario.json':{}}
+    monkeypatch.setattr(obj,'read',lambda name:records.get(name,{}))
+    def request(url,**kwargs):
+        value=({'status':'processing','sim_time_ns':200,'available_epochs':[100,200],'payload_bytes':999}
+            if url.endswith('/status') else {'sim_time_ns':100,'psd':{'from_epoch':100}})
+        return io.BytesIO(json.dumps(value).encode())
+    monkeypatch.setattr(dashboard,'urlopen',request)
+    state=obj.snapshot()
+    assert state['producer']['position_rf_m']==[1,0,200]
+    assert state['skill']['sim_time_ns']==100
+    assert state['transport']['sim_time_ns']==200 and state['transport']['payload_bytes']==999
+    assert state['camera']['url']=='/camera.jpg?frame='+key
+    assert state['synchronization']['offset_ms']==0
+    assert state['camera']['available']
+
+
+def test_display_rejects_large_clock_offsets_and_missing_diagnostic_epochs():
+    history=[{'sim_time_ns':0},{'sim_time_ns':120000000},{'sim_time_ns':240000000}]
+    assert dashboard.select_display_frame(history,[0,120000000],120000000,120000000)==history[1]
+    assert dashboard.select_display_frame(history,[240000000],0,120000000) is None
+    assert dashboard.select_display_frame(history,[],0,120000000) is None
+    assert dashboard.select_display_frame(history,[0],None,120000000) is None
+    assert dashboard.select_display_frame(history,[0],120000000,60000000) is None
+    assert dashboard.select_display_frame(history,[0,120000000],120000000,60000000)==history[1]

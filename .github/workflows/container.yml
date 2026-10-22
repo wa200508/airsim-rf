@@ -75,7 +75,7 @@ jobs:
             scripts/qualify_dashboard_container.py
           docker run --rm --network none --entrypoint python airsim-rf:dashboard-gpu-test \
             -m pytest tests/test_dashboard.py tests/test_dashboard_container.py -q -p no:cacheprovider
-      - name: Exercise paused camera updates in actual Unreal software rendering
+      - name: Verify shared terrain, independent LiDAR and paused camera updates
         run: |
           docker run --rm --network none --shm-size 1g --entrypoint python airsim-rf:dashboard-gpu-test \
             scripts/qualify_dashboard_camera.py

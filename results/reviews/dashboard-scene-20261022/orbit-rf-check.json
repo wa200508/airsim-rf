@@ -1,0 +1,2579 @@
+{
+  "status": "passed",
+  "geometry_sha256": "fb790eae11d6fc810cff8db2a444c479499034dae9d14f78a53324a02a3085de",
+  "positions": [
+    {
+      "angle_deg": 0,
+      "direct_visible": [
+        true,
+        true
+      ],
+      "site_paths": [
+        {
+          "id": "site0",
+          "center_rf_m": [
+            0.0,
+            -25.0,
+            130.77262721580547
+          ],
+          "direct_elements": 4,
+          "elements": 4,
+          "reflected_paths_per_element": [
+            2,
+            2,
+            2,
+            2
+          ],
+          "blocker_rf_m": null
+        },
+        {
+          "id": "site1",
+          "center_rf_m": [
+            0.0,
+            25.0,
+            111.46968528723096
+          ],
+          "direct_elements": 4,
+          "elements": 4,
+          "reflected_paths_per_element": [
+            1,
+            1,
+            1,
+            1
+          ],
+          "blocker_rf_m": null
+        }
+      ],
+      "channel_paths": {
+        "site0_e0": {
+          "direct_paths": 1,
+          "reflected_paths": 2,
+          "direct_visible": true,
+          "blocker_rf_m": null
+        },
+        "site0_e1": {
+          "direct_paths": 1,
+          "reflected_paths": 2,
+          "direct_visible": true,
+          "blocker_rf_m": null
+        },
+        "site0_e2": {
+          "direct_paths": 1,
+          "reflected_paths": 2,
+          "direct_visible": true,
+          "blocker_rf_m": null
+        },
+        "site0_e3": {
+          "direct_paths": 1,
+          "reflected_paths": 2,
+          "direct_visible": true,
+          "blocker_rf_m": null
+        },
+        "site1_e0": {
+          "direct_paths": 1,
+          "reflected_paths": 1,
+          "direct_visible": true,
+          "blocker_rf_m": null
+        },
+        "site1_e1": {
+          "direct_paths": 1,
+          "reflected_paths": 1,
+          "direct_visible": true,
+          "blocker_rf_m": null
+        },
+        "site1_e2": {
+          "direct_paths": 1,
+          "reflected_paths": 1,
+          "direct_visible": true,
+          "blocker_rf_m": null
+        },
+        "site1_e3": {
+          "direct_paths": 1,
+          "reflected_paths": 1,
+          "direct_visible": true,
+          "blocker_rf_m": null
+        }
+      },
+      "input_power_w": {
+        "site0_e0": 2.7465585361596823e-09,
+        "site0_e1": 3.0154114760705397e-09,
+        "site0_e2": 3.016864758009774e-09,
+        "site0_e3": 2.7401778623925566e-09,
+        "site1_e0": 1.9762660397049103e-09,
+        "site1_e1": 1.817211048305012e-09,
+        "site1_e2": 1.5500861705319835e-09,
+        "site1_e3": 1.2197233223432136e-09
+      }
+    },
+    {
+      "angle_deg": 15,
+      "direct_visible": [
+        true,
+        true
+      ],
+      "site_paths": [
+        {
+          "id": "site0",
+          "center_rf_m": [
+            0.0,
+            -25.0,
+            130.77262721580547
+          ],
+          "direct_elements": 4,
+          "elements": 4,
+          "reflected_paths_per_element": [
+            1,
+            1,
+            1,
+            1
+          ],
+          "blocker_rf_m": null
+        },
+        {
+          "id": "site1",
+          "center_rf_m": [
+            0.0,
+            25.0,
+            111.46968528723096
+          ],
+          "direct_elements": 4,
+          "elements": 4,
+          "reflected_paths_per_element": [
+            2,
+            2,
+            2,
+            2
+          ],
+          "blocker_rf_m": null
+        }
+      ],
+      "channel_paths": {
+        "site0_e0": {
+          "direct_paths": 1,
+          "reflected_paths": 1,
+          "direct_visible": true,
+          "blocker_rf_m": null
+        },
+        "site0_e1": {
+          "direct_paths": 1,
+          "reflected_paths": 1,
+          "direct_visible": true,
+          "blocker_rf_m": null
+        },
+        "site0_e2": {
+          "direct_paths": 1,
+          "reflected_paths": 1,
+          "direct_visible": true,
+          "blocker_rf_m": null
+        },
+        "site0_e3": {
+          "direct_paths": 1,
+          "reflected_paths": 1,
+          "direct_visible": true,
+          "blocker_rf_m": null
+        },
+        "site1_e0": {
+          "direct_paths": 1,
+          "reflected_paths": 2,
+          "direct_visible": true,
+          "blocker_rf_m": null
+        },
+        "site1_e1": {
+          "direct_paths": 1,
+          "reflected_paths": 2,
+          "direct_visible": true,
+          "blocker_rf_m": null
+        },
+        "site1_e2": {
+          "direct_paths": 1,
+          "reflected_paths": 2,
+          "direct_visible": true,
+          "blocker_rf_m": null
+        },
+        "site1_e3": {
+          "direct_paths": 1,
+          "reflected_paths": 2,
+          "direct_visible": true,
+          "blocker_rf_m": null
+        }
+      },
+      "input_power_w": {
+        "site0_e0": 5.772624045441432e-10,
+        "site0_e1": 8.602860646078625e-10,
+        "site0_e2": 1.1920860965020097e-09,
+        "site0_e3": 1.5027080690899197e-09,
+        "site1_e0": 6.193651702623981e-10,
+        "site1_e1": 6.292526499862561e-10,
+        "site1_e2": 6.23063434179727e-10,
+        "site1_e3": 6.027636167971195e-10
+      }
+    },
+    {
+      "angle_deg": 30,
+      "direct_visible": [
+        true,
+        true
+      ],
+      "site_paths": [
+        {
+          "id": "site0",
+          "center_rf_m": [
+            0.0,
+            -25.0,
+            130.77262721580547
+          ],
+          "direct_elements": 4,
+          "elements": 4,
+          "reflected_paths_per_element": [
+            2,
+            2,
+            2,
+            2
+          ],
+          "blocker_rf_m": null
+        },
+        {
+          "id": "site1",
+          "center_rf_m": [
+            0.0,
+            25.0,
+            111.46968528723096
+          ],
+          "direct_elements": 4,
+          "elements": 4,
+          "reflected_paths_per_element": [
+            5,
+            5,
+            5,
+            5
+          ],
+          "blocker_rf_m": null
+        }
+      ],
+      "channel_paths": {
+        "site0_e0": {
+          "direct_paths": 1,
+          "reflected_paths": 2,
+          "direct_visible": true,
+          "blocker_rf_m": null
+        },
+        "site0_e1": {
+          "direct_paths": 1,
+          "reflected_paths": 2,
+          "direct_visible": true,
+          "blocker_rf_m": null
+        },
+        "site0_e2": {
+          "direct_paths": 1,
+          "reflected_paths": 2,
+          "direct_visible": true,
+          "blocker_rf_m": null
+        },
+        "site0_e3": {
+          "direct_paths": 1,
+          "reflected_paths": 2,
+          "direct_visible": true,
+          "blocker_rf_m": null
+        },
+        "site1_e0": {
+          "direct_paths": 1,
+          "reflected_paths": 5,
+          "direct_visible": true,
+          "blocker_rf_m": null
+        },
+        "site1_e1": {
+          "direct_paths": 1,
+          "reflected_paths": 5,
+          "direct_visible": true,
+          "blocker_rf_m": null
+        },
+        "site1_e2": {
+          "direct_paths": 1,
+          "reflected_paths": 5,
+          "direct_visible": true,
+          "blocker_rf_m": null
+        },
+        "site1_e3": {
+          "direct_paths": 1,
+          "reflected_paths": 5,
+          "direct_visible": true,
+          "blocker_rf_m": null
+        }
+      },
+      "input_power_w": {
+        "site0_e0": 9.4880026058064e-10,
+        "site0_e1": 1.403368754537837e-09,
+        "site0_e2": 1.4495731281982671e-09,
+        "site0_e3": 1.0545601059064325e-09,
+        "site1_e0": 1.1188817927720862e-10,
+        "site1_e1": 2.7547120140525294e-10,
+        "site1_e2": 5.672911584930773e-10,
+        "site1_e3": 9.70765134944429e-10
+      }
+    },
+    {
+      "angle_deg": 45,
+      "direct_visible": [
+        true,
+        true
+      ],
+      "site_paths": [
+        {
+          "id": "site0",
+          "center_rf_m": [
+            0.0,
+            -25.0,
+            130.77262721580547
+          ],
+          "direct_elements": 4,
+          "elements": 4,
+          "reflected_paths_per_element": [
+            3,
+            3,
+            3,
+            3
+          ],
+          "blocker_rf_m": null
+        },
+        {
+          "id": "site1",
+          "center_rf_m": [
+            0.0,
+            25.0,
+            111.46968528723096
+          ],
+          "direct_elements": 4,
+          "elements": 4,
+          "reflected_paths_per_element": [
+            4,
+            4,
+            4,
+            4
+          ],
+          "blocker_rf_m": null
+        }
+      ],
+      "channel_paths": {
+        "site0_e0": {
+          "direct_paths": 1,
+          "reflected_paths": 3,
+          "direct_visible": true,
+          "blocker_rf_m": null
+        },
+        "site0_e1": {
+          "direct_paths": 1,
+          "reflected_paths": 3,
+          "direct_visible": true,
+          "blocker_rf_m": null
+        },
+        "site0_e2": {
+          "direct_paths": 1,
+          "reflected_paths": 3,
+          "direct_visible": true,
+          "blocker_rf_m": null
+        },
+        "site0_e3": {
+          "direct_paths": 1,
+          "reflected_paths": 3,
+          "direct_visible": true,
+          "blocker_rf_m": null
+        },
+        "site1_e0": {
+          "direct_paths": 1,
+          "reflected_paths": 4,
+          "direct_visible": true,
+          "blocker_rf_m": null
+        },
+        "site1_e1": {
+          "direct_paths": 1,
+          "reflected_paths": 4,
+          "direct_visible": true,
+          "blocker_rf_m": null
+        },
+        "site1_e2": {
+          "direct_paths": 1,
+          "reflected_paths": 4,
+          "direct_visible": true,
+          "blocker_rf_m": null
+        },
+        "site1_e3": {
+          "direct_paths": 1,
+          "reflected_paths": 4,
+          "direct_visible": true,
+          "blocker_rf_m": null
+        }
+      },
+      "input_power_w": {
+        "site0_e0": 8.613754709507759e-10,
+        "site0_e1": 6.422723464183377e-10,
+        "site0_e2": 4.5970466322486914e-10,
+        "site0_e3": 6.182077072480752e-10,
+        "site1_e0": 3.6755512522468337e-10,
+        "site1_e1": 4.0200348605523573e-10,
+        "site1_e2": 3.9373701521405735e-10,
+        "site1_e3": 3.42674999487258e-10
+      }
+    },
+    {
+      "angle_deg": 60,
+      "direct_visible": [
+        true,
+        true
+      ],
+      "site_paths": [
+        {
+          "id": "site0",
+          "center_rf_m": [
+            0.0,
+            -25.0,
+            130.77262721580547
+          ],
+          "direct_elements": 4,
+          "elements": 4,
+          "reflected_paths_per_element": [
+            1,
+            1,
+            1,
+            1
+          ],
+          "blocker_rf_m": null
+        },
+        {
+          "id": "site1",
+          "center_rf_m": [
+            0.0,
+            25.0,
+            111.46968528723096
+          ],
+          "direct_elements": 4,
+          "elements": 4,
+          "reflected_paths_per_element": [
+            3,
+            3,
+            3,
+            3
+          ],
+          "blocker_rf_m": null
+        }
+      ],
+      "channel_paths": {
+        "site0_e0": {
+          "direct_paths": 1,
+          "reflected_paths": 1,
+          "direct_visible": true,
+          "blocker_rf_m": null
+        },
+        "site0_e1": {
+          "direct_paths": 1,
+          "reflected_paths": 1,
+          "direct_visible": true,
+          "blocker_rf_m": null
+        },
+        "site0_e2": {
+          "direct_paths": 1,
+          "reflected_paths": 1,
+          "direct_visible": true,
+          "blocker_rf_m": null
+        },
+        "site0_e3": {
+          "direct_paths": 1,
+          "reflected_paths": 1,
+          "direct_visible": true,
+          "blocker_rf_m": null
+        },
+        "site1_e0": {
+          "direct_paths": 1,
+          "reflected_paths": 3,
+          "direct_visible": true,
+          "blocker_rf_m": null
+        },
+        "site1_e1": {
+          "direct_paths": 1,
+          "reflected_paths": 3,
+          "direct_visible": true,
+          "blocker_rf_m": null
+        },
+        "site1_e2": {
+          "direct_paths": 1,
+          "reflected_paths": 3,
+          "direct_visible": true,
+          "blocker_rf_m": null
+        },
+        "site1_e3": {
+          "direct_paths": 1,
+          "reflected_paths": 3,
+          "direct_visible": true,
+          "blocker_rf_m": null
+        }
+      },
+      "input_power_w": {
+        "site0_e0": 9.039274329047942e-10,
+        "site0_e1": 9.290707092546313e-10,
+        "site0_e2": 8.091217140737683e-10,
+        "site0_e3": 8.170749632441243e-10,
+        "site1_e0": 6.651282302705397e-10,
+        "site1_e1": 6.184845413592654e-10,
+        "site1_e2": 4.411545295734953e-10,
+        "site1_e3": 2.3524607262181974e-10
+      }
+    },
+    {
+      "angle_deg": 75,
+      "direct_visible": [
+        true,
+        true
+      ],
+      "site_paths": [
+        {
+          "id": "site0",
+          "center_rf_m": [
+            0.0,
+            -25.0,
+            130.77262721580547
+          ],
+          "direct_elements": 4,
+          "elements": 4,
+          "reflected_paths_per_element": [
+            2,
+            2,
+            2,
+            2
+          ],
+          "blocker_rf_m": null
+        },
+        {
+          "id": "site1",
+          "center_rf_m": [
+            0.0,
+            25.0,
+            111.46968528723096
+          ],
+          "direct_elements": 4,
+          "elements": 4,
+          "reflected_paths_per_element": [
+            2,
+            2,
+            2,
+            2
+          ],
+          "blocker_rf_m": null
+        }
+      ],
+      "channel_paths": {
+        "site0_e0": {
+          "direct_paths": 1,
+          "reflected_paths": 2,
+          "direct_visible": true,
+          "blocker_rf_m": null
+        },
+        "site0_e1": {
+          "direct_paths": 1,
+          "reflected_paths": 2,
+          "direct_visible": true,
+          "blocker_rf_m": null
+        },
+        "site0_e2": {
+          "direct_paths": 1,
+          "reflected_paths": 2,
+          "direct_visible": true,
+          "blocker_rf_m": null
+        },
+        "site0_e3": {
+          "direct_paths": 1,
+          "reflected_paths": 2,
+          "direct_visible": true,
+          "blocker_rf_m": null
+        },
+        "site1_e0": {
+          "direct_paths": 1,
+          "reflected_paths": 2,
+          "direct_visible": true,
+          "blocker_rf_m": null
+        },
+        "site1_e1": {
+          "direct_paths": 1,
+          "reflected_paths": 2,
+          "direct_visible": true,
+          "blocker_rf_m": null
+        },
+        "site1_e2": {
+          "direct_paths": 1,
+          "reflected_paths": 2,
+          "direct_visible": true,
+          "blocker_rf_m": null
+        },
+        "site1_e3": {
+          "direct_paths": 1,
+          "reflected_paths": 2,
+          "direct_visible": true,
+          "blocker_rf_m": null
+        }
+      },
+      "input_power_w": {
+        "site0_e0": 1.6777653710775553e-09,
+        "site0_e1": 1.4205258080934868e-09,
+        "site0_e2": 1.5033788658413982e-09,
+        "site0_e3": 1.7106353000784225e-09,
+        "site1_e0": 1.2492776813033402e-09,
+        "site1_e1": 7.383442746089486e-10,
+        "site1_e2": 5.043812589811125e-10,
+        "site1_e3": 6.278741970788815e-10
+      }
+    },
+    {
+      "angle_deg": 90,
+      "direct_visible": [
+        true,
+        true
+      ],
+      "site_paths": [
+        {
+          "id": "site0",
+          "center_rf_m": [
+            0.0,
+            -25.0,
+            130.77262721580547
+          ],
+          "direct_elements": 4,
+          "elements": 4,
+          "reflected_paths_per_element": [
+            2,
+            2,
+            2,
+            2
+          ],
+          "blocker_rf_m": null
+        },
+        {
+          "id": "site1",
+          "center_rf_m": [
+            0.0,
+            25.0,
+            111.46968528723096
+          ],
+          "direct_elements": 4,
+          "elements": 4,
+          "reflected_paths_per_element": [
+            2,
+            2,
+            2,
+            2
+          ],
+          "blocker_rf_m": null
+        }
+      ],
+      "channel_paths": {
+        "site0_e0": {
+          "direct_paths": 1,
+          "reflected_paths": 2,
+          "direct_visible": true,
+          "blocker_rf_m": null
+        },
+        "site0_e1": {
+          "direct_paths": 1,
+          "reflected_paths": 2,
+          "direct_visible": true,
+          "blocker_rf_m": null
+        },
+        "site0_e2": {
+          "direct_paths": 1,
+          "reflected_paths": 2,
+          "direct_visible": true,
+          "blocker_rf_m": null
+        },
+        "site0_e3": {
+          "direct_paths": 1,
+          "reflected_paths": 2,
+          "direct_visible": true,
+          "blocker_rf_m": null
+        },
+        "site1_e0": {
+          "direct_paths": 1,
+          "reflected_paths": 2,
+          "direct_visible": true,
+          "blocker_rf_m": null
+        },
+        "site1_e1": {
+          "direct_paths": 1,
+          "reflected_paths": 2,
+          "direct_visible": true,
+          "blocker_rf_m": null
+        },
+        "site1_e2": {
+          "direct_paths": 1,
+          "reflected_paths": 2,
+          "direct_visible": true,
+          "blocker_rf_m": null
+        },
+        "site1_e3": {
+          "direct_paths": 1,
+          "reflected_paths": 2,
+          "direct_visible": true,
+          "blocker_rf_m": null
+        }
+      },
+      "input_power_w": {
+        "site0_e0": 1.2286633932490076e-09,
+        "site0_e1": 8.458712619230369e-10,
+        "site0_e2": 5.724319351863016e-10,
+        "site0_e3": 1.2907892532609822e-09,
+        "site1_e0": 5.131468028274355e-10,
+        "site1_e1": 9.126438493822775e-10,
+        "site1_e2": 1.2899730172932777e-09,
+        "site1_e3": 1.394477644467429e-09
+      }
+    },
+    {
+      "angle_deg": 105,
+      "direct_visible": [
+        true,
+        true
+      ],
+      "site_paths": [
+        {
+          "id": "site0",
+          "center_rf_m": [
+            0.0,
+            -25.0,
+            130.77262721580547
+          ],
+          "direct_elements": 4,
+          "elements": 4,
+          "reflected_paths_per_element": [
+            2,
+            2,
+            2,
+            2
+          ],
+          "blocker_rf_m": null
+        },
+        {
+          "id": "site1",
+          "center_rf_m": [
+            0.0,
+            25.0,
+            111.46968528723096
+          ],
+          "direct_elements": 4,
+          "elements": 4,
+          "reflected_paths_per_element": [
+            3,
+            3,
+            3,
+            3
+          ],
+          "blocker_rf_m": null
+        }
+      ],
+      "channel_paths": {
+        "site0_e0": {
+          "direct_paths": 1,
+          "reflected_paths": 2,
+          "direct_visible": true,
+          "blocker_rf_m": null
+        },
+        "site0_e1": {
+          "direct_paths": 1,
+          "reflected_paths": 2,
+          "direct_visible": true,
+          "blocker_rf_m": null
+        },
+        "site0_e2": {
+          "direct_paths": 1,
+          "reflected_paths": 2,
+          "direct_visible": true,
+          "blocker_rf_m": null
+        },
+        "site0_e3": {
+          "direct_paths": 1,
+          "reflected_paths": 2,
+          "direct_visible": true,
+          "blocker_rf_m": null
+        },
+        "site1_e0": {
+          "direct_paths": 1,
+          "reflected_paths": 3,
+          "direct_visible": true,
+          "blocker_rf_m": null
+        },
+        "site1_e1": {
+          "direct_paths": 1,
+          "reflected_paths": 3,
+          "direct_visible": true,
+          "blocker_rf_m": null
+        },
+        "site1_e2": {
+          "direct_paths": 1,
+          "reflected_paths": 3,
+          "direct_visible": true,
+          "blocker_rf_m": null
+        },
+        "site1_e3": {
+          "direct_paths": 1,
+          "reflected_paths": 3,
+          "direct_visible": true,
+          "blocker_rf_m": null
+        }
+      },
+      "input_power_w": {
+        "site0_e0": 6.478371727958177e-10,
+        "site0_e1": 6.91338764013949e-10,
+        "site0_e2": 1.5681169696080133e-09,
+        "site0_e3": 5.888079468441276e-10,
+        "site1_e0": 2.791043396399573e-09,
+        "site1_e1": 2.7245419254029457e-09,
+        "site1_e2": 2.0770085651378167e-09,
+        "site1_e3": 1.3998808778836747e-09
+      }
+    },
+    {
+      "angle_deg": 120,
+      "direct_visible": [
+        true,
+        true
+      ],
+      "site_paths": [
+        {
+          "id": "site0",
+          "center_rf_m": [
+            0.0,
+            -25.0,
+            130.77262721580547
+          ],
+          "direct_elements": 4,
+          "elements": 4,
+          "reflected_paths_per_element": [
+            1,
+            1,
+            1,
+            1
+          ],
+          "blocker_rf_m": null
+        },
+        {
+          "id": "site1",
+          "center_rf_m": [
+            0.0,
+            25.0,
+            111.46968528723096
+          ],
+          "direct_elements": 4,
+          "elements": 4,
+          "reflected_paths_per_element": [
+            2,
+            2,
+            2,
+            2
+          ],
+          "blocker_rf_m": null
+        }
+      ],
+      "channel_paths": {
+        "site0_e0": {
+          "direct_paths": 1,
+          "reflected_paths": 1,
+          "direct_visible": true,
+          "blocker_rf_m": null
+        },
+        "site0_e1": {
+          "direct_paths": 1,
+          "reflected_paths": 1,
+          "direct_visible": true,
+          "blocker_rf_m": null
+        },
+        "site0_e2": {
+          "direct_paths": 1,
+          "reflected_paths": 1,
+          "direct_visible": true,
+          "blocker_rf_m": null
+        },
+        "site0_e3": {
+          "direct_paths": 1,
+          "reflected_paths": 1,
+          "direct_visible": true,
+          "blocker_rf_m": null
+        },
+        "site1_e0": {
+          "direct_paths": 1,
+          "reflected_paths": 2,
+          "direct_visible": true,
+          "blocker_rf_m": null
+        },
+        "site1_e1": {
+          "direct_paths": 1,
+          "reflected_paths": 2,
+          "direct_visible": true,
+          "blocker_rf_m": null
+        },
+        "site1_e2": {
+          "direct_paths": 1,
+          "reflected_paths": 2,
+          "direct_visible": true,
+          "blocker_rf_m": null
+        },
+        "site1_e3": {
+          "direct_paths": 1,
+          "reflected_paths": 2,
+          "direct_visible": true,
+          "blocker_rf_m": null
+        }
+      },
+      "input_power_w": {
+        "site0_e0": 8.415044217002787e-10,
+        "site0_e1": 7.746362440386179e-10,
+        "site0_e2": 9.41760114336887e-10,
+        "site0_e3": 9.175012416484662e-10,
+        "site1_e0": 4.768490602380382e-10,
+        "site1_e1": 5.649464229762202e-10,
+        "site1_e2": 1.093748203118139e-09,
+        "site1_e3": 1.748397315814998e-09
+      }
+    },
+    {
+      "angle_deg": 135,
+      "direct_visible": [
+        true,
+        true
+      ],
+      "site_paths": [
+        {
+          "id": "site0",
+          "center_rf_m": [
+            0.0,
+            -25.0,
+            130.77262721580547
+          ],
+          "direct_elements": 4,
+          "elements": 4,
+          "reflected_paths_per_element": [
+            1,
+            1,
+            1,
+            1
+          ],
+          "blocker_rf_m": null
+        },
+        {
+          "id": "site1",
+          "center_rf_m": [
+            0.0,
+            25.0,
+            111.46968528723096
+          ],
+          "direct_elements": 4,
+          "elements": 4,
+          "reflected_paths_per_element": [
+            2,
+            2,
+            2,
+            2
+          ],
+          "blocker_rf_m": null
+        }
+      ],
+      "channel_paths": {
+        "site0_e0": {
+          "direct_paths": 1,
+          "reflected_paths": 1,
+          "direct_visible": true,
+          "blocker_rf_m": null
+        },
+        "site0_e1": {
+          "direct_paths": 1,
+          "reflected_paths": 1,
+          "direct_visible": true,
+          "blocker_rf_m": null
+        },
+        "site0_e2": {
+          "direct_paths": 1,
+          "reflected_paths": 1,
+          "direct_visible": true,
+          "blocker_rf_m": null
+        },
+        "site0_e3": {
+          "direct_paths": 1,
+          "reflected_paths": 1,
+          "direct_visible": true,
+          "blocker_rf_m": null
+        },
+        "site1_e0": {
+          "direct_paths": 1,
+          "reflected_paths": 2,
+          "direct_visible": true,
+          "blocker_rf_m": null
+        },
+        "site1_e1": {
+          "direct_paths": 1,
+          "reflected_paths": 2,
+          "direct_visible": true,
+          "blocker_rf_m": null
+        },
+        "site1_e2": {
+          "direct_paths": 1,
+          "reflected_paths": 2,
+          "direct_visible": true,
+          "blocker_rf_m": null
+        },
+        "site1_e3": {
+          "direct_paths": 1,
+          "reflected_paths": 2,
+          "direct_visible": true,
+          "blocker_rf_m": null
+        }
+      },
+      "input_power_w": {
+        "site0_e0": 9.60927781790133e-10,
+        "site0_e1": 9.46340561469583e-10,
+        "site0_e2": 8.089135472566511e-10,
+        "site0_e3": 8.397380013569489e-10,
+        "site1_e0": 1.6229748656115817e-09,
+        "site1_e1": 1.487893364071624e-09,
+        "site1_e2": 1.19310727964006e-09,
+        "site1_e3": 9.456162519683176e-10
+      }
+    },
+    {
+      "angle_deg": 150,
+      "direct_visible": [
+        true,
+        true
+      ],
+      "site_paths": [
+        {
+          "id": "site0",
+          "center_rf_m": [
+            0.0,
+            -25.0,
+            130.77262721580547
+          ],
+          "direct_elements": 4,
+          "elements": 4,
+          "reflected_paths_per_element": [
+            2,
+            2,
+            2,
+            2
+          ],
+          "blocker_rf_m": null
+        },
+        {
+          "id": "site1",
+          "center_rf_m": [
+            0.0,
+            25.0,
+            111.46968528723096
+          ],
+          "direct_elements": 4,
+          "elements": 4,
+          "reflected_paths_per_element": [
+            4,
+            4,
+            4,
+            4
+          ],
+          "blocker_rf_m": null
+        }
+      ],
+      "channel_paths": {
+        "site0_e0": {
+          "direct_paths": 1,
+          "reflected_paths": 2,
+          "direct_visible": true,
+          "blocker_rf_m": null
+        },
+        "site0_e1": {
+          "direct_paths": 1,
+          "reflected_paths": 2,
+          "direct_visible": true,
+          "blocker_rf_m": null
+        },
+        "site0_e2": {
+          "direct_paths": 1,
+          "reflected_paths": 2,
+          "direct_visible": true,
+          "blocker_rf_m": null
+        },
+        "site0_e3": {
+          "direct_paths": 1,
+          "reflected_paths": 2,
+          "direct_visible": true,
+          "blocker_rf_m": null
+        },
+        "site1_e0": {
+          "direct_paths": 1,
+          "reflected_paths": 4,
+          "direct_visible": true,
+          "blocker_rf_m": null
+        },
+        "site1_e1": {
+          "direct_paths": 1,
+          "reflected_paths": 4,
+          "direct_visible": true,
+          "blocker_rf_m": null
+        },
+        "site1_e2": {
+          "direct_paths": 1,
+          "reflected_paths": 4,
+          "direct_visible": true,
+          "blocker_rf_m": null
+        },
+        "site1_e3": {
+          "direct_paths": 1,
+          "reflected_paths": 4,
+          "direct_visible": true,
+          "blocker_rf_m": null
+        }
+      },
+      "input_power_w": {
+        "site0_e0": 1.3855386837846595e-09,
+        "site0_e1": 1.1456280368804528e-09,
+        "site0_e2": 8.329235079429509e-10,
+        "site0_e3": 9.4286212171113e-10,
+        "site1_e0": 1.0802732042236585e-09,
+        "site1_e1": 1.279909400686563e-09,
+        "site1_e2": 1.355147105641663e-09,
+        "site1_e3": 1.3244607632856287e-09
+      }
+    },
+    {
+      "angle_deg": 165,
+      "direct_visible": [
+        true,
+        true
+      ],
+      "site_paths": [
+        {
+          "id": "site0",
+          "center_rf_m": [
+            0.0,
+            -25.0,
+            130.77262721580547
+          ],
+          "direct_elements": 4,
+          "elements": 4,
+          "reflected_paths_per_element": [
+            1,
+            1,
+            1,
+            1
+          ],
+          "blocker_rf_m": null
+        },
+        {
+          "id": "site1",
+          "center_rf_m": [
+            0.0,
+            25.0,
+            111.46968528723096
+          ],
+          "direct_elements": 4,
+          "elements": 4,
+          "reflected_paths_per_element": [
+            3,
+            3,
+            3,
+            3
+          ],
+          "blocker_rf_m": null
+        }
+      ],
+      "channel_paths": {
+        "site0_e0": {
+          "direct_paths": 1,
+          "reflected_paths": 1,
+          "direct_visible": true,
+          "blocker_rf_m": null
+        },
+        "site0_e1": {
+          "direct_paths": 1,
+          "reflected_paths": 1,
+          "direct_visible": true,
+          "blocker_rf_m": null
+        },
+        "site0_e2": {
+          "direct_paths": 1,
+          "reflected_paths": 1,
+          "direct_visible": true,
+          "blocker_rf_m": null
+        },
+        "site0_e3": {
+          "direct_paths": 1,
+          "reflected_paths": 1,
+          "direct_visible": true,
+          "blocker_rf_m": null
+        },
+        "site1_e0": {
+          "direct_paths": 1,
+          "reflected_paths": 3,
+          "direct_visible": true,
+          "blocker_rf_m": null
+        },
+        "site1_e1": {
+          "direct_paths": 1,
+          "reflected_paths": 3,
+          "direct_visible": true,
+          "blocker_rf_m": null
+        },
+        "site1_e2": {
+          "direct_paths": 1,
+          "reflected_paths": 3,
+          "direct_visible": true,
+          "blocker_rf_m": null
+        },
+        "site1_e3": {
+          "direct_paths": 1,
+          "reflected_paths": 3,
+          "direct_visible": true,
+          "blocker_rf_m": null
+        }
+      },
+      "input_power_w": {
+        "site0_e0": 7.185107508966837e-10,
+        "site0_e1": 1.195323839908724e-09,
+        "site0_e2": 1.5048422508101567e-09,
+        "site0_e3": 1.3552309274800223e-09,
+        "site1_e0": 8.93058127449109e-10,
+        "site1_e1": 7.182495709301406e-10,
+        "site1_e2": 6.125457918670918e-10,
+        "site1_e3": 5.813018399969394e-10
+      }
+    },
+    {
+      "angle_deg": 180,
+      "direct_visible": [
+        true,
+        true
+      ],
+      "site_paths": [
+        {
+          "id": "site0",
+          "center_rf_m": [
+            0.0,
+            -25.0,
+            130.77262721580547
+          ],
+          "direct_elements": 4,
+          "elements": 4,
+          "reflected_paths_per_element": [
+            2,
+            2,
+            2,
+            2
+          ],
+          "blocker_rf_m": null
+        },
+        {
+          "id": "site1",
+          "center_rf_m": [
+            0.0,
+            25.0,
+            111.46968528723096
+          ],
+          "direct_elements": 4,
+          "elements": 4,
+          "reflected_paths_per_element": [
+            4,
+            4,
+            4,
+            4
+          ],
+          "blocker_rf_m": null
+        }
+      ],
+      "channel_paths": {
+        "site0_e0": {
+          "direct_paths": 1,
+          "reflected_paths": 2,
+          "direct_visible": true,
+          "blocker_rf_m": null
+        },
+        "site0_e1": {
+          "direct_paths": 1,
+          "reflected_paths": 2,
+          "direct_visible": true,
+          "blocker_rf_m": null
+        },
+        "site0_e2": {
+          "direct_paths": 1,
+          "reflected_paths": 2,
+          "direct_visible": true,
+          "blocker_rf_m": null
+        },
+        "site0_e3": {
+          "direct_paths": 1,
+          "reflected_paths": 2,
+          "direct_visible": true,
+          "blocker_rf_m": null
+        },
+        "site1_e0": {
+          "direct_paths": 1,
+          "reflected_paths": 4,
+          "direct_visible": true,
+          "blocker_rf_m": null
+        },
+        "site1_e1": {
+          "direct_paths": 1,
+          "reflected_paths": 4,
+          "direct_visible": true,
+          "blocker_rf_m": null
+        },
+        "site1_e2": {
+          "direct_paths": 1,
+          "reflected_paths": 4,
+          "direct_visible": true,
+          "blocker_rf_m": null
+        },
+        "site1_e3": {
+          "direct_paths": 1,
+          "reflected_paths": 4,
+          "direct_visible": true,
+          "blocker_rf_m": null
+        }
+      },
+      "input_power_w": {
+        "site0_e0": 1.419962258886187e-09,
+        "site0_e1": 9.756443430930517e-10,
+        "site0_e2": 4.80172845929161e-10,
+        "site0_e3": 1.4933672354278116e-10,
+        "site1_e0": 1.0926168858560459e-09,
+        "site1_e1": 1.0236794745210887e-09,
+        "site1_e2": 1.0461839172748455e-09,
+        "site1_e3": 1.1450888015573923e-09
+      }
+    },
+    {
+      "angle_deg": 195,
+      "direct_visible": [
+        true,
+        true
+      ],
+      "site_paths": [
+        {
+          "id": "site0",
+          "center_rf_m": [
+            0.0,
+            -25.0,
+            130.77262721580547
+          ],
+          "direct_elements": 4,
+          "elements": 4,
+          "reflected_paths_per_element": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "blocker_rf_m": null
+        },
+        {
+          "id": "site1",
+          "center_rf_m": [
+            0.0,
+            25.0,
+            111.46968528723096
+          ],
+          "direct_elements": 4,
+          "elements": 4,
+          "reflected_paths_per_element": [
+            1,
+            1,
+            1,
+            1
+          ],
+          "blocker_rf_m": null
+        }
+      ],
+      "channel_paths": {
+        "site0_e0": {
+          "direct_paths": 1,
+          "reflected_paths": 0,
+          "direct_visible": true,
+          "blocker_rf_m": null
+        },
+        "site0_e1": {
+          "direct_paths": 1,
+          "reflected_paths": 0,
+          "direct_visible": true,
+          "blocker_rf_m": null
+        },
+        "site0_e2": {
+          "direct_paths": 1,
+          "reflected_paths": 0,
+          "direct_visible": true,
+          "blocker_rf_m": null
+        },
+        "site0_e3": {
+          "direct_paths": 1,
+          "reflected_paths": 0,
+          "direct_visible": true,
+          "blocker_rf_m": null
+        },
+        "site1_e0": {
+          "direct_paths": 1,
+          "reflected_paths": 1,
+          "direct_visible": true,
+          "blocker_rf_m": null
+        },
+        "site1_e1": {
+          "direct_paths": 1,
+          "reflected_paths": 1,
+          "direct_visible": true,
+          "blocker_rf_m": null
+        },
+        "site1_e2": {
+          "direct_paths": 1,
+          "reflected_paths": 1,
+          "direct_visible": true,
+          "blocker_rf_m": null
+        },
+        "site1_e3": {
+          "direct_paths": 1,
+          "reflected_paths": 1,
+          "direct_visible": true,
+          "blocker_rf_m": null
+        }
+      },
+      "input_power_w": {
+        "site0_e0": 1.051297382481664e-09,
+        "site0_e1": 1.0510867731738927e-09,
+        "site0_e2": 1.0508744985315843e-09,
+        "site0_e3": 1.0506628900230908e-09,
+        "site1_e0": 1.1527145904466352e-09,
+        "site1_e1": 1.1123678644864299e-09,
+        "site1_e2": 1.0368057523635343e-09,
+        "site1_e3": 9.40532318693954e-10
+      }
+    },
+    {
+      "angle_deg": 210,
+      "direct_visible": [
+        false,
+        false
+      ],
+      "site_paths": [
+        {
+          "id": "site0",
+          "center_rf_m": [
+            0.0,
+            -25.0,
+            130.77262721580547
+          ],
+          "direct_elements": 0,
+          "elements": 4,
+          "reflected_paths_per_element": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "blocker_rf_m": [
+            -87.19966375390506,
+            -65.42256066077415,
+            158.6545050589666
+          ]
+        },
+        {
+          "id": "site1",
+          "center_rf_m": [
+            0.0,
+            25.0,
+            111.46968528723096
+          ],
+          "direct_elements": 0,
+          "elements": 4,
+          "reflected_paths_per_element": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "blocker_rf_m": [
+            -105.92542064396787,
+            -48.51279187634212,
+            154.7830143637858
+          ]
+        }
+      ],
+      "channel_paths": {
+        "site0_e0": {
+          "direct_paths": 0,
+          "reflected_paths": 0,
+          "direct_visible": false,
+          "blocker_rf_m": [
+            -87.19966375390506,
+            -65.42256066077415,
+            158.6545050589666
+          ]
+        },
+        "site0_e1": {
+          "direct_paths": 0,
+          "reflected_paths": 0,
+          "direct_visible": false,
+          "blocker_rf_m": [
+            -87.35371100976091,
+            -65.3958129683438,
+            158.70376128983887
+          ]
+        },
+        "site0_e2": {
+          "direct_paths": 0,
+          "reflected_paths": 0,
+          "direct_visible": false,
+          "blocker_rf_m": [
+            -87.50739165936908,
+            -65.36912893086856,
+            158.75290029926586
+          ]
+        },
+        "site0_e3": {
+          "direct_paths": 0,
+          "reflected_paths": 0,
+          "direct_visible": false,
+          "blocker_rf_m": [
+            -87.66070700986496,
+            -65.34250832138656,
+            158.80192250520088
+          ]
+        },
+        "site1_e0": {
+          "direct_paths": 0,
+          "reflected_paths": 0,
+          "direct_visible": false,
+          "blocker_rf_m": [
+            -105.92542064396787,
+            -48.51279187634212,
+            154.7830143637858
+          ]
+        },
+        "site1_e1": {
+          "direct_paths": 0,
+          "reflected_paths": 0,
+          "direct_visible": false,
+          "blocker_rf_m": [
+            -106.13511004599908,
+            -48.57431780482473,
+            154.86875720076324
+          ]
+        },
+        "site1_e2": {
+          "direct_paths": 0,
+          "reflected_paths": 0,
+          "direct_visible": false,
+          "blocker_rf_m": [
+            -106.34400570492384,
+            -48.6356108375046,
+            154.95417547300298
+          ]
+        },
+        "site1_e3": {
+          "direct_paths": 0,
+          "reflected_paths": 0,
+          "direct_visible": false,
+          "blocker_rf_m": [
+            -106.55211211909491,
+            -48.696672294264104,
+            155.0392710198994
+          ]
+        }
+      },
+      "input_power_w": {
+        "site0_e0": 0.0,
+        "site0_e1": 0.0,
+        "site0_e2": 0.0,
+        "site0_e3": 0.0,
+        "site1_e0": 0.0,
+        "site1_e1": 0.0,
+        "site1_e2": 0.0,
+        "site1_e3": 0.0
+      }
+    },
+    {
+      "angle_deg": 225,
+      "direct_visible": [
+        false,
+        false
+      ],
+      "site_paths": [
+        {
+          "id": "site0",
+          "center_rf_m": [
+            0.0,
+            -25.0,
+            130.77262721580547
+          ],
+          "direct_elements": 0,
+          "elements": 4,
+          "reflected_paths_per_element": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "blocker_rf_m": [
+            -62.49290269536579,
+            -78.81393381654871,
+            155.2454202160307
+          ]
+        },
+        {
+          "id": "site1",
+          "center_rf_m": [
+            0.0,
+            25.0,
+            111.46968528723096
+          ],
+          "direct_elements": 0,
+          "elements": 4,
+          "reflected_paths_per_element": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "blocker_rf_m": [
+            -62.61750636201833,
+            -46.6316480040049,
+            142.82872577306
+          ]
+        }
+      ],
+      "channel_paths": {
+        "site0_e0": {
+          "direct_paths": 0,
+          "reflected_paths": 0,
+          "direct_visible": false,
+          "blocker_rf_m": [
+            -62.49290269536579,
+            -78.81393381654871,
+            155.2454202160307
+          ]
+        },
+        "site0_e1": {
+          "direct_paths": 0,
+          "reflected_paths": 0,
+          "direct_visible": false,
+          "blocker_rf_m": [
+            -62.60896056918095,
+            -78.80761673531238,
+            155.29086954226491
+          ]
+        },
+        "site0_e2": {
+          "direct_paths": 0,
+          "reflected_paths": 0,
+          "direct_visible": false,
+          "blocker_rf_m": [
+            -62.72478296314158,
+            -78.80131247134833,
+            155.33622665243158
+          ]
+        },
+        "site0_e3": {
+          "direct_paths": 0,
+          "reflected_paths": 0,
+          "direct_visible": false,
+          "blocker_rf_m": [
+            -62.840370593199474,
+            -78.795020985687,
+            155.38149182690398
+          ]
+        },
+        "site1_e0": {
+          "direct_paths": 0,
+          "reflected_paths": 0,
+          "direct_visible": false,
+          "blocker_rf_m": [
+            -62.61750636201833,
+            -46.6316480040049,
+            142.82872577306
+          ]
+        },
+        "site1_e1": {
+          "direct_paths": 0,
+          "reflected_paths": 0,
+          "direct_visible": false,
+          "blocker_rf_m": [
+            -62.804188875837276,
+            -46.73885226630671,
+            142.92221695226792
+          ]
+        },
+        "site1_e2": {
+          "direct_paths": 0,
+          "reflected_paths": 0,
+          "direct_visible": false,
+          "blocker_rf_m": [
+            -62.99026182919688,
+            -46.84570648254348,
+            143.0154028617161
+          ]
+        },
+        "site1_e3": {
+          "direct_paths": 0,
+          "reflected_paths": 0,
+          "direct_visible": false,
+          "blocker_rf_m": [
+            -63.17572820275909,
+            -46.95221236438957,
+            143.10828499412924
+          ]
+        }
+      },
+      "input_power_w": {
+        "site0_e0": 0.0,
+        "site0_e1": 0.0,
+        "site0_e2": 0.0,
+        "site0_e3": 0.0,
+        "site1_e0": 0.0,
+        "site1_e1": 0.0,
+        "site1_e2": 0.0,
+        "site1_e3": 0.0
+      }
+    },
+    {
+      "angle_deg": 240,
+      "direct_visible": [
+        true,
+        false
+      ],
+      "site_paths": [
+        {
+          "id": "site0",
+          "center_rf_m": [
+            0.0,
+            -25.0,
+            130.77262721580547
+          ],
+          "direct_elements": 4,
+          "elements": 4,
+          "reflected_paths_per_element": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "blocker_rf_m": null
+        },
+        {
+          "id": "site1",
+          "center_rf_m": [
+            0.0,
+            25.0,
+            111.46968528723096
+          ],
+          "direct_elements": 0,
+          "elements": 4,
+          "reflected_paths_per_element": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "blocker_rf_m": [
+            -45.70402739419624,
+            -63.45838719700515,
+            143.83922071802462
+          ]
+        }
+      ],
+      "channel_paths": {
+        "site0_e0": {
+          "direct_paths": 1,
+          "reflected_paths": 0,
+          "direct_visible": true,
+          "blocker_rf_m": null
+        },
+        "site0_e1": {
+          "direct_paths": 1,
+          "reflected_paths": 0,
+          "direct_visible": true,
+          "blocker_rf_m": null
+        },
+        "site0_e2": {
+          "direct_paths": 1,
+          "reflected_paths": 0,
+          "direct_visible": true,
+          "blocker_rf_m": null
+        },
+        "site0_e3": {
+          "direct_paths": 1,
+          "reflected_paths": 0,
+          "direct_visible": true,
+          "blocker_rf_m": null
+        },
+        "site1_e0": {
+          "direct_paths": 0,
+          "reflected_paths": 0,
+          "direct_visible": false,
+          "blocker_rf_m": [
+            -45.70402739419624,
+            -63.45838719700515,
+            143.83922071802462
+          ]
+        },
+        "site1_e1": {
+          "direct_paths": 0,
+          "reflected_paths": 0,
+          "direct_visible": false,
+          "blocker_rf_m": [
+            -45.81703432767534,
+            -63.57272550851981,
+            143.91925703310966
+          ]
+        },
+        "site1_e2": {
+          "direct_paths": 0,
+          "reflected_paths": 0,
+          "direct_visible": false,
+          "blocker_rf_m": [
+            -45.929719620778584,
+            -63.68673839028996,
+            143.9990655488051
+          ]
+        },
+        "site1_e3": {
+          "direct_paths": 0,
+          "reflected_paths": 0,
+          "direct_visible": false,
+          "blocker_rf_m": [
+            -46.04208464473388,
+            -63.80042722969843,
+            144.07864723627287
+          ]
+        }
+      },
+      "input_power_w": {
+        "site0_e0": 1.1926669651884936e-09,
+        "site0_e1": 1.1913574571309482e-09,
+        "site0_e2": 1.1900493923633348e-09,
+        "site0_e3": 1.1887416606626289e-09,
+        "site1_e0": 0.0,
+        "site1_e1": 0.0,
+        "site1_e2": 0.0,
+        "site1_e3": 0.0
+      }
+    },
+    {
+      "angle_deg": 255,
+      "direct_visible": [
+        true,
+        true
+      ],
+      "site_paths": [
+        {
+          "id": "site0",
+          "center_rf_m": [
+            0.0,
+            -25.0,
+            130.77262721580547
+          ],
+          "direct_elements": 4,
+          "elements": 4,
+          "reflected_paths_per_element": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "blocker_rf_m": null
+        },
+        {
+          "id": "site1",
+          "center_rf_m": [
+            0.0,
+            25.0,
+            111.46968528723096
+          ],
+          "direct_elements": 4,
+          "elements": 4,
+          "reflected_paths_per_element": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "blocker_rf_m": null
+        }
+      ],
+      "channel_paths": {
+        "site0_e0": {
+          "direct_paths": 1,
+          "reflected_paths": 0,
+          "direct_visible": true,
+          "blocker_rf_m": null
+        },
+        "site0_e1": {
+          "direct_paths": 1,
+          "reflected_paths": 0,
+          "direct_visible": true,
+          "blocker_rf_m": null
+        },
+        "site0_e2": {
+          "direct_paths": 1,
+          "reflected_paths": 0,
+          "direct_visible": true,
+          "blocker_rf_m": null
+        },
+        "site0_e3": {
+          "direct_paths": 1,
+          "reflected_paths": 0,
+          "direct_visible": true,
+          "blocker_rf_m": null
+        },
+        "site1_e0": {
+          "direct_paths": 1,
+          "reflected_paths": 0,
+          "direct_visible": true,
+          "blocker_rf_m": null
+        },
+        "site1_e1": {
+          "direct_paths": 1,
+          "reflected_paths": 0,
+          "direct_visible": true,
+          "blocker_rf_m": null
+        },
+        "site1_e2": {
+          "direct_paths": 1,
+          "reflected_paths": 0,
+          "direct_visible": true,
+          "blocker_rf_m": null
+        },
+        "site1_e3": {
+          "direct_paths": 1,
+          "reflected_paths": 0,
+          "direct_visible": true,
+          "blocker_rf_m": null
+        }
+      },
+      "input_power_w": {
+        "site0_e0": 1.2196517129581252e-09,
+        "site0_e1": 1.2181025077495633e-09,
+        "site0_e2": 1.2165571883215875e-09,
+        "site0_e3": 1.2150144224065684e-09,
+        "site1_e0": 8.19964485199165e-10,
+        "site1_e1": 8.191016753755775e-10,
+        "site1_e2": 8.182409749757369e-10,
+        "site1_e3": 8.173810517320135e-10
+      }
+    },
+    {
+      "angle_deg": 270,
+      "direct_visible": [
+        true,
+        true
+      ],
+      "site_paths": [
+        {
+          "id": "site0",
+          "center_rf_m": [
+            0.0,
+            -25.0,
+            130.77262721580547
+          ],
+          "direct_elements": 4,
+          "elements": 4,
+          "reflected_paths_per_element": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "blocker_rf_m": null
+        },
+        {
+          "id": "site1",
+          "center_rf_m": [
+            0.0,
+            25.0,
+            111.46968528723096
+          ],
+          "direct_elements": 4,
+          "elements": 4,
+          "reflected_paths_per_element": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "blocker_rf_m": null
+        }
+      ],
+      "channel_paths": {
+        "site0_e0": {
+          "direct_paths": 1,
+          "reflected_paths": 0,
+          "direct_visible": true,
+          "blocker_rf_m": null
+        },
+        "site0_e1": {
+          "direct_paths": 1,
+          "reflected_paths": 0,
+          "direct_visible": true,
+          "blocker_rf_m": null
+        },
+        "site0_e2": {
+          "direct_paths": 1,
+          "reflected_paths": 0,
+          "direct_visible": true,
+          "blocker_rf_m": null
+        },
+        "site0_e3": {
+          "direct_paths": 1,
+          "reflected_paths": 0,
+          "direct_visible": true,
+          "blocker_rf_m": null
+        },
+        "site1_e0": {
+          "direct_paths": 1,
+          "reflected_paths": 0,
+          "direct_visible": true,
+          "blocker_rf_m": null
+        },
+        "site1_e1": {
+          "direct_paths": 1,
+          "reflected_paths": 0,
+          "direct_visible": true,
+          "blocker_rf_m": null
+        },
+        "site1_e2": {
+          "direct_paths": 1,
+          "reflected_paths": 0,
+          "direct_visible": true,
+          "blocker_rf_m": null
+        },
+        "site1_e3": {
+          "direct_paths": 1,
+          "reflected_paths": 0,
+          "direct_visible": true,
+          "blocker_rf_m": null
+        }
+      },
+      "input_power_w": {
+        "site0_e0": 1.2291365703021029e-09,
+        "site0_e1": 1.2275016558760399e-09,
+        "site0_e2": 1.2258695170075384e-09,
+        "site0_e3": 1.2242413749419256e-09,
+        "site1_e0": 8.15813472332394e-10,
+        "site1_e1": 8.149335650742273e-10,
+        "site1_e2": 8.140540463941193e-10,
+        "site1_e3": 8.131763595820019e-10
+      }
+    },
+    {
+      "angle_deg": 285,
+      "direct_visible": [
+        true,
+        true
+      ],
+      "site_paths": [
+        {
+          "id": "site0",
+          "center_rf_m": [
+            0.0,
+            -25.0,
+            130.77262721580547
+          ],
+          "direct_elements": 4,
+          "elements": 4,
+          "reflected_paths_per_element": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "blocker_rf_m": null
+        },
+        {
+          "id": "site1",
+          "center_rf_m": [
+            0.0,
+            25.0,
+            111.46968528723096
+          ],
+          "direct_elements": 4,
+          "elements": 4,
+          "reflected_paths_per_element": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "blocker_rf_m": null
+        }
+      ],
+      "channel_paths": {
+        "site0_e0": {
+          "direct_paths": 1,
+          "reflected_paths": 0,
+          "direct_visible": true,
+          "blocker_rf_m": null
+        },
+        "site0_e1": {
+          "direct_paths": 1,
+          "reflected_paths": 0,
+          "direct_visible": true,
+          "blocker_rf_m": null
+        },
+        "site0_e2": {
+          "direct_paths": 1,
+          "reflected_paths": 0,
+          "direct_visible": true,
+          "blocker_rf_m": null
+        },
+        "site0_e3": {
+          "direct_paths": 1,
+          "reflected_paths": 0,
+          "direct_visible": true,
+          "blocker_rf_m": null
+        },
+        "site1_e0": {
+          "direct_paths": 1,
+          "reflected_paths": 0,
+          "direct_visible": true,
+          "blocker_rf_m": null
+        },
+        "site1_e1": {
+          "direct_paths": 1,
+          "reflected_paths": 0,
+          "direct_visible": true,
+          "blocker_rf_m": null
+        },
+        "site1_e2": {
+          "direct_paths": 1,
+          "reflected_paths": 0,
+          "direct_visible": true,
+          "blocker_rf_m": null
+        },
+        "site1_e3": {
+          "direct_paths": 1,
+          "reflected_paths": 0,
+          "direct_visible": true,
+          "blocker_rf_m": null
+        }
+      },
+      "input_power_w": {
+        "site0_e0": 1.2196517129581252e-09,
+        "site0_e1": 1.2181027297941682e-09,
+        "site0_e2": 1.2165571883215875e-09,
+        "site0_e3": 1.2150144224065684e-09,
+        "site1_e0": 8.199650403106773e-10,
+        "site1_e1": 8.191016753755775e-10,
+        "site1_e2": 8.182409749757369e-10,
+        "site1_e3": 8.173810517320135e-10
+      }
+    },
+    {
+      "angle_deg": 300,
+      "direct_visible": [
+        true,
+        true
+      ],
+      "site_paths": [
+        {
+          "id": "site0",
+          "center_rf_m": [
+            0.0,
+            -25.0,
+            130.77262721580547
+          ],
+          "direct_elements": 4,
+          "elements": 4,
+          "reflected_paths_per_element": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "blocker_rf_m": null
+        },
+        {
+          "id": "site1",
+          "center_rf_m": [
+            0.0,
+            25.0,
+            111.46968528723096
+          ],
+          "direct_elements": 4,
+          "elements": 4,
+          "reflected_paths_per_element": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "blocker_rf_m": null
+        }
+      ],
+      "channel_paths": {
+        "site0_e0": {
+          "direct_paths": 1,
+          "reflected_paths": 0,
+          "direct_visible": true,
+          "blocker_rf_m": null
+        },
+        "site0_e1": {
+          "direct_paths": 1,
+          "reflected_paths": 0,
+          "direct_visible": true,
+          "blocker_rf_m": null
+        },
+        "site0_e2": {
+          "direct_paths": 1,
+          "reflected_paths": 0,
+          "direct_visible": true,
+          "blocker_rf_m": null
+        },
+        "site0_e3": {
+          "direct_paths": 1,
+          "reflected_paths": 0,
+          "direct_visible": true,
+          "blocker_rf_m": null
+        },
+        "site1_e0": {
+          "direct_paths": 1,
+          "reflected_paths": 0,
+          "direct_visible": true,
+          "blocker_rf_m": null
+        },
+        "site1_e1": {
+          "direct_paths": 1,
+          "reflected_paths": 0,
+          "direct_visible": true,
+          "blocker_rf_m": null
+        },
+        "site1_e2": {
+          "direct_paths": 1,
+          "reflected_paths": 0,
+          "direct_visible": true,
+          "blocker_rf_m": null
+        },
+        "site1_e3": {
+          "direct_paths": 1,
+          "reflected_paths": 0,
+          "direct_visible": true,
+          "blocker_rf_m": null
+        }
+      },
+      "input_power_w": {
+        "site0_e0": 1.1926669651884936e-09,
+        "site0_e1": 1.1913574571309482e-09,
+        "site0_e2": 1.1900493923633348e-09,
+        "site0_e3": 1.1887416606626289e-09,
+        "site1_e0": 8.323779443486501e-10,
+        "site1_e1": 8.31572588566587e-10,
+        "site1_e2": 8.307691201636658e-10,
+        "site1_e3": 8.299655962495933e-10
+      }
+    },
+    {
+      "angle_deg": 315,
+      "direct_visible": [
+        true,
+        true
+      ],
+      "site_paths": [
+        {
+          "id": "site0",
+          "center_rf_m": [
+            0.0,
+            -25.0,
+            130.77262721580547
+          ],
+          "direct_elements": 4,
+          "elements": 4,
+          "reflected_paths_per_element": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "blocker_rf_m": null
+        },
+        {
+          "id": "site1",
+          "center_rf_m": [
+            0.0,
+            25.0,
+            111.46968528723096
+          ],
+          "direct_elements": 4,
+          "elements": 4,
+          "reflected_paths_per_element": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "blocker_rf_m": null
+        }
+      ],
+      "channel_paths": {
+        "site0_e0": {
+          "direct_paths": 1,
+          "reflected_paths": 0,
+          "direct_visible": true,
+          "blocker_rf_m": null
+        },
+        "site0_e1": {
+          "direct_paths": 1,
+          "reflected_paths": 0,
+          "direct_visible": true,
+          "blocker_rf_m": null
+        },
+        "site0_e2": {
+          "direct_paths": 1,
+          "reflected_paths": 0,
+          "direct_visible": true,
+          "blocker_rf_m": null
+        },
+        "site0_e3": {
+          "direct_paths": 1,
+          "reflected_paths": 0,
+          "direct_visible": true,
+          "blocker_rf_m": null
+        },
+        "site1_e0": {
+          "direct_paths": 1,
+          "reflected_paths": 0,
+          "direct_visible": true,
+          "blocker_rf_m": null
+        },
+        "site1_e1": {
+          "direct_paths": 1,
+          "reflected_paths": 0,
+          "direct_visible": true,
+          "blocker_rf_m": null
+        },
+        "site1_e2": {
+          "direct_paths": 1,
+          "reflected_paths": 0,
+          "direct_visible": true,
+          "blocker_rf_m": null
+        },
+        "site1_e3": {
+          "direct_paths": 1,
+          "reflected_paths": 0,
+          "direct_visible": true,
+          "blocker_rf_m": null
+        }
+      },
+      "input_power_w": {
+        "site0_e0": 1.1521190668162262e-09,
+        "site0_e1": 1.151150952338753e-09,
+        "site0_e2": 1.1501817276382553e-09,
+        "site0_e3": 1.1492138352053871e-09,
+        "site1_e0": 8.529196793283234e-10,
+        "site1_e1": 8.522135774846618e-10,
+        "site1_e2": 8.515085858640248e-10,
+        "site1_e3": 8.508025950426656e-10
+      }
+    },
+    {
+      "angle_deg": 330,
+      "direct_visible": [
+        true,
+        true
+      ],
+      "site_paths": [
+        {
+          "id": "site0",
+          "center_rf_m": [
+            0.0,
+            -25.0,
+            130.77262721580547
+          ],
+          "direct_elements": 4,
+          "elements": 4,
+          "reflected_paths_per_element": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "blocker_rf_m": null
+        },
+        {
+          "id": "site1",
+          "center_rf_m": [
+            0.0,
+            25.0,
+            111.46968528723096
+          ],
+          "direct_elements": 4,
+          "elements": 4,
+          "reflected_paths_per_element": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "blocker_rf_m": null
+        }
+      ],
+      "channel_paths": {
+        "site0_e0": {
+          "direct_paths": 1,
+          "reflected_paths": 0,
+          "direct_visible": true,
+          "blocker_rf_m": null
+        },
+        "site0_e1": {
+          "direct_paths": 1,
+          "reflected_paths": 0,
+          "direct_visible": true,
+          "blocker_rf_m": null
+        },
+        "site0_e2": {
+          "direct_paths": 1,
+          "reflected_paths": 0,
+          "direct_visible": true,
+          "blocker_rf_m": null
+        },
+        "site0_e3": {
+          "direct_paths": 1,
+          "reflected_paths": 0,
+          "direct_visible": true,
+          "blocker_rf_m": null
+        },
+        "site1_e0": {
+          "direct_paths": 1,
+          "reflected_paths": 0,
+          "direct_visible": true,
+          "blocker_rf_m": null
+        },
+        "site1_e1": {
+          "direct_paths": 1,
+          "reflected_paths": 0,
+          "direct_visible": true,
+          "blocker_rf_m": null
+        },
+        "site1_e2": {
+          "direct_paths": 1,
+          "reflected_paths": 0,
+          "direct_visible": true,
+          "blocker_rf_m": null
+        },
+        "site1_e3": {
+          "direct_paths": 1,
+          "reflected_paths": 0,
+          "direct_visible": true,
+          "blocker_rf_m": null
+        }
+      },
+      "input_power_w": {
+        "site0_e0": 1.1032398328225668e-09,
+        "site0_e1": 1.1026540791547745e-09,
+        "site0_e2": 1.102067548330865e-09,
+        "site0_e3": 1.1014816836407704e-09,
+        "site1_e0": 8.812635621247011e-10,
+        "site1_e1": 8.80703510119929e-10,
+        "site1_e2": 8.80143014025947e-10,
+        "site1_e3": 8.79581574242394e-10
+      }
+    },
+    {
+      "angle_deg": 345,
+      "direct_visible": [
+        true,
+        true
+      ],
+      "site_paths": [
+        {
+          "id": "site0",
+          "center_rf_m": [
+            0.0,
+            -25.0,
+            130.77262721580547
+          ],
+          "direct_elements": 4,
+          "elements": 4,
+          "reflected_paths_per_element": [
+            1,
+            1,
+            1,
+            1
+          ],
+          "blocker_rf_m": null
+        },
+        {
+          "id": "site1",
+          "center_rf_m": [
+            0.0,
+            25.0,
+            111.46968528723096
+          ],
+          "direct_elements": 4,
+          "elements": 4,
+          "reflected_paths_per_element": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "blocker_rf_m": null
+        }
+      ],
+      "channel_paths": {
+        "site0_e0": {
+          "direct_paths": 1,
+          "reflected_paths": 1,
+          "direct_visible": true,
+          "blocker_rf_m": null
+        },
+        "site0_e1": {
+          "direct_paths": 1,
+          "reflected_paths": 1,
+          "direct_visible": true,
+          "blocker_rf_m": null
+        },
+        "site0_e2": {
+          "direct_paths": 1,
+          "reflected_paths": 1,
+          "direct_visible": true,
+          "blocker_rf_m": null
+        },
+        "site0_e3": {
+          "direct_paths": 1,
+          "reflected_paths": 1,
+          "direct_visible": true,
+          "blocker_rf_m": null
+        },
+        "site1_e0": {
+          "direct_paths": 1,
+          "reflected_paths": 0,
+          "direct_visible": true,
+          "blocker_rf_m": null
+        },
+        "site1_e1": {
+          "direct_paths": 1,
+          "reflected_paths": 0,
+          "direct_visible": true,
+          "blocker_rf_m": null
+        },
+        "site1_e2": {
+          "direct_paths": 1,
+          "reflected_paths": 0,
+          "direct_visible": true,
+          "blocker_rf_m": null
+        },
+        "site1_e3": {
+          "direct_paths": 1,
+          "reflected_paths": 0,
+          "direct_visible": true,
+          "blocker_rf_m": null
+        }
+      },
+      "input_power_w": {
+        "site0_e0": 1.6199694918839214e-09,
+        "site0_e1": 1.2367968871274115e-09,
+        "site0_e2": 8.616612423573144e-10,
+        "site0_e3": 5.530476632209513e-10,
+        "site1_e0": 9.167391290532123e-10,
+        "site1_e1": 9.163771408360333e-10,
+        "site1_e2": 9.16013653817771e-10,
+        "site1_e3": 9.156505553775673e-10
+      }
+    }
+  ],
+  "scope": "Static pose scan at 24 angles and eight actual antenna elements; Sionna LLVM, noise disabled, 128-sample tone captures; not a moving GPU mission or a runtime benchmark"
+}

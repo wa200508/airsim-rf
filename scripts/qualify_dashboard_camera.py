@@ -24,7 +24,9 @@ async def check_camera(output):
     from projectairsim.utils import unpack_image
     from airsim_rf.bridge import mount_kinematics, normalize_kinematics
     from airsim_rf.dashboard_view import queue_chase_camera_pose
+    from dashboard_scene_probes import add_probes,spawn_environment,compare_probes
 
+    probes=add_probes(output)
     arrays = json.loads((output / 'arrays.json').read_text())
     receivers = [site['center_rf_m'] for site in arrays['sites']]
     client = ProjectAirSimClient()
@@ -32,8 +34,13 @@ async def check_camera(output):
     try:
         world = World(client, 'scene.jsonc', sim_config_path=str(output / 'sim_config'))
         world.pause()
+        alignment=spawn_environment(output,world)
         drone = Drone(client, world, 'OrbitDrone')
         frames = []
+        probe_messages={p['name']:[] for p in probes};probe_drones={}
+        for probe in probes:
+            name=probe['name'];probe_drones[name]=Drone(client,world,name)
+            client.subscribe(probe_drones[name].sensors['lidar']['lidar'],lambda _,message,n=name:probe_messages[n].append(message))
         client.subscribe(drone.sensors['Chase']['scene_camera'],
                          lambda _, message: frames.append(message))
         timings = []
@@ -66,11 +73,14 @@ async def check_camera(output):
             'real_960_by_540_image_received': image.shape == (540, 960, 3),
             'requested_camera_position_rendered': horizontal_error < 3,
         }
+        alignment.update(compare_probes(output,probes,probe_messages,probe_drones))
+        checks['unreal_collision_and_sionna_dem_match']=True
         report = {'status': 'passed' if all(checks.values()) else 'failed', 'checks': checks,
                   'metrics': {'camera_frames': len(frames), 'sim_elapsed_s': elapsed,
                               'pose_request_wall_s': timings,
                               'horizontal_camera_position_error_m': horizontal_error},
-                  'scope': 'Actual packaged Unreal/software Vulkan and pinned ProjectAirSim SDK; '
+                  'scene_alignment':alignment,
+                  'scope': 'Actual Unreal/software Vulkan, CPU LiDAR terrain probes and Sionna mesh; '
                            'no CUDA, RF generation or full-mission qualification'}
         (output / 'camera-check.json').write_text(json.dumps(report, indent=2) + '\n')
         print(json.dumps(report, indent=2), flush=True)
