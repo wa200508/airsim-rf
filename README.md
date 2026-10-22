@@ -10,16 +10,57 @@ Sionna, and received I/Q processed by an independent CPU MUSIC RF Skill process.
 Python launcher displays the actual simulator camera, RF spectra/MUSIC diagnostics
 and measured simulation-to-skill throughput.
 
+## Launch the dashboard
+
+On **Linux x86-64**, install Docker Engine, a compatible NVIDIA driver,
+NVIDIA Container Toolkit and Python 3. Verify that your user can run Docker
+and that NVIDIA GPU passthrough is configured.
+
+From a fresh checkout:
+
 ```bash
+git clone https://github.com/wa200508/airsim-rf.git
+cd airsim-rf
 bash scripts/run_dashboard.sh --open
 ```
 
-The script pulls and verifies three published service images, starts the
-simulator, GPU RF and CPU skill containers concurrently, and checks actual
-GPU, camera and service readiness before enabling **Launch mission**. No local
-image builds are required. The host needs Docker, NVIDIA Container Toolkit,
-an NVIDIA driver and Python 3. See the dashboard guide for a standalone script
-download that does not require cloning the repository.
+Or launch without cloning the repository:
+
+```bash
+curl -fsSLo run_dashboard.sh https://raw.githubusercontent.com/wa200508/airsim-rf/main/scripts/run_dashboard.sh
+bash run_dashboard.sh --open
+```
+
+The script pulls and verifies three published images:
+
+- `ghcr.io/wa200508/airsim-rf:dashboard-render` — ProjectAirSim and camera.
+- `ghcr.io/wa200508/airsim-rf:dashboard-gpu` — CUDA propagation and I/Q producer.
+- `ghcr.io/wa200508/airsim-rf:dashboard-skill` — CPU MUSIC processing.
+
+It starts the **three separate containers concurrently**, verifies matching
+image revisions and service health, checks CUDA/OptiX/CuPy, prepares the actual
+scene and camera, and delivers an initial full I/Q window to the skill.
+**Launch mission stays disabled until those checks pass.** No local image
+builds, `priority2-local` image, Docker socket mount or manual simulator asset
+download is required. First startup can take several minutes to pull images
+and compile GPU kernels. A failed check prints an error and log location
+instead of presenting a ready mission.
+
+Open **http://localhost:8765** if the browser does not open automatically,
+then click **Launch mission**. Pause/Resume controls the simulation; Stop shuts
+down the task-owned containers. Use **Prepare services** to initialize a new
+mission after stopping. Closing the launcher also cleans up its containers.
+Logs and run products are stored in `recordings/dashboard` on the host.
+
+For a short mission or slower first-use compilation:
+
+```bash
+bash scripts/run_dashboard.sh --open --duration 12 --ready-timeout 600
+```
+
+See the [dashboard guide](docs/dashboard.md) for image overrides, output
+locations and the sensing/modeling limits. Startup readiness is checked on
+your hardware; CPU CI alone does not qualify a live GPU mission.
 
 | Goal | Start here |
 | --- | --- |
