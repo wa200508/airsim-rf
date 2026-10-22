@@ -22,6 +22,12 @@ curl -fsSLo run_dashboard.sh https://raw.githubusercontent.com/wa200508/airsim-r
 bash run_dashboard.sh --open
 ```
 
+The launcher honors an activated virtual environment by selecting
+`$VIRTUAL_ENV/bin/python`; otherwise it uses `python3` from `PATH`. Set
+`RF_DASHBOARD_PYTHON=/path/to/venv/bin/python` to choose an unactivated environment.
+Python 3.10+ is checked before any image pulls; no numerical packages are needed
+in the host environment. GPU libraries remain in their containers.
+
 The script pulls the GPU RF service and extracts its standard-library dashboard
 launcher and static assets to the host cache. The launcher pulls and inspects
 **three separate published images**: `ghcr.io/wa200508/airsim-rf:dashboard-render`,

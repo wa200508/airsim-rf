@@ -31,6 +31,26 @@ curl -fsSLo run_dashboard.sh https://raw.githubusercontent.com/wa200508/airsim-r
 bash run_dashboard.sh --open
 ```
 
+The host launcher uses only Python's standard library. To run it from a virtual
+environment (no project packages need to be installed there):
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+bash scripts/run_dashboard.sh --open
+```
+
+The script explicitly selects `$VIRTUAL_ENV/bin/python` when activated, otherwise
+`python3` from `PATH`. It validates Python 3.10+ before pulling images. To select
+an unactivated environment explicitly:
+
+```bash
+RF_DASHBOARD_PYTHON="$PWD/.venv/bin/python" bash scripts/run_dashboard.sh --open
+```
+
+The selected host Python is printed at startup. GPU/numerical dependencies
+remain inside the containers; the host environment is used only for the launcher.
+
 The script pulls and verifies three published images:
 
 - `ghcr.io/wa200508/airsim-rf:dashboard-render` — ProjectAirSim and camera.
