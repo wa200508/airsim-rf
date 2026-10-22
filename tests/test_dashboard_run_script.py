@@ -99,6 +99,19 @@ def test_checkout_uses_current_launcher_instead_of_image_embedded_copy(tmp_path)
     assert not any(e[0]=='docker' for e in events)
 
 
+def test_cached_standalone_replay_does_not_pull_or_create_containers(tmp_path):
+    env,_=fixture_tools(tmp_path)
+    standalone=tmp_path/'downloaded/run_dashboard.sh';standalone.parent.mkdir()
+    standalone.write_text((ROOT/'scripts/run_dashboard.sh').read_text())
+    cache=Path(env['XDG_CACHE_HOME'])/'airsim-rf-dashboard';cache.mkdir(parents=True)
+    for name in ('dashboard.py','dashboard_recording.py'):(cache/name).write_text('# cached launcher')
+    result=subprocess.run(['bash',str(standalone),'--replay'],env=env,capture_output=True,text=True)
+    assert result.returncode==0,result.stderr
+    events=calls(env)
+    assert not any(event[0]=='docker' for event in events)
+    assert '--replay' in events[-1]
+
+
 def test_standalone_interrupted_extraction_removes_source_container(tmp_path):
     env,_=fixture_tools(tmp_path)
     standalone=tmp_path/'downloaded/run_dashboard.sh';standalone.parent.mkdir()

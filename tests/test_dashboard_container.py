@@ -216,6 +216,22 @@ def test_pair_selection_never_rewinds_and_prefers_closest_image():
     assert dashboard.select_display_pair(history,[120000000],cameras,60000000,240000000) is None
 
 
+def test_recorded_view_keeps_service_health_live_without_changing_saved_data(tmp_path,monkeypatch):
+    obj=instance(tmp_path);obj.ready=True
+    obj.processes={part:SimpleNamespace(poll=lambda:None,pid=1) for part in ('sim','rf','skill')}
+    monkeypatch.setattr(obj,'read',lambda name:{'status':'ready'} if name=='producer.json' else {})
+    writer=dashboard._recording.RecordingWriter(obj.run/'replays','0123456789abcdef',{},.12,120000000,no_render=True)
+    writer.frame({'sim_time_ns':0,'origin_ns':0,'sim_elapsed_s':0.,'position_rf_m':[1,0,200]},
+        {'sim_time_ns':0,'complete_windows':1})
+    calls=[]
+    def unavailable(url,**kwargs):calls.append(url);raise OSError('skill offline')
+    monkeypatch.setattr(dashboard,'urlopen',unavailable)
+    state=obj.recorded_snapshot('0123456789abcdef')
+    assert state['skill']['complete_windows']==1 and state['producer']['position_rf_m']==[1,0,200]
+    assert not state['ready'] and state['service_health']['skill_status']=='offline'
+    assert len(calls)==1 and calls[0].endswith('/health')
+
+
 def test_display_rejects_large_clock_offsets_and_missing_diagnostic_epochs():
     history=[{'sim_time_ns':0},{'sim_time_ns':120000000},{'sim_time_ns':240000000}]
     assert dashboard.select_display_frame(history,[0,120000000],120000000,120000000)==history[1]

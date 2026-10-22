@@ -197,6 +197,9 @@ def test_skill_keeps_diagnostics_for_a_delayed_camera_epoch(tmp_path):
     assert old['psd']!=skill.snapshot()['psd']
     assert all(row['sim_time_ns']==0 for row in old['history']+old['waterfall'])
     assert old==original
+    compact=skill.snapshot(0,compact=True)
+    assert 'history' not in compact and 'waterfall' not in compact
+    assert compact['psd']==original['psd'] and skill.snapshot(0)==original
     # Old waterfall rows must survive eviction from the live rolling waterfall.
     skill.state['waterfall']=[];skill.state['history']=[]
     assert skill.snapshot(0)==original
@@ -215,6 +218,7 @@ def test_real_skill_ingress_and_http_gate_release_flight_only_after_eight_channe
     from urllib.request import ProxyHandler,build_opener
     from airsim_rf.dashboard_sync import advance_after_skill
     from airsim_rf.iq_stream import IQStreamWriter
+    from airsim_rf.dashboard_recording import RecordingWriter,RecordingStore
     arrays={'schema_version':1,'sample_rate_hz':FS,'carrier_hz':915e6,'sites':[
         {'id':str(i),'channels':[f's{i}e{j}' for j in range(4)],'center_rf_m':[0,i*20,110],'yaw_rad':0,
          'element_offsets_m':(np.arange(4)*299792458./915e6/2).tolist(),'calibration_complex':[[1,0]]*4} for i in range(2)]}
@@ -224,8 +228,12 @@ def test_real_skill_ingress_and_http_gate_release_flight_only_after_eight_channe
     iq_port,http_port,control_port=[reservation.getsockname()[1] for reservation in reservations]
     for reservation in reservations:reservation.close()
     request=build_opener(ProxyHandler({})).open;steps=[]
+    recorder=RecordingWriter(tmp_path/'replays','0123456789abcdef',{},.24,120000000,no_render=True)
+    recorded=RecordingStore(tmp_path/'replays')
     class World:
-        def continue_until_sim_time(self,epoch,wait_until_complete):steps.append(epoch)
+        def continue_until_sim_time(self,epoch,wait_until_complete):
+            assert recorded.snapshot('0123456789abcdef')['skill']['sim_time_ns']==epoch-120000000
+            steps.append(epoch)
     with (tmp_path/'skill.log').open('w+') as log:
         process=subprocess.Popen([sys.executable,'-m','airsim_rf.dashboard_skill','--arrays',str(path),
             '--iq-port',str(iq_port),'--http-port',str(http_port),'--control-address',f'127.0.0.1:{control_port}'],stdout=log,stderr=log)
@@ -248,7 +256,13 @@ def test_real_skill_ingress_and_http_gate_release_flight_only_after_eight_channe
                 async def run_windows():
                     for index in range(2):
                         epoch=index*120000000
-                        task=asyncio.create_task(advance_after_skill(World(),epoch,120000000,'127.0.0.1',http_port,lambda:False,timeout=20))
+                        async def save_completed():
+                            from airsim_rf.dashboard_sync import read_skill_frame
+                            frame=await asyncio.to_thread(read_skill_frame,'127.0.0.1',http_port,epoch)
+                            recorder.frame({'sim_time_ns':epoch,'origin_ns':0,'sim_elapsed_s':index*.12,
+                                'position_rf_m':[index,0,200]},frame)
+                        task=asyncio.create_task(advance_after_skill(World(),epoch,120000000,'127.0.0.1',http_port,lambda:False,
+                            timeout=20,on_complete=save_completed))
                         capture=SimpleNamespace(adc_iq_volts=samples,sim_time_ns=epoch,actual_sample_rate_hz=FS,clipped_component_fraction=0.)
                         for name in names[:-1]:writer.send_capture(name,capture)
                         await asyncio.sleep(.15)

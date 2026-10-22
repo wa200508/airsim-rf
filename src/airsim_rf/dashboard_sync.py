@@ -40,11 +40,20 @@ async def wait_for_skill_epoch(host, port, epoch, stop_requested, *, timeout=120
     return False
 
 
-async def advance_after_skill(world, epoch, step_ns, host, port, stop_requested, *, timeout=120):
+async def advance_after_skill(world, epoch, step_ns, host, port, stop_requested, *, timeout=120, on_complete=None):
     """The camera/flight cannot run ahead of an unfinished RF window."""
     if not await wait_for_skill_epoch(host, port, epoch, stop_requested, timeout=timeout):
         return False
+    if on_complete is not None:
+        await on_complete()
     if stop_requested():
         return False
     world.continue_until_sim_time(epoch + step_ns, wait_until_complete=True)
     return True
+
+
+def read_skill_frame(host, port, epoch):
+    with _open(f'http://{host}:{port}/frames/{epoch}?compact=1', timeout=5) as response:
+        frame=json.load(response)
+    if frame.get('sim_time_ns')!=epoch:raise ValueError('Recording skill epoch differs')
+    return frame

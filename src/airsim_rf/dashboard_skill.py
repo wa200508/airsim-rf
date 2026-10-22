@@ -11,6 +11,7 @@ import json
 import socket
 import threading
 import time
+from urllib.parse import urlsplit,parse_qs
 
 import numpy as np
 
@@ -25,7 +26,7 @@ class Skill:
         self.state={'status':'starting','ingress_ready':False,'payload_bytes':0,'complex_samples':0,'complete_windows':0,'payload_bytes_per_second':0.,'bearings':[],'history':[]}
         self.mode=4;self.traffic=deque();self.history=deque(maxlen=1000);self.waterfall=deque(maxlen=60);self.frames=deque(maxlen=128)
 
-    def snapshot(self,epoch_ns=None):
+    def snapshot(self,epoch_ns=None,*,compact=False):
         with self.lock:
             if epoch_ns is None:
                 result=dict(self.state);result['available_epochs']=[frame['sim_time_ns'] for frame in self.frames]
@@ -33,6 +34,8 @@ class Skill:
                 frame=next((frame for frame in reversed(self.frames) if frame['sim_time_ns']==epoch_ns),None)
                 if frame is None:raise KeyError(epoch_ns)
                 result=dict(frame)
+        if compact:
+            for key in ('history','waterfall'):result.pop(key,None)
         # Per-epoch snapshots stay immutable while the display waits for video.
         # Only live service status has an aging rate/clock.
         if epoch_ns is None:
@@ -152,14 +155,16 @@ def main():
     threading.Thread(target=skill.serve_stream,args=(args.iq_port,),daemon=True).start()
     class Handler(BaseHTTPRequestHandler):
         def do_GET(self):
+            url=urlsplit(self.path)
             try:
-                if self.path in ('/health','/status'):state=skill.snapshot()
-                elif self.path.startswith('/frames/'):state=skill.snapshot(int(self.path.removeprefix('/frames/')))
-                elif self.path.startswith('/epochs/'):state=skill.epoch_status(int(self.path.removeprefix('/epochs/')))
+                if url.path in ('/health','/status'):state=skill.snapshot()
+                elif url.path.startswith('/frames/'):state=skill.snapshot(int(url.path.removeprefix('/frames/')),
+                    compact=parse_qs(url.query).get('compact')==['1'])
+                elif url.path.startswith('/epochs/'):state=skill.epoch_status(int(url.path.removeprefix('/epochs/')))
                 else:self.send_error(404);return
             except (KeyError,ValueError):self.send_error(404,'No diagnostics for that simulation epoch');return
             except RuntimeError as error:self.send_error(503,str(error));return
-            data=json.dumps(state,allow_nan=False).encode();self.send_response(503 if self.path=='/health' and not skill.healthy() else 200)
+            data=json.dumps(state,allow_nan=False).encode();self.send_response(503 if url.path=='/health' and not skill.healthy() else 200)
             self.send_header('Content-Type','application/json');self.send_header('Content-Length',str(len(data)));self.end_headers();self.wfile.write(data)
         def log_message(self,*args):pass
     try:ThreadingHTTPServer(('0.0.0.0',args.http_port),Handler).serve_forever()

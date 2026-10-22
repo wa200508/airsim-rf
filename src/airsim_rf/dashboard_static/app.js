@@ -1,6 +1,37 @@
 'use strict';
 let token='',lastFrame=-1,lastWindow=-1,lastStatus=null,lastControlStatus=null,waterRows=[],presentationGeneration=0;
 const $=id=>document.getElementById(id);
+const player={id:null,autoSelect:true,playing:true,following:false,time:0,end:0,start:0,rate:1,lastTick:performance.now()};
+let recordingOptions='';
+function chooseRecording(id,autoSelect=false){
+ player.id=id;player.autoSelect=autoSelect;player.time=0;player.end=0;player.start=0;player.playing=true;player.following=false;player.lastTick=performance.now();presentationGeneration++;
+}
+$('recording-select').onchange=()=>chooseRecording($('recording-select').value);
+$('playback-seek').oninput=()=>{player.time=Number($('playback-seek').value);player.playing=false;player.following=false;player.lastTick=performance.now();presentationGeneration++;};
+$('playback-play').onclick=()=>{if(!player.playing&&player.time>=player.end)player.time=player.start;player.playing=!player.playing;player.following=false;player.lastTick=performance.now();presentationGeneration++;};
+$('playback-rate').onchange=()=>{player.rate=Number($('playback-rate').value);player.lastTick=performance.now();};
+$('playback-latest').onclick=()=>{player.time=player.end;player.following=true;player.playing=true;player.lastTick=performance.now();presentationGeneration++;};
+function recordingControls(state){
+ const recordings=state.recordings||[],signature=recordings.map(r=>r.id).join(',');
+ if(signature!==recordingOptions){
+  $('recording-select').replaceChildren(...recordings.map(r=>{const option=document.createElement('option');option.value=r.id;option.textContent=r.created_utc.slice(0,19).replace('T',' ')+' UTC · '+r.id;return option;}));recordingOptions=signature;
+ }
+ if(recordings.length&&player.autoSelect&&player.id!==recordings[0].id)chooseRecording(recordings[0].id,true);
+ $('recording-select').value=player.id||'';
+ const timeline=state.playback,available=timeline&&timeline.id===player.id&&timeline.playable_frames>0;
+ $('playback-play').disabled=!available;$('playback-seek').disabled=!available;$('playback-latest').disabled=!available;
+ if(!timeline||timeline.id!==player.id)return;
+ player.start=timeline.start_s;player.end=timeline.end_s;
+ if(player.playing&&timeline.status==='complete'&&player.time>=player.end)player.playing=false;
+ $('playback-play').textContent=player.playing?'Pause playback':'Play';
+ $('playback-state').textContent=!available?'WAITING FOR MATCHED DATA':player.time>=player.end?(timeline.status==='complete'?'END OF RECORDING':player.playing?'BUFFERING / END OF SAVED PORTION':'PAUSED'):player.playing?(player.following?'FOLLOWING LATEST':'PLAYING'):'PAUSED';
+ $('playback-seek').min=timeline.start_s;$('playback-seek').max=timeline.end_s;
+ $('record-progress').max=timeline.duration_s;$('record-progress').value=timeline.computed_s;
+ const active=state.active_recording_id===timeline.id&&!state.replay_only;
+ const label=timeline.status==='complete'?'Complete':active?(timeline.status==='paused'?'Computation paused':'Computing'):timeline.status==='failed'?'Failed · saved portion':'Saved portion';
+ $('record-progress-label').textContent=`${label} · ${timeline.computed_s.toFixed(2)} / ${timeline.duration_s.toFixed(2)} s computed · ${timeline.playable_frames} synchronized frames`;
+}
+
 function surface(id){const canvas=$(id),ratio=devicePixelRatio||1,rect=canvas.getBoundingClientRect();canvas.width=Math.round(rect.width*ratio);canvas.height=Math.round(rect.height*ratio);const ctx=canvas.getContext('2d');ctx.scale(ratio,ratio);return [ctx,rect.width,rect.height];}
 function graph(id,x,curves,rangeX,rangeY,colors=['#55d7d0','#e6b96c'],points=false){
  const [ctx,w,h]=surface(id),m={l:40,r:13,t:10,b:24},pw=w-m.l-m.r,ph=h-m.t-m.b;
@@ -29,24 +60,26 @@ function groundtrack(p,scenario){const [ctx,w,h]=surface('groundtrack'),cx=w/2,c
   if(p.position_rf_m){const [tx,ty]=point(p.position_rf_m);ctx.strokeStyle=site.direct_elements?'#55d7d0':'#e6b96c';ctx.setLineDash(site.direct_elements?[]:[4,4]);ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(tx,ty);ctx.stroke();ctx.setLineDash([]);}
   if(site.blocker_rf_m){const [bx,by]=point(site.blocker_rf_m);ctx.strokeStyle='#ffae65';ctx.beginPath();ctx.moveTo(bx-4,by-4);ctx.lineTo(bx+4,by+4);ctx.moveTo(bx-4,by+4);ctx.lineTo(bx+4,by-4);ctx.stroke();}});
 }
-async function action(name){if(name==='prepare')presentationGeneration++;try{const response=await fetch('/api/'+name,{method:'POST',headers:{'X-Dashboard-Token':token}});if(!response.ok)throw Error(await response.text());}catch(error){$('error').textContent=error.message;$('error').hidden=false;}}
-$('prepare').onclick=()=>action('prepare');$('start').onclick=()=>action('start');$('stop').onclick=()=>action('stop');$('pause').onclick=()=>action(lastControlStatus?.producer.status==='paused'?'resume':'pause');
-function renderControls(state){lastControlStatus=state;token=state.token;const p=state.producer,health=state.service_health||{},running=Object.values(state.processes).some(v=>v.state==='running');
- $('start').disabled=state.busy||!state.ready||state.mission_started;$('prepare').disabled=state.busy||state.ready;$('connection').textContent=state.ready?'SERVICES READY':state.busy?'PREPARING':'NOT READY';$('stop').disabled=state.busy||!running;$('pause').disabled=state.busy||p.status!=='running'&&p.status!=='paused';$('pause').textContent=p.status==='paused'?'Resume':'Pause';
+async function action(name){if(name==='prepare'){chooseRecording(null,true);}try{const response=await fetch('/api/'+name,{method:'POST',headers:{'X-Dashboard-Token':token}});if(!response.ok)throw Error(await response.text());}catch(error){$('error').textContent=error.message;$('error').hidden=false;}}
+$('prepare').onclick=()=>action('prepare');$('start').onclick=()=>action('start');$('stop').onclick=()=>action('stop');$('pause').onclick=()=>action((lastControlStatus?.control_producer||lastControlStatus?.producer)?.status==='paused'?'resume':'pause');
+function renderControls(state){lastControlStatus=state;token=state.token;const p=state.control_producer||state.producer,health=state.service_health||{},running=Object.values(state.processes).some(v=>v.state==='running');
+ $('start').disabled=state.busy||!state.ready||state.mission_started;$('prepare').disabled=state.busy||state.ready;$('connection').textContent=state.replay_only?'REPLAY ONLY':state.ready?'SERVICES READY':state.busy?'PREPARING':'NOT READY';$('stop').disabled=state.busy||!running;$('pause').disabled=state.busy||p.status!=='running'&&p.status!=='paused';$('pause').textContent=p.status==='paused'?'Resume computation':'Pause computation';
+ if(state.replay_only){for(const id of ['prepare','start','pause','stop'])$(id).disabled=true;}
+ recordingControls(state);
  $('error').hidden=!state.error&&!p.error&&!health.skill_error;$('error').textContent=state.error||p.error||health.skill_error||'';
- for(const part of ['sim','rf','skill']){const element=document.querySelector(`[data-process="${part}"]`),process=state.processes[part],badge=element.querySelector('.status');badge.textContent=process?process.state.toUpperCase():'OFFLINE';badge.classList.toggle('on',process?.state==='running');element.querySelector('.identity').textContent=process?`${process.container||part} · PID ${process.pid}`:['Ready for launch','CUDA deployment','Coherent TCP metadata extension'][['sim','rf','skill'].indexOf(part)];}
+ for(const part of ['sim','rf','skill']){const element=document.querySelector(`[data-process="${part}"]`),process=state.processes[part],badge=element.querySelector('.status');badge.textContent=process?process.state.toUpperCase():state.replay_only?'NOT NEEDED':'OFFLINE';badge.classList.toggle('on',process?.state==='running');element.querySelector('.identity').textContent=state.replay_only?'Playing saved mission output':process?`${process.container||part} · PID ${process.pid}`:['Ready for launch','CUDA deployment','Coherent TCP metadata extension'][['sim','rf','skill'].indexOf(part)];}
 }
 function render(state){lastStatus=state;renderControls(state);const s=state.skill,p=state.producer,transport=s,sync=state.synchronization||{};
  $('clock').textContent=sync.status==='matched'?`RF T+ ${(p.sim_elapsed_s||0).toFixed(3)} s`+(!state.no_render?` / view T+ ${((sync.camera_sim_time_ns-(p.origin_ns||0))/1e9).toFixed(3)} s`:''):'WAITING FOR MATCHED TIMES';$('position').textContent=sync.status==='matched'&&p.position_rf_m?`N ${p.position_rf_m[0].toFixed(1)} / W ${p.position_rf_m[1].toFixed(1)} / UP ${p.position_rf_m[2].toFixed(1)} m`:'NO MATCHED PLATFORM TELEMETRY';
- if(state.camera.available){$('camera').hidden=false;$('camera-empty').hidden=true;$('camera-status').textContent=p.status==='paused'?'PAUSED FRAME':p.status==='complete'?'LAST FRAME':state.camera.age_s>3?'CAMERA LAG':'AIRSIM CAMERA';$('camera-status').classList.toggle('warning',state.camera.age_s>3);}else{$('camera').hidden=true;$('camera-empty').hidden=false;$('camera-status').textContent=state.no_render?'RENDERING DISABLED':'WAITING FOR MATCHED CAMERA';}
+ if(state.camera.available){$('camera').hidden=false;$('camera-empty').hidden=true;$('camera-status').textContent=state.playback?'RECORDED FRAME':p.status==='paused'?'PAUSED FRAME':p.status==='complete'?'LAST FRAME':state.camera.age_s>3?'CAMERA LAG':'AIRSIM CAMERA';$('camera-status').classList.toggle('warning',state.camera.age_s>3);}else{$('camera').hidden=true;$('camera-empty').hidden=false;$('camera-status').textContent=state.no_render?'RENDERING DISABLED':'WAITING FOR MATCHED CAMERA';}
  const visible=sync.status==='matched'?p.direct_visible:null;$('visibility').innerHTML=visible?`<i style="background:${visible.every(Boolean)?'#55d7d0':'#e6b96c'}"></i> Receiver direct paths: ${visible.map((v,i)=>'S'+i+' '+(v?'clear':'blocked')).join(' / ')}`:'<i></i> Visibility: awaiting matched geometry';
  const lag=sync.status==='matched'?Math.max(0,(sync.latest_rf_sim_time_ns-sync.rf_sim_time_ns)/1e9):null;
  $('sync-status').textContent=sync.status==='matched'?(state.no_render?'RF EPOCH MATCHED':`CAMERA / RF Δ ${sync.offset_ms.toFixed(0)} ms`):'WAITING FOR MATCHED TIMES';
- $('scene-rate').textContent=(p.status==='paused'?'Paused':`${(p.simulation_speed||0).toFixed(2)}× sim / wall`)+(lag!==null?` · displayed RF ${lag.toFixed(2)} s behind latest`:'');
+ $('scene-rate').textContent=(state.playback?'Recorded performance · ':'')+(p.status==='paused'?'Paused':`${(p.simulation_speed||0).toFixed(2)}× sim / wall`)+(lag!==null?` · displayed RF ${lag.toFixed(2)} s behind latest`:'');
  groundtrack(sync.status==='matched'?p:{},state.scenario);
  $('path-summary').replaceChildren(...(sync.status==='matched'?p.site_paths||[]:[]).map((site,i)=>{const row=document.createElement('p'),echoes=site.reflected_paths_per_element||[],power=s.bearings?.[i]?.received_power_dbm;
   row.textContent=`${site.id}: ${site.direct_elements}/${site.elements} elements have a direct path. Reflected paths per element: ${echoes.join(', ')}. ${power!==undefined?`Received ${power.toFixed(1)} dBm.`:''} ${site.direct_elements===0?'Echoes and receiver noise only; no direct path.':''}`;return row;}));
- const rate=(transport.payload_bytes_per_second||0)/1e6;gauge(rate);$('throughput').textContent=rate.toFixed(2);$('payload').textContent=((transport.payload_bytes||0)/1e6).toFixed(1)+' MB';$('windows').textContent=transport.complete_windows||0;$('latency').textContent=s.processing_latency_ms?s.processing_latency_ms.toFixed(0)+' ms':'—';$('stream-state').textContent=(p.status==='paused'?'PAUSED':transport.status||'NO DATA').toUpperCase();
+ const rate=(transport.payload_bytes_per_second||0)/1e6;gauge(rate);$('throughput').textContent=rate.toFixed(2);$('payload').textContent=((transport.payload_bytes||0)/1e6).toFixed(1)+' MB';$('windows').textContent=transport.complete_windows||0;$('latency').textContent=s.processing_latency_ms?s.processing_latency_ms.toFixed(0)+' ms':'—';$('stream-state').textContent=(state.playback?'RECORDED':p.status==='paused'?'PAUSED':transport.status||'NO DATA').toUpperCase();
  [0,1].forEach(i=>{const bearing=s.bearings?.[i],e=$('site-status').children[i].querySelector('span');e.textContent=!bearing?'Awaiting matched I/Q':!bearing.detected?'No stable MUSIC peak':visible&&!visible[i]?`${bearing.angle_deg.toFixed(1)}° · direct blocked`:`${bearing.angle_deg.toFixed(1)}° · candidate`;e.classList.toggle('warning',Boolean(bearing&&(!bearing.detected||visible&&!visible[i])));});
  graph('psd',s.psd?.frequency_khz,[s.psd?.density_db_v2_hz||[]],[-100,100],[-180,-105]);
  graph('music',s.angle_grid_deg,s.music_db||[],[-70,70],[-65,0]);graph('eigen',[1,2,3,4],s.eigenvalues_db||[],[1,4],[-60,0],undefined,true);graph('phase',[0,1,2,3],s.phase_rad?[s.phase_rad]:[],[0,3],[-9,9],undefined,true);
@@ -54,12 +87,14 @@ function render(state){lastStatus=state;renderControls(state);const s=state.skil
  const origin=p.origin_ns||0,first=(s.waterfall[0].sim_time_ns-origin)/1e9,last=(s.waterfall[s.waterfall.length-1].sim_time_ns-origin)/1e9;
  $('waterfall-caption').textContent=`RF T+ ${first.toFixed(2)}–${last.toFixed(2)} s · ${waterRows.length} rows · 12 ms PSD snapshots every 120 ms · −178 to −113 dB`;
  }else waterRows=[];waterfall();
+ if(state.playback){$('playback-seek').value=state.playback.frame_time_s||0;$('playback-time').textContent=`T+ ${(state.playback.frame_time_s||0).toFixed(3)} / ${state.playback.end_s.toFixed(3)} s ready`;}
  $('events').replaceChildren(...state.events.map(e=>{const row=document.createElement('div');row.textContent=e.time+'  '+e.message;return row;}));
 }
 async function present(state){
  renderControls(state);
+ if(player.id&&state.playback?.id!==player.id)return;
  const generation=presentationGeneration,epoch=state.synchronization?.rf_sim_time_ns;
- if(lastStatus?.producer.presentation_session===state.producer.presentation_session&&epoch<lastStatus?.synchronization?.rf_sim_time_ns)return;
+ if(!state.playback&&lastStatus?.producer.presentation_session===state.producer.presentation_session&&epoch<lastStatus?.synchronization?.rf_sim_time_ns)return;
  let prepared=null;
  if(state.camera.available&&lastFrame!==state.camera.url){
   prepared=$('camera').cloneNode(false);prepared.src=state.camera.url;
@@ -76,5 +111,17 @@ async function present(state){
   resolve();
  }));
 }
-async function poll(){try{const response=await fetch('/api/status',{signal:AbortSignal.timeout(4000)});if(!response.ok)throw Error('Status endpoint unavailable');await present(await response.json());$('connection').textContent='LOCALHOST · CONNECTED';}catch(e){$('connection').textContent=e.message.startsWith('Camera image')?'WAITING FOR CAMERA · FRAME HELD':'DISCONNECTED · FRAME HELD';}setTimeout(poll,200);}
+async function poll(){
+ const now=performance.now(),elapsed=(now-player.lastTick)/1000;player.lastTick=now;
+ if(player.id&&player.playing)player.time=player.following?player.end:Math.min(player.end,player.time+elapsed*player.rate);
+ const generation=presentationGeneration,url=player.id?`/api/status?recording=${player.id}&time_s=${player.time}`:'/api/status';
+ try{
+  const response=await fetch(url,{signal:AbortSignal.timeout(4000)});if(!response.ok)throw Error('Status endpoint unavailable');
+  const state=await response.json();if(generation===presentationGeneration)await present(state);
+  $('connection').textContent=state.replay_only?'REPLAY · LOCALHOST':'LOCALHOST · CONNECTED';
+ }catch(e){$('connection').textContent=e.message.startsWith('Camera image')?'WAITING FOR CAMERA · FRAME HELD':'DISCONNECTED · FRAME HELD';}
+ // Freeze the playback clock during a long fetch/decode stall.
+ if(performance.now()-now>300)player.lastTick=performance.now();
+ setTimeout(poll,100);
+}
 window.addEventListener('resize',()=>lastStatus&&render(lastStatus));poll();

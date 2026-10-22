@@ -26,7 +26,8 @@ async def run(args):
     from .bridge import mount_kinematics,normalize_kinematics
     from .dashboard_view import queue_chase_camera_pose,radio_marker_glb
     from .dashboard_geometry import isolate_blocks_scene,require_rf_mesh_match,link_geometry
-    from .dashboard_sync import wait_for_skill_epoch,advance_after_skill
+    from .dashboard_sync import wait_for_skill_epoch,advance_after_skill,read_skill_frame
+    from .dashboard_recording import RecordingWriter
     from .geometry import read_bundle
     from .geometry_sync import AirSimGeometryBinding,spawn_placements
     from .iq_stream import IQStreamWriter
@@ -53,6 +54,8 @@ async def run(args):
     camera_counter=[0];last_camera=[0.];history=[]
     camera_session=secrets.token_hex(8);camera_files=[];camera_history=[]
     state['presentation_session']=camera_session
+    recording=RecordingWriter(output/'replays',camera_session,json.loads((output/'scenario.json').read_text()),
+        args.duration,ADVANCE_NS,no_render=args.no_render)
     (output/'camera').mkdir(exist_ok=True)
     site_positions=[site['center_rf_m'] for site in arrays['sites']]
     def image_received(_,message):
@@ -69,13 +72,16 @@ async def run(args):
                 metadata={'key':key,'sim_time_ns':epoch,'frames':camera_counter[0],
                     'position_ned_m':[message['pos_'+axis] for axis in ('x','y','z')],
                     'geometry_sha256':bundle['scene_sha256']}
+                recording.camera(metadata,jpeg.tobytes())
                 camera_history[:]=[frame for frame in camera_history if frame['key']!=key]
                 camera_history.append(metadata);del camera_history[:-128]
                 atomic_json(output/'camera.json',{**metadata,'history':list(camera_history)})
                 if path in camera_files:camera_files.remove(path)
                 camera_files.append(path)
                 if len(camera_files)>128:camera_files.pop(0).unlink(missing_ok=True)
-        except Exception as error:state['camera_error']=str(error)
+        except Exception as error:
+            state['camera_error']=str(error)
+            state['recording_error']=str(error)
     try:
         if args.wait_for_mission:
             from .preflight import gpu_check
@@ -156,6 +162,9 @@ async def run(args):
         sock.settimeout(120);writer=IQStreamWriter(sock,carrier_hz=CARRIER)
         def stop_requested():
             return (output/'command.json').exists() and json.loads((output/'command.json').read_text()).get('stop',False)
+        async def save_completed_frame():
+            diagnostics=await asyncio.to_thread(read_skill_frame,args.skill_host,args.skill_http_port,state['sim_time_ns'])
+            recording.frame(state,diagnostics)
         prepared_captures=None
         if args.wait_for_mission:
             # Exercise the actual configured scene, eight-channel block and data
@@ -172,29 +181,37 @@ async def run(args):
             prepared_captures=receiver.capture(epoch,num_samples=count)
             row=record_frame(epoch,position,prepared_captures)
             for name,capture in prepared_captures.items():writer.send_capture(name,capture)
-            if not await wait_for_skill_epoch(args.skill_host,args.skill_http_port,epoch,stop_requested):return
+            if not await wait_for_skill_epoch(args.skill_host,args.skill_http_port,epoch,stop_requested):
+                recording.status('stopped');return
             row.update(windows=1,velocity_rf_m_s=velocity.tolist(),camera_frames=camera_counter[0],
                 wall_elapsed_s=0.,simulation_speed=0.,raw_payload_bytes=count*8*8)
             if not args.no_render:
                 deadline=time.monotonic()+30
                 while not camera_counter[0] and time.monotonic()<deadline:await asyncio.sleep(.1)
                 if not camera_counter[0]:raise RuntimeError('No actual ProjectAirSim camera frame during preparation')
+            if state.get('recording_error'):raise RuntimeError('Camera recording failed: '+state['recording_error'])
             state.update(row);state.update(status='ready',history=list(history),camera_frames=camera_counter[0],gpu_preflight='passed',mission_started=False)
             atomic_json(output/'producer.json',state)
+            await save_completed_frame();recording.status('ready')
             while True:
                 command=json.loads((output/'command.json').read_text())
                 if command.get('stop'):
-                    state.update(status='stopped');atomic_json(output/'producer.json',state);return
+                    state.update(status='stopped');atomic_json(output/'producer.json',state);recording.status('stopped');return
                 if command.get('start'):break
                 await asyncio.sleep(.2)
         started=time.monotonic()
+        recording.status('running')
         for index in range(max(1,round(args.duration*1e9/ADVANCE_NS))):
             while True:
                 command=json.loads((output/'command.json').read_text()) if (output/'command.json').exists() else {}
                 if command.get('stop'):break
                 if not command.get('paused'):break
-                state['status']='paused';atomic_json(output/'producer.json',state);await asyncio.sleep(.2)
+                state['status']='paused';atomic_json(output/'producer.json',state)
+                if recording.manifest['status']!='paused':recording.status('paused')
+                await asyncio.sleep(.2)
             if command.get('stop'):break
+            if recording.manifest['status']=='paused':recording.status('running')
+            if state.get('recording_error'):raise RuntimeError('Camera recording failed: '+state['recording_error'])
             if motion.done():motion.result()
             epoch=int(world.get_sim_time());kinematics=normalize_kinematics(drone.get_ground_truth_kinematics())
             position,velocity,orientation=mount_kinematics(kinematics)
@@ -223,16 +240,30 @@ async def run(args):
             row.update({key:state[key] for key in ('windows','velocity_rf_m_s','retained_paths',
                 'wall_elapsed_s','simulation_speed','camera_frames','camera_age_s','raw_payload_bytes')})
             atomic_json(output/'producer.json',state)
-            if not await advance_after_skill(world,epoch,ADVANCE_NS,args.skill_host,args.skill_http_port,stop_requested):break
+            if not await advance_after_skill(world,epoch,ADVANCE_NS,args.skill_host,args.skill_http_port,stop_requested,
+                on_complete=save_completed_frame):break
             await asyncio.sleep(0)
         totals=writer.finish();writer=None
         state['acknowledged_sample_totals']=totals
-        state.update(status='complete',camera_frames=camera_counter[0]);atomic_json(output/'producer.json',state)
+        # Stop may have interrupted the epoch wait. The final stream ACK now
+        # guarantees that window finished, so preserve it before shutdown.
+        if history and not (recording.path/'frames'/f'{state["sim_time_ns"]}.json').is_file():
+            await save_completed_frame()
+        if not args.no_render:
+            # Give already-triggered asynchronous camera captures a chance to
+            # arrive for the final RF epoch. No extra flight time is simulated.
+            deadline=time.monotonic()+5
+            while history and not any(abs(c['sim_time_ns']-history[-1]['sim_time_ns'])<=60_000_000 for c in camera_history):
+                if time.monotonic()>=deadline:break
+                await asyncio.sleep(.05)
+        state.update(status='stopped' if stop_requested() else 'complete',camera_frames=camera_counter[0]);atomic_json(output/'producer.json',state)
+        recording.status(state['status'])
         drone.cancel_last_task()
         world.continue_until_sim_time(int(world.get_sim_time())+3_000_000,wait_until_complete=True)
         try:await asyncio.wait_for(asyncio.shield(motion),timeout=2)
         except asyncio.TimeoutError:pass
     except BaseException as error:
+        recording.status('failed',error=str(error))
         state.update(status='failed',error=str(error));atomic_json(output/'producer.json',state);raise
     finally:
         if sock:sock.close()

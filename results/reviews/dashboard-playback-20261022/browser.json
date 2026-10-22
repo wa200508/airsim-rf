@@ -1,0 +1,17 @@
+{
+  "test": "Actual replay-only host server and shipped UI; saved presentation fixtures, no GPU or scientific mission",
+  "autoplay": true,
+  "pause_holds_frame": true,
+  "backward_seek_s": 0.24,
+  "seek_checks": [
+    "image URL",
+    "clock",
+    "payload/window counters"
+  ],
+  "playback_2x_after_1_1s": "RF T+ 2.280 s / view T+ 2.280 s",
+  "older_run_selected": true,
+  "latest_computed_frame": 90,
+  "offline_simulation_actions": 0,
+  "mobile_horizontal_overflow": false,
+  "javascript_errors": []
+}

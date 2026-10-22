@@ -3,7 +3,6 @@
 # The launcher pulls/inspects all three images, starts them concurrently and
 # requires a live simulator, GPU/OptiX/CuPy probe, camera and skill before the UI.
 set -euo pipefail
-command -v docker >/dev/null
 if [[ -n "${RF_DASHBOARD_PYTHON:-}" ]]; then
   rf_dashboard_python=$(command -v "$RF_DASHBOARD_PYTHON") || {
     echo "RF_DASHBOARD_PYTHON is not executable: $RF_DASHBOARD_PYTHON" >&2; exit 1;
@@ -29,6 +28,12 @@ if [[ -f "$rf_dashboard_repo/src/airsim_rf/dashboard.py" && -f "$rf_dashboard_re
 fi
 rf_dashboard_cache="${XDG_CACHE_HOME:-$HOME/.cache}/airsim-rf-dashboard"
 mkdir -p "$rf_dashboard_cache"
+for rf_dashboard_argument in "$@"; do
+  if [[ "$rf_dashboard_argument" == --replay && -f "$rf_dashboard_cache/dashboard.py" && -f "$rf_dashboard_cache/dashboard_recording.py" ]]; then
+    exec "$rf_dashboard_python" "$rf_dashboard_cache/dashboard.py" "$@"
+  fi
+done
+command -v docker >/dev/null
 # Keep the source container identifiable even if interrupted before `create`
 # returns. A background child plus wait lets Bash handle TERM/HUP immediately.
 rf_dashboard_source="airsim-rf-dashboard-source-${UID}-$$-${RANDOM}"
@@ -56,6 +61,7 @@ trap 'exit 129' HUP
 rf_dashboard_docker pull "$rf_dashboard_image"
 rf_dashboard_docker create --name "$rf_dashboard_source" --entrypoint python "$rf_dashboard_image" -c pass
 rf_dashboard_docker cp "$rf_dashboard_source:/opt/airsim-rf/src/airsim_rf/dashboard.py" "$rf_dashboard_cache/dashboard.py"
+rf_dashboard_docker cp "$rf_dashboard_source:/opt/airsim-rf/src/airsim_rf/dashboard_recording.py" "$rf_dashboard_cache/dashboard_recording.py"
 rf_dashboard_docker cp "$rf_dashboard_source:/opt/airsim-rf/src/airsim_rf/dashboard_static" "$rf_dashboard_cache/"
 rf_dashboard_cleanup
 trap - EXIT INT TERM HUP

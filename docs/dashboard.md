@@ -6,6 +6,72 @@ The three process cards report actual supervised processes; the plots and data
 rate come from the receiving skill, and the main image is a ProjectAirSim scene
 camera. Camera or sensing failure is displayed separately from stream delivery.
 
+## Recording and playback
+
+Every new mission records automatically in the RF producer, independently of
+browser polling. The dashboard acts as a player for that saved output. The
+**Saved run** selector opens the current or an older mission. **Play / Pause
+playback**, the seek slider and the **0.5×, 1×, 2×, 4×** speed selector control
+only the displayed simulation time. **Latest computed** follows the newest
+available synchronized frame. The separate header **Pause computation / Resume
+computation** buttons control flight/RF generation; playback can continue while
+computation is paused.
+
+The progress bar shows computed flight seconds against the requested mission
+duration. The slider covers the portion with matching camera and RF data. A
+slow renderer can leave computed RF ahead of the playable portion. At the
+available end the player holds its coherent frame until more output arrives.
+Seeking backward restores the camera, terrain track, telemetry, visibility,
+MUSIC/PSD/eigenvalues/phase, waterfall, counters and original performance metrics
+for that time. Playback does not rerun ray tracing or signal processing.
+
+Replay-only startup skips all image pulls, GPU checks and service launches:
+
+```bash
+bash scripts/run_dashboard.sh --replay --run-dir recordings/dashboard --open
+# No Docker installation is needed with the checkout launcher:
+python3 scripts/launch_dashboard.py --replay --run-dir recordings/dashboard --open
+```
+
+Python 3.10+ with only its standard library is sufficient. An already-used
+standalone script can replay using its cached host launcher, without contacting
+Docker. A first standalone extraction still needs Docker and the published
+image; use a checkout for a fresh machine without Docker. Replay-only mode
+does not acquire the simulation run lock, write stop commands or remove any
+containers, so a second player can inspect a recording while its producer is
+still running. Use a different `--port` for an additional player.
+
+Archives live at `<run-dir>/replays/<16-hex-run-id>/`:
+
+- `manifest.json`: schema, creation time, requested duration, status and computed
+  extent.
+- `scenario.json`: saved terrain/map and receiver description.
+- `frames/<simulation-nanoseconds>.json`: original per-window RF diagnostics and
+  producer telemetry. Rolling histories and waterfall are rebuilt from the
+  saved frames up to the selected epoch, with their original display limits.
+- `camera/<frame-key>.jpg` and `.json`: immutable actual camera images and
+  timestamp/geometry metadata. Replay retains the whole run; the live
+  128-frame buffer does not truncate these files.
+
+Each file is published by atomic rename. Temporary files and orphan JPEGs are
+ignored, and already-published frames in stopped or interrupted runs remain
+playable. A new mission gets a new directory; preparation and shutdown preserve
+earlier recordings. Copy the run's `replays` directory to another machine to
+review it, or remove individual archived run directories to reclaim space.
+The reader indexes small summaries and bounds its full-diagnostic cache to 32
+frames, rather than loading every spatial spectrum into memory.
+
+This is a **dashboard recording**, containing camera, RF analysis results and
+telemetry. It does **not** save the full continuous raw ADC I/Q stream or support
+reprocessing it with a different skill. The displayed payload counters describe
+the original stream, not bytes saved on disk. Historical runs made before this
+recorder existed lack the required data and cannot be reconstructed completely.
+Camera pairing still requires the same geometry hash and at most 60 ms of
+simulation-time offset; playback does not interpolate RF data or fabricate
+missing camera frames.
+See the [recording and playback validation](../results/reviews/dashboard-playback-20261022/REPORT.md)
+for the real stream-to-archive regression, replay-only restart checks and browser controls.
+
 ## Pull and run separate containers
 
 Install Docker Engine, a compatible NVIDIA driver, NVIDIA Container Toolkit and

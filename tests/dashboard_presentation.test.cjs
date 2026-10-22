@@ -25,7 +25,7 @@ function dashboard(){
  const context=vm.createContext({document:{getElementById:element,querySelector:element,createElement:element},
   window:{addEventListener:(event,callback)=>listeners[event]=callback},devicePixelRatio:1,
   fetch:(url,options)=>{requests.push({url,options});return new Promise(()=>{});},AbortSignal,setTimeout,clearTimeout,
-  requestAnimationFrame:callback=>queueMicrotask(callback),console});
+  requestAnimationFrame:callback=>queueMicrotask(callback),performance,console});
  vm.runInContext(fs.readFileSync(path.join(__dirname,'../src/airsim_rf/dashboard_static/app.js'),'utf8'),context);
  return {context,element,decodes,listeners,draws,requests};
 }
@@ -79,9 +79,31 @@ test('failed video and an out-of-order status cannot replace a coherent frame',a
 test('live pause/resume controls work while the next camera image is pending',async()=>{
  const ui=dashboard(),first=ui.context.present(frame(0));ui.decodes.shift().resolve();await first;
  const paused=frame(1);paused.producer.status='paused';const pending=ui.context.present(paused);
- assert.equal(ui.element('pause').textContent,'Resume');
+ assert.equal(ui.element('pause').textContent,'Resume computation');
  ui.element('pause').onclick();
  assert.equal(ui.requests.at(-1).url,'/api/resume');
  assert.equal(ui.element('windows').textContent,1);
  ui.decodes.shift().resolve();await pending;
+});
+
+test('recorded playback can seek backward atomically without pausing computation',async()=>{
+ const ui=dashboard(),id='0123456789abcdef';ui.context.chooseRecording(id);
+ function saved(index){const state=frame(index);state.recordings=[{id,created_utc:'2026-10-22T00:00:00Z'}];
+  state.playback={id,start_s:0,end_s:.24,frame_time_s:index*.12,playable_frames:3,duration_s:.36,computed_s:.36,status:'complete'};
+  state.control_producer={status:'running'};return state;}
+ const first=ui.context.present(saved(1));ui.decodes.shift().resolve();await first;
+ assert.match(ui.element('clock').textContent,/0\.120/);
+ assert.equal(ui.element('record-progress').value,.36);
+ const requests=ui.requests.length;
+ ui.element('playback-play').onclick();
+ assert.equal(ui.requests.length,requests); // Playback pause never calls /api/pause.
+ ui.element('playback-seek').value=0;ui.element('playback-seek').oninput();
+ const earlier=ui.context.present(saved(0));
+ assert.match(ui.element('clock').textContent,/0\.120/);
+ ui.decodes.shift().resolve();await earlier;
+ assert.match(ui.element('clock').textContent,/0\.000/);
+ assert.equal(ui.element('windows').textContent,1);
+ assert.equal(ui.element('camera').src,'/camera.jpg?frame=0');
+ assert.equal(ui.element('playback-seek').value,0);
+ assert.equal(ui.element('record-progress').value,.36); // Seeking cannot erase completed computation.
 });

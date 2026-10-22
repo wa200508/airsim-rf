@@ -1,5 +1,7 @@
 """Real host HTTP transport; GPU/service bootstrap is stubbed explicitly."""
 import json
+import importlib.util
+import os
 from pathlib import Path
 import socket
 import subprocess
@@ -7,7 +9,7 @@ import sys
 import tempfile
 import time
 import unittest
-from urllib.error import URLError
+from urllib.error import URLError, HTTPError
 from urllib.request import ProxyHandler, build_opener
 
 
@@ -15,6 +17,57 @@ ROOT = Path(__file__).resolve().parents[1]
 
 
 class DashboardHostHTTPTest(unittest.TestCase):
+    def test_saved_run_reopens_and_seeks_without_docker_or_service_stubs(self):
+        spec=importlib.util.spec_from_file_location('replay_http',ROOT/'src/airsim_rf/dashboard_recording.py')
+        recording=importlib.util.module_from_spec(spec);spec.loader.exec_module(recording)
+        identifier='0123456789abcdef'
+        with tempfile.TemporaryDirectory() as temporary:
+            run=Path(temporary);writer=recording.RecordingWriter(run/'replays',identifier,{},.24,120000000)
+            for index in range(2):
+                epoch=index*120000000
+                writer.frame({'sim_time_ns':epoch,'origin_ns':0,'sim_elapsed_s':index*.12,
+                    'position_rf_m':[index,0,200],'geometry_sha256':'scene'},
+                    {'sim_time_ns':epoch,'complete_windows':index+1,'payload_bytes':index+100,'bearings':[]})
+                writer.camera({'key':identifier+'-'+str(epoch),'sim_time_ns':epoch,'geometry_sha256':'scene'},b'image '+str(index).encode())
+            writer.status('complete')
+            tools=run/'bin';tools.mkdir();marker=run/'docker-was-called'
+            docker=tools/'docker';docker.write_text('#!/bin/sh\ntouch "'+str(marker)+'"\nexit 99\n');docker.chmod(0o755)
+            environment={**os.environ,'PATH':str(tools)+os.pathsep+os.environ['PATH']}
+            opener=build_opener(ProxyHandler({}))
+            # Stop/reopen twice, using the real main and handlers, no bootstrap
+            # patches. The saved frames must survive and no Docker command runs.
+            for _ in range(2):
+                with socket.socket() as reservation:
+                    reservation.bind(('127.0.0.1',0));port=reservation.getsockname()[1]
+                process=subprocess.Popen([sys.executable,str(ROOT/'scripts/launch_dashboard.py'),'--replay',
+                    '--run-dir',str(run),'--port',str(port)],env=environment,stdout=subprocess.PIPE,stderr=subprocess.PIPE,text=True)
+                try:
+                    base=f'http://127.0.0.1:{port}';deadline=time.monotonic()+10
+                    while True:
+                        try:
+                            with opener.open(base+'/api/status',timeout=1) as response:state=json.load(response)
+                            break
+                        except URLError:
+                            if process.poll() is not None or time.monotonic()>=deadline:self.fail('Replay did not start')
+                            time.sleep(.05)
+                    self.assertTrue(state['replay_only']);self.assertEqual(state['processes'],{})
+                    self.assertEqual(state['recordings'][0]['id'],identifier)
+                    for index in (1,0):
+                        with opener.open(base+f'/api/status?recording={identifier}&time_s={index*.12}',timeout=2) as response:state=json.load(response)
+                        self.assertEqual(state['producer']['position_rf_m'],[index,0,200])
+                        self.assertEqual(state['skill']['complete_windows'],index+1)
+                        with opener.open(base+state['camera']['url'],timeout=2) as response:self.assertEqual(response.read(),b'image '+str(index).encode())
+                    request=__import__('urllib.request',fromlist=['Request']).Request(base+'/api/start',method='POST',headers={'X-Dashboard-Token':state['token']})
+                    with self.assertRaises(HTTPError) as rejected:opener.open(request,timeout=2)
+                    self.assertEqual(rejected.exception.code,409)
+                    for query in ('recording=../outside','recording='+identifier+'&time_s=nan'):
+                        with self.assertRaises(HTTPError) as rejected:opener.open(base+'/api/status?'+query,timeout=2)
+                        self.assertEqual(rejected.exception.code,404)
+                finally:
+                    process.terminate();stdout,stderr=process.communicate(timeout=5)
+                self.assertEqual(process.returncode,0,stderr)
+            self.assertFalse(marker.exists());self.assertFalse((run/'command.json').exists())
+
     def test_host_browser_can_fetch_dashboard_assets_and_status(self):
         with socket.socket() as reservation:
             reservation.bind(('127.0.0.1', 0))

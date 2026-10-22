@@ -110,10 +110,31 @@ Docker network connects only the simulator, RF service and processing skill.
 Use `--port 8766` if the default dashboard port is occupied.
 
 Open **http://localhost:8765** if the browser does not open automatically,
-then click **Launch mission**. Pause/Resume controls the simulation; Stop shuts
+then click **Launch mission**. Pause/Resume computation controls the simulation; Stop shuts
 down the task-owned containers. Use **Prepare services** to initialize a new
 mission after stopping. Closing the launcher also cleans up its containers.
 Logs and run products are stored in `recordings/dashboard` on the host.
+
+The dashboard records every run automatically, even with the browser closed.
+Use **Saved run**, **Play / Pause playback**, the time slider and **0.5×–4×**
+speed to review recorded camera, map and RF diagnostics without recomputing.
+The progress bar shows how much flight time has been computed; playback waits
+at the end of the available recording while computation continues. **Latest
+computed** follows the newest synchronized frame. Playback pause does not pause
+the simulation.
+
+To reopen saved runs immediately, with **no Docker or GPU startup**:
+
+```bash
+bash scripts/run_dashboard.sh --replay --run-dir recordings/dashboard --open
+# Or use just host Python from a checkout:
+python3 scripts/launch_dashboard.py --replay --run-dir recordings/dashboard --open
+```
+
+Runs are retained under `recordings/dashboard/replays/<run-id>/`, including
+partial runs and previous missions. This records camera images, telemetry and
+RF diagnostics for GUI playback; **raw ADC I/Q samples are not saved** by the
+dashboard recorder. Runs made before this feature cannot be fully replayed.
 
 The terrain map below the camera uses the same DEM as AirSim and Sionna and
 shows receiver sight lines and terrain intersections. Each receiver reports

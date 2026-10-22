@@ -3,8 +3,10 @@ import argparse
 from collections import deque
 from http.server import BaseHTTPRequestHandler,ThreadingHTTPServer
 import fcntl
+import importlib.util
 from hashlib import sha256
 import json
+import math
 import os
 import re
 from pathlib import Path
@@ -22,6 +24,11 @@ from urllib.parse import urlsplit,parse_qs
 # These HTTP calls only target our own published loopback service ports.
 urlopen=build_opener(ProxyHandler({})).open
 import webbrowser
+
+# Load the stdlib-only recorder alongside this file, without importing the
+# numerical package __init__. The standalone run script extracts both files.
+_recording_spec=importlib.util.spec_from_file_location('dashboard_recording',Path(__file__).with_name('dashboard_recording.py'))
+_recording=importlib.util.module_from_spec(_recording_spec);_recording_spec.loader.exec_module(_recording)
 
 
 class DashboardShutdown(SystemExit):
@@ -63,6 +70,8 @@ class Dashboard:
         self.owned_names=set();self.shutdown_event=threading.Event()
         self.operation_lock=threading.RLock();self.run_lock=None;self.owns_run=False
         self.last_display=None
+        self.recordings=_recording.RecordingStore(self.run/'replays')
+        self.health_updated=0.;self.skill_health={}
 
     def acquire_run(self):
         self.run_lock=(self.run/'.dashboard.lock').open('a')
@@ -192,6 +201,7 @@ class Dashboard:
         if ids:self.command(['docker','network','rm',*ids]);self.log('Removed networks from an interrupted launch')
     def bootstrap(self):
         self.ready=False;self.mission_started=False;self.last_skill={};self.last_display=None
+        self.health_updated=0.;self.skill_health={}
         self.configure_docker()
         if self.owns_run:self.cleanup_stale()
         self.pull_images()
@@ -298,6 +308,7 @@ class Dashboard:
             if self.run_lock:self.run_lock.close();self.run_lock=None
             self.owns_run=False
     def action(self,name):
+        if getattr(self.args,'replay',False):raise ValueError('Replay mode does not launch or control simulation services')
         with self.lock:
             if self.busy:raise ValueError('A process action is already running')
             if name not in ('prepare','start','stop','pause','resume'):raise ValueError('Unknown action')
@@ -317,6 +328,11 @@ class Dashboard:
                 finally:self.busy=False
         threading.Thread(target=work,daemon=True).start()
     def snapshot(self):
+        if getattr(self.args,'replay',False):
+            recordings=self.recordings.list()
+            if recordings:return self.recorded_snapshot(recordings[0]['id'],0.)
+            return {**self.control_state(),'producer':{},'skill':{},'scenario':{},'camera':{'available':False},
+                'synchronization':{'status':'waiting'},'recordings':[],'no_render':True}
         skill={}
         try:
             with urlopen(f'http://127.0.0.1:{self.args.skill_port}/status',timeout=.4) as response:skill=json.load(response)
@@ -373,7 +389,29 @@ class Dashboard:
                 'camera':{'available':camera_available,'age_s':time.time()-camera.stat().st_mtime if camera_available else None,
                     'url':'/camera.jpg?frame='+key,'source':'Timestamped ProjectAirSim Chase scene_camera'},
                 'ready':self.ready and all(p.poll() is None for p in self.processes.values()) and transport.get('status') not in ('offline','failed'),'mission_started':self.mission_started,'busy':self.busy,'error':self.error,'events':list(self.events),'no_render':self.args.no_render,
-                'run_directory':str(self.run),'token':self.token}
+                'run_directory':str(self.run),'token':self.token,'recordings':self.recordings.list(),'replay_only':False}
+
+    def control_state(self):
+        replay=getattr(self.args,'replay',False)
+        producer={} if replay else self.read('producer.json')
+        processes={part:{'pid':p.pid,'state':'running' if p.poll() is None else 'exited','exit_code':p.poll(),
+            'container':self.names[part]} for part,p in self.processes.items()}
+        if not replay and processes and time.monotonic()-self.health_updated>1:
+            self.health_updated=time.monotonic()
+            try:
+                with urlopen(f'http://127.0.0.1:{self.args.skill_port}/health',timeout=.25) as response:health=json.load(response)
+                self.skill_health={'skill_status':health.get('status'),'skill_error':health.get('error')}
+            except (OSError,ValueError,URLError):self.skill_health={'skill_status':'offline','skill_error':'RF skill health check failed'}
+        return {'processes':processes,'control_producer':producer,
+            'ready':not replay and self.ready and all(p.poll() is None for p in self.processes.values()) and producer.get('status')!='failed'
+                and self.skill_health.get('skill_status') not in ('failed','offline'),
+            'mission_started':self.mission_started,'busy':self.busy,'error':self.error,'events':list(self.events),
+            'run_directory':str(self.run),'token':self.token,'replay_only':replay,
+            'service_health':self.skill_health,
+            'active_recording_id':producer.get('presentation_session') if any(p.poll() is None for p in self.processes.values()) else None}
+
+    def recorded_snapshot(self,identifier,time_s=None):
+        return {**self.recordings.snapshot(identifier,time_s),**self.control_state(),'recordings':self.recordings.list()}
 
 
 def main():
@@ -383,6 +421,7 @@ def main():
     parser.add_argument('--skill-port',type=int,default=8812);parser.add_argument('--control-port',type=int,default=8813)
     parser.add_argument('--duration',type=float,default=120);parser.add_argument('--pascal-compat',action='store_true')
     parser.add_argument('--no-render',action='store_true',help='Explicit diagnostic mode: no Unreal camera image')
+    parser.add_argument('--replay',action='store_true',help='Replay saved dashboard runs without Docker, a GPU or simulation startup')
     parser.add_argument('--ready-timeout',type=float,default=600)
     parser.add_argument('--gpu-mode',choices=('auto','cdi','gpus'),default='auto')
     parser.add_argument('--gpu-device',default='0',help='NVIDIA device index or UUID')
@@ -390,6 +429,7 @@ def main():
     parser.add_argument('--sim-image',default=registry+':dashboard-render');parser.add_argument('--rf-image',default=registry+':dashboard-gpu')
     parser.add_argument('--skill-image',default=registry+':dashboard-skill')
     parser.add_argument('--open',action='store_true');args=parser.parse_args()
+    if args.replay and not (args.run_dir/'replays').is_dir():parser.error('No replay recordings in this run directory; select --run-dir from a recorded mission')
     if not 0<args.duration<=3600:parser.error('duration must be in (0,3600] seconds')
     if not 0<args.ready_timeout<=1800:parser.error('ready-timeout must be in (0,1800] seconds')
     for port in (args.port,args.iq_port,args.skill_port,args.control_port):
@@ -400,12 +440,22 @@ def main():
     assets=Path(__file__).with_name('dashboard_static')
     class Handler(BaseHTTPRequestHandler):
         def do_GET(self):
-            if self.path=='/api/status':data=json.dumps(dashboard.snapshot(),allow_nan=False).encode();kind='application/json'
+            url=urlsplit(self.path);query=parse_qs(url.query)
+            if url.path=='/api/status':
+                try:
+                    identifier=query.get('recording',[None])[0]
+                    time_s=float(query['time_s'][0]) if 'time_s' in query else None
+                    if time_s is not None and not math.isfinite(time_s):raise ValueError('Playback time must be finite')
+                    state=dashboard.snapshot() if identifier is None else dashboard.recorded_snapshot(identifier,time_s)
+                except (ValueError,OSError,KeyError) as error:self.send_error(404,str(error));return
+                data=json.dumps(state,allow_nan=False).encode();kind='application/json'
             elif urlsplit(self.path).path=='/camera.jpg':
-                key=parse_qs(urlsplit(self.path).query).get('frame',[''])[0]
+                key=query.get('frame',[''])[0]
                 if not re.fullmatch(r'[0-9a-f]{16}-[0-9]+',key):self.send_error(404);return
-                try:data=(dashboard.run/'camera'/(key+'.jpg')).read_bytes();kind='image/jpeg'
-                except OSError:self.send_error(404,'No ProjectAirSim camera frame received');return
+                try:
+                    root=dashboard.recordings.path(query['recording'][0]) if 'recording' in query else dashboard.run
+                    data=(root/'camera'/(key+'.jpg')).read_bytes();kind='image/jpeg'
+                except (OSError,ValueError):self.send_error(404,'No ProjectAirSim camera frame received');return
             elif self.path in ('/','/app.js','/style.css'):
                 name={'/':'index.html','/app.js':'app.js','/style.css':'style.css'}[self.path]
                 data=assets.joinpath(name).read_bytes();kind={'index.html':'text/html','app.js':'text/javascript','style.css':'text/css'}[name]
@@ -431,12 +481,12 @@ def main():
         for name in ('SIGINT','SIGTERM','SIGHUP'):
             number=getattr(signal,name,None)
             if number is not None:previous_handlers[number]=signal.signal(number,shutdown)
-        dashboard.acquire_run()
+        if not args.replay:dashboard.acquire_run()
         try:server=ThreadingHTTPServer(('127.0.0.1',args.port),Handler)
         except OSError as error:
             raise RuntimeError(f'Cannot open dashboard at http://localhost:{args.port}; '
                 'stop the existing launcher or select another --port. '+str(error)) from error
-        dashboard.bootstrap()
+        if not args.replay:dashboard.bootstrap()
         print(f'RF mission dashboard: http://localhost:{args.port}',flush=True)
         if args.open:webbrowser.open(f'http://localhost:{args.port}')
         server.serve_forever()
