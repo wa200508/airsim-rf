@@ -142,7 +142,7 @@ class Dashboard:
              '-v',f'{self.run}/arrays.json:/config/arrays.json:ro',self.args.skill_image])
         self.launch('rf',['docker','run','--rm','--init','--name',self.names['rf'],*self.gpu_options,'--network',self.network,
             '--user',self.uid(),'--tmpfs','/.drjit:rw,mode=1777','-e','HOME=/tmp',
-            '-v',f'{self.run}:/run','--entrypoint','/opt/airsim-rf/.venv/bin/python',self.args.rf_image,
+            '-v',f'{self.run}:/run','--workdir','/run','--entrypoint','/opt/airsim-rf/.venv/bin/python',self.args.rf_image,
             '-m','airsim_rf.cuda_launch','-m','airsim_rf.dashboard_producer','--run-dir','/run',
             '--duration',str(self.args.duration),'--address','projectairsim','--skill-host','rf-skill',
             '--skill-port','8811','--wait-for-mission',

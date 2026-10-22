@@ -47,6 +47,20 @@ and skill, then waits with the world paused. Only after this succeeds is
 **Launch mission** enabled at http://localhost:8765. It releases the prepared
 mission; it does not pull images or create containers.
 
+Chase-camera poses are queued with `wait_for_pose_update=False` and applied on
+the next simulator/render step. Waiting synchronously for a renderer update
+while the stepping owner holds the world paused can time out and report
+`Chase camera gimbal pose update failed`. Preparation now exercises this camera
+RPC before the first settling step and checks for an actual image before READY.
+`--no-render` skips camera subscription and pose updates. The RF container uses
+the writable `/run` directory for the SDK's `projectairsim_client.log`.
+
+CI also runs `scripts/qualify_dashboard_camera.py` in the dashboard GPU image
+without an NVIDIA device: packaged Unreal/software Vulkan, ten paused camera
+updates, 1.2 simulated seconds, and a real 960×540 image with the requested camera
+position. This checks SDK/render integration; it does not qualify RF or a full
+GPU mission. See the [recorded camera regression](../results/reviews/dashboard-camera-20261022/REPORT.md).
+
 Failures stop task-owned containers and print the error/log location instead of
 presenting a ready button. Normal future hardware/runtime failures remain
 possible; startup checks establish readiness rather than a guarantee against

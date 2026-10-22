@@ -1,0 +1,27 @@
+{
+  "status": "passed",
+  "checks": {
+    "ten_paused_camera_requests_accepted": true,
+    "simulation_advanced_1_2_seconds": true,
+    "real_960_by_540_image_received": true,
+    "requested_camera_position_rendered": true
+  },
+  "metrics": {
+    "camera_frames": 1,
+    "sim_elapsed_s": 1.2000000000000002,
+    "pose_request_wall_s": [
+      0.003378444000190939,
+      0.006798630000048433,
+      0.0012923609992867569,
+      0.0009402019986737287,
+      0.0010942730004899204,
+      0.004185524998320034,
+      0.0007628959992871387,
+      0.0009124799998971866,
+      0.007167554000261589,
+      0.0011825159999716561
+    ],
+    "horizontal_camera_position_error_m": 1.3315805517777335e-05
+  },
+  "scope": "Actual packaged Unreal/software Vulkan and pinned ProjectAirSim SDK; no CUDA, RF generation or full-mission qualification"
+}

@@ -23,7 +23,7 @@ async def run(args):
     from projectairsim.utils import unpack_image
     import cv2
     from .bridge import mount_kinematics,normalize_kinematics
-    from .dashboard_view import camera_frame,relative_camera_pose,project_radios,radio_marker_glb
+    from .dashboard_view import queue_chase_camera_pose,project_radios,radio_marker_glb
     from .geometry import read_bundle
     from .geometry_sync import AirSimGeometryBinding,spawn_placements,nearest_intersections
     from .iq_stream import IQStreamWriter
@@ -88,8 +88,17 @@ async def run(args):
             name=f'Radio_RX_{i}'
             world.spawn_object_from_file(name,'gltf',radio_marker_glb([.2,.9,.85] if i==0 else [1.,.65,.15]),True,marker_pose(np.asarray(position)-[0,0,8]),[1,1,1],False)
         drone=Drone(client,world,'OrbitDrone')
-        client.subscribe(drone.sensors['Chase']['scene_camera'],image_received)
+        if not args.no_render:
+            client.subscribe(drone.sensors['Chase']['scene_camera'],image_received)
         drone.enable_api_control();drone.arm()
+        # Exercise the same camera RPC as the mission before advertising READY.
+        # The following settling step lets Unreal apply the queued view and
+        # produce the actual camera frame checked during preparation.
+        if not args.no_render:
+            initial=normalize_kinematics(drone.get_ground_truth_kinematics())
+            position,_,_=mount_kinematics(initial)
+            eye,rotation=queue_chase_camera_pose(drone,position,site_positions,initial)
+            view[0]=(eye,rotation,[position.tolist(),*site_positions])
         settle=await drone.move_by_velocity_z_async(v_north=0,v_east=0,z=-ALTITUDE,duration=2.1,yaw_is_rate=False,yaw=-np.pi/2)
         world.continue_until_sim_time(int(world.get_sim_time())+2_001_000_000,wait_until_complete=True)
         await asyncio.sleep(.1)
@@ -160,10 +169,9 @@ async def run(args):
             if motion.done():motion.result()
             epoch=int(world.get_sim_time());kinematics=normalize_kinematics(drone.get_ground_truth_kinematics())
             position,velocity,orientation=mount_kinematics(kinematics)
-            eye,rotation=camera_frame(position,site_positions)
-            if not drone.set_camera_pose('Chase',relative_camera_pose(eye,rotation,kinematics)):
-                raise RuntimeError('Chase camera gimbal pose update failed')
-            view[0]=(eye,rotation,[position.tolist(),*site_positions])
+            if not args.no_render:
+                eye,rotation=queue_chase_camera_pose(drone,position,site_positions,kinematics)
+                view[0]=(eye,rotation,[position.tolist(),*site_positions])
             scene.transmitters['tx0'].position=position.tolist();scene.transmitters['tx0'].velocity=velocity.tolist();scene.transmitters['tx0'].orientation=orientation.tolist()
             samples,reference=waveform_window(epoch,count,origin)
             receiver.emitters['tx0']=SDREmitter(SampledWaveform(samples,FS,reference,boundary='error'),transmit_power_w=.1,baseband_frequency_bounds_hz=(-100000,100000))

@@ -128,6 +128,7 @@ def test_rootless_services_share_bridge_and_start_before_readiness_waits(tmp_pat
         assert 'host' not in command
         assert command[command.index('--user')+1]==('10001:10001' if part=='sim' else '0:0')
     rf=commands['rf']
+    assert rf[rf.index('--workdir')+1]=='/run'
     assert rf[rf.index('--address')+1]=='projectairsim'
     assert rf[rf.index('--skill-host')+1]=='rf-skill'
     assert rf[rf.index('--skill-port')+1]=='8811'

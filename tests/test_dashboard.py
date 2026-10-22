@@ -99,6 +99,34 @@ def test_gimballed_camera_frames_all_radios_across_complete_orbit():
         np.testing.assert_allclose(body.as_matrix()@Rotation.from_quat(list(relative['rotation'].values())).as_matrix(),rotation,atol=1e-10)
 
 
+def test_chase_camera_queues_pose_while_simulation_is_paused():
+    from airsim_rf.dashboard_view import queue_chase_camera_pose,relative_camera_pose
+    position=np.array([250.,0.,200.]);receivers=[[0,-25,108],[0,25,115]]
+    kinematics={'pose':{'position':{'x':250.,'y':0.,'z':-200.},
+                        'orientation':{'x':0.,'y':0.,'z':0.,'w':1.}}}
+    class PausedCamera:
+        pending=None
+        def set_camera_pose(self,name,pose,wait_for_pose_update=True):
+            assert name=='Chase'
+            self.pending=pose
+            # The stepping owner cannot advance Unreal until this RPC returns.
+            return not wait_for_pose_update
+    drone=PausedCamera()
+    eye,rotation=queue_chase_camera_pose(drone,position,receivers,kinematics)
+    assert drone.pending==relative_camera_pose(eye,rotation,kinematics)
+    assert np.isfinite(eye).all() and np.isfinite(rotation).all()
+
+
+def test_rejected_camera_pose_is_not_mistaken_for_readiness():
+    from types import SimpleNamespace
+    from airsim_rf.dashboard_view import queue_chase_camera_pose
+    kinematics={'pose':{'position':{'x':250.,'y':0.,'z':-200.},
+                        'orientation':{'x':0.,'y':0.,'z':0.,'w':1.}}}
+    drone=SimpleNamespace(set_camera_pose=lambda *a,**kw:False)
+    with pytest.raises(RuntimeError,match='pose request was rejected'):
+        queue_chase_camera_pose(drone,[250,0,200],[[0,-25,108],[0,25,115]],kinematics)
+
+
 def test_prepared_scene_reuses_demo_terrain_and_explicit_camera_gimbal(tmp_path):
     pytest.importorskip('commentjson')
     import json

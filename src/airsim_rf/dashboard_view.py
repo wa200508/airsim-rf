@@ -26,6 +26,20 @@ def relative_camera_pose(eye_ned, camera_to_ned, kinematics):
             'rotation':dict(zip(('x','y','z','w'),quat.tolist()))}
 
 
+def queue_chase_camera_pose(drone, position_rf, receiver_positions_rf, kinematics):
+    """Queue a view for the next renderer tick without waiting on a paused world.
+
+    ProjectAirSim's default waits for Unreal to apply the pose. Our single
+    stepping owner must return from this RPC before it can advance the world;
+    waiting here can time out even though the pose request was accepted.
+    """
+    eye, rotation = camera_frame(position_rf, receiver_positions_rf)
+    if not drone.set_camera_pose('Chase', relative_camera_pose(eye, rotation, kinematics),
+                                 wait_for_pose_update=False):
+        raise RuntimeError('Chase camera pose request was rejected')
+    return eye, rotation
+
+
 def project_radios(eye_ned,camera_to_ned,points_rf,width,height,fov_deg=90):
     points=np.asarray(points_rf)*[1,-1,-1]
     local=(points-eye_ned)@camera_to_ned
