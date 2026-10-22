@@ -6,6 +6,7 @@ from scipy.signal import firwin, upfirdn
 FS=2_000_000
 CARRIER=915_000_000.
 RADIUS=250.
+ALTITUDE=220.
 SPEED=25.
 ADVANCE_NS=120_000_000
 
@@ -17,7 +18,7 @@ def atomic_json(path,value):
 
 def orbit_pose(seconds,radius=RADIUS,speed=SPEED):
     angle=speed/radius*seconds
-    return np.array([radius*np.cos(angle),radius*np.sin(angle),160.]),np.array([-speed*np.sin(angle),speed*np.cos(angle),0.])
+    return np.array([radius*np.cos(angle),radius*np.sin(angle),ALTITUDE]),np.array([-speed*np.sin(angle),speed*np.cos(angle),0.])
 
 
 def waveform_window(epoch_ns,count,origin_ns):
@@ -42,24 +43,20 @@ def prepare(output,runtime_source):
     from .geometry import export_sionna_geometry
     from .geometry_sync import placement_plan
     output=Path(output);output.mkdir(parents=True,exist_ok=True)
-    grid=np.linspace(-600,600,7)
-    vertices=[[float(x),float(y),float(-100-4*np.sin(x/170)*np.cos(y/170))] for y in grid for x in grid]
-    faces=[]
-    for j in range(6):
-        for i in range(6):
-            a=j*7+i;faces.extend([[a,a+8,a+1],[a,a+7,a+8]])
-    objects=[{'id':'Terrain','material':'earth','vertices_local':vertices,'faces':faces,'local_to_ned_m':np.eye(4).tolist()}]
-    wall=[[145,-85,-100],[155,-85,-100],[155,85,-100],[145,85,-100],[145,-85,-185],[155,-85,-185],[155,85,-185],[145,85,-185]]
-    faces=[[0,2,1],[0,3,2],[4,5,6],[4,6,7],[0,1,5],[0,5,4],[1,2,6],[1,6,5],[2,3,7],[2,7,6],[3,0,4],[3,4,7]]
-    objects.append({'id':'RidgeScreen','material':'rock','vertices_local':wall,'faces':faces,'local_to_ned_m':np.eye(4).tolist()})
-    geometry={'schema_version':1,'scene_id':'OrbitRF','revision':'1','source':{'adapter':'dashboard-terrain','version':'1','asset':'shared-triangles','revision':'1','geometry_kind':'shared'},
+    from .terrain import demo_terrain, TerrainGrid
+    original=demo_terrain()
+    terrain=TerrainGrid(original.x_m*4,original.y_m*4,100+original.heights_m*3)
+    rf_vertices,faces=terrain.mesh()
+    vertices=rf_vertices*[1,-1,-1]
+    objects=[{'id':'Terrain','material':'earth','vertices_local':vertices.tolist(),'faces':faces.tolist(),'local_to_ned_m':np.eye(4).tolist()}]
+    geometry={'schema_version':1,'scene_id':'OrbitRF','revision':'2','source':{'adapter':'demo_terrain','version':'2','asset':'demo_terrain:xy4:z3:base100','revision':'2','geometry_kind':'shared'},
         'materials':{name:{'relative_permittivity':value,'conductivity_s_m':.01,'assumption':'Illustrative uncalibrated dielectric'} for name,value in [('earth',5.),('rock',6.)]},'objects':objects}
     bindings={'version':1,'geodetic_anchor':{'latitude':47.641468,'longitude':-122.140165,'altitude_m':122.},
         'objects':{obj['id']:{'simulator':{'object_name':obj['id'],'asset_path':'generated:glb','local_to_actor_m':np.eye(4).tolist(),'asset_provenance':'Same triangles in Unreal and RF'}} for obj in objects}}
     export_sionna_geometry(geometry,output/'bundle',provenance={'scope':'dashboard shared terrain'},bindings=bindings)
     atomic_json(output/'placement.json',placement_plan(geometry,bindings))
     offsets=(np.arange(4)-1.5)*299792458./CARRIER/2
-    arrays={'schema_version':1,'sample_rate_hz':FS,'carrier_hz':CARRIER,'sites':[{'id':f'site{i}','channels':[f'site{i}_e{j}' for j in range(4)],'center_rf_m':[0.,float(y),110.],'yaw_rad':0.,'element_offsets_m':offsets.tolist(),'calibration_complex':[[1.,0.]]*4} for i,y in enumerate((-25,25))],
+    arrays={'schema_version':1,'sample_rate_hz':FS,'carrier_hz':CARRIER,'sites':[{'id':f'site{i}','channels':[f'site{i}_e{j}' for j in range(4)],'center_rf_m':[0.,float(y),float(terrain.elevation_at(0,y)+8)],'yaw_rad':0.,'element_offsets_m':offsets.tolist(),'calibration_complex':[[1.,0.]]*4} for i,y in enumerate((-25,25))],
         'scope':'Ideal coherent ULAs; full-circle azimuth/elevation ambiguities remain explicit'}
     atomic_json(output/'arrays.json',arrays)
     source=Path(runtime_source)/'client/python/example_user_scripts/sim_config/robot_quadrotor_fastphysics_sensors.jsonc'
@@ -68,10 +65,10 @@ def prepare(output,runtime_source):
     if not source.exists():raise ValueError('Pinned ProjectAirSim robot template is missing; rebuild the qualified CPU base image')
     robot=commentjson.loads(source.read_text());robot['controller']['simple-flight-api-settings']['parameters']={'MPC_XY_VEL_MAX':30.}
     robot['sensors']=[s for s in robot['sensors'] if s['id']=='Chase']
-    camera=robot['sensors'][0];camera['capture-interval']=.12;camera['origin']={'xyz':'-12 0 -5','rpy-deg':'0 -23 0'}
+    camera=robot['sensors'][0];camera['capture-interval']=.12;camera['origin']={'xyz':'-100 0 -60','rpy-deg':'0 -35 0'}
     camera['capture-settings'][0].update(width=960,height=540,compress=False)
     sim=output/'sim_config';sim.mkdir(exist_ok=True);atomic_json(sim/'orbit.jsonc',robot)
-    atomic_json(sim/'scene.jsonc',{'id':'OrbitDashboard','scene-type':'UnrealNative','actors':[{'type':'robot','name':'OrbitDrone','origin':{'xyz':'250 0 -160','rpy-deg':'0 0 -90'},'robot-config':'orbit.jsonc'}],
+    atomic_json(sim/'scene.jsonc',{'id':'OrbitDashboard','scene-type':'UnrealNative','actors':[{'type':'robot','name':'OrbitDrone','origin':{'xyz':f'250 0 {-ALTITUDE}','rpy-deg':'0 0 -90'},'robot-config':'orbit.jsonc'}],
         'clock':{'type':'steppable','step-ns':3_000_000,'real-time-update-rate':3_000_000,'pause-on-start':True},'home-geo-point':{'latitude':47.641468,'longitude':-122.140165,'altitude':122.}})
-    atomic_json(output/'scenario.json',{'radius_m':RADIUS,'speed_m_s':SPEED,'turn':'left','period_s':2*np.pi*RADIUS/SPEED,'terrain_width_m':1200,'advance_ns':ADVANCE_NS,'source':'ProjectAirSim Fast Physics actual pose readback; native closed-loop carrot follower on a 250 m circle','screen':'Shared ridge at north 150 m, 10 × 170 × 85 m','propagation':'direct visibility + retained first-order specular paths'})
+    atomic_json(output/'scenario.json',{'radius_m':RADIUS,'speed_m_s':SPEED,'turn':'left','period_s':2*np.pi*RADIUS/SPEED,'terrain_width_m':800,'advance_ns':ADVANCE_NS,'source':'ProjectAirSim Fast Physics actual pose readback; native closed-loop carrot follower on a 250 m circle','altitude_rf_m':ALTITUDE,'terrain':'Existing demo_terrain hills/swale; horizontal scale 4, relief scale 3, RF base 100 m','terrain_relief_m':90,'screen':'Natural hills and drainage valley; no artificial screen','camera':'Inward-looking gimballed Chase, airborne TX and both ground RX sites framed','propagation':'direct visibility + retained first-order specular paths'})
     return arrays

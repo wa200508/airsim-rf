@@ -7,7 +7,7 @@ import socket
 import time
 
 import numpy as np
-from .dashboard_scenario import ADVANCE_NS,FS,CARRIER,SPEED,RADIUS,atomic_json,waveform_window
+from .dashboard_scenario import ADVANCE_NS,FS,CARRIER,SPEED,RADIUS,ALTITUDE,atomic_json,waveform_window
 
 
 async def run(args):
@@ -22,7 +22,8 @@ async def run(args):
     from projectairsim import ProjectAirSimClient,World,Drone
     from projectairsim.utils import unpack_image
     import cv2
-    from .bridge import mount_kinematics
+    from .bridge import mount_kinematics,normalize_kinematics
+    from .dashboard_view import camera_frame,relative_camera_pose,project_radios,radio_marker_glb
     from .geometry import read_bundle
     from .geometry_sync import AirSimGeometryBinding,spawn_placements,nearest_intersections
     from .iq_stream import IQStreamWriter
@@ -37,10 +38,20 @@ async def run(args):
            'flight_command_wall_timeout_s':3600}
     atomic_json(output/'producer.json',state)
     writer=None;sock=None;motion=None;flight_client=None
-    camera_counter=[0];last_camera=[0.]
+    camera_counter=[0];last_camera=[0.];view=[None]
+    site_positions=[site['center_rf_m'] for site in arrays['sites']]
     def image_received(_,message):
         try:
-            image=unpack_image(message)
+            image=unpack_image(message).copy()
+            if view[0] is not None:
+                eye,rotation,points=view[0];height,width=image.shape[:2]
+                projected=project_radios(eye,rotation,points,width,height)
+                for label,point,color in zip(('TX / DRONE','RX 0','RX 1'),projected,((40,180,255),(210,230,70),(80,200,255))):
+                    x,y,depth=point
+                    if depth>0 and 0<x<width and 0<y<height:
+                        anchor=(round(x),round(y));cv2.circle(image,anchor,7,color,2)
+                        cv2.putText(image,label,(max(5,min(width-150,round(x)+12)),max(20,round(y)-12)),cv2.FONT_HERSHEY_SIMPLEX,.55,(5,10,15),4)
+                        cv2.putText(image,label,(max(5,min(width-150,round(x)+12)),max(20,round(y)-12)),cv2.FONT_HERSHEY_SIMPLEX,.55,color,1)
             success,jpeg=cv2.imencode('.jpg',image,[cv2.IMWRITE_JPEG_QUALITY,82])
             if success:
                 temp=output/'camera.tmp';temp.write_bytes(jpeg.tobytes());temp.replace(output/'camera.jpg')
@@ -58,16 +69,21 @@ async def run(args):
             obj['mesh']['emissive_rgb']=[.07,.10,.045] if terrain else [.12,.075,.035]
         spawn_placements(world,binding.plan)
         binding.require_static_match(world,int(world.get_sim_time()))
+        marker_pose=lambda p:{'frame_id':'DEFAULT_ID','translation':dict(zip(('x','y','z'),(np.asarray(p)*[1,-1,-1]).tolist())),'rotation':{'w':1.,'x':0.,'y':0.,'z':0.}}
+        for i,position in enumerate(site_positions):
+            name=f'Radio_RX_{i}'
+            world.spawn_object_from_file(name,'gltf',radio_marker_glb([.2,.9,.85] if i==0 else [1.,.65,.15]),True,marker_pose(position),[1,1,1],False)
+        world.spawn_object_from_file('Radio_TX','gltf',radio_marker_glb([1.,.3,.1]),True,marker_pose([250,0,ALTITUDE]),[1,1,1],False)
         drone=Drone(client,world,'OrbitDrone')
         client.subscribe(drone.sensors['Chase']['scene_camera'],image_received)
         drone.enable_api_control();drone.arm()
-        settle=await drone.move_by_velocity_z_async(v_north=0,v_east=0,z=-160.,duration=2.1,yaw_is_rate=False,yaw=-np.pi/2)
+        settle=await drone.move_by_velocity_z_async(v_north=0,v_east=0,z=-ALTITUDE,duration=2.1,yaw_is_rate=False,yaw=-np.pi/2)
         world.continue_until_sim_time(int(world.get_sim_time())+2_001_000_000,wait_until_complete=True)
         await asyncio.sleep(.1)
         origin=int(world.get_sim_time())
         cycles=int(np.ceil(args.duration/(2*np.pi*RADIUS/SPEED)))+1
         angles=np.linspace(0,cycles*2*np.pi,cycles*120+1)
-        path=[[float(RADIUS*np.cos(a)),float(-RADIUS*np.sin(a)),-160.] for a in angles]
+        path=[[float(RADIUS*np.cos(a)),float(-RADIUS*np.sin(a)),-ALTITUDE] for a in angles]
         # Long flight command has a separate services-only client: its deadline
         # is wall time, including intentional simulation pauses. Ordinary scene
         # RPCs retain the normal SDK deadline and one owner still steps time.
@@ -79,7 +95,7 @@ async def run(args):
         await asyncio.sleep(0)
         scene=rt.load_scene(str(output/'bundle/scene.xml'),merge_shapes=False)
         scene.tx_array=rt.PlanarArray(num_rows=1,num_cols=1,pattern='iso',polarization='V');scene.rx_array=scene.tx_array
-        scene.add(rt.Transmitter('tx0',position=[250,0,160]))
+        scene.add(rt.Transmitter('tx0',position=[250,0,ALTITUDE]))
         for site in arrays['sites']:
             for name,offset in zip(site['channels'],site['element_offsets_m']):
                 scene.add(rt.Receiver(name,position=(np.asarray(site['center_rf_m'])+[0,offset,0]).tolist()))
@@ -96,7 +112,13 @@ async def run(args):
                 state['status']='paused';atomic_json(output/'producer.json',state);await asyncio.sleep(.2)
             if command.get('stop'):break
             if motion.done():motion.result()
-            epoch=int(world.get_sim_time());position,velocity,orientation=mount_kinematics(drone.get_ground_truth_kinematics())
+            epoch=int(world.get_sim_time());kinematics=normalize_kinematics(drone.get_ground_truth_kinematics())
+            position,velocity,orientation=mount_kinematics(kinematics)
+            eye,rotation=camera_frame(position,site_positions)
+            if not drone.set_camera_pose('Chase',relative_camera_pose(eye,rotation,kinematics)):
+                raise RuntimeError('Chase camera gimbal pose update failed')
+            world.set_object_pose('Radio_TX',marker_pose(position),True)
+            view[0]=(eye,rotation,[position.tolist(),*site_positions])
             scene.transmitters['tx0'].position=position.tolist();scene.transmitters['tx0'].velocity=velocity.tolist();scene.transmitters['tx0'].orientation=orientation.tolist()
             samples,reference=waveform_window(epoch,count,origin)
             receiver.emitters['tx0']=SDREmitter(SampledWaveform(samples,FS,reference,boundary='error'),transmit_power_w=.1,baseband_frequency_bounds_hz=(-100000,100000))
@@ -117,6 +139,7 @@ async def run(args):
                 retained_paths={name:cap.retained_paths for name,cap in captures.items()},history=history,
                 wall_elapsed_s=time.monotonic()-started,simulation_speed=elapsed/max(time.monotonic()-started,.001),
                 camera_frames=camera_counter[0],camera_age_s=None if not last_camera[0] else time.monotonic()-last_camera[0],
+                camera_framing='Actual gimballed Chase view; projected TX/RX labels; presentation-only radio beacons',
                 geometry_sha256=bundle['scene_sha256'],raw_payload_bytes=(index+1)*count*8*8)
             atomic_json(output/'producer.json',state)
             world.continue_until_sim_time(epoch+ADVANCE_NS,wait_until_complete=True)

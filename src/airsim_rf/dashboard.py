@@ -77,6 +77,14 @@ class Dashboard:
              '-p',f'127.0.0.1:{self.args.control_port}:8813',
              '-v',f'{self.run}/arrays.json:/config/arrays.json:ro',self.args.skill_image])
         self.wait_port(self.args.skill_port,60,part='skill')
+        deadline=time.monotonic()+30
+        while True:
+            try:
+                with urlopen(f'http://127.0.0.1:{self.args.skill_port}/health',timeout=1) as response:
+                    if response.status==200:break
+            except (OSError,URLError):pass
+            if time.monotonic()>deadline:raise RuntimeError('RF skill ingress failed its health check')
+            time.sleep(.2)
         self.log('Starting airsim_rf + Sionna CUDA deployment; one simulation stepping owner')
         self.launch('rf',['docker','run','--rm','--name',self.names['rf'],'--gpus','device=0','--network','host',
             '--user',uid,'--tmpfs','/.drjit:rw,mode=1777','-e','HOME=/tmp',

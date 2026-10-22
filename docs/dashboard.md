@@ -42,17 +42,19 @@ Camera appearance uses presentation-only glTF color/emission; these values do
 not set RF dielectric properties. Explicit UVs and tangent frames keep imported
 meshes visible in the packaged renderer.
 Use `--run-dir` for separate runs. The first run exports and places the same
-terrain and ridge triangles in Unreal and RF.
+terrain triangles in Unreal and RF.
 
 ## Scene and signal interpretation
 
-The drone starts at RF `(250,0,160)` metres over ground around z=100 m. The native
+The drone starts at RF `(250,0,220)` metres over the existing hills-and-valleys terrain. The native
 Fast Physics path follower follows a 250 m radius left-hand circle sampled at
 3° waypoint intervals, with a 25 m/s speed command, 12 m lookahead and heading
 aligned to flight direction. Actual simulator pose and velocity readback,
-rather than the ideal commanded circle, drive Sionna. The shared terrain spans
-1.2 km; a 10 × 170 × 85 m ridge at north 150 m shadows part of the orbit without
-intersecting the nominal flight path. The RF solver retains direct visibility
+rather than the ideal commanded circle, drive Sionna. The same `demo_terrain()` DEM used by the other examples supplies the hills and
+drainage valley. Horizontal coordinates are scaled by four (800 m scene width),
+heights by three (90 m relief), with RF base elevation 100 m. The exact transformed
+triangles are shared by Unreal and Sionna. Natural hills partially shadow the
+ground arrays during the orbit; there is no artificial ridge screen. The RF solver retains direct visibility
 and all its supported first-order specular paths. Materials are illustrative.
 
 The airborne QPSK emitter is observed by two stationary four-element ULAs at
@@ -96,3 +98,10 @@ MEL bridge would require an agreed synchronization/metadata extension.
 than replacing the AirSim camera with a fabricated scene. A graphics-capable
 Unreal/Vulkan environment is needed for the full requested view; the render
 image also includes a software Vulkan/X display path for qualification.
+
+The Chase camera is gimballed inward from 100 m outside and 65 m above the
+airborne transmitter, aimed between the drone and the two ground receivers.
+Actual body attitude is removed from the relative camera transform. TX/RX labels
+are projections of actual simulator/radio positions; colored eight-metre location
+beacons are presentation markers, excluded from RF propagation geometry. Terrain
+can physically occlude a ground marker; labels locate it without claiming LOS.

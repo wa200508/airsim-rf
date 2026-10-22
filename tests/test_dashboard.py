@@ -77,3 +77,23 @@ def test_launcher_rejects_port_collisions_before_starting_processes():
     import subprocess,sys
     result=subprocess.run([sys.executable,'scripts/launch_dashboard.py','--port','8812'],capture_output=True,text=True)
     assert result.returncode==2 and 'must be distinct' in result.stderr
+
+
+def test_gimballed_camera_frames_all_radios_across_complete_orbit():
+    from airsim_rf.dashboard_view import camera_frame,project_radios,relative_camera_pose
+    from scipy.spatial.transform import Rotation
+    receivers=[[0,-25,108],[0,25,115]]
+    for angle in np.linspace(0,2*np.pi,121):
+        position=np.array([250*np.cos(angle),250*np.sin(angle),220.])
+        eye,rotation=camera_frame(position,receivers)
+        points=project_radios(eye,rotation,[position,*receivers],960,540)
+        assert np.all(points[:,2]>0)
+        assert np.all((points[:,0]>80)&(points[:,0]<880))
+        assert np.all((points[:,1]>40)&(points[:,1]<500))
+        body=Rotation.from_euler('ZYX',[angle+.5,.1,-.1])
+        q=body.as_quat();ned=position*[1,-1,-1]
+        kinematics={'pose':{'position':dict(zip(('x','y','z'),ned)),
+                           'orientation':dict(zip(('x','y','z','w'),q))}}
+        relative=relative_camera_pose(eye,rotation,kinematics)
+        np.testing.assert_allclose(body.apply(list(relative['translation'].values()))+ned,eye,atol=1e-10)
+        np.testing.assert_allclose(body.as_matrix()@Rotation.from_quat(list(relative['rotation'].values())).as_matrix(),rotation,atol=1e-10)
