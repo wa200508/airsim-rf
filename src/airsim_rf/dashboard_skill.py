@@ -22,7 +22,7 @@ from .music_plots import frequency_psd, spatial_spectrum
 class Skill:
     def __init__(self,arrays):
         self.arrays=read_arrays(arrays);self.lock=threading.Lock();self.started=time.monotonic()
-        self.state={'status':'listening','payload_bytes':0,'complex_samples':0,'complete_windows':0,'payload_bytes_per_second':0.,'bearings':[],'history':[]}
+        self.state={'status':'starting','ingress_ready':False,'payload_bytes':0,'complex_samples':0,'complete_windows':0,'payload_bytes_per_second':0.,'bearings':[],'history':[]}
         self.mode=4;self.traffic=deque();self.history=deque(maxlen=1000);self.waterfall=deque(maxlen=60)
 
     def snapshot(self):
@@ -68,16 +68,29 @@ class Skill:
                 processing_latency_ms=(now-start)*1000,source='received ADC complex volts; no emitter truth',
                 ambiguity='ULA cone angle; full-circle front/back and elevation ambiguities; multipath peaks are candidates')
 
+    def healthy(self):
+        state=self.snapshot()
+        return state['ingress_ready'] and state['status']!='failed'
+
     def serve_stream(self,port):
+        try:self._serve_stream(port)
+        except Exception as error:
+            with self.lock:self.state.update(status='failed',ingress_ready=False,error=str(error))
+
+    def _serve_stream(self,port):
         names={n for s in self.arrays['sites'] for n in s['channels']}
         with socket.socket() as server:
             server.setsockopt(socket.SOL_SOCKET,socket.SO_REUSEADDR,1);server.bind(('0.0.0.0',port));server.listen(1)
+            with self.lock:self.state.update(status='listening',ingress_ready=True)
             while True:
-                conn,_=server.accept();pending={};epoch=None
+                conn,_=server.accept();pending={};epoch=None;completed=0
                 with conn:
                     conn.settimeout(3600)
                     try:
-                        for block in iter_stream(conn):
+                        def validate_end():
+                            if pending:raise ValueError('Stream completed with incomplete coherent array')
+                            if not completed:raise ValueError('Stream contains no coherent array windows')
+                        for block in iter_stream(conn,validate_end=validate_end):
                             if block.receiver not in names or block.receiver in pending:raise ValueError('Unknown or duplicate array channel')
                             if epoch is None:epoch=block.sim_time_ns
                             if block.sim_time_ns!=epoch:raise ValueError('Incomplete array window before next epoch')
@@ -85,7 +98,7 @@ class Skill:
                             with self.lock:
                                 self.state['payload_bytes']+=block.samples.nbytes;self.state['complex_samples']+=len(block.samples)
                             if set(pending)==names:
-                                self.process(pending);pending={};epoch=None
+                                self.process(pending);pending={};epoch=None;completed+=1
                         if pending:raise ValueError('Stream completed with incomplete coherent array')
                         with self.lock:self.state['status']='complete'
                     except Exception as error:
@@ -98,7 +111,7 @@ def start_control(skill,address):
     class Control(rpc.SquallRfControlServicer):
         def GetStatus(self,request,context):
             state=skill.snapshot()
-            return pb.GetStatusResponse(name='music-rf-skill',domain='rf',running=True,ready=state['status']!='failed',uptime_seconds=int(state['uptime_s']),rf_status=pb.RfStatus(center_frequency_hz=915000000,sample_rate=2000000,block_size=240000,source_type='coherent_iq_tcp_extension',current_mode=skill.mode))
+            return pb.GetStatusResponse(name='music-rf-skill',domain='rf',running=True,ready=skill.healthy(),uptime_seconds=int(state['uptime_s']),rf_status=pb.RfStatus(center_frequency_hz=915000000,sample_rate=2000000,block_size=240000,source_type='coherent_iq_tcp_extension',current_mode=skill.mode))
         def TuneRf(self,request,context):
             valid=request.center_frequency_hz in (0,915000000) and request.sample_rate in (0,2000000) and request.bandwidth_hz in (0,200000) and not request.HasField('gain') and not request.HasField('agc')
             return pb.TuneRfResponse(success=valid,actual_center_frequency_hz=915000000,error_message='' if valid else 'Fixed demo profile; tuning requires a new coherent stream')
@@ -123,7 +136,7 @@ def main():
     class Handler(BaseHTTPRequestHandler):
         def do_GET(self):
             if self.path not in ('/health','/status'):self.send_error(404);return
-            data=json.dumps(skill.snapshot(),allow_nan=False).encode();self.send_response(200)
+            data=json.dumps(skill.snapshot(),allow_nan=False).encode();self.send_response(503 if self.path=='/health' and not skill.healthy() else 200)
             self.send_header('Content-Type','application/json');self.send_header('Content-Length',str(len(data)));self.end_headers();self.wfile.write(data)
         def log_message(self,*args):pass
     try:ThreadingHTTPServer(('0.0.0.0',args.http_port),Handler).serve_forever()

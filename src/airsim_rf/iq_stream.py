@@ -132,11 +132,12 @@ class IQStreamWriter:
         return totals
 
 
-def iter_stream(sock):
+def iter_stream(sock, *, validate_end=None):
     """Yield complete voltage blocks; acknowledge only after consumer exhausts them.
 
     Breaking iteration early or raising in processing leaves completion
     unacknowledged. EOF without an end frame is a failure, not normal completion.
+    Optional validate_end runs before ACK to enforce application-level completion.
     """
     if sock.gettimeout() is None or sock.gettimeout()<=0:raise ValueError('A finite positive socket timeout is required')
     states={};sequence=0
@@ -146,6 +147,7 @@ def iter_stream(sock):
         if h['type']=='end':
             totals={name:state[0] for name,state in states.items()}
             if h.get('sample_totals')!=totals:raise ValueError('I/Q completion totals mismatch')
+            if validate_end is not None:validate_end()
             _send(sock,{'type':'ack','sequence':sequence,'sample_totals':totals})
             return
         if h['type']!='iq':raise ValueError('Unexpected I/Q control frame')

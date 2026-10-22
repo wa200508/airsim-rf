@@ -54,3 +54,26 @@ def test_visual_glb_has_stable_positions_and_an_orthogonal_tangent_frame():
     np.testing.assert_allclose(np.linalg.norm(tangent[:,:3],axis=1),1)
     np.testing.assert_allclose(np.sum(normal*tangent[:,:3],axis=1),0,atol=1e-7)
     assert doc['materials'][0]['emissiveFactor']==[.07,.1,.04]
+
+
+def test_skill_bind_failure_is_unhealthy(tmp_path):
+    pytest.importorskip('doa_py')
+    import json,socket
+    from airsim_rf.dashboard_skill import Skill
+    arrays={'schema_version':1,'sample_rate_hz':FS,'carrier_hz':915e6,'sites':[
+        {'id':str(i),'channels':[f's{i}e{j}' for j in range(4)],'center_rf_m':[0,i*20,110],'yaw_rad':0,
+         'element_offsets_m':(np.arange(4)*299792458./915e6/2).tolist(),'calibration_complex':[[1,0]]*4} for i in range(2)]}
+    path=tmp_path/'arrays.json';path.write_text(json.dumps(arrays));skill=Skill(path)
+    assert not skill.healthy()
+    with socket.socket() as occupied:
+        occupied.bind(('0.0.0.0',0));occupied.listen()
+        skill.serve_stream(occupied.getsockname()[1])
+    assert not skill.healthy()
+    assert skill.snapshot()['status']=='failed'
+    assert skill.snapshot()['error']
+
+
+def test_launcher_rejects_port_collisions_before_starting_processes():
+    import subprocess,sys
+    result=subprocess.run([sys.executable,'scripts/launch_dashboard.py','--port','8812'],capture_output=True,text=True)
+    assert result.returncode==2 and 'must be distinct' in result.stderr

@@ -73,3 +73,18 @@ def test_completion_requires_consumer_acknowledgement():
     with a,b:
         a.settimeout(.05);writer=IQStreamWriter(a,carrier_hz=915e6)
         with pytest.raises(TimeoutError):writer.finish()
+
+
+def test_application_completion_validator_runs_before_ack():
+    a,b=pair()
+    def reject_incomplete_array():
+        raise ValueError('incomplete coherent array')
+    with a,b,ThreadPoolExecutor(1) as pool:
+        def consume():
+            with b:
+                return list(iter_stream(b,validate_end=reject_incomplete_array))
+        received=pool.submit(consume)
+        writer=IQStreamWriter(a,carrier_hz=915e6)
+        writer.send_capture('only_one_array_channel',capture(0,[1j]))
+        with pytest.raises((EOFError,ConnectionError)):writer.finish()
+        with pytest.raises(ValueError,match='incomplete coherent array'):received.result(timeout=2)

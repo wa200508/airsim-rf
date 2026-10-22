@@ -58,7 +58,7 @@ class Dashboard:
             path=self.run/name
             if path.exists():path.replace(self.run/(name+'.previous'))
         self.write_command(paused=False,stop=False)
-        for port in (8989,8990,self.args.iq_port,self.args.skill_port):
+        for port in (8989,8990,self.args.iq_port,self.args.skill_port,self.args.control_port):
             with socket.socket() as test:
                 if test.connect_ex(('127.0.0.1',port))==0:raise RuntimeError(f'Port {port} already in use; use a dedicated simulator/skill instance')
         uid=f'{__import__("os").getuid()}:{__import__("os").getgid()}'
@@ -109,7 +109,9 @@ class Dashboard:
                 if name=='start':self.start()
                 elif name=='stop':self.stop()
                 else:self.write_command(paused=name=='pause',stop=False);self.log('Simulation '+('paused' if name=='pause' else 'resumed'))
-            except Exception as error:self.error=str(error);self.log(error)
+            except Exception as error:
+                self.error=str(error);self.log(error)
+                if name=='start' and self.processes:self.stop()
             finally:self.busy=False
         threading.Thread(target=work,daemon=True).start()
     def snapshot(self):
@@ -142,6 +144,8 @@ def main():
     if not 0<args.duration<=3600:parser.error('duration must be in (0,3600] seconds')
     for port in (args.port,args.iq_port,args.skill_port,args.control_port):
         if not 1024<=port<=65535:parser.error('ports must be in 1024–65535')
+    ports=(args.port,args.iq_port,args.skill_port,args.control_port,8989,8990)
+    if len(set(ports))!=len(ports):parser.error('dashboard, I/Q, skill HTTP, control and simulator ports must be distinct')
     if args.build:
         for name,image in [('simulator',args.sim_image),('skill',args.skill_image)]:
             subprocess.run(['docker','build','-t',image,'-f',f'deploy/dashboard/Dockerfile.{name}','.'],cwd=args.repo,check=True)

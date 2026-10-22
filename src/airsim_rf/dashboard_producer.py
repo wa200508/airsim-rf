@@ -32,9 +32,11 @@ async def run(args):
     output=Path(args.run_dir);arrays=json.loads((output/'arrays.json').read_text())
     document,bundle,bindings=read_bundle(output/'bundle')
     client=ProjectAirSimClient(address=args.address);client.connect()
-    state={'status':'starting','sim_elapsed_s':0,'windows':0,'camera_frames':0,'backend':'CUDA / Sionna RT','propagation':'direct + first-order specular'}
+    state={'status':'starting','sim_elapsed_s':0,'windows':0,'camera_frames':0,'backend':'CUDA / Sionna RT','propagation':'direct + first-order specular',
+           'flight_controller':'native MoveOnPath, 3-degree circle waypoints, ForwardOnly absolute heading',
+           'flight_command_wall_timeout_s':3600}
     atomic_json(output/'producer.json',state)
-    writer=None;sock=None;motion=None
+    writer=None;sock=None;motion=None;flight_client=None
     camera_counter=[0];last_camera=[0.]
     def image_received(_,message):
         try:
@@ -66,7 +68,13 @@ async def run(args):
         cycles=int(np.ceil(args.duration/(2*np.pi*RADIUS/SPEED)))+1
         angles=np.linspace(0,cycles*2*np.pi,cycles*120+1)
         path=[[float(RADIUS*np.cos(a)),float(-RADIUS*np.sin(a)),-160.] for a in angles]
-        motion=await drone.move_on_path_async(path=path,velocity=SPEED,timeout_sec=args.duration+10,
+        # Long flight command has a separate services-only client: its deadline
+        # is wall time, including intentional simulation pauses. Ordinary scene
+        # RPCs retain the normal SDK deadline and one owner still steps time.
+        flight_client=ProjectAirSimClient(address=args.address);flight_client.connect_services()
+        flight_client.socket_services.recv_timeout=3_600_000
+        flight_drone=Drone(flight_client,world,'OrbitDrone')
+        motion=await flight_drone.move_on_path_async(path=path,velocity=SPEED,timeout_sec=args.duration+10,
             yaw_control_mode=1,yaw_is_rate=False,yaw=0,lookahead=12.,adaptive_lookahead=0.)
         await asyncio.sleep(0)
         scene=rt.load_scene(str(output/'bundle/scene.xml'),merge_shapes=False)
@@ -100,7 +108,9 @@ async def run(args):
                 hit=nearest_intersections(document,[a],[b-a],maximum_distance_m=float(distance-.01))[0]
                 direct.append(hit is None)
             elapsed=(epoch-origin)*1e-9
-            history.append({'sim_elapsed_s':elapsed,'position_rf_m':position.tolist(),'direct_visible':direct})
+            history.append({'sim_elapsed_s':elapsed,'position_rf_m':position.tolist(),'direct_visible':direct,
+                'retained_paths_per_channel':[sum(c.retained_paths.values()) for c in captures.values()],
+                'max_clipped_component_fraction':max(c.clipped_component_fraction for c in captures.values())})
             history=history[-1000:]
             state.update(status='running',sim_elapsed_s=elapsed,windows=index+1,sim_time_ns=epoch,
                 position_rf_m=position.tolist(),velocity_rf_m_s=velocity.tolist(),direct_visible=direct,
@@ -111,13 +121,18 @@ async def run(args):
             atomic_json(output/'producer.json',state)
             world.continue_until_sim_time(epoch+ADVANCE_NS,wait_until_complete=True)
             await asyncio.sleep(0)
-        writer.finish();writer=None
+        totals=writer.finish();writer=None
+        state['acknowledged_sample_totals']=totals
         state.update(status='complete',camera_frames=camera_counter[0]);atomic_json(output/'producer.json',state)
         drone.cancel_last_task()
+        world.continue_until_sim_time(int(world.get_sim_time())+3_000_000,wait_until_complete=True)
+        try:await asyncio.wait_for(asyncio.shield(motion),timeout=2)
+        except asyncio.TimeoutError:pass
     except BaseException as error:
         state.update(status='failed',error=str(error));atomic_json(output/'producer.json',state);raise
     finally:
         if sock:sock.close()
+        if flight_client:flight_client.disconnect()
         client.disconnect()
 
 

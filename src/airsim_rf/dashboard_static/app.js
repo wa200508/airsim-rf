@@ -39,7 +39,7 @@ function render(state){lastStatus=state;token=state.token;const s=state.skill,p=
  graph('music',s.angle_grid_deg,s.music_db||[],[-70,70],[-65,0]);graph('eigen',[1,2,3,4],s.eigenvalues_db||[],[1,4],[-60,0],undefined,true);graph('phase',[0,1,2,3],s.phase_rad?[s.phase_rad]:[],[0,3],[-9,9],undefined,true);
  if(s.waterfall?.length){waterRows=s.waterfall.map(row=>row.psd_db);lastWindow=s.complete_windows;
  const first=s.waterfall[0].sim_time_ns/1e9,last=s.waterfall[s.waterfall.length-1].sim_time_ns/1e9;
- $('waterfall-caption').textContent=`Acquisition ${first.toFixed(2)}–${last.toFixed(2)} s · ${waterRows.length} contiguous 120 ms windows · −178 to −113 dB`;
+ $('waterfall-caption').textContent=`Acquisition ${first.toFixed(2)}–${last.toFixed(2)} s · ${waterRows.length} rows · 12 ms PSD snapshots every 120 ms · −178 to −113 dB`;
  }else waterRows=[];waterfall();
  $('events').replaceChildren(...state.events.map(e=>{const row=document.createElement('div');row.textContent=e.time+'  '+e.message;return row;}));
 }
