@@ -464,7 +464,11 @@ def main():
                 if part not in ('rf','sim','skill'):self.send_error(404);return
                 path=dashboard.run/f'{part}.log';data=(path.read_bytes()[-18000:] if path.exists() else b'No logs yet');kind='text/plain'
             else:self.send_error(404);return
-            self.send_response(200);self.send_header('Content-Type',kind);self.send_header('Content-Length',str(len(data)));self.send_header('Cache-Control','no-store');self.end_headers();self.wfile.write(data)
+            try:
+                self.send_response(200);self.send_header('Content-Type',kind);self.send_header('Content-Length',str(len(data)))
+                self.send_header('Cache-Control','no-store');self.end_headers();self.wfile.write(data)
+            except (BrokenPipeError,ConnectionResetError):
+                pass  # Closing the tab or abandoning an image request is normal.
         def do_POST(self):
             origin=self.headers.get('Origin')
             if origin and origin not in (f'http://127.0.0.1:{args.port}',f'http://localhost:{args.port}'):
