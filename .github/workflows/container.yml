@@ -63,11 +63,11 @@ jobs:
         run: docker run --rm --network none -w /opt/airsim-rf airsim-rf:test python scripts/check_sensing_products.py
       - name: Check scientific summary scalars
         run: docker run --rm --network none -w /opt/airsim-rf airsim-rf:test python scripts/update_sensing_summary.py --check
-      - name: Build bundled GPU dashboard (no local image prerequisites)
+      - name: Build GPU RF service (no local image prerequisites)
         run: |
           docker build -f Dockerfile.dashboard --build-arg BASE_IMAGE=airsim-rf:test \
-            --target dashboard -t airsim-rf:dashboard-gpu-test .
-      - name: Qualify bundled dashboard offline without GPU claims
+            --build-arg SOURCE_REVISION=${{ github.sha }} --target gpu -t airsim-rf:dashboard-gpu-test .
+      - name: Qualify dashboard service dependencies offline without GPU claims
         run: |
           docker run --rm --network none --entrypoint python airsim-rf:dashboard-gpu-test \
             scripts/qualify_dashboard_container.py
@@ -76,9 +76,9 @@ jobs:
       - name: Build matching optional dashboard service images
         run: |
           docker build -f Dockerfile.dashboard --build-arg BASE_IMAGE=airsim-rf:test \
-            --target skill -t airsim-rf:dashboard-skill-test .
+            --build-arg SOURCE_REVISION=${{ github.sha }} --target skill -t airsim-rf:dashboard-skill-test .
           docker build -f Dockerfile.dashboard --build-arg BASE_IMAGE=airsim-rf:test \
-            --target render -t airsim-rf:dashboard-render-test .
+            --build-arg SOURCE_REVISION=${{ github.sha }} --target render -t airsim-rf:dashboard-render-test .
       - name: Registry tags
         id: meta
         if: github.event_name != 'pull_request' && (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/v'))

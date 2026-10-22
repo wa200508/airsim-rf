@@ -1,5 +1,5 @@
 # syntax=docker/dockerfile:1
-# One pullable runtime: simulator + GPU RF producer + CPU MUSIC consumer + UI.
+# Shared pinned dependencies; distinct simulator, RF producer and CPU skill images.
 ARG BASE_IMAGE=ghcr.io/wa200508/airsim-rf:latest
 FROM ${BASE_IMAGE} AS runtime
 USER root
@@ -28,15 +28,14 @@ RUN --mount=type=secret,id=proxy_ca,mode=0444 \
     mv /tmp/blocks-download/extracted /opt/blocks; rm -rf /tmp/blocks-download; \
     chmod -R a+rX /opt/blocks; mkdir -p /work/dashboard /.drjit; \
     chown rf:rf /work/dashboard; chmod 1777 /.drjit
-ENV RF_DASHBOARD_CONTAINER=1 HOME=/tmp MPLCONFIGDIR=/tmp/matplotlib \
+ENV HOME=/tmp MPLCONFIGDIR=/tmp/matplotlib \
     PYTHONPATH=/opt/airsim-rf/src NVIDIA_DRIVER_CAPABILITIES=compute,utility,graphics
-LABEL org.opencontainers.image.source="https://github.com/wa200508/airsim-rf" \
+ARG SOURCE_REVISION=unknown
+LABEL org.opencontainers.image.revision=${SOURCE_REVISION} \
+    org.opencontainers.image.source="https://github.com/wa200508/airsim-rf" \
     org.opencontainers.image.title="AirSim RF GPU dashboard" \
     org.opencontainers.image.description="Bundled ProjectAirSim, Pascal-compatible CUDA RF, CPU MUSIC and localhost mission dashboard"
 USER rf
-EXPOSE 8765
-HEALTHCHECK --interval=10s --start-period=15s --timeout=3s \
-    CMD python -c "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8765/api/status',timeout=2)"
 
 FROM runtime AS skill
 EXPOSE 8811 8812 8813
@@ -46,10 +45,12 @@ ENTRYPOINT ["python", "-m", "airsim_rf.dashboard_skill"]
 CMD ["--arrays", "/config/arrays.json"]
 
 FROM runtime AS render
+ENV RF_BLOCKS_DIR=/opt/blocks
 HEALTHCHECK NONE
 ENTRYPOINT ["python", "/opt/airsim-rf/deploy/dashboard/render-entrypoint.py"]
 CMD []
 
-FROM runtime AS dashboard
-ENTRYPOINT ["python", "scripts/launch_dashboard.py"]
-CMD ["--pascal-compat"]
+FROM runtime AS gpu
+HEALTHCHECK NONE
+ENTRYPOINT ["python", "-m", "airsim_rf.cuda_launch", "-m", "airsim_rf.dashboard_producer"]
+CMD ["--run-dir", "/run", "--pascal-compat", "--wait-for-mission"]

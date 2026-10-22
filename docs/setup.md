@@ -84,7 +84,7 @@ docker run --rm --network none airsim-rf:test
 ```
 
 For the complete dashboard, pull and run the published GPU image using the
-[dashboard quickstart](dashboard.md#pull-and-run-no-checkout-or-local-image-builds).
+[dashboard quickstart](dashboard.md#pull-and-run-separate-containers).
 It bundles the simulator and its assets; no local base-image tags are required.
 
 The ordinary Dockerfile is the CPU test environment. It is not a simulator server

@@ -32,29 +32,9 @@ def main():
         arrays=json.loads((output/'arrays.json').read_text())
         assert len(arrays['sites'])==2
         assert sum(len(site['channels']) for site in arrays['sites'])==8
-        with socket.socket() as listener:
-            listener.bind(('127.0.0.1',0));port=listener.getsockname()[1]
-        command=[sys.executable,str(ROOT/'scripts/launch_dashboard.py'),'--port',str(port),
-                 '--run-dir',str(output),'--bind','127.0.0.1']
-        http=build_opener(ProxyHandler({}))
-        with (output/'dashboard.log').open('w') as log:
-            process=subprocess.Popen(command,stdout=log,stderr=subprocess.STDOUT)
-            try:
-                for _ in range(100):
-                    if process.poll() is not None:raise RuntimeError((output/'dashboard.log').read_text())
-                    try:
-                        with http.open(f'http://127.0.0.1:{port}/api/status',timeout=1) as response:
-                            state=json.load(response)
-                        break
-                    except (OSError,URLError):time.sleep(.1)
-                else:raise RuntimeError('Dashboard HTTP did not become ready')
-                assert state['processes']=={} and state['error'] is None
-                with http.open(f'http://127.0.0.1:{port}/',timeout=2) as response:
-                    assert b'Launch' in response.read()
-            finally:
-                process.terminate()
-                process.wait(timeout=15)
-    print('Bundled dashboard: pinned GPU libraries, simulator dependencies, scene preparation and HTTP passed. GPU mission not exercised.')
+        assert (ROOT/'src/airsim_rf/dashboard.py').is_file()
+        assert (ROOT/'src/airsim_rf/dashboard_static/index.html').is_file()
+    print('Bundled dashboard: pinned GPU libraries, simulator dependencies, scene preparation and packaged host launcher passed. GPU mission not exercised.')
 
 
 if __name__=='__main__':main()

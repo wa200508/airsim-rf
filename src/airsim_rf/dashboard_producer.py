@@ -32,6 +32,15 @@ async def run(args):
 
     output=Path(args.run_dir);arrays=json.loads((output/'arrays.json').read_text())
     document,bundle,bindings=read_bundle(output/'bundle')
+    if args.wait_for_mission:
+        deadline=time.monotonic()+args.ready_timeout
+        for port in (8989,8990):
+            while True:
+                try:
+                    probe=socket.create_connection((args.address,port),timeout=.5);probe.close();break
+                except OSError:
+                    if time.monotonic()>deadline:raise RuntimeError('ProjectAirSim did not become reachable before RF startup')
+                    await asyncio.sleep(.25)
     client=ProjectAirSimClient(address=args.address);client.connect()
     state={'status':'starting','sim_elapsed_s':0,'windows':0,'camera_frames':0,'backend':'CUDA / Sionna RT','propagation':'direct + first-order specular',
            'flight_controller':'native MoveOnPath, 3-degree circle waypoints, ForwardOnly absolute heading',
@@ -58,6 +67,11 @@ async def run(args):
                 camera_counter[0]+=1;last_camera[0]=time.monotonic()
         except Exception as error:state['camera_error']=str(error)
     try:
+        if args.wait_for_mission:
+            from .preflight import gpu_check
+            atomic_json(output/'gpu-preflight-input.json',{'rf_scene':'bundle/scene.xml'})
+            check=gpu_check(output/'gpu-preflight-input.json',pascal_compat=args.pascal_compat)
+            atomic_json(output/'gpu-preflight.json',check)
         world=World(client,'scene.jsonc',sim_config_path=str((output/'sim_config').resolve()));world.pause()
         binding=AirSimGeometryBinding(document,bindings)
         # Presentation-only glTF appearance; RF dielectric settings remain in
@@ -101,7 +115,26 @@ async def run(args):
         count=round(ADVANCE_NS*FS/1e9);samples,reference=waveform_window(origin,count,origin)
         receiver=SDRNetworkReceiver(scene,{'tx0':SDREmitter(SampledWaveform(samples,FS,reference,boundary='error'),transmit_power_w=.1,baseband_frequency_bounds_hz=(-100000,100000))},
             PlutoSDRProfile(noise_enabled=True),renderer='basis-cuda',continuous=True,path_solver='single-bounce',max_depth=1,samples_per_link=2,seed=20261021)
-        sock=socket.create_connection((args.skill_host,args.skill_port),timeout=120);writer=IQStreamWriter(sock,carrier_hz=CARRIER)
+        deadline=time.monotonic()+args.ready_timeout
+        while True:
+            try:sock=socket.create_connection((args.skill_host,args.skill_port),timeout=2);break
+            except OSError:
+                if time.monotonic()>deadline:raise RuntimeError('RF skill ingress did not become ready')
+                await asyncio.sleep(.25)
+        sock.settimeout(120);writer=IQStreamWriter(sock,carrier_hz=CARRIER)
+        if args.wait_for_mission:
+            if not args.no_render:
+                deadline=time.monotonic()+30
+                while not camera_counter[0] and time.monotonic()<deadline:await asyncio.sleep(.1)
+                if not camera_counter[0]:raise RuntimeError('No actual ProjectAirSim camera frame during preparation')
+            state.update(status='ready',camera_frames=camera_counter[0],gpu_preflight='passed',mission_started=False)
+            atomic_json(output/'producer.json',state)
+            while True:
+                command=json.loads((output/'command.json').read_text())
+                if command.get('stop'):
+                    state.update(status='stopped');atomic_json(output/'producer.json',state);return
+                if command.get('start'):break
+                await asyncio.sleep(.2)
         started=time.monotonic();history=[]
         for index in range(max(1,round(args.duration*1e9/ADVANCE_NS))):
             while True:
@@ -162,7 +195,10 @@ def main():
     parser=argparse.ArgumentParser(description=__doc__);parser.add_argument('--run-dir',type=Path,required=True)
     parser.add_argument('--duration',type=float,default=120);parser.add_argument('--address',default='127.0.0.1')
     parser.add_argument('--skill-host',default='127.0.0.1');parser.add_argument('--skill-port',type=int,default=8811)
-    parser.add_argument('--pascal-compat',action='store_true');args=parser.parse_args()
+    parser.add_argument('--pascal-compat',action='store_true')
+    parser.add_argument('--wait-for-mission',action='store_true')
+    parser.add_argument('--ready-timeout',type=float,default=300)
+    parser.add_argument('--no-render',action='store_true');args=parser.parse_args()
     if not 0<args.duration<=3600:parser.error('duration must be in (0,3600] seconds')
     asyncio.run(run(args))
 

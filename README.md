@@ -11,16 +11,15 @@ Python launcher displays the actual simulator camera, RF spectra/MUSIC diagnosti
 and measured simulation-to-skill throughput.
 
 ```bash
-docker pull ghcr.io/wa200508/airsim-rf:dashboard-gpu
-docker run --rm --init --gpus all --shm-size=1g \
-  -p 127.0.0.1:8765:8765 -v airsim-rf-dashboard:/work/dashboard \
-  ghcr.io/wa200508/airsim-rf:dashboard-gpu
+bash scripts/run_dashboard.sh --open
 ```
 
-Open http://localhost:8765 and click **Launch mission**. No checkout or local
-image build is needed. The image includes the simulator and GPU RF dependencies;
-the host needs Docker, an NVIDIA driver and NVIDIA Container Toolkit.
-See the guide for the optional separate-container development launcher.
+The script pulls and verifies three published service images, starts the
+simulator, GPU RF and CPU skill containers concurrently, and checks actual
+GPU, camera and service readiness before enabling **Launch mission**. No local
+image builds are required. The host needs Docker, NVIDIA Container Toolkit,
+an NVIDIA driver and Python 3. See the dashboard guide for a standalone script
+download that does not require cloning the repository.
 
 | Goal | Start here |
 | --- | --- |

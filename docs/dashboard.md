@@ -6,72 +6,58 @@ The three process cards report actual supervised processes; the plots and data
 rate come from the receiving skill, and the main image is a ProjectAirSim scene
 camera. Camera or sensing failure is displayed separately from stream delivery.
 
-## Pull and run (no checkout or local image builds)
+## Pull and run separate containers
 
-Install Docker Engine, a compatible NVIDIA host driver and the NVIDIA Container
-Toolkit on Linux x86-64, then run:
-
-```bash
-docker pull ghcr.io/wa200508/airsim-rf:dashboard-gpu
-docker run --rm --init --gpus all --shm-size=1g \
-  -p 127.0.0.1:8765:8765 \
-  -v airsim-rf-dashboard:/work/dashboard \
-  ghcr.io/wa200508/airsim-rf:dashboard-gpu
-```
-
-Open **http://localhost:8765** and click **Launch mission**. The image includes
-the checksum-pinned ProjectAirSim Blocks executable and client templates,
-Sionna/CuPy CUDA libraries, OpenUSD, the MUSIC dependencies and dashboard assets.
-It runs the simulator, RF producer and skill as three supervised processes in
-one container. No source mount, Docker socket, `priority2-local` image, first-run
-package installation or manual Blocks download is required. The GPU performs
-RF propagation/rendering; the bundled Unreal camera uses software Vulkan/Xvfb,
-which also supports compute-only cards such as the P100. Pascal compatibility
-is enabled by default in this image.
-
-Only the dashboard port is published. AirSim and skill ports remain internal.
-The named volume retains run products under `/work/dashboard`; remove it only
-when you want to delete those recordings. Pause preserves the simulation clock
-and stream. Stop terminates the task-owned child process groups. Container
-shutdown also stops them. `--init` reaps any orphaned simulator children.
-Use `--duration 12` after the image name for a shorter mission.
-
-The workflow publishes `dashboard-gpu` on successful `main` builds, with an
-immutable `dashboard-gpu-sha-<full-commit>` tag. The optional `dashboard-skill`
-and `dashboard-render` tags provide the same pinned runtime for the separate
-container deployment below. Version tags also publish version-specific image
-tags. CPU-only CI checks dependencies, bundled assets, scene preparation and HTTP
-startup; it cannot qualify GPU physics/RF performance. A successful GPU mission
-requires compatible hardware and is not implied by an idle dashboard health check.
-
-## Optional checkout / separate-container deployment
-
-For development, use the [setup](setup.md) prerequisites and prepare the Blocks
-asset on the host, then run the standard-library launcher:
+Install Docker Engine, a compatible NVIDIA driver, NVIDIA Container Toolkit and
+Python 3 on Linux x86-64. From a checkout run:
 
 ```bash
-python3 scripts/prepare_unreal_blocks.py
-python3 scripts/launch_dashboard.py --pascal-compat --open
+bash scripts/run_dashboard.sh --open
 ```
 
-The launcher pulls the published `dashboard-gpu`, `dashboard-render` and
-`dashboard-skill` tags by default. It no longer assumes any locally built image.
-`--build` explicitly rebuilds the optional skill/render wrappers using the
-published base. `--cpu-image`, `--rf-image`, `--skill-image` and `--sim-image`
-remain available for overriding images during development.
+Or download only the standalone run script:
 
-This deployment supervises three Docker containers. Defaults are dashboard
-8765, AirSim 8989/8990, coherent I/Q 8811, skill HTTP 8812 and SQUALL control 8813.
-The RF deployment uses host networking to reach the local simulator and skill.
-The equivalent [three-service Compose file](../deploy/dashboard/compose.yaml)
-is supplied after the launcher has generated the run directory. Do not run
-Compose and the launcher against the same ports simultaneously.
+```bash
+curl -fsSLo run_dashboard.sh https://raw.githubusercontent.com/wa200508/airsim-rf/main/scripts/run_dashboard.sh
+bash run_dashboard.sh --open
+```
+
+The script pulls the GPU RF service and extracts its standard-library dashboard
+launcher and static assets to the host cache. The launcher pulls and inspects
+**three separate published images**: `ghcr.io/wa200508/airsim-rf:dashboard-render`,
+`:dashboard-skill`, and `:dashboard-gpu`. It requires matching source revision
+labels and pins their local image IDs so tags cannot change underneath a run.
+No source checkout, local image build, Docker socket mount into a container,
+`priority2-local` image or host Blocks download is needed.
+
+The simulator, skill and RF service containers are started concurrently. Before
+the dashboard is offered, startup verifies simulator endpoints, a real camera
+frame, skill health/ingress, configured geometry, CUDA/OptiX propagation and a
+CPU-referenced CuPy render. The RF service connects to the prepared simulator
+and skill, then waits with the world paused. Only after this succeeds is
+**Launch mission** enabled at http://localhost:8765. It releases the prepared
+mission; it does not pull images or create containers.
+
+Failures stop task-owned containers and print the error/log location instead of
+presenting a ready button. Normal future hardware/runtime failures remain
+possible; startup checks establish readiness rather than a guarantee against
+later failures. Stop shuts down the three containers. Use **Prepare services**
+to prepare a new mission after stopping. Closing the host launcher also cleans
+up its task-owned containers. Logs and metadata are in `recordings/dashboard`.
+Use `--run-dir` for another output directory, `--duration 12` for a short flight,
+or `--ready-timeout 600` for slower first-use compilation.
+
+All service ports are published to loopback; the RF container uses host
+networking for the simulator and skill connections. The camera uses bundled
+software Vulkan/Xvfb; the GPU is used for RF. The published service images share
+pinned runtime dependencies and assets, but run as independent containers.
+CPU CI qualifies packaging and supervision; live GPU readiness is checked on
+the actual machine every time the run script prepares the services.
 
 Default duration is 120 simulated seconds, about two 62.8-second orbits. Use
 `--duration 12` for a bounded check. Runtime speed depends on rendering and RF
 processing; no real-time claim is made. Logs, actual poses, camera frames,
-geometry bundle and receiver metadata are stored in `/work/dashboard` in the pull-and-run image, or `recordings/dashboard`
-in a checkout deployment.
+geometry bundle and receiver metadata are stored in the host `recordings/dashboard` directory.
 Camera appearance uses presentation-only glTF color/emission; these values do
 not set RF dielectric properties. Explicit UVs and tangent frames keep imported
 meshes visible in the packaged renderer.
