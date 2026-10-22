@@ -1,5 +1,5 @@
 # CPU Vulkan rendering is supported for machines whose compute GPU has no graphics.
-ARG BASE_IMAGE=airsim-rf:p100-profile
+ARG BASE_IMAGE=ghcr.io/wa200508/airsim-rf:dashboard-gpu
 FROM ${BASE_IMAGE}
 USER root
 RUN apt-get update && apt-get install -y --no-install-recommends xvfb xauth xdg-user-dirs mesa-vulkan-drivers libgl1-mesa-dri libxkbcommon0 libxrandr2 libxi6 libxcursor1 libxinerama1 libxss1 libxxf86vm1 libasound2t64 libnss3 strace vulkan-tools && rm -rf /var/lib/apt/lists/*

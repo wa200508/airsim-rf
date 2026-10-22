@@ -1,5 +1,5 @@
 # Separate CPU consumer; neither an AirSim server nor a CUDA device is required.
-ARG BASE_IMAGE=airsim-rf:priority2-local
+ARG BASE_IMAGE=ghcr.io/wa200508/airsim-rf:dashboard-gpu
 FROM ${BASE_IMAGE}
 USER root
 COPY requirements-tracking-lock.txt /opt/skill/requirements-tracking-lock.txt

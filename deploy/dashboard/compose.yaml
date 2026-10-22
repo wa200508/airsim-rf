@@ -1,7 +1,7 @@
 # Optional equivalent deployment after the launcher has prepared RUN_DIR.
 services:
   projectairsim:
-    image: airsim-rf:dashboard-render
+    image: ghcr.io/wa200508/airsim-rf:dashboard-render
     user: "${LOCAL_UID:-1000}:${LOCAL_GID:-1000}"
     volumes:
       - ${BLOCKS_DIR:?Set the absolute extracted Blocks directory}:/blocks:ro
@@ -13,7 +13,7 @@ services:
       timeout: 3s
       retries: 45
   rf-skill:
-    image: airsim-rf:music-skill
+    image: ghcr.io/wa200508/airsim-rf:dashboard-skill
     user: "${LOCAL_UID:-1000}:${LOCAL_GID:-1000}"
     volumes:
       - ${RUN_DIR:?Set the absolute prepared run directory}/arrays.json:/config/arrays.json:ro
@@ -21,7 +21,7 @@ services:
     read_only: true
     tmpfs: [/tmp]
   airsim-rf:
-    image: airsim-rf:p100-modern-gpu
+    image: ghcr.io/wa200508/airsim-rf:dashboard-gpu
     user: "${LOCAL_UID:-1000}:${LOCAL_GID:-1000}"
     network_mode: host
     environment:

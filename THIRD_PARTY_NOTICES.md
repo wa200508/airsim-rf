@@ -31,3 +31,11 @@ Roger R. Labbe Jr) for Kalman filtering. Both remain external dependencies;
 their source is not vendored. The MathWorks SDR Challenge/MUSIC/tracking
 examples are linked as references; no MathWorks example source or toolbox
 implementation is copied or bundled.
+
+The published GPU dashboard image includes the upstream ProjectAirSim
+[Blocks Linux 1.0.1 release](https://github.com/iamaisim/ProjectAirSim/releases/tag/v1.0.1),
+verified using the SHA-256 in `scripts/prepare_unreal_blocks.py`. Upstream asset
+contents and notices are retained in `/opt/blocks`; the pinned ProjectAirSim
+source/client license is retained in `/opt/airsim-rf/.deps/ProjectAirSim`.
+Bundling does not relicense the upstream simulator or its third-party components
+under this repository's MIT license.

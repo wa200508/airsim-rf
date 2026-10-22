@@ -75,7 +75,7 @@ def test_skill_bind_failure_is_unhealthy(tmp_path):
 
 def test_launcher_rejects_port_collisions_before_starting_processes():
     import subprocess,sys
-    result=subprocess.run([sys.executable,'scripts/launch_dashboard.py','--port','8812'],capture_output=True,text=True)
+    result=subprocess.run([sys.executable,str(Path(__file__).resolve().parents[1]/'scripts/launch_dashboard.py'),'--port','8812'],capture_output=True,text=True)
     assert result.returncode==2 and 'must be distinct' in result.stderr
 
 

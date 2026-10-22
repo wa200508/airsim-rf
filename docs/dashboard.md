@@ -1,43 +1,77 @@
 # Local RF mission dashboard
 
 The primary use case is an actual ProjectAirSim drone over shared terrain,
-Sionna propagation and continuous ADC I/Q, streamed to a separate Docker MUSIC
-RF Skill. A Python launcher serves the dashboard at `http://localhost:8765`.
+Sionna propagation and continuous ADC I/Q, streamed to a separate MUSIC RF Skill process. A Python launcher serves the dashboard at `http://localhost:8765`.
 The three process cards report actual supervised processes; the plots and data
 rate come from the receiving skill, and the main image is a ProjectAirSim scene
 camera. Camera or sensing failure is displayed separately from stream delivery.
 
-## Prepare and launch
+## Pull and run (no checkout or local image builds)
 
-Use the qualified Linux/Docker/NVIDIA environment in [setup](setup.md), with the
-pinned ProjectAirSim client source (included in the CPU base image) and Blocks asset already prepared. The CPU base image
-is `airsim-rf:priority2-local`; the P100 producer image is
-`airsim-rf:p100-modern-gpu`. Their qualification and build commands are in setup.
-Then, from the checkout:
+Install Docker Engine, a compatible NVIDIA host driver and the NVIDIA Container
+Toolkit on Linux x86-64, then run:
+
+```bash
+docker pull ghcr.io/wa200508/airsim-rf:dashboard-gpu
+docker run --rm --init --gpus all --shm-size=1g \
+  -p 127.0.0.1:8765:8765 \
+  -v airsim-rf-dashboard:/work/dashboard \
+  ghcr.io/wa200508/airsim-rf:dashboard-gpu
+```
+
+Open **http://localhost:8765** and click **Launch mission**. The image includes
+the checksum-pinned ProjectAirSim Blocks executable and client templates,
+Sionna/CuPy CUDA libraries, OpenUSD, the MUSIC dependencies and dashboard assets.
+It runs the simulator, RF producer and skill as three supervised processes in
+one container. No source mount, Docker socket, `priority2-local` image, first-run
+package installation or manual Blocks download is required. The GPU performs
+RF propagation/rendering; the bundled Unreal camera uses software Vulkan/Xvfb,
+which also supports compute-only cards such as the P100. Pascal compatibility
+is enabled by default in this image.
+
+Only the dashboard port is published. AirSim and skill ports remain internal.
+The named volume retains run products under `/work/dashboard`; remove it only
+when you want to delete those recordings. Pause preserves the simulation clock
+and stream. Stop terminates the task-owned child process groups. Container
+shutdown also stops them. `--init` reaps any orphaned simulator children.
+Use `--duration 12` after the image name for a shorter mission.
+
+The workflow publishes `dashboard-gpu` on successful `main` builds, with an
+immutable `dashboard-gpu-sha-<full-commit>` tag. The optional `dashboard-skill`
+and `dashboard-render` tags provide the same pinned runtime for the separate
+container deployment below. Version tags also publish version-specific image
+tags. CPU-only CI checks dependencies, bundled assets, scene preparation and HTTP
+startup; it cannot qualify GPU physics/RF performance. A successful GPU mission
+requires compatible hardware and is not implied by an idle dashboard health check.
+
+## Optional checkout / separate-container deployment
+
+For development, use the [setup](setup.md) prerequisites and prepare the Blocks
+asset on the host, then run the standard-library launcher:
 
 ```bash
 python3 scripts/prepare_unreal_blocks.py
-python3 scripts/launch_dashboard.py --build --pascal-compat --open
+python3 scripts/launch_dashboard.py --pascal-compat --open
 ```
 
-The host launcher uses Python's standard library; numerical work stays in the
-containers. `--build` builds the simulator rendering and CPU skill images from
-those local base images. The skill's locked Python dependencies need network
-access during the image build. Click **Launch mission** to start the three
-processes. Pause preserves the simulation clock and stream; Stop terminates
-only containers created by this launcher. Closing the launcher also cleans up
-its processes. Do not run another stepping owner against this dedicated world.
-All HTTP/control ports are published to loopback. Defaults are dashboard 8765,
-AirSim 8989/8990, coherent I/Q 8811, skill HTTP 8812 and SQUALL control 8813.
+The launcher pulls the published `dashboard-gpu`, `dashboard-render` and
+`dashboard-skill` tags by default. It no longer assumes any locally built image.
+`--build` explicitly rebuilds the optional skill/render wrappers using the
+published base. `--cpu-image`, `--rf-image`, `--skill-image` and `--sim-image`
+remain available for overriding images during development.
+
+This deployment supervises three Docker containers. Defaults are dashboard
+8765, AirSim 8989/8990, coherent I/Q 8811, skill HTTP 8812 and SQUALL control 8813.
 The RF deployment uses host networking to reach the local simulator and skill.
 The equivalent [three-service Compose file](../deploy/dashboard/compose.yaml)
-is supplied for integration after the launcher has generated the run directory.
-Do not start Compose and the launcher against the same ports simultaneously.
+is supplied after the launcher has generated the run directory. Do not run
+Compose and the launcher against the same ports simultaneously.
 
 Default duration is 120 simulated seconds, about two 62.8-second orbits. Use
 `--duration 12` for a bounded check. Runtime speed depends on rendering and RF
 processing; no real-time claim is made. Logs, actual poses, camera frames,
-geometry bundle and receiver metadata are stored in `recordings/dashboard`.
+geometry bundle and receiver metadata are stored in `/work/dashboard` in the pull-and-run image, or `recordings/dashboard`
+in a checkout deployment.
 Camera appearance uses presentation-only glTF color/emission; these values do
 not set RF dielectric properties. Explicit UVs and tangent frames keep imported
 meshes visible in the packaged renderer.
@@ -101,7 +135,4 @@ image also includes a software Vulkan/X display path for qualification.
 
 The Chase camera is gimballed inward from 100 m outside and 65 m above the
 airborne transmitter, aimed between the drone and the two ground receivers.
-Actual body attitude is removed from the relative camera transform. TX/RX labels
-are projections of actual simulator/radio positions; colored eight-metre location
-beacons are presentation markers, excluded from RF propagation geometry. Terrain
-can physically occlude a ground marker; labels locate it without claiming LOS.
+Actual body attitude is removed from the relative camera transform. TX/RX la

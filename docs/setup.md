@@ -83,6 +83,10 @@ docker build -t airsim-rf:test .
 docker run --rm --network none airsim-rf:test
 ```
 
+For the complete dashboard, pull and run the published GPU image using the
+[dashboard quickstart](dashboard.md#pull-and-run-no-checkout-or-local-image-builds).
+It bundles the simulator and its assets; no local base-image tags are required.
+
 The ordinary Dockerfile is the CPU test environment. It is not a simulator server
 or a CuPy live environment. GitHub Actions publishes tested CPU images to
 `ghcr.io/wa200508/airsim-rf`; publication and source pins are in the

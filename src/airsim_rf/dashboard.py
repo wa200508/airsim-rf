@@ -4,11 +4,13 @@ from collections import deque
 from http.server import BaseHTTPRequestHandler,ThreadingHTTPServer
 from importlib.resources import files
 import json
+import os
 from pathlib import Path
 import secrets
 import signal
 import socket
 import subprocess
+import sys
 import threading
 import time
 from urllib.error import URLError
@@ -28,9 +30,9 @@ class Dashboard:
         result=subprocess.run(args,cwd=self.root,capture_output=True,text=True,timeout=120)
         if check and result.returncode:raise RuntimeError((result.stderr or result.stdout)[-2500:])
         return result
-    def launch(self,part,args):
+    def launch(self,part,args,**kwargs):
         log=(self.run/f'{part}.log').open('a')
-        process=subprocess.Popen(args,cwd=self.root,stdout=log,stderr=subprocess.STDOUT,start_new_session=True)
+        process=subprocess.Popen(args,cwd=kwargs.pop('cwd',self.root),stdout=log,stderr=subprocess.STDOUT,start_new_session=True,**kwargs)
         self.processes[part]=process;return process
     def read(self,name):
         try:return json.loads((self.run/name).read_text())
@@ -48,11 +50,16 @@ class Dashboard:
         raise RuntimeError(f'Process did not listen on localhost:{port}; check run logs')
     def prepare(self):
         if (self.run/'arrays.json').exists():return
+        if self.args.container_runtime:
+            script='from airsim_rf.dashboard_scenario import prepare; import sys; prepare(sys.argv[1],sys.argv[2])'
+            self.command([sys.executable,'-c',script,str(self.run),str(self.root/'.deps/ProjectAirSim')])
+            return
         script='from airsim_rf.dashboard_scenario import prepare; prepare("/run", "/work/repo/.deps/ProjectAirSim-runtime")'
         self.command(['docker','run','--rm','--network','none','--user',f'{__import__("os").getuid()}:{__import__("os").getgid()}',
             '-e','HOME=/tmp','-e','PYTHONPATH=/work/repo/src:/work/repo/.deps/openusd-26.8',
-            '-v',f'{self.root}:/work/repo:ro','-v',f'{self.run}:/run','-w','/tmp',self.args.cpu_image,'python','-c',script])
+            '-v',f'{self.root}:/work/repo:ro','-v',f'{self.run}:/run','-w','/tmp','--entrypoint','python',self.args.cpu_image,'-c',script])
     def start(self):
+        if self.args.container_runtime:return self.start_local()
         self.prepare();self.last_skill={}
         for name in ('producer.json','camera.jpg'):
             path=self.run/name
@@ -94,6 +101,40 @@ class Dashboard:
             '-m','airsim_rf.dashboard_producer','--run-dir','/run','--duration',str(self.args.duration),
             '--skill-port',str(self.args.iq_port),*(['--pascal-compat'] if self.args.pascal_compat else [])])
         self.log('Pipeline started; waiting for actual camera and received ADC I/Q')
+    def start_local(self):
+        """Supervise the actual simulator, skill and CUDA producer inside one image."""
+        executable=self.args.blocks.resolve()/'Blocks/Binaries/Linux/Blocks-Linux-Shipping'
+        if not executable.is_file():raise RuntimeError(f'Bundled ProjectAirSim executable is missing: {executable}')
+        for port in (8989,8990,self.args.iq_port,self.args.skill_port,self.args.control_port):
+            with socket.socket() as test:
+                if test.connect_ex(('127.0.0.1',port))==0:raise RuntimeError(f'Port {port} already in use')
+        self.prepare();self.last_skill={}
+        for name in ('producer.json','camera.jpg'):
+            path=self.run/name
+            if path.exists():path.replace(self.run/(name+'.previous'))
+        self.write_command(paused=False,stop=False)
+        self.log('Starting bundled ProjectAirSim, CPU MUSIC skill and CUDA RF producer')
+        environment=dict(os.environ,RF_BLOCKS_DIR=str(self.args.blocks.resolve()))
+        sim=([str(executable),'Blocks','-nullrhi','-nosound','-unattended'] if self.args.no_render else
+             [sys.executable,str(self.root/'deploy/dashboard/render-entrypoint.py')])
+        self.launch('sim',sim,cwd=self.args.blocks.resolve(),env=environment)
+        self.wait_port(8989,90,part='sim')
+        self.launch('skill',[sys.executable,'-m','airsim_rf.dashboard_skill','--arrays',str(self.run/'arrays.json'),
+            '--iq-port',str(self.args.iq_port),'--http-port',str(self.args.skill_port),
+            '--control-address',f'127.0.0.1:{self.args.control_port}'])
+        self.wait_port(self.args.skill_port,60,part='skill')
+        deadline=time.monotonic()+30
+        while True:
+            try:
+                with urlopen(f'http://127.0.0.1:{self.args.skill_port}/health',timeout=1) as response:
+                    if response.status==200:break
+            except (OSError,URLError):pass
+            if time.monotonic()>deadline:raise RuntimeError('RF skill ingress failed its health check')
+            time.sleep(.2)
+        self.launch('rf',[sys.executable,'-m','airsim_rf.cuda_launch','-m','airsim_rf.dashboard_producer',
+            '--run-dir',str(self.run),'--duration',str(self.args.duration),'--skill-port',str(self.args.iq_port),
+            *(['--pascal-compat'] if self.args.pascal_compat else [])])
+        self.log('Pipeline started; waiting for actual camera and received ADC I/Q')
     def stop(self):
         self.write_command(stop=True)
         process=self.processes.get('rf')
@@ -102,6 +143,17 @@ class Dashboard:
             except subprocess.TimeoutExpired:pass
         for part in ('rf','skill','sim'):
             if part in self.processes:
+                if self.args.container_runtime:
+                    process=self.processes[part]
+                    # Kill the task-owned group, including the simulator's Xvfb child.
+                    try:os.killpg(process.pid,signal.SIGTERM)
+                    except ProcessLookupError:pass
+                    try:process.wait(timeout=5)
+                    except subprocess.TimeoutExpired:
+                        try:os.killpg(process.pid,signal.SIGKILL)
+                        except ProcessLookupError:pass
+                        process.wait(timeout=5)
+                    continue
                 self.command(['docker','stop','-t','5',self.names[part]],check=False)
                 try:self.processes[part].wait(timeout=5)
                 except subprocess.TimeoutExpired:self.processes[part].terminate()
@@ -130,7 +182,7 @@ class Dashboard:
         except (OSError,ValueError,URLError):
             if self.last_skill:skill={**self.last_skill,'status':'offline','payload_bytes_per_second':0.}
         producer=self.read('producer.json')
-        processes={part:{'pid':p.pid,'state':'running' if p.poll() is None else 'exited','exit_code':p.poll(),'container':self.names[part]} for part,p in self.processes.items()}
+        processes={part:{'pid':p.pid,'state':'running' if p.poll() is None else 'exited','exit_code':p.poll(),'container':None if self.args.container_runtime else self.names[part]} for part,p in self.processes.items()}
         camera=self.run/'camera.jpg'
         return {'processes':processes,'producer':producer,'skill':skill,'scenario':self.read('scenario.json'),
                 'camera':{'available':camera.exists(),'age_s':time.time()-camera.stat().st_mtime if camera.exists() else None,'source':'ProjectAirSim Chase scene_camera'},
@@ -140,23 +192,31 @@ class Dashboard:
 
 def main():
     parser=argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--repo',type=Path,default=Path.cwd());parser.add_argument('--run-dir',type=Path,default=Path('recordings/dashboard'))
+    bundled=os.environ.get('RF_DASHBOARD_CONTAINER')=='1'
+    parser.add_argument('--container-runtime',action='store_true',default=bundled,help='Run bundled processes without a Docker socket')
+    parser.add_argument('--repo',type=Path,default=Path('/opt/airsim-rf') if bundled else Path.cwd());parser.add_argument('--run-dir',type=Path,default=Path('/work/dashboard') if bundled else Path('recordings/dashboard'))
+    parser.add_argument('--bind',default='0.0.0.0' if bundled else '127.0.0.1')
     parser.add_argument('--port',type=int,default=8765);parser.add_argument('--iq-port',type=int,default=8811)
     parser.add_argument('--skill-port',type=int,default=8812);parser.add_argument('--control-port',type=int,default=8813)
-    parser.add_argument('--duration',type=float,default=120);parser.add_argument('--pascal-compat',action='store_true')
+    parser.add_argument('--duration',type=float,default=120);parser.add_argument('--pascal-compat',action='store_true',default=bundled)
     parser.add_argument('--no-render',action='store_true',help='Explicit diagnostic mode: no Unreal camera image')
-    parser.add_argument('--blocks',type=Path,default=Path('.deps/blocks-linux-1.0.1/extracted'))
-    parser.add_argument('--sim-image',default='airsim-rf:dashboard-render');parser.add_argument('--rf-image',default='airsim-rf:p100-modern-gpu')
-    parser.add_argument('--skill-image',default='airsim-rf:music-skill');parser.add_argument('--cpu-image',default='airsim-rf:priority2-local')
+    parser.add_argument('--blocks',type=Path,default=Path('/opt/blocks') if bundled else Path('.deps/blocks-linux-1.0.1/extracted'))
+    registry='ghcr.io/wa200508/airsim-rf'
+    parser.add_argument('--sim-image',default=registry+':dashboard-render');parser.add_argument('--rf-image',default=registry+':dashboard-gpu')
+    parser.add_argument('--skill-image',default=registry+':dashboard-skill');parser.add_argument('--cpu-image',default=registry+':dashboard-gpu')
     parser.add_argument('--build',action='store_true');parser.add_argument('--open',action='store_true');args=parser.parse_args()
     if not 0<args.duration<=3600:parser.error('duration must be in (0,3600] seconds')
     for port in (args.port,args.iq_port,args.skill_port,args.control_port):
         if not 1024<=port<=65535:parser.error('ports must be in 1024–65535')
     ports=(args.port,args.iq_port,args.skill_port,args.control_port,8989,8990)
     if len(set(ports))!=len(ports):parser.error('dashboard, I/Q, skill HTTP, control and simulator ports must be distinct')
+    if args.container_runtime and args.build:parser.error('The published image already includes the runtime; --build is only for checkout deployments')
     if args.build:
         for name,image in [('simulator',args.sim_image),('skill',args.skill_image)]:
-            subprocess.run(['docker','build','-t',image,'-f',f'deploy/dashboard/Dockerfile.{name}','.'],cwd=args.repo,check=True)
+            subprocess.run(['docker','build','--build-arg','BASE_IMAGE='+args.cpu_image,'-t',image,'-f',f'deploy/dashboard/Dockerfile.{name}','.'],cwd=args.repo,check=True)
+    elif not args.container_runtime:
+        for image in dict.fromkeys((args.cpu_image,args.sim_image,args.skill_image,args.rf_image)):
+            subprocess.run(['docker','pull',image],check=True)
     dashboard=Dashboard(args)
     assets=Path(__file__).with_name('dashboard_static')
     class Handler(BaseHTTPRequestHandler):
@@ -182,7 +242,7 @@ def main():
             try:dashboard.action(self.path.removeprefix('/api/'));self.send_response(202);self.end_headers()
             except ValueError as error:self.send_error(409,str(error))
         def log_message(self,*args):pass
-    server=ThreadingHTTPServer(('127.0.0.1',args.port),Handler)
+    server=ThreadingHTTPServer((args.bind,args.port),Handler)
     print(f'RF mission dashboard: http://localhost:{args.port}',flush=True)
     if args.open:webbrowser.open(f'http://localhost:{args.port}')
     def shutdown(*_):threading.Thread(target=server.shutdown,daemon=True).start()

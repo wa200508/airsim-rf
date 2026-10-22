@@ -6,15 +6,21 @@ models and an AMS-GRA radar worker; continuous SDR uses a separate capture API.
 
 The primary workflow is the [localhost RF mission dashboard](docs/dashboard.md):
 a large left-hand drone orbit in ProjectAirSim, shared-terrain multipath through
-Sionna, and received I/Q processed by a separate Docker MUSIC RF Skill. The
+Sionna, and received I/Q processed by an independent CPU MUSIC RF Skill process. The
 Python launcher displays the actual simulator camera, RF spectra/MUSIC diagnostics
 and measured simulation-to-skill throughput.
 
 ```bash
-python3 scripts/launch_dashboard.py --build --pascal-compat --open
+docker pull ghcr.io/wa200508/airsim-rf:dashboard-gpu
+docker run --rm --init --gpus all --shm-size=1g \
+  -p 127.0.0.1:8765:8765 -v airsim-rf-dashboard:/work/dashboard \
+  ghcr.io/wa200508/airsim-rf:dashboard-gpu
 ```
 
-See the guide for the qualified local base images and prerequisite assets.
+Open http://localhost:8765 and click **Launch mission**. No checkout or local
+image build is needed. The image includes the simulator and GPU RF dependencies;
+the host needs Docker, an NVIDIA driver and NVIDIA Container Toolkit.
+See the guide for the optional separate-container development launcher.
 
 | Goal | Start here |
 | --- | --- |
@@ -57,5 +63,4 @@ startup and distributed SDR transport remain unmeasured; all 30 updates miss the
 - [Third-party notices](THIRD_PARTY_NOTICES.md)
 
 Historical reports and raw measurements remain under `results/` and
-`research_results/`. They retain their original workloads and qualification;
-renderer-only timings cannot be substituted for fleet throughput.
+`research_results/`. They retain th

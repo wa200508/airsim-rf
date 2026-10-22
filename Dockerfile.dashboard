@@ -1,0 +1,55 @@
+# syntax=docker/dockerfile:1
+# One pullable runtime: simulator + GPU RF producer + CPU MUSIC consumer + UI.
+ARG BASE_IMAGE=ghcr.io/wa200508/airsim-rf:latest
+FROM ${BASE_IMAGE} AS runtime
+USER root
+WORKDIR /opt/airsim-rf
+COPY --chmod=755 . /opt/airsim-rf/
+# Keep dependencies and simulator extraction in one layer: the download archive
+# is removed before committing, and low-disk Docker builders avoid large copies.
+RUN --mount=type=secret,id=proxy_ca,mode=0444 \
+    set -eu; \
+    if [ -f /run/secrets/proxy_ca ]; then \
+      export PIP_CERT=/run/secrets/proxy_ca SSL_CERT_FILE=/run/secrets/proxy_ca; \
+    fi; \
+    python -m pip install --no-cache-dir -r requirements-p100-cuda.txt \
+      -r requirements-p100-propagation.txt -r requirements-tracking-lock.txt; \
+    if [ -f /run/secrets/proxy_ca ]; then \
+      apt-get -o Acquire::https::CaInfo=/run/secrets/proxy_ca update; \
+      apt-get -o Acquire::https::CaInfo=/run/secrets/proxy_ca install -y --no-install-recommends \
+        xvfb xauth xdg-user-dirs mesa-vulkan-drivers libgl1-mesa-dri libxkbcommon0 libxrandr2 libxi6 \
+        libxcursor1 libxinerama1 libxss1 libxxf86vm1 libasound2t64 libnss3 vulkan-tools; \
+    else \
+      apt-get update; apt-get install -y --no-install-recommends \
+        xvfb xauth xdg-user-dirs mesa-vulkan-drivers libgl1-mesa-dri libxkbcommon0 libxrandr2 libxi6 \
+        libxcursor1 libxinerama1 libxss1 libxxf86vm1 libasound2t64 libnss3 vulkan-tools; \
+    fi; rm -rf /var/lib/apt/lists/*; \
+    python scripts/prepare_unreal_blocks.py --output /tmp/blocks-download; \
+    mv /tmp/blocks-download/extracted /opt/blocks; rm -rf /tmp/blocks-download; \
+    chmod -R a+rX /opt/blocks; mkdir -p /work/dashboard /.drjit; \
+    chown rf:rf /work/dashboard; chmod 1777 /.drjit
+ENV RF_DASHBOARD_CONTAINER=1 HOME=/tmp MPLCONFIGDIR=/tmp/matplotlib \
+    PYTHONPATH=/opt/airsim-rf/src NVIDIA_DRIVER_CAPABILITIES=compute,utility,graphics
+LABEL org.opencontainers.image.source="https://github.com/wa200508/airsim-rf" \
+    org.opencontainers.image.title="AirSim RF GPU dashboard" \
+    org.opencontainers.image.description="Bundled ProjectAirSim, Pascal-compatible CUDA RF, CPU MUSIC and localhost mission dashboard"
+USER rf
+EXPOSE 8765
+HEALTHCHECK --interval=10s --start-period=15s --timeout=3s \
+    CMD python -c "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8765/api/status',timeout=2)"
+
+FROM runtime AS skill
+EXPOSE 8811 8812 8813
+HEALTHCHECK --interval=5s --timeout=3s \
+    CMD python -c "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8812/health',timeout=2)"
+ENTRYPOINT ["python", "-m", "airsim_rf.dashboard_skill"]
+CMD ["--arrays", "/config/arrays.json"]
+
+FROM runtime AS render
+HEALTHCHECK NONE
+ENTRYPOINT ["python", "/opt/airsim-rf/deploy/dashboard/render-entrypoint.py"]
+CMD []
+
+FROM runtime AS dashboard
+ENTRYPOINT ["python", "scripts/launch_dashboard.py"]
+CMD ["--pascal-compat"]

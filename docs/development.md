@@ -2,7 +2,7 @@
 
 GitHub Actions builds the CPU container, runs tests offline as the unprivileged
 container user, smoke-tests radar, distributed workers, SDR and terrain examples,
-and then publishes the tested image. [Workflow](../.github/workflows/container.yml).
+and then publishes the tested CPU and GPU dashboard images on `main` and version tags. [Workflow](../.github/workflows/container.yml).
 CUDA tests skip in CPU CI; their qualification requires a separate run on compatible hardware.
 
 The CPU image now also builds a local wheel. Before any existing publication
@@ -80,3 +80,22 @@ rendered outputs: machine checks cannot establish legible labels, meaningful axe
 normalization, scenario interpretation or physical realism. Undefined values are
 acceptable only when both metadata and plots explain them. Current guides are
 short entry points; dated research is in `docs/archive/`.
+
+## GPU dashboard publication
+
+`Dockerfile.dashboard` layers the pinned CUDA 12.2 CuPy libraries,
+Mitsuba 3.8.0 / Dr.Jit 1.3.1 compatibility stack, tracking lock and software
+Vulkan/Xvfb over the CPU dependency image. It checksum-verifies and bundles the
+upstream Blocks release, then exposes `dashboard`, `skill` and `render` targets.
+The main workflow builds/tests the default dashboard and publishes
+`ghcr.io/wa200508/airsim-rf:dashboard-gpu`, `:dashboard-skill` and
+`:dashboard-render`, plus immutable `dashboard-<role>-sha-<full-commit>` tags.
+A final anonymous pull verifies public access to the dashboard image.
+
+CI runs the dashboard container smoke test with networking disabled, checking
+installed pins, the bundled simulator's shared libraries, scene preparation and
+the HTTP UI. It also tests child-process supervision and checkout defaults.
+No GPU is present on the hosted runner; this does not certify CUDA execution
+or mission performance. The normal CPU test image retains its newer
+Mitsuba/Dr.Jit lock, while the dashboard image uses the explicit compatibility
+pins rather than changing the CPU release environment.
