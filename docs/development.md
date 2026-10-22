@@ -1,5 +1,9 @@
 # Development and CI
 
+For a source reading order and precise edit locations in the dashboard/RF/MUSIC
+pipeline, start with the [code map](code-map.md). It distinguishes the running
+dashboard from offline examples, generic API defaults and benchmark scenarios.
+
 GitHub Actions builds the CPU container, runs tests offline as the unprivileged
 container user, smoke-tests radar, distributed workers, SDR and terrain examples,
 and then publishes the tested CPU and GPU dashboard images on `main` and version tags. [Workflow](../.github/workflows/container.yml).

@@ -10,6 +10,25 @@ Sionna, and received I/Q processed by an independent CPU MUSIC RF Skill process.
 Python launcher displays the actual simulator camera, RF spectra/MUSIC diagnostics
 and measured simulation-to-skill throughput.
 
+## Find the code
+
+Start with the **[question-by-question code map](docs/code-map.md)** for the
+current dashboard: antennas, waveform, receiver laydown, mover, terrain,
+propagation, I/Q generation and MUSIC. It links to the actual source lines,
+lists the selected values and flags settings that must be edited together.
+
+| What you need | Open first |
+| --- | --- |
+| Scenario, receiver locations and transmitted QPSK samples | [dashboard_scenario.py](src/airsim_rf/dashboard_scenario.py) — `prepare()`, `waveform_window()` |
+| Native drone flight, antenna pattern, TX power and selected RF backend | [dashboard_producer.py](src/airsim_rf/dashboard_producer.py) — `run()` |
+| SDR filtering, noise, ADC and path-to-I/Q dispatch | [sdr.py](src/airsim_rf/sdr.py) — `PlutoSDRProfile`, `SDRNetworkReceiver.capture()` |
+| Live received-I/Q processing | [dashboard_skill.py](src/airsim_rf/dashboard_skill.py) — `Skill.process()` |
+| MUSIC algorithm call, steering vector and detection gate | [aoa_tracking.py](src/airsim_rf/aoa_tracking.py) — `estimate_bearing()`, `PhysicalULA`; [full MUSIC trace](docs/code-map.md#find-the-actual-music-algorithm) |
+
+The MUSIC numerical implementation comes from `doa_py`; it is not vendored
+here. The current dashboard is the QPSK SDR scenario; the LFM/FMCW radar and
+offline tracking examples have separate configurations.
+
 ## Launch the dashboard
 
 On **Linux x86-64**, install Docker Engine, a compatible NVIDIA driver,
@@ -165,6 +184,7 @@ your hardware; CPU CI alone does not qualify a live GPU mission.
 
 | Goal | Start here |
 | --- | --- |
+| Find the implementation or change antennas, signal, laydown or mover | [Question-by-question code map](docs/code-map.md) |
 | Complete setup → matching geometry → recording → CPU processor | [Shared-scene quickstart](docs/quickstart.md) |
 | Check what is qualified and what remains open | [Capability and acceptance matrix](docs/capabilities.md) |
 | Integrate waveforms, radios and processing code | [Configuration and API interfaces](docs/interfaces.md) |

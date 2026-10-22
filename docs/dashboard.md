@@ -5,6 +5,8 @@ Sionna propagation and continuous ADC I/Q, streamed to a separate MUSIC RF Skill
 The three process cards report actual supervised processes; the plots and data
 rate come from the receiving skill, and the main image is a ProjectAirSim scene
 camera. Camera or sensing failure is displayed separately from stream delivery.
+For the actual scenario, antenna, waveform, mover and MUSIC implementation
+locations, use the [question-by-question code map](code-map.md).
 
 ## Recording and playback
 

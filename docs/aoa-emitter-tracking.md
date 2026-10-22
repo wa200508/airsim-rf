@@ -1,5 +1,9 @@
 # MUSIC angle of arrival and emitter tracking
 
+This page describes the offline tracking example. For the live drone-orbit
+dashboard's different layout and its MUSIC call chain, see the
+[code map](code-map.md#find-the-actual-music-algorithm).
+
 This ready-made Python example follows the direction-finding theme of the
 [SDR University Challenge resource list](https://www.mathworks.com/academia/student-competitions/sdr-university-challenge.html).
 Its official reference is MathWorks'
