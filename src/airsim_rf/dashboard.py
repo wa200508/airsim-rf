@@ -37,9 +37,11 @@ class Dashboard:
         except (OSError,ValueError):return {}
     def write_command(self,**value):
         path=self.run/'command.json';tmp=self.run/'command.tmp';tmp.write_text(json.dumps(value));tmp.replace(path)
-    def wait_port(self,port,timeout=60):
+    def wait_port(self,port,timeout=60,part=None):
         deadline=time.monotonic()+timeout
         while time.monotonic()<deadline:
+            if part and self.processes[part].poll() is not None:
+                raise RuntimeError(f'{part} exited before readiness; see {self.run}/{part}.log')
             try:
                 with socket.create_connection(('127.0.0.1',port),timeout=.3):return
             except OSError:time.sleep(.25)
@@ -51,7 +53,11 @@ class Dashboard:
             '-e','HOME=/tmp','-e','PYTHONPATH=/work/repo/src:/work/repo/.deps/openusd-26.8',
             '-v',f'{self.root}:/work/repo:ro','-v',f'{self.run}:/run','-w','/tmp',self.args.cpu_image,'python','-c',script])
     def start(self):
-        self.prepare();self.write_command(paused=False,stop=False)
+        self.prepare()
+        for name in ('producer.json','camera.jpg'):
+            path=self.run/name
+            if path.exists():path.replace(self.run/(name+'.previous'))
+        self.write_command(paused=False,stop=False)
         for port in (8989,8990,self.args.iq_port,self.args.skill_port):
             with socket.socket() as test:
                 if test.connect_ex(('127.0.0.1',port))==0:raise RuntimeError(f'Port {port} already in use; use a dedicated simulator/skill instance')
@@ -64,13 +70,13 @@ class Dashboard:
             sim += ['Blocks','-nullrhi','-nosound','-unattended']
             # Explicit diagnostic mode; never presented as a live rendered camera.
             sim[sim.index(self.args.sim_image):sim.index(self.args.sim_image)]=['--entrypoint','/blocks/Blocks/Binaries/Linux/Blocks-Linux-Shipping']
-        self.launch('sim',sim);self.wait_port(8989,90)
+        self.launch('sim',sim);self.wait_port(8989,90,part='sim')
         self.log('Starting independent CPU MUSIC RF Skill container')
         self.launch('skill',['docker','run','--rm','--name',self.names['skill'],'--network','bridge','--user',uid,
              '-p',f'127.0.0.1:{self.args.iq_port}:8811','-p',f'127.0.0.1:{self.args.skill_port}:8812',
              '-p',f'127.0.0.1:{self.args.control_port}:8813',
              '-v',f'{self.run}/arrays.json:/config/arrays.json:ro',self.args.skill_image])
-        self.wait_port(self.args.skill_port,60)
+        self.wait_port(self.args.skill_port,60,part='skill')
         self.log('Starting airsim_rf + Sionna CUDA deployment; one simulation stepping owner')
         self.launch('rf',['docker','run','--rm','--name',self.names['rf'],'--gpus','device=0','--network','host',
             '--user',uid,'--tmpfs','/.drjit:rw,mode=1777','-e','HOME=/tmp',

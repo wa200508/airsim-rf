@@ -12,4 +12,4 @@ for _ in range(100):
 else:raise SystemExit('Xvfb readiness timeout')
 os.environ['DISPLAY']=':98'
 os.environ.setdefault('VK_ICD_FILENAMES','/usr/share/vulkan/icd.d/lvp_icd.json')
-os.execv('/blocks/Blocks/Binaries/Linux/Blocks-Linux-Shipping',['Blocks','Blocks','-RenderOffscreen','-vulkan','-sm5','-nosound','-unattended','-stdout','-FullStdOutLogOutput','-userdir=/tmp/airsim-user'])
+os.execv('/blocks/Blocks/Binaries/Linux/Blocks-Linux-Shipping',['Blocks','Blocks','-RenderOffscreen','-vulkan','-sm5','-AllowCPUDevices','-nosound','-unattended','-stdout','-FullStdOutLogOutput','-userdir=/tmp/airsim-user'])

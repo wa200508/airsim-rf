@@ -55,7 +55,7 @@ def prepare(output,runtime_source):
     geometry={'schema_version':1,'scene_id':'OrbitRF','revision':'1','source':{'adapter':'dashboard-terrain','version':'1','asset':'shared-triangles','revision':'1','geometry_kind':'shared'},
         'materials':{name:{'relative_permittivity':value,'conductivity_s_m':.01,'assumption':'Illustrative uncalibrated dielectric'} for name,value in [('earth',5.),('rock',6.)]},'objects':objects}
     bindings={'version':1,'geodetic_anchor':{'latitude':47.641468,'longitude':-122.140165,'altitude_m':122.},
-        'objects':{obj['id']:{'object_name':obj['id'],'asset_path':'generated:glb','local_to_asset_m':np.eye(4).tolist(),'asset_provenance':'Same triangles in Unreal and RF'} for obj in objects}}
+        'objects':{obj['id']:{'simulator':{'object_name':obj['id'],'asset_path':'generated:glb','local_to_actor_m':np.eye(4).tolist(),'asset_provenance':'Same triangles in Unreal and RF'}} for obj in objects}}
     export_sionna_geometry(geometry,output/'bundle',provenance={'scope':'dashboard shared terrain'},bindings=bindings)
     atomic_json(output/'placement.json',placement_plan(geometry,bindings))
     offsets=(np.arange(4)-1.5)*299792458./CARRIER/2

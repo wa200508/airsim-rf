@@ -48,10 +48,15 @@ async def run(args):
         world=World(client,'scene.jsonc',sim_config_path=str((output/'sim_config').resolve()));world.pause()
         binding=AirSimGeometryBinding(document,bindings);spawn_placements(world,binding.plan)
         binding.require_static_match(world,int(world.get_sim_time()))
+        visual={}
+        for name in ('Terrain','RidgeScreen'):
+            try:visual[name]=world.set_object_material(name,'/Engine/BasicShapes/BasicShapeMaterial.BasicShapeMaterial')
+            except Exception as error:visual[name]=str(error)
+        state['visual_materials']=visual
         drone=Drone(client,world,'OrbitDrone')
         client.subscribe(drone.sensors['Chase']['scene_camera'],image_received)
         drone.enable_api_control();drone.arm()
-        motion=await drone.move_by_velocity_body_frame_async(v_forward=SPEED,v_right=0,v_down=0,duration=args.duration+5,yaw_is_rate=True,yaw=-SPEED/RADIUS)
+        motion=await drone.move_by_velocity_body_frame_z_async(v_forward=SPEED,v_right=0,z=-160.,duration=args.duration+5,yaw_is_rate=True,yaw=-SPEED/RADIUS)
         world.continue_until_sim_time(int(world.get_sim_time())+2_001_000_000,wait_until_complete=True)
         await asyncio.sleep(.1)
         origin=int(world.get_sim_time());scene=rt.load_scene(str(output/'bundle/scene.xml'),merge_shapes=False)
