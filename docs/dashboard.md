@@ -46,7 +46,7 @@ terrain triangles in Unreal and RF.
 
 ## Scene and signal interpretation
 
-The drone starts at RF `(250,0,220)` metres over the existing hills-and-valleys terrain. The native
+The drone starts at RF `(250,0,200)` metres over the existing hills-and-valleys terrain. The native
 Fast Physics path follower follows a 250 m radius left-hand circle sampled at
 3° waypoint intervals, with a 25 m/s speed command, 12 m lookahead and heading
 aligned to flight direction. Actual simulator pose and velocity readback,

@@ -6,7 +6,7 @@ from scipy.signal import firwin, upfirdn
 FS=2_000_000
 CARRIER=915_000_000.
 RADIUS=250.
-ALTITUDE=220.
+ALTITUDE=200.
 SPEED=25.
 ADVANCE_NS=120_000_000
 
@@ -65,7 +65,7 @@ def prepare(output,runtime_source):
     if not source.exists():raise ValueError('Pinned ProjectAirSim robot template is missing; rebuild the qualified CPU base image')
     robot=commentjson.loads(source.read_text());robot['controller']['simple-flight-api-settings']['parameters']={'MPC_XY_VEL_MAX':30.}
     robot['sensors']=[s for s in robot['sensors'] if s['id']=='Chase']
-    camera=robot['sensors'][0];camera['capture-interval']=.12;camera['origin']={'xyz':'-100 0 -60','rpy-deg':'0 -35 0'}
+    camera=robot['sensors'][0];camera['gimbal']={'lock-roll':False,'lock-pitch':False,'lock-yaw':False};camera['capture-interval']=.12;camera['origin']={'xyz':'-100 0 -60','rpy-deg':'0 -35 0'}
     camera['capture-settings'][0].update(width=960,height=540,compress=False)
     sim=output/'sim_config';sim.mkdir(exist_ok=True);atomic_json(sim/'orbit.jsonc',robot)
     atomic_json(sim/'scene.jsonc',{'id':'OrbitDashboard','scene-type':'UnrealNative','actors':[{'type':'robot','name':'OrbitDrone','origin':{'xyz':f'250 0 {-ALTITUDE}','rpy-deg':'0 0 -90'},'robot-config':'orbit.jsonc'}],

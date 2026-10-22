@@ -7,6 +7,7 @@ import numpy as np
 
 def audit(run,status,pause):
     producer=json.loads((run/'producer.json').read_text());skill=status['skill']
+    altitude=json.loads((run/'scenario.json').read_text()).get('altitude_rf_m',160.)
     history=producer['history'];received={row['sim_time_ns']:row for row in skill['history']}
     positions=np.asarray([row['position_rf_m'] for row in history])
     angle=np.unwrap(np.arctan2(positions[:,1],positions[:,0]))
@@ -26,7 +27,7 @@ def audit(run,status,pause):
         'actual_flight_and_stream_complete':producer['status']=='complete' and skill['status']=='complete',
         'one_complete_left_hand_circuit':float(angle[-1]-angle[0])>=2*np.pi,
         'radius_within_10m_of_250m':bool(np.max(abs(radius-250))<10),
-        'altitude_within_8m_of_160m':bool(np.max(abs(positions[:,2]-160))<8),
+        'altitude_within_8m_of_command':bool(np.max(abs(positions[:,2]-altitude))<8),
         'all_coherent_windows_received':skill['complete_windows']==producer['windows']==len(history)==len(blocks),
         'all_payload_bytes_received':skill['payload_bytes']==producer['raw_payload_bytes']==expected,
         'all_eight_sample_totals_acknowledged':len(totals)==8 and all(n==producer['windows']*240000 for n in totals.values()),

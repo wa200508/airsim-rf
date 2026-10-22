@@ -72,8 +72,7 @@ async def run(args):
         marker_pose=lambda p:{'frame_id':'DEFAULT_ID','translation':dict(zip(('x','y','z'),(np.asarray(p)*[1,-1,-1]).tolist())),'rotation':{'w':1.,'x':0.,'y':0.,'z':0.}}
         for i,position in enumerate(site_positions):
             name=f'Radio_RX_{i}'
-            world.spawn_object_from_file(name,'gltf',radio_marker_glb([.2,.9,.85] if i==0 else [1.,.65,.15]),True,marker_pose(position),[1,1,1],False)
-        world.spawn_object_from_file('Radio_TX','gltf',radio_marker_glb([1.,.3,.1]),True,marker_pose([250,0,ALTITUDE]),[1,1,1],False)
+            world.spawn_object_from_file(name,'gltf',radio_marker_glb([.2,.9,.85] if i==0 else [1.,.65,.15]),True,marker_pose(np.asarray(position)-[0,0,8]),[1,1,1],False)
         drone=Drone(client,world,'OrbitDrone')
         client.subscribe(drone.sensors['Chase']['scene_camera'],image_received)
         drone.enable_api_control();drone.arm()
@@ -117,7 +116,6 @@ async def run(args):
             eye,rotation=camera_frame(position,site_positions)
             if not drone.set_camera_pose('Chase',relative_camera_pose(eye,rotation,kinematics)):
                 raise RuntimeError('Chase camera gimbal pose update failed')
-            world.set_object_pose('Radio_TX',marker_pose(position),True)
             view[0]=(eye,rotation,[position.tolist(),*site_positions])
             scene.transmitters['tx0'].position=position.tolist();scene.transmitters['tx0'].velocity=velocity.tolist();scene.transmitters['tx0'].orientation=orientation.tolist()
             samples,reference=waveform_window(epoch,count,origin)

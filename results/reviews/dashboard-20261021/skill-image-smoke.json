@@ -1,0 +1,10 @@
+{
+  "status": "passed",
+  "checks": {
+    "complete_group_acknowledged": true,
+    "incomplete_group_not_acknowledged": true,
+    "stream_failure_health_503": true,
+    "bind_failure_health_503": true
+  },
+  "scope": "Final CPU Docker image; synthetic transport-only test, not RF evidence"
+}

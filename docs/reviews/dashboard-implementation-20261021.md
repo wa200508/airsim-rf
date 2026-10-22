@@ -1,48 +1,34 @@
-# Primary localhost RF dashboard — implementation checkpoint
+# Primary localhost RF dashboard — qualification
 
-User-directed work is on `main`, with periodic pushes to origin/main. Baseline
-checkpoint a1b16f7 contains priorities 1–3. Dashboard foundation 5e0e96f contains
-the Python stdlib launcher, local HTTP UI, three-process supervision, shared
-terrain/large left orbit scenario, actual AirSim/Sionna producer, CPU MUSIC
-container and SQUALL-derived control-schema boundary. Image publication now
-requires a version tag; ordinary main checkpoints do not publish containers.
+The dashboard is the primary README use case, implemented and periodically pushed
+on `main`. Checkpoints include a1b16f7 (priorities 1–3), 5e0e96f (launcher),
+85b3f58 (actual circular flight/rendering), 0b46957 (full-orbit audit and transport
+completion) and f2f50f7 (shared demo terrain and radio-tracking camera).
+Ordinary main pushes test code; container publication requires a version tag.
 
-Current qualification is in progress, not complete. The UI serves at localhost
-8765. Preparing the shared scene exposed and corrected a simulator-binding
-schema mismatch. Software Vulkan is available (Mesa llvmpipe); the current Blocks
-binary exits before emitting a camera frame. Render image debugging is ongoing;
-no substitute image or fabricated telemetry is supplied. The user requested a
-real AirSim rendered 3D scene, not a schematic as the main display.
+The initial actual-rendered 90-second orbit passed all 16 acceptance checks:
+750 coherent windows, 11.52 GB independently received ADC I/Q, eight acknowledged
+sample totals, 389 actual camera frames, 8.04 radians of left-hand travel, radius
+249.83–250.54 m, and 154 both-blocked/no-detection windows. RF exited normally.
+Pause held the actual clock and received-byte counters while all three processes
+remained alive. See [acceptance evidence](../../results/reviews/dashboard-20261021/acceptance.json).
 
-Main files: `src/airsim_rf/dashboard.py`, `dashboard_scenario.py`,
-`dashboard_producer.py`, `dashboard_skill.py`, `dashboard_static/`,
-`deploy/dashboard/`, `scripts/launch_dashboard.py`, `docs/dashboard.md`.
-The stdlib host launcher is running in a retained process and uses Docker for
-numerical work. `.deps/ProjectAirSim-runtime` and Blocks are the pinned existing
-assets. The task-created render probe container is `airsim-rf-dashboard-sim`
-(exited; retained for diagnostics). Do not touch unrelated comfyui,
-gitlab-runner or immich containers. GPU was idle except 263 MiB baseline.
+The user requested the terrain from the other RF examples. The primary scene now
+uses `demo_terrain()` with its same hills and drainage valley: horizontal scale
+four, vertical scale three, 800 m width and 90 m relief above RF base 100 m.
+The 250 m orbit commands RF altitude 200 m. Identical triangles are exported to
+Unreal and Sionna. Natural hills replace the artificial ridge. A gimballed Chase
+camera tracks actual drone and ground receiver positions, with projected TX/RX
+labels and ground radio location beacons. No airborne beacon is placed in the
+flight path. Final terrain/camera qualification evidence is recorded separately.
 
-Local images: airsim-rf:dashboard-render (software Vulkan/X11 + Blocks mount),
-airsim-rf:music-skill (CPU-only MUSIC), airsim-rf:p100-modern-gpu (actual Sionna
-producer), airsim-rf:priority2-local (CPU preparation/tests).
+The CPU skill image passes valid-completion, incomplete-group/no-ACK, failed-stream
+HTTP 503 and ingress-bind-failure HTTP 503 checks. SQUALL gRPC status and fixed
+profile validation are exercised. Coherent framed TCP remains a documented
+metadata extension; native MEL/VITA conformance, hardware calibration, generic
+multipath-robust MUSIC and real-time operation are not claimed.
 
-Remaining: finish actual-render startup, qualify 12-second live flight through
-three processes with camera/IQ/MUSIC/blocked-to-clear transitions; test
-pause/resume/stop and explicit failure states; numerical continuity and transport
-checks; browser visual QA at desktop/mobile; fix errors, save acceptance evidence,
-update status docs, push final changes on main. Earlier auto-review rejected
-broad staging of historical results and a potential duplicate simulator launch.
-The safe alternatives are explicit reviewed source-file staging and restarting
-only owned probe containers, with one Unreal process per container.
-
-
-Live integration update: the real Unreal camera and 100-window acknowledged
-I/Q transfer passed, with 1.536 GB received by the CPU skill. A separate
-altitude-hold run explicitly showed 100 blocked/no-detection windows while all
-I/Q remained delivered. Native MoveOnPath now supplies the actual circular route;
-its ForwardOnly mode requires an absolute-yaw configuration. Visual GLB emission,
-UVs and tangent frames fix black imported terrain without changing RF vertices.
-The final 90-second circular-flight qualification is running. Pause held actual
-simulation epoch and payload counters across a two-second check while all three
-processes remained alive; Resume continued delivery. See local dashboard evidence.
+During integration we corrected Unreal software Vulkan startup, imported mesh
+UV/tangent visibility, native path yaw mode, a long-command wall deadline,
+read-only image buffers, and explicit camera/object pose frame IDs. Earlier probe
+logs and local diagnostic captures remain outside the maintained report set.

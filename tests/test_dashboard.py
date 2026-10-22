@@ -97,3 +97,21 @@ def test_gimballed_camera_frames_all_radios_across_complete_orbit():
         relative=relative_camera_pose(eye,rotation,kinematics)
         np.testing.assert_allclose(body.apply(list(relative['translation'].values()))+ned,eye,atol=1e-10)
         np.testing.assert_allclose(body.as_matrix()@Rotation.from_quat(list(relative['rotation'].values())).as_matrix(),rotation,atol=1e-10)
+
+
+def test_prepared_scene_reuses_demo_terrain_and_explicit_camera_gimbal(tmp_path):
+    pytest.importorskip('commentjson')
+    import json
+    from airsim_rf.dashboard_scenario import prepare,ALTITUDE
+    from airsim_rf.terrain import demo_terrain,TerrainGrid
+    from airsim_rf.geometry import read_bundle
+    prepare(tmp_path,Path('.deps/ProjectAirSim-runtime'))
+    document,_,_=read_bundle(tmp_path/'bundle')
+    original=demo_terrain();expected=TerrainGrid(original.x_m*4,original.y_m*4,100+original.heights_m*3)
+    vertices,faces=expected.mesh()
+    assert len(document['objects'])==1
+    np.testing.assert_allclose(document['objects'][0]['vertices_local'],vertices*[1,-1,-1])
+    np.testing.assert_array_equal(document['objects'][0]['faces'],faces)
+    robot=json.loads((tmp_path/'sim_config/orbit.jsonc').read_text())
+    assert not any(robot['sensors'][0]['gimbal'].values())
+    assert ALTITUDE>expected.heights_m.max()
