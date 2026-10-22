@@ -33,7 +33,10 @@ No source checkout, local image build, Docker socket mount into a container,
 The simulator, skill and RF service containers are started concurrently. Before
 the dashboard is offered, startup verifies simulator endpoints, a real camera
 frame, skill health/ingress, configured geometry, CUDA/OptiX propagation and a
-CPU-referenced CuPy render. The RF service connects to the prepared simulator
+CPU-referenced CuPy render. A full initial scene-derived eight-channel ADC block
+is delivered to and processed by the skill as a stationary startup snapshot.
+That same window is reused at mission T+0 without duplicate transmission.
+The RF service connects to the prepared simulator
 and skill, then waits with the world paused. Only after this succeeds is
 **Launch mission** enabled at http://localhost:8765. It releases the prepared
 mission; it does not pull images or create containers.

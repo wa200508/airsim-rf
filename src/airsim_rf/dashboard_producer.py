@@ -122,7 +122,21 @@ async def run(args):
                 if time.monotonic()>deadline:raise RuntimeError('RF skill ingress did not become ready')
                 await asyncio.sleep(.25)
         sock.settimeout(120);writer=IQStreamWriter(sock,carrier_hz=CARRIER)
+        prepared_captures=None
         if args.wait_for_mission:
+            # Exercise the actual configured scene, eight-channel block and data
+            # plane before advertising READY. Reuse this initial window at T+0.
+            epoch=int(world.get_sim_time())
+            initial=normalize_kinematics(drone.get_ground_truth_kinematics())
+            position,velocity,orientation=mount_kinematics(initial)
+            scene.transmitters['tx0'].position=position.tolist()
+            scene.transmitters['tx0'].velocity=velocity.tolist()
+            scene.transmitters['tx0'].orientation=orientation.tolist()
+            samples,reference=waveform_window(epoch,count,origin)
+            receiver.emitters['tx0']=SDREmitter(SampledWaveform(samples,FS,reference,boundary='error'),
+                transmit_power_w=.1,baseband_frequency_bounds_hz=(-100000,100000))
+            prepared_captures=receiver.capture(epoch,num_samples=count)
+            for name,capture in prepared_captures.items():writer.send_capture(name,capture)
             if not args.no_render:
                 deadline=time.monotonic()+30
                 while not camera_counter[0] and time.monotonic()<deadline:await asyncio.sleep(.1)
@@ -153,8 +167,11 @@ async def run(args):
             scene.transmitters['tx0'].position=position.tolist();scene.transmitters['tx0'].velocity=velocity.tolist();scene.transmitters['tx0'].orientation=orientation.tolist()
             samples,reference=waveform_window(epoch,count,origin)
             receiver.emitters['tx0']=SDREmitter(SampledWaveform(samples,FS,reference,boundary='error'),transmit_power_w=.1,baseband_frequency_bounds_hz=(-100000,100000))
-            captures=receiver.capture(epoch,num_samples=count)
-            for name,capture in captures.items():writer.send_capture(name,capture)
+            if index==0 and prepared_captures is not None:
+                captures=prepared_captures
+            else:
+                captures=receiver.capture(epoch,num_samples=count)
+                for name,capture in captures.items():writer.send_capture(name,capture)
             direct=[]
             for site in arrays['sites']:
                 a=np.asarray(site['center_rf_m'])*[1,-1,-1];b=position*[1,-1,-1];distance=np.linalg.norm(b-a)

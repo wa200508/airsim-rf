@@ -107,8 +107,8 @@ class Dashboard:
             if state.get('status')=='failed':raise RuntimeError(state.get('error','RF startup failed'))
             if state.get('status')=='ready':
                 with urlopen(f'http://127.0.0.1:{self.args.skill_port}/health',timeout=2) as response:
-                    if response.status==200:
-                        self.ready=True;self.log('READY: GPU/OptiX/CuPy checked, scene and camera prepared, skill connected; mission paused')
+                    if response.status==200 and json.load(response).get('complete_windows',0)>=1:
+                        self.ready=True;self.log('READY: GPU checked, actual scene I/Q processed by skill, camera prepared; mission paused')
                         return
             time.sleep(.25)
         raise RuntimeError('Services did not become mission-ready; inspect simulator, RF and skill logs')
@@ -159,7 +159,7 @@ class Dashboard:
         camera=self.run/'camera.jpg'
         return {'processes':processes,'producer':producer,'skill':skill,'scenario':self.read('scenario.json'),
                 'camera':{'available':camera.exists(),'age_s':time.time()-camera.stat().st_mtime if camera.exists() else None,'source':'ProjectAirSim Chase scene_camera'},
-                'ready':self.ready and all(p.poll() is None for p in self.processes.values()) and skill.get('status')!='offline','mission_started':self.mission_started,'busy':self.busy,'error':self.error,'events':list(self.events),'no_render':self.args.no_render,
+                'ready':self.ready and all(p.poll() is None for p in self.processes.values()) and skill.get('status') not in ('offline','failed'),'mission_started':self.mission_started,'busy':self.busy,'error':self.error,'events':list(self.events),'no_render':self.args.no_render,
                 'run_directory':str(self.run),'token':self.token}
 
 
