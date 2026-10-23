@@ -124,7 +124,7 @@ ports and contract. For example:
 The launcher maps published host ports to those internal ports and connects the
 RF source to the chosen I/Q port. It supplies `RF_IQ_PORT`, `RF_HTTP_PORT`,
 optional `RF_CONTROL_PORT`, `RF_RECEIVER_CONFIG` and `RF_RESULTS_DIR` environment
-variables. The bundled skill honors the port variables; a custom image may
+variables. DF-Skill honors the port variables; a custom image may
 use them or its own declared command arguments. Your image supplies its own entrypoint; the
 listed command is its argument vector. A null control port publishes no gRPC
 endpoint. `--skill-image` can override the configured image for one invocation.
@@ -139,10 +139,11 @@ new kinds of algorithm visualization need an observer renderer.
 
 The external `kind: direction-finding` (legacy alias `music`) requires two ULAs with at least three ordered,
 calibrated, at-most-half-wavelength-spaced channels per site. Choose `custom`
-for other consumer layouts. `revision_policy: matching` enforces the bundled
-skill's common source revision with the RF/simulator images. `independent`
-permits an independently versioned consumer; simulator and RF images must still
-match. Every role is pinned to the image ID actually inspected after pulling.
+for other consumer layouts. The default DF-Skill deployment uses
+`revision_policy: independent`, because it has its own repository/release cycle.
+`matching` remains available for consumers deliberately released at the same
+source revision as the simulator/RF images. Simulator and RF images must still
+match in either case. Every role is pinned to the image ID actually inspected after pulling.
 
 The skill gets only read-only receiver metadata at `/config/arrays.json` and a
 writable results directory. The scenario directory, emitter waveforms, terrain

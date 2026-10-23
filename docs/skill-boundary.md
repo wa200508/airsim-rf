@@ -57,8 +57,8 @@ supplied waveform/profile, without importing its simulation source.
 | Neutral in-process and TCP I/Q | [sample_stream.py](../src/airsim_rf/sample_stream.py): `SampleBlock`, `SampleStreamWriter`, `iter_stream` |
 | Live acquisition adapter | [live.py](../src/airsim_rf/live.py): `on_samples(block)` after ADC conversion |
 | Source-format compatibility | [iq_stream.py](../src/airsim_rf/iq_stream.py) and [recording.py](../src/airsim_rf/recording.py): v1 TCP/SigMF → neutral samples |
-| Live MUSIC application | [skills/music.py](../src/airsim_rf/skills/music.py): `MusicSkill` |
-| Receiver-only algorithms | [processing/music.py](../src/airsim_rf/processing/music.py), [tracking.py](../src/airsim_rf/processing/tracking.py), [radar.py](../src/airsim_rf/processing/radar.py), [sensing.py](../src/airsim_rf/processing/sensing.py) |
+| Direction Finding RF Skill | [DF-Skill app.py](https://github.com/wa200508/DF-Skill/blob/main/src/df_skill/app.py): `DirectionFindingSkill`; local `skills/music.py` is a legacy re-export |
+| Receiver-only algorithms | [DF-Skill MUSIC math](https://github.com/wa200508/DF-Skill/blob/main/src/df_skill/music.py) (local `processing/music.py` is a re-export), [tracking.py](../src/airsim_rf/processing/tracking.py), [radar.py](../src/airsim_rf/processing/radar.py), [sensing.py](../src/airsim_rf/processing/sensing.py) |
 | Simulator RF loop | [dashboard_producer.py](../src/airsim_rf/dashboard_producer.py) |
 | Generic lockstep/backpressure | [dashboard_sync.py](../src/airsim_rf/dashboard_sync.py) |
 | Separate journals | [source_recording.py](../src/airsim_rf/source_recording.py), [processing/results.py](../src/airsim_rf/processing/results.py) |
