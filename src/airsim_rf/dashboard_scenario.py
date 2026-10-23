@@ -1,6 +1,7 @@
 """Compile a portable input package into shared simulator/RF runtime artifacts."""
 from copy import deepcopy
 import json
+import shutil
 from pathlib import Path
 import tempfile
 import numpy as np
@@ -89,7 +90,7 @@ def waveform_window(epoch_ns,count,origin_ns):
     return samples,reference
 
 
-def prepare(output,runtime_source=None,scenario_dir=None,duration_s=None):
+def prepare(output,runtime_source=None,scenario_dir=None,duration_s=None,check_iq_space=False):
     """Snapshot input files; compile them without loading Sionna or connecting AirSim."""
     import commentjson
     from .geometry import export_sionna_geometry,validate_geometry
@@ -101,6 +102,13 @@ def prepare(output,runtime_source=None,scenario_dir=None,duration_s=None):
     if duration_s is not None:
         if not 0<duration_s<=3600:raise ValueError('Duration must be in (0,3600] seconds')
         config['mission']['duration_s']=duration_s
+    if check_iq_space and config['mission'].get('record_iq',True):
+        mission=config['mission'];radio=config['radios']
+        windows=max(1,int(np.ceil(mission['duration_s']*1e9/mission['rf_update_ns'])))
+        count=round(mission['rf_update_ns']*radio['sample_rate_hz']/1e9)
+        required=windows*count*sum(len(site['channels']) for site in radio['sites'])*8
+        if shutil.disk_usage(output).free<required+64*1024**2:
+            raise ValueError(f'Insufficient output space for bulk I/Q: need {required} sample bytes plus 64 MiB headroom; shorten mission or set mission.record_iq=false')
     env=config['environment'];terrain=None
     if env['type']=='heightfield':
         terrain=TerrainGrid(env['x_m'],env['y_m'],env['heights_m']);vertices,faces=terrain.mesh()

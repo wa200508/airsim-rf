@@ -41,6 +41,7 @@ front-end approximation and material constants remain uncalibrated assumptions.
 | Shared-world integrity and direct-ray checks | [geometry.py](../src/airsim_rf/geometry.py), [geometry_sync.py](../src/airsim_rf/geometry_sync.py), [dashboard_geometry.py](../src/airsim_rf/dashboard_geometry.py). Diagnostics inspect actual paths rather than muting hidden links. |
 | Camera boom and actual-frame labels | [dashboard_view.py](../src/airsim_rf/dashboard_view.py): `camera_frame()`, `relative_camera_pose()`, `camera_labels()`. Terrain visibility of a label is separate from a TX/RX radio link. |
 | Neutral receiver stream and lockstep | [sample_stream.py](../src/airsim_rf/sample_stream.py), [dashboard_sync.py](../src/airsim_rf/dashboard_sync.py): acquisition timestamps, channels and generic window acknowledgements, without algorithm outputs. |
+| Bulk I/Q recording and unchanged-skill replay | [sample_recording.py](../src/airsim_rf/sample_recording.py): `SampleRecordingWriter`, `iter_recorded_windows()`, `replay()`; NumPy and neutral transport only. See [capture/replay guide](iq-replay.md). |
 | Service lifecycle, scenario/skill wiring, replay and HTTP | [dashboard.py](../src/airsim_rf/dashboard.py); [standalone shell launcher](../scripts/run_dashboard.sh). |
 | Plotting and playback presentation | [app.js](../src/airsim_rf/dashboard_static/app.js), [index.html](../src/airsim_rf/dashboard_static/index.html), [style.css](../src/airsim_rf/dashboard_static/style.css). The browser does not run MUSIC. |
 
@@ -105,9 +106,11 @@ recordings/dashboard/
     results/<timestamp-ns>.json    independent RF application outputs
     camera/<frame-key>.jpg         actual recorded camera image and labels
     camera/<frame-key>.json        image time, geometry hash and label metadata
+    iq/                           exact receiver samples and neutral replay metadata
 ```
 
-The replay archive saves presentation diagnostics, not raw ADC I/Q. Source and
+The archive also retains raw receiver I/Q when `mission.record_iq` is enabled;
+see [bulk capture and RF-skill replay](iq-replay.md). Source and
 application journals meet only in [dashboard_recording.py](../src/airsim_rf/dashboard_recording.py).
 See the [boundary guide](skill-boundary.md), [dashboard operations](dashboard.md),
 [interfaces](interfaces.md) and [scenario-package schema](scenarios.md).

@@ -123,5 +123,25 @@ def test_configured_receiver_adapter_renders_real_iq_on_cpu(package,tmp_path):
     assert len(captured)==8
     assert all(len(block.adc_iq_volts)==1024 and np.isfinite(block.adc_iq_volts).all() for block in captured.values())
     assert receiver.profile.carrier_hz==radio['carrier_hz']
+    from airsim_rf.sample_stream import SampleBlock
+    from airsim_rf.sample_recording import SampleRecordingWriter,iter_recorded_windows
+    saved=SampleRecordingWriter(tmp_path/'propagated-iq',arrays)
+    blocks=[SampleBlock(name,captured[name].adc_iq_volts,0,captured[name].sim_time_ns,
+        captured[name].actual_sample_rate_hz,radio['carrier_hz'],captured[name].clipped_component_fraction)
+        for site in arrays['sites'] for name in site['channels']]
+    saved.write_window(blocks);saved.close()
+    restored=next(iter_recorded_windows(tmp_path/'propagated-iq'))
+    assert all(a.samples.tobytes()==b.samples.tobytes() for a,b in zip(blocks,restored))
     expected=np.asarray(arrays['sites'][1]['center_rf_m'])+arrays['sites'][1]['element_offsets_m'][0]*np.array([-np.sin(.4),np.cos(.4),0])
     np.testing.assert_allclose(scene.receivers['site1_e0'].position.numpy().reshape(3),expected,atol=1e-5)
+
+
+def test_bulk_capture_space_is_checked_only_for_execution(package,tmp_path,monkeypatch):
+    from types import SimpleNamespace
+    pytest.importorskip('commentjson')
+    monkeypatch.setattr('airsim_rf.dashboard_scenario.shutil.disk_usage',lambda path:SimpleNamespace(free=64*1024**2))
+    with pytest.raises(ValueError,match='Insufficient output space for bulk I/Q'):
+        prepare(tmp_path/'run',scenario_dir=package,check_iq_space=True)
+    change(package,'scenario.json',lambda d:d['mission'].update(record_iq=False))
+    prepare(tmp_path/'run-disabled',scenario_dir=package,check_iq_space=True)
+    assert not json.loads((tmp_path/'run-disabled/runtime.json').read_text())['mission']['record_iq']

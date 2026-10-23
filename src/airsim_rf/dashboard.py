@@ -160,7 +160,7 @@ class Dashboard:
         if not self.rootless and os.getuid()==0:
             for path in (self.run/'scenario-input',*(self.run/'scenario-input').rglob('*')):os.chown(path,10001,10001)
         script=('from airsim_rf.dashboard_scenario import prepare; '
-            f'prepare("/run", scenario_dir="/run/scenario-input", duration_s={self.args.duration!r})')
+            f'prepare("/run", scenario_dir="/run/scenario-input", duration_s={self.args.duration!r}, check_iq_space=True)')
         self.one_shot(['--network','none','--user',self.uid(),'-e','HOME=/tmp',
             '-v',f'{self.run}:/run','--entrypoint','python',self.args.rf_image,'-c',script])
     def check_workspace(self):

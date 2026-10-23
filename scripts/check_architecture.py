@@ -13,7 +13,7 @@ SOURCE={'receiver','sdr','radar','fmcw','rendering','batched_rendering','sampled
     'usd_geometry','scenario','scenario_definition','live','dashboard_producer','dashboard_scenario','dashboard_geometry',
     'dashboard_view','dashboard_sync','source_recording','p100_compat','cuda_launch','preflight','example'}
 EXTERNAL_SOURCE={'sionna','mitsuba','drjit','projectairsim'}
-CONTRACT={'sample_stream','processing.results','ams.squall_rf_pb2','ams.squall_rf_pb2_grpc'}
+CONTRACT={'sample_stream','sample_recording','processing.results','ams.squall_rf_pb2','ams.squall_rf_pb2_grpc'}
 ADAPTER={'iq_stream','recording','aoa_tracking'}
 
 

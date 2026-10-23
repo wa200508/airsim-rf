@@ -35,6 +35,9 @@ change a scenario. A launch without `--scenario` uses the packaged example.
 `--duration 12` overrides only that run's duration; `runtime.json` records the
 effective value. **Prepare services** reloads edits for the next mission; an
 already prepared mission retains its frozen inputs.
+`mission.record_iq` defaults to `true`: bulk samples are saved independently of
+video and skill results. Set it to `false` for a run without bulk capture; see
+[I/Q capture, replay and disk requirements](iq-replay.md).
 
 ## Package layout and ownership
 
@@ -162,6 +165,7 @@ recordings/dashboard/
     deployment.json                configured tags, pinned image IDs, skill wiring
     scenario.json                  observer summary including input SHA-256 hashes
     frames/ camera/ results/       independent source, video and application outputs
+    iq/                            lossless receiver I/Q and neutral replay metadata
 ```
 
 Edit the input package, not generated `runtime.json` or the run directory.

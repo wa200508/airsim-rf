@@ -14,7 +14,8 @@ from urllib.request import ProxyHandler,build_opener
 import numpy as np
 import grpc
 from airsim_rf.ams import squall_rf_pb2 as pb, squall_rf_pb2_grpc as rpc
-from airsim_rf.sample_stream import SampleStreamWriter
+from airsim_rf.sample_stream import SampleStreamWriter,SampleBlock
+from airsim_rf.sample_recording import SampleRecordingWriter,replay
 
 FORBIDDEN=('sionna','mitsuba','drjit','cupy','projectairsim','airsim_rf.receiver','airsim_rf.sdr',
     'airsim_rf.dashboard_producer','airsim_rf.source_recording','airsim_rf.dashboard_recording')
@@ -53,19 +54,29 @@ def qualify():
                 rng=np.random.default_rng(444);angle=20.;phase=np.exp(2j*np.pi*carrier/299792458.*offsets*np.sin(np.deg2rad(angle)))
                 with socket.create_connection(('127.0.0.1',iq),timeout=10) as connection:
                     writer=SampleStreamWriter(connection,carrier_hz=carrier)
+                    archive=SampleRecordingWriter(root/'iq',arrays);expected_bearings=[]
                     epochs=[1_800_000_000_000_000_000+i*round(count/fs*1e9) for i in range(2)]
                     for epoch in epochs:
                         symbols=(rng.choice([-1.,1.],count)+1j*rng.choice([-1.,1.],count))/np.sqrt(2)
+                        blocks=[]
                         for site in arrays['sites']:
                             for index,name in enumerate(site['channels']):
                                 values=(.001*phase[index]*symbols+1e-7*(rng.normal(size=count)+1j*rng.normal(size=count))).astype(np.complex64)
+                                blocks.append(SampleBlock(name,values,writer.states.get(name,(0,))[0],epoch,fs,carrier,0.))
                                 writer.send_samples(name,values,timestamp_ns=epoch,sample_rate_hz=fs)
+                        archive.write_window(blocks)
                         assert writer.commit_window()==epoch
                         result=json.loads((root/'results'/f'{epoch}.json').read_text())
                         assert result['timestamp_ns']==epoch and 'sim_time_ns' not in result
                         assert all(b['detected'] and abs(b['angle_deg']-angle)<.2 for b in result['bearings'])
+                        expected_bearings.append(result['bearings'])
                         assert not any(key in result for key in ('paths','position_rf_m','waveform','truth'))
                     totals=writer.finish();assert set(totals.values())=={2*count}
+                    archive.close()
+                replayed=replay(root/'iq',port=iq,timeout=10)
+                assert replayed['windows']==2
+                for epoch,expected in zip(epochs,expected_bearings):
+                    assert json.loads((root/'results'/f'{epoch}.json').read_text())['bearings']==expected
                 with grpc.insecure_channel(f'127.0.0.1:{control}') as channel:
                     client=rpc.SquallRfControlStub(channel)
                     status=client.GetStatus(pb.GetStatusRequest(),timeout=5)
@@ -77,6 +88,7 @@ def qualify():
                     'source_dependencies_absent':list(FORBIDDEN),'carrier_hz':carrier,'sample_rate_hz':fs,
                     'channels':8,'windows':2,'samples_per_channel':2*count,'expected_angle_deg':angle,
                     'receiver_control_configuration_checked':True,
+                    'lossless_archive_replayed_to_unmodified_skill':True,
                     'simulator_or_truth_available':False,'physical_hardware_tested':False}
             finally:
                 process.terminate()

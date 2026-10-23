@@ -56,6 +56,7 @@ def load(directory=None):
     for name in ('environment','flight','radios'):
         config[name]=json.loads(asset(root,config[name]).read_text())
     mission=config['mission'];rate=config['radios']['sample_rate_hz'];carrier=config['radios']['carrier_hz']
+    if 'record_iq' in mission and not isinstance(mission['record_iq'],bool):raise ValueError('mission.record_iq must be boolean')
     for key in ('physics_step_ns','rf_update_ns'):_number(mission[key],key,1,integer=True)
     _number(mission['duration_s'],'duration_s',.001)
     if mission['duration_s']>3600:raise ValueError('Mission duration must not exceed 3600 s')

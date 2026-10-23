@@ -40,7 +40,7 @@ USER rf
 # The processing application is physically packaged without simulation code,
 # propagation dependencies, server assets or scenario/ground-truth files.
 FROM scratch AS skill-files
-COPY --chmod=755 src/airsim_rf/__init__.py src/airsim_rf/sample_stream.py /src/airsim_rf/
+COPY --chmod=755 src/airsim_rf/__init__.py src/airsim_rf/sample_stream.py src/airsim_rf/sample_recording.py /src/airsim_rf/
 COPY --chmod=755 src/airsim_rf/processing/ /src/airsim_rf/processing/
 COPY --chmod=755 src/airsim_rf/skills/ /src/airsim_rf/skills/
 COPY --chmod=755 scripts/qualify_skill_boundary.py /scripts/qualify_skill_boundary.py

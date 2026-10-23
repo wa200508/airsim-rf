@@ -21,6 +21,9 @@ def main():
     scenario=subprocess.run([sys.executable,'-m','airsim_rf.dashboard','--check-scenario'],text=True,capture_output=True)
     if scenario.returncode:raise RuntimeError('Installed default scenario missing: '+scenario.stderr)
     checks['installed_editable_scenario_available']=json.loads(scenario.stdout)['status']=='valid'
+    replay=subprocess.run([sys.executable,'-m','airsim_rf.sample_recording','--help'],text=True,capture_output=True)
+    if replay.returncode:raise RuntimeError('Installed neutral I/Q replay missing: '+replay.stderr)
+    checks['installed_neutral_iq_replay_available']=True
     def run(arguments, *, expected_code=0):
         result=subprocess.run([str(executable),*map(str,arguments)],text=True,capture_output=True)
         commands.append({'arguments':list(map(str,arguments)),'returncode':result.returncode,

@@ -66,8 +66,11 @@ Archives live at `<run-dir>/replays/<16-hex-run-id>/`:
 - `camera/<frame-key>.jpg` and `.json`: immutable actual camera images and
   timestamp/geometry metadata. Replay retains the whole run; the live
   128-frame buffer does not truncate these files.
+- `iq/`: bulk receiver samples and neutral metadata for independent skill
+  development, when `mission.record_iq` is enabled (the default). See
+  [capture/replay commands and SDR tool options](iq-replay.md).
 
-Each file is published by atomic rename. Temporary files and orphan JPEGs are
+Camera, frame and manifest files are published by atomic rename. Temporary files and orphan JPEGs are
 ignored, and already-published frames in stopped or interrupted runs remain
 playable. A new mission gets a new directory; preparation and shutdown preserve
 earlier recordings. Copy the run's `replays` directory to another machine to
@@ -75,12 +78,13 @@ review it, or remove individual archived run directories to reclaim space.
 The reader indexes small summaries and bounds its full-diagnostic cache to 32
 frames, rather than loading every spatial spectrum into memory.
 
-This is a **dashboard recording**, containing camera, RF analysis results and
-telemetry. It does **not** save the full continuous raw ADC I/Q stream or support
-reprocessing it with a different skill. The displayed payload counters describe
-the original stream, not bytes saved on disk. Historical runs made before this
-recorder existed lack the required data and cannot be reconstructed completely.
-Camera pairing still requires the same geometry hash and at most 60 ms of
+GUI playback reads camera, RF analysis results and telemetry; it does not
+rerun the skill. The separate `iq/` archive permits reprocessing with another
+skill without rerunning simulation. Payload counters describe the original
+stream; `iq_recording_bytes` separately counts saved sample bytes. Historical
+runs contain only the products that were saved at the time.
+Camera pairing requires the same geometry hash and at most half an RF window
+(60 ms in the default scenario) of
 simulation-time offset; playback does not interpolate RF data or fabricate
 missing camera frames.
 See the [recording and playback validation](../results/reviews/dashboard-playback-20261022/REPORT.md)

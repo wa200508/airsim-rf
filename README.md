@@ -176,8 +176,12 @@ python3 scripts/launch_dashboard.py --replay --run-dir recordings/dashboard --op
 
 Runs are retained under `recordings/dashboard/replays/<run-id>/`, including
 partial runs and previous missions. This records camera images, telemetry and
-RF diagnostics for GUI playback; **raw ADC I/Q samples are not saved** by the
-dashboard recorder. Runs made before this feature cannot be fully replayed.
+RF diagnostics for GUI playback. New runs also save bulk receiver I/Q under
+`replays/<run-id>/iq/` by default (`mission.record_iq` in the scenario controls it).
+These exact samples can be replayed into an unchanged RF skill without AirSim,
+Sionna or a GPU. See [capture and I/Q replay](docs/iq-replay.md) for Python and
+container commands, disk requirements and SDR development tools. Older runs
+have only the products saved at the time; their raw I/Q cannot be recovered.
 
 The receiver dropdown switches the spectrum and waterfall between the two
 receiving sites. MUSIC uses a circular 360° search with explicit front/back

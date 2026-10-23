@@ -38,6 +38,8 @@ async def run(args):
     from .geometry import read_bundle
     from .geometry_sync import AirSimGeometryBinding,spawn_placements
     from .sample_stream import SampleStreamWriter
+    from .sample_recording import SampleRecordingWriter
+    from .sample_stream import SampleBlock
 
     arrays=json.loads((output/'arrays.json').read_text())
     document,bundle,bindings=read_bundle(output/'bundle')
@@ -62,6 +64,7 @@ async def run(args):
     state['presentation_session']=camera_session
     recording=RecordingWriter(output/'replays',camera_session,json.loads((output/'scenario.json').read_text()),
         args.duration,ADVANCE_NS,no_render=args.no_render,resume=args.recording_id is not None)
+    iq_recording=None
     (output/'camera').mkdir(exist_ok=True)
     site_positions=[site['center_rf_m'] for site in arrays['sites']]
     def queue_view(position,kinematics):
@@ -106,6 +109,9 @@ async def run(args):
             state['camera_error']=str(error)
             state['recording_error']=str(error)
     try:
+        if mission.get('record_iq',True):
+            iq_recording=SampleRecordingWriter(recording.path/'iq',arrays)
+            state['iq_recording']='iq'
         if args.wait_for_mission:
             from .preflight import gpu_check
             atomic_json(output/'gpu-preflight-input.json',{'rf_scene':'bundle/scene.xml'})
@@ -200,9 +206,17 @@ async def run(args):
         def stop_requested():
             return (output/'command.json').exists() and json.loads((output/'command.json').read_text()).get('stop',False)
         def send_captures(captures):
-            for name,capture in captures.items():
-                writer.send_samples(name,capture.adc_iq_volts,timestamp_ns=capture.sim_time_ns,
-                    sample_rate_hz=capture.actual_sample_rate_hz,clipped_component_fraction=capture.clipped_component_fraction)
+            blocks=[SampleBlock(name,captures[name].adc_iq_volts,writer.states.get(name,(0,))[0],
+                captures[name].sim_time_ns,captures[name].actual_sample_rate_hz,CARRIER,
+                captures[name].clipped_component_fraction)
+                for site in arrays['sites'] for name in site['channels']]
+            if iq_recording is not None:
+                started_io=time.monotonic();iq_recording.write_window(blocks)
+                state['iq_recording_wall_s']=state.get('iq_recording_wall_s',0.)+time.monotonic()-started_io
+                state['iq_recording_bytes']=iq_recording.manifest['payload_bytes']
+            for block in blocks:
+                writer.send_samples(block.receiver,block.samples,timestamp_ns=block.timestamp_ns,
+                    sample_rate_hz=block.sample_rate_hz,clipped_component_fraction=block.clipped_component_fraction)
         async def save_source_frame():
             recording.source_frame(state)
         prepared_captures=None
@@ -300,9 +314,12 @@ async def run(args):
         recording.status('failed',error=str(error))
         state.update(status='failed',error=str(error));atomic_json(output/'producer.json',state);raise
     finally:
-        if sock:sock.close()
-        if flight_client:flight_client.disconnect()
-        client.disconnect()
+        try:
+            if iq_recording is not None:iq_recording.close(state['status'] if state['status'] in ('complete','stopped') else 'failed')
+        finally:
+            if sock:sock.close()
+            if flight_client:flight_client.disconnect()
+            client.disconnect()
 
 
 
