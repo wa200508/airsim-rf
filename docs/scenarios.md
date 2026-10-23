@@ -198,4 +198,5 @@ SDR link. `transmitters` is empty: passive targets are declared under
 moving radar, and `radar.profile` supplies the FMCW/IF/ADC configuration. The
 receiver-only configuration includes `acquisition` timing/gating metadata,
 without target or flight information. Use `skill.kind: radar` with the independent
-CPU `dashboard-radar-skill` image, or `custom` for another compatible consumer. See the [complete example and limitations](../scenarios/mmwave-radar/README.md).
+CPU [Radar-skill image](radar-skill.md) with `revision_policy: independent`,
+or `custom` for another compatible consumer. See the [complete example and limitations](../scenarios/mmwave-radar/README.md).

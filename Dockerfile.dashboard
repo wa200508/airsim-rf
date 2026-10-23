@@ -2,6 +2,7 @@
 # Independent receiver application; shared simulator/RF runtime for other roles.
 ARG BASE_IMAGE=ghcr.io/wa200508/airsim-rf:latest
 ARG DF_SKILL_IMAGE=ghcr.io/wa200508/df-skill:sha-270bfacb6ac933f5c60599aab3edf39489978c45
+ARG RADAR_SKILL_IMAGE=ghcr.io/wa200508/airsim-rf:radar-skill-sha-ed36dffc23e716e24d7bf3ed084c0358d1d12e18
 FROM ${BASE_IMAGE} AS runtime
 USER root
 WORKDIR /opt/airsim-rf
@@ -53,25 +54,5 @@ HEALTHCHECK NONE
 ENTRYPOINT ["python", "-m", "airsim_rf.cuda_launch", "-m", "airsim_rf.dashboard_producer"]
 CMD ["--run-dir", "/run", "--pascal-compat", "--wait-for-mission"]
 
-# CPU radar consumer contains only receiver contracts and processing code.
-# No Sionna/AirSim/CUDA or direction-finding application is installed.
-FROM python:3.12.14-slim-trixie AS radar-skill
-WORKDIR /opt/radar
-COPY --chmod=755 requirements-radar-skill.txt LICENSE /opt/radar/
-RUN --mount=type=secret,id=proxy_ca,mode=0444 \
-    set -eu; \
-    if [ -f /run/secrets/proxy_ca ]; then export PIP_CERT=/run/secrets/proxy_ca; fi; \
-    python -m pip install --no-cache-dir -r requirements-radar-skill.txt
-COPY --chmod=755 src/airsim_rf/__init__.py src/airsim_rf/sample_stream.py /opt/radar/src/airsim_rf/
-COPY --chmod=755 src/airsim_rf/processing/__init__.py src/airsim_rf/processing/results.py /opt/radar/src/airsim_rf/processing/
-COPY --chmod=755 src/airsim_rf/skills/__init__.py src/airsim_rf/skills/radar.py /opt/radar/src/airsim_rf/skills/
-COPY --chmod=755 scripts/qualify_radar_skill.py /opt/radar/scripts/qualify_radar_skill.py
-ENV PYTHONPATH=/opt/radar/src HOME=/tmp PYTHONDONTWRITEBYTECODE=1
-ARG SOURCE_REVISION=unknown
-LABEL org.opencontainers.image.revision=${SOURCE_REVISION} \
-      org.opencontainers.image.source="https://github.com/wa200508/airsim-rf" \
-      org.opencontainers.image.licenses="MIT" \
-      org.opencontainers.image.title="FMCW Radar RF Skill"
-USER 10001:10001
-ENTRYPOINT ["python", "-m", "airsim_rf.skills.radar"]
-CMD ["--arrays", "/config/arrays.json", "--results-dir", "/results"]
+# Backward-compatible tag alias; implementation is published by Radar-skill.
+FROM ${RADAR_SKILL_IMAGE} AS radar-skill

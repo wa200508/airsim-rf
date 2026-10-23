@@ -1,124 +1,13 @@
-"""Receiver-only FMCW range/Doppler skill; accepts hardware or recorded ADC I/Q.
+"""Compatibility shim for the independently maintained Radar RF Skill.
 
-The receiver configuration supplies chirp timing, not targets or environment.
-No simulator, propagation backend or source trajectory is imported or opened.
+Implementation: https://github.com/wa200508/Radar-skill.
+Install airsim-rf[radar] for legacy Python imports. The dashboard runs its
+separately published CPU container.
 """
-import argparse
-from collections import deque
-from http.server import BaseHTTPRequestHandler,ThreadingHTTPServer
-import json
-import os
-from pathlib import Path
-import socket
-import threading
-import time
-from urllib.parse import urlsplit
-import numpy as np
-from ..sample_stream import iter_stream
-from ..processing.results import ResultWriter
-
-C=299792458.
-
-
-def range_doppler(samples,rate,carrier,acquisition,*,chirps=64,threshold_db=18.):
-    stride=round(acquisition['pri_s']*rate);start=round(acquisition['adc_start_s']*rate);n=acquisition['num_samples']
-    if len(samples)%stride or len(samples)//stride<chirps or start+n>stride:raise ValueError('Need complete ADC gates and at least 64 chirps')
-    cube=np.asarray(samples).reshape(-1,stride)[:chirps,start:start+n]
-    cube=cube-cube.mean(axis=1,keepdims=True)  # Remove per-ramp ADC DC offset.
-    spectrum=np.fft.fftshift(np.fft.fft2(cube*np.hanning(chirps)[:,None]*np.hanning(n)[None,:]),axes=0)[:,:n//2]
-    power=abs(spectrum)**2;floor=max(float(np.median(power)),1e-30)
-    snr=10*np.log10(np.maximum(power/floor,1e-30))
-    slow=np.fft.fftshift(np.fft.fftfreq(chirps,acquisition['pri_s']))
-    beat=np.fft.fftfreq(n,1/rate)[:n//2];slope=acquisition['bandwidth_hz']/acquisition['chirp_duration_s']
-    # TX*conj(RX): positive slow-time frequency denotes receding motion.
-    velocities=slow*C/(2*carrier);ranges=beat*C/(2*slope)
-    y,x=np.unravel_index(power.argmax(),power.shape)
-    detected=bool(snr[y,x]>=threshold_db)
-    # Beat contains positive range rate; subtract that contribution from range.
-    detection={'detected':detected,'range_m':float((beat[x]-slow[y])*C/(2*slope)) if detected else None,
-               'range_rate_m_s':float(velocities[y]) if detected else None,'contrast_db':float(snr[y,x]),'threshold_db':threshold_db}
-    return {'range_m':ranges.tolist(),'range_rate_m_s':velocities.tolist(),'power_db':np.maximum(snr,-20).tolist(),
-            'detection':detection,'chirps':chirps,'range_resolution_m':C/(2*slope*(n/rate)),
-            'velocity_resolution_m_s':C/(2*carrier*chirps*acquisition['pri_s'])}
-
-
-class RadarSkill:
-    def __init__(self,arrays,*,results_dir=None):
-        self.arrays=json.loads(Path(arrays).read_text());self.acquisition=self.arrays['acquisition']
-        if self.acquisition['type']!='fmcw-dechirped':raise ValueError('FMCW dechirped ADC configuration required')
-        self.channels=[n for s in self.arrays['sites'] for n in s['channels']]
-        if len(self.channels)!=1:raise ValueError('This radar skill expects one complex receiver channel')
-        self.lock=threading.Lock();self.started=time.monotonic();self.frames=deque(maxlen=128);self.waterfall=deque(maxlen=60)
-        self.results=ResultWriter(results_dir) if results_dir else None
-        self.state={'status':'starting','ingress_ready':False,'payload_bytes':0,'complex_samples':0,'complete_windows':0,'payload_bytes_per_second':0.}
-
-    def snapshot(self,epoch=None):
-        with self.lock:
-            if epoch is not None:return dict(next(f for f in reversed(self.frames) if f['timestamp_ns']==epoch))
-            return {**self.state,'available_epochs':[f['timestamp_ns'] for f in self.frames]}
-
-    def process(self,block):
-        start=time.monotonic();fs=block.sample_rate_hz
-        if (fs,block.carrier_hz)!=(self.arrays['sample_rate_hz'],self.arrays['carrier_hz']):raise ValueError('Receiver sample rate/carrier mismatch')
-        rd=range_doppler(block.samples,fs,block.carrier_hz,self.acquisition)
-        stride=round(self.acquisition['pri_s']*fs);a=round(self.acquisition['adc_start_s']*fs);n=self.acquisition['num_samples']
-        gates=block.samples.reshape(-1,stride)[:64,a:a+n];spectrum=np.fft.fft(gates*np.hanning(n),axis=1)[:,:n//2]
-        psd={'frequency_khz':(np.fft.fftfreq(n,1/fs)[:n//2]/1000).tolist(),
-             'density_db_v2_hz':(10*np.log10(np.maximum(np.mean(abs(spectrum)**2,axis=0)/(fs*np.sum(np.hanning(n)**2)),1e-30))).tolist()}
-        self.waterfall.append({'timestamp_ns':block.timestamp_ns,'psd_db':psd['density_db_v2_hz'],'site_psd_db':[psd['density_db_v2_hz']]})
-        now=time.monotonic()
-        with self.lock:
-            payload=self.state['payload_bytes']+block.samples.nbytes
-            self.state.update(status='processing',timestamp_ns=block.timestamp_ns,sample_start=block.sample_start,
-                sample_rate_hz=fs,carrier_hz=block.carrier_hz,samples_per_channel=len(block.samples),
-                payload_bytes=payload,complex_samples=self.state['complex_samples']+len(block.samples),
-                complete_windows=self.state['complete_windows']+1,payload_bytes_per_second=payload/max(now-self.started,.001),
-                psd=psd,receiver_spectra=[{'site_id':self.arrays['sites'][0]['id'],'psd':psd}],
-                radar=rd,waterfall=list(self.waterfall),processing_latency_ms=(now-start)*1000,
-                analysis_duration_s=64*self.acquisition['pri_s'],application='fmcw-radar-rf-skill',algorithm='Hann-windowed range/Doppler FFT with median-noise contrast threshold')
-            frame=dict(self.state)
-            if self.results:self.results.write(frame)
-            self.frames.append(frame)
-
-    def serve_stream(self,port):
-        try:
-            with socket.socket() as server:
-                server.setsockopt(socket.SOL_SOCKET,socket.SO_REUSEADDR,1);server.bind(('0.0.0.0',port));server.listen(1)
-                with self.lock:self.state.update(status='listening',ingress_ready=True)
-                while True:
-                    conn,_=server.accept()
-                    with conn:
-                        conn.settimeout(3600);completed=0
-                        def validate():
-                            if not completed:raise ValueError('Stream contains no radar windows')
-                        for block in iter_stream(conn,validate_end=validate,validate_window=validate):
-                            if block.receiver!=self.channels[0]:raise ValueError('Unknown radar receiver channel')
-                            self.process(block);completed+=1
-                        with self.lock:self.state['status']='complete'
-        except Exception as error:
-            with self.lock:self.state.update(status='failed',ingress_ready=False,error=str(error))
-
-
-def main():
-    parser=argparse.ArgumentParser(description=__doc__);parser.add_argument('--arrays',required=True);parser.add_argument('--results-dir')
-    parser.add_argument('--iq-port',type=int,default=int(os.environ.get('RF_IQ_PORT','8811')))
-    parser.add_argument('--http-port',type=int,default=int(os.environ.get('RF_HTTP_PORT','8812')));args=parser.parse_args()
-    skill=RadarSkill(args.arrays,results_dir=args.results_dir)
-    threading.Thread(target=skill.serve_stream,args=(args.iq_port,),daemon=True).start()
-    class Handler(BaseHTTPRequestHandler):
-        def do_GET(self):
-            url=urlsplit(self.path).path
-            try:
-                if url in ('/health','/status'):state=skill.snapshot()
-                elif url.startswith('/frames/'):state=skill.snapshot(int(url.rsplit('/',1)[-1]))
-                elif url.startswith('/epochs/'):state={k:v for k,v in skill.snapshot(int(url.rsplit('/',1)[-1])).items() if k in ('timestamp_ns','complete_windows')}
-                else:self.send_error(404);return
-            except (ValueError,StopIteration):self.send_error(404);return
-            data=json.dumps(state,allow_nan=False).encode()
-            self.send_response(503 if url=='/health' and (not state['ingress_ready'] or state['status']=='failed') else 200)
-            self.send_header('Content-Type','application/json');self.send_header('Content-Length',str(len(data)));self.end_headers();self.wfile.write(data)
-        def log_message(self,*args):pass
-    ThreadingHTTPServer(('0.0.0.0',args.http_port),Handler).serve_forever()
-
+try:
+    from radar_skill.app import RadarSkill,main
+    from radar_skill.processing import range_doppler
+except ImportError as error:
+    raise ImportError('Radar RF Skill moved to wa200508/Radar-skill; install airsim-rf[radar]') from error
 
 if __name__=='__main__':main()

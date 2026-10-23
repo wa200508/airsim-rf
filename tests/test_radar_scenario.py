@@ -9,7 +9,8 @@ import pytest
 from airsim_rf.scenario_definition import catalog,load,snapshot
 from airsim_rf.dashboard_scenario import flight_path,prepare
 from airsim_rf.terrain import TerrainGrid
-from airsim_rf.skills.radar import range_doppler,RadarSkill
+from radar_skill.processing import range_doppler
+from radar_skill.app import RadarSkill
 from airsim_rf.sample_stream import SampleStreamWriter
 
 

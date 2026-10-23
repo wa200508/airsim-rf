@@ -210,3 +210,12 @@ are bias-subtracted **ADC volts**, after modeled IF gain, rather than SDR
 input-referred volts. Zero-filled gate gaps retain their actual acquisition-clock
 positions; remove/select them using that timing when developing radar processing.
 See the [radar scenario guide](../scenarios/mmwave-radar/README.md).
+
+For the standalone radar skill, replay needs no airsim-rf installation:
+
+```bash
+python -m radar_skill.sample_recording replay /path/to/iq --host 127.0.0.1 --port 8811
+```
+
+Start a fresh [Radar-skill](https://github.com/wa200508/Radar-skill) consumer with
+that archive's receiver configuration and a separate results directory first.
