@@ -122,7 +122,9 @@ def test_actual_sionna_radar_iq_to_detector_and_lossless_archive(tmp_path):
     from airsim_rf.sample_stream import SampleBlock
     snapshot('mmwave-radar',tmp_path/'nondefault')
     mode_path=tmp_path/'nondefault/radar-mode.json';requested=json.loads(mode_path.read_text())
-    requested['waveform']['bandwidth_hz']=35e6;mode_path.write_text(json.dumps(requested))
+    requested['waveform'].update(bandwidth_hz=35e6,carrier_hz=78e9);mode_path.write_text(json.dumps(requested))
+    radio_path=tmp_path/'nondefault/radios.json';hardware=json.loads(radio_path.read_text())
+    hardware['carrier_hz']=78e9;radio_path.write_text(json.dumps(hardware))
     path,config=receiver_config(tmp_path,tmp_path/'nondefault');radio=load(tmp_path/'nondefault')['radios']
     radio['radar']['max_depth_per_leg']=0;radio['radar']['profile']['noise_enabled']=False
     receiver=RadarWindowReceiver(rt.load_scene(),radio,config)
@@ -141,8 +143,9 @@ def test_actual_sionna_radar_iq_to_detector_and_lossless_archive(tmp_path):
     receiver.update({'RadarDrone':kin([30,25,150],[-20,0,0]),'TargetDrone':kin([0,25,110],[0,2,0])})
     capture=receiver.capture(0,num_samples=40000)['radar_rx0']
     assert receiver.radar.profile.bandwidth_hz==35e6
+    assert receiver.radar.scene.frequency==78e9
     assert receiver.control.snapshot()['applied_configuration_id']==skill.snapshot()['transceiver']['configuration_id']
-    original=SampleBlock('radar_rx0',capture.adc_iq_volts,0,0,10e6,77e9,capture.clipped_component_fraction)
+    original=SampleBlock('radar_rx0',capture.adc_iq_volts,0,0,config['sample_rate_hz'],config['carrier_hz'],capture.clipped_component_fraction)
     recording=SampleRecordingWriter(tmp_path/'iq',config);recording.write_window([original]);recording.close()
     restored=next(iter_recorded_windows(tmp_path/'iq'))[0]
     assert restored.samples.tobytes()==original.samples.tobytes()

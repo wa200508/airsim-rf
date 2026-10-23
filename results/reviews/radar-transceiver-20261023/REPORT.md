@@ -29,7 +29,7 @@ and the simulator does not import the skill or detector.
 - [Public immutable active-skill image release](https://github.com/wa200508/airsim-rf/actions/runs/40022797722):
   passed; offline qualification, fresh anonymous pull and pulled-image replay.
 - Focused source/skill/scenario/dashboard checks: **55 passed**, including
-  actual Sionna target echoes, a commanded **35 MHz** sweep overriding the
+  actual Sionna target echoes, a commanded **35 MHz sweep at 78 GHz** overriding the
   model's default, range/Doppler detection, and exact recorded samples.
 - Actual radio capture with TX off and noise disabled: zero analog echo power.
   A conducted TX increase from 6 to 12 dBm gives the expected 3.981x echo power.
@@ -37,6 +37,7 @@ and the simulator does not import the skill or detector.
   95.35 s, exit 0. GPU/SDK-dependent checks are among the skips. An initial run
   hit a native shutdown SIGSEGV after its passing summary; the baseline and
   unchanged full rerun exited cleanly. This is not GPU flight qualification.
+- [Cross-repository CPU Sionna CI](https://github.com/wa200508/Radar-skill/actions/runs/40023501548): passed with actual propagation and TX/RX commands.
 - **9 dashboard JavaScript tests**, architecture import walls and maintained
   documentation links passed.
 

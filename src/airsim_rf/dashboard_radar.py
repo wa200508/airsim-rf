@@ -35,7 +35,8 @@ class RadarWindowReceiver:
     def capture(self,sim_time_ns,*,num_samples):
         profile,transmit=self.control.begin_window(sim_time_ns)
         if self.radar.profile!=profile:
-            self.radar.profile=profile;self.radar._noise_sos=profile.filter_sos()
+            self.radar.profile=profile;self.radar.scene.frequency=profile.carrier_hz
+            self.radar._noise_sos=profile.filter_sos()
         p=self.radar.profile;stride=round(p.pri_s*p.sample_rate_hz);start=round(p.adc_start_s*p.sample_rate_hz)
         if num_samples%stride:raise ValueError('Radar window must contain whole chirps')
         values=np.zeros(num_samples,dtype=np.complex64);analog=values.copy();clipped=0;retained=0
