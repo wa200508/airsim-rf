@@ -125,7 +125,13 @@ def load(directory=None):
     radios=config['radios'];tx_names=[];channels=[]
     radar=radios.get('mode')=='fmcw-radar'
     if (not radar and not radios['transmitters']) or not radios['sites']:raise ValueError('Transmitters and receiver sites required')
-    if radar:_validate_radar(radios,mission,names,config['skill']['mode_config'])
+    if radar:
+        _validate_radar(radios,mission,names,config['skill']['mode_config'])
+        for target in radios['radar']['targets']:
+            if target.get('altitude_reference')=='agl':
+                if env['type']!='heightfield':raise ValueError('AGL targets need a heightfield')
+                x,y,z=target['position_rf_m']
+                if z<0 or not env['x_m'][0]<=x<=env['x_m'][-1] or not env['y_m'][0]<=y<=env['y_m'][-1]:raise ValueError('AGL target must lie above and within the DEM')
     for tx in radios['transmitters']:
         _identifier(tx['id']);tx_names.append(tx['id'])
         if tx['actor'] not in names:raise ValueError('Unknown transmitter actor: '+tx['actor'])
@@ -246,9 +252,25 @@ def _validate_radar(radios,mission,names,mode):
     if radar['pointing']!='track-target' or len(radios['sites'])!=1 or len(radios['sites'][0]['channels'])!=1:raise ValueError('Radar example requires one tracking monostatic channel')
     if radios['transmitters']:raise ValueError('Passive radar targets must not be transmitters')
     if p['carrier_hz']!=radios['carrier_hz'] or p['sample_rate_hz']!=rate:raise ValueError('Radar rate/carrier mismatch')
+    target_names=[]
     for target in radar['targets']:
-        if target['actor'] not in names or target['actor']==radar['platform_actor']:raise ValueError('Invalid radar target actor')
+        if 'actor' in target:
+            if set(target)!={'actor','rcs_m2'} or target['actor'] not in names or target['actor']==radar['platform_actor']:raise ValueError('Invalid radar target actor')
+            name=target['actor']
+        else:
+            if set(target)-{'id','position_rf_m','altitude_reference','rcs_m2','visual'}:raise ValueError('Unsupported fixed radar target field')
+            name=target.get('id');_identifier(name)
+            if name in names or name=='Terrain':raise ValueError('Fixed radar target ID collides with scene actor')
+            _vector(target['position_rf_m'],3,'fixed target position')
+            if target.get('altitude_reference') not in ('agl','absolute'):raise ValueError('Fixed target altitude_reference must be agl or absolute')
+            visual=target.get('visual')
+            if visual is not None:
+                if set(visual)!={'size_m','color_rgb'}:raise ValueError('Target visual needs size_m and color_rgb')
+                _vector(visual['size_m'],3,'target visual size');_vector(visual['color_rgb'],3,'target visual color')
+                if min(visual['size_m'])<=0 or any(not 0<=v<=1 for v in visual['color_rgb']):raise ValueError('Invalid target visual size/color')
+        target_names.append(name)
         _number(target['rcs_m2'],'target RCS',0)
+    if len(set(target_names))!=len(target_names):raise ValueError('Duplicate radar target IDs')
     for key in ('carrier_hz','bandwidth_hz','chirp_duration_s','sample_rate_hz','num_samples','pri_s','adc_full_scale_v'):_number(p[key],key,.000000001)
     _number(p['num_samples'],'ADC samples',2,integer=True)
     _number(p['adc_start_s'],'ADC start',0)

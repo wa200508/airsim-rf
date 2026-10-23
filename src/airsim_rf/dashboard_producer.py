@@ -17,7 +17,7 @@ async def run(args):
     radio=config['radios'];camera=config['camera'];mission=config['mission']
     FS=radio['sample_rate_hz'];CARRIER=radio['carrier_hz'];ADVANCE_NS=mission['rf_update_ns']
     actors=config['flight']['actors'];radar_mode=radio.get('mode')=='fmcw-radar'
-    primary_tx=radio['radar']['targets'][0]['actor'] if radar_mode else radio['transmitters'][0]['id']
+    primary_tx=(radio['radar']['targets'][0].get('id') or radio['radar']['targets'][0]['actor']) if radar_mode else radio['transmitters'][0]['id']
     num_channels=sum(len(site['channels']) for site in radio['sites'])
     import mitsuba as mi
     mi.set_variant('cuda_ad_mono_polarized')
@@ -32,7 +32,7 @@ async def run(args):
     import cv2
     from .bridge import mount_kinematics,normalize_kinematics
     from .dashboard_view import (queue_chase_camera_pose,relative_camera_pose,camera_labels,
-        radio_marker_glb)
+        radio_marker_glb,ground_target_placements)
     from .dashboard_geometry import isolate_blocks_scene,require_rf_mesh_match,link_geometry
     from .dashboard_sync import commit_window,advance_after_commit
     from .source_recording import RecordingWriter
@@ -69,7 +69,11 @@ async def run(args):
     (output/'camera').mkdir(exist_ok=True)
     site_positions=[site['center_rf_m'] for site in arrays['sites']]
     def queue_view(position,kinematics):
-        anchors=([mount_kinematics(normalize_kinematics(drones[t['actor']].get_ground_truth_kinematics()))[0].tolist() for t in radio['radar']['targets']] if radar_mode else site_positions)
+        if radar_mode:
+            from .dashboard_radar import target_states
+            readback={t['actor']:normalize_kinematics(drones[t['actor']].get_ground_truth_kinematics()) for t in radio['radar']['targets'] if 'actor' in t}
+            anchors=[list(t.position_m) for t in target_states(radio['radar'],readback)]
+        else:anchors=site_positions
         eye,rotation=queue_chase_camera_pose(drone,position,anchors,kinematics,
             sensor=camera['sensor'],distance_m=camera['distance_m'],elevation_bias=camera['elevation_bias'])
         camera_mounts.append((int(world.get_sim_time()),relative_camera_pose(eye,rotation,kinematics),anchors))
@@ -81,7 +85,7 @@ async def run(args):
             view=next(((pose,anchors) for sent,pose,anchors in reversed(camera_mounts) if sent<epoch),None)
             mount=view[0] if view is not None else None
             labels=camera_labels(message,mount,view[1],document,fov_deg=camera['fov_deg'],
-                receiver_labels=[t['actor'] for t in radio['radar']['targets']] if radar_mode else None,
+                receiver_labels=[t.get('id') or t['actor'] for t in radio['radar']['targets']] if radar_mode else None,
                 platform_label='RADAR / DRONE' if radar_mode else 'TX / DRONE' if any(tx['actor']==camera['actor'] for tx in radio['transmitters']) else camera['actor']) if mount is not None and camera['labels'] else []
             height,width=image.shape[:2]
             for label in labels:
@@ -137,6 +141,7 @@ async def run(args):
         for i,position in enumerate([] if radar_mode else site_positions):
             name=f'Radio_RX_{i}'
             world.spawn_object_from_file(name,'gltf',radio_marker_glb([.2,.9,.85] if i==0 else [1.,.65,.15]),True,marker_pose(np.asarray(position)-[0,0,8]),[1,1,1],False)
+        if radar_mode:spawn_placements(world,ground_target_placements(radio['radar']['targets']))
         drones={actor['id']:Drone(client,world,actor['id']) for actor in actors}
         drone=drones[camera['actor']]
         if not args.no_render:
@@ -197,6 +202,7 @@ async def run(args):
                 tx_positions[tx['id']]=position
             if radar_mode:
                 receiver.update(kinematics)
+                platform_positions.update({t.name:list(t.position_m) for t in receiver.targets})
                 tx_positions[primary_tx]=np.asarray(receiver.targets[0].position_m)
                 site_positions[:]=[site['center_rf_m'] for site in arrays['sites']]
             else:receiver.emitters.update(emitters_for_window(radio,sources,epoch,count,origin))

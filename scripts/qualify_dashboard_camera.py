@@ -99,6 +99,20 @@ async def check_camera(output):
         }
         alignment.update(compare_probes(output,probes,probe_messages,probe_drones))
         checks['unreal_collision_and_sionna_dem_match']=True
+        # Exercise the actual imported ground-target meshes after the isolated
+        # terrain/LiDAR comparison, so marker collisions cannot bias that test.
+        from airsim_rf.dashboard_view import ground_target_placements
+        from airsim_rf.geometry_sync import spawn_placements,_pose_matrix
+        fixed=json.loads((output/'ground-targets/runtime.json').read_text())['radios']['radar']['targets']
+        plan=ground_target_placements(fixed);spawn_placements(world,plan)
+        before={obj['id']:_pose_matrix(world.get_object_pose(obj['object_name'])) for obj in plan['objects']}
+        world.continue_until_sim_time(int(world.get_sim_time())+120_000_000,wait_until_complete=True)
+        errors=[float(np.max(abs(_pose_matrix(world.get_object_pose(obj['object_name']))-_pose_matrix(obj['pose'])))) for obj in plan['objects']]
+        drift=[float(np.max(abs(_pose_matrix(world.get_object_pose(obj['object_name']))-before[obj['id']]))) for obj in plan['objects']]
+        checks['three_ground_target_meshes_match_rf_centers']=len(errors)==3 and max(errors)<1e-4
+        checks['ground_targets_remain_stationary_after_physics_step']=len(drift)==3 and max(drift)<1e-5
+        alignment['ground_targets']={'names':list(before),'maximum_pose_error':max(errors),'maximum_drift':max(drift),'simulated_check_interval_s':.12}
+
         report = {'status': 'passed' if all(checks.values()) else 'failed', 'checks': checks,
                   'metrics': {'camera_frames': len(frames), 'sim_elapsed_s': elapsed,
                               'pose_request_wall_s': timings,
@@ -126,6 +140,7 @@ def main():
     output.mkdir(parents=True, exist_ok=True)
     from airsim_rf.dashboard_scenario import prepare
     prepare(output, Path('/opt/airsim-rf/.deps/ProjectAirSim'))
+    prepare(output/'ground-targets',scenario_dir='mmwave-radar',duration_s=.004)
     # The SDK opens projectairsim_client.log relative to its current directory.
     os.chdir(output)
     env = dict(os.environ, RF_BLOCKS_DIR=str(args.blocks_dir.resolve()))

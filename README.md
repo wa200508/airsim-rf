@@ -12,7 +12,7 @@ models and an AMS-GRA radar worker; continuous SDR uses a separate capture API.
 
 The primary workflow is the [localhost RF mission dashboard](docs/dashboard.md).
 Select direction finding over shared terrain or a moving 77 GHz radar observing
-a passive drone target. Separate containers run ProjectAirSim, Sionna acquisition
+three stationary ground targets. Separate containers run ProjectAirSim, Sionna acquisition
 and the receiver skill. The launcher displays the actual simulator camera,
 received I/Q, algorithm diagnostics and measured throughput.
 
@@ -51,7 +51,7 @@ image is built independently without simulation dependencies.
 
 Scenario data lives together under **[scenarios/](scenarios/README.md)**. Select the
 current direction-finding example (`drone-orbit`) or the
-[77 GHz radar racetrack with a passive drone target](scenarios/mmwave-radar/README.md)
+[77 GHz radar racetrack with stationary ground targets](scenarios/mmwave-radar/README.md)
 (`mmwave-radar`). The dashboard has a **Scenario** drop-down; stop a mission before switching.
 
 ```bash

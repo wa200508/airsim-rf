@@ -91,3 +91,25 @@ def radio_marker_glb(color):
         vertices.extend([[x,y,z] for z in (lo[2],hi[2]) for y in (lo[1],hi[1]) for x in (lo[0],hi[0])])
         faces.extend([[start+a,start+b,start+c] for a,b,c in [(0,1,3),(0,3,2),(4,6,7),(4,7,5),(0,4,5),(0,5,1),(2,3,7),(2,7,6),(0,2,6),(0,6,4),(1,5,7),(1,7,3)]])
     return triangle_glb(vertices,faces,base_color_rgba=[*color,1],emissive_rgb=(np.asarray(color)*.7).tolist())
+
+
+def ground_target_placements(targets):
+    """Static visual boxes centered on point scatterers; not RF mesh scatterers.
+
+    Use the shared GLB importer with physics disabled. The RF target is the
+    configured scalar-RCS point; these illustrative boxes never self-occlude it.
+    """
+    objects=[]
+    faces=[[a,b,c] for a,b,c in [(0,1,3),(0,3,2),(4,6,7),(4,7,5),(0,4,5),(0,5,1),(2,3,7),(2,7,6),(0,2,6),(0,6,4),(1,5,7),(1,7,3)]]
+    for target in targets:
+        if 'actor' in target or 'visual' not in target:continue
+        if target['altitude_reference']!='absolute':raise ValueError('Compile AGL target coordinates before placement')
+        size=np.asarray(target['visual']['size_m'])/2;color=target['visual']['color_rgb']
+        vertices=[[x,y,z] for z in (-size[2],size[2]) for y in (-size[1],size[1]) for x in (-size[0],size[0])]
+        position=np.asarray(target['position_rf_m'])*[1,-1,-1]
+        objects.append({'id':target['id'],'object_name':target['id'],
+            'pose':{'frame_id':'DEFAULT_ID','translation':dict(zip(('x','y','z'),position.tolist())),
+                    'rotation':{'w':1.,'x':0.,'y':0.,'z':0.}},'scale':[1.,1.,1.],'enable_physics':False,
+            'mesh':{'vertices_actor_m':vertices,'faces':faces,'base_color_rgba':[*color,1.],
+                    'emissive_rgb':(np.asarray(color)*.25).tolist()}})
+    return {'version':1,'objects':objects}

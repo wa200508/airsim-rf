@@ -1,7 +1,8 @@
 # 77 GHz FMCW radar: terrain-masked racetrack
 
 This package replaces the direction-finding emitter with a **moving monostatic
-radar**. The other drone is a passive point-scattering target, with no transmitter.
+radar** observing three stationary ground targets with no transmitters.
+The fixed targets are passive scalar-RCS point scatterers with colored box visuals.
 The environment is an independent copy of the current hills/valleys DEM, exported
 as identical triangles into Unreal and Sionna. Run with:
 
@@ -21,22 +22,33 @@ All coordinates are north/west/up metres, in this package's local RF frame.
   400 m straights and 80 m turn radius. It starts at `(-200, 0, 210)`, heads east,
   and repeats. One lap is about 65.1 s; the default 120 s covers several straight
   passes and most of two laps. Nominal turn acceleration is 5 m/s² (~0.51 g).
-- TargetDrone: 5 m diameter circle centered at `(0, 25)`, near the old receiver
-  laydown. It flies at 2 m/s with 1.6 m/s² centripetal acceleration (~0.16 g).
-  Its constant absolute altitude is ground elevation at its circle center +10 m;
-  the local terrain variation puts it about 9.4–10.6 m AGL around the circle.
+- Three fixed ground targets near the old receiver laydown. Their scattering
+  centers are anchored to the exact shared DEM; the AGL values place each center
+  halfway up its illustrative box. None is a drone or a flight-control actor.
+
+  | Target | RF horizontal position (m) | Center AGL (m) | Visual size (m) | RCS (m²) |
+  |---|---|---:|---|---:|
+  | GroundContainer | `(0, 25)` | 1.3 | 6 × 2.5 × 2.6, orange | 1,000,000 |
+  | GroundShelter | `(65, 55)` | 1.8 | 4 × 4 × 3.6, teal | 500,000 |
+  | GroundReflector | `(-75, 15)` | 1.0 | 1.5 × 1.5 × 2, violet | 250,000 |
+
 - Planned route qualification: radar clearance stays above 28 m; the western
   part of the southern leg/turn is occluded by the shared hill. The same triangle
   mesh supplies an independent visibility check against Sionna's direct paths.
-- Ideal route range-rate extrema are approximately −20 and +19 m/s, derived
-  from relative position/velocity. Doppler is never assigned independently of
-  motion. Native flight-controller tracking can change the achieved extrema.
+- Stationary targets still produce Doppler because the radar is moving.
+  Relative range rates change sign between approaching and receding passes,
+  and their magnitudes stay below the radar's 20 m/s speed. Native flight tracking
+  can change the achieved values. Terrain masks part of every target's planned
+  line of sight; targets can retain reflected echoes when the direct path is blocked.
 
-Both drones use the native ProjectAirSim flight controller and actual kinematic
-readback. The camera follows 5 m behind the radar and looks toward the target;
-labels identify radar and target, omitting terrain-hidden anchors. The radar
-antenna has ideal target-tracking pointing, distinct from drone body attitude.
-It has no modeled gimbal limits or tracking error. This is an acquisition setting,
+Only RadarDrone uses a native ProjectAirSim flight controller and kinematic
+readback. Target world positions and velocities are fixed: zero target velocity
+is used for both channel propagation and intra-window evolution. The camera
+follows 5 m behind the radar and looks toward the target group; labels identify
+the radar and each target, omitting terrain-hidden anchors. The radar antenna
+ideally tracks **GroundContainer**, the first configured target. Other targets
+therefore have different range and off-boresight attenuation. There are no
+modeled gimbal limits or tracking error. This is an acquisition setting,
 not knowledge passed to the detection skill.
 
 ## Hardware and waveform
@@ -60,17 +72,16 @@ the conservative 7 dBi value and does not claim a calibrated board antenna.
 | Range-rate bin spacing | ~0.76 m/s | Wavelength/(2×CPI) |
 | RF update / physics step | 4 ms / 1 ms | 100 chirps per synchronized source window |
 | TX / antenna peak gain | 12 dBm / 7 dBi each way | Device specification / conservative board reference |
-| Target RCS | **1,000,000 m²**, scalar and aspect-independent | Deliberately unrealistic demonstration target for conspicuous returns |
+| Target RCS | **1,000,000 / 500,000 / 250,000 m²**, scalar and aspect-independent | Deliberately unrealistic demonstration targets for conspicuous, distinct returns |
 | Noise figure / IF voltage gain | 15 dB / 60 dB | Modeling assumptions |
 | IF passband / Gaussian beam widths | 30 kHz–4.5 MHz / 56° azimuth × 28° elevation | Modeling assumptions |
 | Quantizer | 12 bits, 1 V span, 0.5 V bias, ideal I/Q pair | Transfer-function approximation, not TI ADC calibration |
 
-The target RCS is intentionally enormous: **80 dB more echo power** than the
-previous 0.01 m² setting (10,000× the echo voltage before receiver processing).
-It makes the target conspicuous for demonstrations and is not representative
-of a real drone or evidence of this board's detection range. Edit
-`radios.json` → `radar.targets[0].rcs_m2` to restore a realistic study value.
-Terrain occlusion still removes the direct path; reflected returns, noise and
+The three RCS values remain intentionally enormous, preserving conspicuous
+returns for demonstrations. They are not calibrated RCS values for shipping
+containers, shelters or reflectors, and do not establish the board's detection
+range. Edit `radios.json` → `radar.targets[].rcs_m2` for a realistic study.
+Terrain occlusion still removes direct paths; reflected returns, noise and
 ADC clipping continue to follow the configured model.
 
 Real raw ADC capture from the board requires a supported acquisition setup,
@@ -104,8 +115,11 @@ Sionna uses the shared DEM's dielectric material settings for specular paths.
 Blocked direct paths are removed, rather than merely attenuated. Reflected
 illumination/return paths may still contribute. This model does **not** include
 terrain backscatter clutter, diffuse scattering, diffraction, target mesh
-scattering, micro-Doppler/rotor blades, atmosphere/rain or mutual radar interference.
-The scalar RCS and common target-directed Gaussian antenna gain are approximations;
+scattering, micro-Doppler, atmosphere/rain or mutual radar interference.
+The colored box meshes are static presentation markers; their surfaces are not
+added as RF obstacles or extra scattering surfaces. Echoes originate at their
+configured centers with scalar RCS. The shared terrain remains the RF occluder
+and specular reflector. The scalar RCS and common target-directed Gaussian antenna gain are approximations;
 a fully polarimetric target scattering matrix and per-path measured board
 antenna patterns are not implemented.
 
@@ -113,7 +127,7 @@ The renderer computes dechirped IF directly: it does not sample a 77 GHz carrier
 at 10 MS/s. Its convention is TX × conjugate(RX); positive slow-time frequency
 means receding range rate. Delay and Doppler create the fast-time beat, and
 carrier phase evolves coherently across chirps. The narrowband Doppler model is
-retained. Actual readback position and velocity are extrapolated within each
+retained. Actual radar readback position and velocity are extrapolated within each
 4 ms source window, then refreshed. That is a local constant-velocity
 approximation, not per-chirp physics readback or a wideband Doppler model.
 
@@ -124,7 +138,7 @@ PRI. The other samples are zero-filled **ADC gate gaps**, not continuous receive
 measurements. Receiver configuration records the gate and PRI, so playback does
 not compress time or lose slow-time phase. DF/ESM scenario streams remain continuous.
 **Runtime:** the 4 ms window is a simulated acquisition interval, not a measured
-wall-clock deadline. Each window currently makes 100 channel solves and renders
+wall-clock deadline. Each window currently makes 100 channel solves, each batching the three targets, and renders
 IF/noise/ADC in NumPy before transport/recording. No new GPU throughput or
 120 Hz real-time claim has been measured for this example.
 
@@ -146,7 +160,8 @@ installation and never receives scene, flight plan, target RCS or target truth.
 
 | Question | Input / implementation |
 |---|---|
-| Flight, target orbit, speed, height? | `flight.json`; native path compilation in [dashboard_scenario.py](../../src/airsim_rf/dashboard_scenario.py) |
+| Radar flight, speed and altitude? | `flight.json`; native path compilation in [dashboard_scenario.py](../../src/airsim_rf/dashboard_scenario.py) |
+| Fixed target locations, heights, box visuals and RCS? | `radios.json` → `radar.targets`; AGL conversion in [dashboard_scenario.py](../../src/airsim_rf/dashboard_scenario.py), shared state resolution in [dashboard_radar.py](../../src/airsim_rf/dashboard_radar.py) |
 | Terrain and dielectric assumptions? | `environment.json`, copied/exported into the run's shared geometry bundle |
 | Carrier, sweep, ramp, PRI, TX power, receive gate and gain? | `radar-mode.json`, applied by the external skill through its transceiver client |
 | Antenna, noise, IF filter, ADC transfer, RCS? | `radios.json` → `radar.profile` and `radar.targets` |

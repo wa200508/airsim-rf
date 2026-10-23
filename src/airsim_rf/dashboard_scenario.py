@@ -150,6 +150,14 @@ def prepare(output,runtime_source=None,scenario_dir=None,duration_s=None,check_i
         if reference=='agl':
             if terrain is None:raise ValueError('AGL receiver sites need a heightfield; use absolute RF coordinates with a geometry scene')
             site['center_rf_m'][2]+=float(terrain.elevation_at(*site['center_rf_m'][:2]))
+    # Fixed target coordinates are resolved once from the exact shared DEM.
+    # Snapshot input retains AGL edit values; runtime and visual markers use
+    # the same absolute scattering center. These are not flight actors.
+    for target in radio.get('radar',{}).get('targets',[]):
+        if 'actor' not in target and target['altitude_reference']=='agl':
+            if terrain is None:raise ValueError('AGL targets need a heightfield; use absolute coordinates with a geometry scene')
+            target['position_rf_m'][2]+=float(terrain.elevation_at(*target['position_rf_m'][:2]))
+            target['altitude_reference']='absolute'
     arrays={'schema_version':1,'sample_rate_hz':radio['sample_rate_hz'],'carrier_hz':radio['carrier_hz'],'sites':sites}
     if radio.get('mode')=='fmcw-radar':
         mode=config['skill']['mode_config'];tx=mode['waveform'];rx=mode['receiver']
@@ -191,6 +199,7 @@ def prepare(output,runtime_source=None,scenario_dir=None,duration_s=None,check_i
         'sample_rate_hz':radio['sample_rate_hz'],'carrier_hz':radio['carrier_hz'],'transmitters':len(radio['transmitters']),
         'camera':camera,'source':'Scenario package; actual ProjectAirSim pose readback drives RF',
         'propagation':radio['propagation'],'skill_kind':config['skill']['kind'],'skill_name':config['skill'].get('name',config['skill']['kind'])}
+    if radio.get('mode')=='fmcw-radar':summary['radar_targets']=deepcopy(radio['radar']['targets'])
     if terrain is not None:
         summary.update(terrain_width_m=float(max(np.ptp(terrain.x_m),np.ptp(terrain.y_m))),terrain_relief_m=float(np.ptp(terrain.heights_m)),
             terrain_grid={'x_m':terrain.x_m.tolist(),'y_m':terrain.y_m.tolist(),'heights_m':terrain.heights_m.tolist()})

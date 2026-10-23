@@ -7,7 +7,7 @@ copyable input package; no assets are resolved through another scenario.
 | Select with `--scenario` | Scenario | Receiver application |
 |---|---|---|
 | `drone-orbit` | [Current direction-finding example](drone-orbit/README.md): 915 MHz QPSK emitter flying over two fixed arrays | [Direction Finding RF Skill](https://github.com/wa200508/DF-Skill), MUSIC |
-| `mmwave-radar` | [77 GHz FMCW radar](mmwave-radar/README.md): flying racetrack radar observing a passive drone in a 5 m circle, with terrain masking | Independent CPU FMCW range/Doppler skill |
+| `mmwave-radar` | [77 GHz FMCW radar](mmwave-radar/README.md): flying racetrack radar observing three stationary ground targets with varied locations, sizes and RCS, with terrain masking | Independent CPU FMCW range/Doppler skill |
 
 ```bash
 python3 scripts/launch_dashboard.py --list-scenarios

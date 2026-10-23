@@ -203,3 +203,32 @@ without target or flight information. Use `skill.kind: radar` with the independe
 CPU [Radar-skill image](radar-skill.md) with `revision_policy: independent`,
 or `custom` for another compatible active skill. The skill configures and starts
 the adapter before acquisition; an uncommanded adapter remains disabled. See the [complete example and limitations](../scenarios/mmwave-radar/README.md).
+
+## Fixed radar targets
+
+The `mmwave-radar` package has one flying actor, RadarDrone, and three fixed
+passive ground targets. Edit their locations and illustrative appearances in
+`radios.json` → `radar.targets`, beside the other scenario inputs:
+
+```json
+{
+  "id":"GroundContainer",
+  "position_rf_m":[0,25,1.3],
+  "altitude_reference":"agl",
+  "rcs_m2":1000000,
+  "visual":{"size_m":[6,2.5,2.6],"color_rgb":[0.9,0.55,0.15]}
+}
+```
+
+`agl` resolves the scattering center's height above the exact shared heightfield;
+`absolute` uses RF-up elevation directly. The compiler writes resolved absolute
+coordinates to `runtime.json`, preserving editable AGL values in `scenario-input`.
+Static targets have exactly zero world velocity and require no robot, arming,
+settling or hover commands. Optional box visuals use the same center and have
+physics disabled; they illustrate scalar point scatterers, not mesh-based RF
+scattering or new RF occluders. Terrain remains shared between RF and rendering.
+Moving targets remain supported through `{"actor":"ActorID","rcs_m2":...}`
+references to flight actors. Each target must use exactly one of these forms.
+The antenna tracks the first configured target; other targets receive the same
+configured antenna pattern at their actual relative bearings. The skill receives
+only I/Q and acquisition settings, without target positions or RCS.

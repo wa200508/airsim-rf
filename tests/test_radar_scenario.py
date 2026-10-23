@@ -28,26 +28,53 @@ def route_geometry():
     return c,grid,d
 
 
-def test_racetrack_clears_terrain_has_occluded_and_clear_passes_and_20_mps_range_rate():
+def test_racetrack_clears_terrain_and_ground_targets_have_masked_and_clear_passes():
     from airsim_rf.geometry_sync import nearest_intersections
-    c,g,d=route_geometry();a=c['flight']['actors'][0];target=c['flight']['actors'][1]
+    c,g,d=route_geometry();a=c['flight']['actors'][0]
+    assert [actor['id'] for actor in c['flight']['actors']]==['RadarDrone']
     points=np.asarray(flight_path(a,1));np.testing.assert_allclose(points[0],points[-1])
     assert np.min(points[:,2]-g.elevation_at(points[:,0],points[:,1]))>20
-    origin=points*[1,-1,-1];rays=np.asarray(target['position_rf_m'])*[1,-1,-1]-origin
-    hits=nearest_intersections(d,origin,rays,maximum_distance_m=1000)
-    blocked=[hit is not None and hit['distance_m']<dist for hit,dist in zip(hits,np.linalg.norm(rays,axis=1))]
-    assert any(blocked) and not all(blocked)
     lengths=np.r_[0,np.cumsum(np.linalg.norm(np.diff(points,axis=0),axis=1))]
     t=np.arange(0,lengths[-1]/a['flight']['speed_m_s'],.02)
     positions=np.array([np.interp(t*a['flight']['speed_m_s'],lengths,points[:,i]) for i in range(3)]).T
-    velocity=np.gradient(positions,.02,axis=0);f=target['flight'];angle=t*f['speed_m_s']/f['radius_m']
-    tp=np.asarray(f['center_rf_m'])+np.column_stack((2.5*np.cos(angle),2.5*np.sin(angle),np.zeros(len(t))))
-    tv=np.column_stack((-2*np.sin(angle),2*np.cos(angle),np.zeros(len(t))))
-    rate=np.sum((tv-velocity)*(tp-positions),axis=1)/np.linalg.norm(tp-positions,axis=1)
-    assert 19<max(abs(rate))<22
-    assert np.all(abs(tp[:,2]-g.elevation_at(tp[:,0],tp[:,1])-10)<1)
-    assert f['speed_m_s']**2/f['radius_m']<2
+    velocity=np.gradient(positions,.02,axis=0)
+    for target in c['radios']['radar']['targets']:
+        assert 'actor' not in target and target['altitude_reference']=='agl'
+        tp=np.array(target['position_rf_m']);tp[2]+=g.elevation_at(*tp[:2])
+        assert target['position_rf_m'][2]==target['visual']['size_m'][2]/2
+        origin=points*[1,-1,-1];rays=(tp-points)*[1,-1,-1]
+        hits=nearest_intersections(d,origin,rays,maximum_distance_m=1000)
+        blocked=[hit is not None and hit['distance_m']<dist for hit,dist in zip(hits,np.linalg.norm(rays,axis=1))]
+        assert any(blocked) and not all(blocked),target['id']
+        rate=np.sum(-velocity*(tp-positions),axis=1)/np.linalg.norm(tp-positions,axis=1)
+        assert rate.min() < -15 and rate.max() > 15
+        assert max(abs(rate))<=20.01
     assert a['flight']['speed_m_s']**2/a['flight']['turn_radius_m']<=5
+
+
+def test_fixed_targets_compile_to_shared_visual_and_rf_positions_without_flight_actors(tmp_path):
+    from airsim_rf.dashboard_radar import target_states
+    from airsim_rf.dashboard_view import ground_target_placements
+    from airsim_rf.glb_geometry import triangle_glb
+    prepare(tmp_path/'run',scenario_dir='mmwave-radar',duration_s=.004)
+    runtime=json.loads((tmp_path/'run/runtime.json').read_text())
+    scene=json.loads((tmp_path/'run/sim_config/scene.jsonc').read_text())
+    assert [a['name'] for a in scene['actors']]==['RadarDrone']
+    radar=runtime['radios']['radar'];states=target_states(radar,{})
+    assert len(states)==3 and len({t.rcs_m2 for t in states})==3
+    plan=ground_target_placements(radar['targets'])
+    c,g,_=route_geometry()
+    for source,state,obj in zip(c['radios']['radar']['targets'],states,plan['objects']):
+        assert state.velocity_m_s==(0.,0.,0.) and obj['enable_physics'] is False
+        assert state.position_m[2]==pytest.approx(g.elevation_at(*source['position_rf_m'][:2])+source['position_rf_m'][2])
+        np.testing.assert_allclose(list(obj['pose']['translation'].values()),np.asarray(state.position_m)*[1,-1,-1])
+        assert triangle_glb(**obj['mesh']).startswith(b'glTF')
+    assert [t.position_m for t in target_states(radar,{})]==[t.position_m for t in states]
+    # Moving actor targets remain supported for separately edited scenarios.
+    actor={'pose':{'position':{'x':1.,'y':-2.,'z':-3.},'orientation':{'w':1.,'x':0.,'y':0.,'z':0.}},
+           'twist':{'linear':{'x':4.,'y':-5.,'z':-6.},'angular':{'x':0.,'y':0.,'z':0.}}}
+    moving=target_states({'targets':[{'actor':'Mover','rcs_m2':1.}]},{'Mover':actor})[0]
+    assert moving.position_m==(1.,2.,3.) and moving.velocity_m_s==(4.,5.,6.)
 
 
 def receiver_config(tmp_path,scenario='mmwave-radar'):
@@ -101,7 +128,8 @@ def test_sionna_target_echo_and_mesh_occlusion_agree(tmp_path):
     from dataclasses import replace
     prepare(tmp_path/'run',scenario_dir='mmwave-radar',duration_s=.004)
     scene=rt.load_scene(str(tmp_path/'run/bundle/scene.xml'),merge_shapes=False)
-    c,g,d=route_geometry();target=PointTarget('target',tuple(c['flight']['actors'][1]['position_rf_m']),.01)
+    c,g,d=route_geometry();fixed=json.loads((tmp_path/'run/runtime.json').read_text())['radios']['radar']['targets'][0]
+    target=PointTarget('target',tuple(fixed['position_rf_m']),.01)
     radar=FMCWRadar(replace(IWR1843Profile(),noise_enabled=False),rf_scene=scene,max_depth=1)
     powers=[]
     for pos in ([200,0,210],[-240,-150,210]):
@@ -125,7 +153,7 @@ def test_actual_sionna_radar_iq_to_detector_and_lossless_archive(tmp_path):
     requested['waveform'].update(bandwidth_hz=35e6,carrier_hz=78e9);mode_path.write_text(json.dumps(requested))
     radio_path=tmp_path/'nondefault/radios.json';hardware=json.loads(radio_path.read_text())
     hardware['carrier_hz']=78e9;radio_path.write_text(json.dumps(hardware))
-    path,config=receiver_config(tmp_path,tmp_path/'nondefault');radio=load(tmp_path/'nondefault')['radios']
+    path,config=receiver_config(tmp_path,tmp_path/'nondefault');radio=json.loads((tmp_path/'run/runtime.json').read_text())['radios']
     radio['radar']['max_depth_per_leg']=0;radio['radar']['profile']['noise_enabled']=False
     receiver=RadarWindowReceiver(rt.load_scene(),radio,config)
     from airsim_rf.radar_control import serve_transceiver
@@ -140,8 +168,11 @@ def test_actual_sionna_radar_iq_to_detector_and_lossless_archive(tmp_path):
                         'orientation':{'w':1.,'x':0.,'y':0.,'z':0.}},
                 'twist':{'linear':dict(zip(('x','y','z'),np.asarray(velocity)*[1,-1,-1])),
                          'angular':{'x':0.,'y':0.,'z':0.}}}
-    receiver.update({'RadarDrone':kin([30,25,150],[-20,0,0]),'TargetDrone':kin([0,25,110],[0,2,0])})
+    receiver.update({'RadarDrone':kin([30,25,150],[-20,0,0])})
+    assert len(receiver.targets)==3 and all(t.velocity_m_s==(0.,0.,0.) for t in receiver.targets)
     capture=receiver.capture(0,num_samples=40000)['radar_rx0']
+    assert set(receiver.radar.last_path_diagnostics)=={t.name for t in receiver.targets}
+    assert receiver.truth['target_names']==[t.name for t in receiver.targets]
     assert receiver.radar.profile.bandwidth_hz==35e6
     assert receiver.radar.scene.frequency==78e9
     assert receiver.control.snapshot()['applied_configuration_id']==skill.snapshot()['transceiver']['configuration_id']
@@ -177,4 +208,17 @@ def test_invalid_radar_acquisition_is_rejected_before_docker(tmp_path,field,valu
     else:
         path=tmp_path/'edited/radios.json';c=json.loads(path.read_text());c['radar']['profile'][field]=value
     path.write_text(json.dumps(c))
+    with pytest.raises(ValueError):load(tmp_path/'edited')
+
+
+@pytest.mark.parametrize('change', ['duplicate','mixed','outside-dem','negative-agl'])
+def test_invalid_fixed_targets_fail_before_service_launch(tmp_path,change):
+    snapshot('mmwave-radar',tmp_path/'edited')
+    path=tmp_path/'edited/radios.json';radio=json.loads(path.read_text())
+    targets=radio['radar']['targets']
+    if change=='duplicate':targets[1]['id']=targets[0]['id']
+    elif change=='mixed':targets[0]['actor']='RadarDrone'
+    elif change=='outside-dem':targets[0]['position_rf_m'][0]=10000
+    else:targets[0]['position_rf_m'][2]=-1
+    path.write_text(json.dumps(radio))
     with pytest.raises(ValueError):load(tmp_path/'edited')

@@ -12,6 +12,19 @@ from .bridge import mount_kinematics
 from .radar_control import RadarTransceiverControl
 
 
+def target_states(radar,kinematics):
+    """Resolve moving actor readback or fixed scattering centers in RF coordinates."""
+    targets=[]
+    for target in radar['targets']:
+        if 'actor' in target:
+            pos,vel,_=mount_kinematics(kinematics[target['actor']]);name=target['actor']
+        else:
+            if target['altitude_reference']!='absolute':raise ValueError('Compile AGL target coordinates before acquisition')
+            pos=target['position_rf_m'];vel=(0.,0.,0.);name=target['id']
+        targets.append(PointTarget(name,tuple(pos),target['rcs_m2'],tuple(vel)))
+    return targets
+
+
 class RadarWindowReceiver:
     def __init__(self,scene,radio,arrays):
         self.radio=radio;self.arrays=arrays;c=radio['radar']
@@ -23,10 +36,7 @@ class RadarWindowReceiver:
     def update(self,kinematics):
         c=self.radio['radar']
         self.position,self.velocity,self.orientation=mount_kinematics(kinematics[c['platform_actor']],c['mount_body_m'])
-        self.targets=[]
-        for target in c['targets']:
-            pos,vel,_=mount_kinematics(kinematics[target['actor']])
-            self.targets.append(PointTarget(target['actor'],tuple(pos),target['rcs_m2'],tuple(vel)))
+        self.targets=target_states(c,kinematics)
         if c['pointing']=='track-target':
             delta=np.asarray(self.targets[0].position_m)-self.position
             self.orientation=np.array([np.arctan2(delta[1],delta[0]),-np.arctan2(delta[2],np.linalg.norm(delta[:2])),0.])
@@ -50,7 +60,7 @@ class RadarWindowReceiver:
             values[a:b]=cap.adc_iq_volts;analog[a:b]=cap.if_volts;clipped+=cap.clipped_components
             if i==0:
                 self.last_path_diagnostics={self.channel:dict(self.radar.last_path_diagnostics)}
-                self.truth={'target_ranges_m':cap.target_ranges_m.tolist(),'target_doppler_hz':cap.target_doppler_hz.tolist(),
+                self.truth={'target_names':[t.name for t in self.targets],'target_ranges_m':cap.target_ranges_m.tolist(),'target_doppler_hz':cap.target_doppler_hz.tolist(),
                             'target_range_rates_m_s':(-cap.target_doppler_hz*299792458./(2*p.carrier_hz)).tolist()}
                 retained=sum((v['direct_paths']+v['reflected_paths'])**2 for v in self.radar.last_path_diagnostics.values())
         return {self.channel:SDRCapture(analog,values,np.empty((0,2),dtype=np.uint16),sim_time_ns,p.sample_rate_hz,p.sample_rate_hz,

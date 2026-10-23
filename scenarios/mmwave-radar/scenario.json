@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "id": "mmwave-radar",
-  "title": "77 GHz radar / terrain-masked racetrack",
+  "title": "77 GHz radar / stationary ground targets",
   "environment": "environment.json",
   "flight": "flight.json",
   "radios": "radios.json",
