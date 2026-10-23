@@ -38,7 +38,7 @@
   "skill": {
     "kind": "radar",
     "contract": "receiver-tcp-v2",
-    "image": "ghcr.io/wa200508/airsim-rf:radar-skill-sha-bea025f28894b089d2d371479d1a8936f1dd0fb7",
+    "image": "ghcr.io/wa200508/airsim-rf:radar-skill-sha-bb78fbd0c7b3506b36ae1ad82b9df78acedbe66c",
     "revision_policy": "independent",
     "command": [
       "--arrays",

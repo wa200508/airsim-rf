@@ -1,8 +1,8 @@
 # syntax=docker/dockerfile:1
 # Independent receiver application; shared simulator/RF runtime for other roles.
 ARG BASE_IMAGE=ghcr.io/wa200508/airsim-rf:latest
-ARG DF_SKILL_IMAGE=ghcr.io/wa200508/df-skill:sha-270bfacb6ac933f5c60599aab3edf39489978c45
-ARG RADAR_SKILL_IMAGE=ghcr.io/wa200508/airsim-rf:radar-skill-sha-bea025f28894b089d2d371479d1a8936f1dd0fb7
+ARG DF_SKILL_IMAGE=ghcr.io/wa200508/df-skill:sha-5e2420aa0c2bf49563db3f83fceda1e874fd2029
+ARG RADAR_SKILL_IMAGE=ghcr.io/wa200508/airsim-rf:radar-skill-sha-bb78fbd0c7b3506b36ae1ad82b9df78acedbe66c
 FROM ${BASE_IMAGE} AS runtime
 USER root
 WORKDIR /opt/airsim-rf

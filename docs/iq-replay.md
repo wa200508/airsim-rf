@@ -96,7 +96,7 @@ These two containers use no GPU and mount only receiver/sample data.
 Set `iq_dir` to an absolute existing archive path in each terminal:
 
 ```bash
-image=ghcr.io/wa200508/df-skill:sha-270bfacb6ac933f5c60599aab3edf39489978c45
+image=ghcr.io/wa200508/df-skill:sha-5e2420aa0c2bf49563db3f83fceda1e874fd2029
 docker pull "$image"
 docker network create rf-offline
 # Run in one terminal. HTTP diagnostics are available on the host at :18812.

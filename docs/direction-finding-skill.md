@@ -23,10 +23,10 @@ must match. The old `music` kind remains a schema alias for saved/copied inputs.
 
 ## Reproduce this integration
 
-Pinned DF-Skill source: [270bfacb6ac933f5c60599aab3edf39489978c45](https://github.com/wa200508/DF-Skill/tree/270bfacb6ac933f5c60599aab3edf39489978c45).
+Pinned DF-Skill source: [5e2420aa0c2bf49563db3f83fceda1e874fd2029](https://github.com/wa200508/DF-Skill/tree/5e2420aa0c2bf49563db3f83fceda1e874fd2029).
 
 ```text
-ghcr.io/wa200508/df-skill:sha-270bfacb6ac933f5c60599aab3edf39489978c45
+ghcr.io/wa200508/df-skill:sha-5e2420aa0c2bf49563db3f83fceda1e874fd2029
 ```
 
 The package pin lives in `requirements-df-skill.txt`; the scenario's consumer
@@ -79,3 +79,14 @@ consumer in an older copied scenario, set its `skill.kind` to
 `skill.revision_policy` to `independent`. An explicit old `matching` policy
 is not silently relaxed: it would incorrectly require independent repositories
 to have the same Git commit. Simulator/RF revision matching is always retained.
+
+## Skill-owned dashboard display
+
+The skill's `display.py` defines its plots, labels, units, selectors and metric
+bindings. `GET /display` exposes the description, and every timestamped result
+carries it for synchronized live display and playback. See the
+[RF Skill Display contract](skill-display.md) for extension instructions and the
+[JSON schema](schemas/rf-skill-display-v1.schema.json). The dashboard's generic
+renderer is `src/airsim_rf/dashboard_static/skill-display.js`; the observer replay
+projection is `src/airsim_rf/skill_display.py`. Neither source nor simulator
+selects a receiver algorithm or interprets its live result fields.

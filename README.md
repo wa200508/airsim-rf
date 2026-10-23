@@ -32,6 +32,12 @@ lists the selected values and flags settings that must be edited together.
 | Live received-I/Q processing | [External direction-finding skill](https://github.com/wa200508/DF-Skill); [external radar skill](https://github.com/wa200508/Radar-skill/blob/main/src/radar_skill/app.py) — `RadarSkill.process()` |
 | MUSIC algorithm call, steering vector and detection gate | [processing/music.py](src/airsim_rf/processing/music.py) — `estimate_bearing()`, `PhysicalULA`; [full MUSIC trace](docs/code-map.md#find-the-actual-music-algorithm) |
 
+RF skills also own their dashboard displays: the direction-finding skill describes its
+MUSIC search and receiver diagnostics; the radar skill describes its range–Doppler
+map and detections. The dashboard renders these timestamped descriptions without
+selecting an algorithm by scenario. New skills can supply plots, metrics and tables
+using the [RF Skill Display contract](docs/skill-display.md), including recorded playback.
+
 The MUSIC numerical implementation comes from `doa_py`; it is not vendored
 here. The dashboard supports the QPSK direction-finding and 77 GHz FMCW radar scenarios; other LFM/FMCW radar and
 offline tracking examples have separate configurations.

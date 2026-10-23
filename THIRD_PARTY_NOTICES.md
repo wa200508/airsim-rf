@@ -61,3 +61,9 @@ original airsim-rf MIT attribution in its own distribution. Local
 `skills/radar.py` is a compatibility import; the radar receiver application and
 FFT implementation are not vendored here. Its neutral I/Q transport/archive
 adapters remain interoperable with this repository's acquisition interfaces.
+
+
+The frozen `legacy-display-df.json` and `legacy-display-radar.json` assets are
+Apache-2.0 display descriptions from DF-Skill and Radar-skill respectively,
+Copyright (c) 2026 wa200508. They migrate recordings made before RF Skill Display
+v1. Current live descriptions are owned and served by the external skills.

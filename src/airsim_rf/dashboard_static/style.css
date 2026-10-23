@@ -8,3 +8,7 @@
 .receiver-picker{display:flex;flex-direction:column;gap:5px;font:9px ui-monospace,monospace;color:var(--muted)}.receiver-picker select{max-width:190px;font-size:10px;padding:6px}.waterfall{width:calc(100% - 73px);margin-left:60px}@media(max-width:400px){.receiver-picker select{max-width:145px}}
 
 .spatial-polar{height:310px}
+
+.skill-display-heading{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px;padding:17px 18px}.skill-legend{display:flex;flex-wrap:wrap;gap:16px;padding:0 18px 12px;font:10px ui-monospace,monospace}.skill-metrics{padding:0 18px 16px}.skill-metrics>div{display:flex;justify-content:space-between;gap:12px;border-top:1px solid var(--border);padding:10px 0;font:11px ui-monospace,monospace}.skill-metrics span{color:var(--muted)}.skill-metrics strong{font-weight:500;text-align:right}.skill-table{overflow:auto;padding:0 18px 16px}.skill-table table{width:100%;border-collapse:collapse;font:11px ui-monospace,monospace}.skill-table td,.skill-table th{text-align:left;padding:8px;border-bottom:1px solid var(--border)}.skill-widget .plot{height:220px}.skill-widget .spatial-polar{height:330px}
+
+.skill-display-heading { grid-column: 1 / -1; }

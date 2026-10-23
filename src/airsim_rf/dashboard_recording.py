@@ -12,12 +12,14 @@ import threading
 _spec=importlib.util.spec_from_file_location('source_recording',Path(__file__).with_name('source_recording.py'))
 _source=importlib.util.module_from_spec(_spec);_spec.loader.exec_module(_source)
 ID=_source.ID;CAMERA_KEY=_source.CAMERA_KEY;MAX_OFFSET_NS=_source.MAX_OFFSET_NS;atomic_json=_source.atomic_json
+_display_spec=importlib.util.spec_from_file_location('skill_display',Path(__file__).with_name('skill_display.py'))
+_display=importlib.util.module_from_spec(_display_spec);_display_spec.loader.exec_module(_display)
 
 
 def display_result(result):
     """Translate acquisition-clock metadata only at the simulation observer UI."""
     data=dict(result)
-    if 'timestamp_ns' in data:data['sim_time_ns']=data.pop('timestamp_ns')
+    if 'timestamp_ns' in data:data['sim_time_ns']=data['timestamp_ns']
     for key in ('history','waterfall'):
         if key in data:data[key]=[display_result(row) for row in data[key]]
     return data
@@ -29,7 +31,8 @@ class RecordingWriter(_source.RecordingWriter):
         epoch=producer['sim_time_ns']
         if skill.get('timestamp_ns',skill.get('sim_time_ns'))!=epoch:raise ValueError('Recording epochs differ')
         self.source_frame(producer)
-        data={k:v for k,v in skill.items() if k not in ('history','waterfall')}
+        rolling={spec['key'] for spec in _display.history_specs(skill.get('display'))}
+        data={k:v for k,v in skill.items() if k not in rolling|{'history','waterfall'}}
         if 'sim_time_ns' in data:data['timestamp_ns']=data.pop('sim_time_ns')
         atomic_json(self.path/'results'/f'{epoch}.json',data)
 
@@ -76,13 +79,19 @@ class RecordingStore:
                     if not result.exists():continue  # Source/result arrivals are independent.
                     s=display_result(json.loads(result.read_text()))
                 if p['sim_time_ns']!=epoch or s['sim_time_ns']!=epoch:raise ValueError('Corrupt recording epoch')
+                display_signature,display_history=_display.history_summaries(s)
+                # Current skills declare their own history projections. These
+                # fixed summaries are only the pre-contract recording adapter.
+                legacy_history={'sim_time_ns':epoch}
+                legacy_waterfall={'sim_time_ns':epoch}
+                if display_signature is None:
+                    legacy_history.update(angles_deg=[b['angle_deg'] if b['detected'] else None for b in s.get('bearings',[])],
+                        detected=[b['detected'] for b in s.get('bearings',[])],payload_bytes=s.get('payload_bytes',0),sample_start=s.get('sample_start',0))
+                    legacy_waterfall.update(psd_db=s.get('psd',{}).get('density_db_v2_hz',[]),
+                        site_psd_db=[entry['psd']['density_db_v2_hz'] for entry in s.get('receiver_spectra',[])])
                 index['rows'][epoch]={'producer':{k:p[k] for k in ('sim_time_ns','origin_ns','sim_elapsed_s','position_rf_m','geometry_sha256') if k in p},
-                    'history':{'sim_time_ns':epoch,
-                        'angles_deg':[b['angle_deg'] if b['detected'] else None for b in s.get('bearings',[])],
-                        'detected':[b['detected'] for b in s.get('bearings',[])],
-                        'payload_bytes':s.get('payload_bytes',0),'sample_start':s.get('sample_start',0)},
-                    'waterfall':{'sim_time_ns':epoch,'psd_db':s.get('psd',{}).get('density_db_v2_hz',[]),
-                        'site_psd_db':[entry['psd']['density_db_v2_hz'] for entry in s.get('receiver_spectra',[])]}}
+                    'history':legacy_history,'waterfall':legacy_waterfall,
+                    'display_signature':display_signature,'display_history':display_history}
             for camera in (path/'camera').glob('*.json'):
                 if camera.stem not in index['cameras']:
                     value=json.loads(camera.read_text())
@@ -133,8 +142,17 @@ class RecordingStore:
             self.frames.move_to_end(key);value=self.frames[key]
             end=bisect_right(index['epochs'],epoch);history=index['epochs'][max(0,end-1000):end]
             producer={**value['producer'],'history':[index['rows'][e]['producer'] for e in history]}
-            skill={**value['skill'],'history':[index['rows'][e]['history'] for e in history],
-                'waterfall':[index['rows'][e]['waterfall'] for e in index['epochs'][max(0,end-60):end]]}
+            skill=dict(value['skill'])
+            if 'display' in skill:
+                signature,_=_display.history_summaries(skill)
+                for spec in _display.history_specs(skill['display']):
+                    key=spec['key'];limit=spec['limit']
+                    skill[key]=[index['rows'][e]['display_history'][key] for e in index['epochs'][max(0,end-limit):end]
+                                if index['rows'][e]['display_signature']==signature and key in index['rows'][e]['display_history']]
+            else:
+                skill.update(history=[index['rows'][e]['history'] for e in history],
+                    waterfall=[index['rows'][e]['waterfall'] for e in index['epochs'][max(0,end-60):end]])
+                skill=_display.legacy_display(skill,base['scenario'])
             timeline.update(frame_time_s=times[at],frame_index=at)
             base.update(producer=producer,skill=skill,transport=skill,
                 synchronization={'status':'matched','rf_sim_time_ns':epoch,'latest_rf_sim_time_ns':pairs[-1][0],

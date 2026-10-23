@@ -112,6 +112,7 @@ module.main()
                         time.sleep(0.05)
                 self.assertIn(b'RF FIELD LAB', html)
                 for asset, content_type in (('/app.js', 'text/javascript'),
+                                            ('/skill-display.js', 'text/javascript'),
                                             ('/style.css', 'text/css')):
                     with opener.open(base + asset, timeout=2) as response:
                         self.assertEqual(response.status, 200)

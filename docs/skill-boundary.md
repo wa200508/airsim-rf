@@ -184,3 +184,14 @@ result files and exact replay while AirSim, Sionna, CUDA and DF-Skill are physic
 absent. Cross-repository tests separately exercise actual Sionna echoes and
 nondefault commanded sweeps. The architecture audit rejects simulator imports
 of both radar_skill and df_skill. See [deployment and ownership](radar-skill.md).
+
+## Skill-owned dashboard display
+
+The skill's `display.py` defines its plots, labels, units, selectors and metric
+bindings. `GET /display` exposes the description, and every timestamped result
+carries it for synchronized live display and playback. See the
+[RF Skill Display contract](skill-display.md) for extension instructions and the
+[JSON schema](schemas/rf-skill-display-v1.schema.json). The dashboard's generic
+renderer is `src/airsim_rf/dashboard_static/skill-display.js`; the observer replay
+projection is `src/airsim_rf/skill_display.py`. Neither source nor simulator
+selects a receiver algorithm or interprets its live result fields.

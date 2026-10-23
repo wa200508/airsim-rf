@@ -442,3 +442,14 @@ Use `bash scripts/run_dashboard.sh --scenario mmwave-radar --open` for the
 selector prepares the selected package with its own receiver skill; stop an active
 mission first. The radar display adds range/range-rate processing and preserves
 ADC gate timing in recorded I/Q. See the [radar model and hardware assumptions](../scenarios/mmwave-radar/README.md).
+
+## Skill-owned dashboard display
+
+The skill's `display.py` defines its plots, labels, units, selectors and metric
+bindings. `GET /display` exposes the description, and every timestamped result
+carries it for synchronized live display and playback. See the
+[RF Skill Display contract](skill-display.md) for extension instructions and the
+[JSON schema](schemas/rf-skill-display-v1.schema.json). The dashboard's generic
+renderer is `src/airsim_rf/dashboard_static/skill-display.js`; the observer replay
+projection is `src/airsim_rf/skill_display.py`. Neither source nor simulator
+selects a receiver algorithm or interprets its live result fields.

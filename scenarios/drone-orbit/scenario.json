@@ -38,7 +38,7 @@
   "skill": {
     "kind": "direction-finding",
     "contract": "receiver-tcp-v2",
-    "image": "ghcr.io/wa200508/df-skill:sha-270bfacb6ac933f5c60599aab3edf39489978c45",
+    "image": "ghcr.io/wa200508/df-skill:sha-5e2420aa0c2bf49563db3f83fceda1e874fd2029",
     "revision_policy": "independent",
     "command": [
       "--arrays",

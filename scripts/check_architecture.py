@@ -25,7 +25,7 @@ def role(module):
     if name in SOURCE or name.startswith(('distributed.','research.')) or name in ('ams.backend','ams.dis'):return 'simulation/source'
     if name.startswith('evaluation.'):return 'held-out evaluation'
     if module=='airsim_rf' or name in ('ams','distributed','research','evaluation'):return 'package boundary'
-    if name in ('observer_exports','dashboard','dashboard_recording','dashboard_skill','music_plots','sensing_analysis','inspection','aoa_example','cli','profiling','runtime_metrics'):return 'observer/orchestration/compatibility'
+    if name in ('observer_exports','dashboard','dashboard_recording','skill_display','dashboard_skill','music_plots','sensing_analysis','inspection','aoa_example','cli','profiling','runtime_metrics'):return 'observer/orchestration/compatibility'
     raise ValueError('Unclassified first-party module: '+module)
 
 

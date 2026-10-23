@@ -20,10 +20,10 @@ are forbidden from importing `df_skill`; the architecture audit enforces both.
 
 ## Pins and deployment
 
-Pinned source: [bea025f28894b089d2d371479d1a8936f1dd0fb7](https://github.com/wa200508/Radar-skill/tree/bea025f28894b089d2d371479d1a8936f1dd0fb7).
+Pinned source: [bb78fbd0c7b3506b36ae1ad82b9df78acedbe66c](https://github.com/wa200508/Radar-skill/tree/bb78fbd0c7b3506b36ae1ad82b9df78acedbe66c).
 
 ```text
-ghcr.io/wa200508/airsim-rf:radar-skill-sha-bea025f28894b089d2d371479d1a8936f1dd0fb7
+ghcr.io/wa200508/airsim-rf:radar-skill-sha-bb78fbd0c7b3506b36ae1ad82b9df78acedbe66c
 ```
 
 The scenario selects that immutable public image with `revision_policy: independent`.
@@ -107,3 +107,14 @@ and [I/Q development/replay guide](iq-replay.md).
 Apache-2.0, matching DF-Skill and the starter kit's public RF example license
 selection. The new distribution preserves airsim-rf's original MIT notice.
 airsim-rf itself remains MIT licensed.
+
+## Skill-owned dashboard display
+
+The skill's `display.py` defines its plots, labels, units, selectors and metric
+bindings. `GET /display` exposes the description, and every timestamped result
+carries it for synchronized live display and playback. See the
+[RF Skill Display contract](skill-display.md) for extension instructions and the
+[JSON schema](schemas/rf-skill-display-v1.schema.json). The dashboard's generic
+renderer is `src/airsim_rf/dashboard_static/skill-display.js`; the observer replay
+projection is `src/airsim_rf/skill_display.py`. Neither source nor simulator
+selects a receiver algorithm or interprets its live result fields.

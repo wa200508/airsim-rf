@@ -1,5 +1,5 @@
 'use strict';
-let token='',lastFrame=-1,lastWindow=-1,lastStatus=null,lastControlStatus=null,waterRows=[],presentationGeneration=0;
+let token='',lastFrame=-1,lastWindow=-1,lastStatus=null,lastControlStatus=null,presentationGeneration=0;
 const $=id=>document.getElementById(id);
 const player={id:null,autoSelect:true,playing:true,following:false,time:0,end:0,start:0,rate:1,lastTick:performance.now()};
 let recordingOptions='',scenarioOptions='';
@@ -8,8 +8,6 @@ $('scenario-select').onchange=async()=>{
  const response=await fetch('/api/scenario',{method:'POST',headers:{'X-Dashboard-Token':token,'Content-Type':'application/json'},body:JSON.stringify({id:$('scenario-select').value})});
  if(!response.ok){$('error').hidden=false;$('error').textContent=await response.text();}
 };
-let selectedReceiver=0,receiverOptions='',siteStatusOptions='';
-$('receiver-select').onchange=()=>{selectedReceiver=Number($('receiver-select').value);if(lastStatus)render(lastStatus);};
 function chooseRecording(id,autoSelect=false){
  player.id=id;player.autoSelect=autoSelect;player.time=0;player.end=0;player.start=0;player.playing=true;player.following=false;player.lastTick=performance.now();presentationGeneration++;
 }
@@ -40,51 +38,7 @@ function recordingControls(state){
 }
 
 function surface(id){const canvas=$(id),ratio=devicePixelRatio||1,rect=canvas.getBoundingClientRect();canvas.width=Math.round(rect.width*ratio);canvas.height=Math.round(rect.height*ratio);const ctx=canvas.getContext('2d');ctx.scale(ratio,ratio);return [ctx,rect.width,rect.height];}
-function graph(id,x,curves,rangeX,rangeY,colors=['#55d7d0','#e6b96c'],points=false,yLabel='',xTicks=null){
- const [ctx,w,h]=surface(id),m={l:yLabel?60:40,r:13,t:10,b:24},pw=w-m.l-m.r,ph=h-m.t-m.b;
- const px=v=>m.l+(v-rangeX[0])/(rangeX[1]-rangeX[0])*pw,py=v=>m.t+(rangeY[1]-v)/(rangeY[1]-rangeY[0])*ph;
- ctx.font='9px monospace';ctx.textAlign='right';ctx.fillStyle='#6d8696';ctx.strokeStyle='#24343e';ctx.lineWidth=.6;
- for(let i=0;i<=4;i++){const y=rangeY[0]+i*(rangeY[1]-rangeY[0])/4;ctx.beginPath();ctx.moveTo(m.l,py(y));ctx.lineTo(w-m.r,py(y));ctx.stroke();ctx.fillText(y.toFixed(Number.isInteger(y)?0:1),m.l-7,py(y)+3);}
- ctx.textAlign='center';for(const xx of xTicks||Array.from({length:5},(_,i)=>rangeX[0]+i*(rangeX[1]-rangeX[0])/4)){ctx.fillText(xx.toFixed(0),px(xx),h-6);}
- if(yLabel){ctx.save();ctx.translate(12,m.t+ph/2);ctx.rotate(-Math.PI/2);ctx.fillStyle='#a0b1bd';ctx.fillText(yLabel,0,0);ctx.restore();}
- if(!x?.length){ctx.fillStyle='#526f81';ctx.fillText('Awaiting received I/Q',w/2,h/2);return;}
- ctx.save();ctx.beginPath();ctx.rect(m.l,m.t,pw,ph);ctx.clip();
- curves.forEach((values,k)=>{ctx.strokeStyle=colors[k%colors.length];ctx.fillStyle=ctx.strokeStyle;ctx.lineWidth=1.5;ctx.beginPath();values.forEach((v,i)=>{if(i===0)ctx.moveTo(px(x[i]),py(v));else ctx.lineTo(px(x[i]),py(v));});ctx.stroke();if(points)values.forEach((v,i)=>{ctx.beginPath();ctx.arc(px(x[i]),py(v),3,0,Math.PI*2);ctx.fill();});});ctx.restore();
-}
-function radarPlot(data){
- const [ctx,w,h]=surface('radar-map'),m={l:58,r:15,t:10,b:32},pw=w-m.l-m.r,ph=h-m.t-m.b;
- ctx.font='10px monospace';ctx.fillStyle='#a0b1bd';ctx.textAlign='center';
- if(!data){ctx.fillText('Awaiting radar I/Q',w/2,h/2);return;}
- const xs=data.range_m,ys=data.range_rate_m_s,z=data.power_db;
- for(let y=0;y<ys.length;y++)for(let x=0;x<xs.length;x++){
-  const c=Math.max(0,Math.min(1,(z[y][x]+10)/45));ctx.fillStyle=`rgb(${Math.round(230*c)},${Math.round(210*c)},${Math.round(45+110*c)})`;
-  ctx.fillRect(m.l+x*pw/xs.length,m.t+(ys.length-y-1)*ph/ys.length,pw/xs.length+1,ph/ys.length+1);
- }
- ctx.fillStyle='#a0b1bd';for(let i=0;i<=4;i++){
-  ctx.fillText((xs.at(-1)*i/4).toFixed(0),m.l+pw*i/4,h-18);
-  ctx.fillText((ys[0]+(ys.at(-1)-ys[0])*i/4).toFixed(1),30,m.t+ph*(1-i/4));
- }
- ctx.fillText('Range (m)',m.l+pw/2,h-3);ctx.save();ctx.translate(10,m.t+ph/2);ctx.rotate(-Math.PI/2);ctx.fillText('Range rate (m/s)',0,0);ctx.restore();
-}
-function spatialSearch(angles,curves){
- const [ctx,w,h]=surface('music'),cx=w/2,cy=(h-16)/2,r=Math.max(1,Math.min(w-86,h-68)/2),floor=-65;
- const point=(angle,db)=>{const theta=angle*Math.PI/180,radius=r*(Math.max(floor,Math.min(0,db))-floor)/-floor;return [cx-Math.sin(theta)*radius,cy-Math.cos(theta)*radius];};
- ctx.font='10px monospace';ctx.textAlign='center';ctx.strokeStyle='#2d424e';ctx.lineWidth=.7;
- for(const db of [-40,-20,0]){const radius=r*(db-floor)/-floor;ctx.beginPath();ctx.arc(cx,cy,radius,0,2*Math.PI);ctx.stroke();
-  ctx.fillStyle='#a0b1bd';ctx.fillText(`${db} dB`,cx+radius*.707+13,cy+radius*.707+3);}
- for(let angle=-180;angle<180;angle+=45){const [x,y]=point(angle,0);ctx.beginPath();ctx.moveTo(cx,cy);ctx.lineTo(x,y);ctx.stroke();}
- ctx.fillStyle='#c3d5de';ctx.fillText('0°',cx,cy-r-12);ctx.fillText('±180°',cx,cy+r+16);
- ctx.fillText('+90°',cx-r-24,cy+3);ctx.fillText('−90°',cx+r+24,cy+3);
- ctx.fillText('−65',cx,cy+3);
- ctx.fillText('Pseudospectrum (dB)',cx,h-5);
- if(!angles?.length||!curves.length){ctx.fillStyle='#82929f';ctx.fillText('Awaiting received I/Q',cx,cy-14);return;}
- const colors=['#55d7d0','#e6b96c'];
- curves.forEach((values,k)=>{ctx.strokeStyle=colors[k%colors.length];ctx.lineWidth=1.7;ctx.beginPath();
-  values.forEach((db,i)=>{const [x,y]=point(angles[i],db);if(i)ctx.lineTo(x,y);else ctx.moveTo(x,y);});
-  if(angles.at(-1)-angles[0]>=359)ctx.closePath();ctx.stroke();});
-}
 function gauge(rate,fullScale=128){const [ctx,w,h]=surface('gauge'),cx=w/2,cy=h-16,r=Math.min(w/2-24,h-30);ctx.lineWidth=10;ctx.lineCap='round';ctx.strokeStyle='#22333e';ctx.beginPath();ctx.arc(cx,cy,r,Math.PI,2*Math.PI);ctx.stroke();const fraction=Math.min(rate/fullScale,1);ctx.strokeStyle='#55d7d0';ctx.beginPath();ctx.arc(cx,cy,r,Math.PI,Math.PI+fraction*Math.PI);ctx.stroke();ctx.font='9px monospace';ctx.fillStyle='#607c8e';ctx.fillText('0',cx-r-5,cy+13);ctx.fillText(fullScale.toFixed(0),cx+r-15,cy+13);const angle=Math.PI+fraction*Math.PI;ctx.lineWidth=2;ctx.strokeStyle='#e6b96c';ctx.beginPath();ctx.moveTo(cx+Math.cos(angle)*(r-21),cy+Math.sin(angle)*(r-21));ctx.lineTo(cx+Math.cos(angle)*(r+6),cy+Math.sin(angle)*(r+6));ctx.stroke();}
-function waterfall(low=-178,high=-113){const [ctx,w,h]=surface('waterfall');if(!waterRows.length){ctx.font='9px monospace';ctx.fillStyle='#526f81';ctx.fillText('Spectrum waterfall appears with received windows',15,h/2);return;}const count=waterRows[0].length,dh=h/Math.max(waterRows.length,20),dw=w/count;waterRows.forEach((row,j)=>row.forEach((v,i)=>{let f=Math.max(0,Math.min(1,(v-low)/(high-low)));let r=Math.round(13+215*f*f),g=Math.round(21+190*f),b=Math.round(42+70*Math.sin(f*Math.PI));ctx.fillStyle=`rgb(${r},${g},${b})`;ctx.fillRect(i*dw,h-(j+1)*dh,dw+1,dh+1);}));}
 function groundtrack(p,scenario){const [ctx,w,h]=surface('groundtrack'),cx=w/2,cy=h/2,scale=Math.min(w-36,h-36)/(scenario.terrain_width_m||800);
  const point=v=>[cx-v[1]*scale,cy-v[0]*scale];const grid=scenario.terrain_grid;
  if(grid){const heights=grid.heights_m.flat(),lo=Math.min(...heights),hi=Math.max(...heights);
@@ -118,23 +72,14 @@ lastControlStatus=state;token=state.token;const p=state.control_producer||state.
 }
 function render(state){lastStatus=state;renderControls(state);const s=state.skill,p=state.producer,transport=s,sync=state.synchronization||{};
  const scenario=state.scenario,carrier=s.carrier_hz||scenario.carrier_hz,fs=s.sample_rate_hz||scenario.sample_rate_hz;
- $('geometry-note').textContent=scenario.skill_kind==='radar'?'North up · shared terrain · radar-to-target sight line · terrain blockage is checked against Sionna at each RF epoch.':'North up · colors show shared terrain elevation · cyan: clear receiver sight line · amber dashed: terrain-blocked sight line. A MUSIC peak can be an echo; it does not establish a direct path.';
- $('detection-note').textContent=scenario.skill_kind==='radar'?'A passive target returns a two-way echo. Terrain can remove the direct return; reflections and receiver noise remain. The displayed candidate comes only from received I/Q.':'Blocked direct paths still produce reflected signal and receiver noise. A MUSIC peak is a candidate, not proof of an unambiguous emitter bearing.';
+ $('geometry-note').textContent='North up · shared terrain elevation · cyan: direct sight line · amber dashed: terrain-blocked sight line. Reflected RF can remain when the direct path is blocked.';
  $('scenario-title').textContent=scenario.title||'Recorded scenario / tracking camera';
  $('mission-label').textContent=scenario.id||'RECORDED SCENARIO';
  $('signal-label').textContent=`${carrier?(carrier/1e6).toFixed(3)+' MHz':'Carrier pending'} · ${fs?(fs/1e6).toFixed(3)+' MS/s':'Rate pending'}`;
  $('flight-summary').textContent=scenario.flight_type==='racetrack'?`${scenario.straight_length_m} m straights / ${scenario.turn_radius_m} m turns / ${scenario.speed_m_s} m/s`:scenario.radius_m?`${scenario.radius_m} m orbit / ${scenario.altitude_rf_m} m RF-up`:'Scenario flight plan';
  $('propagation-summary').textContent=typeof scenario.propagation==='object'?`${scenario.propagation.path_solver} / depth ${scenario.propagation.max_depth}`:(scenario.propagation||'Recorded propagation');
- $('radar-panel').hidden=scenario.skill_kind!=='radar';
- if(scenario.skill_kind==='radar'){
-  radarPlot(s.radar);const d=s.radar?.detection;
-  $('radar-detection').textContent=d?.detected?`${d.range_m.toFixed(1)} m / ${d.range_rate_m_s.toFixed(1)} m/s`:'NO DETECTION';
-  $('radar-caption').textContent='64 chirps · positive range rate = receding · Hann-windowed FFT · 18 dB above median noise threshold · color: contrast, −10 to +35 dB. Range axis retains FMCW range/Doppler coupling; detection range is corrected.';
- }
- $('music-panel').hidden=Boolean(scenario.skill_kind&&!['direction-finding','music'].includes(scenario.skill_kind));
- document.querySelector('[data-process="skill"]').querySelector('h3').textContent=scenario.skill_name||'RF Skill';
- $('spectrum-caption').textContent=`Baseband offset${carrier?' from '+(carrier/1e6).toFixed(3)+' MHz':''} (kHz) · PSD, dB re 1 V²/Hz`;
- if(s.analysis_samples_per_channel)$('analysis-caption').textContent=`${s.analysis_samples_per_channel.toLocaleString()} simultaneous ADC samples per analysis. Linear-array front/back and elevation ambiguity remains.`;
+ document.querySelector('[data-process="skill"]').querySelector('h3').textContent=s.display?.title||scenario.skill_name||'RF Skill';
+ RFSkillDisplay.render($('skill-display'),s);
  $('clock').textContent=sync.status==='matched'?`RF T+ ${(p.sim_elapsed_s||0).toFixed(3)} s`+(!state.no_render?` / view T+ ${((sync.camera_sim_time_ns-(p.origin_ns||0))/1e9).toFixed(3)} s`:''):'WAITING FOR MATCHED TIMES';$('position').textContent=sync.status==='matched'&&p.position_rf_m?`N ${p.position_rf_m[0].toFixed(1)} / W ${p.position_rf_m[1].toFixed(1)} / UP ${p.position_rf_m[2].toFixed(1)} m`:'NO MATCHED PLATFORM TELEMETRY';
  if(state.camera.available){$('camera').hidden=false;$('camera-empty').hidden=true;$('camera-status').textContent=state.playback?'RECORDED FRAME':p.status==='paused'?'PAUSED FRAME':p.status==='complete'?'LAST FRAME':state.camera.age_s>3?'CAMERA LAG':'AIRSIM CAMERA';$('camera-status').classList.toggle('warning',state.camera.age_s>3);}else{$('camera').hidden=true;$('camera-empty').hidden=false;$('camera-status').textContent=state.no_render?'RENDERING DISABLED':'WAITING FOR MATCHED CAMERA';}
  const visible=sync.status==='matched'?p.direct_visible:null;$('visibility').innerHTML=visible?`<i style="background:${visible.every(Boolean)?'#55d7d0':'#e6b96c'}"></i> Receiver direct paths: ${visible.map((v,i)=>'S'+i+' '+(v?'clear':'blocked')).join(' / ')}`:'<i></i> Visibility: awaiting matched geometry';
@@ -142,38 +87,12 @@ function render(state){lastStatus=state;renderControls(state);const s=state.skil
  $('sync-status').textContent=sync.status==='matched'?(state.no_render?'RF EPOCH MATCHED':`CAMERA / RF Δ ${sync.offset_ms.toFixed(0)} ms`):'WAITING FOR MATCHED TIMES';
  $('scene-rate').textContent=(state.playback?'Recorded performance · ':'')+(p.status==='paused'?'Paused':`${(p.simulation_speed||0).toFixed(2)}× sim / wall`)+(lag!==null?` · displayed RF ${lag.toFixed(2)} s behind latest`:'');
  groundtrack(sync.status==='matched'?p:{},state.scenario);
- $('path-summary').replaceChildren(...(sync.status==='matched'?p.site_paths||[]:[]).map((site,i)=>{const row=document.createElement('p'),echoes=site.reflected_paths_per_element||[],power=s.bearings?.[i]?.received_power_dbm;
-  row.textContent=`${site.id}: ${site.direct_elements}/${site.elements} elements have a direct path. Reflected paths per element: ${echoes.join(', ')}. ${power!==undefined?`Received ${power.toFixed(1)} dBm.`:''} ${site.direct_elements===0?'Echoes and receiver noise only; no direct path.':''}`;return row;}));
+ $('path-summary').replaceChildren(...(sync.status==='matched'?p.site_paths||[]:[]).map((site,i)=>{const row=document.createElement('p'),echoes=site.reflected_paths_per_element||[];
+  row.textContent=`${site.id}: ${site.direct_elements}/${site.elements} elements have a direct path. Reflected paths per element: ${echoes.join(', ')}. ${site.direct_elements===0?'Echoes and receiver noise only; no direct path.':''}`;return row;}));
  const channels=(scenario.sites||[]).reduce((sum,site)=>sum+(site.channels?.length||0),0)||8;
  const requiredRate=channels*(fs||2e6)*8/1e6;
  $('throughput-caption').textContent=`Wall-clock throughput at the displayed RF epoch. ${channels} cf32 channels require ${requiredRate.toFixed(1)} MB/s at real time.`;
  const rate=(transport.payload_bytes_per_second||0)/1e6;gauge(rate,requiredRate);$('throughput').textContent=rate.toFixed(2);$('payload').textContent=((transport.payload_bytes||0)/1e6).toFixed(1)+' MB';$('windows').textContent=transport.complete_windows||0;$('latency').textContent=s.processing_latency_ms?s.processing_latency_ms.toFixed(0)+' ms':'—';$('stream-state').textContent=(state.playback?'RECORDED':p.status==='paused'?'PAUSED':transport.status||'NO DATA').toUpperCase();
- const statusSites=state.scenario.sites||[{id:'site0'},{id:'site1'}],siteSignature=statusSites.map(site=>site.id).join(',');
- if(siteSignature!==siteStatusOptions){$('site-status').replaceChildren(...statusSites.map((site,i)=>{const row=document.createElement('div');row.innerHTML=`Site ${i} <span></span>`;return row;}));siteStatusOptions=siteSignature;}
- statusSites.forEach((site,i)=>{if(scenario.skill_kind==='radar'){const d=s.radar?.detection;$('site-status').children[i].querySelector('span').textContent=d?.detected?`${d.range_m.toFixed(1)} m · ${d.range_rate_m_s.toFixed(1)} m/s`:'No radar detection';return;}const bearing=s.bearings?.[i],e=$('site-status').children[i].querySelector('span');e.textContent=!bearing?'Awaiting matched I/Q':!bearing.detected?'No stable MUSIC peak':visible&&!visible[i]?`${bearing.angle_deg.toFixed(1)}° · direct blocked`:`${bearing.angle_deg.toFixed(1)}° · candidate`;e.classList.toggle('warning',Boolean(bearing&&(!bearing.detected||visible&&!visible[i])));});
- const spectra=s.receiver_spectra||[],sites=state.scenario.sites||[{id:'site0'},{id:'site1'}];
- const options=sites.map((site,i)=>({label:`Site ${i} · element 0`,available:Boolean(spectra[i]?.psd||(i===0&&s.psd))}));
- const signature=JSON.stringify(options);
- if(signature!==receiverOptions){
-  $('receiver-select').replaceChildren(...options.map((entry,i)=>{const option=document.createElement('option');option.value=String(i);option.textContent=entry.label+(entry.available?'':' · no saved data');option.disabled=!entry.available;return option;}));receiverOptions=signature;
- }
- if(!options[selectedReceiver]?.available&&options.some(entry=>entry.available))selectedReceiver=options.findIndex(entry=>entry.available);
- $('receiver-select').value=String(selectedReceiver);
- const spectrum=spectra[selectedReceiver]?.psd||(selectedReceiver===0?s.psd:null),receiverLabel=`Site ${selectedReceiver} · element 0`;
- graph('psd',spectrum?.frequency_khz,[spectrum?.density_db_v2_hz||[]],spectrum?.frequency_khz?.length>1?[spectrum.frequency_khz[0],spectrum.frequency_khz.at(-1)]:[-100,100],scenario.skill_kind==='radar'?[-120,-30]:[-180,-105],
-  [selectedReceiver===0?'#55d7d0':'#e6b96c'],false,'PSD (dB re 1 V²/Hz)');
- spatialSearch(s.angle_grid_deg,s.music_db||[]);
- $('music-caption').textContent=s.angle_grid_deg?.length&&s.angle_grid_deg.at(-1)-s.angle_grid_deg[0]<359?
-  `Saved search covers ${s.angle_grid_deg[0]}° to ${s.angle_grid_deg.at(-1)}° only · radius: relative power (dB)`:
-  'Full 360° search · radius: relative pseudospectrum (dB) · 0° is array broadside';
- graph('eigen',[1,2,3,4],s.eigenvalues_db||[],[1,4],[-60,0],undefined,true,'Relative power (dB)',[1,2,3,4]);
- graph('phase',[0,1,2,3],s.phase_rad?[s.phase_rad]:[],[0,3],[-9,9],undefined,true,'Phase (rad)',[0,1,2,3]);
- const rows=(s.waterfall||[]).map(row=>({epoch:row.sim_time_ns,values:row.site_psd_db?.[selectedReceiver]||(selectedReceiver===0?row.psd_db:null)})).filter(row=>row.values?.length);
- waterRows=rows.map(row=>row.values);lastWindow=s.complete_windows;
- if(rows.length){const origin=p.origin_ns||0,first=(rows[0].epoch-origin)/1e9,last=(rows.at(-1).epoch-origin)/1e9;
-  $('waterfall-caption').textContent=`${receiverLabel} · RF T+ ${first.toFixed(2)}–${last.toFixed(2)} s · ${waterRows.length} rows · ${((s.analysis_duration_s||.012)*1000).toFixed(1)} ms PSD snapshots every ${((scenario.advance_ns||120000000)/1e6).toFixed(1)} ms · ${scenario.skill_kind==='radar'?'−120 to −45':'−178 to −113'} dB`;
- }else $('waterfall-caption').textContent=`${receiverLabel} · no saved spectrum windows at this time`;
- waterfall(...(scenario.skill_kind==='radar'?[-120,-45]:[-178,-113]));
  if(state.playback){$('playback-seek').value=state.playback.frame_time_s||0;$('playback-time').textContent=`T+ ${(state.playback.frame_time_s||0).toFixed(3)} / ${state.playback.end_s.toFixed(3)} s ready`;}
  $('events').replaceChildren(...state.events.map(e=>{const row=document.createElement('div');row.textContent=e.time+'  '+e.message;return row;}));
 }

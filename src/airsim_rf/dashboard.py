@@ -70,7 +70,7 @@ class Dashboard:
         if self.definition is not None:
             if self.duration_override is None:args.duration=self.definition['mission']['duration_s']
             if not getattr(args,'skill_image',None):args.skill_image=self.definition['skill']['image']
-        elif not getattr(args,'skill_image',None):args.skill_image='ghcr.io/wa200508/df-skill:sha-270bfacb6ac933f5c60599aab3edf39489978c45'
+        elif not getattr(args,'skill_image',None):args.skill_image='ghcr.io/wa200508/df-skill:sha-5e2420aa0c2bf49563db3f83fceda1e874fd2029'
         self.token=secrets.token_urlsafe(24);self.lock=threading.Lock();self.events=deque(maxlen=40);self.busy=False;self.error=None
         self.processes={};self.last_skill={};self.ready=False;self.mission_started=False;self.image_tags={name:getattr(args,name) for name in ('sim_image','skill_image','rf_image')};self.names={part:f'airsim-rf-dashboard-{part}-{args.port}' for part in ('sim','rf','skill')}
         self.log('Preparing separate simulator, GPU RF and receiver skill containers.')
@@ -535,9 +535,9 @@ def main():
                     root=dashboard.recordings.path(query['recording'][0]) if 'recording' in query else dashboard.run
                     data=(root/'camera'/(key+'.jpg')).read_bytes();kind='image/jpeg'
                 except (OSError,ValueError):self.send_error(404,'No ProjectAirSim camera frame received');return
-            elif self.path in ('/','/app.js','/style.css'):
-                name={'/':'index.html','/app.js':'app.js','/style.css':'style.css'}[self.path]
-                data=assets.joinpath(name).read_bytes();kind={'index.html':'text/html','app.js':'text/javascript','style.css':'text/css'}[name]
+            elif self.path in ('/','/app.js','/style.css','/skill-display.js'):
+                name={'/':'index.html','/app.js':'app.js','/style.css':'style.css','/skill-display.js':'skill-display.js'}[self.path]
+                data=assets.joinpath(name).read_bytes();kind='text/javascript' if name.endswith('.js') else 'text/css' if name.endswith('.css') else 'text/html'
             elif self.path.startswith('/api/log/'):
                 part=self.path.rsplit('/',1)[-1]
                 if part not in ('rf','sim','skill'):self.send_error(404);return

@@ -143,3 +143,14 @@ Its mode is `scenarios/mmwave-radar/radar-mode.json`, selected by `skill.mode`.
 The simulation-side [radio adapter](../src/airsim_rf/radar_control.py) accepts
 waveform/gate/state commands; [dashboard_radar.py](../src/airsim_rf/dashboard_radar.py)
 applies them at capture boundaries without importing the skill.
+
+## Skill-owned dashboard display
+
+The skill's `display.py` defines its plots, labels, units, selectors and metric
+bindings. `GET /display` exposes the description, and every timestamped result
+carries it for synchronized live display and playback. See the
+[RF Skill Display contract](skill-display.md) for extension instructions and the
+[JSON schema](schemas/rf-skill-display-v1.schema.json). The dashboard's generic
+renderer is `src/airsim_rf/dashboard_static/skill-display.js`; the observer replay
+projection is `src/airsim_rf/skill_display.py`. Neither source nor simulator
+selects a receiver algorithm or interprets its live result fields.
