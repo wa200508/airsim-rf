@@ -3,7 +3,7 @@
 > The direction-finding receiver application is the separately maintained
 > [Direction Finding RF Skill](https://github.com/wa200508/DF-Skill), using MUSIC.
 > See [repository separation and pinned deployment](docs/direction-finding-skill.md).
-> The radar receiver is also separate: [Radar-skill](https://github.com/wa200508/Radar-skill),
+> The active radar skill is also separate: [Radar-skill](https://github.com/wa200508/Radar-skill),
 > with [ownership and pinned deployment](docs/radar-skill.md).
 
 ProjectAirSim poses → Sionna propagation → complex I/Q → receiver filtering,
@@ -28,6 +28,7 @@ lists the selected values and flags settings that must be edited together.
 | Scenario, receiver locations, flight and transmitted samples | [Scenario catalog](scenarios/README.md); [compiler/engine adapters](src/airsim_rf/dashboard_scenario.py) |
 | Native drone flight, antenna pattern, TX power and selected RF backend | [dashboard_producer.py](src/airsim_rf/dashboard_producer.py) — `run()` |
 | SDR filtering, noise, ADC and path-to-I/Q dispatch | [sdr.py](src/airsim_rf/sdr.py) — `PlutoSDRProfile`, `SDRNetworkReceiver.capture()` |
+| Radar TX/RX control | [External radar skill](https://github.com/wa200508/Radar-skill/blob/main/src/radar_skill/transceiver.py) programs the waveform, power, receive gate and gain through the [radio adapter](docs/radar-skill.md#transmit-and-receive) |
 | Live received-I/Q processing | [External direction-finding skill](https://github.com/wa200508/DF-Skill); [external radar skill](https://github.com/wa200508/Radar-skill/blob/main/src/radar_skill/app.py) — `RadarSkill.process()` |
 | MUSIC algorithm call, steering vector and detection gate | [processing/music.py](src/airsim_rf/processing/music.py) — `estimate_bearing()`, `PhysicalULA`; [full MUSIC trace](docs/code-map.md#find-the-actual-music-algorithm) |
 

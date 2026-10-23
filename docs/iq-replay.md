@@ -218,4 +218,5 @@ python -m radar_skill.sample_recording replay /path/to/iq --host 127.0.0.1 --por
 ```
 
 Start a fresh [Radar-skill](https://github.com/wa200508/Radar-skill) consumer with
+`--replay` (no radio-control traffic) and
 that archive's receiver configuration and a separate results directory first.

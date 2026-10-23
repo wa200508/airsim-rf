@@ -76,6 +76,20 @@ ADC clipping continue to follow the configured model.
 Real raw ADC capture from the board requires a supported acquisition setup,
 commonly the DCA1000EVM [1,4], beyond buying the radar board alone.
 
+## Transmit/receive control
+
+The skill sends its mode to `PUT /v1/configuration` on the RF adapter, checks
+the returned configuration identity, then commands TX and RX on with
+`POST /v1/state`. It receives the resulting dechirped ADC I/Q on TCP 8811.
+The adapter starts disabled and cannot capture until the skill enables receive.
+TX off with RX on removes target illumination/echoes while preserving receiver
+noise and ADC behavior. Controls apply at acquisition-window boundaries; settings
+cannot change midstream without a new metadata/recording session.
+The [control adapter](../../src/airsim_rf/radar_control.py) has no detector
+imports. The skill uses the same [hardware-neutral contract](https://github.com/wa200508/Radar-skill/blob/main/docs/transceiver-control.md)
+for physical adapters; no TI/DCA1000 hardware driver is supplied yet.
+Recorded-I/Q development uses explicit `--replay` and never commands a transmitter.
+
 ## Exactly what is simulated
 
 [FMCWRadar](../../src/airsim_rf/fmcw.py) traces Sionna paths from radar to each
@@ -117,8 +131,10 @@ IF/noise/ADC in NumPy before transport/recording. No new GPU throughput or
 At 10 MS/s, one cf32 channel needs 80 MB/s and about **9.6 GB for 120 s**, plus
 journals/video. Set `mission.record_iq=false` to disable bulk recording.
 
-The [Radar RF Skill](https://github.com/wa200508/Radar-skill) knows only receiver channel,
-carrier, sample rate and chirp/gate timing. It uses the first 64 chirps from each
+The [Radar RF Skill](https://github.com/wa200508/Radar-skill) selects the transmit
+sweep, power and PRI and the receive gate/gain from `radar-mode.json`, commands
+the radio adapter to enable TX and RX, then consumes returned ADC samples.
+It knows its own transmitted waveform and receiver channel settings. It uses the first 64 chirps from each
 100-chirp window, per-ramp DC removal, Hann windows and a 2D FFT, then reports a candidate above an
 18 dB contrast threshold relative to the median map power. This is a simple
 teaching detector, **not a calibrated CFAR false-alarm specification**. Its peak
@@ -132,13 +148,15 @@ installation and never receives scene, flight plan, target RCS or target truth.
 |---|---|
 | Flight, target orbit, speed, height? | `flight.json`; native path compilation in [dashboard_scenario.py](../../src/airsim_rf/dashboard_scenario.py) |
 | Terrain and dielectric assumptions? | `environment.json`, copied/exported into the run's shared geometry bundle |
-| Carrier, ramp, PRI, ADC, noise, antenna, RCS? | `radios.json` → `radar.profile` and `radar.targets` |
+| Carrier, sweep, ramp, PRI, TX power, receive gate and gain? | `radar-mode.json`, applied by the external skill through its transceiver client |
+| Antenna, noise, IF filter, ADC transfer, RCS? | `radios.json` → `radar.profile` and `radar.targets` |
 | Clock, duration, recording, camera and chosen skill? | `scenario.json` |
 | Path pairing, phase, IF, noise and quantizer? | [fmcw.py](../../src/airsim_rf/fmcw.py) |
 | Actual poses, window acquisition and gate packing? | [dashboard_radar.py](../../src/airsim_rf/dashboard_radar.py); orchestrated by [dashboard_producer.py](../../src/airsim_rf/dashboard_producer.py) |
 | Detection and range/Doppler FFT? | [Radar-skill processing](https://github.com/wa200508/Radar-skill/blob/main/src/radar_skill/processing.py) and [receiver app](https://github.com/wa200508/Radar-skill/blob/main/src/radar_skill/app.py); local `skills/radar.py` is a compatibility import |
 
-The receiver is maintained, tested and published in its own repository. This
+The active skill is maintained and tested in its own repository. Its public
+container is built directly from that repository by the pinned release workflow. This
 scenario pins its image and uses `revision_policy: independent`; simulator/RF
 images still must match each other. See [radar skill separation](../../docs/radar-skill.md).
 

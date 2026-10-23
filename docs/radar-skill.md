@@ -1,14 +1,15 @@
 # Radar RF Skill is a separate project
 
-The live radar receiver is maintained at **[wa200508/Radar-skill](https://github.com/wa200508/Radar-skill)**.
+The active radar skill is maintained at **[wa200508/Radar-skill](https://github.com/wa200508/Radar-skill)**.
 It follows the [Direction Finding RF Skill separation](direction-finding-skill.md).
-The skill consumes dechirped complex ADC I/Q and receiver chirp/gate settings.
+The skill selects the FMCW sweep, TX power, PRI, receive gate and gain, commands
+a transceiver adapter, then consumes returned dechirped complex ADC I/Q.
 It neither imports nor receives the simulator's target, RCS, flight or terrain.
 
 | Repository | Owns |
 |---|---|
 | airsim-rf | Scenarios, native flight, shared geometry, reciprocal radar point-target channel, FMCW/IF/noise/ADC acquisition, exact sample recording, dashboard observer |
-| Radar-skill | Range/Doppler FFT and candidate detector, receiver application, TCP/HTTP/result interfaces, neutral recording/replay adapters, tests, CPU container and publication |
+| Radar-skill | Waveform and TX/RX control, range/Doppler FFT and candidate detector, active application, TCP/HTTP/result interfaces, neutral recording/replay adapters, tests and CPU container |
 
 The actual detector lives in [processing.py](https://github.com/wa200508/Radar-skill/blob/main/src/radar_skill/processing.py);
 the service is [app.py](https://github.com/wa200508/Radar-skill/blob/main/src/radar_skill/app.py).
@@ -19,10 +20,10 @@ are forbidden from importing `df_skill`; the architecture audit enforces both.
 
 ## Pins and deployment
 
-Pinned source: [ed36dffc23e716e24d7bf3ed084c0358d1d12e18](https://github.com/wa200508/Radar-skill/tree/ed36dffc23e716e24d7bf3ed084c0358d1d12e18).
+Pinned source: [bea025f28894b089d2d371479d1a8936f1dd0fb7](https://github.com/wa200508/Radar-skill/tree/bea025f28894b089d2d371479d1a8936f1dd0fb7).
 
 ```text
-ghcr.io/wa200508/airsim-rf:radar-skill-sha-ed36dffc23e716e24d7bf3ed084c0358d1d12e18
+ghcr.io/wa200508/airsim-rf:radar-skill-sha-bea025f28894b089d2d371479d1a8936f1dd0fb7
 ```
 
 The scenario selects that immutable public image with `revision_policy: independent`.
@@ -35,6 +36,8 @@ the external image. They no longer build a second copy of the application.
 CPU bootstrap installs the small external package without additional dependency
 resolution for cross-repository acquisition/consumer tests and legacy imports.
 For a Python installation needing the old namespace, use `pip install 'airsim-rf[radar]'`.
+The old Python math/consumer imports remain compatible; the active CLI requires
+`--mode` and `--radio-url`. Recorded input explicitly uses `--replay`.
 The standalone skill requires NumPy only, without AirSim, Sionna, CUDA or DF-Skill.
 
 Existing copied radar scenarios adopting the external image must also change
@@ -58,6 +61,32 @@ scenario image, Dockerfile alias, and this release workflow's source revision
 together. The unchanged numerical processing, interfaces and license are owned
 by Radar-skill regardless of the registry package hosting its image.
 
+## Transmit and receive
+
+`scenarios/mmwave-radar/radar-mode.json` is the editable operating mode, selected
+by `skill.mode` in scenario.json. It owns the waveform and electrical settings;
+radios.json retains hardware antenna/filter/noise/ADC parameters and target RCS.
+The launcher mounts only the mode and receiver metadata into the skill and starts
+the acquisition container under network alias rf-acquisition. The skill sends
+PUT /v1/configuration to http://rf-acquisition:8814, validates its configuration
+identity and sends POST /v1/state enabling transmit and receive. The adapter
+starts with both off; no source acquisition occurs before these commands.
+
+The adapter in [radar_control.py](../src/airsim_rf/radar_control.py) is independent
+of the skill implementation. It validates against modeled IWR1843/stream limits
+and applies settings atomically at the next window. TX-off/RX-on produces no
+radar target echoes while retaining noise/ADC behavior; RX-off pauses acquisition.
+Status distinguishes accepted commands from the applied configuration/timestamp.
+[The external client](https://github.com/wa200508/Radar-skill/blob/main/src/radar_skill/transceiver.py)
+uses the same [contract](https://github.com/wa200508/Radar-skill/blob/main/docs/transceiver-control.md)
+for physical adapters. A vendor hardware driver is not included.
+
+The skill's HTTP POST /transceiver/state forwards explicit TX/RX commands;
+normal skill shutdown requests both off. Recorded-I/Q development uses `--replay`,
+which rejects active-control options and never contacts a radio. Midstream
+waveform/carrier/rate changes require a fresh session and matching metadata.
+This HTTP API is not a claim of native AMS-GRA MEL/VITA transmit compatibility.
+
 ## Data and replay
 
 The neutral TCP v2 and lossless cf32/SigMF formats are unchanged.
@@ -67,7 +96,7 @@ can stream an existing acquisition archive into a fresh unchanged consumer.
 The standalone qualifier checks real TCP/HTTP/journals with all source packages
 physically absent and requires identical radar results after recorded-I/Q replay.
 
-The current skill remains a single-channel, 64-chirp Hann-windowed FFT with an
+The processing remains a single-channel, 64-chirp Hann-windowed FFT with an
 18 dB median-map contrast detector. This extraction does not change the
 algorithm, introduce CFAR performance claims, add gRPC acquisition control,
 or alter the exaggerated demonstration RCS. See the [scenario/model guide](../scenarios/mmwave-radar/README.md)

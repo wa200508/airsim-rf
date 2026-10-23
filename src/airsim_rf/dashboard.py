@@ -273,9 +273,10 @@ class Dashboard:
              '-e','RF_RECEIVER_CONFIG=/config/arrays.json','-e','RF_RESULTS_DIR=/results',
              *(['-e',f"RF_CONTROL_PORT={ports['control']}"] if ports['control'] is not None else []),
              '-v',f'{self.run}/receiver-config.json:/config/arrays.json:ro',
+             *(['-v',f'{self.run}/radar-mode.json:/config/radar-mode.json:ro'] if skill['kind']=='radar' else []),
              '-v',f'{self.run}/replays/{self.recording_id}/results:/results',
              self.args.skill_image,*skill['command']])
-        self.launch('rf',['docker','run','--rm','--init','--name',self.names['rf'],*self.labels(),*self.gpu_options,'--network',self.network,
+        self.launch('rf',['docker','run','--rm','--init','--name',self.names['rf'],*self.labels(),*self.gpu_options,'--network',self.network,'--network-alias','rf-acquisition',
             '--user',self.uid(),'--tmpfs','/.drjit:rw,mode=1777','-e','HOME=/tmp',
             '-v',f'{self.run}:/run','--workdir','/run','--entrypoint','/opt/airsim-rf/.venv/bin/python',self.args.rf_image,
             '-m','airsim_rf.cuda_launch','-m','airsim_rf.dashboard_producer','--run-dir','/run',

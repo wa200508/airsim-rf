@@ -58,7 +58,7 @@ async def run(args):
            'flight_controller':'scenario flight plans, native ProjectAirSim controller',
            'flight_command_wall_timeout_s':3600}
     atomic_json(output/'producer.json',state)
-    writer=None;sock=None;motions=[];flight_client=None
+    writer=None;sock=None;motions=[];flight_client=None;radio_server=None
     camera_counter=[0];last_camera=[0.];history=[]
     camera_mounts=[]
     camera_session=args.recording_id or secrets.token_hex(8);camera_files=[];camera_history=[]
@@ -181,7 +181,11 @@ async def run(args):
         sources={tx['id']:WaveformSource(output/'scenario-input',tx['waveform'],FS) for tx in radio['transmitters']}
         if radar_mode:
             from .dashboard_radar import RadarWindowReceiver
+            from .radar_control import serve_transceiver
             receiver=RadarWindowReceiver(scene,radio,arrays)
+            radio_server=serve_transceiver(receiver.control,('0.0.0.0',args.radio_control_port))
+            if not await asyncio.to_thread(receiver.control.ready.wait,args.ready_timeout):
+                raise RuntimeError('Radar skill did not configure and enable transceiver receive acquisition')
         else:receiver=create_receiver(scene,radio,arrays,sources,origin,count)
         tx_positions={};platform_positions={}
         def update_platforms(epoch):
@@ -203,7 +207,8 @@ async def run(args):
                 **link_geometry(document,arrays,tx_positions[primary_tx],receiver.last_path_diagnostics,transmitter_id=primary_tx),
                 'retained_paths_per_channel':[sum(c.retained_paths.values()) for c in captures.values()],
                 'max_clipped_component_fraction':max(c.clipped_component_fraction for c in captures.values())}
-            if radar_mode:row.update(radar_truth=receiver.truth,line_target_position_rf_m=tx_positions[primary_tx].tolist())
+            if radar_mode:row.update(radar_truth=receiver.truth,line_target_position_rf_m=tx_positions[primary_tx].tolist(),
+                transceiver=receiver.control.snapshot())
             if history and history[-1]['sim_time_ns']==epoch:history[-1]=row
             else:history.append(row)
             del history[:-1000]
@@ -278,6 +283,11 @@ async def run(args):
             if index==0 and prepared_captures is not None:
                 captures=prepared_captures
             else:
+                if radar_mode:
+                    while not receiver.control.ready.is_set():
+                        if stop_requested():break
+                        await asyncio.sleep(.05)
+                    if stop_requested():break
                 captures=receiver.capture(epoch,num_samples=count)
                 send_captures(captures)
             row=record_frame(epoch,position,captures)
@@ -326,6 +336,9 @@ async def run(args):
         recording.status('failed',error=str(error))
         state.update(status='failed',error=str(error));atomic_json(output/'producer.json',state);raise
     finally:
+        if radio_server is not None:
+            receiver.control.set_state({'transmit':False,'receive':False})
+            radio_server.shutdown();radio_server.server_close()
         try:
             if iq_recording is not None:iq_recording.close(state['status'] if state['status'] in ('complete','stopped') else 'failed')
         finally:
@@ -339,6 +352,7 @@ def main():
     parser=argparse.ArgumentParser(description=__doc__);parser.add_argument('--run-dir',type=Path,required=True)
     parser.add_argument('--duration',type=float,default=120);parser.add_argument('--address',default='127.0.0.1')
     parser.add_argument('--iq-host',default='127.0.0.1');parser.add_argument('--iq-port',type=int,default=8811)
+    parser.add_argument('--radio-control-port',type=int,default=8814)
     parser.add_argument('--recording-id',help='Coordinator-prepared source recording ID')
     parser.add_argument('--pascal-compat',action='store_true')
     parser.add_argument('--wait-for-mission',action='store_true')

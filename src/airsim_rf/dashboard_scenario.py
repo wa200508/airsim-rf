@@ -152,8 +152,10 @@ def prepare(output,runtime_source=None,scenario_dir=None,duration_s=None,check_i
             site['center_rf_m'][2]+=float(terrain.elevation_at(*site['center_rf_m'][:2]))
     arrays={'schema_version':1,'sample_rate_hz':radio['sample_rate_hz'],'carrier_hz':radio['carrier_hz'],'sites':sites}
     if radio.get('mode')=='fmcw-radar':
-        p=radio['radar']['profile']
-        arrays['acquisition']={k:p[k] for k in ('bandwidth_hz','chirp_duration_s','num_samples','adc_start_s','pri_s')}
+        mode=config['skill']['mode_config'];tx=mode['waveform'];rx=mode['receiver']
+        arrays['acquisition']={k:tx[k] for k in ('bandwidth_hz','chirp_duration_s','pri_s')}
+        arrays['acquisition'].update({k:rx[k] for k in ('num_samples','adc_start_s')})
+        atomic_json(output/'radar-mode.json',mode)
         arrays['voltage_reference']='bias-subtracted ADC volts'
         arrays['acquisition'].update(type='fmcw-dechirped',adc_gate='zero-filled outside acquisition gate',chirp_origin='first window timestamp',impedance_ohm=50.)
     atomic_json(output/'arrays.json',arrays);atomic_json(output/'receiver-config.json',arrays)

@@ -18,7 +18,7 @@ def test_packaged_catalog_and_self_contained_export(tmp_path):
     assert {'drone-orbit','mmwave-radar'}<={row['id'] for row in catalog()}
     c=snapshot('mmwave-radar',tmp_path/'radar')
     assert c['skill']['kind']=='radar' and not c['radios']['transmitters']
-    assert c['radios']['radar']['profile']['carrier_hz']==77e9
+    assert c['skill']['mode_config']['waveform']['carrier_hz']==77e9
 
 
 def route_geometry():
@@ -50,8 +50,8 @@ def test_racetrack_clears_terrain_has_occluded_and_clear_passes_and_20_mps_range
     assert a['flight']['speed_m_s']**2/a['flight']['turn_radius_m']<=5
 
 
-def receiver_config(tmp_path):
-    pytest.importorskip('commentjson');prepare(tmp_path/'run',scenario_dir='mmwave-radar',duration_s=.004)
+def receiver_config(tmp_path,scenario='mmwave-radar'):
+    pytest.importorskip('commentjson');prepare(tmp_path/'run',scenario_dir=scenario,duration_s=.004)
     path=tmp_path/'run/receiver-config.json';config=json.loads(path.read_text())
     assert set(config)=={'schema_version','sample_rate_hz','carrier_hz','sites','acquisition','voltage_reference'}
     assert not any(key in config['acquisition'] for key in ('targets','flight','rcs_m2','environment','radar'))
@@ -120,9 +120,19 @@ def test_actual_sionna_radar_iq_to_detector_and_lossless_archive(tmp_path):
     from airsim_rf.dashboard_radar import RadarWindowReceiver
     from airsim_rf.sample_recording import SampleRecordingWriter,iter_recorded_windows
     from airsim_rf.sample_stream import SampleBlock
-    path,config=receiver_config(tmp_path);radio=load('mmwave-radar')['radios']
+    snapshot('mmwave-radar',tmp_path/'nondefault')
+    mode_path=tmp_path/'nondefault/radar-mode.json';requested=json.loads(mode_path.read_text())
+    requested['waveform']['bandwidth_hz']=35e6;mode_path.write_text(json.dumps(requested))
+    path,config=receiver_config(tmp_path,tmp_path/'nondefault');radio=load(tmp_path/'nondefault')['radios']
     radio['radar']['max_depth_per_leg']=0;radio['radar']['profile']['noise_enabled']=False
     receiver=RadarWindowReceiver(rt.load_scene(),radio,config)
+    from airsim_rf.radar_control import serve_transceiver
+    mode=load(tmp_path/'nondefault')['skill']['mode_config']
+    skill=RadarSkill(path,results_dir=tmp_path/'actual-results')
+    radio_server=serve_transceiver(receiver.control,('127.0.0.1',0))
+    try:skill.start_transceiver(f'http://127.0.0.1:{radio_server.server_port}',mode,ready_timeout=2)
+    finally:radio_server.shutdown();radio_server.server_close()
+    assert receiver.control.snapshot()['transmit'] and receiver.control.snapshot()['receive']
     def kin(position,velocity):
         return {'pose':{'position':dict(zip(('x','y','z'),np.asarray(position)*[1,-1,-1])),
                         'orientation':{'w':1.,'x':0.,'y':0.,'z':0.}},
@@ -130,11 +140,12 @@ def test_actual_sionna_radar_iq_to_detector_and_lossless_archive(tmp_path):
                          'angular':{'x':0.,'y':0.,'z':0.}}}
     receiver.update({'RadarDrone':kin([30,25,150],[-20,0,0]),'TargetDrone':kin([0,25,110],[0,2,0])})
     capture=receiver.capture(0,num_samples=40000)['radar_rx0']
+    assert receiver.radar.profile.bandwidth_hz==35e6
+    assert receiver.control.snapshot()['applied_configuration_id']==skill.snapshot()['transceiver']['configuration_id']
     original=SampleBlock('radar_rx0',capture.adc_iq_volts,0,0,10e6,77e9,capture.clipped_component_fraction)
     recording=SampleRecordingWriter(tmp_path/'iq',config);recording.write_window([original]);recording.close()
     restored=next(iter_recorded_windows(tmp_path/'iq'))[0]
     assert restored.samples.tobytes()==original.samples.tobytes()
-    skill=RadarSkill(path,results_dir=tmp_path/'actual-results')
     with socket.socket() as reserve:reserve.bind(('127.0.0.1',0));port=reserve.getsockname()[1]
     threading.Thread(target=skill.serve_stream,args=(port,),daemon=True).start()
     deadline=time.monotonic()+5
@@ -156,6 +167,11 @@ def test_actual_sionna_radar_iq_to_detector_and_lossless_archive(tmp_path):
 
 @pytest.mark.parametrize('field,value',[('pri_s',35e-6),('carrier_hz',24e9),('sample_rate_hz',30e6),('if_high_hz',6e6),('adc_bits',1)])
 def test_invalid_radar_acquisition_is_rejected_before_docker(tmp_path,field,value):
-    snapshot('mmwave-radar',tmp_path/'edited');path=tmp_path/'edited/radios.json';c=json.loads(path.read_text());c['radar']['profile'][field]=value
+    snapshot('mmwave-radar',tmp_path/'edited')
+    if field in ('pri_s','carrier_hz','sample_rate_hz'):
+        path=tmp_path/'edited/radar-mode.json';c=json.loads(path.read_text())
+        c['receiver' if field=='sample_rate_hz' else 'waveform'][field]=value
+    else:
+        path=tmp_path/'edited/radios.json';c=json.loads(path.read_text());c['radar']['profile'][field]=value
     path.write_text(json.dumps(c))
     with pytest.raises(ValueError):load(tmp_path/'edited')

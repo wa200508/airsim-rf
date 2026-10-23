@@ -47,8 +47,8 @@ An active radar may legitimately use its own commanded transmit waveform; comms
 may use known pilots, and a passive system may have a measured reference channel.
 Those must come through the corresponding physical-style reference/control
 contract. The MUSIC skill uses none of them and cannot read a simulator's private
-transmit buffers. Receiver-only radar processing therefore accepts an explicitly
-supplied waveform/profile, without importing its simulation source.
+transmit buffers. Active Radar-skill commands its own waveform and receive
+settings through a hardware-neutral adapter, without importing its simulation source.
 
 ## Actual code and contracts
 
@@ -164,15 +164,23 @@ dashboard. No physical radio or full GPU flight is claimed by that test.
 
 ## Radar scenario boundary
 
-The [77 GHz FMCW scenario](../scenarios/mmwave-radar/README.md) follows the same
-barrier. Acquisition pairs reciprocal Sionna paths through a private point-target
-model; the independently deployed [Radar-skill](https://github.com/wa200508/Radar-skill)
-receives dechirped ADC volts and its own chirp/ADC gate configuration. That
-configuration contains no target identity, RCS, flight plan or terrain. Source
-truth remains in source telemetry and is never mounted into the radar consumer.
-Its standalone NumPy-only image contains neither simulation dependencies nor
-DF-Skill. The external `scripts/qualify_independence.py` exercises actual TCP,
-HTTP, result journaling and lossless recorded-I/Q replay with those dependencies
-physically absent. Local `scripts/qualify_radar_skill.py` only runs that published
-qualifier container; it does not contain another application implementation. Radar results do not
-control physics or waveform generation.
+The [77 GHz FMCW scenario](../scenarios/mmwave-radar/README.md) uses an active
+[external Radar-skill](https://github.com/wa200508/Radar-skill). The skill chooses
+its waveform, TX power, PRI, receive gate and gain from nearby radar-mode.json,
+commands a neutral transceiver adapter, then processes the returned I/Q. Its
+own transmitted waveform is legitimate skill state; source terrain, target RCS,
+platform trajectories and target truth remain exclusively in acquisition.
+
+[radar_control.py](../src/airsim_rf/radar_control.py) implements the radio
+adapter in the simulation. It accepts electrical settings and TX/RX commands,
+applies them at a window boundary, and never imports the detector or skill.
+It starts disabled. TX-off/RX-on suppresses radar echoes while receive noise
+and ADC behavior continue. The external skill uses the same HTTP API for a
+physical adapter; a TI/DCA1000 driver and native AMS-GRA TX binding are not
+implemented. Recorded-I/Q replay is explicit and issues no transmit commands.
+
+The standalone qualifier checks actual HTTP configure/start/stop, real TCP I/Q,
+result files and exact replay while AirSim, Sionna, CUDA and DF-Skill are physically
+absent. Cross-repository tests separately exercise actual Sionna echoes and
+nondefault commanded sweeps. The architecture audit rejects simulator imports
+of both radar_skill and df_skill. See [deployment and ownership](radar-skill.md).

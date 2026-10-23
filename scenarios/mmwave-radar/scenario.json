@@ -38,19 +38,24 @@
   "skill": {
     "kind": "radar",
     "contract": "receiver-tcp-v2",
-    "image": "ghcr.io/wa200508/airsim-rf:radar-skill-sha-ed36dffc23e716e24d7bf3ed084c0358d1d12e18",
+    "image": "ghcr.io/wa200508/airsim-rf:radar-skill-sha-bea025f28894b089d2d371479d1a8936f1dd0fb7",
     "revision_policy": "independent",
     "command": [
       "--arrays",
       "/config/arrays.json",
       "--results-dir",
-      "/results"
+      "/results",
+      "--mode",
+      "/config/radar-mode.json",
+      "--radio-url",
+      "http://rf-acquisition:8814"
     ],
     "ports": {
       "iq": 8811,
       "http": 8812,
       "control": null
     },
-    "name": "Radar RF Skill"
+    "name": "Radar RF Skill",
+    "mode": "radar-mode.json"
   }
 }

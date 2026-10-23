@@ -38,6 +38,14 @@ async def check_camera(output):
         alignment=spawn_environment(output,world)
         drone = Drone(client, world, 'OrbitDrone')
         frames = []
+        poses=[]
+        # Camera timestamps can fall between the 120 ms stepping RPCs. Use
+        # independent timestamped native body telemetry at physics cadence,
+        # rather than comparing an image to sparsely sampled RPC endpoints.
+        def pose_received(_,message):
+            position=np.array([message['position'][axis] for axis in ('x','y','z')])
+            poses.append((int(message['time_stamp']),position*[1,-1,-1]))
+        client.subscribe(drone.robot_info['actual_pose'],pose_received)
         probe_messages={p['name']:[] for p in probes};probe_drones={}
         for probe in probes:
             name=probe['name'];probe_drones[name]=Drone(client,world,name)
@@ -45,13 +53,11 @@ async def check_camera(output):
         client.subscribe(drone.sensors['Chase']['scene_camera'],
                          lambda _, message: frames.append(message))
         timings = []
-        poses=[]
         origin = int(world.get_sim_time())
         # Same paused queue -> render/physics step order as the RF producer.
         for _ in range(10):
             kinematics = normalize_kinematics(drone.get_ground_truth_kinematics())
             position, _, _ = mount_kinematics(kinematics)
-            poses.append((int(world.get_sim_time()),position.copy()))
             started = time.monotonic()
             eye, _ = queue_chase_camera_pose(drone, position, receivers, kinematics)
             timings.append(time.monotonic() - started)
@@ -59,14 +65,14 @@ async def check_camera(output):
             world.continue_until_sim_time(epoch + 120_000_000, wait_until_complete=True)
             await asyncio.sleep(.2)
         deadline = time.monotonic() + 30
-        while not frames and time.monotonic() < deadline:
+        while time.monotonic() < deadline:
+            if frames and poses and min(abs(epoch-int(frames[-1]['time_stamp'])) for epoch,_ in poses)<=3_000_000:break
             await asyncio.sleep(.1)
         if not frames:
             raise RuntimeError('No actual camera frame after queued poses and ten simulator steps')
+        if not poses:raise RuntimeError('No independent timestamped body pose telemetry')
         frame = frames[-1]
         image = unpack_image(frame)
-        current,_,_=mount_kinematics(normalize_kinematics(drone.get_ground_truth_kinematics()))
-        poses.append((int(world.get_sim_time()),current.copy()))
         # Software rendering can deliver an older image after physics has stepped
         # ahead. Compare native image telemetry to independent body truth at the
         # image epoch, never to the newest body pose.

@@ -9,6 +9,7 @@ from .fmcw import FMCWRadar,IWR1843Profile
 from .radar import PointTarget
 from .sdr import SDRCapture
 from .bridge import mount_kinematics
+from .radar_control import RadarTransceiverControl
 
 
 class RadarWindowReceiver:
@@ -16,6 +17,7 @@ class RadarWindowReceiver:
         self.radio=radio;self.arrays=arrays;c=radio['radar']
         self.radar=FMCWRadar(IWR1843Profile(**c['profile']),rf_scene=scene,seed=c['seed'],max_depth=c['max_depth_per_leg'])
         self.channel=arrays['sites'][0]['channels'][0]
+        self.control=RadarTransceiverControl(self.radar.profile,arrays)
         self.last_path_diagnostics={};self.truth={}
 
     def update(self,kinematics):
@@ -31,12 +33,16 @@ class RadarWindowReceiver:
         self.arrays['sites'][0]['center_rf_m']=self.position.tolist()
 
     def capture(self,sim_time_ns,*,num_samples):
+        profile,transmit=self.control.begin_window(sim_time_ns)
+        if self.radar.profile!=profile:
+            self.radar.profile=profile;self.radar._noise_sos=profile.filter_sos()
         p=self.radar.profile;stride=round(p.pri_s*p.sample_rate_hz);start=round(p.adc_start_s*p.sample_rate_hz)
         if num_samples%stride:raise ValueError('Radar window must contain whole chirps')
         values=np.zeros(num_samples,dtype=np.complex64);analog=values.copy();clipped=0;retained=0
         for i in range(num_samples//stride):
             dt=i*p.pri_s
             targets=[replace(t,position_m=tuple(np.asarray(t.position_m)+np.asarray(t.velocity_m_s)*dt)) for t in self.targets]
+            if not transmit:targets=[]
             cap=self.radar.capture(targets,position_m=self.position+self.velocity*dt,velocity_m_s=self.velocity,
                                    orientation_rad=self.orientation,sim_time_ns=sim_time_ns+round(dt*1e9))
             a=i*stride+start;b=a+p.num_samples

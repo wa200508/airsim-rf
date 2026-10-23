@@ -135,3 +135,11 @@ and [receiver app](https://github.com/wa200508/Radar-skill/blob/main/src/radar_s
 The local `skills/radar.py` is only a compatibility import. See [repository separation](radar-skill.md).
 The preceding MUSIC map
 continues to describe the direction-finding package.
+
+
+Radar transmit and receive control lives in external
+[transceiver.py](https://github.com/wa200508/Radar-skill/blob/main/src/radar_skill/transceiver.py).
+Its mode is `scenarios/mmwave-radar/radar-mode.json`, selected by `skill.mode`.
+The simulation-side [radio adapter](../src/airsim_rf/radar_control.py) accepts
+waveform/gate/state commands; [dashboard_radar.py](../src/airsim_rf/dashboard_radar.py)
+applies them at capture boundaries without importing the skill.

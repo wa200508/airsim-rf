@@ -72,6 +72,9 @@ def load(directory=None):
     _identifier(config['id'])
     for name in ('environment','flight','radios'):
         config[name]=json.loads(asset(root,config[name]).read_text())
+    if config['radios'].get('mode')=='fmcw-radar':
+        if not isinstance(config['skill'].get('mode'),str):raise ValueError('Active radar scenarios require skill.mode pointing to radar-mode.json')
+        config['skill']['mode_config']=json.loads(asset(root,config['skill']['mode']).read_text())
     mission=config['mission'];rate=config['radios']['sample_rate_hz'];carrier=config['radios']['carrier_hz']
     if 'record_iq' in mission and not isinstance(mission['record_iq'],bool):raise ValueError('mission.record_iq must be boolean')
     for key in ('physics_step_ns','rf_update_ns'):_number(mission[key],key,1,integer=True)
@@ -122,7 +125,7 @@ def load(directory=None):
     radios=config['radios'];tx_names=[];channels=[]
     radar=radios.get('mode')=='fmcw-radar'
     if (not radar and not radios['transmitters']) or not radios['sites']:raise ValueError('Transmitters and receiver sites required')
-    if radar:_validate_radar(radios,mission,names)
+    if radar:_validate_radar(radios,mission,names,config['skill']['mode_config'])
     for tx in radios['transmitters']:
         _identifier(tx['id']);tx_names.append(tx['id'])
         if tx['actor'] not in names:raise ValueError('Unknown transmitter actor: '+tx['actor'])
@@ -224,8 +227,20 @@ def fingerprints(directory):
     return result
 
 
-def _validate_radar(radios,mission,names):
-    radar=radios['radar'];p=radar['profile'];rate=radios['sample_rate_hz']
+def _validate_radar(radios,mission,names,mode):
+    radar=radios['radar'];p=dict(radar['profile']);rate=radios['sample_rate_hz']
+    if set(mode)!={'schema_version','waveform','receiver'} or type(mode['schema_version']) is not int or mode['schema_version']!=1:raise ValueError('Radar transceiver schema v1 required')
+    tx=mode['waveform'];rx=mode['receiver']
+    if set(tx)!={'type','carrier_hz','bandwidth_hz','chirp_duration_s','pri_s','power_dbm'} or tx['type']!='fmcw-linear-up':raise ValueError('Unsupported radar transmit waveform')
+    if set(rx)!={'channel','sample_rate_hz','num_samples','adc_start_s','gain_db'}:raise ValueError('Unsupported radar receive configuration')
+    for key,value in tx.items():
+        if key!='type':_number(value,'radar waveform '+key)
+    for key,value in rx.items():
+        if key!='channel':_number(value,'radar receive '+key)
+    if not -60<=tx['power_dbm']<=12 or not 0<=rx['gain_db']<=100:raise ValueError('Radar TX power or receive gain outside adapter limits')
+    if [rx['channel']]!=[n for s in radios['sites'] for n in s['channels']]:raise ValueError('Radar mode receiver channel mismatch')
+    p.update({k:tx[k] for k in ('carrier_hz','bandwidth_hz','chirp_duration_s','pri_s')})
+    p.update({k:rx[k] for k in ('sample_rate_hz','num_samples','adc_start_s')})
     if radar['platform_actor'] not in names or not radar['targets']:raise ValueError('Radar platform/target actors required')
     _vector(radar['mount_body_m'],3,'radar mount')
     if radar['pointing']!='track-target' or len(radios['sites'])!=1 or len(radios['sites'][0]['channels'])!=1:raise ValueError('Radar example requires one tracking monostatic channel')
