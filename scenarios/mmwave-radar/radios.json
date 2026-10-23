@@ -38,7 +38,7 @@
     "targets": [
       {
         "actor": "TargetDrone",
-        "rcs_m2": 0.01
+        "rcs_m2": 1000000.0
       }
     ],
     "profile": {

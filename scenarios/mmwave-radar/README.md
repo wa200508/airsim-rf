@@ -60,18 +60,21 @@ the conservative 7 dBi value and does not claim a calibrated board antenna.
 | Range-rate bin spacing | ~0.76 m/s | Wavelength/(2×CPI) |
 | RF update / physics step | 4 ms / 1 ms | 100 chirps per synchronized source window |
 | TX / antenna peak gain | 12 dBm / 7 dBi each way | Device specification / conservative board reference |
-| Target RCS | 0.01 m², scalar and aspect-independent | Explicit synthetic assumption; not a measured drone |
+| Target RCS | **1,000,000 m²**, scalar and aspect-independent | Deliberately unrealistic demonstration target for conspicuous returns |
 | Noise figure / IF voltage gain | 15 dB / 60 dB | Modeling assumptions |
 | IF passband / Gaussian beam widths | 30 kHz–4.5 MHz / 56° azimuth × 28° elevation | Modeling assumptions |
 | Quantizer | 12 bits, 1 V span, 0.5 V bias, ideal I/Q pair | Transfer-function approximation, not TI ADC calibration |
 
-Do not assume the drone is detected on every pass. Small RCS, two-way range loss,
-receiver noise and terrain blockage determine what the skill can recover. No
-truth-dependent signal boost or guaranteed detection is applied. This is a
-university evaluation-board example; it is not a claim that an inexpensive
-presence sensor can reliably detect a drone hundreds of metres away. Real raw
-ADC capture from the board requires a supported acquisition setup, commonly the
-DCA1000EVM [1,4], beyond buying the radar board alone.
+The target RCS is intentionally enormous: **80 dB more echo power** than the
+previous 0.01 m² setting (10,000× the echo voltage before receiver processing).
+It makes the target conspicuous for demonstrations and is not representative
+of a real drone or evidence of this board's detection range. Edit
+`radios.json` → `radar.targets[0].rcs_m2` to restore a realistic study value.
+Terrain occlusion still removes the direct path; reflected returns, noise and
+ADC clipping continue to follow the configured model.
+
+Real raw ADC capture from the board requires a supported acquisition setup,
+commonly the DCA1000EVM [1,4], beyond buying the radar board alone.
 
 ## Exactly what is simulated
 
