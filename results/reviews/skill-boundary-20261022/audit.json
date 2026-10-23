@@ -1,0 +1,1829 @@
+{
+  "support_files": [
+    {
+      "file": "scripts/aggregate_end_to_end_profile.py",
+      "role": "orchestration/qualification"
+    },
+    {
+      "file": "scripts/aggregate_gpu_profile.py",
+      "role": "orchestration/qualification"
+    },
+    {
+      "file": "scripts/analyze_diffuse_iq.py",
+      "role": "orchestration/qualification"
+    },
+    {
+      "file": "scripts/analyze_directional_turns.py",
+      "role": "orchestration/qualification"
+    },
+    {
+      "file": "scripts/analyze_live_phase.py",
+      "role": "orchestration/qualification"
+    },
+    {
+      "file": "scripts/analyze_turning_mounts.py",
+      "role": "orchestration/qualification"
+    },
+    {
+      "file": "scripts/basis_cuda_preflight.py",
+      "role": "orchestration/qualification"
+    },
+    {
+      "file": "scripts/basis_launch.py",
+      "role": "orchestration/qualification"
+    },
+    {
+      "file": "scripts/bootstrap.py",
+      "role": "orchestration/qualification"
+    },
+    {
+      "file": "scripts/check_architecture.py",
+      "role": "orchestration/qualification"
+    },
+    {
+      "file": "scripts/check_docs.py",
+      "role": "orchestration/qualification"
+    },
+    {
+      "file": "scripts/check_iq_transport.py",
+      "role": "orchestration/qualification"
+    },
+    {
+      "file": "scripts/check_sensing_products.py",
+      "role": "orchestration/qualification"
+    },
+    {
+      "file": "scripts/dashboard_scene_probes.py",
+      "role": "orchestration/qualification"
+    },
+    {
+      "file": "scripts/generate_demo_terrain.py",
+      "role": "orchestration/qualification"
+    },
+    {
+      "file": "scripts/gpu_preflight.py",
+      "role": "orchestration/qualification"
+    },
+    {
+      "file": "scripts/inspect_live_recording.py",
+      "role": "orchestration/qualification"
+    },
+    {
+      "file": "scripts/launch_dashboard.py",
+      "role": "orchestration/qualification"
+    },
+    {
+      "file": "scripts/p100_legacy/analyze_legacy.py",
+      "role": "orchestration/qualification"
+    },
+    {
+      "file": "scripts/p100_legacy/analyze_scaling.py",
+      "role": "orchestration/qualification"
+    },
+    {
+      "file": "scripts/p100_legacy/benchmark_propagation.py",
+      "role": "orchestration/qualification"
+    },
+    {
+      "file": "scripts/p100_legacy/launch.py",
+      "role": "orchestration/qualification"
+    },
+    {
+      "file": "scripts/p100_legacy/run_scaling.py",
+      "role": "orchestration/qualification"
+    },
+    {
+      "file": "scripts/p100_legacy/sitecustomize.py",
+      "role": "orchestration/qualification"
+    },
+    {
+      "file": "scripts/plot_live_motion.py",
+      "role": "orchestration/qualification"
+    },
+    {
+      "file": "scripts/plot_live_phase.py",
+      "role": "orchestration/qualification"
+    },
+    {
+      "file": "scripts/plot_moving_receiver.py",
+      "role": "orchestration/qualification"
+    },
+    {
+      "file": "scripts/plot_unreal_geometry.py",
+      "role": "orchestration/qualification"
+    },
+    {
+      "file": "scripts/prepare_unreal_blocks.py",
+      "role": "orchestration/qualification"
+    },
+    {
+      "file": "scripts/profile_p100_fft_lengths.py",
+      "role": "orchestration/qualification"
+    },
+    {
+      "file": "scripts/publish_gpu_results.py",
+      "role": "orchestration/qualification"
+    },
+    {
+      "file": "scripts/qualify_dashboard.py",
+      "role": "orchestration/qualification"
+    },
+    {
+      "file": "scripts/qualify_dashboard_camera.py",
+      "role": "orchestration/qualification"
+    },
+    {
+      "file": "scripts/qualify_dashboard_container.py",
+      "role": "orchestration/qualification"
+    },
+    {
+      "file": "scripts/qualify_dashboard_lifecycle.py",
+      "role": "orchestration/qualification"
+    },
+    {
+      "file": "scripts/qualify_diffuse_stability.py",
+      "role": "orchestration/qualification"
+    },
+    {
+      "file": "scripts/qualify_geometry_closure.py",
+      "role": "orchestration/qualification"
+    },
+    {
+      "file": "scripts/qualify_installed_package.py",
+      "role": "orchestration/qualification"
+    },
+    {
+      "file": "scripts/qualify_iq_workflow.py",
+      "role": "orchestration/qualification"
+    },
+    {
+      "file": "scripts/qualify_live_motion.py",
+      "role": "orchestration/qualification"
+    },
+    {
+      "file": "scripts/qualify_package_closure.py",
+      "role": "orchestration/qualification"
+    },
+    {
+      "file": "scripts/qualify_sigmf.py",
+      "role": "orchestration/qualification"
+    },
+    {
+      "file": "scripts/qualify_skill_boundary.py",
+      "role": "orchestration/qualification"
+    },
+    {
+      "file": "scripts/qualify_surface_power.py",
+      "role": "orchestration/qualification"
+    },
+    {
+      "file": "scripts/qualify_tracking_example.py",
+      "role": "orchestration/qualification"
+    },
+    {
+      "file": "scripts/qualify_unreal_geometry.py",
+      "role": "orchestration/qualification"
+    },
+    {
+      "file": "scripts/qualify_usd_geometry.py",
+      "role": "orchestration/qualification"
+    },
+    {
+      "file": "scripts/qualify_wheel_overlay.py",
+      "role": "orchestration/qualification"
+    },
+    {
+      "file": "scripts/run_basis_experiments.py",
+      "role": "orchestration/qualification"
+    },
+    {
+      "file": "scripts/run_doppler_basis_profile.py",
+      "role": "orchestration/qualification"
+    },
+    {
+      "file": "scripts/run_end_to_end_profile.py",
+      "role": "orchestration/qualification"
+    },
+    {
+      "file": "scripts/run_gpu_profile.py",
+      "role": "orchestration/qualification"
+    },
+    {
+      "file": "scripts/run_p100_block_sweep.py",
+      "role": "orchestration/qualification"
+    },
+    {
+      "file": "scripts/run_p100_kernel_sweep.py",
+      "role": "orchestration/qualification"
+    },
+    {
+      "file": "scripts/run_p100_temporal_sweep.py",
+      "role": "orchestration/qualification"
+    },
+    {
+      "file": "scripts/run_system_optimization.py",
+      "role": "orchestration/qualification"
+    },
+    {
+      "file": "scripts/update_profiling_breakdown.py",
+      "role": "orchestration/qualification"
+    },
+    {
+      "file": "scripts/update_runtime_docs.py",
+      "role": "orchestration/qualification"
+    },
+    {
+      "file": "scripts/update_sensing_summary.py",
+      "role": "orchestration/qualification"
+    },
+    {
+      "file": "scripts/update_timing_context.py",
+      "role": "orchestration/qualification"
+    },
+    {
+      "file": "scripts/verify_ams_mel.py",
+      "role": "orchestration/qualification"
+    },
+    {
+      "file": "examples/airsim_iq.py",
+      "role": "example orchestration or source-format adapter"
+    },
+    {
+      "file": "examples/airsim_lfm_radar.py",
+      "role": "example orchestration or source-format adapter"
+    },
+    {
+      "file": "examples/aoa_emitter_tracking.py",
+      "role": "example orchestration or source-format adapter"
+    },
+    {
+      "file": "examples/distance2gol_radar.py",
+      "role": "example orchestration or source-format adapter"
+    },
+    {
+      "file": "examples/distributed_hello.py",
+      "role": "example orchestration or source-format adapter"
+    },
+    {
+      "file": "examples/lfm_radar.py",
+      "role": "example orchestration or source-format adapter"
+    },
+    {
+      "file": "examples/los_iq.py",
+      "role": "example orchestration or source-format adapter"
+    },
+    {
+      "file": "examples/pluto_esm_drones.py",
+      "role": "example orchestration or source-format adapter"
+    },
+    {
+      "file": "examples/prepare_live_example.py",
+      "role": "example orchestration or source-format adapter"
+    },
+    {
+      "file": "examples/process_live.py",
+      "role": "example orchestration or source-format adapter"
+    },
+    {
+      "file": "examples/process_recording.py",
+      "role": "example orchestration or source-format adapter"
+    },
+    {
+      "file": "examples/process_sigmf.py",
+      "role": "example orchestration or source-format adapter"
+    },
+    {
+      "file": "examples/receive_iq_stream.py",
+      "role": "example orchestration or source-format adapter"
+    },
+    {
+      "file": "examples/send_live_iq.py",
+      "role": "example orchestration or source-format adapter"
+    },
+    {
+      "file": "benchmarks/analyze_channel_support.py",
+      "role": "benchmark/evaluation"
+    },
+    {
+      "file": "benchmarks/analyze_sdr_scaling.py",
+      "role": "benchmark/evaluation"
+    },
+    {
+      "file": "benchmarks/benchmark_batched_rendering.py",
+      "role": "benchmark/evaluation"
+    },
+    {
+      "file": "benchmarks/benchmark_doppler_basis.py",
+      "role": "benchmark/evaluation"
+    },
+    {
+      "file": "benchmarks/benchmark_doppler_basis_gpu.py",
+      "role": "benchmark/evaluation"
+    },
+    {
+      "file": "benchmarks/benchmark_end_to_end.py",
+      "role": "benchmark/evaluation"
+    },
+    {
+      "file": "benchmarks/benchmark_network_paths.py",
+      "role": "benchmark/evaluation"
+    },
+    {
+      "file": "benchmarks/benchmark_render_accumulation.py",
+      "role": "benchmark/evaluation"
+    },
+    {
+      "file": "benchmarks/benchmark_rf.py",
+      "role": "benchmark/evaluation"
+    },
+    {
+      "file": "benchmarks/benchmark_scattering.py",
+      "role": "benchmark/evaluation"
+    },
+    {
+      "file": "benchmarks/benchmark_sdr_runtime.py",
+      "role": "benchmark/evaluation"
+    },
+    {
+      "file": "benchmarks/benchmark_signal_sum.py",
+      "role": "benchmark/evaluation"
+    },
+    {
+      "file": "benchmarks/benchmark_single_bounce.py",
+      "role": "benchmark/evaluation"
+    },
+    {
+      "file": "benchmarks/check_sensing_visibility.py",
+      "role": "benchmark/evaluation"
+    },
+    {
+      "file": "benchmarks/generate_rf_waterfalls.py",
+      "role": "benchmark/evaluation"
+    },
+    {
+      "file": "benchmarks/generate_sensing_figures.py",
+      "role": "benchmark/evaluation"
+    },
+    {
+      "file": "benchmarks/generate_sensing_scenarios.py",
+      "role": "benchmark/evaluation"
+    },
+    {
+      "file": "benchmarks/generate_terrain_signature.py",
+      "role": "benchmark/evaluation"
+    },
+    {
+      "file": "benchmarks/plot_benchmark.py",
+      "role": "benchmark/evaluation"
+    },
+    {
+      "file": "benchmarks/scattering_scenario.py",
+      "role": "benchmark/evaluation"
+    },
+    {
+      "file": "benchmarks/terrain_scan.py",
+      "role": "benchmark/evaluation"
+    },
+    {
+      "file": "benchmarks/validate_compact_channel.py",
+      "role": "benchmark/evaluation"
+    },
+    {
+      "file": "tests/conftest.py",
+      "role": "test/qualification"
+    },
+    {
+      "file": "tests/test_aoa_tracking.py",
+      "role": "test/qualification"
+    },
+    {
+      "file": "tests/test_architecture_boundaries.py",
+      "role": "test/qualification"
+    },
+    {
+      "file": "tests/test_batched_rendering.py",
+      "role": "test/qualification"
+    },
+    {
+      "file": "tests/test_dashboard.py",
+      "role": "test/qualification"
+    },
+    {
+      "file": "tests/test_dashboard_container.py",
+      "role": "test/qualification"
+    },
+    {
+      "file": "tests/test_dashboard_http.py",
+      "role": "test/qualification"
+    },
+    {
+      "file": "tests/test_dashboard_lifecycle.py",
+      "role": "test/qualification"
+    },
+    {
+      "file": "tests/test_dashboard_recording.py",
+      "role": "test/qualification"
+    },
+    {
+      "file": "tests/test_dashboard_run_script.py",
+      "role": "test/qualification"
+    },
+    {
+      "file": "tests/test_dashboard_scene.py",
+      "role": "test/qualification"
+    },
+    {
+      "file": "tests/test_dashboard_sync.py",
+      "role": "test/qualification"
+    },
+    {
+      "file": "tests/test_diffuse_iq_analysis.py",
+      "role": "test/qualification"
+    },
+    {
+      "file": "tests/test_diffuse_stability_analysis.py",
+      "role": "test/qualification"
+    },
+    {
+      "file": "tests/test_directional_turns_analysis.py",
+      "role": "test/qualification"
+    },
+    {
+      "file": "tests/test_dis.py",
+      "role": "test/qualification"
+    },
+    {
+      "file": "tests/test_distributed.py",
+      "role": "test/qualification"
+    },
+    {
+      "file": "tests/test_documentation_checks.py",
+      "role": "test/qualification"
+    },
+    {
+      "file": "tests/test_doppler_basis.py",
+      "role": "test/qualification"
+    },
+    {
+      "file": "tests/test_doppler_basis_cuda.py",
+      "role": "test/qualification"
+    },
+    {
+      "file": "tests/test_end_to_end.py",
+      "role": "test/qualification"
+    },
+    {
+      "file": "tests/test_end_to_end_profiling.py",
+      "role": "test/qualification"
+    },
+    {
+      "file": "tests/test_fmcw.py",
+      "role": "test/qualification"
+    },
+    {
+      "file": "tests/test_geometry.py",
+      "role": "test/qualification"
+    },
+    {
+      "file": "tests/test_iq_stream.py",
+      "role": "test/qualification"
+    },
+    {
+      "file": "tests/test_live.py",
+      "role": "test/qualification"
+    },
+    {
+      "file": "tests/test_live_motion_analysis.py",
+      "role": "test/qualification"
+    },
+    {
+      "file": "tests/test_music_plots.py",
+      "role": "test/qualification"
+    },
+    {
+      "file": "tests/test_p100_compat.py",
+      "role": "test/qualification"
+    },
+    {
+      "file": "tests/test_package_workflow.py",
+      "role": "test/qualification"
+    },
+    {
+      "file": "tests/test_profiling_tools.py",
+      "role": "test/qualification"
+    },
+    {
+      "file": "tests/test_radar.py",
+      "role": "test/qualification"
+    },
+    {
+      "file": "tests/test_receiver.py",
+      "role": "test/qualification"
+    },
+    {
+      "file": "tests/test_rendering.py",
+      "role": "test/qualification"
+    },
+    {
+      "file": "tests/test_runtime_metrics.py",
+      "role": "test/qualification"
+    },
+    {
+      "file": "tests/test_sample_stream.py",
+      "role": "test/qualification"
+    },
+    {
+      "file": "tests/test_scattering.py",
+      "role": "test/qualification"
+    },
+    {
+      "file": "tests/test_sdr.py",
+      "role": "test/qualification"
+    },
+    {
+      "file": "tests/test_sensing_analysis.py",
+      "role": "test/qualification"
+    },
+    {
+      "file": "tests/test_single_bounce.py",
+      "role": "test/qualification"
+    },
+    {
+      "file": "tests/test_terrain.py",
+      "role": "test/qualification"
+    },
+    {
+      "file": "tests/test_terrain_scan.py",
+      "role": "test/qualification"
+    },
+    {
+      "file": "tests/test_turning_mounts_analysis.py",
+      "role": "test/qualification"
+    }
+  ],
+  "total_python_files": 208,
+  "status": "passed",
+  "modules": 68,
+  "roles": {
+    "package boundary": 5,
+    "simulation/source": 36,
+    "receiver contract/result I/O": 3,
+    "observer/orchestration/compatibility": 11,
+    "legacy source-format adapter": 3,
+    "held-out evaluation": 2,
+    "receiver application/math": 8
+  },
+  "failures": [],
+  "inventory": [
+    {
+      "file": "src/airsim_rf/__init__.py",
+      "role": "package boundary",
+      "imports": [
+        "airsim_rf",
+        "airsim_rf.receiver"
+      ]
+    },
+    {
+      "file": "src/airsim_rf/ams/__init__.py",
+      "role": "package boundary",
+      "imports": []
+    },
+    {
+      "file": "src/airsim_rf/ams/backend.py",
+      "role": "simulation/source",
+      "imports": [
+        "airsim_rf.ams",
+        "airsim_rf.ams.squall_rf_pb2",
+        "airsim_rf.ams.squall_rf_pb2_grpc",
+        "concurrent.futures",
+        "concurrent.futures.ThreadPoolExecutor",
+        "grpc",
+        "time"
+      ]
+    },
+    {
+      "file": "src/airsim_rf/ams/dis.py",
+      "role": "simulation/source",
+      "imports": [
+        "numpy",
+        "scipy.spatial.transform",
+        "scipy.spatial.transform.Rotation",
+        "socket",
+        "struct",
+        "warnings"
+      ]
+    },
+    {
+      "file": "src/airsim_rf/ams/squall_rf_pb2.py",
+      "role": "receiver contract/result I/O",
+      "imports": [
+        "google.protobuf",
+        "google.protobuf.descriptor",
+        "google.protobuf.descriptor_pool",
+        "google.protobuf.internal",
+        "google.protobuf.internal.builder",
+        "google.protobuf.runtime_version",
+        "google.protobuf.symbol_database"
+      ]
+    },
+    {
+      "file": "src/airsim_rf/ams/squall_rf_pb2_grpc.py",
+      "role": "receiver contract/result I/O",
+      "imports": [
+        "airsim_rf.ams",
+        "airsim_rf.ams.squall_rf_pb2",
+        "grpc",
+        "grpc._utilities",
+        "grpc._utilities.first_version_is_lower",
+        "warnings"
+      ]
+    },
+    {
+      "file": "src/airsim_rf/aoa_example.py",
+      "role": "observer/orchestration/compatibility",
+      "imports": [
+        "airsim_rf.aoa_tracking",
+        "airsim_rf.aoa_tracking.consume",
+        "airsim_rf.aoa_tracking.score",
+        "airsim_rf.example",
+        "airsim_rf.example.prepare",
+        "airsim_rf.geometry",
+        "airsim_rf.geometry.file_digest",
+        "airsim_rf.geometry.read_bundle",
+        "airsim_rf.music_plots",
+        "airsim_rf.music_plots.plot_recording",
+        "airsim_rf.p100_compat",
+        "airsim_rf.p100_compat.enable_pascal_compat",
+        "airsim_rf.sampled_waveform",
+        "airsim_rf.sampled_waveform.SampledWaveform",
+        "airsim_rf.sdr",
+        "airsim_rf.sdr.PlutoSDRProfile",
+        "airsim_rf.sdr.SDREmitter",
+        "airsim_rf.sdr.SDRNetworkReceiver",
+        "drjit",
+        "importlib",
+        "importlib.metadata",
+        "json",
+        "matplotlib",
+        "matplotlib.pyplot",
+        "mitsuba",
+        "numpy",
+        "pathlib",
+        "pathlib.Path",
+        "scipy.signal",
+        "scipy.signal.firwin",
+        "scipy.signal.upfirdn",
+        "sionna.rt",
+        "time",
+        "time.perf_counter"
+      ]
+    },
+    {
+      "file": "src/airsim_rf/aoa_tracking.py",
+      "role": "legacy source-format adapter",
+      "imports": [
+        "airsim_rf.evaluation.tracking",
+        "airsim_rf.evaluation.tracking.score",
+        "airsim_rf.processing.music",
+        "airsim_rf.processing.music.C",
+        "airsim_rf.processing.music.PhysicalULA",
+        "airsim_rf.processing.music.estimate_bearing",
+        "airsim_rf.processing.music.read_arrays",
+        "airsim_rf.processing.tracking",
+        "airsim_rf.processing.tracking._position_covariance",
+        "airsim_rf.processing.tracking.intersect_bearings",
+        "airsim_rf.processing.tracking.track_windows",
+        "airsim_rf.recording",
+        "airsim_rf.recording.iter_sample_blocks"
+      ]
+    },
+    {
+      "file": "src/airsim_rf/batched_rendering.py",
+      "role": "simulation/source",
+      "imports": [
+        "airsim_rf.rendering",
+        "airsim_rf.rendering.LFMChirpWaveform",
+        "airsim_rf.rendering.ToneWaveform",
+        "airsim_rf.rendering._epoch",
+        "airsim_rf.rendering._finite",
+        "airsim_rf.rendering._oscillator_cycles",
+        "airsim_rf.sampled_waveform",
+        "airsim_rf.sampled_waveform.SampledWaveform",
+        "dataclasses",
+        "dataclasses.dataclass",
+        "drjit",
+        "drjit.cuda",
+        "drjit.llvm",
+        "numbers",
+        "numbers.Integral",
+        "numpy",
+        "time",
+        "time.perf_counter"
+      ]
+    },
+    {
+      "file": "src/airsim_rf/bridge.py",
+      "role": "simulation/source",
+      "imports": [
+        "airsim_rf.receiver",
+        "airsim_rf.receiver.RFReceiver",
+        "airsim_rf.receiver.Waveform",
+        "numpy",
+        "scipy.spatial.transform",
+        "scipy.spatial.transform.Rotation",
+        "warnings"
+      ]
+    },
+    {
+      "file": "src/airsim_rf/cli.py",
+      "role": "observer/orchestration/compatibility",
+      "imports": [
+        "airsim_rf.aoa_example",
+        "airsim_rf.aoa_example.run",
+        "airsim_rf.aoa_tracking",
+        "airsim_rf.aoa_tracking.consume",
+        "airsim_rf.example",
+        "airsim_rf.example.prepare",
+        "airsim_rf.inspection",
+        "airsim_rf.inspection.inspect",
+        "airsim_rf.music_plots",
+        "airsim_rf.music_plots.plot_recording",
+        "airsim_rf.preflight",
+        "airsim_rf.preflight.check",
+        "airsim_rf.recording",
+        "airsim_rf.recording.iter_iq_blocks",
+        "argparse",
+        "json",
+        "numpy",
+        "pathlib",
+        "pathlib.Path",
+        "sys"
+      ]
+    },
+    {
+      "file": "src/airsim_rf/cuda_launch.py",
+      "role": "simulation/source",
+      "imports": [
+        "os",
+        "pathlib",
+        "pathlib.Path",
+        "sys",
+        "sysconfig"
+      ]
+    },
+    {
+      "file": "src/airsim_rf/dashboard.py",
+      "role": "observer/orchestration/compatibility",
+      "imports": [
+        "argparse",
+        "collections",
+        "collections.deque",
+        "fcntl",
+        "hashlib",
+        "hashlib.sha256",
+        "http.server",
+        "http.server.BaseHTTPRequestHandler",
+        "http.server.ThreadingHTTPServer",
+        "importlib.util",
+        "json",
+        "math",
+        "os",
+        "pathlib",
+        "pathlib.Path",
+        "re",
+        "secrets",
+        "signal",
+        "socket",
+        "subprocess",
+        "sys",
+        "threading",
+        "time",
+        "urllib.error",
+        "urllib.error.URLError",
+        "urllib.parse",
+        "urllib.parse.parse_qs",
+        "urllib.parse.urlsplit",
+        "urllib.request",
+        "urllib.request.ProxyHandler",
+        "urllib.request.build_opener",
+        "webbrowser"
+      ]
+    },
+    {
+      "file": "src/airsim_rf/dashboard_geometry.py",
+      "role": "simulation/source",
+      "imports": [
+        "airsim_rf.geometry",
+        "airsim_rf.geometry.rf_mesh",
+        "airsim_rf.geometry_sync",
+        "airsim_rf.geometry_sync.nearest_intersections",
+        "numpy",
+        "re"
+      ]
+    },
+    {
+      "file": "src/airsim_rf/dashboard_producer.py",
+      "role": "simulation/source",
+      "imports": [
+        "airsim_rf.bridge",
+        "airsim_rf.bridge.mount_kinematics",
+        "airsim_rf.bridge.normalize_kinematics",
+        "airsim_rf.dashboard_geometry",
+        "airsim_rf.dashboard_geometry.isolate_blocks_scene",
+        "airsim_rf.dashboard_geometry.link_geometry",
+        "airsim_rf.dashboard_geometry.require_rf_mesh_match",
+        "airsim_rf.dashboard_scenario",
+        "airsim_rf.dashboard_scenario.ADVANCE_NS",
+        "airsim_rf.dashboard_scenario.ALTITUDE",
+        "airsim_rf.dashboard_scenario.CARRIER",
+        "airsim_rf.dashboard_scenario.FS",
+        "airsim_rf.dashboard_scenario.RADIUS",
+        "airsim_rf.dashboard_scenario.SPEED",
+        "airsim_rf.dashboard_scenario.atomic_json",
+        "airsim_rf.dashboard_scenario.waveform_window",
+        "airsim_rf.dashboard_sync",
+        "airsim_rf.dashboard_sync.advance_after_commit",
+        "airsim_rf.dashboard_sync.commit_window",
+        "airsim_rf.dashboard_view",
+        "airsim_rf.dashboard_view.queue_chase_camera_pose",
+        "airsim_rf.dashboard_view.radio_marker_glb",
+        "airsim_rf.geometry",
+        "airsim_rf.geometry.read_bundle",
+        "airsim_rf.geometry_sync",
+        "airsim_rf.geometry_sync.AirSimGeometryBinding",
+        "airsim_rf.geometry_sync.spawn_placements",
+        "airsim_rf.p100_compat",
+        "airsim_rf.p100_compat.enable_pascal_compat",
+        "airsim_rf.preflight",
+        "airsim_rf.preflight.gpu_check",
+        "airsim_rf.sample_stream",
+        "airsim_rf.sample_stream.SampleStreamWriter",
+        "airsim_rf.sampled_waveform",
+        "airsim_rf.sampled_waveform.SampledWaveform",
+        "airsim_rf.sdr",
+        "airsim_rf.sdr.PlutoSDRProfile",
+        "airsim_rf.sdr.SDREmitter",
+        "airsim_rf.sdr.SDRNetworkReceiver",
+        "airsim_rf.source_recording",
+        "airsim_rf.source_recording.RecordingWriter",
+        "argparse",
+        "asyncio",
+        "cv2",
+        "drjit",
+        "json",
+        "mitsuba",
+        "numpy",
+        "pathlib",
+        "pathlib.Path",
+        "projectairsim",
+        "projectairsim.Drone",
+        "projectairsim.ProjectAirSimClient",
+        "projectairsim.World",
+        "projectairsim.utils",
+        "projectairsim.utils.unpack_image",
+        "secrets",
+        "sionna.rt",
+        "socket",
+        "time"
+      ]
+    },
+    {
+      "file": "src/airsim_rf/dashboard_recording.py",
+      "role": "observer/orchestration/compatibility",
+      "imports": [
+        "bisect",
+        "bisect.bisect_left",
+        "bisect.bisect_right",
+        "collections",
+        "collections.OrderedDict",
+        "importlib.util",
+        "json",
+        "pathlib",
+        "pathlib.Path",
+        "threading"
+      ]
+    },
+    {
+      "file": "src/airsim_rf/dashboard_scenario.py",
+      "role": "simulation/source",
+      "imports": [
+        "airsim_rf.geometry",
+        "airsim_rf.geometry.export_sionna_geometry",
+        "airsim_rf.geometry_sync",
+        "airsim_rf.geometry_sync.placement_plan",
+        "airsim_rf.terrain",
+        "airsim_rf.terrain.TerrainGrid",
+        "airsim_rf.terrain.demo_terrain",
+        "commentjson",
+        "json",
+        "numpy",
+        "pathlib",
+        "pathlib.Path",
+        "scipy.signal",
+        "scipy.signal.firwin",
+        "scipy.signal.upfirdn",
+        "tempfile"
+      ]
+    },
+    {
+      "file": "src/airsim_rf/dashboard_skill.py",
+      "role": "observer/orchestration/compatibility",
+      "imports": [
+        "airsim_rf.skills.music",
+        "airsim_rf.skills.music.MusicSkill",
+        "airsim_rf.skills.music.main",
+        "airsim_rf.skills.music.start_control"
+      ]
+    },
+    {
+      "file": "src/airsim_rf/dashboard_sync.py",
+      "role": "simulation/source",
+      "imports": [
+        "asyncio"
+      ]
+    },
+    {
+      "file": "src/airsim_rf/dashboard_view.py",
+      "role": "simulation/source",
+      "imports": [
+        "airsim_rf.glb_geometry",
+        "airsim_rf.glb_geometry.triangle_glb",
+        "numpy",
+        "scipy.spatial.transform",
+        "scipy.spatial.transform.Rotation"
+      ]
+    },
+    {
+      "file": "src/airsim_rf/distributed/__init__.py",
+      "role": "package boundary",
+      "imports": []
+    },
+    {
+      "file": "src/airsim_rf/distributed/client.py",
+      "role": "simulation/source",
+      "imports": [
+        "airsim_rf.distributed.protocol",
+        "airsim_rf.distributed.protocol.CaptureRequest",
+        "airsim_rf.distributed.protocol.CaptureResult",
+        "airsim_rf.distributed.protocol.MAX_RESPONSE_BYTES",
+        "concurrent.futures",
+        "concurrent.futures.ThreadPoolExecutor",
+        "concurrent.futures.wait",
+        "http.client",
+        "json",
+        "time",
+        "urllib.parse",
+        "urllib.parse.urlsplit",
+        "uuid"
+      ]
+    },
+    {
+      "file": "src/airsim_rf/distributed/coordinator.py",
+      "role": "simulation/source",
+      "imports": [
+        "airsim_rf.ams.dis",
+        "airsim_rf.ams.dis.TruthPublisher",
+        "airsim_rf.bridge",
+        "airsim_rf.bridge.NED_TO_RF",
+        "airsim_rf.bridge.mount_kinematics",
+        "airsim_rf.bridge.normalize_kinematics",
+        "airsim_rf.bridge.vector3",
+        "airsim_rf.distributed.client",
+        "airsim_rf.distributed.client.CaptureBarrier",
+        "airsim_rf.distributed.client.WorkerClient",
+        "airsim_rf.radar",
+        "airsim_rf.radar.PointTarget",
+        "argparse",
+        "dataclasses",
+        "dataclasses.dataclass",
+        "json",
+        "numpy",
+        "pathlib",
+        "pathlib.Path",
+        "projectairsim",
+        "projectairsim.Drone",
+        "projectairsim.ProjectAirSimClient",
+        "projectairsim.World",
+        "scipy.spatial.transform",
+        "scipy.spatial.transform.Rotation",
+        "scipy.spatial.transform.Slerp",
+        "time",
+        "warnings"
+      ]
+    },
+    {
+      "file": "src/airsim_rf/distributed/protocol.py",
+      "role": "simulation/source",
+      "imports": [
+        "airsim_rf.radar",
+        "airsim_rf.radar.PointTarget",
+        "dataclasses",
+        "dataclasses.dataclass",
+        "io",
+        "io.BytesIO",
+        "json",
+        "numpy",
+        "re",
+        "uuid"
+      ]
+    },
+    {
+      "file": "src/airsim_rf/distributed/worker.py",
+      "role": "simulation/source",
+      "imports": [
+        "airsim_rf.ams.backend",
+        "airsim_rf.ams.backend.grpc_server",
+        "airsim_rf.distributed.protocol",
+        "airsim_rf.distributed.protocol.CaptureRequest",
+        "airsim_rf.distributed.protocol.MAX_REQUEST_BYTES",
+        "airsim_rf.distributed.protocol.encode_result",
+        "airsim_rf.distributed.protocol.receiver_name",
+        "airsim_rf.distributed.protocol.run_uuid",
+        "airsim_rf.distributed.protocol.sc16_payload",
+        "airsim_rf.fmcw",
+        "airsim_rf.fmcw.Distance2GoLProfile",
+        "airsim_rf.fmcw.FMCWRadar",
+        "argparse",
+        "collections",
+        "collections.OrderedDict",
+        "concurrent.futures",
+        "concurrent.futures.ThreadPoolExecutor",
+        "dataclasses",
+        "dataclasses.asdict",
+        "dataclasses.replace",
+        "hashlib",
+        "http.server",
+        "http.server.BaseHTTPRequestHandler",
+        "http.server.ThreadingHTTPServer",
+        "json",
+        "mitsuba",
+        "numpy",
+        "signal",
+        "socket",
+        "threading",
+        "time"
+      ]
+    },
+    {
+      "file": "src/airsim_rf/evaluation/__init__.py",
+      "role": "package boundary",
+      "imports": []
+    },
+    {
+      "file": "src/airsim_rf/evaluation/clocks.py",
+      "role": "held-out evaluation",
+      "imports": [
+        "airsim_rf.sampled_waveform",
+        "airsim_rf.sampled_waveform.SampledWaveform",
+        "numpy"
+      ]
+    },
+    {
+      "file": "src/airsim_rf/evaluation/tracking.py",
+      "role": "held-out evaluation",
+      "imports": [
+        "json",
+        "numpy",
+        "pathlib",
+        "pathlib.Path"
+      ]
+    },
+    {
+      "file": "src/airsim_rf/example.py",
+      "role": "simulation/source",
+      "imports": [
+        "airsim_rf.geometry",
+        "airsim_rf.geometry.export_sionna_geometry",
+        "airsim_rf.usd_geometry",
+        "airsim_rf.usd_geometry.import_usd",
+        "argparse",
+        "importlib.resources",
+        "importlib.resources.files",
+        "json",
+        "numpy",
+        "pathlib",
+        "pathlib.Path",
+        "pxr"
+      ]
+    },
+    {
+      "file": "src/airsim_rf/fmcw.py",
+      "role": "simulation/source",
+      "imports": [
+        "airsim_rf.observer_exports",
+        "airsim_rf.observer_exports.save_fmcw",
+        "airsim_rf.processing.radar",
+        "airsim_rf.processing.radar.range_fft",
+        "airsim_rf.radar",
+        "airsim_rf.radar.C",
+        "airsim_rf.radar.PointTarget",
+        "airsim_rf.receiver",
+        "airsim_rf.receiver.BOLTZMANN",
+        "dataclasses",
+        "dataclasses.asdict",
+        "dataclasses.dataclass",
+        "dataclasses.replace",
+        "json",
+        "numpy",
+        "pathlib",
+        "pathlib.Path",
+        "scipy.signal",
+        "scipy.signal.butter",
+        "scipy.signal.freqs_zpk",
+        "scipy.signal.sosfilt",
+        "scipy.spatial.transform",
+        "scipy.spatial.transform.Rotation",
+        "sionna.rt",
+        "sionna.rt.PathSolver",
+        "sionna.rt.PlanarArray",
+        "sionna.rt.Receiver",
+        "sionna.rt.Transmitter",
+        "sionna.rt.load_scene"
+      ]
+    },
+    {
+      "file": "src/airsim_rf/geometry.py",
+      "role": "simulation/source",
+      "imports": [
+        "argparse",
+        "hashlib",
+        "hashlib.sha256",
+        "json",
+        "numpy",
+        "pathlib",
+        "pathlib.Path",
+        "re",
+        "xml.etree.ElementTree"
+      ]
+    },
+    {
+      "file": "src/airsim_rf/geometry_sync.py",
+      "role": "simulation/source",
+      "imports": [
+        "airsim_rf.geometry",
+        "airsim_rf.geometry.geometry_digest",
+        "airsim_rf.geometry.read_bundle",
+        "airsim_rf.geometry.validate_geometry",
+        "airsim_rf.glb_geometry",
+        "airsim_rf.glb_geometry.triangle_glb",
+        "airsim_rf.usd_geometry",
+        "airsim_rf.usd_geometry.affine",
+        "argparse",
+        "copy",
+        "copy.deepcopy",
+        "json",
+        "numpy",
+        "pathlib",
+        "pathlib.Path",
+        "scipy.spatial.transform",
+        "scipy.spatial.transform.Rotation"
+      ]
+    },
+    {
+      "file": "src/airsim_rf/glb_geometry.py",
+      "role": "simulation/source",
+      "imports": [
+        "json",
+        "numpy",
+        "struct"
+      ]
+    },
+    {
+      "file": "src/airsim_rf/inspection.py",
+      "role": "observer/orchestration/compatibility",
+      "imports": [
+        "argparse",
+        "hashlib",
+        "hashlib.sha256",
+        "json",
+        "numpy",
+        "pathlib",
+        "pathlib.Path",
+        "scipy.signal",
+        "scipy.signal.welch"
+      ]
+    },
+    {
+      "file": "src/airsim_rf/iq_stream.py",
+      "role": "legacy source-format adapter",
+      "imports": [
+        "airsim_rf",
+        "airsim_rf.sample_stream",
+        "airsim_rf.sample_stream.MAX_HEADER",
+        "airsim_rf.sample_stream.MAX_SAMPLES",
+        "airsim_rf.sample_stream.PREFIX",
+        "airsim_rf.sample_stream._exact",
+        "dataclasses",
+        "dataclasses.dataclass",
+        "numpy"
+      ]
+    },
+    {
+      "file": "src/airsim_rf/live.py",
+      "role": "simulation/source",
+      "imports": [
+        "airsim_rf.geometry",
+        "airsim_rf.geometry.read_bundle",
+        "airsim_rf.geometry_sync",
+        "airsim_rf.geometry_sync.AirSimGeometryBinding",
+        "airsim_rf.geometry_sync.spawn_placements",
+        "airsim_rf.p100_compat",
+        "airsim_rf.p100_compat.enable_pascal_compat",
+        "airsim_rf.preflight",
+        "airsim_rf.preflight.check",
+        "airsim_rf.preflight.read_sim_config",
+        "airsim_rf.sample_stream",
+        "airsim_rf.sample_stream.SampleBlock",
+        "airsim_rf.sampled_waveform",
+        "airsim_rf.sampled_waveform.SampledWaveform",
+        "airsim_rf.scenario",
+        "airsim_rf.scenario.antenna_options",
+        "airsim_rf.scenario.propagation_options",
+        "airsim_rf.sdr",
+        "airsim_rf.sdr.PlutoSDRProfile",
+        "airsim_rf.sdr.SDREmitter",
+        "airsim_rf.sdr.SDRNetworkReceiver",
+        "airsim_rf.sdr_bridge",
+        "airsim_rf.sdr_bridge.AirSimSDRBridge",
+        "airsim_rf.terrain",
+        "airsim_rf.terrain.scene_provenance",
+        "argparse",
+        "cupy",
+        "drjit",
+        "hashlib",
+        "hashlib.sha256",
+        "json",
+        "mitsuba",
+        "numpy",
+        "pathlib",
+        "pathlib.Path",
+        "projectairsim",
+        "projectairsim.Drone",
+        "projectairsim.ProjectAirSimClient",
+        "projectairsim.World",
+        "re",
+        "sionna.rt",
+        "time",
+        "time.perf_counter",
+        "types",
+        "types.SimpleNamespace"
+      ]
+    },
+    {
+      "file": "src/airsim_rf/music_plots.py",
+      "role": "observer/orchestration/compatibility",
+      "imports": [
+        "airsim_rf.aoa_tracking",
+        "airsim_rf.aoa_tracking.PhysicalULA",
+        "airsim_rf.aoa_tracking.consume",
+        "airsim_rf.aoa_tracking.read_arrays",
+        "airsim_rf.geometry",
+        "airsim_rf.geometry.file_digest",
+        "airsim_rf.processing.music",
+        "airsim_rf.processing.music.frequency_psd",
+        "airsim_rf.processing.music.spatial_spectrum",
+        "airsim_rf.recording",
+        "airsim_rf.recording.iter_iq_blocks",
+        "argparse",
+        "json",
+        "matplotlib",
+        "matplotlib.pyplot",
+        "numpy",
+        "pathlib",
+        "pathlib.Path",
+        "scipy.signal",
+        "scipy.signal.spectrogram"
+      ]
+    },
+    {
+      "file": "src/airsim_rf/observer_exports.py",
+      "role": "observer/orchestration/compatibility",
+      "imports": [
+        "airsim_rf.processing.radar",
+        "airsim_rf.processing.radar.range_compress",
+        "airsim_rf.processing.radar.range_fft",
+        "dataclasses",
+        "dataclasses.asdict",
+        "json",
+        "numpy"
+      ]
+    },
+    {
+      "file": "src/airsim_rf/p100_compat.py",
+      "role": "simulation/source",
+      "imports": [
+        "cupy",
+        "drjit",
+        "inspect",
+        "mitsuba",
+        "sionna.rt",
+        "sionna.rt.path_solvers.paths",
+        "sionna.rt.path_solvers.paths.Paths",
+        "textwrap"
+      ]
+    },
+    {
+      "file": "src/airsim_rf/preflight.py",
+      "role": "simulation/source",
+      "imports": [
+        "airsim_rf.batched_rendering",
+        "airsim_rf.batched_rendering.PathRenderJob",
+        "airsim_rf.live",
+        "airsim_rf.live.validate_inputs",
+        "airsim_rf.p100_compat",
+        "airsim_rf.p100_compat.enable_pascal_compat",
+        "airsim_rf.research.doppler_basis",
+        "airsim_rf.research.doppler_basis.DopplerBasisRenderer",
+        "airsim_rf.research.doppler_basis_cuda",
+        "airsim_rf.research.doppler_basis_cuda.CudaDopplerBasisRenderer",
+        "airsim_rf.sampled_waveform",
+        "airsim_rf.sampled_waveform.SampledWaveform",
+        "airsim_rf.sdr",
+        "airsim_rf.sdr.PlutoSDRProfile",
+        "airsim_rf.single_bounce",
+        "airsim_rf.single_bounce.SingleBouncePathSolver",
+        "argparse",
+        "commentjson",
+        "cupy",
+        "drjit",
+        "importlib",
+        "importlib.metadata",
+        "json",
+        "mitsuba",
+        "numbers",
+        "numbers.Integral",
+        "numpy",
+        "pathlib",
+        "pathlib.Path",
+        "shutil",
+        "sionna.rt",
+        "subprocess",
+        "sys"
+      ]
+    },
+    {
+      "file": "src/airsim_rf/processing/__init__.py",
+      "role": "receiver application/math",
+      "imports": []
+    },
+    {
+      "file": "src/airsim_rf/processing/music.py",
+      "role": "receiver application/math",
+      "imports": [
+        "doa_py.algorithm",
+        "doa_py.algorithm.music",
+        "json",
+        "numpy",
+        "pathlib",
+        "pathlib.Path",
+        "scipy.signal",
+        "scipy.signal.spectrogram"
+      ]
+    },
+    {
+      "file": "src/airsim_rf/processing/radar.py",
+      "role": "receiver application/math",
+      "imports": [
+        "numpy",
+        "scipy.signal",
+        "scipy.signal.correlate"
+      ]
+    },
+    {
+      "file": "src/airsim_rf/processing/results.py",
+      "role": "receiver application/math",
+      "imports": [
+        "json",
+        "pathlib",
+        "pathlib.Path"
+      ]
+    },
+    {
+      "file": "src/airsim_rf/processing/sensing.py",
+      "role": "receiver application/math",
+      "imports": [
+        "cupy",
+        "numpy",
+        "scipy.signal",
+        "scipy.signal.spectrogram"
+      ]
+    },
+    {
+      "file": "src/airsim_rf/processing/tracking.py",
+      "role": "receiver application/math",
+      "imports": [
+        "airsim_rf.processing.music",
+        "airsim_rf.processing.music.C",
+        "airsim_rf.processing.music.estimate_bearing",
+        "airsim_rf.processing.music.read_arrays",
+        "filterpy.common",
+        "filterpy.common.Q_discrete_white_noise",
+        "filterpy.kalman",
+        "filterpy.kalman.KalmanFilter",
+        "importlib",
+        "importlib.metadata",
+        "numpy"
+      ]
+    },
+    {
+      "file": "src/airsim_rf/profiling.py",
+      "role": "observer/orchestration/compatibility",
+      "imports": [
+        "contextlib",
+        "contextlib.contextmanager",
+        "contextlib.nullcontext",
+        "contextvars",
+        "contextvars.ContextVar",
+        "nvtx",
+        "time",
+        "time.perf_counter"
+      ]
+    },
+    {
+      "file": "src/airsim_rf/radar.py",
+      "role": "simulation/source",
+      "imports": [
+        "airsim_rf.observer_exports",
+        "airsim_rf.observer_exports.save_radar",
+        "airsim_rf.processing.radar",
+        "airsim_rf.processing.radar.range_compress",
+        "airsim_rf.receiver",
+        "airsim_rf.receiver.IQBlock",
+        "airsim_rf.receiver.ReceiverConfig",
+        "airsim_rf.receiver.synthesize_voltage",
+        "airsim_rf.rendering",
+        "airsim_rf.rendering.LFMChirpWaveform",
+        "dataclasses",
+        "dataclasses.dataclass",
+        "dataclasses.replace",
+        "numpy",
+        "pathlib",
+        "pathlib.Path",
+        "sionna.rt",
+        "sionna.rt.PathSolver",
+        "sionna.rt.PlanarArray",
+        "sionna.rt.Receiver",
+        "sionna.rt.Transmitter",
+        "sionna.rt.load_scene"
+      ]
+    },
+    {
+      "file": "src/airsim_rf/receiver.py",
+      "role": "simulation/source",
+      "imports": [
+        "airsim_rf.rendering",
+        "airsim_rf.rendering.render_paths",
+        "airsim_rf.scattering",
+        "airsim_rf.scattering.FirstOrderScatteringPathSolver",
+        "airsim_rf.single_bounce",
+        "airsim_rf.single_bounce.SingleBouncePathSolver",
+        "dataclasses",
+        "dataclasses.dataclass",
+        "numbers",
+        "numbers.Integral",
+        "numpy",
+        "pathlib",
+        "pathlib.Path",
+        "sionna.rt",
+        "sionna.rt.PathSolver",
+        "typing",
+        "typing.Callable"
+      ]
+    },
+    {
+      "file": "src/airsim_rf/recording.py",
+      "role": "legacy source-format adapter",
+      "imports": [
+        "airsim_rf.sample_stream",
+        "airsim_rf.sample_stream.SampleBlock",
+        "dataclasses",
+        "dataclasses.dataclass",
+        "json",
+        "numpy",
+        "pathlib",
+        "pathlib.Path",
+        "re"
+      ]
+    },
+    {
+      "file": "src/airsim_rf/rendering.py",
+      "role": "simulation/source",
+      "imports": [
+        "dataclasses",
+        "dataclasses.dataclass",
+        "drjit",
+        "drjit.cuda",
+        "drjit.llvm",
+        "numbers",
+        "numbers.Integral",
+        "numpy"
+      ]
+    },
+    {
+      "file": "src/airsim_rf/research/__init__.py",
+      "role": "package boundary",
+      "imports": []
+    },
+    {
+      "file": "src/airsim_rf/research/doppler_basis.py",
+      "role": "simulation/source",
+      "imports": [
+        "airsim_rf.batched_rendering",
+        "airsim_rf.batched_rendering.PathRenderJob",
+        "airsim_rf.rendering",
+        "airsim_rf.rendering._epoch",
+        "airsim_rf.rendering._oscillator_cycles",
+        "airsim_rf.sampled_waveform",
+        "airsim_rf.sampled_waveform.SampledWaveform",
+        "dataclasses",
+        "dataclasses.dataclass",
+        "dataclasses.field",
+        "numbers",
+        "numbers.Integral",
+        "numpy",
+        "scipy.fft",
+        "scipy.fft.fft",
+        "scipy.fft.ifft",
+        "scipy.fft.next_fast_len",
+        "scipy.sparse",
+        "scipy.sparse.csr_matrix",
+        "scipy.special",
+        "scipy.special.gammaln",
+        "scipy.special.jv",
+        "time",
+        "time.perf_counter"
+      ]
+    },
+    {
+      "file": "src/airsim_rf/research/doppler_basis_cuda.py",
+      "role": "simulation/source",
+      "imports": [
+        "airsim_rf.rendering",
+        "airsim_rf.rendering._epoch",
+        "airsim_rf.rendering._oscillator_cycles",
+        "airsim_rf.research.doppler_basis",
+        "airsim_rf.research.doppler_basis.DopplerBasisRenderer",
+        "airsim_rf.research.doppler_basis.doppler_degree",
+        "airsim_rf.sampled_waveform",
+        "airsim_rf.sampled_waveform.SampledWaveform",
+        "contextlib",
+        "contextlib.contextmanager",
+        "cupy",
+        "cupyx.scipy",
+        "cupyx.scipy.fft",
+        "numpy",
+        "scipy.fft",
+        "scipy.fft.next_fast_len",
+        "time",
+        "time.perf_counter"
+      ]
+    },
+    {
+      "file": "src/airsim_rf/runtime_metrics.py",
+      "role": "observer/orchestration/compatibility",
+      "imports": [
+        "math"
+      ]
+    },
+    {
+      "file": "src/airsim_rf/sample_stream.py",
+      "role": "receiver contract/result I/O",
+      "imports": [
+        "dataclasses",
+        "dataclasses.dataclass",
+        "json",
+        "math",
+        "numpy",
+        "re",
+        "socket",
+        "struct"
+      ]
+    },
+    {
+      "file": "src/airsim_rf/sampled_waveform.py",
+      "role": "simulation/source",
+      "imports": [
+        "airsim_rf.rendering",
+        "airsim_rf.rendering._epoch",
+        "dataclasses",
+        "dataclasses.dataclass",
+        "numbers",
+        "numbers.Integral",
+        "numpy"
+      ]
+    },
+    {
+      "file": "src/airsim_rf/scattering.py",
+      "role": "simulation/source",
+      "imports": [
+        "airsim_rf.profiling",
+        "airsim_rf.profiling.profile_range",
+        "airsim_rf.single_bounce",
+        "airsim_rf.single_bounce._PlanarCandidates",
+        "airsim_rf.single_bounce._VisibleImageMethod",
+        "dataclasses",
+        "dataclasses.dataclass",
+        "drjit",
+        "mitsuba",
+        "numpy",
+        "sionna.rt",
+        "sionna.rt.antenna_pattern",
+        "sionna.rt.antenna_pattern.antenna_pattern_to_world_implicit",
+        "sionna.rt.constants",
+        "sionna.rt.constants.InteractionType",
+        "sionna.rt.constants.MIN_SEGMENT_LENGTH",
+        "sionna.rt.path_solvers.paths_buffer",
+        "sionna.rt.path_solvers.paths_buffer.PathsBuffer",
+        "sionna.rt.utils",
+        "sionna.rt.utils.rotation_matrix",
+        "sionna.rt.utils.spawn_ray_to",
+        "time",
+        "time.perf_counter"
+      ]
+    },
+    {
+      "file": "src/airsim_rf/scenario.py",
+      "role": "simulation/source",
+      "imports": []
+    },
+    {
+      "file": "src/airsim_rf/sdr.py",
+      "role": "simulation/source",
+      "imports": [
+        "airsim_rf.batched_rendering",
+        "airsim_rf.batched_rendering.BatchedPathRenderer",
+        "airsim_rf.batched_rendering.PathRenderJob",
+        "airsim_rf.profiling",
+        "airsim_rf.profiling.profile_range",
+        "airsim_rf.receiver",
+        "airsim_rf.receiver.BOLTZMANN",
+        "airsim_rf.receiver.ReceiverConfig",
+        "airsim_rf.receiver.synthesize_voltage",
+        "airsim_rf.rendering",
+        "airsim_rf.rendering.LFMChirpWaveform",
+        "airsim_rf.rendering.ToneWaveform",
+        "airsim_rf.rendering.render_paths",
+        "airsim_rf.research.doppler_basis",
+        "airsim_rf.research.doppler_basis.DopplerBasisRenderer",
+        "airsim_rf.research.doppler_basis_cuda",
+        "airsim_rf.research.doppler_basis_cuda.CudaDopplerBasisRenderer",
+        "airsim_rf.sampled_waveform",
+        "airsim_rf.sampled_waveform.SampledWaveform",
+        "airsim_rf.scattering",
+        "airsim_rf.scattering.FirstOrderScatteringPathSolver",
+        "airsim_rf.single_bounce",
+        "airsim_rf.single_bounce.SingleBouncePathSolver",
+        "dataclasses",
+        "dataclasses.dataclass",
+        "numpy",
+        "scipy.signal",
+        "scipy.signal.butter",
+        "scipy.signal.sosfilt",
+        "scipy.signal.sosfreqz",
+        "sionna.rt.constants",
+        "sionna.rt.constants.InteractionType",
+        "time",
+        "time.perf_counter",
+        "typing",
+        "typing.Callable"
+      ]
+    },
+    {
+      "file": "src/airsim_rf/sdr_bridge.py",
+      "role": "simulation/source",
+      "imports": [
+        "airsim_rf.bridge",
+        "airsim_rf.bridge.mount_kinematics",
+        "numbers",
+        "numbers.Integral"
+      ]
+    },
+    {
+      "file": "src/airsim_rf/sensing_analysis.py",
+      "role": "observer/orchestration/compatibility",
+      "imports": [
+        "airsim_rf.evaluation.clocks",
+        "airsim_rf.evaluation.clocks.align_known_receiver_clocks",
+        "airsim_rf.processing.sensing",
+        "airsim_rf.processing.sensing.cross_ambiguity",
+        "airsim_rf.processing.sensing.power_db",
+        "airsim_rf.processing.sensing.received_waterfall"
+      ]
+    },
+    {
+      "file": "src/airsim_rf/single_bounce.py",
+      "role": "simulation/source",
+      "imports": [
+        "drjit",
+        "fractions",
+        "fractions.Fraction",
+        "functools",
+        "functools.reduce",
+        "math",
+        "math.gcd",
+        "math.lcm",
+        "mitsuba",
+        "sionna.rt",
+        "sionna.rt.constants",
+        "sionna.rt.constants.InteractionType",
+        "sionna.rt.constants.MIN_SEGMENT_LENGTH",
+        "sionna.rt.path_solvers.paths_buffer",
+        "sionna.rt.path_solvers.paths_buffer.PathsBuffer",
+        "sionna.rt.utils",
+        "sionna.rt.utils.spawn_ray_to"
+      ]
+    },
+    {
+      "file": "src/airsim_rf/skills/__init__.py",
+      "role": "receiver application/math",
+      "imports": []
+    },
+    {
+      "file": "src/airsim_rf/skills/music.py",
+      "role": "receiver application/math",
+      "imports": [
+        "airsim_rf.ams",
+        "airsim_rf.ams.squall_rf_pb2",
+        "airsim_rf.ams.squall_rf_pb2_grpc",
+        "airsim_rf.processing.music",
+        "airsim_rf.processing.music.estimate_bearing",
+        "airsim_rf.processing.music.frequency_psd",
+        "airsim_rf.processing.music.read_arrays",
+        "airsim_rf.processing.music.spatial_spectrum",
+        "airsim_rf.processing.results",
+        "airsim_rf.processing.results.ResultWriter",
+        "airsim_rf.sample_stream",
+        "airsim_rf.sample_stream.iter_stream",
+        "argparse",
+        "collections",
+        "collections.deque",
+        "concurrent.futures",
+        "concurrent.futures.ThreadPoolExecutor",
+        "grpc",
+        "http.server",
+        "http.server.BaseHTTPRequestHandler",
+        "http.server.ThreadingHTTPServer",
+        "json",
+        "numpy",
+        "socket",
+        "threading",
+        "time",
+        "urllib.parse",
+        "urllib.parse.parse_qs",
+        "urllib.parse.urlsplit"
+      ]
+    },
+    {
+      "file": "src/airsim_rf/source_recording.py",
+      "role": "simulation/source",
+      "imports": [
+        "datetime",
+        "datetime.datetime",
+        "datetime.timezone",
+        "json",
+        "pathlib",
+        "pathlib.Path",
+        "re",
+        "threading"
+      ]
+    },
+    {
+      "file": "src/airsim_rf/terrain.py",
+      "role": "simulation/source",
+      "imports": [
+        "dataclasses",
+        "dataclasses.dataclass",
+        "hashlib",
+        "hashlib.sha256",
+        "numpy",
+        "pathlib",
+        "pathlib.Path",
+        "xml.etree.ElementTree"
+      ]
+    },
+    {
+      "file": "src/airsim_rf/usd_geometry.py",
+      "role": "simulation/source",
+      "imports": [
+        "airsim_rf.ams.dis",
+        "airsim_rf.ams.dis.LocalEarthFrame",
+        "airsim_rf.geometry",
+        "airsim_rf.geometry._fields",
+        "airsim_rf.geometry._identifier",
+        "airsim_rf.geometry.export_sionna_geometry",
+        "airsim_rf.geometry.file_digest",
+        "airsim_rf.geometry.validate_geometry",
+        "argparse",
+        "json",
+        "numpy",
+        "pathlib",
+        "pathlib.Path",
+        "pxr",
+        "pxr.Usd",
+        "pxr.UsdGeom",
+        "uuid",
+        "uuid.UUID"
+      ]
+    }
+  ]
+}

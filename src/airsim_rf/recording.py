@@ -90,3 +90,11 @@ def iter_iq_blocks(directory, receiver='rx0', *, units='volts'):
                 samples = samples.astype(np.complex64)
             yield RecordedIQBlock(samples, capture['core:sample_start'], row['sim_time_ns'],
                 fs, capture['core:frequency'], units, capture['airsim_rf:clipped_component_fraction'])
+
+
+def iter_sample_blocks(directory,receiver='rx0'):
+    """Receiver-facing adapter for this legacy recording layout."""
+    from .sample_stream import SampleBlock
+    for block in iter_iq_blocks(directory,receiver):
+        yield SampleBlock(receiver,block.samples,block.sample_start,block.sim_time_ns,
+            block.sample_rate_hz,block.carrier_hz,block.clipped_component_fraction)

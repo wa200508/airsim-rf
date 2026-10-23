@@ -6,7 +6,7 @@ import numpy as np
 import pytest
 
 from airsim_rf.dashboard_scenario import FS,orbit_pose,waveform_window
-from airsim_rf.iq_stream import StreamIQBlock
+from airsim_rf.sample_stream import SampleBlock as StreamIQBlock
 
 
 def test_counter_source_preserves_identical_samples_across_windows():
@@ -195,7 +195,7 @@ def test_skill_keeps_diagnostics_for_a_delayed_camera_epoch(tmp_path):
     assert skill.snapshot()['available_epochs']==[0,120000000]
     assert old['psd']==original['psd']
     assert old['psd']!=skill.snapshot()['psd']
-    assert all(row['sim_time_ns']==0 for row in old['history']+old['waterfall'])
+    assert all(row['timestamp_ns']==0 for row in old['history']+old['waterfall'])
     assert old==original
     compact=skill.snapshot(0,compact=True)
     assert 'history' not in compact and 'waterfall' not in compact
@@ -203,21 +203,21 @@ def test_skill_keeps_diagnostics_for_a_delayed_camera_epoch(tmp_path):
     # Old waterfall rows must survive eviction from the live rolling waterfall.
     skill.state['waterfall']=[];skill.state['history']=[]
     assert skill.snapshot(0)==original
-    assert skill.epoch_status(0)=={'sim_time_ns':0,'complete_windows':1}
+    assert skill.epoch_status(0)=={'timestamp_ns':0,'complete_windows':1}
     with pytest.raises(KeyError):skill.epoch_status(999)
     skill.state.update(status='failed',error='processing failed')
     with pytest.raises(RuntimeError,match='processing failed'):skill.epoch_status(0)
 
 
-def test_real_skill_ingress_and_http_gate_release_flight_only_after_eight_channels(tmp_path):
-    """Real TCP -> MUSIC/PSD -> HTTP epoch ACK; only the AirSim step is stubbed."""
+def test_real_neutral_skill_ingress_and_stream_commit_release_flight_only_after_eight_channels(tmp_path):
+    """Real source-neutral TCP -> MUSIC/PSD -> stream commit; only the flight step is stubbed."""
     pytest.importorskip('doa_py');pytest.importorskip('grpc')
     import asyncio,json,socket,subprocess,sys,time
     from types import SimpleNamespace
     from urllib.error import URLError
     from urllib.request import ProxyHandler,build_opener
-    from airsim_rf.dashboard_sync import advance_after_skill
-    from airsim_rf.iq_stream import IQStreamWriter
+    from airsim_rf.dashboard_sync import advance_after_commit
+    from airsim_rf.sample_stream import SampleStreamWriter
     from airsim_rf.dashboard_recording import RecordingWriter,RecordingStore
     arrays={'schema_version':1,'sample_rate_hz':FS,'carrier_hz':915e6,'sites':[
         {'id':str(i),'channels':[f's{i}e{j}' for j in range(4)],'center_rf_m':[0,i*20,110],'yaw_rad':0,
@@ -235,8 +235,8 @@ def test_real_skill_ingress_and_http_gate_release_flight_only_after_eight_channe
             assert recorded.snapshot('0123456789abcdef')['skill']['sim_time_ns']==epoch-120000000
             steps.append(epoch)
     with (tmp_path/'skill.log').open('w+') as log:
-        process=subprocess.Popen([sys.executable,'-m','airsim_rf.dashboard_skill','--arrays',str(path),
-            '--iq-port',str(iq_port),'--http-port',str(http_port),'--control-address',f'127.0.0.1:{control_port}'],stdout=log,stderr=log)
+        process=subprocess.Popen([sys.executable,'-m','airsim_rf.skills.music','--arrays',str(path),
+            '--iq-port',str(iq_port),'--http-port',str(http_port),'--results-dir',str(recorder.path/'results'),'--control-address',f'127.0.0.1:{control_port}'],stdout=log,stderr=log)
         try:
             deadline=time.monotonic()+30
             while True:
@@ -248,7 +248,7 @@ def test_real_skill_ingress_and_http_gate_release_flight_only_after_eight_channe
                     log.seek(0);pytest.fail('Skill startup failed: '+log.read())
                 time.sleep(.05)
             with socket.create_connection(('127.0.0.1',iq_port),timeout=10) as connection:
-                writer=IQStreamWriter(connection,carrier_hz=915e6)
+                writer=SampleStreamWriter(connection,carrier_hz=915e6)
                 names=[name for site in arrays['sites'] for name in site['channels']]
                 rng=np.random.default_rng(42)
                 samples=(.001*np.exp(2j*np.pi*10000*np.arange(240000)/FS)+
@@ -256,21 +256,19 @@ def test_real_skill_ingress_and_http_gate_release_flight_only_after_eight_channe
                 async def run_windows():
                     for index in range(2):
                         epoch=index*120000000
-                        async def save_completed():
-                            from airsim_rf.dashboard_sync import read_skill_frame
-                            frame=await asyncio.to_thread(read_skill_frame,'127.0.0.1',http_port,epoch)
-                            recorder.frame({'sim_time_ns':epoch,'origin_ns':0,'sim_elapsed_s':index*.12,
-                                'position_rf_m':[index,0,200]},frame)
-                        task=asyncio.create_task(advance_after_skill(World(),epoch,120000000,'127.0.0.1',http_port,lambda:False,
-                            timeout=20,on_complete=save_completed))
+                        async def save_source():
+                            recorder.source_frame({'sim_time_ns':epoch,'origin_ns':0,'sim_elapsed_s':index*.12,
+                                'position_rf_m':[index,0,200]})
+                        # Source uses no processing endpoint, estimator name or result.
+                        # Commit is submitted only after all channel samples are written.
                         capture=SimpleNamespace(adc_iq_volts=samples,sim_time_ns=epoch,actual_sample_rate_hz=FS,clipped_component_fraction=0.)
-                        for name in names[:-1]:writer.send_capture(name,capture)
+                        for name in names[:-1]:writer.send_samples(name,capture.adc_iq_volts,timestamp_ns=epoch,sample_rate_hz=FS)
                         await asyncio.sleep(.15)
-                        assert not task.done() and len(steps)==index
-                        writer.send_capture(names[-1],capture)
-                        assert await task
+                        assert len(steps)==index
+                        writer.send_samples(names[-1],capture.adc_iq_volts,timestamp_ns=epoch,sample_rate_hz=FS)
+                        assert await advance_after_commit(World(),writer,epoch,120000000,lambda:False,on_committed=save_source)
                         with request(f'http://127.0.0.1:{http_port}/frames/{epoch}',timeout=2) as response:frame=json.load(response)
-                        assert frame['sim_time_ns']==epoch and frame['complete_windows']==index+1
+                        assert frame['timestamp_ns']==epoch and frame['complete_windows']==index+1
                         assert frame['payload_bytes']==(index+1)*8*240000*8
                         assert len(frame['bearings'])==2 and frame['psd']['frequency_khz']
                 asyncio.run(run_windows())

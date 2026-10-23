@@ -1,4 +1,4 @@
-"""Single stepping owner: actual AirSim orbit -> Sionna -> ADC -> Docker skill."""
+"""Single stepping owner: actual AirSim orbit -> Sionna -> ADC -> receiver transport."""
 import argparse
 import asyncio
 import json
@@ -26,11 +26,11 @@ async def run(args):
     from .bridge import mount_kinematics,normalize_kinematics
     from .dashboard_view import queue_chase_camera_pose,radio_marker_glb
     from .dashboard_geometry import isolate_blocks_scene,require_rf_mesh_match,link_geometry
-    from .dashboard_sync import wait_for_skill_epoch,advance_after_skill,read_skill_frame
-    from .dashboard_recording import RecordingWriter
+    from .dashboard_sync import commit_window,advance_after_commit
+    from .source_recording import RecordingWriter
     from .geometry import read_bundle
     from .geometry_sync import AirSimGeometryBinding,spawn_placements
-    from .iq_stream import IQStreamWriter
+    from .sample_stream import SampleStreamWriter
     from .sampled_waveform import SampledWaveform
     from .sdr import SDREmitter,SDRNetworkReceiver,PlutoSDRProfile
 
@@ -52,10 +52,10 @@ async def run(args):
     atomic_json(output/'producer.json',state)
     writer=None;sock=None;motion=None;flight_client=None
     camera_counter=[0];last_camera=[0.];history=[]
-    camera_session=secrets.token_hex(8);camera_files=[];camera_history=[]
+    camera_session=args.recording_id or secrets.token_hex(8);camera_files=[];camera_history=[]
     state['presentation_session']=camera_session
     recording=RecordingWriter(output/'replays',camera_session,json.loads((output/'scenario.json').read_text()),
-        args.duration,ADVANCE_NS,no_render=args.no_render)
+        args.duration,ADVANCE_NS,no_render=args.no_render,resume=args.recording_id is not None)
     (output/'camera').mkdir(exist_ok=True)
     site_positions=[site['center_rf_m'] for site in arrays['sites']]
     def image_received(_,message):
@@ -155,16 +155,19 @@ async def run(args):
             return row
         deadline=time.monotonic()+args.ready_timeout
         while True:
-            try:sock=socket.create_connection((args.skill_host,args.skill_port),timeout=2);break
+            try:sock=socket.create_connection((args.iq_host,args.iq_port),timeout=2);break
             except OSError:
-                if time.monotonic()>deadline:raise RuntimeError('RF skill ingress did not become ready')
+                if time.monotonic()>deadline:raise RuntimeError('Receiver ingress did not become ready')
                 await asyncio.sleep(.25)
-        sock.settimeout(120);writer=IQStreamWriter(sock,carrier_hz=CARRIER)
+        sock.settimeout(120);writer=SampleStreamWriter(sock,carrier_hz=CARRIER)
         def stop_requested():
             return (output/'command.json').exists() and json.loads((output/'command.json').read_text()).get('stop',False)
-        async def save_completed_frame():
-            diagnostics=await asyncio.to_thread(read_skill_frame,args.skill_host,args.skill_http_port,state['sim_time_ns'])
-            recording.frame(state,diagnostics)
+        def send_captures(captures):
+            for name,capture in captures.items():
+                writer.send_samples(name,capture.adc_iq_volts,timestamp_ns=capture.sim_time_ns,
+                    sample_rate_hz=capture.actual_sample_rate_hz,clipped_component_fraction=capture.clipped_component_fraction)
+        async def save_source_frame():
+            recording.source_frame(state)
         prepared_captures=None
         if args.wait_for_mission:
             # Exercise the actual configured scene, eight-channel block and data
@@ -180,8 +183,8 @@ async def run(args):
                 transmit_power_w=.1,baseband_frequency_bounds_hz=(-100000,100000))
             prepared_captures=receiver.capture(epoch,num_samples=count)
             row=record_frame(epoch,position,prepared_captures)
-            for name,capture in prepared_captures.items():writer.send_capture(name,capture)
-            if not await wait_for_skill_epoch(args.skill_host,args.skill_http_port,epoch,stop_requested):
+            send_captures(prepared_captures)
+            if not (await commit_window(writer,stop_requested))[0]:
                 recording.status('stopped');return
             row.update(windows=1,velocity_rf_m_s=velocity.tolist(),camera_frames=camera_counter[0],
                 wall_elapsed_s=0.,simulation_speed=0.,raw_payload_bytes=count*8*8)
@@ -192,7 +195,7 @@ async def run(args):
             if state.get('recording_error'):raise RuntimeError('Camera recording failed: '+state['recording_error'])
             state.update(row);state.update(status='ready',history=list(history),camera_frames=camera_counter[0],gpu_preflight='passed',mission_started=False)
             atomic_json(output/'producer.json',state)
-            await save_completed_frame();recording.status('ready')
+            await save_source_frame();recording.status('ready')
             while True:
                 command=json.loads((output/'command.json').read_text())
                 if command.get('stop'):
@@ -224,7 +227,7 @@ async def run(args):
                 captures=prepared_captures
             else:
                 captures=receiver.capture(epoch,num_samples=count)
-                for name,capture in captures.items():writer.send_capture(name,capture)
+                send_captures(captures)
             row=record_frame(epoch,position,captures)
             elapsed=(epoch-origin)*1e-9
             state.update(row)
@@ -240,15 +243,19 @@ async def run(args):
             row.update({key:state[key] for key in ('windows','velocity_rf_m_s','retained_paths',
                 'wall_elapsed_s','simulation_speed','camera_frames','camera_age_s','raw_payload_bytes')})
             atomic_json(output/'producer.json',state)
-            if not await advance_after_skill(world,epoch,ADVANCE_NS,args.skill_host,args.skill_http_port,stop_requested,
-                on_complete=save_completed_frame):break
+            if index==0 and prepared_captures is not None:
+                # Initial acquisition was already committed before READY.
+                await save_source_frame()
+                world.continue_until_sim_time(epoch+ADVANCE_NS,wait_until_complete=True)
+            elif not await advance_after_commit(world,writer,epoch,ADVANCE_NS,stop_requested,
+                on_committed=save_source_frame):break
             await asyncio.sleep(0)
-        totals=writer.finish();writer=None
+        totals={} if writer.closed else writer.finish();writer=None
         state['acknowledged_sample_totals']=totals
-        # Stop may have interrupted the epoch wait. The final stream ACK now
-        # guarantees that window finished, so preserve it before shutdown.
+        # Preserve source telemetry even if stop interrupted the stream commit.
+        # Only the observer decides whether a matching application result exists.
         if history and not (recording.path/'frames'/f'{state["sim_time_ns"]}.json').is_file():
-            await save_completed_frame()
+            await save_source_frame()
         if not args.no_render:
             # Give already-triggered asynchronous camera captures a chance to
             # arrive for the final RF epoch. No extra flight time is simulated.
@@ -275,8 +282,8 @@ async def run(args):
 def main():
     parser=argparse.ArgumentParser(description=__doc__);parser.add_argument('--run-dir',type=Path,required=True)
     parser.add_argument('--duration',type=float,default=120);parser.add_argument('--address',default='127.0.0.1')
-    parser.add_argument('--skill-host',default='127.0.0.1');parser.add_argument('--skill-port',type=int,default=8811)
-    parser.add_argument('--skill-http-port',type=int,default=8812)
+    parser.add_argument('--iq-host',default='127.0.0.1');parser.add_argument('--iq-port',type=int,default=8811)
+    parser.add_argument('--recording-id',help='Coordinator-prepared source recording ID')
     parser.add_argument('--pascal-compat',action='store_true')
     parser.add_argument('--wait-for-mission',action='store_true')
     parser.add_argument('--ready-timeout',type=float,default=600)

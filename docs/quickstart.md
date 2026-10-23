@@ -143,14 +143,14 @@ on propagation, antennas and ADC settings; no fixed calibrated power is promised
 Replace the CPU processor using the installed reader:
 
 ```python
-from airsim_rf.recording import iter_iq_blocks
+from airsim_rf.recording import iter_sample_blocks
 
-for block in iter_iq_blocks("recordings/shared-capture", "rx0"):
+for block in iter_sample_blocks("recordings/shared-capture", "rx0"):
     process(block.samples, block.sample_rate_hz)  # your stateful algorithm
 ```
 
 Keep processing state per receiver across blocks. For a synchronous callback,
-use `airsim_rf.live.run(..., on_capture=process_capture)`. See
+use `airsim_rf.live.run(..., on_samples=process_samples)`. See
 [interfaces](interfaces.md), [scenario customization](scenario-to-iq.md) and
 [troubleshooting](troubleshooting.md).
 

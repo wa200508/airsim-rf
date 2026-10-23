@@ -4,6 +4,12 @@ This page describes the offline tracking example. For the live drone-orbit
 dashboard's different layout and its MUSIC call chain, see the
 [code map](code-map.md#find-the-actual-music-algorithm).
 
+Receiver-only MUSIC and tracking live in `processing/music.py` and
+`processing/tracking.py`; `track_windows()` accepts neutral acquisition blocks.
+The old `aoa_tracking.consume()` translates completed recordings only; held-out
+truth scoring lives separately in `evaluation/tracking.py`. See the
+[simulation/skill boundary](skill-boundary.md).
+
 This ready-made Python example follows the direction-finding theme of the
 [SDR University Challenge resource list](https://www.mathworks.com/academia/student-competitions/sdr-university-challenge.html).
 Its official reference is MathWorks'

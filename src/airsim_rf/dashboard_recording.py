@@ -1,71 +1,37 @@
-"""Durable dashboard frames and stdlib-only replay; independent of browser polling."""
+"""Observer-only replay compositor: joins source telemetry and application results.
+
+Neither sample generation nor receiver processing imports this module.
+"""
 from bisect import bisect_left, bisect_right
 from collections import OrderedDict
-from datetime import datetime, timezone
+import importlib.util
 import json
 from pathlib import Path
-import re
 import threading
 
-
-ID = re.compile(r'[0-9a-f]{16}')
-CAMERA_KEY = re.compile(r'[0-9a-f]{16}-[0-9]+')
-MAX_OFFSET_NS = 60_000_000
-
-
-def atomic_json(path, value):
-    path = Path(path)
-    temporary = path.with_suffix(path.suffix + '.tmp')
-    temporary.write_text(json.dumps(value, allow_nan=False) + '\n')
-    temporary.replace(path)
+_spec=importlib.util.spec_from_file_location('source_recording',Path(__file__).with_name('source_recording.py'))
+_source=importlib.util.module_from_spec(_spec);_spec.loader.exec_module(_source)
+ID=_source.ID;CAMERA_KEY=_source.CAMERA_KEY;MAX_OFFSET_NS=_source.MAX_OFFSET_NS;atomic_json=_source.atomic_json
 
 
-class RecordingWriter:
-    def __init__(self, root, identifier, scenario, duration_s, step_ns, *, no_render=False):
-        if not ID.fullmatch(identifier):raise ValueError('Invalid recording ID')
-        self.path = Path(root) / identifier
-        self.path.mkdir(parents=True, exist_ok=False)
-        for name in ('frames', 'camera'):(self.path / name).mkdir()
-        self.lock = threading.RLock()
-        self.manifest = {'schema_version':1, 'id':identifier,
-            'created_utc':datetime.now(timezone.utc).isoformat(), 'status':'preparing',
-            'duration_s':duration_s, 'step_ns':step_ns, 'no_render':no_render,
-            'frame_count':0, 'computed_s':0.,
-            'contents':'Camera, telemetry and RF diagnostics; raw ADC samples are not stored'}
-        atomic_json(self.path / 'scenario.json', scenario)
-        atomic_json(self.path / 'manifest.json', self.manifest)
+def display_result(result):
+    """Translate acquisition-clock metadata only at the simulation observer UI."""
+    data=dict(result)
+    if 'timestamp_ns' in data:data['sim_time_ns']=data.pop('timestamp_ns')
+    for key in ('history','waterfall'):
+        if key in data:data[key]=[display_result(row) for row in data[key]]
+    return data
 
-    def camera(self, metadata, jpeg):
-        key = metadata['key']
-        if not CAMERA_KEY.fullmatch(key):raise ValueError('Invalid camera key')
-        with self.lock:
-            path = self.path / 'camera' / (key + '.jpg')
-            if path.exists():return
-            temporary = path.with_suffix('.tmp')
-            temporary.write_bytes(jpeg);temporary.replace(path)
-            # Metadata is the publication marker; orphan JPEGs are ignored.
-            atomic_json(path.with_suffix('.json'), metadata)
 
-    def frame(self, producer, skill):
-        epoch = producer['sim_time_ns']
-        if skill.get('sim_time_ns') != epoch:raise ValueError('Recording epochs differ')
-        with self.lock:
-            path = self.path / 'frames' / (str(epoch) + '.json')
-            if path.exists():return
-            # Reconstruct rolling histories from these frames during replay,
-            # rather than serializing the same growing history thousands of times.
-            data = {'producer':{k:v for k,v in producer.items() if k != 'history'},
-                'skill':{k:v for k,v in skill.items() if k not in ('history','waterfall')}}
-            atomic_json(path, data)
-            self.manifest.update(frame_count=self.manifest['frame_count']+1,
-                origin_ns=producer['origin_ns'],
-                computed_s=min(self.manifest['duration_s'], producer['sim_elapsed_s'] + self.manifest['step_ns']/1e9))
-            atomic_json(self.path / 'manifest.json', self.manifest)
-
-    def status(self, status, **extra):
-        with self.lock:
-            self.manifest.update(status=status, **extra)
-            atomic_json(self.path / 'manifest.json', self.manifest)
+class RecordingWriter(_source.RecordingWriter):
+    """Observer/test convenience for joining already-computed inputs."""
+    def frame(self,producer,skill):
+        epoch=producer['sim_time_ns']
+        if skill.get('timestamp_ns',skill.get('sim_time_ns'))!=epoch:raise ValueError('Recording epochs differ')
+        self.source_frame(producer)
+        data={k:v for k,v in skill.items() if k not in ('history','waterfall')}
+        if 'sim_time_ns' in data:data['timestamp_ns']=data.pop('sim_time_ns')
+        atomic_json(self.path/'results'/f'{epoch}.json',data)
 
 
 class RecordingStore:
@@ -85,7 +51,7 @@ class RecordingStore:
         for path in self.root.glob('*/manifest.json'):
             try:
                 value = json.loads(path.read_text())
-                if ID.fullmatch(path.parent.name) and value['schema_version']==1:
+                if ID.fullmatch(path.parent.name) and value['schema_version'] in (1,2):
                     results.append(value)
             except (OSError, ValueError, KeyError):continue
         return sorted(results, key=lambda item:item['created_utc'], reverse=True)
@@ -93,16 +59,22 @@ class RecordingStore:
     def _index(self, identifier):
         path = self.path(identifier)
         manifest = json.loads((path/'manifest.json').read_text())
-        if manifest.get('schema_version')!=1:raise ValueError('Unsupported dashboard recording')
+        if manifest.get('schema_version') not in (1,2):raise ValueError('Unsupported dashboard recording')
         index = self.indices.setdefault(identifier, {'rows':{}, 'cameras':{}, 'revision':None})
         self.indices.move_to_end(identifier)
         if len(self.indices)>3:self.indices.popitem(last=False)
-        revision = ((path/'frames').stat().st_mtime_ns, (path/'camera').stat().st_mtime_ns)
+        revision = ((path/'frames').stat().st_mtime_ns, (path/'camera').stat().st_mtime_ns,
+            (path/'results').stat().st_mtime_ns if (path/'results').exists() else None)
         if index['revision'] != revision:
             for frame in (path/'frames').glob('*.json'):
                 epoch = int(frame.stem)
                 if epoch in index['rows']:continue
-                value = json.loads(frame.read_text());p=value['producer'];s=value['skill']
+                value = json.loads(frame.read_text());p=value['producer']
+                if 'skill' in value:s=value['skill']  # Immutable version-1 archive.
+                else:
+                    result=path/'results'/f'{epoch}.json'
+                    if not result.exists():continue  # Source/result arrivals are independent.
+                    s=display_result(json.loads(result.read_text()))
                 if p['sim_time_ns']!=epoch or s['sim_time_ns']!=epoch:raise ValueError('Corrupt recording epoch')
                 index['rows'][epoch]={'producer':{k:p[k] for k in ('sim_time_ns','origin_ns','sim_elapsed_s','position_rf_m','geometry_sha256') if k in p},
                     'history':{'sim_time_ns':epoch,
@@ -138,9 +110,10 @@ class RecordingStore:
                 'end_s':times[-1] if times else 0.}
             # A killed writer may have published its final frame just before
             # updating the manifest. Published frame files are authoritative.
-            timeline['frame_count']=len(index['epochs'])
-            timeline['computed_s']=min(manifest['duration_s'], max((row['producer']['sim_elapsed_s']+
-                manifest['step_ns']/1e9 for row in index['rows'].values()),default=0.))
+            timeline['frame_count']=max(manifest.get('frame_count',0),len(index['epochs']))
+            timeline['computed_s']=min(manifest['duration_s'], max(manifest.get('computed_s',0.),
+                max((row['producer']['sim_elapsed_s']+manifest['step_ns']/1e9
+                    for row in index['rows'].values()),default=0.)))
             base={'producer':{},'skill':{},'transport':{},'camera':{'available':False},
                 'synchronization':{'status':'waiting'},'no_render':manifest['no_render'],
                 'scenario':json.loads((self.path(identifier)/'scenario.json').read_text()),'playback':timeline}
@@ -153,6 +126,8 @@ class RecordingStore:
             epoch,camera=pairs[at];key=(identifier,epoch)
             if key not in self.frames:
                 self.frames[key]=json.loads((self.path(identifier)/'frames'/f'{epoch}.json').read_text())
+                if 'skill' not in self.frames[key]:
+                    self.frames[key]['skill']=display_result(json.loads((self.path(identifier)/'results'/f'{epoch}.json').read_text()))
                 if len(self.frames)>32:self.frames.popitem(last=False)
             self.frames.move_to_end(key);value=self.frames[key]
             end=bisect_right(index['epochs'],epoch);history=index['epochs'][max(0,end-1000):end]

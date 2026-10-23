@@ -4,13 +4,13 @@ import hashlib
 import json
 import socket
 import numpy as np
-from airsim_rf.iq_stream import iter_stream
+from airsim_rf.sample_stream import iter_stream
 
 
 def process(block):
     # Replace this function. Keep independent filter/overlap state per receiver.
     rms=float(np.sqrt(np.mean(abs(block.samples)**2)))
-    print(f'{block.receiver}: {len(block.samples)} samples at {block.sim_time_ns} ns, {rms:g} RMS V',flush=True)
+    print(f'{block.receiver}: {len(block.samples)} samples at {block.timestamp_ns} ns, {rms:g} RMS V',flush=True)
 
 
 if __name__=='__main__':

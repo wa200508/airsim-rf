@@ -10,22 +10,8 @@ from .aoa_tracking import PhysicalULA, read_arrays
 from .recording import iter_iq_blocks
 
 
-def frequency_psd(samples, sample_rate_hz):
-    """Two-sided complex-voltage PSD; 4096-sample Hann, 50% overlap, no padding."""
-    frequency, time, density = spectrogram(
-        samples, fs=sample_rate_hz, window='hann', nperseg=4096,
-        noverlap=2048, nfft=4096, detrend=False, return_onesided=False,
-        scaling='density', mode='psd')
-    return np.fft.fftshift(frequency), time, np.fft.fftshift(density, axes=0)
-
-
-def spatial_spectrum(samples, offsets, carrier_hz, grid):
-    from doa_py.algorithm import music
-    spectrum=np.asarray(music(samples,num_signal=1,array=PhysicalULA(offsets),
-                              signal_fre=carrier_hz,angle_grids=grid),float)
-    if not np.isfinite(spectrum).all() or np.max(spectrum)<=0:
-        raise ValueError('Expected finite positive MUSIC pseudospectrum')
-    return 10*np.log10(np.maximum(spectrum/np.max(spectrum),1e-12))
+# Public compatibility exports; pure receiver math lives in processing/.
+from .processing.music import frequency_psd, spatial_spectrum
 
 
 def plot_recording(recording, arrays_path, output):

@@ -1,10 +1,10 @@
 {
   "name": "music-rf-skill",
-  "image": "airsim-rf:music-skill",
+  "image": "ghcr.io/wa200508/airsim-rf:dashboard-skill",
   "domain": "rf",
-  "entrypoint": "python -m airsim_rf.dashboard_skill",
+  "entrypoint": "python -m airsim_rf.skills.music",
   "control": {"protocol": "gRPC", "service": "squall.rf.control.v1.SquallRfControl", "port": 8813},
-  "input": {"protocol": "airsim-rf framed TCP v1", "port": 8811, "format": "cf32_le complex volts", "coherence_metadata": true},
+  "input": {"protocol": "receiver framed TCP v2 (legacy v1 accepted at ingress)", "port": 8811, "format": "cf32_le complex volts", "coherence_metadata": true, "timestamp": "acquisition timestamp_ns"},
   "health": "http://127.0.0.1:8812/health",
   "compatibility": "SQUALL-derived control schema and separate container deployment; coherent TCP is a project extension, not native AMS RF MEL/VITA conformance"
 }

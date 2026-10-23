@@ -107,9 +107,13 @@ def test_gpu_failure_never_turns_into_cpu_fallback(tmp_path,monkeypatch):
     assert not obj.ready and obj.gpu_options==[]
 
 
-def test_rootless_services_share_bridge_and_start_before_readiness_waits(tmp_path,monkeypatch):
+@pytest.mark.parametrize('rootless',[True,False])
+def test_services_share_bridge_and_start_before_readiness_waits(tmp_path,monkeypatch,rootless):
     import io
-    obj=instance(tmp_path);obj.args.iq_port=18811;obj.rootless=True
+    obj=instance(tmp_path);obj.args.iq_port=18811;obj.rootless=rootless
+    monkeypatch.setattr(dashboard.os,'getuid',lambda:0)
+    owned=[]
+    monkeypatch.setattr(dashboard.os,'chown',lambda path,uid,gid:owned.append((path,uid,gid)))
     obj.gpu_options=['--device','nvidia.com/gpu=0']
     for name in ('configure_docker','pull_images','check_workspace','check_gpu','prepare'):
         monkeypatch.setattr(obj,name,lambda:None)
@@ -142,13 +146,21 @@ def test_rootless_services_share_bridge_and_start_before_readiness_waits(tmp_pat
     for part,command in commands.items():
         assert command[command.index('--network')+1]==obj.network
         assert 'host' not in command
-        assert command[command.index('--user')+1]==('10001:10001' if part=='sim' else '0:0')
+        assert command[command.index('--user')+1]==('10001:10001' if part=='sim' or not rootless else '0:0')
+    if rootless:assert not owned
+    else:
+        results=obj.run/'replays'/obj.recording_id/'results'
+        assert (results,10001,10001) in owned
     rf=commands['rf']
     assert rf[rf.index('--workdir')+1]=='/run'
     assert rf[rf.index('--address')+1]=='projectairsim'
-    assert rf[rf.index('--skill-host')+1]=='rf-skill'
-    assert rf[rf.index('--skill-port')+1]=='8811'
-    assert rf[rf.index('--skill-http-port')+1]=='8812'
+    assert rf[rf.index('--iq-host')+1]=='rf-skill'
+    assert rf[rf.index('--iq-port')+1]=='8811'
+    assert '--skill-http-port' not in rf
+    assert '--recording-id' in rf
+    mounts=[command for command in commands['skill'] if ':/results' in command]
+    assert len(mounts)==1 and '/replays/' in mounts[0]
+    assert not any(item.endswith(':/run') for item in commands['skill'])
 
 
 def test_display_matches_camera_time_to_older_iq_not_latest_transport(tmp_path,monkeypatch):

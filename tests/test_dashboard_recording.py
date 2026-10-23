@@ -46,7 +46,9 @@ def test_record_without_a_browser_and_replay_after_restart_with_backward_seek(tm
     assert store.snapshot(ID,999)['producer']['position_rf_m']==[3,0,200]
     assert store.snapshot(ID,-999)['producer']['position_rf_m']==[0,0,200]
     saved=json.loads((writer.path/'frames/120000000.json').read_text())
-    assert 'history' not in saved['producer'] and 'history' not in saved['skill'] and 'waterfall' not in saved['skill']
+    assert 'history' not in saved['producer'] and 'skill' not in saved
+    result=json.loads((writer.path/'results/120000000.json').read_text())
+    assert 'history' not in result and 'waterfall' not in result and result['timestamp_ns']==120000000
 
 
 def test_full_recording_outlives_live_128_frame_retention_and_bounds_reader_cache(tmp_path):
@@ -103,3 +105,26 @@ def test_seek_uses_integer_epochs_despite_floating_point_elapsed_time(tmp_path):
         writer.frame({'sim_time_ns':epoch,'origin_ns':0,'sim_elapsed_s':epoch*1e-9,'position_rf_m':[epoch,0,200]},
             {'sim_time_ns':epoch,'complete_windows':epoch//120000000+1})
     assert recording.RecordingStore(tmp_path/'replays').snapshot(ID,.24)['skill']['complete_windows']==3
+
+
+def test_independent_source_progress_precedes_late_application_result(tmp_path):
+    writer=make_writer(tmp_path,no_render=True)
+    writer.source_frame({'sim_time_ns':0,'origin_ns':0,'sim_elapsed_s':0.,'position_rf_m':[0,0,200]})
+    store=recording.RecordingStore(tmp_path/'replays')
+    pending=store.snapshot(ID)['playback']
+    assert pending['computed_s']==pytest.approx(.12)
+    assert pending['frame_count']==1 and pending['playable_frames']==0
+    recording.atomic_json(writer.path/'results/0.json',{'timestamp_ns':0,'complete_windows':1})
+    assert store.snapshot(ID)['playback']['playable_frames']==1
+
+
+def test_existing_version_one_archive_remains_playable(tmp_path):
+    writer=make_writer(tmp_path,no_render=True);p,s=write_frame(writer,0,False)
+    recording.atomic_json(writer.path/'frames/0.json',{'producer':p,'skill':s})
+    manifest=json.loads((writer.path/'manifest.json').read_text());manifest['schema_version']=1
+    recording.atomic_json(writer.path/'manifest.json',manifest)
+    for path in (writer.path/'results').iterdir():path.unlink()
+    (writer.path/'results').rmdir()
+    replay=recording.RecordingStore(tmp_path/'replays').snapshot(ID)
+    assert replay['skill']['complete_windows']==1
+    assert replay['playback']['playable_frames']==1

@@ -10,8 +10,9 @@ locations, use the [question-by-question code map](code-map.md).
 
 ## Recording and playback
 
-Every new mission records automatically in the RF producer, independently of
-browser polling. The dashboard acts as a player for that saved output. The
+Every new mission records automatically, independently of browser polling.
+The RF producer journals source telemetry/camera; the skill independently
+journals application results. Only the observer joins these records. The dashboard acts as a player for that saved output. The
 **Saved run** selector opens the current or an older mission. **Play / Pause
 playback**, the seek slider and the **0.5×, 1×, 2×, 4×** speed selector control
 only the displayed simulation time. **Latest computed** follows the newest
@@ -185,8 +186,8 @@ machine; when running on a remote machine, forward its dashboard port over SSH
 All service ports are published to loopback. All three containers use a private
 Docker bridge with internal service DNS names; they do not depend on the
 host network namespace. The camera uses bundled
-software Vulkan/Xvfb; the GPU is used for RF. The published service images share
-pinned runtime dependencies and assets, but run as independent containers.
+software Vulkan/Xvfb; the GPU is used for RF. The simulator/RF images share their runtime assets. The CPU skill image uses an
+independent Python base and contains no simulator or propagation dependencies.
 CPU CI qualifies packaging and supervision; live GPU readiness is checked on
 the actual machine every time the run script prepares the services.
 
@@ -253,14 +254,14 @@ far the displayed RF epoch trails the newest result. These are bounded-time
 pairs, not a claim of identical capture times: propagation uses the window-start
 pose; MUSIC/PSD use its first 12 ms of samples.
 
-The stepping owner now waits for `/epochs/<sim_time_ns>` on the skill's internal
-HTTP endpoint before advancing the next 120 ms of flight. An epoch is acknowledged
-only after all eight channels arrive and covariance, MUSIC, PSD and diagnostics
-finish. TCP send completion alone does not release the barrier. Stop cancels
-the wait, a processing failure aborts, and a 120-second timeout fails explicitly.
-The internal HTTP port defaults to 8812 (`--skill-http-port` on the producer);
-it does not depend on the host's published port number. Camera pose updates
-remain asynchronous so a paused simulator cannot deadlock waiting for rendering.
+The stepping owner waits for a **generic TCP window acknowledgement** before
+advancing the next 120 ms of flight. The consumer acknowledges only after its
+handlers and complete-channel validation return. MUSIC finishes in that handler,
+but the simulator never requests or reads MUSIC diagnostics or algorithm HTTP
+responses. Any conforming consumer can acknowledge the same stream. TCP send
+completion alone does not release the barrier. Stop cancels the wait; processing
+failure or the 120-second timeout fails explicitly. Camera pose updates remain
+asynchronous so a paused simulator cannot deadlock waiting for rendering.
 
 The browser loads and decodes the selected immutable JPEG first, then commits
 it with the map, clock, position, visibility, RF plots, waterfall, throughput,
@@ -277,7 +278,9 @@ The camera overlay and waterfall use the same mission-relative T+ origin.
 See the [shared-scene and occlusion validation](../results/reviews/dashboard-scene-20261022/REPORT.md)
 for independent probe measurements, the orbit scan and echo-only I/Q regression.
 See the [synchronization validation](../results/reviews/dashboard-sync-20261022/REPORT.md)
-for delayed-camera browser checks and the real TCP/MUSIC/HTTP stepping-barrier test.
+for the earlier delayed-camera and HTTP-barrier baseline. The replacement generic
+stream barrier and independent image qualification are documented in the
+[boundary audit](../results/reviews/skill-boundary-20261022/REPORT.md).
 
 The speedometer shows actual received cf32 payload bytes per wall second measured
 at the displayed RF epoch (it is held with that frame);
@@ -292,11 +295,14 @@ The RF Skill is packaged as an independent CPU Docker container with a health
 endpoint and the pinned `SquallRfControl` gRPC schema; see
 [skill manifest](../deploy/dashboard/skill-manifest.json). It is a MUSIC consumer,
 so acquisition commands and dynamic bare-UDP destination requests return explicit
-unsupported responses. Fixed-profile status/tuning validation is implemented.
+unsupported responses. Status reflects the configured receiver rate/carrier; acquisition control is
+explicitly rejected. The skill receives only receiver geometry/calibration and
+post-ADC I/Q, with a separate result-only output mount. See the comprehensive
+[boundary guide](skill-boundary.md) for code, packaging and compatibility limits.
 
-The actual coherent data plane is the project's acknowledged framed TCP v1:
-channel IDs, sequences, sample offsets, simulation epochs, rate and carrier are
-retained. Stock SQUALL's bare SC16 UDP omits that coherent-array metadata.
+The actual coherent data plane is the project's acknowledged framed TCP v2:
+channel IDs, sequences, sample offsets, neutral acquisition timestamps, rate and
+carrier are retained. Legacy v1 is translated at ingress. Stock SQUALL's bare SC16 UDP omits that coherent-array metadata.
 This is a documented extension, not a claim of native RF MEL/VITA conformance.
 The existing [native starter-kit overlay](../deploy/compose.ams-overlay.yaml)
 remains the independently qualified radar integration; its fixed radar profile

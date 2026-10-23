@@ -13,8 +13,8 @@ files that show what a particular mission used.
 | 1 | [dashboard_scenario.py — prepare()](../src/airsim_rf/dashboard_scenario.py#L42) and `waveform_window()` | Terrain, receiver laydown, signal samples, simulator configuration and basic constants. |
 | 2 | [dashboard_producer.py — run()](../src/airsim_rf/dashboard_producer.py#L14) | Actual flight command, antenna model, transmit power, solver/renderer selection and pose → capture loop. |
 | 3 | [sdr.py — SDRNetworkReceiver.capture()](../src/airsim_rf/sdr.py#L267) | Channel coefficients/delays/Dopplers → complex samples → receiver filtering/noise/ADC. |
-| 4 | [dashboard_skill.py — Skill.process()](../src/airsim_rf/dashboard_skill.py#L54) | Which received channels/samples MUSIC consumes, calibration, search grid, PSD and diagnostic outputs. |
-| 5 | [aoa_tracking.py — estimate_bearing()](../src/airsim_rf/aoa_tracking.py#L31) and `PhysicalULA` | The external MUSIC call, steering model and detection gate. |
+| 4 | [skills/music.py — MusicSkill.process()](../src/airsim_rf/skills/music.py#L55) | Which received channels/samples MUSIC consumes, calibration, search grid, PSD and diagnostic outputs. |
+| 5 | [processing/music.py — estimate_bearing()](../src/airsim_rf/processing/music.py#L27) and `PhysicalULA` | The external MUSIC call, steering model and detection gate. |
 
 The host [dashboard.py](../src/airsim_rf/dashboard.py) mostly launches services,
 serves HTTP and selects displayed frames. The JavaScript mostly draws them.
@@ -31,8 +31,10 @@ flowchart LR
     D --> E[Receiver filter, noise and ADC]
     E --> F[Timestamped eight-channel TCP stream]
     F --> G[CPU skill: MUSIC and PSD]
-    G --> H[Recorded diagnostics and camera]
-    H --> I[Dashboard playback]
+    B --> H[Source telemetry and camera journal]
+    G --> J[Independent application result journal]
+    H --> I[Observer joins for dashboard playback]
+    J --> I
 ```
 
 1. [Dashboard.prepare()](../src/airsim_rf/dashboard.py#L143) invokes
@@ -43,14 +45,17 @@ flowchart LR
 3. Each acquisition reads `get_ground_truth_kinematics()`, converts pose/velocity
    to RF coordinates, updates the Sionna transmitter and creates the next
    `SampledWaveform`. `receiver.capture()` generates the eight ADC channels.
-4. [IQStreamWriter.send_capture()](../src/airsim_rf/iq_stream.py#L108)
-   sends those voltage samples. [Skill._serve_stream()](../src/airsim_rf/dashboard_skill.py#L100)
-   groups them by receiver ID and epoch; it calls `Skill.process()` only after
+4. [SampleStreamWriter.send_samples()](../src/airsim_rf/sample_stream.py#L116)
+   sends neutral post-ADC voltage blocks. [MusicSkill._serve_stream()](../src/airsim_rf/skills/music.py#L103)
+   groups them by channel ID and acquisition timestamp; it processes only after
    all eight channels arrive.
-5. The producer waits for the skill epoch to finish, saves its diagnostics and
-   then advances the world. See [advance_after_skill()](../src/airsim_rf/dashboard_sync.py#L43).
-   [RecordingWriter](../src/airsim_rf/dashboard_recording.py#L23) and
-   `RecordingStore` implement saving/replay. The browser does not run MUSIC.
+5. The producer waits for a generic stream commit, saves only source telemetry
+   and then advances the world. See [advance_after_commit()](../src/airsim_rf/dashboard_sync.py#L19).
+   [Source journal](../src/airsim_rf/source_recording.py),
+   [result journal](../src/airsim_rf/processing/results.py) and
+   [observer compositor](../src/airsim_rf/dashboard_recording.py) implement independent
+   saving and replay joins. The browser does not run MUSIC and the producer never
+   reads MUSIC results. See the [boundary contracts](skill-boundary.md).
 
 ## Questions about the scenario, laydown and mover
 
@@ -61,7 +66,7 @@ flowchart LR
 | What moves the drone? | [run(): path construction and move_on_path_async()](../src/airsim_rf/dashboard_producer.py#L122) | Native ProjectAirSim path follower on a nominal 250 m circle, 25 m/s, constant RF-up altitude 200 m; waypoints every 3 degrees. Default mission duration is 120 s. |
 | Which vehicle and controller parameters are used? | `prepare()` reads `robot_quadrotor_fastphysics_sensors.jsonc`, edits `MPC_XY_VEL_MAX`, and writes `sim_config/orbit.jsonc` | The pinned upstream Fast Physics quadrotor template supplies the remaining vehicle/controller parameters. The speed limit override is 30 m/s. Read the generated robot file for the full configuration. |
 | Is that altitude AGL? | `ALTITUDE`, generated actor `origin`, and `move_by_velocity_z_async()` | It is a local coordinate height. It is **not** 200 m above terrain; clearance changes as terrain elevation changes. |
-| Where does actual RF motion come from? | [run(): live pose readback](../src/airsim_rf/dashboard_producer.py#L216) and [bridge.py — mount_kinematics()](../src/airsim_rf/bridge.py#L27) | Actual simulator position, velocity and attitude overwrite the Sionna TX before capture. `orbit_pose()` in the scenario module is an analytic helper used by tests, not the live flight controller. |
+| Where does actual RF motion come from? | [run(): live pose readback](../src/airsim_rf/dashboard_producer.py#L219) and [bridge.py — mount_kinematics()](../src/airsim_rf/bridge.py#L27) | Actual simulator position, velocity and attitude overwrite the Sionna TX before capture. `orbit_pose()` in the scenario module is an analytic helper used by tests, not the live flight controller. |
 | What coordinates are these? | [bridge.py — NED_TO_RF](../src/airsim_rf/bridge.py#L10) | AirSim: north/east/down. RF: north/west/up, metres. Convert signs with `[1, −1, −1]`. |
 | What creates the hills? | [terrain.py — demo_terrain()](../src/airsim_rf/terrain.py#L96) and the scaling in `dashboard_scenario.prepare()` | Analytic hills/swale on a 21×21 grid. Dashboard expands it to 800×800 m and RF-up heights 100–190 m; cells are 40 m across and become 800 triangles. It is not a surveyed DEM. |
 | Does the visual ground match RF ground? | [geometry.py — export_sionna_geometry()](../src/airsim_rf/geometry.py#L116), [geometry_sync.py — spawn_placements()](../src/airsim_rf/geometry_sync.py#L86), [dashboard_geometry.py — require_rf_mesh_match()](../src/airsim_rf/dashboard_geometry.py#L26) | Same source triangles become Unreal glTF and Sionna PLY/XML. Native Blocks physical scenery is removed by `isolate_blocks_scene()`. |
@@ -109,22 +114,22 @@ plot range does not change the transmitter or receiver filter.
 
 The live consumer has three layers:
 
-1. **Acquire and prepare inputs:** `dashboard_skill.Skill.process()` constructs
+1. **Acquire and prepare inputs:** `skills.music.MusicSkill.process()` constructs
    a four-channel matrix per site from the **first 24,000 received ADC samples**
    of every channel, divides by configured complex gains, and checks coherent
    epochs/rates. It searches −70° to +70° on a 1401-point grid (0.1° increments).
-2. **Choose a bearing:** [aoa_tracking.estimate_bearing()](../src/airsim_rf/aoa_tracking.py#L31)
+2. **Choose a bearing:** [processing.music.estimate_bearing()](../src/airsim_rf/processing/music.py#L27)
    validates geometry, computes covariance/eigenvalues, requires a largest /
    second-largest eigenvalue ratio of at least 5, then calls
    **`doa_py.algorithm.music(..., num_signal=1, ...)`** and chooses its peak.
    Grid-edge peaks are marked undetected.
-3. **Plot the search curve:** [music_plots.spatial_spectrum()](../src/airsim_rf/music_plots.py#L22)
+3. **Plot the search curve:** [processing.music.spatial_spectrum()](../src/airsim_rf/processing/music.py#L86)
    calls the same external MUSIC routine and normalizes its curve to a 0 dB
    maximum. It does not apply the detection gate. A visible peak in a normalized
    noise-only curve is therefore not automatically a detected emitter.
 
 The steering-vector implementation we supply to that dependency is
-[PhysicalULA.steering_vector()](../src/airsim_rf/aoa_tracking.py#L26).
+[PhysicalULA.steering_vector()](../src/airsim_rf/processing/music.py#L22).
 It uses metre offsets and the RF carrier. The MUSIC eigenspace/pseudospectrum
 implementation itself is in the **external open-source
 [doa_py package](https://github.com/zhiim/doa_py)**, not vendored into this repo.
@@ -143,7 +148,7 @@ The host dashboard virtual environment deliberately does not need this package;
 inspect it in the skill container or a scientific environment with the tracking
 extra installed.
 
-`dashboard_skill.start_control()` provides the SQUALL-style gRPC control/status
+`skills.music.start_control()` provides the SQUALL-style gRPC control/status
 interface. The generated files in `src/airsim_rf/ams/` describe that protocol;
 they do not implement the MUSIC algorithm.
 
@@ -176,7 +181,8 @@ questions about a specific run. With the default `--run-dir`:
 
 ```text
 recordings/dashboard/
-  arrays.json                    actual site centers, elements, channel IDs, calibration
+  arrays.json                    source-side array metadata
+  receiver-config.json           receiver-only site geometry, channels, rates and calibration
   scenario.json                  terrain grid and scenario summary
   sim_config/scene.jsonc         actor spawn and steppable physics clock
   sim_config/orbit.jsonc         generated robot, sensor and controller configuration
@@ -188,7 +194,8 @@ recordings/dashboard/
   replays/<run-id>/
     manifest.json                creation time, status and computed extent
     scenario.json                this archived run's terrain/site description
-    frames/<sim-time-ns>.json     producer truth + skill outputs for this epoch
+    frames/<sim-time-ns>.json     source telemetry/truth only
+    results/<timestamp-ns>.json   independent receiver-application measurements
     camera/<frame-key>.jpg        actual camera image
     camera/<frame-key>.json       camera timestamp and geometry hash
 ```
@@ -196,8 +203,8 @@ recordings/dashboard/
 For example, `python3 -m json.tool recordings/dashboard/arrays.json` prints the
 current receiver laydown without requiring NumPy. For a past mission, use its
 archive: top-level generated files are replaced by subsequent preparations.
-Archive `frames/*.json` separates `producer` truth/geometry/timing from `skill`
-measurements (`bearings`, `psd`, `music_db`, eigenvalues, relative phases,
+Archive `frames/*.json` contains `producer` truth/geometry/timing; separate
+`results/*.json` contains application measurements (`bearings`, `psd`, `music_db`, eigenvalues, relative phases,
 `payload_bytes`, `complete_windows`, `processing_latency_ms`). The replay archive
 contains diagnostics and camera images, **not full raw ADC I/Q**.
 
@@ -210,11 +217,11 @@ the producer/profile code above.
 
 | Intended change | Review these together |
 | --- | --- |
-| Carrier or sample rate | `dashboard_scenario.CARRIER` / `FS`; producer `PlutoSDRProfile(...)` (currently inherits fixed defaults); `PlutoSDRProfile` values; skill fixed-frequency/rate control responses; array spacing, waveform upsampling and plot labels. Editing only a global is insufficient. |
+| Carrier or sample rate | `dashboard_scenario.CARRIER` / `FS`; producer `PlutoSDRProfile(...)` (currently inherits fixed defaults); `PlutoSDRProfile` values; receiver-config rate/carrier values used by skill status; array spacing, waveform upsampling and plot labels. Editing only a global is insufficient. |
 | Orbit radius / initial location | `RADIUS` and native path construction; the literal `250 0 ...` actor spawn in scenario `prepare()`; initial Sionna TX `[250, 0, ALTITUDE]` in the producer. Live readback replaces the latter before acquisition. |
 | TX power | Every producer `SDREmitter(...)` call: initial construction, preparation and per-window replacement. Editing only `SDREmitter`'s default has no effect on these explicit overrides. |
 | Receiver positions / number of channels / array yaw | `prepare()` site metadata plus the producer's physical `[0, offset, 0]` placement and the MUSIC steering/calibration assumptions. Changing stored `yaw_rad` alone does not rotate live physical elements or turn dashboard cone angles into global bearings. `read_arrays()` currently requires two sites. |
-| RF-window length | `ADVANCE_NS`, `count`, camera `capture-interval=.12`, skill's 24,000-sample snapshot and fixed control block size, 60 ms camera matching bound and UI captions. Physics step size is a separate setting. |
+| RF-window length | `ADVANCE_NS`, `count`, camera `capture-interval=.12`, skill's 24,000-sample snapshot and reported block size, 60 ms camera matching bound and UI captions. Physics step size is a separate setting. |
 | Terrain/materials | Scenario `prepare()` and `demo_terrain()`; regenerate the shared bundle and placement together. Mesh color/emission in the producer only changes appearance. |
 | MUSIC source count or detection rule | `estimate_bearing()` and `spatial_spectrum()` both call MUSIC with `num_signal=1`. Review both, the eigenvalue-ratio gate and ambiguous-arrival UI interpretation. |
 | Receive impedance / gain / full scale | `PlutoSDRProfile`, `quantize_iq()`, calibration metadata and the skill's received-power calculation (currently literal 50 Ω). |
@@ -240,8 +247,8 @@ To jump to the main edit points from a terminal or an editor's search panel:
 ```bash
 rg -n 'def prepare|def waveform_window|FS=|CARRIER=|RADIUS=|ALTITUDE=|SPEED=' src/airsim_rf/dashboard_scenario.py
 rg -n 'PlanarArray|transmit_power_w|move_on_path_async|get_ground_truth_kinematics|SDRNetworkReceiver' src/airsim_rf/dashboard_producer.py
-rg -n 'def process|24000|linspace' src/airsim_rf/dashboard_skill.py
-rg -n 'def estimate_bearing|def steering_vector|num_signal=1|contrast<5' src/airsim_rf/aoa_tracking.py src/airsim_rf/music_plots.py
+rg -n 'def process|24000|linspace' src/airsim_rf/skills/music.py
+rg -n 'def estimate_bearing|def steering_vector|num_signal=1|contrast<5' src/airsim_rf/processing/music.py
 ```
 
 Source links jump to the current line; the named functions/classes and these

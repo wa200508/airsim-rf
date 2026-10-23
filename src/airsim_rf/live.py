@@ -110,7 +110,7 @@ def validate_inputs(config_path):
 
 
 def record(world, robots, receiver, output, *, updates, advance_ns, max_samples,
-           mounts_body_m=None, provenance=None, on_capture=None, geometry_binding=None):
+           mounts_body_m=None, provenance=None, on_capture=None, on_samples=None, geometry_binding=None):
     """Write contiguous ci16_le captures; checkpoint metadata after every update."""
     from .sdr_bridge import AirSimSDRBridge
     if not receiver.continuous:
@@ -129,7 +129,7 @@ def record(world, robots, receiver, output, *, updates, advance_ns, max_samples,
         'captures': [], 'annotations': []} for name in offsets}
     manifest = {'status': 'running', 'scope': 'live_airsim_rf_recording',
         'sample_rate_hz': receiver.profile.sample_rate_hz,
-        'timing_includes': 'physics advance/RPC, snapshot, RF capture, data and metadata writes, synchronous on_capture callback; no fsync',
+        'timing_includes': 'physics advance/RPC, snapshot, RF capture, data and metadata writes, synchronous receiver/instrumentation callbacks; no fsync',
         'rows': rows, 'provenance': provenance or {}}
     def checkpoint():
         for name, value in metadata.items():
@@ -165,6 +165,11 @@ def record(world, robots, receiver, output, *, updates, advance_ns, max_samples,
             if on_capture is not None:
                 for name, capture in captures.items():
                     on_capture(name, capture)
+            if on_samples is not None:
+                from .sample_stream import SampleBlock
+                for name,capture in captures.items():
+                    on_samples(SampleBlock(name,capture.adc_iq_volts,offsets[name]-len(capture.adc_iq_volts),
+                        capture.sim_time_ns,capture.actual_sample_rate_hz,receiver.profile.carrier_hz,capture.clipped_component_fraction))
             row['wall_ms'] = (perf_counter()-tick)*1000
         manifest['status'] = 'complete'
     except BaseException as error:
@@ -206,10 +211,12 @@ def main():
 
 
 def run(config_path, output, *, updates=10, advance_ns=10_000_000,
-        max_samples=2_000_000, pascal_compat=False, on_capture=None):
+        max_samples=2_000_000, pascal_compat=False, on_capture=None, on_samples=None):
     """Load a scenario, connect/step ProjectAirSim, record and optionally process I/Q.
 
-    on_capture(receiver_id, SDRCapture) runs synchronously after each window is
+    on_samples(SampleBlock) is the receiver-application boundary.
+    on_capture(receiver_id, SDRCapture) is a legacy simulation instrumentation hook,
+    not a skill interface. It runs synchronously after each window is
     written. Exceptions stop the run and mark the manifest failed. The simulator
     is left paused. This owns the simulator's stepping; do not run another client
     that advances or reloads this world concurrently.
@@ -217,6 +224,7 @@ def run(config_path, output, *, updates=10, advance_ns=10_000_000,
     from types import SimpleNamespace
     if min(updates, advance_ns, max_samples) < 1:
         raise ValueError('Counts and interval must be positive')
+    if on_samples is not None and not callable(on_samples):raise ValueError('on_samples must be callable')
     if on_capture is not None and not callable(on_capture):
         raise ValueError('on_capture must be callable')
     args=SimpleNamespace(config=Path(config_path), output=Path(output), updates=updates,
@@ -286,7 +294,7 @@ def run(config_path, output, *, updates=10, advance_ns=10_000_000,
             continuous=True, **input_provenance['propagation_options'])
         mounts = {n: r.get('mount_body_m', [0, 0, 0]) for n, r in config['radios'].items()}
         result = record(world, robots, receiver, args.output, updates=args.updates,
-            advance_ns=args.advance_ns, max_samples=args.max_samples, mounts_body_m=mounts, on_capture=on_capture,
+            advance_ns=args.advance_ns, max_samples=args.max_samples, mounts_body_m=mounts, on_capture=on_capture,on_samples=on_samples,
             geometry_binding=geometry_binding,
             provenance={'inputs':input_provenance, 'preflight_plan':preflight_report['plan'], 'configuration': config, 'propagation_backend': mi.variant(),
                 'renderer': 'basis-cuda', 'pascal_compat': args.pascal_compat,

@@ -104,7 +104,7 @@ def test_cached_standalone_replay_does_not_pull_or_create_containers(tmp_path):
     standalone=tmp_path/'downloaded/run_dashboard.sh';standalone.parent.mkdir()
     standalone.write_text((ROOT/'scripts/run_dashboard.sh').read_text())
     cache=Path(env['XDG_CACHE_HOME'])/'airsim-rf-dashboard';cache.mkdir(parents=True)
-    for name in ('dashboard.py','dashboard_recording.py'):(cache/name).write_text('# cached launcher')
+    for name in ('dashboard.py','dashboard_recording.py','source_recording.py'):(cache/name).write_text('# cached launcher')
     result=subprocess.run(['bash',str(standalone),'--replay'],env=env,capture_output=True,text=True)
     assert result.returncode==0,result.stderr
     events=calls(env)

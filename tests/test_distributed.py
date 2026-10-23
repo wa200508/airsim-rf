@@ -43,7 +43,7 @@ def test_native_rf_control_udp_and_retry(receiver):
     status = control.GetStatus(pb.GetStatusRequest(), timeout=1)
     assert status.ready and status.rf_status.center_frequency_hz == 24_125_000_000
     assert status.rf_status.sample_rate == 100000 and status.rf_status.block_size == 128
-    assert status.rf_status.source_type == "rf_environment"
+    assert status.rf_status.source_type == "sc16_receiver"
     assert not control.TuneRf(pb.TuneRfRequest(center_frequency_hz=915000000), timeout=1).success
     assert not control.TuneRf(pb.TuneRfRequest(agc=True), timeout=1).success
     assert control.TuneRf(pb.TuneRfRequest(center_frequency_hz=24_125_000_000), timeout=1).success

@@ -38,6 +38,8 @@ def fixture(world):
             assert epoch == calls[-1][0]+calls[-1][1]*500
         calls.append((epoch, num_samples))
         return {'rx': SimpleNamespace(adc_codes=np.tile([123, -456], (num_samples, 1)),
+                adc_iq_volts=np.full(num_samples,.123-.456j,dtype=np.complex64),
+                actual_sample_rate_hz=2e6, path_diagnostics={'private':'source only'},
                 sim_time_ns=epoch, volts_per_count=0.001, clipped_component_fraction=0.)}
     receiver = SimpleNamespace(scene=scene, profile=SimpleNamespace(sample_rate_hz=2e6, carrier_hz=915e6),
              clocks={'rx': SimpleNamespace(error_ppm=0)}, capture=capture, continuous=True)
@@ -181,6 +183,22 @@ def test_recording_reader_and_callback_preserve_samples_times_and_scaling(tmp_pa
     path=tmp_path/'run/rx.sigmf-data';path.write_bytes(path.read_bytes()[:-4])
     with pytest.raises(ValueError,match='byte count'):
         list(iter_iq_blocks(tmp_path/'run','rx'))
+
+
+def test_receiver_callback_contains_only_acquisition_data(tmp_path):
+    from dataclasses import fields
+    from airsim_rf.sample_stream import SampleBlock
+    world=TickWorld();robots,receiver,_=fixture(world);seen=[]
+    record(world,robots,receiver,tmp_path/'run',updates=2,advance_ns=10000000,
+           max_samples=100000,on_samples=seen.append)
+    assert len(seen)==2
+    assert all(isinstance(block,SampleBlock) for block in seen)
+    assert {field.name for field in fields(SampleBlock)}=={
+        'receiver','samples','sample_start','timestamp_ns','sample_rate_hz',
+        'carrier_hz','clipped_component_fraction'}
+    assert [block.sample_start for block in seen]==[0,24000]
+    assert seen[1].timestamp_ns-seen[0].timestamp_ns==12000000
+    np.testing.assert_allclose(seen[0].samples,.123-.456j,rtol=1e-6)
 
 
 def test_callback_failure_marks_saved_recording_failed(tmp_path):

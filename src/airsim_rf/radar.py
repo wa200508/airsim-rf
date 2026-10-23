@@ -3,7 +3,6 @@ from dataclasses import dataclass, replace
 from pathlib import Path
 
 import numpy as np
-from scipy.signal import correlate
 
 from .receiver import IQBlock, ReceiverConfig, synthesize_voltage
 
@@ -93,33 +92,11 @@ class RadarCapture:
     target_doppler_hz: np.ndarray
 
     def save(self, filename: str | Path):
-        range_m, compressed = range_compress(self.block.iq_volts, self.config)
-        np.savez_compressed(
-            filename, iq_volts=self.block.iq_volts, sim_time_ns=np.int64(self.block.sim_time_ns),
-            sample_rate_hz=self.config.sample_rate_hz, carrier_hz=self.config.carrier_hz,
-            impedance_ohm=self.config.impedance_ohm, bandwidth_hz=self.config.bandwidth_hz,
-            pulse_width_s=self.config.pulse_width_s, pri_s=self.config.pri_s,
-            peak_power_w=self.config.peak_power_w, noise_enabled=self.config.noise_enabled,
-            temperature_k=self.config.temperature_k, noise_figure_db=self.config.noise_figure_db,
-            transmit_blanking=self.config.transmit_blanking, tx_template=self.config.template(),
-            path_delays_s=self.block.path_delays_s, range_m=range_m,
-            range_profile_volts=compressed, target_names=np.asarray(self.target_names, dtype=str),
-            target_ranges_m=self.target_ranges_m, target_rcs_m2=self.target_rcs_m2,
-            target_doppler_hz=self.target_doppler_hz,
-        )
+        """Legacy observer export; acquisition never invokes this method."""
+        from .observer_exports import save_radar
+        return save_radar(self,filename)
 
 
-def range_compress(iq_volts, config: RadarConfig):
-    """Complex matched filter, normalized by pulse energy; zero lag is 0 m."""
-    iq = np.asarray(iq_volts)
-    if iq.ndim != 1 or iq.size != config.num_samples:
-        raise ValueError("Expected one receive window with config.num_samples samples")
-    template = config.template()
-    result = correlate(iq, template, mode="full", method="fft")
-    # Full correlation lags start at -(len(template)-1).
-    result = result[template.size - 1:] / np.sum(np.abs(template)**2)
-    ranges = np.arange(result.size) * C / (2 * config.sample_rate_hz)
-    return ranges, result
 
 
 class PointTargetRadar:
@@ -202,3 +179,11 @@ class PointTargetRadar:
         block = replace(block, iq_volts=iq, sim_time_ns=int(sim_time_ns))
         return RadarCapture(block, cfg, tuple(t.name for t in targets), np.asarray(ranges),
                             np.asarray([t.rcs_m2 for t in targets]), np.asarray(dopplers))
+
+
+def __getattr__(name):
+    # Compatibility math export; not part of the acquisition path.
+    if name=='range_compress':
+        from .processing.radar import range_compress
+        return range_compress
+    raise AttributeError(name)

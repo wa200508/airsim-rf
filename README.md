@@ -22,12 +22,17 @@ lists the selected values and flags settings that must be edited together.
 | Scenario, receiver locations and transmitted QPSK samples | [dashboard_scenario.py](src/airsim_rf/dashboard_scenario.py) — `prepare()`, `waveform_window()` |
 | Native drone flight, antenna pattern, TX power and selected RF backend | [dashboard_producer.py](src/airsim_rf/dashboard_producer.py) — `run()` |
 | SDR filtering, noise, ADC and path-to-I/Q dispatch | [sdr.py](src/airsim_rf/sdr.py) — `PlutoSDRProfile`, `SDRNetworkReceiver.capture()` |
-| Live received-I/Q processing | [dashboard_skill.py](src/airsim_rf/dashboard_skill.py) — `Skill.process()` |
-| MUSIC algorithm call, steering vector and detection gate | [aoa_tracking.py](src/airsim_rf/aoa_tracking.py) — `estimate_bearing()`, `PhysicalULA`; [full MUSIC trace](docs/code-map.md#find-the-actual-music-algorithm) |
+| Live received-I/Q processing | [skills/music.py](src/airsim_rf/skills/music.py) — `MusicSkill.process()` |
+| MUSIC algorithm call, steering vector and detection gate | [processing/music.py](src/airsim_rf/processing/music.py) — `estimate_bearing()`, `PhysicalULA`; [full MUSIC trace](docs/code-map.md#find-the-actual-music-algorithm) |
 
 The MUSIC numerical implementation comes from `doa_py`; it is not vendored
 here. The current dashboard is the QPSK SDR scenario; the LFM/FMCW radar and
 offline tracking examples have separate configurations.
+
+The **[simulation/skill boundary](docs/skill-boundary.md)** is explicit: skills
+consume receiver samples and calibration; the simulator never reads MUSIC
+results. Source telemetry and skill results meet only in the observer. The skill
+image is built independently without simulation dependencies.
 
 ## Launch the dashboard
 
@@ -160,7 +165,7 @@ shows receiver sight lines and terrain intersections. Each receiver reports
 direct elements and reflected paths; a blocked direct path can still deliver
 echoes, or only receiver noise when no modeled echo exists. Camera and RF plots
 are paired by simulation timestamps, with their time offset displayed (at most
-60 ms). The simulator waits for each RF window's skill processing before
+60 ms). The simulator waits for each RF window's generic stream acknowledgement before
 advancing. The browser decodes the paired image before updating the camera,
 terrain map, plots, clock and counters together; if either stream falls behind,
 it holds the last synchronized view. This favors alignment over wall-clock speed.

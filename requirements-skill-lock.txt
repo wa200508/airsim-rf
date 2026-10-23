@@ -1,0 +1,4 @@
+# Independent receiver application: no Sionna, Mitsuba, Dr.Jit or AirSim SDK.
+-r requirements-tracking-lock.txt
+grpcio==1.84.0
+protobuf==7.36.2

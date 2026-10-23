@@ -140,9 +140,9 @@ Edit the example's `process(samples, sample_rate_hz)` function, or use the reade
 directly in a notebook:
 
 ```python
-from airsim_rf.recording import iter_iq_blocks
+from airsim_rf.recording import iter_sample_blocks
 
-for block in iter_iq_blocks("recordings/my-first-run", "rx0"):
+for block in iter_sample_blocks("recordings/my-first-run", "rx0"):
     iq = block.samples              # complex64, I + jQ, reconstructed ADC volts
     fs = block.sample_rate_hz       # samples/second
     start = block.sample_start     # complex sample offset, not a byte offset
@@ -193,13 +193,13 @@ uses this public interface:
 ```python
 from airsim_rf.live import run
 
-def process(receiver_id, capture):
-    iq = capture.adc_iq_volts       # post-ADC, same values represented by recording
-    fs = capture.actual_sample_rate_hz
-    # Your stateful algorithm here; keep state per receiver_id.
+def process(block):
+    iq = block.samples              # post-ADC calibrated complex volts
+    fs = block.sample_rate_hz
+    # Your stateful algorithm here; keep state per block.receiver.
 
 run("recordings/my-scenario/radios.json", "recordings/my-processed-run",
-    updates=10, advance_ns=10_000_000, on_capture=process)
+    updates=10, advance_ns=10_000_000, on_samples=process)
 ```
 
 The callback runs synchronously after all receiver data for that window is saved.
@@ -212,16 +212,17 @@ a promise of real-time delivery. To process in a separate process, use the
 [experimental TCP adapter](iq-stream.md), which retains recordings and checks
 explicit consumer completion.
 
-`capture.input_iq_volts` is the pre-ADC filtered signal; `adc_iq_volts` is the
-quantized/reconstructed signal; `adc_codes` is an `(N, 2)` signed int16 I,Q array.
-Use the stage appropriate to your experiment and report which one you used.
+The neutral callback receives quantized/reconstructed volts only. The legacy
+`on_capture(name, capture)` exposes pre-ADC reference values and raw ADC codes
+for simulation instrumentation, not for RF skills. See the
+[boundary guide](skill-boundary.md).
 A weak signal can have large relative quantization error without clipping: the
 [directional-flight check](../results/reviews/directional-turns-20261015/REPORT.md)
 measured about 5% I/Q error at eight RMS ADC counts. Inspect signal level in
 counts as well as clipping; do not equate no clipping with adequate resolution.
 
 If your application already owns the simulator, RF receiver and flight control,
-use `airsim_rf.live.record(world, robots, receiver, ..., on_capture=process)`
+use `airsim_rf.live.record(world, robots, receiver, ..., on_samples=process)`
 instead of `run`, which reloads a scene. The receiver must be continuous and all
 radios must be mapped. The [two-drone qualification](../results/reviews/moving-receiver-20261011/REPORT.md)
 provides a real Fast Physics/controller example; its harness also records actual

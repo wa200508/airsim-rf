@@ -58,11 +58,11 @@ explicit; this interface does not add prehistory or loop the source.
 ```python
 from airsim_rf.live import run, record
 from airsim_rf.preflight import check
-from airsim_rf.recording import iter_iq_blocks
+from airsim_rf.recording import iter_sample_blocks
 
 plan = check("inputs/radios.json", updates=10, advance_ns=10_000_000)
 run("inputs/radios.json", "capture", updates=10, advance_ns=10_000_000,
-    on_capture=process_capture)
+    on_samples=process_samples)
 ```
 
 `run` owns client connection, scene loading, pause/advance and disconnection.
@@ -73,12 +73,16 @@ world preparation. Map every scene TX/RX ID to a robot handle. Pass the matching
 equivalence claim. Complete shared-scene loading is implemented in
 [live.py](../src/airsim_rf/live.py).
 
-`on_capture(receiver_id, capture)` runs synchronously after the window is saved.
-The simulator is paused, and callback time is included in service timing. Keep
-state per receiver and copy arrays if retaining them. Callback exceptions fail
-the recording and preserve completed data. Relevant fields are
-`capture.adc_codes` (N×2 int16), `adc_iq_volts` (quantized/reconstructed),
-`input_iq_volts` (pre-ADC filtered), `actual_sample_rate_hz` and `sim_time_ns`.
+`on_samples(block)` runs synchronously after the window is saved. The simulator
+is paused; callback time is included in service timing. Keep state per receiver.
+Exceptions fail recording and preserve completed data. `SampleBlock` exposes
+post-ADC complex volts, channel ID, acquisition `timestamp_ns`, sample offset,
+rate, carrier and clipping fraction. It contains no paths, pre-ADC reference or
+source truth. `iter_sample_blocks()` provides the same neutral recording view.
+
+The legacy `on_capture(receiver_id, capture)` exposes full simulation capture
+instrumentation, including pre-ADC data. It is retained for diagnostics, not for
+new RF skills. See the [boundary guide](skill-boundary.md).
 
 ## Recording and process boundaries
 

@@ -85,12 +85,22 @@ normalization, scenario interpretation or physical realism. Undefined values are
 acceptable only when both metadata and plots explain them. Current guides are
 short entry points; dated research is in `docs/archive/`.
 
+## Architecture qualification
+
+Run `python3 scripts/check_architecture.py` to check all first-party package
+roles and source/receiver import restrictions. CI also builds the independent
+skill and runs `scripts/qualify_skill_boundary.py` with networking disabled: an
+actual MUSIC service processes neutral coherent buffers without simulator code
+or source dependencies. See [boundary contracts and limits](skill-boundary.md).
+
 ## GPU dashboard publication
 
 `Dockerfile.dashboard` layers the pinned CUDA 12.2 CuPy libraries,
 Mitsuba 3.8.0 / Dr.Jit 1.3.1 compatibility stack, tracking lock and software
 Vulkan/Xvfb over the CPU dependency image. It checksum-verifies and bundles the
-upstream Blocks release, then exposes `gpu`, `skill` and `render` targets.
+upstream Blocks release for the `gpu` and `render` targets. The `skill` target
+uses a separate slim Python base with an explicit receiver-source allowlist and
+no simulation dependencies.
 The main workflow builds/tests the separate service images and publishes
 `ghcr.io/wa200508/airsim-rf:dashboard-gpu`, `:dashboard-skill` and
 `:dashboard-render`, plus immutable `dashboard-<role>-sha-<full-commit>` tags.

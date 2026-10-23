@@ -29,7 +29,7 @@ fi
 rf_dashboard_cache="${XDG_CACHE_HOME:-$HOME/.cache}/airsim-rf-dashboard"
 mkdir -p "$rf_dashboard_cache"
 for rf_dashboard_argument in "$@"; do
-  if [[ "$rf_dashboard_argument" == --replay && -f "$rf_dashboard_cache/dashboard.py" && -f "$rf_dashboard_cache/dashboard_recording.py" ]]; then
+  if [[ "$rf_dashboard_argument" == --replay && -f "$rf_dashboard_cache/dashboard.py" && -f "$rf_dashboard_cache/dashboard_recording.py" && -f "$rf_dashboard_cache/source_recording.py" ]]; then
     exec "$rf_dashboard_python" "$rf_dashboard_cache/dashboard.py" "$@"
   fi
 done
@@ -62,6 +62,7 @@ rf_dashboard_docker pull "$rf_dashboard_image"
 rf_dashboard_docker create --name "$rf_dashboard_source" --entrypoint python "$rf_dashboard_image" -c pass
 rf_dashboard_docker cp "$rf_dashboard_source:/opt/airsim-rf/src/airsim_rf/dashboard.py" "$rf_dashboard_cache/dashboard.py"
 rf_dashboard_docker cp "$rf_dashboard_source:/opt/airsim-rf/src/airsim_rf/dashboard_recording.py" "$rf_dashboard_cache/dashboard_recording.py"
+rf_dashboard_docker cp "$rf_dashboard_source:/opt/airsim-rf/src/airsim_rf/source_recording.py" "$rf_dashboard_cache/source_recording.py"
 rf_dashboard_docker cp "$rf_dashboard_source:/opt/airsim-rf/src/airsim_rf/dashboard_static" "$rf_dashboard_cache/"
 rf_dashboard_cleanup
 trap - EXIT INT TERM HUP

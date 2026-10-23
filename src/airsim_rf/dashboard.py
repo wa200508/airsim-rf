@@ -216,6 +216,14 @@ class Dashboard:
             path=self.run/name
             if path.exists():path.replace(self.run/(name+'.previous'))
         self.prepare();self.write_command(start=False,paused=False,stop=False)
+        self.recording_id=secrets.token_hex(8)
+        scenario=self.read('scenario.json')
+        recording=_recording.RecordingWriter(self.run/'replays',self.recording_id,scenario,self.args.duration,
+            scenario.get('advance_ns',120_000_000),no_render=self.args.no_render)
+        if not self.rootless and os.getuid()==0:
+            # A rootful launch runs services as UID 10001. Host-created journals
+            # must be writable by that same user; rootless maps UID 0 to the host.
+            for path in (recording.path,*recording.path.rglob('*')):os.chown(path,10001,10001)
         self.network_created=True
         self.command(['docker','network','create',*self.labels(),self.network])
         sim=['docker','run','--rm','--init','--name',self.names['sim'],*self.labels(),'--network',self.network,'--network-alias','projectairsim',
@@ -229,13 +237,15 @@ class Dashboard:
         self.launch('skill',['docker','run','--rm','--init','--name',self.names['skill'],*self.labels(),'--network',self.network,'--network-alias','rf-skill','--user',self.uid(),
              '-p',f'127.0.0.1:{self.args.iq_port}:8811','-p',f'127.0.0.1:{self.args.skill_port}:8812',
              '-p',f'127.0.0.1:{self.args.control_port}:8813',
-             '-v',f'{self.run}/arrays.json:/config/arrays.json:ro',self.args.skill_image])
+             '-v',f'{self.run}/receiver-config.json:/config/arrays.json:ro',
+             '-v',f'{self.run}/replays/{self.recording_id}/results:/results',
+             self.args.skill_image,'--arrays','/config/arrays.json','--results-dir','/results'])
         self.launch('rf',['docker','run','--rm','--init','--name',self.names['rf'],*self.labels(),*self.gpu_options,'--network',self.network,
             '--user',self.uid(),'--tmpfs','/.drjit:rw,mode=1777','-e','HOME=/tmp',
             '-v',f'{self.run}:/run','--workdir','/run','--entrypoint','/opt/airsim-rf/.venv/bin/python',self.args.rf_image,
             '-m','airsim_rf.cuda_launch','-m','airsim_rf.dashboard_producer','--run-dir','/run',
-            '--duration',str(self.args.duration),'--address','projectairsim','--skill-host','rf-skill',
-            '--skill-port','8811','--skill-http-port','8812','--wait-for-mission',
+            '--duration',str(self.args.duration),'--address','projectairsim','--iq-host','rf-skill',
+            '--iq-port','8811','--recording-id',self.recording_id,'--wait-for-mission',
             '--ready-timeout',str(self.args.ready_timeout),*(['--no-render'] if self.args.no_render else []),
             *(['--pascal-compat'] if self.args.pascal_compat else [])])
         self.wait_port(8989,self.args.ready_timeout,part='sim')
@@ -335,7 +345,7 @@ class Dashboard:
                 'synchronization':{'status':'waiting'},'recordings':[],'no_render':True}
         skill={}
         try:
-            with urlopen(f'http://127.0.0.1:{self.args.skill_port}/status',timeout=.4) as response:skill=json.load(response)
+            with urlopen(f'http://127.0.0.1:{self.args.skill_port}/status',timeout=.4) as response:skill=_recording.display_result(json.load(response))
             self.last_skill=skill
         except (OSError,ValueError,URLError):
             if self.last_skill:skill={**self.last_skill,'status':'offline','payload_bytes_per_second':0.}
@@ -361,7 +371,7 @@ class Dashboard:
                     diagnostics=previous['skill'];frame_producer=previous['producer']
                 else:
                     with urlopen(f'http://127.0.0.1:{self.args.skill_port}/frames/{row["sim_time_ns"]}',timeout=.4) as response:
-                        diagnostics=json.load(response)
+                        diagnostics=_recording.display_result(json.load(response))
                     frame_producer={**producer,**row,'history':[r for r in producer.get('history',[]) if r['sim_time_ns']<=row['sim_time_ns']]}
                 if diagnostics.get('sim_time_ns')==row['sim_time_ns']:
                     self.last_display={'row':row,'skill':diagnostics,'producer':frame_producer,'camera':camera_metadata}

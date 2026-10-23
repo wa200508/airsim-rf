@@ -72,6 +72,10 @@ def prepare(output,runtime_source):
     arrays={'schema_version':1,'sample_rate_hz':FS,'carrier_hz':CARRIER,'sites':[{'id':f'site{i}','channels':[f'site{i}_e{j}' for j in range(4)],'center_rf_m':[0.,float(y),float(terrain.elevation_at(0,y)+8)],'yaw_rad':0.,'element_offsets_m':offsets.tolist(),'calibration_complex':[[1.,0.]]*4} for i,y in enumerate((-25,25))],
         'scope':'Ideal coherent ULAs; full-circle azimuth/elevation ambiguities remain explicit'}
     atomic_json(output/'arrays.json',arrays)
+    # Receiver-facing metadata contains only rate/frequency and known sensor
+    # geometry/calibration. Scene assumptions and source truth stay elsewhere.
+    atomic_json(output/'receiver-config.json',{key:arrays[key] for key in
+        ('schema_version','sample_rate_hz','carrier_hz','sites')})
     source=Path(runtime_source)/'client/python/example_user_scripts/sim_config/robot_quadrotor_fastphysics_sensors.jsonc'
     if not source.exists():
         source=Path('/opt/airsim-rf/.deps/ProjectAirSim/client/python/example_user_scripts/sim_config/robot_quadrotor_fastphysics_sensors.jsonc')

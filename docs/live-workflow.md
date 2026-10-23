@@ -1,5 +1,10 @@
 # Live AirSim-to-SDR recording
 
+For receiver applications use `on_samples(SampleBlock)` or the neutral TCP
+contract. The legacy full-capture callback is simulation instrumentation. See
+the [simulation/skill boundary](skill-boundary.md) for the separation from
+recording, truth and algorithm evaluation.
+
 Start with the [shared-scene quickstart](quickstart.md) for the current complete
 installed-package workflow. The [scenario-to-I/Q walkthrough](scenario-to-iq.md)
 adds propagation choices, CPU processing and a live callback.

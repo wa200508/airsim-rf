@@ -132,28 +132,11 @@ class FMCWCapture:
     clipped_components: int
 
     def save(self, filename: str | Path):
-        ranges, spectrum = range_fft(self.adc_iq_volts, self.profile)
-        np.savez_compressed(filename, if_volts=self.if_volts, adc_codes=self.adc_codes,
-                            adc_iq_volts=self.adc_iq_volts, sim_time_ns=np.int64(self.sim_time_ns),
-                            profile_json=json.dumps(asdict(self.profile)), range_m=ranges,
-                            range_spectrum=spectrum, target_names=np.asarray(self.target_names, dtype=str),
-                            target_ranges_m=self.target_ranges_m, target_doppler_hz=self.target_doppler_hz,
-                            target_beat_hz=self.target_beat_hz, target_delays_s=self.target_delays_s,
-                            clipped_components=self.clipped_components)
+        """Legacy observer export; acquisition never invokes this method."""
+        from .observer_exports import save_fmcw
+        return save_fmcw(self,filename)
 
 
-def range_fft(iq, profile: Distance2GoLProfile, *, zero_padding=4):
-    """Positive beat range FFT, Hann window; range-Doppler coupling retained."""
-    iq = np.asarray(iq)
-    if iq.shape != (profile.num_samples,):
-        raise ValueError("Expected one ADC chirp")
-    if not isinstance(zero_padding, int) or isinstance(zero_padding, bool) or zero_padding < 1:
-        raise ValueError("zero_padding must be a positive integer")
-    nfft = profile.num_samples*zero_padding
-    window = np.hanning(profile.num_samples)
-    spectrum = np.fft.fft(iq*window, n=nfft)[:nfft//2]/window.sum()
-    frequencies = np.arange(spectrum.size)*profile.sample_rate_hz/nfft
-    return frequencies*C/(2*profile.slope_hz_s), spectrum
 
 
 class FMCWRadar:
@@ -288,3 +271,11 @@ def save_frame(captures, filename):
                         target_beat_hz=np.stack([c.target_beat_hz for c in captures]),
                         target_delays_s=np.stack([c.target_delays_s for c in captures]),
                         clipped_components=np.asarray([c.clipped_components for c in captures]))
+
+
+def __getattr__(name):
+    # Compatibility math export; not part of the acquisition path.
+    if name=='range_fft':
+        from .processing.radar import range_fft
+        return range_fft
+    raise AttributeError(name)

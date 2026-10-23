@@ -24,7 +24,7 @@ python examples/send_live_iq.py --config recordings/my-scenario/radios.json \
 Use the P100 launcher and `--pascal-compat` when required by the environment.
 Both commands default to loopback port 8765. Edit `process(block)` in the consumer
 example to call your algorithm. `block.samples` contains complex64 I+jQ volts;
-other fields give receiver ID, sample offset, integer simulator epoch, sample
+other fields give receiver ID, sample offset, integer acquisition timestamp, sample
 rate, carrier and clipping fraction. Keep processing state separately per receiver.
 The consumer can use a separate Python environment with NumPy and this package's
 source on `PYTHONPATH`; it never imports the live simulator or GPU module.
@@ -70,7 +70,28 @@ use a trusted link or SSH tunnel for another host. Binding a public listener is
 not required for the local workflow. Cross-host transport, network congestion,
 and remote failure recovery have not been qualified.
 
-## Version 1 wire contract
+## Neutral v2 wire contract and legacy v1
+
+Use `airsim_rf.sample_stream.SampleStreamWriter` / `iter_stream` for new
+consumers. `SampleBlock.timestamp_ns` names an acquisition clock, regardless of
+physical or simulated origin. V2 changes the I/Q header field below from
+`sim_time_ns` to `timestamp_ns` and rejects metadata outside the contract. The
+legacy `airsim_rf.iq_stream.IQStreamWriter.send_capture()` still emits v1; the
+neutral reader translates it at the transport boundary.
+
+V2 additionally supports `window_end` / `window_ack` (no payload), carrying next
+`sequence`, `timestamp_ns` and cumulative `sample_totals`. Call
+`writer.commit_window()` after sending all channels for a window. The neutral
+iterator acknowledges after preceding handlers return and the optional
+`validate_window` callback succeeds. Failed/incomplete processing yields no
+acknowledgement. This is generic flow control, with no algorithm result schema.
+The dashboard uses it for controlled stepping; the simple legacy example below
+still uses the final-stream acknowledgement only.
+
+The following table documents the retained v1 encoding; v2 uses the same framing
+and rules with the timestamp substitution and window control frames above.
+
+### Legacy v1 fields
 
 A frame begins with two unsigned 32-bit big-endian lengths: UTF-8 JSON header
 bytes, then payload bytes. The header is at most 16,384 bytes; payload is at most

@@ -83,15 +83,19 @@ and Doppler alone do not determine a coherent voltage.
 
 ## User signal-processing interfaces
 
-`airsim_rf.live.run(..., on_capture=callback)` supplies each receiver window
+`airsim_rf.live.run(..., on_samples=callback)` supplies each neutral `SampleBlock`
 to a synchronous Python callback after saving it. The simulator remains paused
-while user processing runs. `airsim_rf.recording.iter_iq_blocks` streams complete
+while user processing runs. `airsim_rf.recording.iter_sample_blocks` streams complete
 recordings into CPU NumPy arrays with sample rate, sample offset, integer
-simulator epoch and per-window voltage scaling. These interfaces share the same
+acquisition timestamp and calibrated complex volts. These interfaces share the same
 post-ADC samples; neither alone is a network transport or physical SDR driver. The
 [experimental TCP adapter](iq-stream.md) sends these same voltage blocks to a
 separate consumer with backpressure and explicit completion acknowledgement.
 See the [scenario-to-I/Q walkthrough](scenario-to-iq.md) for runnable examples.
+
+The [simulation/skill boundary](skill-boundary.md) describes the import walls,
+independent skill image, generic window commit and observer-only record joins.
+The old `on_capture` is simulation instrumentation and is not a skill interface.
 
 ## Distributed interfaces
 

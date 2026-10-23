@@ -23,6 +23,8 @@ jobs:
       packages: write
     steps:
       - uses: actions/checkout@v4
+      - name: Check source/application architecture boundaries
+        run: python3 scripts/check_architecture.py
       - name: Check maintained documentation links
         run: python3 scripts/check_docs.py
       - name: Check synchronized dashboard presentation with delayed video
@@ -87,6 +89,10 @@ jobs:
             --build-arg SOURCE_REVISION=${{ github.sha }} --target skill -t airsim-rf:dashboard-skill-test .
           docker build -f Dockerfile.dashboard --build-arg BASE_IMAGE=airsim-rf:test \
             --build-arg SOURCE_REVISION=${{ github.sha }} --target render -t airsim-rf:dashboard-render-test .
+      - name: Prove standalone RF skill works without simulation dependencies
+        run: |
+          docker run --rm --network none --entrypoint python airsim-rf:dashboard-skill-test \
+            scripts/qualify_skill_boundary.py
       - name: Registry tags
         id: meta
         if: github.event_name != 'pull_request' && (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/v'))

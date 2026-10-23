@@ -19,7 +19,7 @@ class RFControl(rpc.SquallRfControlServicer):
         return pb.GetStatusResponse(name=w.receiver_id, domain="rf", running=True, ready=True,
             uptime_seconds=int(time.monotonic()-w.started), rf_status=pb.RfStatus(
                 center_frequency_hz=round(w.profile.carrier_hz), sample_rate=round(w.profile.sample_rate_hz),
-                block_size=w.profile.num_samples, source_type="rf_environment", current_mode=mode))
+                block_size=w.profile.num_samples, source_type="sc16_receiver", current_mode=mode))
 
     def AddDataDestination(self, request, context):
         try:
