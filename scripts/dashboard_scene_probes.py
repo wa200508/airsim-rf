@@ -6,6 +6,7 @@ from scipy.spatial.transform import Rotation
 from airsim_rf.geometry import read_bundle
 from airsim_rf.geometry_sync import nearest_intersections,AirSimGeometryBinding,spawn_placements
 from airsim_rf.dashboard_geometry import isolate_blocks_scene,require_rf_mesh_match
+from airsim_rf.dashboard_view import TERRAIN_BASE_COLOR_RGBA,TERRAIN_EMISSIVE_RGB
 
 
 def add_probes(output):
@@ -48,7 +49,7 @@ def spawn_environment(output,world):
     document,_,bindings=read_bundle(output/'bundle');report=isolate_blocks_scene(world)
     binding=AirSimGeometryBinding(document,bindings)
     for obj in binding.plan['objects']:
-        obj['mesh'].update(base_color_rgba=[.34,.48,.22,1],emissive_rgb=[.07,.10,.045])
+        obj['mesh'].update(base_color_rgba=TERRAIN_BASE_COLOR_RGBA,emissive_rgb=TERRAIN_EMISSIVE_RGB)
     spawn_placements(world,binding.plan)
     report['airsim']=binding.require_static_match(world,int(world.get_sim_time()))
     return report

@@ -160,6 +160,13 @@ partial runs and previous missions. This records camera images, telemetry and
 RF diagnostics for GUI playback; **raw ADC I/Q samples are not saved** by the
 dashboard recorder. Runs made before this feature cannot be fully replayed.
 
+The receiver dropdown switches the spectrum and waterfall between the two
+receiving sites. MUSIC uses a circular 360° search with explicit front/back
+ambiguity; its radius is relative power in dB. The chase camera sits 5 metres
+from the drone, with darker terrain and terrain-occluded TX/RX labels. New
+recordings include both receiver spectra; older recordings retain their
+original data and camera view.
+
 The terrain map below the camera uses the same DEM as AirSim and Sionna and
 shows receiver sight lines and terrain intersections. Each receiver reports
 direct elements and reflected paths; a blocked direct path can still deliver

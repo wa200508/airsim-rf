@@ -221,6 +221,21 @@ buffers with continuous symbol identity and TX FIR history/lookahead. Sources
 are not silently looped. The consumer receives every ADC sample; its declared
 24,000-sample snapshot bounds MUSIC/plot work per window.
 
+The **Receiver I/Q stream** dropdown selects Site 0 or Site 1 (element 0 of
+that coherent array). Spectrum and waterfall switch together at the displayed
+RF epoch, including when paused or seeking saved runs. Old archives that stored
+only Site 0 disable Site 1; they cannot reconstruct its missing spectra.
+
+The **MUSIC Spatial Search** is a full **−180° to +180° circular search**. Angle
+is around the circle; radius is the relative pseudospectrum (dB), with 0 dB on
+the outer ring and −65 dB at the center. Zero degrees is each array's local
+broadside. A linear array has paired front/back lobes: this view shows that
+ambiguity rather than claiming a unique full-circle bearing. The scalar
+cone-angle candidate searches −90° to +90°, removing the former artificial
+±70° cutoff. Older saved partial searches remain partial arcs and are labeled
+with their stored angular coverage. The eigenvalue and phase panels explicitly
+label their vertical units as relative power (dB) and phase (rad).
+
 MUSIC outputs an arrival **cone-angle candidate**. The full orbit introduces
 ULA front/back and elevation ambiguity, and coherent reflections can bias peaks.
 The demo does not infer successful sensing from the existence of a peak. The
@@ -269,8 +284,10 @@ payload/window counters and processing latency in one animation frame. Failed
 or delayed images hold the entire previous mission view. Per-epoch diagnostics
 include frozen histories and counters; they do not age or change while held.
 Service health, errors and mission controls stay live so a stalled mission can
-still be stopped. Projected radio labels are removed so they cannot show through
-a hill. This coordination can reduce simulation/wall-clock speed; it does not
+still be stopped. TX/RX labels are projected using the native image pose and
+the applied camera mount, and are hidden when the shared terrain blocks their
+anchor from the camera. This visibility check is separate from radio propagation.
+This coordination can reduce simulation/wall-clock speed; it does not
 change generated samples, waveform continuity, Doppler, terrain, trajectory,
 reflection order or receiver sensitivity. The scene update remains 120 ms;
 this dashboard does not claim 120 Hz operation.
@@ -314,9 +331,12 @@ than replacing the AirSim camera with a fabricated scene. A graphics-capable
 Unreal/Vulkan environment is needed for the full requested view; the render
 image also includes a software Vulkan/X display path for qualification.
 
-The Chase camera is gimballed inward from 100 m outside and 65 m above the
-airborne transmitter, aimed between the drone and the two ground receivers.
-Actual body attitude is removed from the relative camera transform. TX/RX la
+The Chase camera follows **5 metres from the drone**, slightly above and behind
+it, aimed at the midpoint of the two receiving sites. The relative mount
+compensates for body attitude when each view is queued. The terrain uses a darker
+visual base color and much lower emission to keep the nearby drone distinct.
+These presentation changes do not modify RF materials, geometry or propagation.
+
 ## Rootless Docker
 
 Use the rootless context owned by your login user, with no `sudo docker`:

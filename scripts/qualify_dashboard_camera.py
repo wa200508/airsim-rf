@@ -15,6 +15,7 @@ import sys
 import time
 
 import numpy as np
+from scipy.spatial.transform import Rotation
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -62,23 +63,31 @@ async def check_camera(output):
             raise RuntimeError('No actual camera frame after queued poses and ten simulator steps')
         frame = frames[-1]
         image = unpack_image(frame)
-        # The configured fixed camera is roughly 140 m away horizontally from
-        # the requested inward view. Verify rendering applied the requested pose,
-        # rather than accepting an old frame from the original fixed camera.
+        # Verify the actual rendered camera followed the requested chase pose.
+        # The close default mount alone does not establish receiver-facing aim.
         horizontal_error = float(np.linalg.norm(np.array([frame['pos_x'], frame['pos_y']]) - eye[:2]))
+        actual_eye=np.array([frame['pos_'+axis] for axis in ('x','y','z')])
+        actual_rotation=Rotation.from_quat([frame['rot_'+axis] for axis in ('x','y','z','w')])
+        target=np.mean(receivers,axis=0)*[1,-1,-1]-actual_eye;target/=np.linalg.norm(target)
+        aim_error=float(np.degrees(np.arccos(np.clip(np.dot(actual_rotation.apply([1,0,0]),target),-1,1))))
+        current,_,_=mount_kinematics(normalize_kinematics(drone.get_ground_truth_kinematics()))
+        chase_distance=float(np.linalg.norm(actual_eye-current*[1,-1,-1]))
         elapsed = (int(world.get_sim_time()) - origin) * 1e-9
         checks = {
             'ten_paused_camera_requests_accepted': len(timings) == 10,
             'simulation_advanced_1_2_seconds': abs(elapsed - 1.2) < .01,
             'real_960_by_540_image_received': image.shape == (540, 960, 3),
             'requested_camera_position_rendered': horizontal_error < 3,
+            'close_chase_camera': 2<chase_distance<8,
+            'camera_faces_receiver_midpoint': aim_error<5,
         }
         alignment.update(compare_probes(output,probes,probe_messages,probe_drones))
         checks['unreal_collision_and_sionna_dem_match']=True
         report = {'status': 'passed' if all(checks.values()) else 'failed', 'checks': checks,
                   'metrics': {'camera_frames': len(frames), 'sim_elapsed_s': elapsed,
                               'pose_request_wall_s': timings,
-                              'horizontal_camera_position_error_m': horizontal_error},
+                              'horizontal_camera_position_error_m': horizontal_error,
+                              'chase_distance_m':chase_distance,'receiver_aim_error_deg':aim_error},
                   'scene_alignment':alignment,
                   'scope': 'Actual Unreal/software Vulkan, CPU LiDAR terrain probes and Sionna mesh; '
                            'no CUDA, RF generation or full-mission qualification'}

@@ -41,6 +41,7 @@ def waveform_window(epoch_ns,count,origin_ns):
 
 def prepare(output,runtime_source):
     import commentjson
+    from .dashboard_view import CAMERA_FOV_DEG
     from .geometry import export_sionna_geometry
     from .geometry_sync import placement_plan
     output=Path(output);output.mkdir(parents=True,exist_ok=True)
@@ -82,8 +83,8 @@ def prepare(output,runtime_source):
     if not source.exists():raise ValueError('Pinned ProjectAirSim robot template is missing; rebuild the qualified CPU base image')
     robot=commentjson.loads(source.read_text());robot['controller']['simple-flight-api-settings']['parameters']={'MPC_XY_VEL_MAX':30.}
     robot['sensors']=[s for s in robot['sensors'] if s['id']=='Chase']
-    camera=robot['sensors'][0];camera['gimbal']={'lock-roll':False,'lock-pitch':False,'lock-yaw':False};camera['capture-interval']=.12;camera['origin']={'xyz':'-100 0 -60','rpy-deg':'0 -35 0'}
-    camera['capture-settings'][0].update(width=960,height=540,compress=False)
+    camera=robot['sensors'][0];camera['gimbal']={'lock-roll':False,'lock-pitch':False,'lock-yaw':False};camera['capture-interval']=.12;camera['origin']={'xyz':'-4.85 0 -1.2','rpy-deg':'0 -20 0'}
+    camera['capture-settings'][0].update(width=960,height=540,compress=False,**{'fov-degrees':CAMERA_FOV_DEG})
     sim=output/'sim_config';sim.mkdir(exist_ok=True);atomic_json(sim/'orbit.jsonc',robot)
     atomic_json(sim/'scene.jsonc',{'id':'OrbitDashboard','scene-type':'UnrealNative','actors':[{'type':'robot','name':'OrbitDrone','origin':{'xyz':f'250 0 {-ALTITUDE}','rpy-deg':'0 0 -90'},'robot-config':'orbit.jsonc'}],
         'clock':{'type':'steppable','step-ns':3_000_000,'real-time-update-rate':3_000_000,'pause-on-start':True},'home-geo-point':{'latitude':47.641468,'longitude':-122.140165,'altitude':122.}})

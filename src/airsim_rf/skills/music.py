@@ -58,32 +58,37 @@ class MusicSkill:
         if any((b.timestamp_ns,b.sample_start,len(b.samples),b.sample_rate_hz,b.carrier_hz)!=(first.timestamp_ns,first.sample_start,len(first.samples),first.sample_rate_hz,first.carrier_hz) for b in blocks.values()):
             raise ValueError('Coherent array block epochs/offsets/rates differ')
         if first.sample_rate_hz!=self.arrays['sample_rate_hz'] or first.carrier_hz!=self.arrays['carrier_hz']:raise ValueError('Array rate/carrier mismatch')
-        grid=np.linspace(-70,70,1401);bearings=[];curves=[];eigen=[];phase=None;psd=None
+        grid=np.linspace(-180,180,3601);bearing_grid=grid[(grid>=-90)&(grid<=90)]
+        bearings=[];curves=[];eigen=[];phase=None;spectra=[]
         for index,site in enumerate(self.arrays['sites']):
             gain=np.asarray(site['calibration_complex']);gain=gain[:,0]+1j*gain[:,1]
             # Every sample is transported; a declared 24k simultaneous snapshot
             # bounds covariance/plot latency without changing the producer rate.
             matrix=np.stack([blocks[n].samples[:24000]/g for n,g in zip(site['channels'],gain)])
-            result=estimate_bearing(matrix,site['element_offsets_m'],first.carrier_hz,grid_deg=grid)
+            result=estimate_bearing(matrix,site['element_offsets_m'],first.carrier_hz,grid_deg=bearing_grid)
             result['received_power_dbm']=float(10*np.log10(max(float(np.mean(abs(matrix)**2))/50,1e-30)*1000))
             bearings.append(result)
             curves.append(spatial_spectrum(matrix,site['element_offsets_m'],first.carrier_hz,grid).tolist())
             eig=np.linalg.eigvalsh(np.cov(matrix))[::-1];eigen.append((10*np.log10(np.maximum(eig/eig[0],1e-12))).tolist())
+            f,t,p=frequency_psd(matrix[0],first.sample_rate_hz);mask=abs(f)<=100000
+            psd={'frequency_khz':(f[mask]/1000).tolist(),'density_db_v2_hz':(10*np.log10(np.maximum(p[mask].mean(axis=1),1e-30))).tolist()}
+            spectra.append({'site_id':site['id'],'receiver':site['channels'][0],'element':0,'psd':psd})
             if index==0:
-                f,t,p=frequency_psd(matrix[0],first.sample_rate_hz);mask=abs(f)<=100000
-                psd={'frequency_khz':(f[mask]/1000).tolist(),'density_db_v2_hz':(10*np.log10(np.maximum(p[mask].mean(axis=1),1e-30))).tolist()}
                 phase=np.unwrap(np.angle(np.mean(matrix*matrix[0].conj(),axis=1))).tolist()
         now=time.monotonic();self.traffic.append((now,self.state['payload_bytes']))
         while len(self.traffic)>1 and self.traffic[0][0]<now-3:self.traffic.popleft()
         elapsed=now-self.traffic[0][0]
         rate=(self.state['payload_bytes']-self.traffic[0][1])/elapsed if elapsed>.01 else 0.
-        self.waterfall.append({'timestamp_ns':first.timestamp_ns,'psd_db':psd['density_db_v2_hz']})
+        self.waterfall.append({'timestamp_ns':first.timestamp_ns,
+            'psd_db':spectra[0]['psd']['density_db_v2_hz'],
+            'site_psd_db':[entry['psd']['density_db_v2_hz'] for entry in spectra]})
         self.history.append({'timestamp_ns':first.timestamp_ns,'angles_deg':[b['angle_deg'] if b['detected'] else None for b in bearings],
             'detected':[b['detected'] for b in bearings],'payload_bytes':self.state['payload_bytes'],'sample_start':first.sample_start})
         with self.lock:
             self.state.update(status='processing',complete_windows=self.state['complete_windows']+1,
                 timestamp_ns=first.timestamp_ns,sample_start=first.sample_start,samples_per_channel=len(first.samples),
-                payload_bytes_per_second=rate,bearings=bearings,psd=psd,angle_grid_deg=grid.tolist(),music_db=curves,
+                payload_bytes_per_second=rate,bearings=bearings,psd=spectra[0]['psd'],receiver_spectra=spectra,
+                angle_grid_deg=grid.tolist(),music_db=curves,
                 eigenvalues_db=eigen,phase_rad=phase,history=list(self.history),waterfall=list(self.waterfall),updated_monotonic=now,
                 processing_latency_ms=(now-start)*1000,source='calibrated receiver complex volts',
                 ambiguity='ULA cone angle; full-circle front/back and elevation ambiguities; multipath peaks are candidates')

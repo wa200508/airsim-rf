@@ -86,6 +86,9 @@ def test_gimballed_camera_frames_all_radios_across_complete_orbit():
     for angle in np.linspace(0,2*np.pi,121):
         position=np.array([250*np.cos(angle),250*np.sin(angle),220.])
         eye,rotation=camera_frame(position,receivers)
+        assert np.linalg.norm(eye-position*[1,-1,-1])==pytest.approx(5.)
+        target=np.mean(receivers,axis=0)*[1,-1,-1]
+        np.testing.assert_allclose(rotation[:,0],(target-eye)/np.linalg.norm(target-eye))
         points=project_radios(eye,rotation,[position,*receivers],960,540)
         assert np.all(points[:,2]>0)
         assert np.all((points[:,0]>80)&(points[:,0]<880))
@@ -97,6 +100,32 @@ def test_gimballed_camera_frames_all_radios_across_complete_orbit():
         relative=relative_camera_pose(eye,rotation,kinematics)
         np.testing.assert_allclose(body.apply(list(relative['translation'].values()))+ned,eye,atol=1e-10)
         np.testing.assert_allclose(body.as_matrix()@Rotation.from_quat(list(relative['rotation'].values())).as_matrix(),rotation,atol=1e-10)
+
+
+def test_camera_labels_use_native_image_pose_and_hide_terrain_obstructed_anchors():
+    from airsim_rf.dashboard_view import camera_frame,relative_camera_pose,camera_labels,project_radios
+    from scipy.spatial.transform import Rotation
+    receivers=[[0,-25,108],[0,25,115]];position=np.array([250.,0,220])
+    eye,rotation=camera_frame(position,receivers)
+    kinematics={'pose':{'position':dict(zip(('x','y','z'),position*[1,-1,-1])),
+        'orientation':{'x':0,'y':0,'z':0,'w':1}}}
+    mount=relative_camera_pose(eye,rotation,kinematics)
+    # The drone and body attitude have changed since the mount was requested.
+    body=Rotation.from_euler('ZYX',[.02,.01,-.01]);drone=position*[1,-1,-1]+[0,2,-1]
+    actual_rotation=body.as_matrix()@rotation;actual_eye=drone+body.apply(list(mount['translation'].values()))
+    q=Rotation.from_matrix(actual_rotation).as_quat()
+    message={'width':960,'height':540,**dict(zip(('pos_x','pos_y','pos_z'),actual_eye)),
+        **dict(zip(('rot_x','rot_y','rot_z','rot_w'),q))}
+    document={'schema_version':1,'scene_id':'Labels','revision':'1',
+        'source':{'adapter':'test','version':'1','asset':'wall','revision':'1','geometry_kind':'shared'},
+        'materials':{'earth':{'relative_permittivity':5.,'conductivity_s_m':.01,'assumption':'Synthetic occluder'}},
+        'objects':[{'id':'Terrain','material':'earth','vertices_local':[[125,5,-300],[125,20,-300],[125,20,0],[125,5,0]],
+            'faces':[[0,1,2],[0,2,3]],'local_to_ned_m':np.eye(4).tolist()}]}
+    labels=camera_labels(message,mount,receivers,document)
+    assert {label['text'] for label in labels}=={'TX / DRONE','RX 1'}
+    tx=next(label for label in labels if label['text']=='TX / DRONE')
+    expected=project_radios(actual_eye,actual_rotation,[drone*[1,-1,-1]],960,540)[0]
+    np.testing.assert_allclose([tx['x'],tx['y']],expected[:2],atol=1e-10)
 
 
 def test_chase_camera_queues_pose_while_simulation_is_paused():
@@ -207,6 +236,39 @@ def test_skill_keeps_diagnostics_for_a_delayed_camera_epoch(tmp_path):
     with pytest.raises(KeyError):skill.epoch_status(999)
     skill.state.update(status='failed',error='processing failed')
     with pytest.raises(RuntimeError,match='processing failed'):skill.epoch_status(0)
+
+
+def test_skill_publishes_independent_receiver_spectra_and_waterfall_rows(tmp_path):
+    pytest.importorskip('doa_py')
+    import json
+    from airsim_rf.skills.music import MusicSkill
+    arrays={'schema_version':1,'sample_rate_hz':FS,'carrier_hz':915e6,'sites':[
+        {'id':f'site{i}','channels':[f's{i}e{j}' for j in range(4)],'center_rf_m':[0,i*20,110],
+         'yaw_rad':0,'element_offsets_m':(np.arange(4)*299792458./915e6/2).tolist(),
+         'calibration_complex':[[1,0]]*4} for i in range(2)]}
+    path=tmp_path/'arrays.json';path.write_text(json.dumps(arrays));skill=MusicSkill(path)
+    rng=np.random.default_rng(77);t=np.arange(8192)/FS;blocks={}
+    for site,frequency,amplitude in zip(arrays['sites'],[10000,-35000],[.001,.0002]):
+        for name,offset in zip(site['channels'],site['element_offsets_m']):
+            steering=np.exp(2j*np.pi*915e6/299792458.*offset*np.sin(np.deg2rad(80)))
+            samples=amplitude*steering*np.exp(2j*np.pi*frequency*t)+1e-8*(rng.normal(size=len(t))+1j*rng.normal(size=len(t)))
+            blocks[name]=StreamIQBlock(name,samples.astype(np.complex64),0,0,FS,915e6,0)
+    skill.process(blocks);frame=skill.snapshot(0)
+    for entry,site,expected in zip(frame['receiver_spectra'],arrays['sites'],[10,-35]):
+        psd=entry['psd']
+        assert entry['receiver']==site['channels'][0]
+        assert abs(psd['frequency_khz'][np.argmax(psd['density_db_v2_hz'])]-expected)<.5
+    assert frame['psd']==frame['receiver_spectra'][0]['psd']
+    row=frame['waterfall'][0]
+    assert row['site_psd_db']==[entry['psd']['density_db_v2_hz'] for entry in frame['receiver_spectra']]
+    assert row['site_psd_db'][0]!=row['site_psd_db'][1]
+    assert frame['angle_grid_deg'][0]==-180 and frame['angle_grid_deg'][-1]==180
+    assert all(bearing['detected'] and abs(bearing['angle_deg']-80)<.2 for bearing in frame['bearings'])
+    for curve in frame['music_db']:
+        # A physical ULA has identical steering at 80° and 100°; a 360° search
+        # must expose that ambiguity and remain continuous at the ±180° seam.
+        assert curve[2600]==pytest.approx(curve[2800],abs=1e-5)
+        assert curve[0]==pytest.approx(curve[-1],abs=1e-5)
 
 
 def test_real_neutral_skill_ingress_and_stream_commit_release_flight_only_after_eight_channels(tmp_path):

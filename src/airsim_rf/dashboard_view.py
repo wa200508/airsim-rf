@@ -2,14 +2,20 @@
 import numpy as np
 from scipy.spatial.transform import Rotation
 
+CHASE_DISTANCE_M=5.
+CAMERA_FOV_DEG=90.
+TERRAIN_BASE_COLOR_RGBA=[.12,.18,.085,1.]
+TERRAIN_EMISSIVE_RGB=[.008,.012,.005]
+
 
 def camera_frame(position_rf, receiver_positions_rf):
-    """World NED camera outside/above the drone, aimed between the radios."""
+    """Five-metre chase boom, slightly above the drone, aimed between the radios."""
     flip=np.array([1,-1,-1]);position=np.asarray(position_rf,float)
     center=np.mean(receiver_positions_rf,axis=0)
-    outward=position-center;outward[2]=0;outward/=np.linalg.norm(outward)
-    eye=(position+100*outward+[0,0,65])*flip
-    target=(.45*position+.55*center)*flip
+    outward=position-center;outward/=np.linalg.norm(outward)
+    boom=outward+[0,0,.25];boom*=CHASE_DISTANCE_M/np.linalg.norm(boom)
+    eye=(position+boom)*flip
+    target=center*flip
     forward=target-eye;forward/=np.linalg.norm(forward)
     right=np.cross([0,0,1],forward);right/=np.linalg.norm(right)
     down=np.cross(forward,right)
@@ -40,12 +46,40 @@ def queue_chase_camera_pose(drone, position_rf, receiver_positions_rf, kinematic
     return eye, rotation
 
 
-def project_radios(eye_ned,camera_to_ned,points_rf,width,height,fov_deg=90):
+def project_radios(eye_ned,camera_to_ned,points_rf,width,height,fov_deg=CAMERA_FOV_DEG):
     points=np.asarray(points_rf)*[1,-1,-1]
     local=(points-eye_ned)@camera_to_ned
     focal=width/(2*np.tan(np.deg2rad(fov_deg)/2))
     return np.column_stack((width/2+focal*local[:,1]/local[:,0],
                             height/2+focal*local[:,2]/local[:,0],local[:,0]))
+
+
+def camera_labels(message,mount_pose,receiver_positions_rf,document):
+    """Project actual-frame TX/RX anchors; omit labels hidden by the shared mesh.
+
+    The applied body-relative camera mount and native image pose reconstruct the
+    drone origin at image time. This avoids using a newer RF pose for a delayed
+    image. Camera visibility is separate from TX/RX propagation visibility.
+    """
+    from .geometry_sync import nearest_intersections
+    eye=np.array([message['pos_'+axis] for axis in ('x','y','z')])
+    rotation=Rotation.from_quat([message['rot_'+axis] for axis in ('x','y','z','w')]).as_matrix()
+    q=mount_pose['rotation'];relative=Rotation.from_quat([q[k] for k in ('x','y','z','w')]).as_matrix()
+    translation=np.array([mount_pose['translation'][k] for k in ('x','y','z')])
+    drone=eye-rotation@relative.T@translation
+    points=np.vstack((drone,np.asarray(receiver_positions_rf)*[1,-1,-1]))
+    vectors=points-eye;distances=np.linalg.norm(vectors,axis=1)
+    hits=nearest_intersections(document,np.tile(eye,(len(points),1)),vectors,
+        maximum_distance_m=float(distances.max()))
+    pixels=project_radios(eye,rotation,points*[1,-1,-1],message['width'],message['height'])
+    labels=[]
+    for index,((x,y,depth),hit,distance) in enumerate(zip(pixels,hits,distances)):
+        if depth<=0 or not (0<x<message['width'] and 0<y<message['height']):continue
+        if hit is not None and hit['distance_m']<distance-.01:continue
+        labels.append({'text':'TX / DRONE' if index==0 else f'RX {index-1}',
+            'x':float(x),'y':float(y),'color_rgb':([255,200,90] if index==0 else
+                [85,215,208] if index==1 else [230,185,108])})
+    return labels
 
 
 def radio_marker_glb(color):

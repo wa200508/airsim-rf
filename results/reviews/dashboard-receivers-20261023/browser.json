@@ -1,0 +1,14 @@
+{
+  "status": "passed",
+  "scope": "Actual host replay server and Chromium; saved two-receiver presentation fixtures and older camera image, not a new GPU mission",
+  "receiver_switch_changes_spectrum_and_waterfall": true,
+  "switch_preserves_image_and_rf_epoch": true,
+  "site_0_restore_identical": true,
+  "circular_music_caption": true,
+  "mobile_horizontal_overflow": false,
+  "mobile_mini_plot_widths": [
+    162.3125,
+    162.3125
+  ],
+  "javascript_errors": []
+}

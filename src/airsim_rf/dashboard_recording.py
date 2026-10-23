@@ -81,7 +81,8 @@ class RecordingStore:
                         'angles_deg':[b['angle_deg'] if b['detected'] else None for b in s.get('bearings',[])],
                         'detected':[b['detected'] for b in s.get('bearings',[])],
                         'payload_bytes':s.get('payload_bytes',0),'sample_start':s.get('sample_start',0)},
-                    'waterfall':{'sim_time_ns':epoch,'psd_db':s.get('psd',{}).get('density_db_v2_hz',[])}}
+                    'waterfall':{'sim_time_ns':epoch,'psd_db':s.get('psd',{}).get('density_db_v2_hz',[]),
+                        'site_psd_db':[entry['psd']['density_db_v2_hz'] for entry in s.get('receiver_spectra',[])]}}
             for camera in (path/'camera').glob('*.json'):
                 if camera.stem not in index['cameras']:
                     value=json.loads(camera.read_text())

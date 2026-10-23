@@ -128,3 +128,18 @@ def test_existing_version_one_archive_remains_playable(tmp_path):
     replay=recording.RecordingStore(tmp_path/'replays').snapshot(ID)
     assert replay['skill']['complete_windows']==1
     assert replay['playback']['playable_frames']==1
+
+
+def test_replay_keeps_each_receiver_spectrum_and_its_own_waterfall(tmp_path):
+    writer=make_writer(tmp_path,no_render=True)
+    for index in range(2):
+        p,s=write_frame(writer,index,False)
+        s['receiver_spectra']=[{'site_id':f'site{i}','receiver':f'site{i}_e0','element':0,
+            'psd':{'frequency_khz':[0,1],'density_db_v2_hz':[index-20*i,index+1-20*i]}} for i in range(2)]
+        writer.frame(p,s)
+    store=recording.RecordingStore(tmp_path/'replays')
+    replay=store.snapshot(ID)
+    assert replay['skill']['receiver_spectra'][1]['psd']['density_db_v2_hz']==[-19,-18]
+    assert [row['site_psd_db'][1] for row in replay['skill']['waterfall']]==[[-20,-19],[-19,-18]]
+    earlier=store.snapshot(ID,0)
+    assert earlier['skill']['receiver_spectra'][1]['psd']['density_db_v2_hz']==[-20,-19]

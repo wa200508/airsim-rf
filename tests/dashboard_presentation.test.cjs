@@ -7,27 +7,27 @@ const vm=require('node:vm');
 const path=require('node:path');
 
 function dashboard(){
- const elements=new Map(),decodes=[],listeners={},draws=[],requests=[];
+ const elements=new Map(),decodes=[],listeners={},draws=[],drawCalls=[],requests=[];let created=0;
  function element(id){
   if(elements.has(id))return elements.get(id);
   const children=new Map();
   const node={id,hidden:false,textContent:'',classList:{toggle(){}},
    querySelector(selector){if(!children.has(selector))children.set(selector,element(id+selector));return children.get(selector);},
    getBoundingClientRect(){return {width:400,height:200};},
-   getContext(){return new Proxy({},{get:(_,key)=>()=>draws.push(id+':'+key),set:()=>true});},
-   replaceChildren(){},
+   getContext(){return new Proxy({},{get:(_,key)=>(...args)=>{draws.push(id+':'+key);drawCalls.push({id,method:key,args});},set:()=>true});},
+   replaceChildren(...nodes){this.children=nodes;},
    cloneNode(){return {id,src:'',decode(){return new Promise((resolve,reject)=>decodes.push({resolve,reject}));}};},
    replaceWith(replacement){replacement.replaceWith=this.replaceWith;replacement.cloneNode=this.cloneNode;replacement.classList=this.classList;elements.set(id,replacement);},
   };
   elements.set(id,node);return node;
  }
  element('site-status').children=[element('site0'),element('site1')];
- const context=vm.createContext({document:{getElementById:element,querySelector:element,createElement:element},
+ const context=vm.createContext({document:{getElementById:element,querySelector:element,createElement:tag=>element(tag+'-'+created++)},
   window:{addEventListener:(event,callback)=>listeners[event]=callback},devicePixelRatio:1,
   fetch:(url,options)=>{requests.push({url,options});return new Promise(()=>{});},AbortSignal,setTimeout,clearTimeout,
   requestAnimationFrame:callback=>queueMicrotask(callback),performance,console});
  vm.runInContext(fs.readFileSync(path.join(__dirname,'../src/airsim_rf/dashboard_static/app.js'),'utf8'),context);
- return {context,element,decodes,listeners,draws,requests};
+ return {context,element,decodes,listeners,draws,drawCalls,requests};
 }
 
 function frame(index){
@@ -106,4 +106,48 @@ test('recorded playback can seek backward atomically without pausing computation
  assert.equal(ui.element('camera').src,'/camera.jpg?frame=0');
  assert.equal(ui.element('playback-seek').value,0);
  assert.equal(ui.element('record-progress').value,.36); // Seeking cannot erase completed computation.
+});
+
+test('receiver selection switches actual spectra and saved waterfall without advancing playback',{timeout:3000},async()=>{
+ const ui=dashboard(),state=frame(0);
+ state.scenario.sites=[{id:'site0',center_rf_m:[0,-25,110]},{id:'site1',center_rf_m:[0,25,110]}];
+ state.skill.receiver_spectra=[
+  {site_id:'site0',psd:{frequency_khz:[-50,50],density_db_v2_hz:[-170,-130]}},
+  {site_id:'site1',psd:{frequency_khz:[-50,50],density_db_v2_hz:[-120,-175]}}];
+ state.skill.waterfall=[{sim_time_ns:0,psd_db:[-170,-130],site_psd_db:[[-170,-130],[-120,-175]]}];
+ const shown=ui.context.present(state);ui.decodes.shift().resolve();await shown;
+ const clock=ui.element('clock').textContent,requests=ui.requests.length;
+ ui.element('receiver-select').value='1';ui.element('receiver-select').onchange();
+ assert.match(ui.element('waterfall-caption').textContent,/Site 1/);
+ assert.deepEqual(Array.from(vm.runInContext('waterRows[0]',ui.context)),[-120,-175]);
+ const lastMove=ui.drawCalls.filter(c=>c.id==='psd'&&c.method==='moveTo').at(-1);
+ // Site 1's first bin is -120 dB: y=10+(15/75)*(200-10-24).
+ assert.equal(lastMove.args[1],43.2);
+ assert.equal(ui.element('clock').textContent,clock);
+ assert.equal(ui.requests.length,requests);
+ assert.equal(ui.element('camera').src,'/camera.jpg?frame=0');
+ const labels=ui.drawCalls.filter(c=>c.method==='fillText').map(c=>c.args[0]);
+ for(const label of ['Pseudospectrum (dB)','Relative power (dB)','Phase (rad)'])assert.ok(labels.includes(label));
+});
+
+test('older recordings disable the unavailable receiver rather than relabel Site 0 data',{timeout:3000},async()=>{
+ const ui=dashboard(),state=frame(0);
+ state.skill.psd={frequency_khz:[0],density_db_v2_hz:[-150]};
+ state.skill.waterfall=[{sim_time_ns:0,psd_db:[-150]}];
+ const shown=ui.context.present(state);ui.decodes.shift().resolve();await shown;
+ assert.equal(ui.element('receiver-select').children[1].disabled,true);
+ assert.match(ui.element('receiver-select').children[1].textContent,/no saved data/);
+ assert.deepEqual(Array.from(vm.runInContext('waterRows[0]',ui.context)),[-150]);
+});
+
+test('circular MUSIC closes the full azimuth seam and identifies partial older searches',()=>{
+ const ui=dashboard();
+ ui.context.spatialSearch([-180,-90,0,90,180],[[-5,-40,-5,-40,-5]]);
+ const path=ui.drawCalls.filter(c=>c.id==='music'&&(c.method==='moveTo'||c.method==='lineTo')).slice(-5);
+ assert.ok(Math.abs(path[0].args[0]-path.at(-1).args[0])<1e-9);
+ assert.ok(Math.abs(path[0].args[1]-path.at(-1).args[1])<1e-9);
+ assert.equal(ui.drawCalls.at(-2).method,'closePath');
+ const state=frame(0);state.camera.available=false;state.skill.angle_grid_deg=[-70,0,70];state.skill.music_db=[[-40,0,-40]];
+ ui.context.render(state);
+ assert.match(ui.element('music-caption').textContent,/−?\-?70° to 70° only/);
 });

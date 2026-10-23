@@ -24,7 +24,8 @@ async def run(args):
     from projectairsim.utils import unpack_image
     import cv2
     from .bridge import mount_kinematics,normalize_kinematics
-    from .dashboard_view import queue_chase_camera_pose,radio_marker_glb
+    from .dashboard_view import (queue_chase_camera_pose,relative_camera_pose,camera_labels,
+        radio_marker_glb,TERRAIN_BASE_COLOR_RGBA,TERRAIN_EMISSIVE_RGB)
     from .dashboard_geometry import isolate_blocks_scene,require_rf_mesh_match,link_geometry
     from .dashboard_sync import commit_window,advance_after_commit
     from .source_recording import RecordingWriter
@@ -52,18 +53,33 @@ async def run(args):
     atomic_json(output/'producer.json',state)
     writer=None;sock=None;motion=None;flight_client=None
     camera_counter=[0];last_camera=[0.];history=[]
+    camera_mounts=[]
     camera_session=args.recording_id or secrets.token_hex(8);camera_files=[];camera_history=[]
     state['presentation_session']=camera_session
     recording=RecordingWriter(output/'replays',camera_session,json.loads((output/'scenario.json').read_text()),
         args.duration,ADVANCE_NS,no_render=args.no_render,resume=args.recording_id is not None)
     (output/'camera').mkdir(exist_ok=True)
     site_positions=[site['center_rf_m'] for site in arrays['sites']]
+    def queue_view(position,kinematics):
+        eye,rotation=queue_chase_camera_pose(drone,position,site_positions,kinematics)
+        camera_mounts.append((int(world.get_sim_time()),relative_camera_pose(eye,rotation,kinematics)))
+        del camera_mounts[:-128]
     def image_received(_,message):
         try:
             image=unpack_image(message).copy()
+            epoch=int(message['time_stamp'])
+            mount=next((pose for sent,pose in reversed(camera_mounts) if sent<epoch),None)
+            labels=camera_labels(message,mount,site_positions,document) if mount is not None else []
+            height,width=image.shape[:2]
+            for label in labels:
+                x,y=round(label['x']),round(label['y']);color=tuple(reversed(label['color_rgb']))
+                cv2.circle(image,(x,y),6,color,2)
+                anchor=(max(5,min(width-150,x+10)),max(20,min(height-8,y-12)))
+                cv2.putText(image,label['text'],anchor,cv2.FONT_HERSHEY_SIMPLEX,.5,(5,10,15),4)
+                cv2.putText(image,label['text'],anchor,cv2.FONT_HERSHEY_SIMPLEX,.5,color,1,cv2.LINE_AA)
             success,jpeg=cv2.imencode('.jpg',image,[cv2.IMWRITE_JPEG_QUALITY,82])
             if success:
-                epoch=int(message['time_stamp']);key=camera_session+'-'+str(epoch)
+                key=camera_session+'-'+str(epoch)
                 path=output/'camera'/(key+'.jpg');temp=path.with_suffix('.tmp')
                 if path.exists():return  # Published URLs are immutable.
                 temp.write_bytes(jpeg.tobytes());temp.replace(path)
@@ -71,6 +87,7 @@ async def run(args):
                 camera_counter[0]+=1;last_camera[0]=time.monotonic()
                 metadata={'key':key,'sim_time_ns':epoch,'frames':camera_counter[0],
                     'position_ned_m':[message['pos_'+axis] for axis in ('x','y','z')],
+                    'labels':labels,
                     'geometry_sha256':bundle['scene_sha256']}
                 recording.camera(metadata,jpeg.tobytes())
                 camera_history[:]=[frame for frame in camera_history if frame['key']!=key]
@@ -96,8 +113,8 @@ async def run(args):
         # imported meshes visible in the packaged map's baked lighting.
         for obj in binding.plan['objects']:
             terrain=obj['id']=='Terrain'
-            obj['mesh']['base_color_rgba']=[.34,.48,.22,1.] if terrain else [.48,.32,.20,1.]
-            obj['mesh']['emissive_rgb']=[.07,.10,.045] if terrain else [.12,.075,.035]
+            obj['mesh']['base_color_rgba']=TERRAIN_BASE_COLOR_RGBA if terrain else [.48,.32,.20,1.]
+            obj['mesh']['emissive_rgb']=TERRAIN_EMISSIVE_RGB if terrain else [.12,.075,.035]
         spawn_placements(world,binding.plan)
         alignment['airsim']=binding.require_static_match(world,int(world.get_sim_time()))
         marker_pose=lambda p:{'frame_id':'DEFAULT_ID','translation':dict(zip(('x','y','z'),(np.asarray(p)*[1,-1,-1]).tolist())),'rotation':{'w':1.,'x':0.,'y':0.,'z':0.}}
@@ -114,7 +131,7 @@ async def run(args):
         if not args.no_render:
             initial=normalize_kinematics(drone.get_ground_truth_kinematics())
             position,_,_=mount_kinematics(initial)
-            queue_chase_camera_pose(drone,position,site_positions,initial)
+            queue_view(position,initial)
         settle=await drone.move_by_velocity_z_async(v_north=0,v_east=0,z=-ALTITUDE,duration=2.1,yaw_is_rate=False,yaw=-np.pi/2)
         world.continue_until_sim_time(int(world.get_sim_time())+2_001_000_000,wait_until_complete=True)
         await asyncio.sleep(.1)
@@ -219,7 +236,7 @@ async def run(args):
             epoch=int(world.get_sim_time());kinematics=normalize_kinematics(drone.get_ground_truth_kinematics())
             position,velocity,orientation=mount_kinematics(kinematics)
             if not args.no_render:
-                queue_chase_camera_pose(drone,position,site_positions,kinematics)
+                queue_view(position,kinematics)
             scene.transmitters['tx0'].position=position.tolist();scene.transmitters['tx0'].velocity=velocity.tolist();scene.transmitters['tx0'].orientation=orientation.tolist()
             samples,reference=waveform_window(epoch,count,origin)
             receiver.emitters['tx0']=SDREmitter(SampledWaveform(samples,FS,reference,boundary='error'),transmit_power_w=.1,baseband_frequency_bounds_hz=(-100000,100000))
@@ -236,7 +253,7 @@ async def run(args):
                 retained_paths={name:cap.retained_paths for name,cap in captures.items()},history=list(history),
                 wall_elapsed_s=time.monotonic()-started,simulation_speed=elapsed/max(time.monotonic()-started,.001),
                 camera_frames=camera_counter[0],camera_age_s=None if not last_camera[0] else time.monotonic()-last_camera[0],
-                camera_framing='Timestamped raw Chase image; physical RX beacons; no projected labels through terrain',
+                camera_framing='Five-metre Chase view toward receivers; actual-frame TX/RX labels hidden by terrain',
                 geometry_sha256=bundle['scene_sha256'],raw_payload_bytes=(index+1)*count*8*8)
             # Retain measurements for this epoch, including counters and speed;
             # the host must not mix them with a newer producer state.

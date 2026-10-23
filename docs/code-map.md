@@ -46,7 +46,7 @@ flowchart LR
    to RF coordinates, updates the Sionna transmitter and creates the next
    `SampledWaveform`. `receiver.capture()` generates the eight ADC channels.
 4. [SampleStreamWriter.send_samples()](../src/airsim_rf/sample_stream.py#L116)
-   sends neutral post-ADC voltage blocks. [MusicSkill._serve_stream()](../src/airsim_rf/skills/music.py#L103)
+   sends neutral post-ADC voltage blocks. [MusicSkill._serve_stream()](../src/airsim_rf/skills/music.py#L108)
    groups them by channel ID and acquisition timestamp; it processes only after
    all eight channels arrive.
 5. The producer waits for a generic stream commit, saves only source telemetry
@@ -62,17 +62,17 @@ flowchart LR
 | Question | Exact source location / search term | Current dashboard selection |
 | --- | --- | --- |
 | What scenario is this? | [dashboard_scenario.py constants](../src/airsim_rf/dashboard_scenario.py#L7) and `prepare()` | One airborne transmitter, two stationary ground receiving sites, four channels per site. |
-| Where are the receivers? | [prepare(): offsets and sites](../src/airsim_rf/dashboard_scenario.py#L71); inspect `center_rf_m`, `element_offsets_m`, `channels` | Site centers at RF north 0 m, west −25/+25 m; each is 8 m above the DEM at that center. Each site's four elements lie along RF west. |
-| What moves the drone? | [run(): path construction and move_on_path_async()](../src/airsim_rf/dashboard_producer.py#L122) | Native ProjectAirSim path follower on a nominal 250 m circle, 25 m/s, constant RF-up altitude 200 m; waypoints every 3 degrees. Default mission duration is 120 s. |
+| Where are the receivers? | [prepare(): offsets and sites](../src/airsim_rf/dashboard_scenario.py#L72); inspect `center_rf_m`, `element_offsets_m`, `channels` | Site centers at RF north 0 m, west −25/+25 m; each is 8 m above the DEM at that center. Each site's four elements lie along RF west. |
+| What moves the drone? | [run(): path construction and move_on_path_async()](../src/airsim_rf/dashboard_producer.py#L139) | Native ProjectAirSim path follower on a nominal 250 m circle, 25 m/s, constant RF-up altitude 200 m; waypoints every 3 degrees. Default mission duration is 120 s. |
 | Which vehicle and controller parameters are used? | `prepare()` reads `robot_quadrotor_fastphysics_sensors.jsonc`, edits `MPC_XY_VEL_MAX`, and writes `sim_config/orbit.jsonc` | The pinned upstream Fast Physics quadrotor template supplies the remaining vehicle/controller parameters. The speed limit override is 30 m/s. Read the generated robot file for the full configuration. |
 | Is that altitude AGL? | `ALTITUDE`, generated actor `origin`, and `move_by_velocity_z_async()` | It is a local coordinate height. It is **not** 200 m above terrain; clearance changes as terrain elevation changes. |
-| Where does actual RF motion come from? | [run(): live pose readback](../src/airsim_rf/dashboard_producer.py#L219) and [bridge.py — mount_kinematics()](../src/airsim_rf/bridge.py#L27) | Actual simulator position, velocity and attitude overwrite the Sionna TX before capture. `orbit_pose()` in the scenario module is an analytic helper used by tests, not the live flight controller. |
+| Where does actual RF motion come from? | [run(): live pose readback](../src/airsim_rf/dashboard_producer.py#L236) and [bridge.py — mount_kinematics()](../src/airsim_rf/bridge.py#L27) | Actual simulator position, velocity and attitude overwrite the Sionna TX before capture. `orbit_pose()` in the scenario module is an analytic helper used by tests, not the live flight controller. |
 | What coordinates are these? | [bridge.py — NED_TO_RF](../src/airsim_rf/bridge.py#L10) | AirSim: north/east/down. RF: north/west/up, metres. Convert signs with `[1, −1, −1]`. |
 | What creates the hills? | [terrain.py — demo_terrain()](../src/airsim_rf/terrain.py#L96) and the scaling in `dashboard_scenario.prepare()` | Analytic hills/swale on a 21×21 grid. Dashboard expands it to 800×800 m and RF-up heights 100–190 m; cells are 40 m across and become 800 triangles. It is not a surveyed DEM. |
 | Does the visual ground match RF ground? | [geometry.py — export_sionna_geometry()](../src/airsim_rf/geometry.py#L116), [geometry_sync.py — spawn_placements()](../src/airsim_rf/geometry_sync.py#L86), [dashboard_geometry.py — require_rf_mesh_match()](../src/airsim_rf/dashboard_geometry.py#L26) | Same source triangles become Unreal glTF and Sionna PLY/XML. Native Blocks physical scenery is removed by `isolate_blocks_scene()`. |
 | What are the ground materials? | `prepare()` → `geometry['materials']` / `objects`; exporter above | Terrain uses `earth`: relative permittivity 5, conductivity 0.01 S/m. `rock` is also declared but no dashboard terrain object uses it. These are illustrative, uncalibrated assumptions. |
 | Where are land cover and permeability? | `geometry.py` material schema/export; `dashboard_scenario.prepare()` material assignments | There is no dashboard land-use/land-cover classifier. The schema exports permittivity and conductivity, not a user-selected magnetic permeability map. The scenario uses Sionna's ordinary nonmagnetic radio-material model. |
-| Is the camera controlling anything physical? | [dashboard_view.py — camera_frame()](../src/airsim_rf/dashboard_view.py#L6) / `queue_chase_camera_pose()` | It only sets the chase view. Radio beacons from `radio_marker_glb()` are visual markers, not RF antennas or RF scatterers. |
+| Is the camera controlling anything physical? | [dashboard_view.py — camera_frame()](../src/airsim_rf/dashboard_view.py#L11) / `queue_chase_camera_pose()` | It sets a 5 m receiver-facing chase view. `camera_labels()` projects native-frame TX/RX labels and hides terrain-occluded anchors. Radio beacons from `radio_marker_glb()` are visual markers, not RF antennas or RF scatterers. |
 
 The orbit is commanded to the simulator, so actual motion can differ from the
 ideal circle during settling/tracking. For a question about a particular frame,
@@ -82,11 +82,11 @@ use its recorded `position_rf_m` and `velocity_rf_m_s`, not an analytic orbit.
 
 | Question | Exact source location / search term | Current dashboard selection |
 | --- | --- | --- |
-| What is the individual antenna pattern? | [run(): scene.tx_array / scene.rx_array](../src/airsim_rf/dashboard_producer.py#L138) | Sionna `PlanarArray(1×1, pattern='iso', polarization='V')` for each TX/RX device. No measured COTS radiation pattern or drone-airframe antenna model is loaded. |
-| Where is the four-element array? | `prepare()` offsets, then [run(): receiver placement](../src/airsim_rf/dashboard_producer.py#L140) | Four separate Sionna receiver devices per site, not a single synthetic four-element `PlanarArray`. Element spacing is half a wavelength at 915 MHz, about 0.164 m; aperture is about 0.491 m. |
+| What is the individual antenna pattern? | [run(): scene.tx_array / scene.rx_array](../src/airsim_rf/dashboard_producer.py#L155) | Sionna `PlanarArray(1×1, pattern='iso', polarization='V')` for each TX/RX device. No measured COTS radiation pattern or drone-airframe antenna model is loaded. |
+| Where is the four-element array? | `prepare()` offsets, then [run(): receiver placement](../src/airsim_rf/dashboard_producer.py#L157) | Four separate Sionna receiver devices per site, not a single synthetic four-element `PlanarArray`. Element spacing is half a wavelength at 915 MHz, about 0.164 m; aperture is about 0.491 m. |
 | What is array orientation/calibration? | `arrays['sites']`; `PhysicalULA.steering_vector()` below | Elements run along +RF west; local broadside is +RF north. Metadata yaw is 0; all complex calibration gains are `[1, 0]`. |
 | What waveform does the GUI use? | [waveform_window()](../src/airsim_rf/dashboard_scenario.py#L25) | Deterministic counter-indexed QPSK symbols, 80× upsampling at 2 MS/s: 25 ksymbol/s. An 801-tap Kaiser FIR has a 20 kHz cutoff. This is not the earlier LFM radar waveform. |
-| What are the carrier and transmit power? | Scenario `CARRIER`; [run(): SDREmitter construction](../src/airsim_rf/dashboard_producer.py#L144) and the later per-window emitter replacement | 915 MHz; `transmit_power_w=.1` (nominal 100 mW / 20 dBm scaling). The declared baseband bounds are ±100 kHz. The producer overrides the reusable emitter's lower default power. |
+| What are the carrier and transmit power? | Scenario `CARRIER`; [run(): SDREmitter construction](../src/airsim_rf/dashboard_producer.py#L161) and the later per-window emitter replacement | 915 MHz; `transmit_power_w=.1` (nominal 100 mW / 20 dBm scaling). The declared baseband bounds are ±100 kHz. The producer overrides the reusable emitter's lower default power. |
 | How are waveform amplitude and delay handled? | [sampled_waveform.py — SampledWaveform](../src/airsim_rf/sampled_waveform.py#L11); `SDRNetworkReceiver.capture()` | Private timestamped sampled buffers with history/lookahead and 32-tap interpolation by default. Amplitudes are preserved; there is no automatic unit-power normalization. Actual waveform RMS therefore matters when interpreting the nominal TX power setting. |
 | Which receiver is modeled? | [sdr.py — PlutoSDRProfile](../src/airsim_rf/sdr.py#L19); producer selects `PlutoSDRProfile(noise_enabled=True)` | Pluto-class approximation: 2 MS/s, 1 MHz RF bandwidth, 10 dB NF, 290 K, 50 Ω, input-referred full scale −30 dBm and 12-bit I/Q ADC. Several values are modeling estimates, not board measurements. |
 | Where are filtering, noise and clipping? | [SDRNetworkReceiver.__init__(): filter](../src/airsim_rf/sdr.py#L254); `capture()` → `rf.receiver.noise_filter_adc`; [quantize_iq()](../src/airsim_rf/sdr.py#L100) | Fourth-order Butterworth low-pass, thermal/noise-figure noise and independent signed I/Q quantization/clipping. `continuous=True` preserves receiver filter state across windows. Output complex volts are reconstructed from ADC codes. |
@@ -117,15 +117,18 @@ The live consumer has three layers:
 1. **Acquire and prepare inputs:** `skills.music.MusicSkill.process()` constructs
    a four-channel matrix per site from the **first 24,000 received ADC samples**
    of every channel, divides by configured complex gains, and checks coherent
-   epochs/rates. It searches −70° to +70° on a 1401-point grid (0.1° increments).
+   epochs/rates. The displayed search spans −180° to +180° on a 3601-point grid
+   (0.1° steps); the scalar cone-angle candidate searches −90° to +90°. Each site
+   separately supplies element-0 PSD/waterfall data for the receiver dropdown.
 2. **Choose a bearing:** [processing.music.estimate_bearing()](../src/airsim_rf/processing/music.py#L27)
    validates geometry, computes covariance/eigenvalues, requires a largest /
    second-largest eigenvalue ratio of at least 5, then calls
    **`doa_py.algorithm.music(..., num_signal=1, ...)`** and chooses its peak.
    Grid-edge peaks are marked undetected.
 3. **Plot the search curve:** [processing.music.spatial_spectrum()](../src/airsim_rf/processing/music.py#L86)
-   calls the same external MUSIC routine and normalizes its curve to a 0 dB
-   maximum. It does not apply the detection gate. A visible peak in a normalized
+   calls the same external MUSIC routine and normalizes its full-circle curve to a 0 dB
+   maximum. The browser plots it in polar form, including the ULA's paired
+   front/back lobes. It does not apply the detection gate. A visible peak in a normalized
    noise-only curve is therefore not automatically a detected emitter.
 
 The steering-vector implementation we supply to that dependency is

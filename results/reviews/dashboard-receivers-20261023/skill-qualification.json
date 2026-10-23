@@ -1,0 +1,25 @@
+{
+  "status": "passed",
+  "scope": "standalone CPU receiver image, generic source buffers, real TCP/MUSIC/result journal",
+  "source_dependencies_absent": [
+    "sionna",
+    "mitsuba",
+    "drjit",
+    "cupy",
+    "projectairsim",
+    "airsim_rf.receiver",
+    "airsim_rf.sdr",
+    "airsim_rf.dashboard_producer",
+    "airsim_rf.source_recording",
+    "airsim_rf.dashboard_recording"
+  ],
+  "carrier_hz": 433000000.0,
+  "sample_rate_hz": 1000000.0,
+  "channels": 8,
+  "windows": 2,
+  "samples_per_channel": 16384,
+  "expected_angle_deg": 20.0,
+  "receiver_control_configuration_checked": true,
+  "simulator_or_truth_available": false,
+  "physical_hardware_tested": false
+}
