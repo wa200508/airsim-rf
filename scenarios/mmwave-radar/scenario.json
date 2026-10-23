@@ -1,0 +1,56 @@
+{
+  "schema_version": 1,
+  "id": "mmwave-radar",
+  "title": "77 GHz radar / terrain-masked racetrack",
+  "environment": "environment.json",
+  "flight": "flight.json",
+  "radios": "radios.json",
+  "mission": {
+    "record_iq": true,
+    "duration_s": 120,
+    "physics_step_ns": 1000000,
+    "rf_update_ns": 4000000
+  },
+  "camera": {
+    "actor": "RadarDrone",
+    "sensor": "Chase",
+    "distance_m": 5,
+    "elevation_bias": 0.25,
+    "fov_deg": 90,
+    "labels": true,
+    "capture_interval_s": 0.004,
+    "width": 960,
+    "height": 540
+  },
+  "appearance": {
+    "terrain_base_color_rgba": [
+      0.12,
+      0.18,
+      0.085,
+      1
+    ],
+    "terrain_emissive_rgb": [
+      0.008,
+      0.012,
+      0.005
+    ]
+  },
+  "skill": {
+    "kind": "radar",
+    "contract": "receiver-tcp-v2",
+    "image": "ghcr.io/wa200508/airsim-rf:dashboard-radar-skill",
+    "revision_policy": "matching",
+    "command": [
+      "--arrays",
+      "/config/arrays.json",
+      "--results-dir",
+      "/results"
+    ],
+    "ports": {
+      "iq": 8811,
+      "http": 8812,
+      "control": null
+    },
+    "name": "FMCW Radar RF Skill"
+  }
+}

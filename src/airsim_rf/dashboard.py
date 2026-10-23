@@ -73,7 +73,7 @@ class Dashboard:
         elif not getattr(args,'skill_image',None):args.skill_image='ghcr.io/wa200508/df-skill:sha-270bfacb6ac933f5c60599aab3edf39489978c45'
         self.token=secrets.token_urlsafe(24);self.lock=threading.Lock();self.events=deque(maxlen=40);self.busy=False;self.error=None
         self.processes={};self.last_skill={};self.ready=False;self.mission_started=False;self.image_tags={name:getattr(args,name) for name in ('sim_image','skill_image','rf_image')};self.names={part:f'airsim-rf-dashboard-{part}-{args.port}' for part in ('sim','rf','skill')}
-        self.log('Preparing separate simulator, GPU RF and Direction Finding RF Skill containers.')
+        self.log('Preparing separate simulator, GPU RF and receiver skill containers.')
         self.rootless=False;self.gpu_options=[];self.network_created=False
         self.network='airsim-rf-dashboard-'+str(args.port)+'-'+secrets.token_hex(4)
         self.session=secrets.token_hex(8)
@@ -352,6 +352,18 @@ class Dashboard:
         finally:
             if self.run_lock:self.run_lock.close();self.run_lock=None
             self.owns_run=False
+    def select_scenario(self,identifier):
+        choices={row['id']:row for row in _definition.catalog()}
+        if identifier not in choices:raise ValueError('Unknown packaged scenario')
+        with self.lock:
+            if self.busy or self.mission_started:raise ValueError('Stop the mission before selecting another scenario')
+            if getattr(self.args,'replay',False):raise ValueError('Replay mode cannot select a live scenario')
+            definition=_definition.load(choices[identifier]['directory'])
+            self.scenario_path=Path(definition['_directory'])
+            self.definition=definition
+            self.ready=False
+        self.action('prepare')
+
     def action(self,name):
         if getattr(self.args,'replay',False):raise ValueError('Replay mode does not launch or control simulation services')
         with self.lock:
@@ -473,10 +485,13 @@ def main():
     registry='ghcr.io/wa200508/airsim-rf'
     parser.add_argument('--sim-image',default=registry+':dashboard-render');parser.add_argument('--rf-image',default=registry+':dashboard-gpu')
     parser.add_argument('--skill-image',default=None)
-    parser.add_argument('--scenario',type=Path,help='Scenario input directory (or its scenario.json)')
+    parser.add_argument('--scenario',help='Packaged scenario ID, input directory or scenario.json')
+    parser.add_argument('--list-scenarios',action='store_true',help='List packaged scenario IDs without Docker')
     parser.add_argument('--check-scenario',action='store_true',help='Validate inputs, relative assets and clocks, then exit without Docker')
     parser.add_argument('--export-scenario',type=Path,help='Copy editable scenario inputs to a new directory and exit')
     parser.add_argument('--open',action='store_true');args=parser.parse_args()
+    if args.list_scenarios:
+        print(json.dumps(_definition.catalog(),indent=2));return
     args.duration_from_scenario=args.duration is None;args.skill_image_override=args.skill_image is not None
     if not args.replay or args.check_scenario or args.export_scenario:
         try:
@@ -509,6 +524,8 @@ def main():
                     if time_s is not None and not math.isfinite(time_s):raise ValueError('Playback time must be finite')
                     state=dashboard.snapshot() if identifier is None else dashboard.recorded_snapshot(identifier,time_s)
                 except (ValueError,OSError,KeyError) as error:self.send_error(404,str(error));return
+                state['scenario_catalog']=_definition.catalog()
+                state['selected_scenario']=dashboard.definition['id'] if dashboard.definition else None
                 data=json.dumps(state,allow_nan=False).encode();kind='application/json'
             elif urlsplit(self.path).path=='/camera.jpg':
                 key=query.get('frame',[''])[0]
@@ -535,8 +552,14 @@ def main():
             if origin and origin not in (f'http://127.0.0.1:{args.port}',f'http://localhost:{args.port}'):
                 self.send_error(403);return
             if self.headers.get('X-Dashboard-Token')!=dashboard.token:self.send_error(403);return
-            try:dashboard.action(self.path.removeprefix('/api/'));self.send_response(202);self.end_headers()
-            except ValueError as error:self.send_error(409,str(error))
+            try:
+                if self.path=='/api/scenario':
+                    size=int(self.headers.get('Content-Length','0'))
+                    if not 0<size<=4096:raise ValueError('Invalid scenario selection')
+                    dashboard.select_scenario(json.loads(self.rfile.read(size))['id'])
+                else:dashboard.action(self.path.removeprefix('/api/'))
+                self.send_response(202);self.end_headers()
+            except (ValueError,KeyError,TypeError) as error:self.send_error(409,str(error))
         def log_message(self,*args):pass
     server=None;previous_handlers={}
     def shutdown(*_):raise DashboardShutdown()

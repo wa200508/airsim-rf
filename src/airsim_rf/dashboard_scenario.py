@@ -45,6 +45,18 @@ def flight_path(actor,duration_s):
             if length<=0:raise ValueError('Repeated waypoint route must have nonzero length')
             points=np.vstack([points[:-1]]*(int(np.ceil(duration_s*flight['speed_m_s']/length))+1)+[points[-1:]])
         return points.tolist()
+    if flight['type']=='racetrack':
+        c=np.asarray(flight['center_rf_m']);half=flight['straight_length_m']/2;r=flight['turn_radius_m']
+        # Clockwise stadium: upper straight eastbound, right arc, lower straight, left arc.
+        n=max(2,int(np.ceil(180/flight['waypoint_step_deg'])));theta=np.linspace(np.pi/2,-np.pi/2,n+1)
+        upper=np.column_stack((np.linspace(-half,half,max(2,int(2*half/5))),np.full(max(2,int(2*half/5)),r)))
+        right=np.column_stack((half+r*np.cos(theta),r*np.sin(theta)))
+        lower=upper[::-1]*[1,-1]
+        left=np.column_stack((-half+r*np.cos(theta-np.pi),r*np.sin(theta-np.pi)))
+        points=np.vstack((upper,right[1:],lower[1:],left[1:]))
+        cycles=int(np.ceil(duration_s*flight['speed_m_s']/(4*half+2*np.pi*r)))+1
+        points=np.vstack([points[:-1]]*cycles+[points[-1:]])
+        return (c+np.column_stack((points,np.zeros(len(points))))).tolist()
     center=np.asarray(flight['center_rf_m']);start=np.asarray(actor['position_rf_m'])-center
     cycles=int(np.ceil(duration_s/(2*np.pi*flight['radius_m']/flight['speed_m_s'])))+1
     sign=1 if flight['direction']=='left' else -1
@@ -139,6 +151,11 @@ def prepare(output,runtime_source=None,scenario_dir=None,duration_s=None,check_i
             if terrain is None:raise ValueError('AGL receiver sites need a heightfield; use absolute RF coordinates with a geometry scene')
             site['center_rf_m'][2]+=float(terrain.elevation_at(*site['center_rf_m'][:2]))
     arrays={'schema_version':1,'sample_rate_hz':radio['sample_rate_hz'],'carrier_hz':radio['carrier_hz'],'sites':sites}
+    if radio.get('mode')=='fmcw-radar':
+        p=radio['radar']['profile']
+        arrays['acquisition']={k:p[k] for k in ('bandwidth_hz','chirp_duration_s','num_samples','adc_start_s','pri_s')}
+        arrays['voltage_reference']='bias-subtracted ADC volts'
+        arrays['acquisition'].update(type='fmcw-dechirped',adc_gate='zero-filled outside acquisition gate',chirp_origin='first window timestamp',impedance_ohm=50.)
     atomic_json(output/'arrays.json',arrays);atomic_json(output/'receiver-config.json',arrays)
     # Validate finite source coverage before GPU/service launch. No file looping.
     for tx in radio['transmitters']:
@@ -167,7 +184,7 @@ def prepare(output,runtime_source=None,scenario_dir=None,duration_s=None,check_i
     runtime['input_sha256']=fingerprints(frozen);atomic_json(output/'runtime.json',runtime)
     first=config['flight']['actors'][0];flight=first['flight'];routes=[flight_path(actor,config['mission']['duration_s']) for actor in config['flight']['actors']]
     summary={'id':config['id'],'title':config['title'],'input_sha256':runtime['input_sha256'],'advance_ns':config['mission']['rf_update_ns'],
-        'radius_m':flight.get('radius_m',0),'speed_m_s':flight.get('speed_m_s',0),'turn':flight.get('direction',flight['type']),
+        'flight_type':flight['type'],'straight_length_m':flight.get('straight_length_m',0),'turn_radius_m':flight.get('turn_radius_m',0),'radius_m':flight.get('radius_m',0),'speed_m_s':flight.get('speed_m_s',0),'turn':flight.get('direction',flight['type']),
         'altitude_rf_m':first['position_rf_m'][2],'sites':sites,'routes_rf_m':routes,
         'sample_rate_hz':radio['sample_rate_hz'],'carrier_hz':radio['carrier_hz'],'transmitters':len(radio['transmitters']),
         'camera':camera,'source':'Scenario package; actual ProjectAirSim pose readback drives RF',

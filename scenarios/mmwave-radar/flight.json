@@ -1,0 +1,55 @@
+{
+  "actors": [
+    {
+      "id": "RadarDrone",
+      "vehicle": "quadrotor.jsonc",
+      "position_rf_m": [
+        -200,
+        0,
+        210
+      ],
+      "yaw_deg": 0,
+      "settle_s": 2.001,
+      "flight": {
+        "type": "racetrack",
+        "center_rf_m": [
+          0,
+          -80,
+          210
+        ],
+        "straight_length_m": 400,
+        "turn_radius_m": 80,
+        "speed_m_s": 20,
+        "waypoint_step_deg": 3,
+        "lookahead_m": 8,
+        "adaptive_lookahead": 0,
+        "direction": "right"
+      }
+    },
+    {
+      "id": "TargetDrone",
+      "vehicle": "quadrotor.jsonc",
+      "position_rf_m": [
+        2.5,
+        25,
+        113.46968528723096
+      ],
+      "yaw_deg": 90,
+      "settle_s": 2.001,
+      "flight": {
+        "type": "circle",
+        "center_rf_m": [
+          0,
+          25,
+          113.46968528723096
+        ],
+        "radius_m": 2.5,
+        "speed_m_s": 2,
+        "direction": "left",
+        "waypoint_step_deg": 5,
+        "lookahead_m": 0.5,
+        "adaptive_lookahead": 0
+      }
+    }
+  ]
+}

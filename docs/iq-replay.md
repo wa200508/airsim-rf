@@ -203,3 +203,10 @@ viewers and physical USRP replay remain documented options, without integration
 qualification here.
 See [the qualification report](../results/reviews/iq-replay-20261023/REPORT.md)
 for exact-sample, real CPU-propagation and standalone-consumer evidence.
+
+The radar scenario uses the same lossless cf32/SigMF archive, with
+`receiver-config.json.acquisition` describing its chirp/ADC gates. Its voltages
+are bias-subtracted **ADC volts**, after modeled IF gain, rather than SDR
+input-referred volts. Zero-filled gate gaps retain their actual acquisition-clock
+positions; remove/select them using that timing when developing radar processing.
+See the [radar scenario guide](../scenarios/mmwave-radar/README.md).

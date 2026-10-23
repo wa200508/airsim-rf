@@ -16,7 +16,8 @@ async def run(args):
     config=json.loads((output/'runtime.json').read_text())
     radio=config['radios'];camera=config['camera'];mission=config['mission']
     FS=radio['sample_rate_hz'];CARRIER=radio['carrier_hz'];ADVANCE_NS=mission['rf_update_ns']
-    actors=config['flight']['actors'];primary_tx=radio['transmitters'][0]['id']
+    actors=config['flight']['actors'];radar_mode=radio.get('mode')=='fmcw-radar'
+    primary_tx=radio['radar']['targets'][0]['actor'] if radar_mode else radio['transmitters'][0]['id']
     num_channels=sum(len(site['channels']) for site in radio['sites'])
     import mitsuba as mi
     mi.set_variant('cuda_ad_mono_polarized')
@@ -68,17 +69,20 @@ async def run(args):
     (output/'camera').mkdir(exist_ok=True)
     site_positions=[site['center_rf_m'] for site in arrays['sites']]
     def queue_view(position,kinematics):
-        eye,rotation=queue_chase_camera_pose(drone,position,site_positions,kinematics,
+        anchors=([mount_kinematics(normalize_kinematics(drones[t['actor']].get_ground_truth_kinematics()))[0].tolist() for t in radio['radar']['targets']] if radar_mode else site_positions)
+        eye,rotation=queue_chase_camera_pose(drone,position,anchors,kinematics,
             sensor=camera['sensor'],distance_m=camera['distance_m'],elevation_bias=camera['elevation_bias'])
-        camera_mounts.append((int(world.get_sim_time()),relative_camera_pose(eye,rotation,kinematics)))
+        camera_mounts.append((int(world.get_sim_time()),relative_camera_pose(eye,rotation,kinematics),anchors))
         del camera_mounts[:-128]
     def image_received(_,message):
         try:
             image=unpack_image(message).copy()
             epoch=int(message['time_stamp'])
-            mount=next((pose for sent,pose in reversed(camera_mounts) if sent<epoch),None)
-            labels=camera_labels(message,mount,site_positions,document,fov_deg=camera['fov_deg'],
-                platform_label='TX / DRONE' if any(tx['actor']==camera['actor'] for tx in radio['transmitters']) else camera['actor']) if mount is not None and camera['labels'] else []
+            view=next(((pose,anchors) for sent,pose,anchors in reversed(camera_mounts) if sent<epoch),None)
+            mount=view[0] if view is not None else None
+            labels=camera_labels(message,mount,view[1],document,fov_deg=camera['fov_deg'],
+                receiver_labels=[t['actor'] for t in radio['radar']['targets']] if radar_mode else None,
+                platform_label='RADAR / DRONE' if radar_mode else 'TX / DRONE' if any(tx['actor']==camera['actor'] for tx in radio['transmitters']) else camera['actor']) if mount is not None and camera['labels'] else []
             height,width=image.shape[:2]
             for label in labels:
                 x,y=round(label['x']),round(label['y']);color=tuple(reversed(label['color_rgb']))
@@ -130,7 +134,7 @@ async def run(args):
         spawn_placements(world,binding.plan)
         alignment['airsim']=binding.require_static_match(world,int(world.get_sim_time()))
         marker_pose=lambda p:{'frame_id':'DEFAULT_ID','translation':dict(zip(('x','y','z'),(np.asarray(p)*[1,-1,-1]).tolist())),'rotation':{'w':1.,'x':0.,'y':0.,'z':0.}}
-        for i,position in enumerate(site_positions):
+        for i,position in enumerate([] if radar_mode else site_positions):
             name=f'Radio_RX_{i}'
             world.spawn_object_from_file(name,'gltf',radio_marker_glb([.2,.9,.85] if i==0 else [1.,.65,.15]),True,marker_pose(np.asarray(position)-[0,0,8]),[1,1,1],False)
         drones={actor['id']:Drone(client,world,actor['id']) for actor in actors}
@@ -175,7 +179,10 @@ async def run(args):
         state['geometry_sha256']=bundle['scene_sha256'];state['origin_ns']=origin
         count=round(ADVANCE_NS*FS/1e9)
         sources={tx['id']:WaveformSource(output/'scenario-input',tx['waveform'],FS) for tx in radio['transmitters']}
-        receiver=create_receiver(scene,radio,arrays,sources,origin,count)
+        if radar_mode:
+            from .dashboard_radar import RadarWindowReceiver
+            receiver=RadarWindowReceiver(scene,radio,arrays)
+        else:receiver=create_receiver(scene,radio,arrays,sources,origin,count)
         tx_positions={};platform_positions={}
         def update_platforms(epoch):
             kinematics={name:normalize_kinematics(platform.get_ground_truth_kinematics()) for name,platform in drones.items()}
@@ -184,7 +191,11 @@ async def run(args):
                 position,velocity,orientation=mount_kinematics(kinematics[tx['actor']],tx['mount_body_m'])
                 device=scene.transmitters[tx['id']];device.position=position.tolist();device.velocity=velocity.tolist();device.orientation=orientation.tolist()
                 tx_positions[tx['id']]=position
-            receiver.emitters.update(emitters_for_window(radio,sources,epoch,count,origin))
+            if radar_mode:
+                receiver.update(kinematics)
+                tx_positions[primary_tx]=np.asarray(receiver.targets[0].position_m)
+                site_positions[:]=[site['center_rf_m'] for site in arrays['sites']]
+            else:receiver.emitters.update(emitters_for_window(radio,sources,epoch,count,origin))
             return kinematics[camera['actor']],mount_kinematics(kinematics[camera['actor']])
         def record_frame(epoch,position,captures):
             binding.require_static_match(world,epoch)
@@ -192,6 +203,7 @@ async def run(args):
                 **link_geometry(document,arrays,tx_positions[primary_tx],receiver.last_path_diagnostics,transmitter_id=primary_tx),
                 'retained_paths_per_channel':[sum(c.retained_paths.values()) for c in captures.values()],
                 'max_clipped_component_fraction':max(c.clipped_component_fraction for c in captures.values())}
+            if radar_mode:row.update(radar_truth=receiver.truth,line_target_position_rf_m=tx_positions[primary_tx].tolist())
             if history and history[-1]['sim_time_ns']==epoch:history[-1]=row
             else:history.append(row)
             del history[:-1000]

@@ -105,6 +105,39 @@ class Distance2GoLProfile:
         return 10**(self.antenna_gain_dbi/10) * power
 
 
+@dataclass(frozen=True)
+class IWR1843Profile(Distance2GoLProfile):
+    """TI IWR1843BOOST-inspired 77 GHz mode; not a measured board calibration.
+
+    TI publishes 76..81 GHz, 12 dBm TX and up to 25 MS/s ADC. The ramp,
+    gain/noise/ADC transfer and Gaussian beam are explicit simulation settings.
+    See scenarios/mmwave-radar/README.md for sources and limitations.
+    """
+    carrier_hz: float = 77e9
+    bandwidth_hz: float = 50e6
+    chirp_duration_s: float = 32e-6
+    sample_rate_hz: float = 10e6
+    num_samples: int = 256
+    adc_start_s: float = 3e-6
+    pri_s: float = 40e-6
+    mmic_power_dbm: float = 12.
+    tx_feed_loss_db: float = 0.
+    antenna_gain_dbi: float = 7.
+    azimuth_beamwidth_deg: float = 56.
+    elevation_beamwidth_deg: float = 28.
+    if_gain_db: float = 60.
+    if_low_hz: float = 30000.
+    if_high_hz: float = 4.5e6
+    adc_full_scale_v: float = 1.
+    adc_bias_v: float = .5
+    noise_figure_db: float = 15.
+
+    def __post_init__(self):
+        super().__post_init__()
+        if not 76e9<=self.carrier_hz<=81e9 or self.sample_rate_hz>25e6 or self.bandwidth_hz>4e9:
+            raise ValueError('Profile exceeds published IWR1843 carrier, ADC or sweep limits')
+
+
 def quantize_iq(if_volts, profile):
     """Two unsigned ADC channels with a common DC bias and hard clipping."""
     signal = np.asarray(if_volts)
@@ -140,17 +173,17 @@ class FMCWCapture:
 
 
 class FMCWRadar:
-    """One ramp per capture, Sionna LoS/blocked paths, scalar reciprocal RCS.
+    """One ramp per capture, Sionna LoS/specular paths, scalar reciprocal RCS.
 
     IF convention is TX * conjugate(RX): f_beat = slope*tau - Doppler.
     Mixing is calculated directly at IF; a 200 MHz waveform is not sampled at
     the 100 kS/s ADC rate. Filter response assumes steady-state ramp tones.
     """
 
-    def __init__(self, profile: Distance2GoLProfile = Distance2GoLProfile(), *, rf_scene=None, seed=42):
+    def __init__(self, profile: Distance2GoLProfile = Distance2GoLProfile(), *, rf_scene=None, seed=42, max_depth=0):
         from sionna.rt import PlanarArray, PathSolver, Receiver, Transmitter, load_scene
         self.profile = profile
-        self.scene = load_scene(rf_scene)
+        self.scene = rf_scene if hasattr(rf_scene,"mi_scene") else load_scene(rf_scene)
         self.scene.frequency = profile.carrier_hz
         self.scene.tx_array = PlanarArray(num_rows=1, num_cols=1, pattern="iso", polarization="V")
         self.scene.rx_array = PlanarArray(num_rows=1, num_cols=1, pattern="iso", polarization="V")
@@ -158,7 +191,13 @@ class FMCWRadar:
         self.scene.add(self.tx)
         self.probes = []
         self.receiver_type = Receiver
-        self.solver = PathSolver(deterministic=True)
+        if max_depth not in (0,1):raise ValueError('FMCW supports zero or one reflection per leg')
+        self.max_depth=max_depth
+        if max_depth:
+            from .single_bounce import SingleBouncePathSolver
+            self.solver=SingleBouncePathSolver()
+        else:self.solver = PathSolver(deterministic=True)
+        self.last_path_diagnostics={}
         self.rng = np.random.default_rng(seed)
         self.seed = seed
         self._noise_sos = profile.filter_sos()
@@ -179,6 +218,7 @@ class FMCWRadar:
         ranges, dopplers, beats, delays = [], [], [], []
         conversion = 10**((p.if_gain_db+p.mixer_voltage_gain_db)/20)
         active = []
+        self.last_path_diagnostics={target.name:{"direct_paths":0,"reflected_paths":0} for target in targets}
         for target in targets:
             delta = np.asarray(target.position_m)-position
             distance = np.linalg.norm(delta)
@@ -205,24 +245,32 @@ class FMCWRadar:
             probe.position = np.asarray(target.position_m, dtype=float).tolist()
             probe.velocity = np.asarray(target.velocity_m_s, dtype=float).tolist()
         if active:
-            paths = self.solver(self.scene, max_depth=0, seed=self.seed)
+            paths = self.solver(self.scene, max_depth=self.max_depth, seed=self.seed)
             a, tau = paths.cir(num_time_steps=1, normalize_delays=False, out_type="numpy")
             if a.shape[:4] != (len(active), 1, 1, 1):
                 raise ValueError("FMCW model requires one transmitter and one receive antenna per target")
             for rx_index, (target, delay, beat, gain) in enumerate(active):
                 link_tau = tau[rx_index, 0] if tau.ndim == 3 else tau[rx_index, 0, 0, 0]
                 valid = np.flatnonzero(np.isfinite(link_tau) & (link_tau >= 0))
-                if valid.size > 1:
-                    raise ValueError("FMCW point target model supports a single direct path")
-                if not valid.size:
-                    continue
-                index = valid[0]
-                # Sionna's carrier phase is included in this reciprocal echo.
-                echo = complex(a[rx_index, 0, 0, 0, index, 0])**2 * np.sqrt(4*np.pi*target.rcs_m2)/wavelength * gain
-                phase = 2*np.pi*beat*t - np.pi*p.slope_hz_s*delay**2 - np.pi*p.bandwidth_hz*delay
-                response = p.filter_response(beat)[0]
-                voltage += (np.sqrt(p.reference_impedance_ohm*p.tx_power_w)*np.conj(echo)
-                            * np.exp(1j*phase) * response * conversion * (t >= delay))
+                # Reciprocal scalar point scattering: pair every outbound/return
+                # path, including mixed direct/reflected paths. Max depth is PER
+                # LEG, so reflected/reflected echoes contain two terrain bounces.
+                from sionna.rt.constants import InteractionType
+                interactions=paths.interactions.numpy()
+                direct=np.all(interactions.reshape((interactions.shape[0],*tau.shape))==int(InteractionType.NONE),axis=0)
+                direct_count=int(direct.reshape(len(active),-1)[rx_index,valid].sum())
+                self.last_path_diagnostics[target.name]={'direct_paths':direct_count,'reflected_paths':int(valid.size)-direct_count}
+                fd=paths.doppler.numpy().reshape(len(active),-1)[rx_index]
+                for outbound in valid:
+                    for inbound in valid:
+                        delay=float(link_tau[outbound]+link_tau[inbound])
+                        path_doppler=float(fd[outbound]+fd[inbound])
+                        beat=p.slope_hz_s*delay-path_doppler
+                        echo=(complex(a[rx_index,0,0,0,outbound,0])*complex(a[rx_index,0,0,0,inbound,0])
+                              *np.sqrt(4*np.pi*target.rcs_m2)/wavelength*gain)
+                        phase=2*np.pi*beat*t-np.pi*p.slope_hz_s*delay**2-np.pi*p.bandwidth_hz*delay
+                        voltage+=(np.sqrt(p.reference_impedance_ohm*p.tx_power_w)*np.conj(echo)
+                                  *np.exp(1j*phase)*p.filter_response(beat)[0]*conversion*(t>=delay))
         if p.noise_enabled:
             variance = p.reference_impedance_ohm*BOLTZMANN*p.temperature_k*p.sample_rate_hz*10**(p.noise_figure_db/10)
             # Warm up the IF filter using prior random samples to avoid start-up bias.

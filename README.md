@@ -1,6 +1,6 @@
 # airsim-rf
 
-> The deployed receiver application is now the separately maintained
+> The direction-finding receiver application is the separately maintained
 > [Direction Finding RF Skill](https://github.com/wa200508/DF-Skill), using MUSIC.
 > See [repository separation and pinned deployment](docs/direction-finding-skill.md).
 
@@ -8,11 +8,11 @@ ProjectAirSim poses → Sionna propagation → complex I/Q → receiver filterin
 noise and ADC → timestamped SDR recordings. The project also provides radar
 models and an AMS-GRA radar worker; continuous SDR uses a separate capture API.
 
-The primary workflow is the [localhost RF mission dashboard](docs/dashboard.md):
-a large left-hand drone orbit in ProjectAirSim, shared-terrain multipath through
-Sionna, and received I/Q processed by an independent CPU Direction Finding RF Skill process. The
-Python launcher displays the actual simulator camera, RF spectra/MUSIC diagnostics
-and measured simulation-to-skill throughput.
+The primary workflow is the [localhost RF mission dashboard](docs/dashboard.md).
+Select direction finding over shared terrain or a moving 77 GHz radar observing
+a passive drone target. Separate containers run ProjectAirSim, Sionna acquisition
+and the receiver skill. The launcher displays the actual simulator camera,
+received I/Q, algorithm diagnostics and measured throughput.
 
 ## Find the code
 
@@ -23,14 +23,14 @@ lists the selected values and flags settings that must be edited together.
 
 | What you need | Open first |
 | --- | --- |
-| Scenario, receiver locations, flight and transmitted samples | [Editable scenario directory](scenarios/drone-orbit); [compiler/engine adapters](src/airsim_rf/dashboard_scenario.py) |
+| Scenario, receiver locations, flight and transmitted samples | [Scenario catalog](scenarios/README.md); [compiler/engine adapters](src/airsim_rf/dashboard_scenario.py) |
 | Native drone flight, antenna pattern, TX power and selected RF backend | [dashboard_producer.py](src/airsim_rf/dashboard_producer.py) — `run()` |
 | SDR filtering, noise, ADC and path-to-I/Q dispatch | [sdr.py](src/airsim_rf/sdr.py) — `PlutoSDRProfile`, `SDRNetworkReceiver.capture()` |
-| Live received-I/Q processing | [skills/music.py](src/airsim_rf/skills/music.py) — `MusicSkill.process()` |
+| Live received-I/Q processing | [External direction-finding skill](https://github.com/wa200508/DF-Skill); [radar skill](src/airsim_rf/skills/radar.py) — `RadarSkill.process()` |
 | MUSIC algorithm call, steering vector and detection gate | [processing/music.py](src/airsim_rf/processing/music.py) — `estimate_bearing()`, `PhysicalULA`; [full MUSIC trace](docs/code-map.md#find-the-actual-music-algorithm) |
 
 The MUSIC numerical implementation comes from `doa_py`; it is not vendored
-here. The current dashboard is the QPSK SDR scenario; the LFM/FMCW radar and
+here. The dashboard supports the QPSK direction-finding and 77 GHz FMCW radar scenarios; other LFM/FMCW radar and
 offline tracking examples have separate configurations.
 
 The **[simulation/skill boundary](docs/skill-boundary.md)** is explicit: skills
@@ -40,7 +40,17 @@ image is built independently without simulation dependencies.
 
 ## Edit or select a scenario
 
-Scenario data lives together in **[scenarios/drone-orbit](scenarios/drone-orbit)**:
+Scenario data lives together under **[scenarios/](scenarios/README.md)**. Select the
+current direction-finding example (`drone-orbit`) or the
+[77 GHz radar racetrack with a passive drone target](scenarios/mmwave-radar/README.md)
+(`mmwave-radar`). The dashboard has a **Scenario** drop-down; stop a mission before switching.
+
+```bash
+python3 scripts/launch_dashboard.py --list-scenarios
+bash scripts/run_dashboard.sh --scenario mmwave-radar --open
+```
+
+Each package keeps its terrain, aircraft, radios, waveform and skill wiring nearby:
 manifest, DEM/materials, vehicle, flight plans, radios and waveform definitions.
 Copy that directory, edit it, and reuse the same containers:
 
@@ -55,7 +65,7 @@ freezes the full input package; each recording preserves its definition and
 pinned image IDs. No image rebuild is needed for scenario edits. A standalone
 launcher can export its example with `--export-scenario ~/my-rf-scenario`.
 See the **[scenario package guide](docs/scenarios.md)** for arbitrary sampled
-waveforms, multiple TX actors, circle/waypoint/hold flight and custom skills.
+waveforms, multiple TX actors, circle/racetrack/waypoint/hold flight and custom skills.
 
 ## Launch the dashboard
 
@@ -135,13 +145,17 @@ script uses the current checkout launcher, so launcher fixes take effect after
 `git pull` without waiting for a rebuilt image. Standalone downloads use the
 launcher embedded in the published image.
 
-The script pulls and verifies three published images:
+The script pulls and verifies three images for the selected scenario:
 
 - `ghcr.io/wa200508/airsim-rf:dashboard-render` — ProjectAirSim and camera.
 - `ghcr.io/wa200508/airsim-rf:dashboard-gpu` — CUDA propagation and I/Q producer.
-- `ghcr.io/wa200508/airsim-rf:dashboard-skill` — CPU MUSIC processing.
+- Direction finding: the pinned `ghcr.io/wa200508/df-skill` image from its own repository.
+- Radar: `ghcr.io/wa200508/airsim-rf:dashboard-radar-skill` — independent CPU range/Doppler processing.
 
-It starts the **three separate containers concurrently**, verifies matching
+Only one receiver skill is launched for each mission; `dashboard-skill` remains a
+legacy alias for the external DF image.
+
+It starts the **three separate containers concurrently**, verifies compatible
 image revisions and service health, checks CUDA/OptiX/CuPy, prepares the actual
 scene and camera, and delivers an initial full I/Q window to the skill.
 **Launch mission stays disabled until those checks pass.** No local image

@@ -41,3 +41,5 @@ testpaths = ["tests"]
 
 [tool.setuptools.data-files]
 "share/airsim-rf/scenarios/drone-orbit" = ["scenarios/drone-orbit/*.json", "scenarios/drone-orbit/*.jsonc", "scenarios/drone-orbit/README.md", "scenarios/drone-orbit/*.txt"]
+
+"share/airsim-rf/scenarios/mmwave-radar" = ["scenarios/mmwave-radar/*.json", "scenarios/mmwave-radar/*.jsonc", "scenarios/mmwave-radar/README.md", "scenarios/mmwave-radar/*.txt"]

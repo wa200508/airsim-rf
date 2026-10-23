@@ -5,7 +5,10 @@
 > See [repository separation and pinned deployment](direction-finding-skill.md).
 
 A scenario is a **directory of input data**, independent of the containers and
-RF skill code. The shipped example is [scenarios/drone-orbit](../scenarios/drone-orbit).
+RF skill code. The [catalog](../scenarios/README.md) ships direction finding (`drone-orbit`) and
+[77 GHz FMCW radar](../scenarios/mmwave-radar/README.md) (`mmwave-radar`).
+List IDs with `--list-scenarios`, pass an ID or directory to `--scenario`, or use
+the dashboard Scenario selector after stopping the current mission.
 The same simulator/RF images compile and run a different package by changing
 `--scenario`. Physical choices no longer live in the dashboard producer.
 
@@ -84,11 +87,14 @@ Each `flight.json` actor names its own vehicle file, initial `position_rf_m`,
 
 - `circle`: `center_rf_m`, `radius_m`, `speed_m_s`, `direction` (`left`/`right`),
   `waypoint_step_deg`, `lookahead_m`, `adaptive_lookahead`. Start on the circle.
+- `racetrack`: clockwise stadium, `center_rf_m`, `straight_length_m`,
+  `turn_radius_m`, `speed_m_s`, `waypoint_step_deg`, `lookahead_m`,
+  `adaptive_lookahead`, `direction: right`. Start at the upper-left straight endpoint.
 - `waypoints`: `points_rf_m`, `speed_m_s`, `lookahead_m`, `adaptive_lookahead`,
   optional `repeat`. A non-repeated route ends at its final point.
 - `hold`: hold the declared altitude with zero horizontal velocity.
 
-Add transmitter actors and bind them by ID in `radios.json`. Current dashboard
+Add transmitter actors and bind them by ID in `radios.json`. In the one-way mode, dashboard
 receiver sites are fixed coherent arrays; moving-receiver capture exists in the
 separate [live API](live-workflow.md) and is not implicitly enabled by this schema.
 Vehicle configurations must support the native flight-control API used by this
@@ -183,3 +189,13 @@ a new solver, hardware impairment model or transport requires a runtime adapter.
 That is separate from changing terrain, vehicle data, waveform samples, flight
 paths, radios or a compatible RF consumer. See the
 [scenario-package qualification](../results/reviews/scenario-packages-20261023/REPORT.md).
+
+## Monostatic FMCW radar mode
+
+`radios.mode: fmcw-radar` selects moving radar acquisition rather than a one-way
+SDR link. `transmitters` is empty: passive targets are declared under
+`radar.targets` with actor and scalar RCS. `radar.platform_actor` identifies the
+moving radar, and `radar.profile` supplies the FMCW/IF/ADC configuration. The
+receiver-only configuration includes `acquisition` timing/gating metadata,
+without target or flight information. Use `skill.kind: radar` with the independent
+CPU `dashboard-radar-skill` image, or `custom` for another compatible consumer. See the [complete example and limitations](../scenarios/mmwave-radar/README.md).

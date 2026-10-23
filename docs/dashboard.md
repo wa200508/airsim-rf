@@ -433,3 +433,12 @@ private service DNS and published loopback port. It cleans up its test container
 and network. [Recorded rootless qualification](../results/reviews/rootless-20261022/REPORT.md)
 passed these checks on a real rootless daemon; full NVIDIA execution remains a
 host-specific startup check rather than a claim from the CPU test environment.
+
+## Select a scenario
+
+Use `bash scripts/run_dashboard.sh --scenario mmwave-radar --open` for the
+77 GHz radar example, or `--scenario drone-orbit` for direction finding. The
+[scenario catalog](../scenarios/README.md) documents both. The dashboard Scenario
+selector prepares the selected package with its own receiver skill; stop an active
+mission first. The radar display adds range/range-rate processing and preserves
+ADC gate timing in recorded I/Q. See the [radar model and hardware assumptions](../scenarios/mmwave-radar/README.md).

@@ -161,3 +161,16 @@ The [audit report and qualification evidence](../results/reviews/skill-boundary-
 record checks and limits. The standalone image processes hardware-like buffers
 without any simulator or truth present, at a carrier/rate different from the
 dashboard. No physical radio or full GPU flight is claimed by that test.
+
+## Radar scenario boundary
+
+The [77 GHz FMCW scenario](../scenarios/mmwave-radar/README.md) follows the same
+barrier. Acquisition pairs reciprocal Sionna paths through a private point-target
+model; the independently deployed [radar skill](../src/airsim_rf/skills/radar.py)
+receives dechirped ADC volts and its own chirp/ADC gate configuration. That
+configuration contains no target identity, RCS, flight plan or terrain. Source
+truth remains in source telemetry and is never mounted into the radar consumer.
+Its standalone NumPy-only image contains neither simulation dependencies nor
+DF-Skill. `scripts/qualify_radar_skill.py` exercises actual TCP, HTTP and result
+journaling with those dependencies physically absent. Radar results do not
+control physics or waveform generation.

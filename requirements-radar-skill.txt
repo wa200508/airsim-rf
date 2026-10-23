@@ -1,0 +1,2 @@
+# Standalone receiver-only radar FFT skill. No simulation or propagation dependencies.
+numpy==2.5.3

@@ -1,0 +1,78 @@
+{
+  "mode": "fmcw-radar",
+  "sample_rate_hz": 10000000.0,
+  "carrier_hz": 77000000000.0,
+  "transmitters": [],
+  "sites": [
+    {
+      "id": "radar",
+      "center_rf_m": [
+        -200,
+        0,
+        210
+      ],
+      "altitude_reference": "absolute",
+      "yaw_rad": 0,
+      "element_offsets_m": [
+        0.0
+      ],
+      "channels": [
+        "radar_rx0"
+      ],
+      "calibration_complex": [
+        [
+          1.0,
+          0.0
+        ]
+      ]
+    }
+  ],
+  "radar": {
+    "platform_actor": "RadarDrone",
+    "mount_body_m": [
+      0,
+      0,
+      0
+    ],
+    "pointing": "track-target",
+    "targets": [
+      {
+        "actor": "TargetDrone",
+        "rcs_m2": 0.01
+      }
+    ],
+    "profile": {
+      "carrier_hz": 77000000000.0,
+      "bandwidth_hz": 50000000.0,
+      "chirp_duration_s": 3.2e-05,
+      "sample_rate_hz": 10000000.0,
+      "num_samples": 256,
+      "adc_start_s": 3e-06,
+      "pri_s": 4e-05,
+      "mmic_power_dbm": 12.0,
+      "tx_feed_loss_db": 0.0,
+      "antenna_gain_dbi": 7.0,
+      "azimuth_beamwidth_deg": 56.0,
+      "elevation_beamwidth_deg": 28.0,
+      "if_gain_db": 60.0,
+      "if_low_hz": 30000.0,
+      "if_high_hz": 4500000.0,
+      "adc_bits": 12,
+      "adc_full_scale_v": 1.0,
+      "adc_bias_v": 0.5,
+      "noise_figure_db": 15.0,
+      "noise_enabled": true
+    },
+    "max_depth_per_leg": 1,
+    "seed": 42
+  },
+  "receiver_profile": {
+    "rf_bandwidth_hz": 9000000.0
+  },
+  "propagation": {
+    "continuous": true,
+    "path_diagnostics": true,
+    "path_solver": "single-bounce per radar leg",
+    "max_depth": 1
+  }
+}

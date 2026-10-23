@@ -51,6 +51,7 @@ class SampleRecordingWriter:
             'sample_rate_hz': rate, 'carrier_hz': carrier, 'units': 'volts',
             'datatype': 'cf32_le', 'windows': 0, 'samples_per_channel': 0,
             'payload_bytes': 0}
+        self.voltage_reference=receiver_config.get('voltage_reference','input-referred complex volts')
         self.states = {}; self.closed = False; self.failed = False
         self.resources = ExitStack()
         try:
@@ -67,7 +68,7 @@ class SampleRecordingWriter:
     def _metadata(self, name, captures):
         return {'global': {'core:datatype': 'cf32_le', 'core:sample_rate': self.manifest['sample_rate_hz'],
             'core:version': '1.2.6', 'core:recorder': 'airsim-rf sample recorder',
-            'core:description': f'{name}: input-referred complex volts; coherent group timing in windows.jsonl'},
+            'core:description': f'{name}: {self.voltage_reference}; coherent group timing in windows.jsonl'},
             'captures': captures, 'annotations': []}
 
     def write_window(self, blocks):

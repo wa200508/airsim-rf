@@ -151,3 +151,24 @@ test('circular MUSIC closes the full azimuth seam and identifies partial older s
  ui.context.render(state);
  assert.match(ui.element('music-caption').textContent,/−?\-?70° to 70° only/);
 });
+
+test('scenario selector names packaged inputs and disables switching during a mission',()=>{
+ const ui=dashboard(),state=frame(0);
+ state.scenario_catalog=[{id:'drone-orbit',title:'Direction finding'},{id:'mmwave-radar',title:'Radar racetrack'}];
+ state.selected_scenario='mmwave-radar';ui.context.renderControls(state);
+ assert.equal(ui.element('scenario-select').children[1].textContent,'Radar racetrack');
+ assert.equal(ui.element('scenario-select').value,'mmwave-radar');
+ assert.equal(ui.element('scenario-select').disabled,false);
+ state.mission_started=true;ui.context.renderControls(state);
+ assert.equal(ui.element('scenario-select').disabled,true);
+});
+
+test('radar view uses receiver result and labels range and range-rate axes',()=>{
+ const ui=dashboard(),state=frame(0);state.camera.available=false;
+ state.scenario.skill_kind='radar';state.skill.radar={range_m:[0,10],range_rate_m_s:[-20,20],power_db:[[-10,5],[2,30]],detection:{detected:true,range_m:10,range_rate_m_s:20}};
+ ui.context.render(state);
+ assert.equal(ui.element('radar-panel').hidden,false);assert.equal(ui.element('music-panel').hidden,true);
+ assert.match(ui.element('radar-detection').textContent,/10.0 m \/ 20.0 m\/s/);
+ const labels=ui.drawCalls.filter(c=>c.id==='radar-map'&&c.method==='fillText').map(c=>c.args[0]);
+ assert.ok(labels.includes('Range (m)')&&labels.includes('Range rate (m/s)'));
+});

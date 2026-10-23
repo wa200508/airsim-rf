@@ -121,3 +121,14 @@ See the [boundary guide](skill-boundary.md), [dashboard operations](dashboard.md
 Other offline radar/FMCW examples and renderer benchmarks remain separate
 workflows. Their point-target/LFM scenarios do not configure the live SDR
 application, and historical reports/figures do not change input defaults.
+
+## Radar scenario and catalog
+
+The [scenario catalog](../scenarios/README.md) now also contains the
+[77 GHz radar racetrack package](../scenarios/mmwave-radar/README.md). Its file
+guide covers chirps, IF/ADC settings, antenna, passive target RCS, trajectory
+and terrain masking. Source acquisition is in
+[dashboard_radar.py](../src/airsim_rf/dashboard_radar.py) and
+[fmcw.py](../src/airsim_rf/fmcw.py); independent receiver detection is in
+[skills/radar.py](../src/airsim_rf/skills/radar.py). The preceding MUSIC map
+continues to describe the direction-finding package.

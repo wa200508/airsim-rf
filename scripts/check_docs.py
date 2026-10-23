@@ -52,7 +52,7 @@ def check(paths):
 
 
 def main():
-    paths = [ROOT/'README.md', ROOT/'THIRD_PARTY_NOTICES.md', *sorted((ROOT/'docs').rglob('*.md'))]
+    paths = [ROOT/'README.md', ROOT/'THIRD_PARTY_NOTICES.md', *sorted((ROOT/'docs').rglob('*.md')), *sorted((ROOT/'scenarios').rglob('*.md'))]
     failures = check(paths)
     if failures:
         raise SystemExit('Documentation validation failures:\n'+'\n'.join(failures))

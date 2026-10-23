@@ -16,6 +16,23 @@ def default_directory():
     return next((p for p in candidates if (p/'scenario.json').is_file()),candidates[0])
 
 
+def catalog():
+    """Discover self-contained installed packages without importing scientific code."""
+    root=default_directory().parent
+    return [{'id':c['id'],'title':c['title'],'directory':str(path.parent.resolve())}
+            for path in sorted(root.glob('*/scenario.json'))
+            for c in [json.loads(path.read_text())]]
+
+
+def resolve(directory=None):
+    if directory is None:return default_directory()
+    path=Path(directory).expanduser()
+    if not path.exists() and len(path.parts)==1:
+        matches=[row for row in catalog() if str(directory)==row['id'] or str(directory)==Path(row['directory']).name]
+        if len(matches)==1:return Path(matches[0]['directory'])
+    return path
+
+
 def asset(directory,name):
     root=Path(directory).resolve()
     if not isinstance(name,str) or not name or Path(name).is_absolute():
@@ -45,7 +62,7 @@ def _identifier(value):
 
 def load(directory=None):
     """Read related JSON inputs, reject inconsistent clocks/assets before Docker."""
-    root=Path(directory or default_directory()).resolve()
+    root=resolve(directory).resolve()
     if root.is_file():
         if root.name!='scenario.json':raise ValueError('Point --scenario to a package directory or its scenario.json')
         root=root.parent
@@ -81,7 +98,7 @@ def load(directory=None):
         _vector(actor['position_rf_m'],3,'actor position');_number(actor['yaw_deg'],'actor yaw')
         _number(actor['settle_s'],'settle duration',0)
         flight=actor['flight'];kind=flight['type']
-        if kind not in ('circle','waypoints','hold'):raise ValueError('Flight type must be circle, waypoints or hold')
+        if kind not in ('circle','racetrack','waypoints','hold'):raise ValueError('Flight type must be circle, racetrack, waypoints or hold')
         if kind!='hold':
             _number(flight['speed_m_s'],'flight speed',.001);_number(flight['lookahead_m'],'flight lookahead',.001)
             _number(flight['adaptive_lookahead'],'adaptive lookahead',0)
@@ -92,12 +109,20 @@ def load(directory=None):
             center=flight['center_rf_m'];position=actor['position_rf_m']
             if abs(math.hypot(position[0]-center[0],position[1]-center[1])-flight['radius_m'])>.01 or abs(position[2]-center[2])>.01:
                 raise ValueError('Circle actor must start on its declared orbit at the orbit altitude')
+        if kind=='racetrack':
+            _vector(flight['center_rf_m'],3,'racetrack center')
+            for key in ('straight_length_m','turn_radius_m','waypoint_step_deg'):_number(flight[key],key,.001)
+            if flight['waypoint_step_deg']>90 or flight['direction']!='right':raise ValueError('Racetrack uses clockwise turns and <=90 degree waypoint spacing')
+            expected=[flight['center_rf_m'][0]-flight['straight_length_m']/2,flight['center_rf_m'][1]+flight['turn_radius_m'],flight['center_rf_m'][2]]
+            if any(abs(a-b)>.01 for a,b in zip(actor['position_rf_m'],expected)):raise ValueError('Racetrack must start at the northwest straight endpoint')
         if kind=='waypoints':
             if len(flight['points_rf_m'])<2:raise ValueError('At least two waypoints required')
             for point in flight['points_rf_m']:_vector(point,3,'waypoint')
     if len(set(names))!=len(names):raise ValueError('Duplicate actor IDs')
     radios=config['radios'];tx_names=[];channels=[]
-    if not radios['transmitters'] or not radios['sites']:raise ValueError('Transmitters and receiver sites required')
+    radar=radios.get('mode')=='fmcw-radar'
+    if (not radar and not radios['transmitters']) or not radios['sites']:raise ValueError('Transmitters and receiver sites required')
+    if radar:_validate_radar(radios,mission,names)
     for tx in radios['transmitters']:
         _identifier(tx['id']);tx_names.append(tx['id'])
         if tx['actor'] not in names:raise ValueError('Unknown transmitter actor: '+tx['actor'])
@@ -148,7 +173,7 @@ def load(directory=None):
         _vector(config['appearance'][key],size,key)
         if any(not 0<=x<=1 for x in config['appearance'][key]):raise ValueError('Visual color/emission must lie in [0,1]')
     skill=config['skill']
-    if skill['kind'] not in ('direction-finding','music','custom'):raise ValueError('Skill kind must be direction-finding or custom (music is a legacy alias)')
+    if skill['kind'] not in ('direction-finding','music','radar','custom'):raise ValueError('Skill kind must be direction-finding, radar or custom (music is a legacy alias)')
     if skill['contract']!='receiver-tcp-v2' or skill['revision_policy'] not in ('matching','independent'):raise ValueError('Unsupported skill contract/revision policy')
     if not isinstance(skill['image'],str) or not skill['image'] or not isinstance(skill['command'],list) or any(not isinstance(x,str) for x in skill['command']):raise ValueError('Skill image and argument list required')
     ports=skill['ports'];used=[]
@@ -163,13 +188,15 @@ def load(directory=None):
         raise ValueError('Direction Finding RF Skill requires two sites, each with >=3 coherent ULA channels; choose a compatible custom skill for other layouts')
     if skill['kind'] in ('direction-finding','music') and any(max((b-a for a,b in zip(site['element_offsets_m'],site['element_offsets_m'][1:])),default=0)>299792458./carrier/2*(1+1e-10) for site in radios['sites']):
         raise ValueError('MUSIC array spacing must be at most half a wavelength at the declared carrier')
+    if radar and skill['kind'] not in ('radar','custom'):raise ValueError('FMCW radar requires a radar or compatible custom skill')
+    if skill['kind']=='radar' and not radar:raise ValueError('Radar skill requires FMCW acquisition')
     config['_directory']=str(root)
     return config
 
 
 def snapshot(directory,destination):
     """Copy one complete input package atomically; retain previously generated runs."""
-    source=Path(directory).resolve();target=Path(destination).resolve()
+    source=resolve(directory).resolve();target=Path(destination).resolve()
     if target.is_relative_to(source):raise ValueError('Run/snapshot directory must be outside the scenario input directory')
     load(source)
     for path in source.rglob('*'):
@@ -195,3 +222,28 @@ def fingerprints(directory):
                 for block in iter(lambda:stream.read(1024*1024),b''):digest.update(block)
             result[str(path.relative_to(root))]=digest.hexdigest()
     return result
+
+
+def _validate_radar(radios,mission,names):
+    radar=radios['radar'];p=radar['profile'];rate=radios['sample_rate_hz']
+    if radar['platform_actor'] not in names or not radar['targets']:raise ValueError('Radar platform/target actors required')
+    _vector(radar['mount_body_m'],3,'radar mount')
+    if radar['pointing']!='track-target' or len(radios['sites'])!=1 or len(radios['sites'][0]['channels'])!=1:raise ValueError('Radar example requires one tracking monostatic channel')
+    if radios['transmitters']:raise ValueError('Passive radar targets must not be transmitters')
+    if p['carrier_hz']!=radios['carrier_hz'] or p['sample_rate_hz']!=rate:raise ValueError('Radar rate/carrier mismatch')
+    for target in radar['targets']:
+        if target['actor'] not in names or target['actor']==radar['platform_actor']:raise ValueError('Invalid radar target actor')
+        _number(target['rcs_m2'],'target RCS',0)
+    for key in ('carrier_hz','bandwidth_hz','chirp_duration_s','sample_rate_hz','num_samples','pri_s','adc_full_scale_v'):_number(p[key],key,.000000001)
+    _number(p['num_samples'],'ADC samples',2,integer=True)
+    _number(p['adc_start_s'],'ADC start',0)
+    if not 76e9<=p['carrier_hz']<=81e9 or rate>25e6 or p['bandwidth_hz']>4e9:raise ValueError('Radar profile exceeds IWR1843 carrier/ADC/sweep limits')
+    if not 0<p['if_low_hz']<p['if_high_hz']<rate/2:raise ValueError('Radar IF passband must lie below Nyquist')
+    _number(p['adc_bits'],'ADC bits',2,integer=True)
+    if p['adc_bits']>16 or not 0<=p['adc_bias_v']<=p['adc_full_scale_v']:raise ValueError('Invalid radar ADC transfer')
+    if not isinstance(p['noise_enabled'],bool):raise ValueError('Radar noise_enabled must be boolean')
+    if p['adc_start_s']+p['num_samples']/rate>p['chirp_duration_s'] or p['pri_s']<p['chirp_duration_s']:raise ValueError('Radar ADC gate must fit ramp and ramp must fit PRI')
+    for samples in (p['pri_s']*rate,p['adc_start_s']*rate,mission['rf_update_ns']/(p['pri_s']*1e9)):
+        if abs(samples-round(samples))>1e-6:raise ValueError('Radar PRI/gate and update must align to sample/chirp boundaries')
+    if mission['rf_update_ns']/(p['pri_s']*1e9)<64:raise ValueError('Radar window needs at least 64 chirps')
+    if radar['max_depth_per_leg'] not in (0,1):raise ValueError('Radar depth per leg must be 0 or 1')

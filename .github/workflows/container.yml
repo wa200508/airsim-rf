@@ -111,6 +111,12 @@ jobs:
         run: |
           docker run --rm --network none --entrypoint python airsim-rf:dashboard-skill-test \
             scripts/qualify_independence.py
+      - name: Build independent CPU radar skill
+        run: |
+          docker build -f Dockerfile.dashboard --build-arg SOURCE_REVISION=${{ github.sha }} \
+            --target radar-skill -t airsim-rf:dashboard-radar-skill-test .
+          docker run --rm --network none --entrypoint python airsim-rf:dashboard-radar-skill-test \
+            scripts/qualify_radar_skill.py
       - name: Registry tags
         id: meta
         if: github.event_name != 'pull_request' && (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/v'))
@@ -143,7 +149,7 @@ jobs:
           IMAGE: ghcr.io/${{ github.repository }}
           REVISION: ${{ github.sha }}
         run: |
-          for role in gpu skill render; do
+          for role in gpu skill radar-skill render; do
             image="$IMAGE:dashboard-$role"
             docker tag "airsim-rf:dashboard-$role-test" "$image-sha-$REVISION"
             docker push "$image-sha-$REVISION"

@@ -287,3 +287,12 @@ def test_default_direction_finding_skill_is_external_and_independent():
     assert config['skill']['kind']=='direction-finding'
     assert config['skill']['revision_policy']=='independent'
     assert config['skill']['image'].startswith('ghcr.io/wa200508/df-skill:sha-')
+
+
+def test_catalog_selection_reprepares_and_preserves_recordings(tmp_path,monkeypatch):
+    obj=instance(tmp_path);obj.busy=False;obj.mission_started=False
+    calls=[];monkeypatch.setattr(obj,'action',calls.append)
+    obj.select_scenario('mmwave-radar')
+    assert calls==['prepare'] and obj.definition['id']=='mmwave-radar' and not obj.ready
+    obj.mission_started=True
+    with pytest.raises(ValueError,match='Stop'):obj.select_scenario('drone-orbit')

@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "id": "drone-orbit",
-  "title": "Hills & valleys / drone orbit",
+  "title": "Direction finding / hills & valleys",
   "environment": "environment.json",
   "flight": "flight.json",
   "radios": "radios.json",

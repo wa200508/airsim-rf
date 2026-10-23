@@ -54,7 +54,7 @@ def project_radios(eye_ned,camera_to_ned,points_rf,width,height,fov_deg=CAMERA_F
                             height/2+focal*local[:,2]/local[:,0],local[:,0]))
 
 
-def camera_labels(message,mount_pose,receiver_positions_rf,document,*,fov_deg=CAMERA_FOV_DEG,platform_label='TX / DRONE'):
+def camera_labels(message,mount_pose,receiver_positions_rf,document,*,fov_deg=CAMERA_FOV_DEG,platform_label='TX / DRONE',receiver_labels=None):
     """Project actual-frame TX/RX anchors; omit labels hidden by the shared mesh.
 
     The applied body-relative camera mount and native image pose reconstruct the
@@ -76,7 +76,7 @@ def camera_labels(message,mount_pose,receiver_positions_rf,document,*,fov_deg=CA
     for index,((x,y,depth),hit,distance) in enumerate(zip(pixels,hits,distances)):
         if depth<=0 or not (0<x<message['width'] and 0<y<message['height']):continue
         if hit is not None and hit['distance_m']<distance-.01:continue
-        labels.append({'text':platform_label if index==0 else f'RX {index-1}',
+        labels.append({'text':platform_label if index==0 else receiver_labels[index-1] if receiver_labels else f'RX {index-1}',
             'x':float(x),'y':float(y),'color_rgb':([255,200,90] if index==0 else
                 [85,215,208] if index==1 else [230,185,108])})
     return labels
