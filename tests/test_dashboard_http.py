@@ -118,7 +118,14 @@ module.main()
                         self.assertEqual(response.headers['Content-Type'], content_type)
                         self.assertTrue(response.read())
                 with opener.open(base + '/api/status', timeout=2) as response:
-                    self.assertEqual(json.load(response), {'transport_test': 'host-loopback'})
+                    state = json.load(response)
+                    self.assertEqual(state['transport_test'], 'host-loopback')
+                    self.assertEqual(state['selected_scenario'], 'drone-orbit')
+                    catalog = {item['id']: item for item in state['scenario_catalog']}
+                    self.assertTrue({'drone-orbit', 'mmwave-radar'} <= catalog.keys())
+                    for item in catalog.values():
+                        self.assertTrue(item['title'])
+                        self.assertTrue((Path(item['directory']) / 'scenario.json').is_file())
                 with opener.open(base + '/camera.jpg?frame=0123456789abcdef-100',timeout=2) as response:
                     self.assertEqual(response.read(),b'immutable epoch 100 image')
             finally:
