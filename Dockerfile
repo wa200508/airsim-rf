@@ -29,7 +29,7 @@ RUN --mount=type=secret,id=proxy_ca,mode=0444 \
     rm -rf /var/lib/apt/lists/*
 
 WORKDIR /opt/airsim-rf
-COPY --chmod=755 pyproject.toml requirements-lock.txt requirements-geometry.txt requirements-df-skill.txt sources.json README.md LICENSE THIRD_PARTY_NOTICES.md ./
+COPY --chmod=755 pyproject.toml requirements-lock.txt requirements-geometry.txt requirements-df-skill.txt requirements-radar-skill.txt sources.json README.md LICENSE THIRD_PARTY_NOTICES.md ./
 COPY --chmod=755 scripts/bootstrap.py scripts/bootstrap.py
 COPY --chmod=755 src/ src/
 COPY --chmod=755 scenarios/ scenarios/

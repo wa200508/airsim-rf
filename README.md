@@ -3,6 +3,8 @@
 > The direction-finding receiver application is the separately maintained
 > [Direction Finding RF Skill](https://github.com/wa200508/DF-Skill), using MUSIC.
 > See [repository separation and pinned deployment](docs/direction-finding-skill.md).
+> The radar receiver is also separate: [Radar-skill](https://github.com/wa200508/Radar-skill),
+> with [ownership and pinned deployment](docs/radar-skill.md).
 
 ProjectAirSim poses → Sionna propagation → complex I/Q → receiver filtering,
 noise and ADC → timestamped SDR recordings. The project also provides radar
@@ -26,7 +28,7 @@ lists the selected values and flags settings that must be edited together.
 | Scenario, receiver locations, flight and transmitted samples | [Scenario catalog](scenarios/README.md); [compiler/engine adapters](src/airsim_rf/dashboard_scenario.py) |
 | Native drone flight, antenna pattern, TX power and selected RF backend | [dashboard_producer.py](src/airsim_rf/dashboard_producer.py) — `run()` |
 | SDR filtering, noise, ADC and path-to-I/Q dispatch | [sdr.py](src/airsim_rf/sdr.py) — `PlutoSDRProfile`, `SDRNetworkReceiver.capture()` |
-| Live received-I/Q processing | [External direction-finding skill](https://github.com/wa200508/DF-Skill); [radar skill](src/airsim_rf/skills/radar.py) — `RadarSkill.process()` |
+| Live received-I/Q processing | [External direction-finding skill](https://github.com/wa200508/DF-Skill); [external radar skill](https://github.com/wa200508/Radar-skill/blob/main/src/radar_skill/app.py) — `RadarSkill.process()` |
 | MUSIC algorithm call, steering vector and detection gate | [processing/music.py](src/airsim_rf/processing/music.py) — `estimate_bearing()`, `PhysicalULA`; [full MUSIC trace](docs/code-map.md#find-the-actual-music-algorithm) |
 
 The MUSIC numerical implementation comes from `doa_py`; it is not vendored
@@ -150,7 +152,8 @@ The script pulls and verifies three images for the selected scenario:
 - `ghcr.io/wa200508/airsim-rf:dashboard-render` — ProjectAirSim and camera.
 - `ghcr.io/wa200508/airsim-rf:dashboard-gpu` — CUDA propagation and I/Q producer.
 - Direction finding: the pinned `ghcr.io/wa200508/df-skill` image from its own repository.
-- Radar: `ghcr.io/wa200508/airsim-rf:dashboard-radar-skill` — independent CPU range/Doppler processing.
+- Radar: the pinned `ghcr.io/wa200508/radar-skill` image from its own repository.
+  `airsim-rf:dashboard-radar-skill` remains a compatibility image alias.
 
 Only one receiver skill is launched for each mission; `dashboard-skill` remains a
 legacy alias for the external DF image.

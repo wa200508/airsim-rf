@@ -53,3 +53,11 @@ its license, provenance NOTICE and original airsim-rf MIT attribution are retain
 in its distribution. Local legacy skill/math imports delegate to that package;
 this repository does not vendor another implementation of the DF application.
 The independent image remains free of AirSim/Sionna/source-truth dependencies.
+
+The separately maintained [Radar RF Skill](https://github.com/wa200508/Radar-skill)
+is an external package and independently published CPU consumer, pinned at
+`ed36dffc23e716e24d7bf3ed084c0358d1d12e18`. It is Apache-2.0 licensed and preserves the
+original airsim-rf MIT attribution in its own distribution. Local
+`skills/radar.py` is a compatibility import; the radar receiver application and
+FFT implementation are not vendored here. Its neutral I/Q transport/archive
+adapters remain interoperable with this repository's acquisition interfaces.

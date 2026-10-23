@@ -1,2 +1,2 @@
-# Standalone receiver-only radar FFT skill. No simulation or propagation dependencies.
-numpy==2.5.3
+# Separately maintained Radar RF Skill; immutable source pin.
+radar-skill @ https://github.com/wa200508/Radar-skill/archive/ed36dffc23e716e24d7bf3ed084c0358d1d12e18.tar.gz

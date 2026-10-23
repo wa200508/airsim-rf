@@ -117,7 +117,7 @@ IF/noise/ADC in NumPy before transport/recording. No new GPU throughput or
 At 10 MS/s, one cf32 channel needs 80 MB/s and about **9.6 GB for 120 s**, plus
 journals/video. Set `mission.record_iq=false` to disable bulk recording.
 
-The [radar skill](../../src/airsim_rf/skills/radar.py) knows only receiver channel,
+The [Radar RF Skill](https://github.com/wa200508/Radar-skill) knows only receiver channel,
 carrier, sample rate and chirp/gate timing. It uses the first 64 chirps from each
 100-chirp window, per-ramp DC removal, Hann windows and a 2D FFT, then reports a candidate above an
 18 dB contrast threshold relative to the median map power. This is a simple
@@ -136,7 +136,11 @@ installation and never receives scene, flight plan, target RCS or target truth.
 | Clock, duration, recording, camera and chosen skill? | `scenario.json` |
 | Path pairing, phase, IF, noise and quantizer? | [fmcw.py](../../src/airsim_rf/fmcw.py) |
 | Actual poses, window acquisition and gate packing? | [dashboard_radar.py](../../src/airsim_rf/dashboard_radar.py); orchestrated by [dashboard_producer.py](../../src/airsim_rf/dashboard_producer.py) |
-| Detection and range/Doppler FFT? | [skills/radar.py](../../src/airsim_rf/skills/radar.py), deployed separately from acquisition |
+| Detection and range/Doppler FFT? | [Radar-skill processing](https://github.com/wa200508/Radar-skill/blob/main/src/radar_skill/processing.py) and [receiver app](https://github.com/wa200508/Radar-skill/blob/main/src/radar_skill/app.py); local `skills/radar.py` is a compatibility import |
+
+The receiver is maintained, tested and published in its own repository. This
+scenario pins its image and uses `revision_policy: independent`; simulator/RF
+images still must match each other. See [radar skill separation](../../docs/radar-skill.md).
 
 ## References
 

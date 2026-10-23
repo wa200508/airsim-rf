@@ -130,5 +130,8 @@ guide covers chirps, IF/ADC settings, antenna, passive target RCS, trajectory
 and terrain masking. Source acquisition is in
 [dashboard_radar.py](../src/airsim_rf/dashboard_radar.py) and
 [fmcw.py](../src/airsim_rf/fmcw.py); independent receiver detection is in
-[skills/radar.py](../src/airsim_rf/skills/radar.py). The preceding MUSIC map
+[Radar-skill processing](https://github.com/wa200508/Radar-skill/blob/main/src/radar_skill/processing.py)
+and [receiver app](https://github.com/wa200508/Radar-skill/blob/main/src/radar_skill/app.py).
+The local `skills/radar.py` is only a compatibility import. See [repository separation](radar-skill.md).
+The preceding MUSIC map
 continues to describe the direction-finding package.

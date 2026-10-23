@@ -3,6 +3,7 @@ import importlib.util
 from pathlib import Path
 import subprocess
 import sys
+import pytest
 
 ROOT=Path(__file__).resolve().parents[1]
 
@@ -62,8 +63,9 @@ assert 'airsim_rf.receiver' not in sys.modules
     assert result.returncode==0,result.stderr
 
 
-def test_simulation_cannot_import_external_direction_finding_implementation(tmp_path):
+@pytest.mark.parametrize('package',('df_skill','radar_skill'))
+def test_simulation_cannot_import_external_receiver_implementation(tmp_path,package):
     root=tmp_path/'src/airsim_rf';root.mkdir(parents=True)
-    (root/'dashboard_producer.py').write_text('from df_skill.app import DirectionFindingSkill\\n'.replace('\\n','\n'))
+    (root/'dashboard_producer.py').write_text(f'import {package}.app\n')
     report=checker().audit(tmp_path)
-    assert any('external receiver implementation df_skill.app' in failure for failure in report['failures'])
+    assert any('external receiver implementation '+package+'.app' in failure for failure in report['failures'])

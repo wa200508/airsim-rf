@@ -38,8 +38,8 @@
   "skill": {
     "kind": "radar",
     "contract": "receiver-tcp-v2",
-    "image": "ghcr.io/wa200508/airsim-rf:dashboard-radar-skill",
-    "revision_policy": "matching",
+    "image": "ghcr.io/wa200508/radar-skill:sha-ed36dffc23e716e24d7bf3ed084c0358d1d12e18",
+    "revision_policy": "independent",
     "command": [
       "--arrays",
       "/config/arrays.json",
@@ -51,6 +51,6 @@
       "http": 8812,
       "control": null
     },
-    "name": "FMCW Radar RF Skill"
+    "name": "Radar RF Skill"
   }
 }

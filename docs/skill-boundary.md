@@ -166,11 +166,13 @@ dashboard. No physical radio or full GPU flight is claimed by that test.
 
 The [77 GHz FMCW scenario](../scenarios/mmwave-radar/README.md) follows the same
 barrier. Acquisition pairs reciprocal Sionna paths through a private point-target
-model; the independently deployed [radar skill](../src/airsim_rf/skills/radar.py)
+model; the independently deployed [Radar-skill](https://github.com/wa200508/Radar-skill)
 receives dechirped ADC volts and its own chirp/ADC gate configuration. That
 configuration contains no target identity, RCS, flight plan or terrain. Source
 truth remains in source telemetry and is never mounted into the radar consumer.
 Its standalone NumPy-only image contains neither simulation dependencies nor
-DF-Skill. `scripts/qualify_radar_skill.py` exercises actual TCP, HTTP and result
-journaling with those dependencies physically absent. Radar results do not
+DF-Skill. The external `scripts/qualify_independence.py` exercises actual TCP,
+HTTP, result journaling and lossless recorded-I/Q replay with those dependencies
+physically absent. Local `scripts/qualify_radar_skill.py` only runs that published
+qualifier container; it does not contain another application implementation. Radar results do not
 control physics or waveform generation.

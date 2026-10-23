@@ -52,6 +52,7 @@ def main():
     # Legacy offline analysis imports delegate to the separately maintained skill.
     # Install only its small package here; DSP dependencies remain in the tracking lock.
     run(installer + ["--no-deps", "-r", root/"requirements-df-skill.txt"])
+    run(installer + ["--no-deps", "-r", root/"requirements-radar-skill.txt"])
     print(f"Ready. Run {python} -m pytest {root/'tests'}")
     print(f"RF example: {python} -m airsim_rf.cli example --geometry {'shared' if args.geometry else 'ground'} --output recordings/demo")
     print("A simulator must be built or downloaded separately for live AirSim captures.")
