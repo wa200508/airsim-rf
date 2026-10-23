@@ -39,3 +39,9 @@ contents and notices are retained in `/opt/blocks`; the pinned ProjectAirSim
 source/client license is retained in `/opt/airsim-rf/.deps/ProjectAirSim`.
 Bundling does not relicense the upstream simulator or its third-party components
 under this repository's MIT license.
+
+The editable `scenarios/drone-orbit/quadrotor.jsonc` vehicle data derives from
+ProjectAirSim's `robot_quadrotor_fastphysics_sensors.jsonc` at the pinned source
+commit, with the example's controller/camera settings. Its upstream MIT license
+and Microsoft copyright are retained alongside it in
+`scenarios/drone-orbit/PROJECTAIRSIM-LICENSE.txt`.

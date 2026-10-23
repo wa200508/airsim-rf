@@ -1,0 +1,128 @@
+{
+  "sample_rate_hz": 2000000.0,
+  "carrier_hz": 915000000.0,
+  "antenna": {
+    "tx_pattern": "iso",
+    "rx_pattern": "iso",
+    "polarization": "V"
+  },
+  "transmitters": [
+    {
+      "id": "tx0",
+      "actor": "OrbitDrone",
+      "mount_body_m": [
+        0,
+        0,
+        0
+      ],
+      "power_w": 0.1,
+      "waveform": "waveform.json",
+      "baseband_bounds_hz": [
+        -100000,
+        100000
+      ]
+    }
+  ],
+  "sites": [
+    {
+      "id": "site0",
+      "center_rf_m": [
+        0,
+        -25,
+        8
+      ],
+      "altitude_reference": "agl",
+      "yaw_rad": 0.0,
+      "element_offsets_m": [
+        -0.24573152295081968,
+        -0.08191050765027322,
+        0.08191050765027322,
+        0.24573152295081968
+      ],
+      "channels": [
+        "site0_e0",
+        "site0_e1",
+        "site0_e2",
+        "site0_e3"
+      ],
+      "calibration_complex": [
+        [
+          1.0,
+          0.0
+        ],
+        [
+          1.0,
+          0.0
+        ],
+        [
+          1.0,
+          0.0
+        ],
+        [
+          1.0,
+          0.0
+        ]
+      ]
+    },
+    {
+      "id": "site1",
+      "center_rf_m": [
+        0,
+        25,
+        8
+      ],
+      "altitude_reference": "agl",
+      "yaw_rad": 0.0,
+      "element_offsets_m": [
+        -0.24573152295081968,
+        -0.08191050765027322,
+        0.08191050765027322,
+        0.24573152295081968
+      ],
+      "channels": [
+        "site1_e0",
+        "site1_e1",
+        "site1_e2",
+        "site1_e3"
+      ],
+      "calibration_complex": [
+        [
+          1.0,
+          0.0
+        ],
+        [
+          1.0,
+          0.0
+        ],
+        [
+          1.0,
+          0.0
+        ],
+        [
+          1.0,
+          0.0
+        ]
+      ]
+    }
+  ],
+  "receiver_profile": {
+    "rf_bandwidth_hz": 1000000.0,
+    "noise_figure_db": 10.0,
+    "input_full_scale_dbm": -30.0,
+    "temperature_k": 290.0,
+    "impedance_ohm": 50.0,
+    "noise_enabled": true
+  },
+  "propagation": {
+    "renderer": "basis-cuda",
+    "continuous": true,
+    "path_solver": "single-bounce",
+    "max_depth": 1,
+    "samples_per_link": 2,
+    "seed": 20261021,
+    "path_diagnostics": true,
+    "max_delay_s": 0.0001,
+    "max_doppler_hz": 2500.0,
+    "block_samples": 2048
+  }
+}

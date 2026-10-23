@@ -1,0 +1,54 @@
+{
+  "schema_version": 1,
+  "id": "drone-orbit",
+  "title": "Hills & valleys / drone orbit",
+  "environment": "environment.json",
+  "flight": "flight.json",
+  "radios": "radios.json",
+  "mission": {
+    "duration_s": 120.0,
+    "physics_step_ns": 3000000,
+    "rf_update_ns": 120000000
+  },
+  "camera": {
+    "actor": "OrbitDrone",
+    "sensor": "Chase",
+    "distance_m": 5.0,
+    "elevation_bias": 0.25,
+    "fov_deg": 90.0,
+    "labels": true,
+    "capture_interval_s": 0.12,
+    "width": 960,
+    "height": 540
+  },
+  "appearance": {
+    "terrain_base_color_rgba": [
+      0.12,
+      0.18,
+      0.085,
+      1.0
+    ],
+    "terrain_emissive_rgb": [
+      0.008,
+      0.012,
+      0.005
+    ]
+  },
+  "skill": {
+    "kind": "music",
+    "contract": "receiver-tcp-v2",
+    "image": "ghcr.io/wa200508/airsim-rf:dashboard-skill",
+    "revision_policy": "matching",
+    "command": [
+      "--arrays",
+      "/config/arrays.json",
+      "--results-dir",
+      "/results"
+    ],
+    "ports": {
+      "iq": 8811,
+      "http": 8812,
+      "control": 8813
+    }
+  }
+}

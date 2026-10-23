@@ -93,11 +93,11 @@ class RecordingStore:
             for epoch in epochs:
                 p=index['rows'][epoch]['producer']
                 if manifest['no_render']:pairs.append((epoch,None));continue
-                near=cameras[bisect_left(camera_times,epoch-MAX_OFFSET_NS):bisect_right(camera_times,epoch+MAX_OFFSET_NS)]
+                near=cameras[bisect_left(camera_times,epoch-manifest['step_ns']//2):bisect_right(camera_times,epoch+manifest['step_ns']//2)]
                 near=[c for c in near if c.get('geometry_sha256')==p.get('geometry_sha256')]
                 if near:
                     camera=min(near,key=lambda c:abs(c['sim_time_ns']-epoch))
-                    if abs(camera['sim_time_ns']-epoch)<=MAX_OFFSET_NS:pairs.append((epoch,camera))
+                    if abs(camera['sim_time_ns']-epoch)<=manifest['step_ns']//2:pairs.append((epoch,camera))
             index.update(revision=revision,epochs=epochs,pairs=pairs,
                 pair_epochs=[epoch for epoch,_ in pairs],
                 times=[index['rows'][epoch]['producer']['sim_elapsed_s'] for epoch,_ in pairs])

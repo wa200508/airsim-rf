@@ -1,0 +1,120 @@
+{
+  "status": "passed",
+  "checks": {
+    "installed_editable_scenario_available": true,
+    "ground_expected_plan": true,
+    "ground_complete_local_assets": true,
+    "shared_expected_plan": true,
+    "shared_complete_local_assets": true,
+    "relocated_bundle_consumable": true,
+    "short_source_diagnosed": true,
+    "clean_cpu_propagation": true,
+    "clean_cpu_receiver_processing": true,
+    "recording_consumers_accept_known_adc_samples": true
+  },
+  "python": "3.12.14 (main, Sep 19 2026, 01:04:57) [GCC 14.2.0]",
+  "installed_module": "/tmp/airsim-rf-wheel-znnvlyko/lib/python3.12/site-packages/airsim_rf/__init__.py",
+  "versions": {
+    "airsim-rf": "0.2.0",
+    "numpy": "2.5.3",
+    "scipy": "1.18.1",
+    "sionna-rt": "2.2.0",
+    "mitsuba": "3.9.1",
+    "drjit": "1.5.0",
+    "projectairsim": "1.1.0",
+    "usd-core": "26.8",
+    "sigmf": "1.13.0"
+  },
+  "commands": [
+    {
+      "arguments": [
+        "example",
+        "--geometry",
+        "ground",
+        "--output",
+        "/tmp/scenario-package-final-qualification-retry/ground"
+      ],
+      "returncode": 0,
+      "stdout": "{\n  \"status\": \"prepared\",\n  \"configuration\": \"/tmp/scenario-package-final-qualification-retry/ground/radios.json\"\n}\n",
+      "stderr": ""
+    },
+    {
+      "arguments": [
+        "preflight",
+        "--config",
+        "/tmp/scenario-package-final-qualification-retry/ground/radios.json",
+        "--output",
+        "/tmp/scenario-package-final-qualification-retry/ground-capture"
+      ],
+      "returncode": 0,
+      "stdout": "{\n  \"status\": \"passed\",\n  \"scope\": \"offline configuration and capture plan\",\n  \"server_contacted\": false,\n  \"versions\": {\n    \"airsim-rf\": \"0.2.0\",\n    \"numpy\": \"2.5.3\",\n    \"scipy\": \"1.18.1\",\n    \"sionna-rt\": \"2.2.0\",\n    \"mitsuba\": \"3.9.1\",\n    \"drjit\": \"1.5.0\",\n    \"projectairsim\": \"1.1.0\",\n    \"cupy-cuda12x\": null,\n    \"usd-core\": \"26.8\",\n    \"sigmf\": \"1.13.0\"\n  },\n  \"inputs\": {\n    \"propagation_options\": {\n      \"path_solver\": \"single-bounce\",\n      \"max_depth\": 1,\n      \"surface_sampling\": false,\n      \"samples_per_link\": 1028,\n      \"seed\": 42\n    },\n    \"antenna_options\": {\n      \"tx\": {\n        \"num_rows\": 1,\n        \"num_cols\": 1,\n        \"pattern\": \"hw_dipole\",\n        \"polarization\": \"V\"\n      },\n      \"rx\": {\n        \"num_rows\": 1,\n        \"num_cols\": 1,\n        \"pattern\": \"hw_dipole\",\n        \"polarization\": \"V\"\n      }\n    },\n    \"configuration_sha256\": \"024736b54cf2d1effb736ee5d9a95dcf2137c20b963c2812feef290a1a4856c5\",\n    \"rf_scene\": {\n      \"scene_id\": \"rf_ground\",\n      \"xml_sha256\": \"c77427ec3f34d66e3f8985ef839083b0874d047ef16de3a8d84446493a5871fa\",\n      \"meshes_sha256\": {\n        \"ground.ply\": \"a79cddd969602a05527ea77dfe89bac4e0f0c204bac69b880d7cfd3391267247\"\n      }\n    },\n    \"geometry_bundle\": null,\n    \"sim_config_sha256\": {\n      \"robot_rf.jsonc\": \"e6e2c24a1586c712999b9e9cc49c9091349d99ebc088d7e13fa6281ec03083e3\",\n      \"scene_rf.jsonc\": \"56ccebac99b4fb1bd193e53d200e219fb503f8a19934e2b905ef620b4a9a23da\"\n    },\n    \"waveforms\": {\n      \"tx0\": {\n        \"sha256\": \"6d3179167e82dacf4094c9959a91b423f0fa3479bc3c8a4992ed6ee2458120a8\",\n        \"samples\": 500000,\n        \"signal_seconds\": 0.25,\n        \"mean_sample_power\": 1.0\n      }\n    }\n  },\n  \"plan\": {\n    \"updates\": 10,\n    \"requested_advance_ns\": 10000000,\n    \"physics_tick_ns\": 3000000,\n    \"expected_interval_ns\": 12000000,\n    \"samples_per_window\": 24000,\n    \"complex_samples_per_receiver\": 240000,\n    \"signal_seconds_per_receiver\": 0.12,\n    \"receivers\": 1,\n    \"raw_iq_bytes\": 960000,\n    \"timing_basis\": \"configured steppable clock; actual capture timestamps remain authoritative\"\n  },\n  \"storage\": {\n    \"output\": \"/tmp/scenario-package-final-qualification-retry/ground-capture\",\n    \"free_bytes\": 1213042688,\n    \"raw_iq_bytes\": 960000,\n    \"metadata_and_filesystem_overhead_included\": false\n  },\n  \"backend\": {\n    \"status\": \"not_requested\",\n    \"server_contacted\": false\n  }\n}\n",
+      "stderr": ""
+    },
+    {
+      "arguments": [
+        "example",
+        "--geometry",
+        "shared",
+        "--output",
+        "/tmp/scenario-package-final-qualification-retry/shared"
+      ],
+      "returncode": 0,
+      "stdout": "{\n  \"status\": \"prepared\",\n  \"configuration\": \"/tmp/scenario-package-final-qualification-retry/shared/radios.json\"\n}\n",
+      "stderr": ""
+    },
+    {
+      "arguments": [
+        "preflight",
+        "--config",
+        "/tmp/scenario-package-final-qualification-retry/shared/radios.json",
+        "--output",
+        "/tmp/scenario-package-final-qualification-retry/shared-capture"
+      ],
+      "returncode": 0,
+      "stdout": "{\n  \"status\": \"passed\",\n  \"scope\": \"offline configuration and capture plan\",\n  \"server_contacted\": false,\n  \"versions\": {\n    \"airsim-rf\": \"0.2.0\",\n    \"numpy\": \"2.5.3\",\n    \"scipy\": \"1.18.1\",\n    \"sionna-rt\": \"2.2.0\",\n    \"mitsuba\": \"3.9.1\",\n    \"drjit\": \"1.5.0\",\n    \"projectairsim\": \"1.1.0\",\n    \"cupy-cuda12x\": null,\n    \"usd-core\": \"26.8\",\n    \"sigmf\": \"1.13.0\"\n  },\n  \"inputs\": {\n    \"propagation_options\": {\n      \"path_solver\": \"single-bounce\",\n      \"max_depth\": 1,\n      \"surface_sampling\": false,\n      \"samples_per_link\": 1028,\n      \"seed\": 42\n    },\n    \"antenna_options\": {\n      \"tx\": {\n        \"num_rows\": 1,\n        \"num_cols\": 1,\n        \"pattern\": \"hw_dipole\",\n        \"polarization\": \"V\"\n      },\n      \"rx\": {\n        \"num_rows\": 1,\n        \"num_cols\": 1,\n        \"pattern\": \"hw_dipole\",\n        \"polarization\": \"V\"\n      }\n    },\n    \"configuration_sha256\": \"701c9d9f3cc78d12cae46828861d2aea2196f2180b0a5634c153c6392bcfb81a\",\n    \"rf_scene\": {\n      \"scene_id\": \"scene\",\n      \"xml_sha256\": \"a6a336bd861e58129a13857b6d144f066b0ff90ba0b26314e67fabf122b72b14\",\n      \"meshes_sha256\": {\n        \"Ground.ply\": \"b78b226381b57479f0dae76d42c4d6fc207090e6e351ecf6bfccefda385ec0d4\",\n        \"Building.ply\": \"382d52afc3e74801b3f20b082da495da75ca6280aa8a3205fa94042ce776902f\",\n        \"Wall.ply\": \"af7149c7b8adc3f1dd4c174bb0185453813c144bb7fc118673aef70b09dabb1d\"\n      }\n    },\n    \"geometry_bundle\": {\n      \"manifest\": {\n        \"schema_version\": 1,\n        \"adapter\": \"sionna-ply-xml-v1\",\n        \"qualification\": \"offline export only; runtime loading not checked\",\n        \"scene_sha256\": \"7897e1f1f368fa894d694a64e53f83f81f0b1ea8dddbb4719f0563ea9bfd10c0\",\n        \"object_map\": {\n          \"Ground\": \"obj_Ground\",\n          \"Building\": \"obj_Building\",\n          \"Wall\": \"obj_Wall\"\n        },\n        \"load_options\": {\n          \"merge_shapes\": false\n        },\n        \"files\": {\n          \"Building.ply\": \"382d52afc3e74801b3f20b082da495da75ca6280aa8a3205fa94042ce776902f\",\n          \"Ground.ply\": \"b78b226381b57479f0dae76d42c4d6fc207090e6e351ecf6bfccefda385ec0d4\",\n          \"Wall.ply\": \"af7149c7b8adc3f1dd4c174bb0185453813c144bb7fc118673aef70b09dabb1d\",\n          \"bindings.json\": \"70b4c8456604f5d193cfe23acb02af8c92e7b41b6c871d2710718ebc3393c925\",\n          \"geometry.json\": \"b3b07e09410fe3941ec270883c07fc6a8ba82312b60406327b38ebf77d8078d9\",\n          \"scene.xml\": \"a6a336bd861e58129a13857b6d144f066b0ff90ba0b26314e67fabf122b72b14\",\n          \"source.json\": \"0dc6b9a27f073c165c95b1e7a1be1a9ffbc70d2bfe3f71c26f11dc511a982650\"\n        }\n      },\n      \"bindings\": {\n        \"version\": 1,\n        \"geodetic_anchor\": {\n          \"latitude_deg\": 47.641468,\n          \"longitude_deg\": -122.140165,\n          \"altitude_hae_m\": 122.0\n        },\n        \"objects\": {\n          \"Ground\": {\n            \"prim_path\": \"/World/Ground\",\n            \"material\": \"dielectric\",\n            \"simulator\": {\n              \"object_name\": \"RFSharedGround\",\n              \"asset_path\": \"generated:glb\",\n              \"local_to_actor_m\": [\n                [\n                  1,\n                  0,\n                  0,\n                  0\n                ],\n                [\n                  0,\n                  -1,\n                  0,\n                  0\n                ],\n                [\n                  0,\n                  0,\n                  -1,\n                  0\n                ],\n                [\n                  0,\n                  0,\n                  0,\n                  1\n                ]\n              ],\n              \"asset_provenance\": \"Shared USD triangles baked by Blocks client-mesh adapter v1; collision equivalence qualified by independent LiDAR rays in pinned Blocks 1.0.1.\"\n            },\n            \"identities\": {\n              \"dis_entity_id\": null,\n              \"oms_system_id\": null,\n              \"oms_subsystem_id\": null,\n              \"rf_aperture_ids\": []\n            }\n          },\n          \"Building\": {\n            \"prim_path\": \"/World/Building\",\n            \"material\": \"dielectric\",\n            \"simulator\": {\n              \"object_name\": \"RFSharedBuilding\",\n              \"asset_path\": \"generated:glb\",\n              \"local_to_actor_m\": [\n                [\n                  1,\n                  0,\n                  0,\n                  0\n                ],\n                [\n                  0,\n                  -1,\n                  0,\n                  0\n                ],\n                [\n                  0,\n                  0,\n                  -1,\n                  0\n                ],\n                [\n                  0,\n                  0,\n                  0,\n                  1\n                ]\n              ],\n              \"asset_provenance\": \"Shared USD triangles baked by Blocks client-mesh adapter v1; collision equivalence qualified by independent LiDAR rays in pinned Blocks 1.0.1.\"\n            },\n            \"identities\": {\n              \"dis_entity_id\": null,\n              \"oms_system_id\": null,\n              \"oms_subsystem_id\": null,\n              \"rf_aperture_ids\": []\n            }\n          },\n          \"Wall\": {\n            \"prim_path\": \"/World/Wall\",\n            \"material\": \"dielectric\",\n            \"simulator\": {\n              \"object_name\": \"RFSharedWall\",\n              \"asset_path\": \"generated:glb\",\n              \"local_to_actor_m\": [\n                [\n                  1,\n                  0,\n                  0,\n                  0\n                ],\n                [\n                  0,\n                  -1,\n                  0,\n                  0\n                ],\n                [\n                  0,\n                  0,\n                  -1,\n                  0\n                ],\n                [\n                  0,\n                  0,\n                  0,\n                  1\n                ]\n              ],\n              \"asset_provenance\": \"Shared USD triangles baked by Blocks client-mesh adapter v1; collision equivalence qualified by independent LiDAR rays in pinned Blocks 1.0.1.\"\n            },\n            \"identities\": {\n              \"dis_entity_id\": null,\n              \"oms_system_id\": null,\n              \"oms_subsystem_id\": null,\n              \"rf_aperture_ids\": []\n            }\n          }\n        }\n      },\n      \"placement\": \"spawn\",\n      \"policy\": \"static bound objects; pose/scale checked at interval start and end\"\n    },\n    \"sim_config_sha256\": {\n      \"robot_rf.jsonc\": \"e6e2c24a1586c712999b9e9cc49c9091349d99ebc088d7e13fa6281ec03083e3\",\n      \"scene_rf.jsonc\": \"32054db8a83347a4636c629390ecc80621fd127ac7dd9b56b1da31df7402bb07\"\n    },\n    \"waveforms\": {\n      \"tx0\": {\n        \"sha256\": \"6d3179167e82dacf4094c9959a91b423f0fa3479bc3c8a4992ed6ee2458120a8\",\n        \"samples\": 500000,\n        \"signal_seconds\": 0.25,\n        \"mean_sample_power\": 1.0\n      }\n    }\n  },\n  \"plan\": {\n    \"updates\": 10,\n    \"requested_advance_ns\": 10000000,\n    \"physics_tick_ns\": 3000000,\n    \"expected_interval_ns\": 12000000,\n    \"samples_per_window\": 24000,\n    \"complex_samples_per_receiver\": 240000,\n    \"signal_seconds_per_receiver\": 0.12,\n    \"receivers\": 1,\n    \"raw_iq_bytes\": 960000,\n    \"timing_basis\": \"configured steppable clock; actual capture timestamps remain authoritative\"\n  },\n  \"storage\": {\n    \"output\": \"/tmp/scenario-package-final-qualification-retry/shared-capture\",\n    \"free_bytes\": 1204965376,\n    \"raw_iq_bytes\": 960000,\n    \"metadata_and_filesystem_overhead_included\": false\n  },\n  \"backend\": {\n    \"status\": \"not_requested\",\n    \"server_contacted\": false\n  }\n}\n",
+      "stderr": ""
+    },
+    {
+      "arguments": [
+        "preflight",
+        "--config",
+        "/tmp/scenario-package-final-qualification-retry/relocated/radios.json"
+      ],
+      "returncode": 0,
+      "stdout": "{\n  \"status\": \"passed\",\n  \"scope\": \"offline configuration and capture plan\",\n  \"server_contacted\": false,\n  \"versions\": {\n    \"airsim-rf\": \"0.2.0\",\n    \"numpy\": \"2.5.3\",\n    \"scipy\": \"1.18.1\",\n    \"sionna-rt\": \"2.2.0\",\n    \"mitsuba\": \"3.9.1\",\n    \"drjit\": \"1.5.0\",\n    \"projectairsim\": \"1.1.0\",\n    \"cupy-cuda12x\": null,\n    \"usd-core\": \"26.8\",\n    \"sigmf\": \"1.13.0\"\n  },\n  \"inputs\": {\n    \"propagation_options\": {\n      \"path_solver\": \"single-bounce\",\n      \"max_depth\": 1,\n      \"surface_sampling\": false,\n      \"samples_per_link\": 1028,\n      \"seed\": 42\n    },\n    \"antenna_options\": {\n      \"tx\": {\n        \"num_rows\": 1,\n        \"num_cols\": 1,\n        \"pattern\": \"hw_dipole\",\n        \"polarization\": \"V\"\n      },\n      \"rx\": {\n        \"num_rows\": 1,\n        \"num_cols\": 1,\n        \"pattern\": \"hw_dipole\",\n        \"polarization\": \"V\"\n      }\n    },\n    \"configuration_sha256\": \"701c9d9f3cc78d12cae46828861d2aea2196f2180b0a5634c153c6392bcfb81a\",\n    \"rf_scene\": {\n      \"scene_id\": \"scene\",\n      \"xml_sha256\": \"a6a336bd861e58129a13857b6d144f066b0ff90ba0b26314e67fabf122b72b14\",\n      \"meshes_sha256\": {\n        \"Ground.ply\": \"b78b226381b57479f0dae76d42c4d6fc207090e6e351ecf6bfccefda385ec0d4\",\n        \"Building.ply\": \"382d52afc3e74801b3f20b082da495da75ca6280aa8a3205fa94042ce776902f\",\n        \"Wall.ply\": \"af7149c7b8adc3f1dd4c174bb0185453813c144bb7fc118673aef70b09dabb1d\"\n      }\n    },\n    \"geometry_bundle\": {\n      \"manifest\": {\n        \"schema_version\": 1,\n        \"adapter\": \"sionna-ply-xml-v1\",\n        \"qualification\": \"offline export only; runtime loading not checked\",\n        \"scene_sha256\": \"7897e1f1f368fa894d694a64e53f83f81f0b1ea8dddbb4719f0563ea9bfd10c0\",\n        \"object_map\": {\n          \"Ground\": \"obj_Ground\",\n          \"Building\": \"obj_Building\",\n          \"Wall\": \"obj_Wall\"\n        },\n        \"load_options\": {\n          \"merge_shapes\": false\n        },\n        \"files\": {\n          \"Building.ply\": \"382d52afc3e74801b3f20b082da495da75ca6280aa8a3205fa94042ce776902f\",\n          \"Ground.ply\": \"b78b226381b57479f0dae76d42c4d6fc207090e6e351ecf6bfccefda385ec0d4\",\n          \"Wall.ply\": \"af7149c7b8adc3f1dd4c174bb0185453813c144bb7fc118673aef70b09dabb1d\",\n          \"bindings.json\": \"70b4c8456604f5d193cfe23acb02af8c92e7b41b6c871d2710718ebc3393c925\",\n          \"geometry.json\": \"b3b07e09410fe3941ec270883c07fc6a8ba82312b60406327b38ebf77d8078d9\",\n          \"scene.xml\": \"a6a336bd861e58129a13857b6d144f066b0ff90ba0b26314e67fabf122b72b14\",\n          \"source.json\": \"0dc6b9a27f073c165c95b1e7a1be1a9ffbc70d2bfe3f71c26f11dc511a982650\"\n        }\n      },\n      \"bindings\": {\n        \"version\": 1,\n        \"geodetic_anchor\": {\n          \"latitude_deg\": 47.641468,\n          \"longitude_deg\": -122.140165,\n          \"altitude_hae_m\": 122.0\n        },\n        \"objects\": {\n          \"Ground\": {\n            \"prim_path\": \"/World/Ground\",\n            \"material\": \"dielectric\",\n            \"simulator\": {\n              \"object_name\": \"RFSharedGround\",\n              \"asset_path\": \"generated:glb\",\n              \"local_to_actor_m\": [\n                [\n                  1,\n                  0,\n                  0,\n                  0\n                ],\n                [\n                  0,\n                  -1,\n                  0,\n                  0\n                ],\n                [\n                  0,\n                  0,\n                  -1,\n                  0\n                ],\n                [\n                  0,\n                  0,\n                  0,\n                  1\n                ]\n              ],\n              \"asset_provenance\": \"Shared USD triangles baked by Blocks client-mesh adapter v1; collision equivalence qualified by independent LiDAR rays in pinned Blocks 1.0.1.\"\n            },\n            \"identities\": {\n              \"dis_entity_id\": null,\n              \"oms_system_id\": null,\n              \"oms_subsystem_id\": null,\n              \"rf_aperture_ids\": []\n            }\n          },\n          \"Building\": {\n            \"prim_path\": \"/World/Building\",\n            \"material\": \"dielectric\",\n            \"simulator\": {\n              \"object_name\": \"RFSharedBuilding\",\n              \"asset_path\": \"generated:glb\",\n              \"local_to_actor_m\": [\n                [\n                  1,\n                  0,\n                  0,\n                  0\n                ],\n                [\n                  0,\n                  -1,\n                  0,\n                  0\n                ],\n                [\n                  0,\n                  0,\n                  -1,\n                  0\n                ],\n                [\n                  0,\n                  0,\n                  0,\n                  1\n                ]\n              ],\n              \"asset_provenance\": \"Shared USD triangles baked by Blocks client-mesh adapter v1; collision equivalence qualified by independent LiDAR rays in pinned Blocks 1.0.1.\"\n            },\n            \"identities\": {\n              \"dis_entity_id\": null,\n              \"oms_system_id\": null,\n              \"oms_subsystem_id\": null,\n              \"rf_aperture_ids\": []\n            }\n          },\n          \"Wall\": {\n            \"prim_path\": \"/World/Wall\",\n            \"material\": \"dielectric\",\n            \"simulator\": {\n              \"object_name\": \"RFSharedWall\",\n              \"asset_path\": \"generated:glb\",\n              \"local_to_actor_m\": [\n                [\n                  1,\n                  0,\n                  0,\n                  0\n                ],\n                [\n                  0,\n                  -1,\n                  0,\n                  0\n                ],\n                [\n                  0,\n                  0,\n                  -1,\n                  0\n                ],\n                [\n                  0,\n                  0,\n                  0,\n                  1\n                ]\n              ],\n              \"asset_provenance\": \"Shared USD triangles baked by Blocks client-mesh adapter v1; collision equivalence qualified by independent LiDAR rays in pinned Blocks 1.0.1.\"\n            },\n            \"identities\": {\n              \"dis_entity_id\": null,\n              \"oms_system_id\": null,\n              \"oms_subsystem_id\": null,\n              \"rf_aperture_ids\": []\n            }\n          }\n        }\n      },\n      \"placement\": \"spawn\",\n      \"policy\": \"static bound objects; pose/scale checked at interval start and end\"\n    },\n    \"sim_config_sha256\": {\n      \"robot_rf.jsonc\": \"e6e2c24a1586c712999b9e9cc49c9091349d99ebc088d7e13fa6281ec03083e3\",\n      \"scene_rf.jsonc\": \"32054db8a83347a4636c629390ecc80621fd127ac7dd9b56b1da31df7402bb07\"\n    },\n    \"waveforms\": {\n      \"tx0\": {\n        \"sha256\": \"6d3179167e82dacf4094c9959a91b423f0fa3479bc3c8a4992ed6ee2458120a8\",\n        \"samples\": 500000,\n        \"signal_seconds\": 0.25,\n        \"mean_sample_power\": 1.0\n      }\n    }\n  },\n  \"plan\": {\n    \"updates\": 10,\n    \"requested_advance_ns\": 10000000,\n    \"physics_tick_ns\": 3000000,\n    \"expected_interval_ns\": 12000000,\n    \"samples_per_window\": 24000,\n    \"complex_samples_per_receiver\": 240000,\n    \"signal_seconds_per_receiver\": 0.12,\n    \"receivers\": 1,\n    \"raw_iq_bytes\": 960000,\n    \"timing_basis\": \"configured steppable clock; actual capture timestamps remain authoritative\"\n  },\n  \"storage\": null,\n  \"backend\": {\n    \"status\": \"not_requested\",\n    \"server_contacted\": false\n  }\n}\n",
+      "stderr": ""
+    },
+    {
+      "arguments": [
+        "preflight",
+        "--config",
+        "/tmp/scenario-package-final-qualification-retry/shared/radios.json",
+        "--updates",
+        "1000"
+      ],
+      "returncode": 2,
+      "stdout": "",
+      "stderr": "airsim-rf: Waveform too short for planned capture plus 16-sample lookahead: ['tx0']; need at least 24000016 samples each. Extend the source or reduce updates.\n"
+    },
+    {
+      "arguments": [
+        "inspect",
+        "/tmp/scenario-package-final-qualification-retry/adc-fixture"
+      ],
+      "returncode": 0,
+      "stdout": "{\n  \"status\": \"passed\",\n  \"scope\": \"recording structure, sample continuity, code range and spectral summary\",\n  \"server_motion_or_physical_accuracy_qualified\": false,\n  \"updates\": 2,\n  \"sample_rate_hz\": 2000000,\n  \"signal_seconds_per_receiver\": 0.024,\n  \"samples_per_update\": [\n    24000,\n    24000\n  ],\n  \"wall_seconds_per_signal_second\": null,\n  \"receivers\": {\n    \"rx0\": {\n      \"complex_samples\": 48000,\n      \"data_bytes\": 192000,\n      \"data_sha256\": \"72839db885d79d2a85bd3ecc611946b50d6740c01c5ac265e1dbf482513a8966\",\n      \"adc_component_min\": -500,\n      \"adc_component_max\": 500,\n      \"nonzero_complex_sample_fraction\": 1.0,\n      \"final_window_peak_baseband_hz\": 149902.34375,\n      \"frequency_bin_spacing_hz\": 488.28125\n    }\n  }\n}\n",
+      "stderr": ""
+    },
+    {
+      "arguments": [
+        "process",
+        "/tmp/scenario-package-final-qualification-retry/adc-fixture"
+      ],
+      "returncode": 0,
+      "stdout": "{\n  \"receiver\": \"rx0\",\n  \"complex_samples\": 48000,\n  \"sample_rate_hz\": 2000000.0,\n  \"signal_seconds\": 0.024,\n  \"rms_complex_volts\": 0.5003893950837084\n}\n",
+      "stderr": ""
+    }
+  ],
+  "script_sha256": "25f45b98b6cd1e7e63d2dfb97cbad8a7a3331b5f65daa2a9afb4be413d826c9d",
+  "scope": "Clean installed wheel, complete examples and CPU interfaces; ADC fixture is synthetic, not a live capture"
+}

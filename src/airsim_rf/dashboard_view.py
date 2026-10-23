@@ -8,12 +8,12 @@ TERRAIN_BASE_COLOR_RGBA=[.12,.18,.085,1.]
 TERRAIN_EMISSIVE_RGB=[.008,.012,.005]
 
 
-def camera_frame(position_rf, receiver_positions_rf):
+def camera_frame(position_rf, receiver_positions_rf, *, distance_m=CHASE_DISTANCE_M,elevation_bias=.25):
     """Five-metre chase boom, slightly above the drone, aimed between the radios."""
     flip=np.array([1,-1,-1]);position=np.asarray(position_rf,float)
     center=np.mean(receiver_positions_rf,axis=0)
     outward=position-center;outward/=np.linalg.norm(outward)
-    boom=outward+[0,0,.25];boom*=CHASE_DISTANCE_M/np.linalg.norm(boom)
+    boom=outward+[0,0,elevation_bias];boom*=distance_m/np.linalg.norm(boom)
     eye=(position+boom)*flip
     target=center*flip
     forward=target-eye;forward/=np.linalg.norm(forward)
@@ -32,15 +32,15 @@ def relative_camera_pose(eye_ned, camera_to_ned, kinematics):
             'rotation':dict(zip(('x','y','z','w'),quat.tolist()))}
 
 
-def queue_chase_camera_pose(drone, position_rf, receiver_positions_rf, kinematics):
+def queue_chase_camera_pose(drone, position_rf, receiver_positions_rf, kinematics, *, sensor='Chase',distance_m=CHASE_DISTANCE_M,elevation_bias=.25):
     """Queue a view for the next renderer tick without waiting on a paused world.
 
     ProjectAirSim's default waits for Unreal to apply the pose. Our single
     stepping owner must return from this RPC before it can advance the world;
     waiting here can time out even though the pose request was accepted.
     """
-    eye, rotation = camera_frame(position_rf, receiver_positions_rf)
-    if not drone.set_camera_pose('Chase', relative_camera_pose(eye, rotation, kinematics),
+    eye, rotation = camera_frame(position_rf, receiver_positions_rf,distance_m=distance_m,elevation_bias=elevation_bias)
+    if not drone.set_camera_pose(sensor, relative_camera_pose(eye, rotation, kinematics),
                                  wait_for_pose_update=False):
         raise RuntimeError('Chase camera pose request was rejected')
     return eye, rotation
@@ -54,7 +54,7 @@ def project_radios(eye_ned,camera_to_ned,points_rf,width,height,fov_deg=CAMERA_F
                             height/2+focal*local[:,2]/local[:,0],local[:,0]))
 
 
-def camera_labels(message,mount_pose,receiver_positions_rf,document):
+def camera_labels(message,mount_pose,receiver_positions_rf,document,*,fov_deg=CAMERA_FOV_DEG,platform_label='TX / DRONE'):
     """Project actual-frame TX/RX anchors; omit labels hidden by the shared mesh.
 
     The applied body-relative camera mount and native image pose reconstruct the
@@ -71,12 +71,12 @@ def camera_labels(message,mount_pose,receiver_positions_rf,document):
     vectors=points-eye;distances=np.linalg.norm(vectors,axis=1)
     hits=nearest_intersections(document,np.tile(eye,(len(points),1)),vectors,
         maximum_distance_m=float(distances.max()))
-    pixels=project_radios(eye,rotation,points*[1,-1,-1],message['width'],message['height'])
+    pixels=project_radios(eye,rotation,points*[1,-1,-1],message['width'],message['height'],fov_deg=fov_deg)
     labels=[]
     for index,((x,y,depth),hit,distance) in enumerate(zip(pixels,hits,distances)):
         if depth<=0 or not (0<x<message['width'] and 0<y<message['height']):continue
         if hit is not None and hit['distance_m']<distance-.01:continue
-        labels.append({'text':'TX / DRONE' if index==0 else f'RX {index-1}',
+        labels.append({'text':platform_label if index==0 else f'RX {index-1}',
             'x':float(x),'y':float(y),'color_rgb':([255,200,90] if index==0 else
                 [85,215,208] if index==1 else [230,185,108])})
     return labels

@@ -8,6 +8,7 @@ from collections import deque
 from concurrent.futures import ThreadPoolExecutor
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 import json
+import os
 import socket
 import threading
 import time
@@ -87,6 +88,8 @@ class MusicSkill:
         with self.lock:
             self.state.update(status='processing',complete_windows=self.state['complete_windows']+1,
                 timestamp_ns=first.timestamp_ns,sample_start=first.sample_start,samples_per_channel=len(first.samples),
+                sample_rate_hz=first.sample_rate_hz,carrier_hz=first.carrier_hz,analysis_samples_per_channel=min(24000,len(first.samples)),
+                analysis_duration_s=min(24000,len(first.samples))/first.sample_rate_hz,
                 payload_bytes_per_second=rate,bearings=bearings,psd=spectra[0]['psd'],receiver_spectra=spectra,
                 angle_grid_deg=grid.tolist(),music_db=curves,
                 eigenvalues_db=eigen,phase_rad=phase,history=list(self.history),waterfall=list(self.waterfall),updated_monotonic=now,
@@ -158,8 +161,8 @@ def start_control(skill,address):
 def main():
     parser=argparse.ArgumentParser(description=__doc__);parser.add_argument('--arrays',required=True)
     parser.add_argument('--results-dir',help='Optional independent processing-result journal')
-    parser.add_argument('--iq-port',type=int,default=8811);parser.add_argument('--http-port',type=int,default=8812)
-    parser.add_argument('--control-address',default='0.0.0.0:8813');args=parser.parse_args()
+    parser.add_argument('--iq-port',type=int,default=int(os.environ.get('RF_IQ_PORT','8811')));parser.add_argument('--http-port',type=int,default=int(os.environ.get('RF_HTTP_PORT','8812')))
+    parser.add_argument('--control-address',default='0.0.0.0:'+os.environ.get('RF_CONTROL_PORT','8813'));args=parser.parse_args()
     skill=MusicSkill(args.arrays,results_dir=args.results_dir);control=start_control(skill,args.control_address)
     threading.Thread(target=skill.serve_stream,args=(args.iq_port,),daemon=True).start()
     class Handler(BaseHTTPRequestHandler):

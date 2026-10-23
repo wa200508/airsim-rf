@@ -1,15 +1,23 @@
-"""Shared terrain and a 250 m left-hand orbit for the localhost use case."""
+"""Compile a portable input package into shared simulator/RF runtime artifacts."""
+from copy import deepcopy
 import json
 from pathlib import Path
 import tempfile
 import numpy as np
-from scipy.signal import firwin, upfirdn
-FS=2_000_000
-CARRIER=915_000_000.
-RADIUS=250.
-ALTITUDE=200.
-SPEED=25.
-ADVANCE_NS=120_000_000
+from scipy.signal import firwin,upfirdn
+from .scenario_definition import load,asset,snapshot,fingerprints
+
+# Historical example constants are lazy aliases; a custom scenario never needs
+# to load the packaged example just to import this runtime/compiler module.
+def __getattr__(name):
+    if name not in ('FS','CARRIER','ADVANCE_NS','RADIUS','SPEED','ALTITUDE'):raise AttributeError(name)
+    config=load()
+    values={'FS':config['radios']['sample_rate_hz'],'CARRIER':config['radios']['carrier_hz'],
+        'ADVANCE_NS':config['mission']['rf_update_ns']}
+    flight=config['flight']['actors'][0]['flight']
+    values.update(RADIUS=flight['radius_m'],SPEED=flight['speed_m_s'],ALTITUDE=flight['center_rf_m'][2])
+    if name not in values:raise AttributeError(name)
+    return values[name]
 
 
 def atomic_json(path,value):
@@ -17,51 +25,98 @@ def atomic_json(path,value):
     tmp.write_text(json.dumps(value,allow_nan=False)+'\n');tmp.replace(path)
 
 
-def orbit_pose(seconds,radius=RADIUS,speed=SPEED):
+def orbit_pose(seconds,radius=None,speed=None):
+    flight=load()['flight']['actors'][0]['flight']
+    radius=flight['radius_m'] if radius is None else radius
+    speed=flight['speed_m_s'] if speed is None else speed
     angle=speed/radius*seconds
-    return np.array([radius*np.cos(angle),radius*np.sin(angle),ALTITUDE]),np.array([-speed*np.sin(angle),speed*np.cos(angle),0.])
+    return np.array([radius*np.cos(angle),radius*np.sin(angle),flight['center_rf_m'][2]]),np.array([-speed*np.sin(angle),speed*np.cos(angle),0.])
+
+
+def flight_path(actor,duration_s):
+    """Compile declared RF-coordinate circle/waypoints; no simulated pose feedback."""
+    flight=actor['flight']
+    if flight['type']=='hold':return []
+    if flight['type']=='waypoints':
+        points=np.asarray(flight['points_rf_m'],float)
+        if flight.get('repeat',False):
+            points=np.vstack((points,points[0]));length=np.linalg.norm(np.diff(points,axis=0),axis=1).sum()
+            if length<=0:raise ValueError('Repeated waypoint route must have nonzero length')
+            points=np.vstack([points[:-1]]*(int(np.ceil(duration_s*flight['speed_m_s']/length))+1)+[points[-1:]])
+        return points.tolist()
+    center=np.asarray(flight['center_rf_m']);start=np.asarray(actor['position_rf_m'])-center
+    cycles=int(np.ceil(duration_s/(2*np.pi*flight['radius_m']/flight['speed_m_s'])))+1
+    sign=1 if flight['direction']=='left' else -1
+    angle=np.arctan2(start[1],start[0])+sign*np.linspace(0,cycles*2*np.pi,cycles*int(np.ceil(360/flight['waypoint_step_deg']))+1)
+    return (center+np.column_stack((flight['radius_m']*np.cos(angle),flight['radius_m']*np.sin(angle),np.zeros(len(angle))))).tolist()
+
+
+class WaveformSource:
+    """Private continuous TX samples, from a configurable QPSK source or .npy file."""
+    def __init__(self,directory,definition,sample_rate_hz):
+        self.config=json.loads(asset(directory,definition).read_text());self.rate=sample_rate_hz
+        self.samples=None
+        if self.config['type']=='samples':
+            self.samples=np.load(asset(directory,self.config['file']),allow_pickle=False)
+            if self.samples.ndim!=1 or self.samples.dtype.kind not in 'fc' or not np.isfinite(self.samples).all():
+                raise ValueError('Waveform .npy must contain a finite 1-D real or complex sample array')
+        else:
+            c=self.config
+            self.taps=firwin(c['filter_taps'],c['cutoff_hz'],fs=self.rate,window=('kaiser',c['kaiser_beta']))*c['samples_per_symbol']
+
+    def window(self,epoch_ns,count,origin_ns):
+        if self.samples is not None:return self.samples,origin_ns,'zero'
+        c=self.config;sps=c['samples_per_symbol'];halo=max(c['history_samples'],c['filter_taps'])
+        first=round((epoch_ns-origin_ns)*self.rate/1e9)-halo
+        margin=int(np.ceil(c['filter_taps']/sps))+2
+        start=first//sps-margin;end=(first+count+2*halo)//sps+margin
+        index=np.arange(start,end,dtype=np.int64).astype(np.uint64)
+        with np.errstate(over='ignore'):
+            hashed=(index+np.uint64(c['seed']))*np.uint64(0x9E3779B97F4A7C15)
+            hashed=(hashed^(hashed>>np.uint64(30)))*np.uint64(0xBF58476D1CE4E5B9)
+            hashed=(hashed^(hashed>>np.uint64(27)))*np.uint64(0x94D049BB133111EB)
+            hashed^=hashed>>np.uint64(31)
+        symbols=((2*(hashed&1).astype(float)-1)+1j*(2*((hashed>>1)&1).astype(float)-1))/np.sqrt(2)
+        samples=upfirdn(self.taps,symbols,up=sps)
+        offset=first-start*sps+(len(self.taps)-1)//2
+        return samples[offset:offset+count+2*halo],origin_ns+round(first*1e9/self.rate),'error'
 
 
 def waveform_window(epoch_ns,count,origin_ns):
-    """Counter-indexed QPSK: overlapping finite buffers preserve the same samples."""
-    first=round((epoch_ns-origin_ns)*FS/1e9)-4000
-    start=first//80-12;end=(first+count+8000)//80+12
-    index=np.arange(start,end,dtype=np.int64).astype(np.uint64)
-    with np.errstate(over='ignore'):
-        hashed=(index+np.uint64(20261021))*np.uint64(0x9E3779B97F4A7C15)
-        hashed=(hashed^(hashed>>np.uint64(30)))*np.uint64(0xBF58476D1CE4E5B9)
-        hashed=(hashed^(hashed>>np.uint64(27)))*np.uint64(0x94D049BB133111EB)
-        hashed^=hashed>>np.uint64(31)
-    symbols=((2*(hashed&1).astype(float)-1)+1j*(2*((hashed>>1)&1).astype(float)-1))/np.sqrt(2)
-    taps=firwin(801,20000,fs=FS,window=('kaiser',8.))*80
-    samples=upfirdn(taps,symbols,up=80)
-    offset=first-start*80+400
-    return samples[offset:offset+count+8000],origin_ns+round(first*1e9/FS)
+    """Compatibility wrapper for the packaged example; not the runtime producer."""
+    config=load();tx=config['radios']['transmitters'][0]
+    samples,reference,_=WaveformSource(config['_directory'],tx['waveform'],config['radios']['sample_rate_hz']).window(epoch_ns,count,origin_ns)
+    return samples,reference
 
 
-def prepare(output,runtime_source):
+def prepare(output,runtime_source=None,scenario_dir=None,duration_s=None):
+    """Snapshot input files; compile them without loading Sionna or connecting AirSim."""
     import commentjson
-    from .dashboard_view import CAMERA_FOV_DEG
-    from .geometry import export_sionna_geometry
+    from .geometry import export_sionna_geometry,validate_geometry
     from .geometry_sync import placement_plan
+    from .terrain import TerrainGrid
     output=Path(output);output.mkdir(parents=True,exist_ok=True)
-    from .terrain import demo_terrain, TerrainGrid
-    original=demo_terrain()
-    terrain=TerrainGrid(original.x_m*4,original.y_m*4,100+original.heights_m*3)
-    rf_vertices,faces=terrain.mesh()
-    vertices=rf_vertices*[1,-1,-1]
-    objects=[{'id':'Terrain','material':'earth','vertices_local':vertices.tolist(),'faces':faces.tolist(),'local_to_ned_m':np.eye(4).tolist()}]
-    geometry={'schema_version':1,'scene_id':'OrbitRF','revision':'2','source':{'adapter':'demo_terrain','version':'2','asset':'demo_terrain:xy4:z3:base100','revision':'2','geometry_kind':'shared'},
-        'materials':{name:{'relative_permittivity':value,'conductivity_s_m':.01,'assumption':'Illustrative uncalibrated dielectric'} for name,value in [('earth',5.),('rock',6.)]},'objects':objects}
-    bindings={'version':1,'geodetic_anchor':{'latitude':47.641468,'longitude':-122.140165,'altitude_m':122.},
-        'objects':{obj['id']:{'simulator':{'object_name':obj['id'],'asset_path':'generated:glb','local_to_actor_m':np.eye(4).tolist(),'asset_provenance':'Same triangles in Unreal and RF'}} for obj in objects}}
-    # The exporter deliberately requires a fresh directory. Build there first,
-    # then replace only our generated bundle; keep logs and recorded I/Q intact.
+    config=load(scenario_dir);source=Path(config['_directory']);frozen=output/'scenario-input'
+    if source.resolve()!=frozen.resolve():config=snapshot(source,frozen)
+    if duration_s is not None:
+        if not 0<duration_s<=3600:raise ValueError('Duration must be in (0,3600] seconds')
+        config['mission']['duration_s']=duration_s
+    env=config['environment'];terrain=None
+    if env['type']=='heightfield':
+        terrain=TerrainGrid(env['x_m'],env['y_m'],env['heights_m']);vertices,faces=terrain.mesh()
+        geometry={'schema_version':1,'scene_id':env['scene_id'],'revision':env['revision'],
+            'source':{'adapter':'scenario-heightfield','version':'1','asset':'environment.json','revision':env['revision'],'geometry_kind':'shared'},
+            'materials':env['materials'],'objects':[{'id':'Terrain','material':env['material'],
+            'vertices_local':(vertices*[1,-1,-1]).tolist(),'faces':faces.tolist(),'local_to_ned_m':np.eye(4).tolist()}]}
+    elif env['type']=='geometry':geometry=validate_geometry(json.loads(asset(frozen,env['file']).read_text()))
+    else:raise ValueError('Environment type must be heightfield or geometry')
+    bindings={'version':1,'geodetic_anchor':env['geodetic_anchor'],
+        'objects':{obj['id']:{'simulator':{'object_name':obj['id'],'asset_path':'generated:glb','local_to_actor_m':np.eye(4).tolist(),
+        'asset_provenance':'Same scenario triangles in Unreal and RF'}} for obj in geometry['objects']}}
     with tempfile.TemporaryDirectory(prefix='.prepare-',dir=output) as temporary:
         staging=Path(temporary);target=output/'bundle';previous=staging/'previous'
-        export_sionna_geometry(geometry,staging/'bundle',provenance={'scope':'dashboard shared terrain'},bindings=bindings)
-        if target.is_symlink() or (target.exists() and not target.is_dir()):
-            raise ValueError('Dashboard bundle path must be a directory; choose a fresh --run-dir')
+        export_sionna_geometry(geometry,staging/'bundle',provenance={'scope':'scenario shared geometry'},bindings=bindings)
+        if target.is_symlink() or (target.exists() and not target.is_dir()):raise ValueError('Dashboard bundle path must be a directory; choose a fresh --run-dir')
         replaced=target.exists()
         if replaced:target.rename(previous)
         try:(staging/'bundle').rename(target)
@@ -69,24 +124,78 @@ def prepare(output,runtime_source):
             if replaced:previous.rename(target)
             raise
     atomic_json(output/'placement.json',placement_plan(geometry,bindings))
-    offsets=(np.arange(4)-1.5)*299792458./CARRIER/2
-    arrays={'schema_version':1,'sample_rate_hz':FS,'carrier_hz':CARRIER,'sites':[{'id':f'site{i}','channels':[f'site{i}_e{j}' for j in range(4)],'center_rf_m':[0.,float(y),float(terrain.elevation_at(0,y)+8)],'yaw_rad':0.,'element_offsets_m':offsets.tolist(),'calibration_complex':[[1.,0.]]*4} for i,y in enumerate((-25,25))],
-        'scope':'Ideal coherent ULAs; full-circle azimuth/elevation ambiguities remain explicit'}
-    atomic_json(output/'arrays.json',arrays)
-    # Receiver-facing metadata contains only rate/frequency and known sensor
-    # geometry/calibration. Scene assumptions and source truth stay elsewhere.
-    atomic_json(output/'receiver-config.json',{key:arrays[key] for key in
-        ('schema_version','sample_rate_hz','carrier_hz','sites')})
-    source=Path(runtime_source)/'client/python/example_user_scripts/sim_config/robot_quadrotor_fastphysics_sensors.jsonc'
-    if not source.exists():
-        source=Path('/opt/airsim-rf/.deps/ProjectAirSim/client/python/example_user_scripts/sim_config/robot_quadrotor_fastphysics_sensors.jsonc')
-    if not source.exists():raise ValueError('Pinned ProjectAirSim robot template is missing; rebuild the qualified CPU base image')
-    robot=commentjson.loads(source.read_text());robot['controller']['simple-flight-api-settings']['parameters']={'MPC_XY_VEL_MAX':30.}
-    robot['sensors']=[s for s in robot['sensors'] if s['id']=='Chase']
-    camera=robot['sensors'][0];camera['gimbal']={'lock-roll':False,'lock-pitch':False,'lock-yaw':False};camera['capture-interval']=.12;camera['origin']={'xyz':'-4.85 0 -1.2','rpy-deg':'0 -20 0'}
-    camera['capture-settings'][0].update(width=960,height=540,compress=False,**{'fov-degrees':CAMERA_FOV_DEG})
-    sim=output/'sim_config';sim.mkdir(exist_ok=True);atomic_json(sim/'orbit.jsonc',robot)
-    atomic_json(sim/'scene.jsonc',{'id':'OrbitDashboard','scene-type':'UnrealNative','actors':[{'type':'robot','name':'OrbitDrone','origin':{'xyz':f'250 0 {-ALTITUDE}','rpy-deg':'0 0 -90'},'robot-config':'orbit.jsonc'}],
-        'clock':{'type':'steppable','step-ns':3_000_000,'real-time-update-rate':3_000_000,'pause-on-start':True},'home-geo-point':{'latitude':47.641468,'longitude':-122.140165,'altitude':122.}})
-    atomic_json(output/'scenario.json',{'radius_m':RADIUS,'speed_m_s':SPEED,'turn':'left','period_s':2*np.pi*RADIUS/SPEED,'terrain_width_m':800,'advance_ns':ADVANCE_NS,'source':'ProjectAirSim Fast Physics actual pose readback; native closed-loop carrot follower on a 250 m circle','altitude_rf_m':ALTITUDE,'terrain':'Existing demo_terrain hills/swale; horizontal scale 4, relief scale 3, RF base 100 m','terrain_relief_m':90,'terrain_grid':{'x_m':terrain.x_m.tolist(),'y_m':terrain.y_m.tolist(),'heights_m':terrain.heights_m.tolist()},'sites':arrays['sites'],'screen':'Natural hills and drainage valley; no artificial screen','camera':'Inward-looking gimballed Chase; native Blocks physical scenery removed','propagation':'direct visibility + retained first-order specular paths'})
+    radio=config['radios'];sites=deepcopy(radio['sites'])
+    for site in sites:
+        reference=site.pop('altitude_reference')
+        if reference=='agl':
+            if terrain is None:raise ValueError('AGL receiver sites need a heightfield; use absolute RF coordinates with a geometry scene')
+            site['center_rf_m'][2]+=float(terrain.elevation_at(*site['center_rf_m'][:2]))
+    arrays={'schema_version':1,'sample_rate_hz':radio['sample_rate_hz'],'carrier_hz':radio['carrier_hz'],'sites':sites}
+    atomic_json(output/'arrays.json',arrays);atomic_json(output/'receiver-config.json',arrays)
+    # Validate finite source coverage before GPU/service launch. No file looping.
+    for tx in radio['transmitters']:
+        waveform=WaveformSource(frozen,tx['waveform'],radio['sample_rate_hz'])
+        count=round(config['mission']['rf_update_ns']*radio['sample_rate_hz']/1e9)
+        if waveform.samples is not None:
+            windows=int(np.ceil(config['mission']['duration_s']*1e9/config['mission']['rf_update_ns']))
+            if len(waveform.samples)<windows*count+32:raise ValueError('Sampled waveform must cover the rounded mission duration plus 32 lookahead samples: '+tx['id'])
+    sim=output/'sim_config';sim.mkdir(exist_ok=True);actors=[];camera=config['camera']
+    for actor in config['flight']['actors']:
+        robot=commentjson.loads(asset(frozen,actor['vehicle']).read_text())
+        if actor['id']==camera['actor']:
+            sensor=next((s for s in robot['sensors'] if s['id']==camera['sensor']),None)
+            if sensor is None:raise ValueError('Camera sensor missing from scenario vehicle: '+camera['sensor'])
+            sensor['capture-interval']=camera['capture_interval_s']
+            sensor['capture-settings'][0].update(width=camera['width'],height=camera['height'],compress=False,**{'fov-degrees':camera['fov_deg']})
+        filename=actor['id']+'.jsonc';atomic_json(sim/filename,robot)
+        if actor['id']=='OrbitDrone':atomic_json(sim/'orbit.jsonc',robot)  # Old inspection tools.
+        actors.append({'type':'robot','name':actor['id'],'origin':{'xyz':' '.join(map(str,np.asarray(actor['position_rf_m'])*[1,-1,-1])),
+            'rpy-deg':f'0 0 {-actor["yaw_deg"]}'},'robot-config':filename})
+    anchor=env['geodetic_anchor'];step=config['mission']['physics_step_ns']
+    atomic_json(sim/'scene.jsonc',{'id':config['id'],'scene-type':'UnrealNative','actors':actors,
+        'clock':{'type':'steppable','step-ns':step,'real-time-update-rate':step,'pause-on-start':True},
+        'home-geo-point':{'latitude':anchor['latitude'],'longitude':anchor['longitude'],'altitude':anchor['altitude_m']}})
+    runtime={k:v for k,v in config.items() if k!='_directory'}
+    runtime['input_sha256']=fingerprints(frozen);atomic_json(output/'runtime.json',runtime)
+    first=config['flight']['actors'][0];flight=first['flight'];routes=[flight_path(actor,config['mission']['duration_s']) for actor in config['flight']['actors']]
+    summary={'id':config['id'],'title':config['title'],'input_sha256':runtime['input_sha256'],'advance_ns':config['mission']['rf_update_ns'],
+        'radius_m':flight.get('radius_m',0),'speed_m_s':flight.get('speed_m_s',0),'turn':flight.get('direction',flight['type']),
+        'altitude_rf_m':first['position_rf_m'][2],'sites':sites,'routes_rf_m':routes,
+        'sample_rate_hz':radio['sample_rate_hz'],'carrier_hz':radio['carrier_hz'],'transmitters':len(radio['transmitters']),
+        'camera':camera,'source':'Scenario package; actual ProjectAirSim pose readback drives RF',
+        'propagation':radio['propagation'],'skill_kind':config['skill']['kind'],'skill_name':config['skill'].get('name',config['skill']['kind'])}
+    if terrain is not None:
+        summary.update(terrain_width_m=float(max(np.ptp(terrain.x_m),np.ptp(terrain.y_m))),terrain_relief_m=float(np.ptp(terrain.heights_m)),
+            terrain_grid={'x_m':terrain.x_m.tolist(),'y_m':terrain.y_m.tolist(),'heights_m':terrain.heights_m.tolist()})
+    else:summary['terrain_width_m']=max(np.ptp(np.asarray(obj['vertices_local'])[:,:2],axis=0).max() for obj in geometry['objects'])
+    atomic_json(output/'scenario.json',summary)
     return arrays
+
+
+def emitters_for_window(radio,sources,epoch_ns,count,origin_ns):
+    """Build independent source buffers using only configured radio inputs."""
+    from .sdr import SDREmitter
+    from .sampled_waveform import SampledWaveform
+    emitters={}
+    for tx in radio['transmitters']:
+        values,reference,boundary=sources[tx['id']].window(epoch_ns,count,origin_ns)
+        emitters[tx['id']]=SDREmitter(SampledWaveform(values,radio['sample_rate_hz'],reference,boundary=boundary),
+            transmit_power_w=tx['power_w'],baseband_frequency_bounds_hz=tuple(tx['baseband_bounds_hz']))
+    return emitters
+
+
+def create_receiver(scene,radio,arrays,sources,origin_ns,count):
+    """Shared live/qualification adapter; all physical settings come from inputs."""
+    import sionna.rt as rt
+    from .sdr import SDRNetworkReceiver,PlutoSDRProfile
+    antenna=radio['antenna']
+    scene.tx_array=rt.PlanarArray(num_rows=1,num_cols=1,pattern=antenna['tx_pattern'],polarization=antenna['polarization'])
+    scene.rx_array=rt.PlanarArray(num_rows=1,num_cols=1,pattern=antenna['rx_pattern'],polarization=antenna['polarization'])
+    for tx in radio['transmitters']:scene.add(rt.Transmitter(tx['id'],position=[0,0,1]))
+    for site in arrays['sites']:
+        direction=np.array([-np.sin(site['yaw_rad']),np.cos(site['yaw_rad']),0.])
+        for name,offset in zip(site['channels'],site['element_offsets_m']):
+            scene.add(rt.Receiver(name,position=(np.asarray(site['center_rf_m'])+offset*direction).tolist(),orientation=[site['yaw_rad'],0,0]))
+    profile={**radio['receiver_profile'],'carrier_hz':radio['carrier_hz'],'sample_rate_hz':radio['sample_rate_hz']}
+    return SDRNetworkReceiver(scene,emitters_for_window(radio,sources,origin_ns,count,origin_ns),
+        PlutoSDRProfile(**profile),**radio['propagation'])

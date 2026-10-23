@@ -2,6 +2,7 @@
 import argparse
 import importlib.util
 import json
+import os
 from pathlib import Path
 import socket
 import subprocess
@@ -37,8 +38,8 @@ def qualify():
         # The app receives ONLY receiver configuration and its own output path.
         with (root/'app.log').open('w+') as log:
             process=subprocess.Popen([sys.executable,'-m','airsim_rf.skills.music','--arrays',str(config),
-                '--iq-port',str(iq),'--http-port',str(http),'--control-address',f'127.0.0.1:{control}',
-                '--results-dir',str(root/'results')],stdout=log,stderr=log)
+                '--results-dir',str(root/'results')],stdout=log,stderr=log,
+                env=dict(os.environ,RF_IQ_PORT=str(iq),RF_HTTP_PORT=str(http),RF_CONTROL_PORT=str(control)))
             try:
                 deadline=time.monotonic()+30
                 while True:

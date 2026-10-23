@@ -8,10 +8,16 @@ import socket
 import time
 
 import numpy as np
-from .dashboard_scenario import ADVANCE_NS,FS,CARRIER,SPEED,RADIUS,ALTITUDE,atomic_json,waveform_window
+from .dashboard_scenario import atomic_json,WaveformSource,flight_path,create_receiver,emitters_for_window
 
 
 async def run(args):
+    output=Path(args.run_dir)
+    config=json.loads((output/'runtime.json').read_text())
+    radio=config['radios'];camera=config['camera'];mission=config['mission']
+    FS=radio['sample_rate_hz'];CARRIER=radio['carrier_hz'];ADVANCE_NS=mission['rf_update_ns']
+    actors=config['flight']['actors'];primary_tx=radio['transmitters'][0]['id']
+    num_channels=sum(len(site['channels']) for site in radio['sites'])
     import mitsuba as mi
     mi.set_variant('cuda_ad_mono_polarized')
     if args.pascal_compat:
@@ -25,17 +31,15 @@ async def run(args):
     import cv2
     from .bridge import mount_kinematics,normalize_kinematics
     from .dashboard_view import (queue_chase_camera_pose,relative_camera_pose,camera_labels,
-        radio_marker_glb,TERRAIN_BASE_COLOR_RGBA,TERRAIN_EMISSIVE_RGB)
+        radio_marker_glb)
     from .dashboard_geometry import isolate_blocks_scene,require_rf_mesh_match,link_geometry
     from .dashboard_sync import commit_window,advance_after_commit
     from .source_recording import RecordingWriter
     from .geometry import read_bundle
     from .geometry_sync import AirSimGeometryBinding,spawn_placements
     from .sample_stream import SampleStreamWriter
-    from .sampled_waveform import SampledWaveform
-    from .sdr import SDREmitter,SDRNetworkReceiver,PlutoSDRProfile
 
-    output=Path(args.run_dir);arrays=json.loads((output/'arrays.json').read_text())
+    arrays=json.loads((output/'arrays.json').read_text())
     document,bundle,bindings=read_bundle(output/'bundle')
     if args.wait_for_mission:
         deadline=time.monotonic()+args.ready_timeout
@@ -47,11 +51,11 @@ async def run(args):
                     if time.monotonic()>deadline:raise RuntimeError('ProjectAirSim did not become reachable before RF startup')
                     await asyncio.sleep(.25)
     client=ProjectAirSimClient(address=args.address);client.connect()
-    state={'status':'starting','sim_elapsed_s':0,'windows':0,'camera_frames':0,'backend':'CUDA / Sionna RT','propagation':'direct + first-order specular',
-           'flight_controller':'native MoveOnPath, 3-degree circle waypoints, ForwardOnly absolute heading',
+    state={'status':'starting','sim_elapsed_s':0,'windows':0,'camera_frames':0,'backend':'CUDA / Sionna RT','propagation':radio['propagation'],
+           'flight_controller':'scenario flight plans, native ProjectAirSim controller',
            'flight_command_wall_timeout_s':3600}
     atomic_json(output/'producer.json',state)
-    writer=None;sock=None;motion=None;flight_client=None
+    writer=None;sock=None;motions=[];flight_client=None
     camera_counter=[0];last_camera=[0.];history=[]
     camera_mounts=[]
     camera_session=args.recording_id or secrets.token_hex(8);camera_files=[];camera_history=[]
@@ -61,7 +65,8 @@ async def run(args):
     (output/'camera').mkdir(exist_ok=True)
     site_positions=[site['center_rf_m'] for site in arrays['sites']]
     def queue_view(position,kinematics):
-        eye,rotation=queue_chase_camera_pose(drone,position,site_positions,kinematics)
+        eye,rotation=queue_chase_camera_pose(drone,position,site_positions,kinematics,
+            sensor=camera['sensor'],distance_m=camera['distance_m'],elevation_bias=camera['elevation_bias'])
         camera_mounts.append((int(world.get_sim_time()),relative_camera_pose(eye,rotation,kinematics)))
         del camera_mounts[:-128]
     def image_received(_,message):
@@ -69,7 +74,8 @@ async def run(args):
             image=unpack_image(message).copy()
             epoch=int(message['time_stamp'])
             mount=next((pose for sent,pose in reversed(camera_mounts) if sent<epoch),None)
-            labels=camera_labels(message,mount,site_positions,document) if mount is not None else []
+            labels=camera_labels(message,mount,site_positions,document,fov_deg=camera['fov_deg'],
+                platform_label='TX / DRONE' if any(tx['actor']==camera['actor'] for tx in radio['transmitters']) else camera['actor']) if mount is not None and camera['labels'] else []
             height,width=image.shape[:2]
             for label in labels:
                 x,y=round(label['x']),round(label['y']);color=tuple(reversed(label['color_rgb']))
@@ -113,18 +119,19 @@ async def run(args):
         # imported meshes visible in the packaged map's baked lighting.
         for obj in binding.plan['objects']:
             terrain=obj['id']=='Terrain'
-            obj['mesh']['base_color_rgba']=TERRAIN_BASE_COLOR_RGBA if terrain else [.48,.32,.20,1.]
-            obj['mesh']['emissive_rgb']=TERRAIN_EMISSIVE_RGB if terrain else [.12,.075,.035]
+            obj['mesh']['base_color_rgba']=config['appearance']['terrain_base_color_rgba']
+            obj['mesh']['emissive_rgb']=config['appearance']['terrain_emissive_rgb']
         spawn_placements(world,binding.plan)
         alignment['airsim']=binding.require_static_match(world,int(world.get_sim_time()))
         marker_pose=lambda p:{'frame_id':'DEFAULT_ID','translation':dict(zip(('x','y','z'),(np.asarray(p)*[1,-1,-1]).tolist())),'rotation':{'w':1.,'x':0.,'y':0.,'z':0.}}
         for i,position in enumerate(site_positions):
             name=f'Radio_RX_{i}'
             world.spawn_object_from_file(name,'gltf',radio_marker_glb([.2,.9,.85] if i==0 else [1.,.65,.15]),True,marker_pose(np.asarray(position)-[0,0,8]),[1,1,1],False)
-        drone=Drone(client,world,'OrbitDrone')
+        drones={actor['id']:Drone(client,world,actor['id']) for actor in actors}
+        drone=drones[camera['actor']]
         if not args.no_render:
-            client.subscribe(drone.sensors['Chase']['scene_camera'],image_received)
-        drone.enable_api_control();drone.arm()
+            client.subscribe(drone.sensors[camera['sensor']]['scene_camera'],image_received)
+        for platform in drones.values():platform.enable_api_control();platform.arm()
         # Exercise the same camera RPC as the mission before advertising READY.
         # The following settling step lets Unreal apply the queued view and
         # produce the actual camera frame checked during preparation.
@@ -132,38 +139,51 @@ async def run(args):
             initial=normalize_kinematics(drone.get_ground_truth_kinematics())
             position,_,_=mount_kinematics(initial)
             queue_view(position,initial)
-        settle=await drone.move_by_velocity_z_async(v_north=0,v_east=0,z=-ALTITUDE,duration=2.1,yaw_is_rate=False,yaw=-np.pi/2)
-        world.continue_until_sim_time(int(world.get_sim_time())+2_001_000_000,wait_until_complete=True)
+        for actor in actors:
+            await drones[actor['id']].move_by_velocity_z_async(v_north=0,v_east=0,z=-actor['position_rf_m'][2],
+                duration=max(actor['settle_s'],.01)+.1,yaw_is_rate=False,yaw=-np.deg2rad(actor['yaw_deg']))
+        step=mission['physics_step_ns']
+        settle_ns=int(np.ceil(max(max(actor['settle_s'] for actor in actors),camera['capture_interval_s'])*1e9/step))*step
+        if settle_ns:world.continue_until_sim_time(int(world.get_sim_time())+settle_ns,wait_until_complete=True)
         await asyncio.sleep(.1)
         origin=int(world.get_sim_time())
-        cycles=int(np.ceil(args.duration/(2*np.pi*RADIUS/SPEED)))+1
-        angles=np.linspace(0,cycles*2*np.pi,cycles*120+1)
-        path=[[float(RADIUS*np.cos(a)),float(-RADIUS*np.sin(a)),-ALTITUDE] for a in angles]
-        # Long flight command has a separate services-only client: its deadline
-        # is wall time, including intentional simulation pauses. Ordinary scene
-        # RPCs retain the normal SDK deadline and one owner still steps time.
+        # Flight command deadlines include intentional wall-time pauses. Only
+        # this source process owns physics stepping, across all declared actors.
         flight_client=ProjectAirSimClient(address=args.address);flight_client.connect_services()
         flight_client.socket_services.recv_timeout=3_600_000
-        flight_drone=Drone(flight_client,world,'OrbitDrone')
-        motion=await flight_drone.move_on_path_async(path=path,velocity=SPEED,timeout_sec=args.duration+10,
-            yaw_control_mode=1,yaw_is_rate=False,yaw=0,lookahead=12.,adaptive_lookahead=0.)
+        for actor in actors:
+            platform=Drone(flight_client,world,actor['id']);flight=actor['flight']
+            path=flight_path(actor,args.duration)
+            if path:
+                task=await platform.move_on_path_async(path=(np.asarray(path)*[1,-1,-1]).tolist(),
+                    velocity=flight['speed_m_s'],timeout_sec=args.duration+10,yaw_control_mode=1,
+                    yaw_is_rate=False,yaw=0,lookahead=flight['lookahead_m'],adaptive_lookahead=flight['adaptive_lookahead'])
+            else:
+                task=await platform.move_by_velocity_z_async(v_north=0,v_east=0,z=-actor['position_rf_m'][2],
+                    duration=args.duration+10,yaw_is_rate=False,yaw=-np.deg2rad(actor['yaw_deg']))
+            motions.append((platform,task))
         await asyncio.sleep(0)
         scene=rt.load_scene(str(output/'bundle/scene.xml'),merge_shapes=False)
         alignment['sionna']=require_rf_mesh_match(scene,document)
         alignment['geometry_sha256']=bundle['scene_sha256'];atomic_json(output/'scene-alignment.json',alignment)
         state['geometry_sha256']=bundle['scene_sha256'];state['origin_ns']=origin
-        scene.tx_array=rt.PlanarArray(num_rows=1,num_cols=1,pattern='iso',polarization='V');scene.rx_array=scene.tx_array
-        scene.add(rt.Transmitter('tx0',position=[250,0,ALTITUDE]))
-        for site in arrays['sites']:
-            for name,offset in zip(site['channels'],site['element_offsets_m']):
-                scene.add(rt.Receiver(name,position=(np.asarray(site['center_rf_m'])+[0,offset,0]).tolist()))
-        count=round(ADVANCE_NS*FS/1e9);samples,reference=waveform_window(origin,count,origin)
-        receiver=SDRNetworkReceiver(scene,{'tx0':SDREmitter(SampledWaveform(samples,FS,reference,boundary='error'),transmit_power_w=.1,baseband_frequency_bounds_hz=(-100000,100000))},
-            PlutoSDRProfile(noise_enabled=True),renderer='basis-cuda',continuous=True,path_solver='single-bounce',max_depth=1,samples_per_link=2,seed=20261021,path_diagnostics=True)
+        count=round(ADVANCE_NS*FS/1e9)
+        sources={tx['id']:WaveformSource(output/'scenario-input',tx['waveform'],FS) for tx in radio['transmitters']}
+        receiver=create_receiver(scene,radio,arrays,sources,origin,count)
+        tx_positions={};platform_positions={}
+        def update_platforms(epoch):
+            kinematics={name:normalize_kinematics(platform.get_ground_truth_kinematics()) for name,platform in drones.items()}
+            platform_positions.update({name:mount_kinematics(kin)[0].tolist() for name,kin in kinematics.items()})
+            for tx in radio['transmitters']:
+                position,velocity,orientation=mount_kinematics(kinematics[tx['actor']],tx['mount_body_m'])
+                device=scene.transmitters[tx['id']];device.position=position.tolist();device.velocity=velocity.tolist();device.orientation=orientation.tolist()
+                tx_positions[tx['id']]=position
+            receiver.emitters.update(emitters_for_window(radio,sources,epoch,count,origin))
+            return kinematics[camera['actor']],mount_kinematics(kinematics[camera['actor']])
         def record_frame(epoch,position,captures):
             binding.require_static_match(world,epoch)
-            row={'sim_time_ns':epoch,'sim_elapsed_s':(epoch-origin)*1e-9,'position_rf_m':position.tolist(),
-                **link_geometry(document,arrays,position,receiver.last_path_diagnostics),
+            row={'sim_time_ns':epoch,'sim_elapsed_s':(epoch-origin)*1e-9,'position_rf_m':position.tolist(),'primary_tx_position_rf_m':tx_positions[primary_tx].tolist(),'visibility_transmitter':primary_tx,'platform_positions_rf_m':dict(platform_positions),
+                **link_geometry(document,arrays,tx_positions[primary_tx],receiver.last_path_diagnostics,transmitter_id=primary_tx),
                 'retained_paths_per_channel':[sum(c.retained_paths.values()) for c in captures.values()],
                 'max_clipped_component_fraction':max(c.clipped_component_fraction for c in captures.values())}
             if history and history[-1]['sim_time_ns']==epoch:history[-1]=row
@@ -190,21 +210,14 @@ async def run(args):
             # Exercise the actual configured scene, eight-channel block and data
             # plane before advertising READY. Reuse this initial window at T+0.
             epoch=int(world.get_sim_time())
-            initial=normalize_kinematics(drone.get_ground_truth_kinematics())
-            position,velocity,orientation=mount_kinematics(initial)
-            scene.transmitters['tx0'].position=position.tolist()
-            scene.transmitters['tx0'].velocity=velocity.tolist()
-            scene.transmitters['tx0'].orientation=orientation.tolist()
-            samples,reference=waveform_window(epoch,count,origin)
-            receiver.emitters['tx0']=SDREmitter(SampledWaveform(samples,FS,reference,boundary='error'),
-                transmit_power_w=.1,baseband_frequency_bounds_hz=(-100000,100000))
+            initial,(position,velocity,orientation)=update_platforms(epoch)
             prepared_captures=receiver.capture(epoch,num_samples=count)
             row=record_frame(epoch,position,prepared_captures)
             send_captures(prepared_captures)
             if not (await commit_window(writer,stop_requested))[0]:
                 recording.status('stopped');return
             row.update(windows=1,velocity_rf_m_s=velocity.tolist(),camera_frames=camera_counter[0],
-                wall_elapsed_s=0.,simulation_speed=0.,raw_payload_bytes=count*8*8)
+                wall_elapsed_s=0.,simulation_speed=0.,raw_payload_bytes=count*num_channels*8)
             if not args.no_render:
                 deadline=time.monotonic()+30
                 while not camera_counter[0] and time.monotonic()<deadline:await asyncio.sleep(.1)
@@ -221,7 +234,7 @@ async def run(args):
                 await asyncio.sleep(.2)
         started=time.monotonic()
         recording.status('running')
-        for index in range(max(1,round(args.duration*1e9/ADVANCE_NS))):
+        for index in range(max(1,int(np.ceil(args.duration*1e9/ADVANCE_NS)))):
             while True:
                 command=json.loads((output/'command.json').read_text()) if (output/'command.json').exists() else {}
                 if command.get('stop'):break
@@ -232,14 +245,10 @@ async def run(args):
             if command.get('stop'):break
             if recording.manifest['status']=='paused':recording.status('running')
             if state.get('recording_error'):raise RuntimeError('Camera recording failed: '+state['recording_error'])
-            if motion.done():motion.result()
-            epoch=int(world.get_sim_time());kinematics=normalize_kinematics(drone.get_ground_truth_kinematics())
-            position,velocity,orientation=mount_kinematics(kinematics)
-            if not args.no_render:
-                queue_view(position,kinematics)
-            scene.transmitters['tx0'].position=position.tolist();scene.transmitters['tx0'].velocity=velocity.tolist();scene.transmitters['tx0'].orientation=orientation.tolist()
-            samples,reference=waveform_window(epoch,count,origin)
-            receiver.emitters['tx0']=SDREmitter(SampledWaveform(samples,FS,reference,boundary='error'),transmit_power_w=.1,baseband_frequency_bounds_hz=(-100000,100000))
+            for platform,motion in motions:
+                if motion.done():motion.result()
+            epoch=int(world.get_sim_time());kinematics,(position,velocity,orientation)=update_platforms(epoch)
+            if not args.no_render:queue_view(position,kinematics)
             if index==0 and prepared_captures is not None:
                 captures=prepared_captures
             else:
@@ -253,8 +262,8 @@ async def run(args):
                 retained_paths={name:cap.retained_paths for name,cap in captures.items()},history=list(history),
                 wall_elapsed_s=time.monotonic()-started,simulation_speed=elapsed/max(time.monotonic()-started,.001),
                 camera_frames=camera_counter[0],camera_age_s=None if not last_camera[0] else time.monotonic()-last_camera[0],
-                camera_framing='Five-metre Chase view toward receivers; actual-frame TX/RX labels hidden by terrain',
-                geometry_sha256=bundle['scene_sha256'],raw_payload_bytes=(index+1)*count*8*8)
+                camera_framing=f"{camera['distance_m']} m Chase view toward receivers; actual-frame labels",
+                geometry_sha256=bundle['scene_sha256'],raw_payload_bytes=(index+1)*count*num_channels*8)
             # Retain measurements for this epoch, including counters and speed;
             # the host must not mix them with a newer producer state.
             row.update({key:state[key] for key in ('windows','velocity_rf_m_s','retained_paths',
@@ -277,15 +286,16 @@ async def run(args):
             # Give already-triggered asynchronous camera captures a chance to
             # arrive for the final RF epoch. No extra flight time is simulated.
             deadline=time.monotonic()+5
-            while history and not any(abs(c['sim_time_ns']-history[-1]['sim_time_ns'])<=60_000_000 for c in camera_history):
+            while history and not any(abs(c['sim_time_ns']-history[-1]['sim_time_ns'])<=ADVANCE_NS//2 for c in camera_history):
                 if time.monotonic()>=deadline:break
                 await asyncio.sleep(.05)
         state.update(status='stopped' if stop_requested() else 'complete',camera_frames=camera_counter[0]);atomic_json(output/'producer.json',state)
         recording.status(state['status'])
-        drone.cancel_last_task()
-        world.continue_until_sim_time(int(world.get_sim_time())+3_000_000,wait_until_complete=True)
-        try:await asyncio.wait_for(asyncio.shield(motion),timeout=2)
-        except asyncio.TimeoutError:pass
+        for platform,motion in motions:platform.cancel_last_task()
+        world.continue_until_sim_time(int(world.get_sim_time())+mission['physics_step_ns'],wait_until_complete=True)
+        for platform,motion in motions:
+            try:await asyncio.wait_for(asyncio.shield(motion),timeout=2)
+            except asyncio.TimeoutError:pass
     except BaseException as error:
         recording.status('failed',error=str(error))
         state.update(status='failed',error=str(error));atomic_json(output/'producer.json',state);raise

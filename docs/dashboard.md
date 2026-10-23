@@ -8,6 +8,17 @@ camera. Camera or sensing failure is displayed separately from stream delivery.
 For the actual scenario, antenna, waveform, mover and MUSIC implementation
 locations, use the [question-by-question code map](code-map.md).
 
+## Select or edit a scenario
+
+Pass `--scenario /path/to/input-directory` to the launcher. All scenario inputs
+are together under [scenarios/drone-orbit](../scenarios/drone-orbit); copy that
+directory to change terrain, vehicles, flight, radios, waveforms, camera or RF
+skill wiring without rebuilding containers. `--check-scenario` validates the
+package without starting services; `--export-scenario DIR` exports the example.
+Each mission saves its frozen inputs and pinned image IDs for reproduction.
+See the [scenario package guide](scenarios.md). The values below describe the
+packaged example, rather than fixed runtime constants.
+
 ## Recording and playback
 
 Every new mission records automatically, independently of browser polling.

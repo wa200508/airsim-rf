@@ -18,6 +18,9 @@ def main():
         raise RuntimeError('Qualification must import an installed wheel outside the checkout')
     executable=Path(sys.executable).parent/'airsim-rf'
     checks={};commands=[]
+    scenario=subprocess.run([sys.executable,'-m','airsim_rf.dashboard','--check-scenario'],text=True,capture_output=True)
+    if scenario.returncode:raise RuntimeError('Installed default scenario missing: '+scenario.stderr)
+    checks['installed_editable_scenario_available']=json.loads(scenario.stdout)['status']=='valid'
     def run(arguments, *, expected_code=0):
         result=subprocess.run([str(executable),*map(str,arguments)],text=True,capture_output=True)
         commands.append({'arguments':list(map(str,arguments)),'returncode':result.returncode,

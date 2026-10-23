@@ -1,0 +1,15 @@
+{
+  "status": "valid",
+  "scenario": "drone-orbit",
+  "directory": "/workspace/airsim-rf/scenarios/drone-orbit",
+  "sha256": {
+    "PROJECTAIRSIM-LICENSE.txt": "c2cfccb812fe482101a8f04597dfc5a9991a6b2748266c47ac91b6a5aae15383",
+    "README.md": "5e4d4b2ef00bf36710b7ee472b6063f0a983f952c3048e87a2337b4267816763",
+    "environment.json": "46294d3ccd1bf3468c733d94fb776a1b483475972362bd248f6bb6caa6012921",
+    "flight.json": "57ee251853e07da8d56bb0fd6eca9a554848ffa03b9c69141f084ed6063b2a25",
+    "quadrotor.jsonc": "c9ff96a27b32b6d520fbe3273266ad98fcd9a59a39b8d4e96cbf2462284fee10",
+    "radios.json": "539cdecbfcc0bb479d0d7ac12afad0427d28e6fc98ba6f9790de1312e1dbf3ee",
+    "scenario.json": "d1453f610190ffd54a775013c08885d4947718d0924ef339d1c48461960c2c42",
+    "waveform.json": "9c1566d5fa59f0a48e47026a1ddd9cec7c98930199b669d5d4f2b8e9f2cb8f22"
+  }
+}

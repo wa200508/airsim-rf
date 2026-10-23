@@ -1,0 +1,9 @@
+{
+  "type": "qpsk",
+  "seed": 20261021,
+  "samples_per_symbol": 80,
+  "filter_taps": 801,
+  "cutoff_hz": 20000.0,
+  "kaiser_beta": 8.0,
+  "history_samples": 4000
+}

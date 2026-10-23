@@ -45,6 +45,21 @@ def test_mismatched_images_fail_before_ready(tmp_path,monkeypatch):
     assert not obj.ready
 
 
+def test_independently_versioned_skill_does_not_relax_simulator_rf_pairing(tmp_path,monkeypatch):
+    obj=instance(tmp_path);obj.definition['skill']['revision_policy']='independent'
+    different_rf=False
+    def command(arguments,**kwargs):
+        image=arguments[-1]
+        revision=None if image.endswith(':skill') else 'changed' if different_rf and image.endswith(':gpu') else 'abc'
+        return SimpleNamespace(stdout=json.dumps([{'Id':'sha256:'+image.split(':')[-1],
+            'Config':{'Labels':{'org.opencontainers.image.revision':revision}}}]))
+    monkeypatch.setattr(obj,'command',command)
+    obj.pull_images()
+    assert obj.args.skill_image=='sha256:skill'
+    different_rf=True
+    with pytest.raises(RuntimeError,match='revisions differ'):obj.pull_images()
+
+
 def test_mission_button_requires_ready_and_never_launches_containers(tmp_path,monkeypatch):
     obj=instance(tmp_path)
     monkeypatch.setattr(obj,'launch',lambda *a,**kw:pytest.fail('No containers at mission launch'))
@@ -108,9 +123,17 @@ def test_gpu_failure_never_turns_into_cpu_fallback(tmp_path,monkeypatch):
 
 
 @pytest.mark.parametrize('rootless',[True,False])
-def test_services_share_bridge_and_start_before_readiness_waits(tmp_path,monkeypatch,rootless):
+@pytest.mark.parametrize('custom',[False,True])
+def test_services_share_bridge_and_start_before_readiness_waits(tmp_path,monkeypatch,rootless,custom):
     import io
     obj=instance(tmp_path);obj.args.iq_port=18811;obj.rootless=rootless
+    if custom:
+        import shutil
+        source=tmp_path/'custom inputs';shutil.copytree(dashboard._definition.default_directory(),source)
+        path=source/'scenario.json';config=json.loads(path.read_text())
+        config['skill'].update(kind='custom',image='research/consumer:1',revision_policy='independent',
+            ports={'iq':9911,'http':9912,'control':None},command=['--input','/config/arrays.json','--output','/results'])
+        path.write_text(json.dumps(config));obj.scenario_path=source;obj.args.skill_image_override=False
     monkeypatch.setattr(dashboard.os,'getuid',lambda:0)
     owned=[]
     monkeypatch.setattr(dashboard.os,'chown',lambda path,uid,gid:owned.append((path,uid,gid)))
@@ -155,7 +178,12 @@ def test_services_share_bridge_and_start_before_readiness_waits(tmp_path,monkeyp
     assert rf[rf.index('--workdir')+1]=='/run'
     assert rf[rf.index('--address')+1]=='projectairsim'
     assert rf[rf.index('--iq-host')+1]=='rf-skill'
-    assert rf[rf.index('--iq-port')+1]=='8811'
+    assert rf[rf.index('--iq-port')+1]==('9911' if custom else '8811')
+    if custom:
+        assert commands['skill'][-4:]==['--input','/config/arrays.json','--output','/results']
+        assert '127.0.0.1:8812:9912' in commands['skill']
+        assert obj.image_tags['skill_image']=='research/consumer:1'
+        assert not any(item.startswith('127.0.0.1:8813:') for item in commands['skill'])
     assert '--skill-http-port' not in rf
     assert '--recording-id' in rf
     mounts=[command for command in commands['skill'] if ':/results' in command]

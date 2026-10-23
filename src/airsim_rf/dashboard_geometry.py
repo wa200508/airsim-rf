@@ -39,19 +39,19 @@ def require_rf_mesh_match(scene,document,tolerance_m=.001):
     return {'maximum_vertex_error_m':errors,'tolerance_m':tolerance_m}
 
 
-def link_geometry(document,arrays,position_rf,path_diagnostics):
+def link_geometry(document,arrays,position_rf,path_diagnostics,*,transmitter_id='tx0'):
     """Compare each element's actual Sionna LoS with an independent mesh ray."""
     channels=[];origins=[]
     for site in arrays['sites']:
         for name,offset in zip(site['channels'],site['element_offsets_m']):
-            channels.append(name);origins.append(np.asarray(site['center_rf_m'])+[0,offset,0])
+            channels.append(name);origins.append(np.asarray(site['center_rf_m'])+offset*np.array([-np.sin(site['yaw_rad']) if 'yaw_rad' in site else 0.,np.cos(site.get('yaw_rad',0.)),0.]))
     origins=np.asarray(origins)*[1,-1,-1];end=np.asarray(position_rf)*[1,-1,-1]
     vectors=end-origins;distances=np.linalg.norm(vectors,axis=1)
     hits=nearest_intersections(document,origins,vectors,maximum_distance_m=float(distances.max()))
     details={}
     for name,hit,distance in zip(channels,hits,distances):
         blocked=hit is not None and hit['distance_m']<distance-.001
-        paths=path_diagnostics[name]['tx0']
+        paths=path_diagnostics[name][transmitter_id]
         if bool(paths['direct_paths'])==blocked:
             raise RuntimeError('Sionna direct path disagrees with shared terrain visibility: '+name)
         details[name]={**paths,'direct_visible':not blocked,

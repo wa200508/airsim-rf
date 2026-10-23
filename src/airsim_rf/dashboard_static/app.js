@@ -3,7 +3,7 @@ let token='',lastFrame=-1,lastWindow=-1,lastStatus=null,lastControlStatus=null,w
 const $=id=>document.getElementById(id);
 const player={id:null,autoSelect:true,playing:true,following:false,time:0,end:0,start:0,rate:1,lastTick:performance.now()};
 let recordingOptions='';
-let selectedReceiver=0,receiverOptions='';
+let selectedReceiver=0,receiverOptions='',siteStatusOptions='';
 $('receiver-select').onchange=()=>{selectedReceiver=Number($('receiver-select').value);if(lastStatus)render(lastStatus);};
 function chooseRecording(id,autoSelect=false){
  player.id=id;player.autoSelect=autoSelect;player.time=0;player.end=0;player.start=0;player.playing=true;player.following=false;player.lastTick=performance.now();presentationGeneration++;
@@ -63,7 +63,7 @@ function spatialSearch(angles,curves){
   values.forEach((db,i)=>{const [x,y]=point(angles[i],db);if(i)ctx.lineTo(x,y);else ctx.moveTo(x,y);});
   if(angles.at(-1)-angles[0]>=359)ctx.closePath();ctx.stroke();});
 }
-function gauge(rate){const [ctx,w,h]=surface('gauge'),cx=w/2,cy=h-16,r=Math.min(w/2-24,h-30);ctx.lineWidth=10;ctx.lineCap='round';ctx.strokeStyle='#22333e';ctx.beginPath();ctx.arc(cx,cy,r,Math.PI,2*Math.PI);ctx.stroke();const fraction=Math.min(rate/128,1);ctx.strokeStyle='#55d7d0';ctx.beginPath();ctx.arc(cx,cy,r,Math.PI,Math.PI+fraction*Math.PI);ctx.stroke();ctx.font='9px monospace';ctx.fillStyle='#607c8e';ctx.fillText('0',cx-r-5,cy+13);ctx.fillText('128',cx+r-15,cy+13);const angle=Math.PI+fraction*Math.PI;ctx.lineWidth=2;ctx.strokeStyle='#e6b96c';ctx.beginPath();ctx.moveTo(cx+Math.cos(angle)*(r-21),cy+Math.sin(angle)*(r-21));ctx.lineTo(cx+Math.cos(angle)*(r+6),cy+Math.sin(angle)*(r+6));ctx.stroke();}
+function gauge(rate,fullScale=128){const [ctx,w,h]=surface('gauge'),cx=w/2,cy=h-16,r=Math.min(w/2-24,h-30);ctx.lineWidth=10;ctx.lineCap='round';ctx.strokeStyle='#22333e';ctx.beginPath();ctx.arc(cx,cy,r,Math.PI,2*Math.PI);ctx.stroke();const fraction=Math.min(rate/fullScale,1);ctx.strokeStyle='#55d7d0';ctx.beginPath();ctx.arc(cx,cy,r,Math.PI,Math.PI+fraction*Math.PI);ctx.stroke();ctx.font='9px monospace';ctx.fillStyle='#607c8e';ctx.fillText('0',cx-r-5,cy+13);ctx.fillText(fullScale.toFixed(0),cx+r-15,cy+13);const angle=Math.PI+fraction*Math.PI;ctx.lineWidth=2;ctx.strokeStyle='#e6b96c';ctx.beginPath();ctx.moveTo(cx+Math.cos(angle)*(r-21),cy+Math.sin(angle)*(r-21));ctx.lineTo(cx+Math.cos(angle)*(r+6),cy+Math.sin(angle)*(r+6));ctx.stroke();}
 function waterfall(){const [ctx,w,h]=surface('waterfall');if(!waterRows.length){ctx.font='9px monospace';ctx.fillStyle='#526f81';ctx.fillText('Spectrum waterfall appears with received windows',15,h/2);return;}const count=waterRows[0].length,dh=h/Math.max(waterRows.length,20),dw=w/count;waterRows.forEach((row,j)=>row.forEach((v,i)=>{let f=Math.max(0,Math.min(1,(v+178)/65));let r=Math.round(13+215*f*f),g=Math.round(21+190*f),b=Math.round(42+70*Math.sin(f*Math.PI));ctx.fillStyle=`rgb(${r},${g},${b})`;ctx.fillRect(i*dw,h-(j+1)*dh,dw+1,dh+1);}));}
 function groundtrack(p,scenario){const [ctx,w,h]=surface('groundtrack'),cx=w/2,cy=h/2,scale=Math.min(w-36,h-36)/(scenario.terrain_width_m||800);
  const point=v=>[cx-v[1]*scale,cy-v[0]*scale];const grid=scenario.terrain_grid;
@@ -73,11 +73,13 @@ function groundtrack(p,scenario){const [ctx,w,h]=surface('groundtrack'),cx=w/2,c
    for(const triangle of [[0,1,2],[0,2,3]]){const vertices=triangle.map(k=>cells[k]),elevation=vertices.reduce((s,[j,i])=>s+grid.heights_m[j][i],0)/3,f=(elevation-lo)/Math.max(hi-lo,1);
     ctx.fillStyle=`rgb(${Math.round(30+105*f)},${Math.round(64+75*f)},${Math.round(47+42*f)})`;ctx.beginPath();vertices.forEach(([j,i],k)=>{const [px,py]=point([grid.x_m[i],grid.y_m[j]]);if(k)ctx.lineTo(px,py);else ctx.moveTo(px,py);});ctx.closePath();ctx.fill();}}
   ctx.font='9px monospace';ctx.fillStyle='#c3d5de';ctx.textAlign='left';ctx.fillText(`N ↑ · elevation ${lo.toFixed(0)}–${hi.toFixed(0)} m`,9,14);}
- ctx.strokeStyle='#6e8a96';ctx.setLineDash([3,3]);ctx.beginPath();ctx.arc(cx,cy,(scenario.radius_m||250)*scale,0,2*Math.PI);ctx.stroke();ctx.setLineDash([]);
+ ctx.strokeStyle='#6e8a96';ctx.setLineDash([3,3]);
+ if(scenario.routes_rf_m){for(const route of scenario.routes_rf_m){ctx.beginPath();route.forEach((v,i)=>{const [x,y]=point(v);if(i)ctx.lineTo(x,y);else ctx.moveTo(x,y);});ctx.stroke();}}
+ else if(scenario.radius_m){ctx.beginPath();ctx.arc(cx,cy,scenario.radius_m*scale,0,2*Math.PI);ctx.stroke();}ctx.setLineDash([]);
  ctx.strokeStyle='#55d7d0';ctx.lineWidth=1.6;ctx.beginPath();(p.history||[]).forEach((row,i)=>{const [x,y]=point(row.position_rf_m);if(i)ctx.lineTo(x,y);else ctx.moveTo(x,y);});ctx.stroke();
  if(p.position_rf_m){const [x,y]=point(p.position_rf_m);ctx.fillStyle='#fff';ctx.beginPath();ctx.arc(x,y,3,0,Math.PI*2);ctx.fill();}
  (p.site_paths||scenario.sites||[]).forEach((site,i)=>{const [x,y]=point(site.center_rf_m);ctx.fillStyle=i?'#e6b96c':'#55d7d0';ctx.fillRect(x-3,y-3,6,6);
-  if(p.position_rf_m){const [tx,ty]=point(p.position_rf_m);ctx.strokeStyle=site.direct_elements?'#55d7d0':'#e6b96c';ctx.setLineDash(site.direct_elements?[]:[4,4]);ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(tx,ty);ctx.stroke();ctx.setLineDash([]);}
+  if(p.position_rf_m){const [tx,ty]=point(p.primary_tx_position_rf_m||p.position_rf_m);ctx.strokeStyle=site.direct_elements?'#55d7d0':'#e6b96c';ctx.setLineDash(site.direct_elements?[]:[4,4]);ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(tx,ty);ctx.stroke();ctx.setLineDash([]);}
   if(site.blocker_rf_m){const [bx,by]=point(site.blocker_rf_m);ctx.strokeStyle='#ffae65';ctx.beginPath();ctx.moveTo(bx-4,by-4);ctx.lineTo(bx+4,by+4);ctx.moveTo(bx-4,by+4);ctx.lineTo(bx+4,by-4);ctx.stroke();}});
 }
 async function action(name){if(name==='prepare'){chooseRecording(null,true);}try{const response=await fetch('/api/'+name,{method:'POST',headers:{'X-Dashboard-Token':token}});if(!response.ok)throw Error(await response.text());}catch(error){$('error').textContent=error.message;$('error').hidden=false;}}
@@ -90,6 +92,16 @@ function renderControls(state){lastControlStatus=state;token=state.token;const p
  for(const part of ['sim','rf','skill']){const element=document.querySelector(`[data-process="${part}"]`),process=state.processes[part],badge=element.querySelector('.status');badge.textContent=process?process.state.toUpperCase():state.replay_only?'NOT NEEDED':'OFFLINE';badge.classList.toggle('on',process?.state==='running');element.querySelector('.identity').textContent=state.replay_only?'Playing saved mission output':process?`${process.container||part} · PID ${process.pid}`:['Ready for launch','CUDA deployment','Coherent TCP metadata extension'][['sim','rf','skill'].indexOf(part)];}
 }
 function render(state){lastStatus=state;renderControls(state);const s=state.skill,p=state.producer,transport=s,sync=state.synchronization||{};
+ const scenario=state.scenario,carrier=s.carrier_hz||scenario.carrier_hz,fs=s.sample_rate_hz||scenario.sample_rate_hz;
+ $('scenario-title').textContent=scenario.title||'Recorded scenario / tracking camera';
+ $('mission-label').textContent=scenario.id||'RECORDED SCENARIO';
+ $('signal-label').textContent=`${carrier?(carrier/1e6).toFixed(3)+' MHz':'Carrier pending'} · ${fs?(fs/1e6).toFixed(3)+' MS/s':'Rate pending'}`;
+ $('flight-summary').textContent=scenario.radius_m?`${scenario.radius_m} m orbit / ${scenario.altitude_rf_m} m RF-up`:'Scenario flight plan';
+ $('propagation-summary').textContent=typeof scenario.propagation==='object'?`${scenario.propagation.path_solver} / depth ${scenario.propagation.max_depth}`:(scenario.propagation||'Recorded propagation');
+ $('music-panel').hidden=Boolean(scenario.skill_kind&&scenario.skill_kind!=='music');
+ document.querySelector('[data-process="skill"]').querySelector('h3').textContent=scenario.skill_name||'RF Skill';
+ $('spectrum-caption').textContent=`Baseband offset${carrier?' from '+(carrier/1e6).toFixed(3)+' MHz':''} (kHz) · PSD, dB re 1 V²/Hz`;
+ if(s.analysis_samples_per_channel)$('analysis-caption').textContent=`${s.analysis_samples_per_channel.toLocaleString()} simultaneous ADC samples per analysis. Linear-array front/back and elevation ambiguity remains.`;
  $('clock').textContent=sync.status==='matched'?`RF T+ ${(p.sim_elapsed_s||0).toFixed(3)} s`+(!state.no_render?` / view T+ ${((sync.camera_sim_time_ns-(p.origin_ns||0))/1e9).toFixed(3)} s`:''):'WAITING FOR MATCHED TIMES';$('position').textContent=sync.status==='matched'&&p.position_rf_m?`N ${p.position_rf_m[0].toFixed(1)} / W ${p.position_rf_m[1].toFixed(1)} / UP ${p.position_rf_m[2].toFixed(1)} m`:'NO MATCHED PLATFORM TELEMETRY';
  if(state.camera.available){$('camera').hidden=false;$('camera-empty').hidden=true;$('camera-status').textContent=state.playback?'RECORDED FRAME':p.status==='paused'?'PAUSED FRAME':p.status==='complete'?'LAST FRAME':state.camera.age_s>3?'CAMERA LAG':'AIRSIM CAMERA';$('camera-status').classList.toggle('warning',state.camera.age_s>3);}else{$('camera').hidden=true;$('camera-empty').hidden=false;$('camera-status').textContent=state.no_render?'RENDERING DISABLED':'WAITING FOR MATCHED CAMERA';}
  const visible=sync.status==='matched'?p.direct_visible:null;$('visibility').innerHTML=visible?`<i style="background:${visible.every(Boolean)?'#55d7d0':'#e6b96c'}"></i> Receiver direct paths: ${visible.map((v,i)=>'S'+i+' '+(v?'clear':'blocked')).join(' / ')}`:'<i></i> Visibility: awaiting matched geometry';
@@ -99,8 +111,13 @@ function render(state){lastStatus=state;renderControls(state);const s=state.skil
  groundtrack(sync.status==='matched'?p:{},state.scenario);
  $('path-summary').replaceChildren(...(sync.status==='matched'?p.site_paths||[]:[]).map((site,i)=>{const row=document.createElement('p'),echoes=site.reflected_paths_per_element||[],power=s.bearings?.[i]?.received_power_dbm;
   row.textContent=`${site.id}: ${site.direct_elements}/${site.elements} elements have a direct path. Reflected paths per element: ${echoes.join(', ')}. ${power!==undefined?`Received ${power.toFixed(1)} dBm.`:''} ${site.direct_elements===0?'Echoes and receiver noise only; no direct path.':''}`;return row;}));
- const rate=(transport.payload_bytes_per_second||0)/1e6;gauge(rate);$('throughput').textContent=rate.toFixed(2);$('payload').textContent=((transport.payload_bytes||0)/1e6).toFixed(1)+' MB';$('windows').textContent=transport.complete_windows||0;$('latency').textContent=s.processing_latency_ms?s.processing_latency_ms.toFixed(0)+' ms':'—';$('stream-state').textContent=(state.playback?'RECORDED':p.status==='paused'?'PAUSED':transport.status||'NO DATA').toUpperCase();
- [0,1].forEach(i=>{const bearing=s.bearings?.[i],e=$('site-status').children[i].querySelector('span');e.textContent=!bearing?'Awaiting matched I/Q':!bearing.detected?'No stable MUSIC peak':visible&&!visible[i]?`${bearing.angle_deg.toFixed(1)}° · direct blocked`:`${bearing.angle_deg.toFixed(1)}° · candidate`;e.classList.toggle('warning',Boolean(bearing&&(!bearing.detected||visible&&!visible[i])));});
+ const channels=(scenario.sites||[]).reduce((sum,site)=>sum+(site.channels?.length||0),0)||8;
+ const requiredRate=channels*(fs||2e6)*8/1e6;
+ $('throughput-caption').textContent=`Wall-clock throughput at the displayed RF epoch. ${channels} cf32 channels require ${requiredRate.toFixed(1)} MB/s at real time.`;
+ const rate=(transport.payload_bytes_per_second||0)/1e6;gauge(rate,requiredRate);$('throughput').textContent=rate.toFixed(2);$('payload').textContent=((transport.payload_bytes||0)/1e6).toFixed(1)+' MB';$('windows').textContent=transport.complete_windows||0;$('latency').textContent=s.processing_latency_ms?s.processing_latency_ms.toFixed(0)+' ms':'—';$('stream-state').textContent=(state.playback?'RECORDED':p.status==='paused'?'PAUSED':transport.status||'NO DATA').toUpperCase();
+ const statusSites=state.scenario.sites||[{id:'site0'},{id:'site1'}],siteSignature=statusSites.map(site=>site.id).join(',');
+ if(siteSignature!==siteStatusOptions){$('site-status').replaceChildren(...statusSites.map((site,i)=>{const row=document.createElement('div');row.innerHTML=`Site ${i} <span></span>`;return row;}));siteStatusOptions=siteSignature;}
+ statusSites.forEach((site,i)=>{const bearing=s.bearings?.[i],e=$('site-status').children[i].querySelector('span');e.textContent=!bearing?'Awaiting matched I/Q':!bearing.detected?'No stable MUSIC peak':visible&&!visible[i]?`${bearing.angle_deg.toFixed(1)}° · direct blocked`:`${bearing.angle_deg.toFixed(1)}° · candidate`;e.classList.toggle('warning',Boolean(bearing&&(!bearing.detected||visible&&!visible[i])));});
  const spectra=s.receiver_spectra||[],sites=state.scenario.sites||[{id:'site0'},{id:'site1'}];
  const options=sites.map((site,i)=>({label:`Site ${i} · element 0`,available:Boolean(spectra[i]?.psd||(i===0&&s.psd))}));
  const signature=JSON.stringify(options);
@@ -110,7 +127,7 @@ function render(state){lastStatus=state;renderControls(state);const s=state.skil
  if(!options[selectedReceiver]?.available&&options.some(entry=>entry.available))selectedReceiver=options.findIndex(entry=>entry.available);
  $('receiver-select').value=String(selectedReceiver);
  const spectrum=spectra[selectedReceiver]?.psd||(selectedReceiver===0?s.psd:null),receiverLabel=`Site ${selectedReceiver} · element 0`;
- graph('psd',spectrum?.frequency_khz,[spectrum?.density_db_v2_hz||[]],[-100,100],[-180,-105],
+ graph('psd',spectrum?.frequency_khz,[spectrum?.density_db_v2_hz||[]],spectrum?.frequency_khz?.length>1?[spectrum.frequency_khz[0],spectrum.frequency_khz.at(-1)]:[-100,100],[-180,-105],
   [selectedReceiver===0?'#55d7d0':'#e6b96c'],false,'PSD (dB re 1 V²/Hz)');
  spatialSearch(s.angle_grid_deg,s.music_db||[]);
  $('music-caption').textContent=s.angle_grid_deg?.length&&s.angle_grid_deg.at(-1)-s.angle_grid_deg[0]<359?
@@ -121,7 +138,7 @@ function render(state){lastStatus=state;renderControls(state);const s=state.skil
  const rows=(s.waterfall||[]).map(row=>({epoch:row.sim_time_ns,values:row.site_psd_db?.[selectedReceiver]||(selectedReceiver===0?row.psd_db:null)})).filter(row=>row.values?.length);
  waterRows=rows.map(row=>row.values);lastWindow=s.complete_windows;
  if(rows.length){const origin=p.origin_ns||0,first=(rows[0].epoch-origin)/1e9,last=(rows.at(-1).epoch-origin)/1e9;
-  $('waterfall-caption').textContent=`${receiverLabel} · RF T+ ${first.toFixed(2)}–${last.toFixed(2)} s · ${waterRows.length} rows · 12 ms PSD snapshots every 120 ms · −178 to −113 dB`;
+  $('waterfall-caption').textContent=`${receiverLabel} · RF T+ ${first.toFixed(2)}–${last.toFixed(2)} s · ${waterRows.length} rows · ${((s.analysis_duration_s||.012)*1000).toFixed(1)} ms PSD snapshots every ${((scenario.advance_ns||120000000)/1e6).toFixed(1)} ms · −178 to −113 dB`;
  }else $('waterfall-caption').textContent=`${receiverLabel} · no saved spectrum windows at this time`;
  waterfall();
  if(state.playback){$('playback-seek').value=state.playback.frame_time_s||0;$('playback-time').textContent=`T+ ${(state.playback.frame_time_s||0).toFixed(3)} / ${state.playback.end_s.toFixed(3)} s ready`;}

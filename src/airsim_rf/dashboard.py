@@ -11,6 +11,7 @@ import os
 import re
 from pathlib import Path
 import secrets
+import shutil
 import signal
 import socket
 import subprocess
@@ -56,9 +57,20 @@ def select_display_pair(history,available_epochs,cameras,max_offset_ns,minimum_e
         -abs(pair[1]['sim_time_ns']-pair[0]['sim_time_ns'])),default=None)
 
 
+_definition_spec=importlib.util.spec_from_file_location('scenario_definition',Path(__file__).with_name('scenario_definition.py'))
+_definition=importlib.util.module_from_spec(_definition_spec);_definition_spec.loader.exec_module(_definition)
+
+
 class Dashboard:
     def __init__(self,args):
         self.args=args;self.root=args.repo.resolve();self.run=args.run_dir.resolve();self.run.mkdir(parents=True,exist_ok=True)
+        self.scenario_path=getattr(args,'scenario',None) or _definition.default_directory()
+        self.definition=None if getattr(args,'replay',False) else _definition.load(self.scenario_path)
+        self.duration_override=None if getattr(args,'duration_from_scenario',False) else getattr(args,'duration',None)
+        if self.definition is not None:
+            if self.duration_override is None:args.duration=self.definition['mission']['duration_s']
+            if not getattr(args,'skill_image',None):args.skill_image=self.definition['skill']['image']
+        elif not getattr(args,'skill_image',None):args.skill_image='ghcr.io/wa200508/airsim-rf:dashboard-skill'
         self.token=secrets.token_urlsafe(24);self.lock=threading.Lock();self.events=deque(maxlen=40);self.busy=False;self.error=None
         self.processes={};self.last_skill={};self.ready=False;self.mission_started=False;self.image_tags={name:getattr(args,name) for name in ('sim_image','skill_image','rf_image')};self.names={part:f'airsim-rf-dashboard-{part}-{args.port}' for part in ('sim','rf','skill')}
         self.log('Preparing separate simulator, GPU RF and MUSIC skill containers.')
@@ -141,7 +153,14 @@ class Dashboard:
         if self.rootless:return '0:0'
         return f'{os.getuid()}:{os.getgid()}' if os.getuid() else '10001:10001'
     def prepare(self):
-        script='from airsim_rf.dashboard_scenario import prepare; prepare("/run", "/opt/airsim-rf/.deps/ProjectAirSim")'
+        self.definition=(_definition.load(self.run/'scenario-input') if getattr(self,'inputs_frozen',False) else
+            _definition.snapshot(self.scenario_path,self.run/'scenario-input'))
+        self.inputs_frozen=False
+        if self.duration_override is None:self.args.duration=self.definition['mission']['duration_s']
+        if not self.rootless and os.getuid()==0:
+            for path in (self.run/'scenario-input',*(self.run/'scenario-input').rglob('*')):os.chown(path,10001,10001)
+        script=('from airsim_rf.dashboard_scenario import prepare; '
+            f'prepare("/run", scenario_dir="/run/scenario-input", duration_s={self.args.duration!r})')
         self.one_shot(['--network','none','--user',self.uid(),'-e','HOME=/tmp',
             '-v',f'{self.run}:/run','--entrypoint','python',self.args.rf_image,'-c',script])
     def check_workspace(self):
@@ -188,9 +207,11 @@ class Dashboard:
             revisions.append(revision)
             # The launched containers use the verified immutable local image ID.
             setattr(self.args,name,metadata['Id'])
-        if len(set(revisions))!=1 or revisions[0] in (None,'unknown',''):
+        required=[revisions[0],revisions[2]]
+        if self.definition is None or self.definition['skill']['revision_policy']=='matching':required.append(revisions[1])
+        if len(set(required))!=1 or required[0] in (None,'unknown',''):
             raise RuntimeError('Dashboard image revisions differ or are unversioned; retry after publication completes')
-        self.log('Verified all three images at revision '+revisions[0])
+        self.log('Verified simulation image revision '+revisions[0]+('; independent skill image' if len(required)==2 else '; matching skill image'))
     def cleanup_stale(self):
         # The run-directory flock establishes that no live launcher owns these
         # resources. Labels restrict recovery to this exact run directory.
@@ -202,6 +223,11 @@ class Dashboard:
     def bootstrap(self):
         self.ready=False;self.mission_started=False;self.last_skill={};self.last_display=None
         self.health_updated=0.;self.skill_health={}
+        # Re-read edited inputs before image selection or any service starts.
+        self.definition=_definition.snapshot(self.scenario_path,self.run/'scenario-input')
+        self.inputs_frozen=True
+        if self.duration_override is None:self.args.duration=self.definition['mission']['duration_s']
+        if not getattr(self.args,'skill_image_override',True):self.image_tags['skill_image']=self.definition['skill']['image']
         self.configure_docker()
         if self.owns_run:self.cleanup_stale()
         self.pull_images()
@@ -209,7 +235,7 @@ class Dashboard:
         self.check_gpu()
         # The host HTTP server already owns args.port, including when the UI's
         # Prepare services button starts a second mission.
-        for port in (8989,8990,self.args.iq_port,self.args.skill_port,self.args.control_port):
+        for port in (8989,8990,self.args.iq_port,self.args.skill_port,*([self.args.control_port] if self.definition['skill']['ports']['control'] is not None else [])):
             with socket.socket() as test:
                 if test.connect_ex(('127.0.0.1',port))==0:raise RuntimeError(f'Port {port} already in use')
         for name in ('producer.json','camera.jpg','camera.json'):
@@ -220,6 +246,11 @@ class Dashboard:
         scenario=self.read('scenario.json')
         recording=_recording.RecordingWriter(self.run/'replays',self.recording_id,scenario,self.args.duration,
             scenario.get('advance_ns',120_000_000),no_render=self.args.no_render)
+        if (self.run/'scenario-input').exists():shutil.copytree(self.run/'scenario-input',recording.path/'definition')
+        _recording.atomic_json(recording.path/'deployment.json',{'image_tags':self.image_tags,
+            'image_ids':{name:getattr(self.args,name) for name in self.image_tags},'skill':self.definition['skill'],
+            'effective_duration_s':self.args.duration,'no_render':self.args.no_render,
+            'pascal_compat':self.args.pascal_compat,'gpu_options':self.gpu_options})
         if not self.rootless and os.getuid()==0:
             # A rootful launch runs services as UID 10001. Host-created journals
             # must be writable by that same user; rootless maps UID 0 to the host.
@@ -234,18 +265,22 @@ class Dashboard:
             sim+=['Blocks','-nullrhi','-nosound','-unattended']
         # Start the independent containers without serial readiness waits.
         self.launch('sim',sim)
+        skill=self.definition['skill'];ports=skill['ports']
+        control=['-p',f"127.0.0.1:{self.args.control_port}:{ports['control']}"] if ports['control'] is not None else []
         self.launch('skill',['docker','run','--rm','--init','--name',self.names['skill'],*self.labels(),'--network',self.network,'--network-alias','rf-skill','--user',self.uid(),
-             '-p',f'127.0.0.1:{self.args.iq_port}:8811','-p',f'127.0.0.1:{self.args.skill_port}:8812',
-             '-p',f'127.0.0.1:{self.args.control_port}:8813',
+             '-p',f"127.0.0.1:{self.args.iq_port}:{ports['iq']}",'-p',f"127.0.0.1:{self.args.skill_port}:{ports['http']}",*control,
+             '-e',f"RF_IQ_PORT={ports['iq']}",'-e',f"RF_HTTP_PORT={ports['http']}",
+             '-e','RF_RECEIVER_CONFIG=/config/arrays.json','-e','RF_RESULTS_DIR=/results',
+             *(['-e',f"RF_CONTROL_PORT={ports['control']}"] if ports['control'] is not None else []),
              '-v',f'{self.run}/receiver-config.json:/config/arrays.json:ro',
              '-v',f'{self.run}/replays/{self.recording_id}/results:/results',
-             self.args.skill_image,'--arrays','/config/arrays.json','--results-dir','/results'])
+             self.args.skill_image,*skill['command']])
         self.launch('rf',['docker','run','--rm','--init','--name',self.names['rf'],*self.labels(),*self.gpu_options,'--network',self.network,
             '--user',self.uid(),'--tmpfs','/.drjit:rw,mode=1777','-e','HOME=/tmp',
             '-v',f'{self.run}:/run','--workdir','/run','--entrypoint','/opt/airsim-rf/.venv/bin/python',self.args.rf_image,
             '-m','airsim_rf.cuda_launch','-m','airsim_rf.dashboard_producer','--run-dir','/run',
             '--duration',str(self.args.duration),'--address','projectairsim','--iq-host','rf-skill',
-            '--iq-port','8811','--recording-id',self.recording_id,'--wait-for-mission',
+            '--iq-port',str(ports['iq']),'--recording-id',self.recording_id,'--wait-for-mission',
             '--ready-timeout',str(self.args.ready_timeout),*(['--no-render'] if self.args.no_render else []),
             *(['--pascal-compat'] if self.args.pascal_compat else [])])
         self.wait_port(8989,self.args.ready_timeout,part='sim')
@@ -357,7 +392,7 @@ class Dashboard:
              if camera.get('geometry_sha256')==producer.get('geometry_sha256') and
                 (self.run/'camera'/(camera.get('key','')+'.jpg')).is_file()])
         previous=self.last_display
-        pair=select_display_pair(producer.get('history',[]),skill.get('available_epochs',[]),cameras,60_000_000,
+        pair=select_display_pair(producer.get('history',[]),skill.get('available_epochs',[]),cameras,self.read('scenario.json').get('advance_ns',120_000_000)//2,
             None if previous is None else previous['row']['sim_time_ns'])
         if pair is not None:
             row,camera_metadata=pair
@@ -429,7 +464,7 @@ def main():
     parser.add_argument('--repo',type=Path,default=Path.cwd());parser.add_argument('--run-dir',type=Path,default=Path('recordings/dashboard'))
     parser.add_argument('--port',type=int,default=8765);parser.add_argument('--iq-port',type=int,default=8811)
     parser.add_argument('--skill-port',type=int,default=8812);parser.add_argument('--control-port',type=int,default=8813)
-    parser.add_argument('--duration',type=float,default=120);parser.add_argument('--pascal-compat',action='store_true')
+    parser.add_argument('--duration',type=float,default=None);parser.add_argument('--pascal-compat',action='store_true')
     parser.add_argument('--no-render',action='store_true',help='Explicit diagnostic mode: no Unreal camera image')
     parser.add_argument('--replay',action='store_true',help='Replay saved dashboard runs without Docker, a GPU or simulation startup')
     parser.add_argument('--ready-timeout',type=float,default=600)
@@ -437,14 +472,30 @@ def main():
     parser.add_argument('--gpu-device',default='0',help='NVIDIA device index or UUID')
     registry='ghcr.io/wa200508/airsim-rf'
     parser.add_argument('--sim-image',default=registry+':dashboard-render');parser.add_argument('--rf-image',default=registry+':dashboard-gpu')
-    parser.add_argument('--skill-image',default=registry+':dashboard-skill')
+    parser.add_argument('--skill-image',default=None)
+    parser.add_argument('--scenario',type=Path,help='Scenario input directory (or its scenario.json)')
+    parser.add_argument('--check-scenario',action='store_true',help='Validate inputs, relative assets and clocks, then exit without Docker')
+    parser.add_argument('--export-scenario',type=Path,help='Copy editable scenario inputs to a new directory and exit')
     parser.add_argument('--open',action='store_true');args=parser.parse_args()
+    args.duration_from_scenario=args.duration is None;args.skill_image_override=args.skill_image is not None
+    if not args.replay or args.check_scenario or args.export_scenario:
+        try:
+            definition=_definition.load(args.scenario)
+            args.scenario=Path(definition['_directory'])
+            if args.export_scenario:
+                if args.export_scenario.exists():parser.error('Export destination already exists; choose a new directory')
+                _definition.snapshot(args.scenario,args.export_scenario);print(str(args.export_scenario.resolve()));return
+            if args.check_scenario:
+                print(json.dumps({'status':'valid','scenario':definition['id'],'directory':definition['_directory'],'sha256':_definition.fingerprints(args.scenario)},indent=2));return
+            if args.duration is None:args.duration=definition['mission']['duration_s']
+        except (OSError,ValueError,KeyError,TypeError) as error:parser.error(str(error))
+    elif args.duration is None:args.duration=120
     if args.replay and not (args.run_dir/'replays').is_dir():parser.error('No replay recordings in this run directory; select --run-dir from a recorded mission')
     if not 0<args.duration<=3600:parser.error('duration must be in (0,3600] seconds')
     if not 0<args.ready_timeout<=1800:parser.error('ready-timeout must be in (0,1800] seconds')
     for port in (args.port,args.iq_port,args.skill_port,args.control_port):
         if not 1024<=port<=65535:parser.error('ports must be in 1024–65535')
-    ports=(args.port,args.iq_port,args.skill_port,args.control_port,8989,8990)
+    ports=(args.port,args.iq_port,args.skill_port,*([args.control_port] if args.replay or definition['skill']['ports']['control'] is not None else []),8989,8990)
     if len(set(ports))!=len(ports):parser.error('dashboard, I/Q, skill HTTP, control and simulator ports must be distinct')
     dashboard=Dashboard(args)
     assets=Path(__file__).with_name('dashboard_static')

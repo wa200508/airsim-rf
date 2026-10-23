@@ -19,7 +19,7 @@ lists the selected values and flags settings that must be edited together.
 
 | What you need | Open first |
 | --- | --- |
-| Scenario, receiver locations and transmitted QPSK samples | [dashboard_scenario.py](src/airsim_rf/dashboard_scenario.py) — `prepare()`, `waveform_window()` |
+| Scenario, receiver locations, flight and transmitted samples | [Editable scenario directory](scenarios/drone-orbit); [compiler/engine adapters](src/airsim_rf/dashboard_scenario.py) |
 | Native drone flight, antenna pattern, TX power and selected RF backend | [dashboard_producer.py](src/airsim_rf/dashboard_producer.py) — `run()` |
 | SDR filtering, noise, ADC and path-to-I/Q dispatch | [sdr.py](src/airsim_rf/sdr.py) — `PlutoSDRProfile`, `SDRNetworkReceiver.capture()` |
 | Live received-I/Q processing | [skills/music.py](src/airsim_rf/skills/music.py) — `MusicSkill.process()` |
@@ -33,6 +33,25 @@ The **[simulation/skill boundary](docs/skill-boundary.md)** is explicit: skills
 consume receiver samples and calibration; the simulator never reads MUSIC
 results. Source telemetry and skill results meet only in the observer. The skill
 image is built independently without simulation dependencies.
+
+## Edit or select a scenario
+
+Scenario data lives together in **[scenarios/drone-orbit](scenarios/drone-orbit)**:
+manifest, DEM/materials, vehicle, flight plans, radios and waveform definitions.
+Copy that directory, edit it, and reuse the same containers:
+
+```bash
+cp -r scenarios/drone-orbit ~/my-rf-scenario
+python3 scripts/launch_dashboard.py --scenario ~/my-rf-scenario --check-scenario
+bash scripts/run_dashboard.sh --scenario ~/my-rf-scenario --open
+```
+
+The manifest also selects the RF skill image, arguments and ports. Preparation
+freezes the full input package; each recording preserves its definition and
+pinned image IDs. No image rebuild is needed for scenario edits. A standalone
+launcher can export its example with `--export-scenario ~/my-rf-scenario`.
+See the **[scenario package guide](docs/scenarios.md)** for arbitrary sampled
+waveforms, multiple TX actors, circle/waypoint/hold flight and custom skills.
 
 ## Launch the dashboard
 
