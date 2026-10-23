@@ -73,6 +73,8 @@ def audit(root=ROOT):
                         failures.append(f'{module} imports {local_role}: {dependency}')
         if layer=='simulation/source':
             for dependency in dependencies:
+                if dependency=='df_skill' or dependency.startswith('df_skill.'):
+                    failures.append(f'{module} imports external receiver implementation {dependency}')
                 if dependency.startswith(('airsim_rf.skills','airsim_rf.processing',
                     'airsim_rf.aoa_tracking','airsim_rf.music_plots','airsim_rf.evaluation','airsim_rf.dashboard_recording')):
                     if module in ('airsim_rf.radar','airsim_rf.fmcw') and dependency.startswith('airsim_rf.processing.radar'):
