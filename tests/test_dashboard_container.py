@@ -25,7 +25,7 @@ def test_preparation_uses_packaged_rf_image_without_checkout_mount(tmp_path,monk
 
 
 def test_image_pull_inspection_pins_matching_revisions(tmp_path,monkeypatch):
-    obj=instance(tmp_path);calls=[]
+    obj=instance(tmp_path);obj.definition['skill']['revision_policy']='matching';calls=[]
     def command(arguments,**kw):
         calls.append(arguments)
         return SimpleNamespace(stdout=json.dumps([
@@ -280,3 +280,10 @@ def test_display_rejects_large_clock_offsets_and_missing_diagnostic_epochs():
     assert dashboard.select_display_frame(history,[0],None,120000000) is None
     assert dashboard.select_display_frame(history,[0],120000000,60000000) is None
     assert dashboard.select_display_frame(history,[0,120000000],120000000,60000000)==history[1]
+
+
+def test_default_direction_finding_skill_is_external_and_independent():
+    config=dashboard._definition.load()
+    assert config['skill']['kind']=='direction-finding'
+    assert config['skill']['revision_policy']=='independent'
+    assert config['skill']['image'].startswith('ghcr.io/wa200508/df-skill:sha-')

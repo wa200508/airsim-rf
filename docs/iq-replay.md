@@ -89,14 +89,14 @@ original timestamps and sample values; TCP sample offsets begin at zero for
 the new session. Seeking does not recreate algorithm state accumulated before
 the selected interval, so include warm-up windows for stateful algorithms.
 
-### All-container example: unchanged MUSIC image plus replay source
+### All-container example: Direction Finding RF Skill plus replay source
 
 The independent skill image also contains the source-neutral archive tool.
 These two containers use no GPU and mount only receiver/sample data.
 Set `iq_dir` to an absolute existing archive path in each terminal:
 
 ```bash
-image=ghcr.io/wa200508/airsim-rf:dashboard-skill
+image=ghcr.io/wa200508/df-skill:sha-270bfacb6ac933f5c60599aab3edf39489978c45
 docker pull "$image"
 docker network create rf-offline
 # Run in one terminal. HTTP diagnostics are available on the host at :18812.
@@ -112,7 +112,7 @@ In another terminal, after the skill reports ingress ready:
 # Set the same image and iq_dir values in this terminal.
 docker run --rm --network rf-offline --entrypoint python \
   --mount "type=bind,src=$iq_dir,dst=/iq,readonly" \
-  "$image" -m airsim_rf.sample_recording replay /iq --host music-offline
+  "$image" -m df_skill.sample_recording replay /iq --host music-offline
 docker cp music-offline:/tmp/offline-results ./music-offline-results
 # Stop the skill with Ctrl-C, then remove the private test network:
 docker network rm rf-offline

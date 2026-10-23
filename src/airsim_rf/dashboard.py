@@ -70,10 +70,10 @@ class Dashboard:
         if self.definition is not None:
             if self.duration_override is None:args.duration=self.definition['mission']['duration_s']
             if not getattr(args,'skill_image',None):args.skill_image=self.definition['skill']['image']
-        elif not getattr(args,'skill_image',None):args.skill_image='ghcr.io/wa200508/airsim-rf:dashboard-skill'
+        elif not getattr(args,'skill_image',None):args.skill_image='ghcr.io/wa200508/df-skill:sha-270bfacb6ac933f5c60599aab3edf39489978c45'
         self.token=secrets.token_urlsafe(24);self.lock=threading.Lock();self.events=deque(maxlen=40);self.busy=False;self.error=None
         self.processes={};self.last_skill={};self.ready=False;self.mission_started=False;self.image_tags={name:getattr(args,name) for name in ('sim_image','skill_image','rf_image')};self.names={part:f'airsim-rf-dashboard-{part}-{args.port}' for part in ('sim','rf','skill')}
-        self.log('Preparing separate simulator, GPU RF and MUSIC skill containers.')
+        self.log('Preparing separate simulator, GPU RF and Direction Finding RF Skill containers.')
         self.rootless=False;self.gpu_options=[];self.network_created=False
         self.network='airsim-rf-dashboard-'+str(args.port)+'-'+secrets.token_hex(4)
         self.session=secrets.token_hex(8)

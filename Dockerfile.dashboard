@@ -1,6 +1,7 @@
 # syntax=docker/dockerfile:1
 # Independent receiver application; shared simulator/RF runtime for other roles.
 ARG BASE_IMAGE=ghcr.io/wa200508/airsim-rf:latest
+ARG DF_SKILL_IMAGE=ghcr.io/wa200508/df-skill:sha-270bfacb6ac933f5c60599aab3edf39489978c45
 FROM ${BASE_IMAGE} AS runtime
 USER root
 WORKDIR /opt/airsim-rf
@@ -34,38 +35,12 @@ ARG SOURCE_REVISION=unknown
 LABEL org.opencontainers.image.revision=${SOURCE_REVISION} \
     org.opencontainers.image.source="https://github.com/wa200508/airsim-rf" \
     org.opencontainers.image.title="AirSim RF GPU dashboard" \
-    org.opencontainers.image.description="Bundled ProjectAirSim, Pascal-compatible CUDA RF, CPU MUSIC and localhost mission dashboard"
+    org.opencontainers.image.description="Bundled ProjectAirSim, Pascal-compatible CUDA RF, independent Direction Finding RF Skill and localhost mission dashboard"
 USER rf
 
-# The processing application is physically packaged without simulation code,
-# propagation dependencies, server assets or scenario/ground-truth files.
-FROM scratch AS skill-files
-COPY --chmod=755 src/airsim_rf/__init__.py src/airsim_rf/sample_stream.py src/airsim_rf/sample_recording.py src/airsim_rf/gnuradio_export.py /src/airsim_rf/
-COPY --chmod=755 src/airsim_rf/processing/ /src/airsim_rf/processing/
-COPY --chmod=755 src/airsim_rf/skills/ /src/airsim_rf/skills/
-COPY --chmod=755 scripts/qualify_skill_boundary.py /scripts/qualify_skill_boundary.py
-COPY --chmod=755 src/airsim_rf/ams/__init__.py src/airsim_rf/ams/squall_rf_pb2.py src/airsim_rf/ams/squall_rf_pb2_grpc.py /src/airsim_rf/ams/
-
-FROM python:3.12.14-slim-trixie AS skill
-WORKDIR /opt/airsim-rf
-COPY requirements-skill-lock.txt requirements-tracking-lock.txt ./
-RUN --mount=type=secret,id=proxy_ca,mode=0444 \
-    set -eu; \
-    if [ -f /run/secrets/proxy_ca ]; then export PIP_CERT=/run/secrets/proxy_ca SSL_CERT_FILE=/run/secrets/proxy_ca; fi; \
-    python -m pip install --no-cache-dir -r requirements-skill-lock.txt; \
-    groupadd --gid 10001 rf; useradd --uid 10001 --gid rf --create-home rf
-COPY --from=skill-files / /opt/airsim-rf/
-ENV PYTHONPATH=/opt/airsim-rf/src HOME=/tmp MPLCONFIGDIR=/tmp/matplotlib
-ARG SOURCE_REVISION=unknown
-LABEL org.opencontainers.image.revision=${SOURCE_REVISION} \
-    org.opencontainers.image.source="https://github.com/wa200508/airsim-rf" \
-    org.opencontainers.image.title="Independent MUSIC RF skill"
-USER rf
-EXPOSE 8811 8812 8813
-HEALTHCHECK --interval=5s --timeout=3s \
-    CMD python -c "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8812/health',timeout=2)"
-ENTRYPOINT ["python", "-m", "airsim_rf.skills.music"]
-CMD ["--arrays", "/config/arrays.json"]
+# Backward-compatible target/tag alias of the independently published DF image.
+# No receiver implementation is built or copied from this repository.
+FROM ${DF_SKILL_IMAGE} AS skill
 
 FROM runtime AS render
 ENV RF_BLOCKS_DIR=/opt/blocks

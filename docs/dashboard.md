@@ -1,7 +1,11 @@
 # Local RF mission dashboard
 
+> The deployed receiver application is now the separately maintained
+> [Direction Finding RF Skill](https://github.com/wa200508/DF-Skill), using MUSIC.
+> See [repository separation and pinned deployment](direction-finding-skill.md).
+
 The primary use case is an actual ProjectAirSim drone over shared terrain,
-Sionna propagation and continuous ADC I/Q, streamed to a separate MUSIC RF Skill process. A Python launcher serves the dashboard at `http://localhost:8765`.
+Sionna propagation and continuous ADC I/Q, streamed to a separate Direction Finding RF Skill process. A Python launcher serves the dashboard at `http://localhost:8765`.
 The three process cards report actual supervised processes; the plots and data
 rate come from the receiving skill, and the main image is a ProjectAirSim scene
 camera. Camera or sensing failure is displayed separately from stream delivery.

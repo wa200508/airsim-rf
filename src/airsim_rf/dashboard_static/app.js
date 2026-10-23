@@ -98,7 +98,7 @@ function render(state){lastStatus=state;renderControls(state);const s=state.skil
  $('signal-label').textContent=`${carrier?(carrier/1e6).toFixed(3)+' MHz':'Carrier pending'} · ${fs?(fs/1e6).toFixed(3)+' MS/s':'Rate pending'}`;
  $('flight-summary').textContent=scenario.radius_m?`${scenario.radius_m} m orbit / ${scenario.altitude_rf_m} m RF-up`:'Scenario flight plan';
  $('propagation-summary').textContent=typeof scenario.propagation==='object'?`${scenario.propagation.path_solver} / depth ${scenario.propagation.max_depth}`:(scenario.propagation||'Recorded propagation');
- $('music-panel').hidden=Boolean(scenario.skill_kind&&scenario.skill_kind!=='music');
+ $('music-panel').hidden=Boolean(scenario.skill_kind&&!['direction-finding','music'].includes(scenario.skill_kind));
  document.querySelector('[data-process="skill"]').querySelector('h3').textContent=scenario.skill_name||'RF Skill';
  $('spectrum-caption').textContent=`Baseband offset${carrier?' from '+(carrier/1e6).toFixed(3)+' MHz':''} (kHz) · PSD, dB re 1 V²/Hz`;
  if(s.analysis_samples_per_channel)$('analysis-caption').textContent=`${s.analysis_samples_per_channel.toLocaleString()} simultaneous ADC samples per analysis. Linear-array front/back and elevation ambiguity remains.`;

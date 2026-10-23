@@ -1,5 +1,9 @@
 # Simulation, receiver and RF skill boundaries
 
+> The deployed receiver application is now the separately maintained
+> [Direction Finding RF Skill](https://github.com/wa200508/DF-Skill), using MUSIC.
+> See [repository separation and pinned deployment](direction-finding-skill.md).
+
 The repository had boundary violations: the dashboard RF producer polled
 MUSIC-specific HTTP endpoints and fetched processing diagnostics to record each
 frame; the consumer imported offline recording/evaluation helpers. Those paths

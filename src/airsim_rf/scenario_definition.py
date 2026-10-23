@@ -148,7 +148,7 @@ def load(directory=None):
         _vector(config['appearance'][key],size,key)
         if any(not 0<=x<=1 for x in config['appearance'][key]):raise ValueError('Visual color/emission must lie in [0,1]')
     skill=config['skill']
-    if skill['kind'] not in ('music','custom'):raise ValueError('Skill kind must be music or custom')
+    if skill['kind'] not in ('direction-finding','music','custom'):raise ValueError('Skill kind must be direction-finding or custom (music is a legacy alias)')
     if skill['contract']!='receiver-tcp-v2' or skill['revision_policy'] not in ('matching','independent'):raise ValueError('Unsupported skill contract/revision policy')
     if not isinstance(skill['image'],str) or not skill['image'] or not isinstance(skill['command'],list) or any(not isinstance(x,str) for x in skill['command']):raise ValueError('Skill image and argument list required')
     ports=skill['ports'];used=[]
@@ -159,9 +159,9 @@ def load(directory=None):
         if port>65535:raise ValueError('Invalid skill port')
         used.append(port)
     if len(set(used))!=len(used):raise ValueError('Skill ports must differ')
-    if skill['kind']=='music' and (len(radios['sites'])!=2 or any(len(s['channels'])<3 for s in radios['sites'])):
-        raise ValueError('Bundled MUSIC skill requires two sites, each with >=3 coherent ULA channels; choose a compatible custom skill for other layouts')
-    if skill['kind']=='music' and any(max((b-a for a,b in zip(site['element_offsets_m'],site['element_offsets_m'][1:])),default=0)>299792458./carrier/2*(1+1e-10) for site in radios['sites']):
+    if skill['kind'] in ('direction-finding','music') and (len(radios['sites'])!=2 or any(len(s['channels'])<3 for s in radios['sites'])):
+        raise ValueError('Direction Finding RF Skill requires two sites, each with >=3 coherent ULA channels; choose a compatible custom skill for other layouts')
+    if skill['kind'] in ('direction-finding','music') and any(max((b-a for a,b in zip(site['element_offsets_m'],site['element_offsets_m'][1:])),default=0)>299792458./carrier/2*(1+1e-10) for site in radios['sites']):
         raise ValueError('MUSIC array spacing must be at most half a wavelength at the declared carrier')
     config['_directory']=str(root)
     return config

@@ -51,15 +51,17 @@ narrowband Doppler evolves over its samples. The example does not enable diffuse
 scattering, diffraction, refraction or higher-order reflections. An alternate
 input must select a backend that actually implements its requested effects.
 
-## Find the actual MUSIC algorithm
+<a id="find-the-actual-music-algorithm"></a>
 
-The separately packaged application is [skills/music.py](../src/airsim_rf/skills/music.py),
-`MusicSkill.process()`. It groups coherent channels, applies the supplied complex
+## Find the Direction Finding RF Skill
+
+The application is now [DF-Skill app.py](https://github.com/wa200508/DF-Skill/blob/main/src/df_skill/app.py),
+`DirectionFindingSkill.process()`. The old local imports are compatibility shims. It groups coherent channels, applies the supplied complex
 calibration, and analyzes at most the first 24,000 samples per window. It uses
 only post-ADC volts, timestamps and its own receiver metadata, with no source
 waveform, emitter truth or paths.
 
-Numerical receiver math lives in [processing/music.py](../src/airsim_rf/processing/music.py):
+Numerical receiver math lives in [DF-Skill music.py](https://github.com/wa200508/DF-Skill/blob/main/src/df_skill/music.py):
 
 - `PhysicalULA.steering_vector()` uses physical element offsets and carrier.
 - `estimate_bearing()` checks geometry/coherence, uses a covariance eigenvalue

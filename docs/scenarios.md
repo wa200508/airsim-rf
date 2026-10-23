@@ -1,5 +1,9 @@
 # Editable scenario packages
 
+> The deployed receiver application is now the separately maintained
+> [Direction Finding RF Skill](https://github.com/wa200508/DF-Skill), using MUSIC.
+> See [repository separation and pinned deployment](direction-finding-skill.md).
+
 A scenario is a **directory of input data**, independent of the containers and
 RF skill code. The shipped example is [scenarios/drone-orbit](../scenarios/drone-orbit).
 The same simulator/RF images compile and run a different package by changing
@@ -89,7 +93,7 @@ receiver sites are fixed coherent arrays; moving-receiver capture exists in the
 separate [live API](live-workflow.md) and is not implicitly enabled by this schema.
 Vehicle configurations must support the native flight-control API used by this
 runtime. The first TX supplies the dashboard's direct-path diagnostic; received
-I/Q includes **all** configured transmitters. The bundled MUSIC application
+I/Q includes **all** configured transmitters. The external Direction Finding RF Skill
 still assumes one dominant arrival per site even if a multi-emitter scene is run.
 
 `waveform.json` uses the example's QPSK fields or `type: samples` with a relative
@@ -133,7 +137,7 @@ common counters, receiver spectra and algorithm-specific measurements are
 optional. The existing GUI understands its common spectrum/counter fields;
 new kinds of algorithm visualization need an observer renderer.
 
-The bundled `kind: music` requires two ULAs with at least three ordered,
+The external `kind: direction-finding` (legacy alias `music`) requires two ULAs with at least three ordered,
 calibrated, at-most-half-wavelength-spaced channels per site. Choose `custom`
 for other consumer layouts. `revision_policy: matching` enforces the bundled
 skill's common source revision with the RF/simulator images. `independent`

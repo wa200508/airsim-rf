@@ -1,12 +1,16 @@
 # airsim-rf
 
+> The deployed receiver application is now the separately maintained
+> [Direction Finding RF Skill](https://github.com/wa200508/DF-Skill), using MUSIC.
+> See [repository separation and pinned deployment](docs/direction-finding-skill.md).
+
 ProjectAirSim poses → Sionna propagation → complex I/Q → receiver filtering,
 noise and ADC → timestamped SDR recordings. The project also provides radar
 models and an AMS-GRA radar worker; continuous SDR uses a separate capture API.
 
 The primary workflow is the [localhost RF mission dashboard](docs/dashboard.md):
 a large left-hand drone orbit in ProjectAirSim, shared-terrain multipath through
-Sionna, and received I/Q processed by an independent CPU MUSIC RF Skill process. The
+Sionna, and received I/Q processed by an independent CPU Direction Finding RF Skill process. The
 Python launcher displays the actual simulator camera, RF spectra/MUSIC diagnostics
 and measured simulation-to-skill throughput.
 

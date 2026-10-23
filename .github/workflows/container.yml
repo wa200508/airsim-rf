@@ -101,7 +101,7 @@ jobs:
         run: |
           docker run --rm --network none --shm-size 1g --entrypoint python airsim-rf:dashboard-gpu-test \
             scripts/qualify_dashboard_camera.py
-      - name: Build matching optional dashboard service images
+      - name: Build simulator renderer and alias the independently published DF skill
         run: |
           docker build -f Dockerfile.dashboard --build-arg BASE_IMAGE=airsim-rf:test \
             --build-arg SOURCE_REVISION=${{ github.sha }} --target skill -t airsim-rf:dashboard-skill-test .
@@ -110,7 +110,7 @@ jobs:
       - name: Prove standalone RF skill works without simulation dependencies
         run: |
           docker run --rm --network none --entrypoint python airsim-rf:dashboard-skill-test \
-            scripts/qualify_skill_boundary.py
+            scripts/qualify_independence.py
       - name: Registry tags
         id: meta
         if: github.event_name != 'pull_request' && (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/v'))

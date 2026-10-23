@@ -111,7 +111,7 @@ def test_failed_bulk_write_publishes_no_partial_channel_group(tmp_path):
 
 def test_tcp_replay_to_unchanged_music_processing_matches_original(tmp_path):
     pytest.importorskip('doa_py')
-    from airsim_rf.skills.music import MusicSkill
+    from df_skill.app import DirectionFindingSkill as MusicSkill
     path,groups=archive(tmp_path)
     direct=MusicSkill(path/'receiver-config.json');restored=MusicSkill(path/'receiver-config.json')
     for blocks in groups:direct.process({b.receiver:b for b in blocks})

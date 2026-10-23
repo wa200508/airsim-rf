@@ -1,4 +1,2 @@
-# Independent receiver application: no Sionna, Mitsuba, Dr.Jit or AirSim SDK.
--r requirements-tracking-lock.txt
-grpcio==1.84.0
-protobuf==7.36.2
+# Compatibility install; the standalone consumer is maintained in wa200508/DF-Skill.
+-r requirements-df-skill.txt

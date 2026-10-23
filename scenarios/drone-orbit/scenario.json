@@ -7,16 +7,16 @@
   "radios": "radios.json",
   "mission": {
     "record_iq": true,
-    "duration_s": 120.0,
+    "duration_s": 120,
     "physics_step_ns": 3000000,
     "rf_update_ns": 120000000
   },
   "camera": {
     "actor": "OrbitDrone",
     "sensor": "Chase",
-    "distance_m": 5.0,
+    "distance_m": 5,
     "elevation_bias": 0.25,
-    "fov_deg": 90.0,
+    "fov_deg": 90,
     "labels": true,
     "capture_interval_s": 0.12,
     "width": 960,
@@ -27,7 +27,7 @@
       0.12,
       0.18,
       0.085,
-      1.0
+      1
     ],
     "terrain_emissive_rgb": [
       0.008,
@@ -36,10 +36,10 @@
     ]
   },
   "skill": {
-    "kind": "music",
+    "kind": "direction-finding",
     "contract": "receiver-tcp-v2",
-    "image": "ghcr.io/wa200508/airsim-rf:dashboard-skill",
-    "revision_policy": "matching",
+    "image": "ghcr.io/wa200508/df-skill:sha-270bfacb6ac933f5c60599aab3edf39489978c45",
+    "revision_policy": "independent",
     "command": [
       "--arrays",
       "/config/arrays.json",
@@ -50,6 +50,7 @@
       "iq": 8811,
       "http": 8812,
       "control": 8813
-    }
+    },
+    "name": "Direction Finding RF Skill"
   }
 }
