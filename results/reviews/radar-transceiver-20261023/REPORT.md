@@ -50,3 +50,8 @@ actual_pose telemetry at physics cadence. It preserves the existing 3 ms
 camera/body comparison threshold and does not interpolate or relax that check.
 The native software-rendered CI gate must verify this change; no successful
 new full GPU/native flight is asserted by the CPU tests above.
+
+The first release of the final RF tree timed out before tests while downloading
+GNU Radio packages from the hosted runner's Azure HTTP mirror. CI now uses
+Ubuntu HTTPS mirrors, caches the downloaded packages, and allows 25 minutes for
+the unchanged stock GNU Radio interoperability gate. No test is bypassed.
