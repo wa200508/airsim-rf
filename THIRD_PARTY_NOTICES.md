@@ -45,3 +45,11 @@ ProjectAirSim's `robot_quadrotor_fastphysics_sensors.jsonc` at the pinned source
 commit, with the example's controller/camera settings. Its upstream MIT license
 and Microsoft copyright are retained alongside it in
 `scenarios/drone-orbit/PROJECTAIRSIM-LICENSE.txt`.
+
+The separately maintained [Direction Finding RF Skill](https://github.com/wa200508/DF-Skill)
+is used as an external Python package and independently published consumer image,
+pinned at `270bfacb6ac933f5c60599aab3edf39489978c45`. It uses Apache License 2.0;
+its license, provenance NOTICE and original airsim-rf MIT attribution are retained
+in its distribution. Local legacy skill/math imports delegate to that package;
+this repository does not vendor another implementation of the DF application.
+The independent image remains free of AirSim/Sionna/source-truth dependencies.
