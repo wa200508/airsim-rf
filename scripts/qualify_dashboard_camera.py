@@ -45,11 +45,13 @@ async def check_camera(output):
         client.subscribe(drone.sensors['Chase']['scene_camera'],
                          lambda _, message: frames.append(message))
         timings = []
+        poses=[]
         origin = int(world.get_sim_time())
         # Same paused queue -> render/physics step order as the RF producer.
         for _ in range(10):
             kinematics = normalize_kinematics(drone.get_ground_truth_kinematics())
             position, _, _ = mount_kinematics(kinematics)
+            poses.append((int(world.get_sim_time()),position.copy()))
             started = time.monotonic()
             eye, _ = queue_chase_camera_pose(drone, position, receivers, kinematics)
             timings.append(time.monotonic() - started)
@@ -63,6 +65,14 @@ async def check_camera(output):
             raise RuntimeError('No actual camera frame after queued poses and ten simulator steps')
         frame = frames[-1]
         image = unpack_image(frame)
+        current,_,_=mount_kinematics(normalize_kinematics(drone.get_ground_truth_kinematics()))
+        poses.append((int(world.get_sim_time()),current.copy()))
+        # Software rendering can deliver an older image after physics has stepped
+        # ahead. Compare native image telemetry to independent body truth at the
+        # image epoch, never to the newest body pose.
+        frame_epoch=int(frame['time_stamp'])
+        body_epoch,body_position=min(poses,key=lambda entry:abs(entry[0]-frame_epoch))
+        epoch_error=abs(body_epoch-frame_epoch)
         # Verify the actual rendered camera followed the requested chase pose.
         # The close default mount alone does not establish receiver-facing aim.
         horizontal_error = float(np.linalg.norm(np.array([frame['pos_x'], frame['pos_y']]) - eye[:2]))
@@ -70,15 +80,15 @@ async def check_camera(output):
         actual_rotation=Rotation.from_quat([frame['rot_'+axis] for axis in ('x','y','z','w')])
         target=np.mean(receivers,axis=0)*[1,-1,-1]-actual_eye;target/=np.linalg.norm(target)
         aim_error=float(np.degrees(np.arccos(np.clip(np.dot(actual_rotation.apply([1,0,0]),target),-1,1))))
-        current,_,_=mount_kinematics(normalize_kinematics(drone.get_ground_truth_kinematics()))
-        chase_distance=float(np.linalg.norm(actual_eye-current*[1,-1,-1]))
+        chase_distance=float(np.linalg.norm(actual_eye-body_position*[1,-1,-1]))
         elapsed = (int(world.get_sim_time()) - origin) * 1e-9
         checks = {
             'ten_paused_camera_requests_accepted': len(timings) == 10,
             'simulation_advanced_1_2_seconds': abs(elapsed - 1.2) < .01,
             'real_960_by_540_image_received': image.shape == (540, 960, 3),
             'requested_camera_position_rendered': horizontal_error < 3,
-            'close_chase_camera': 2<chase_distance<8,
+            'camera_body_epochs_match':epoch_error<=3_000_000,
+            'close_chase_camera': abs(chase_distance-5)<.25,
             'camera_faces_receiver_midpoint': aim_error<5,
         }
         alignment.update(compare_probes(output,probes,probe_messages,probe_drones))
@@ -87,7 +97,9 @@ async def check_camera(output):
                   'metrics': {'camera_frames': len(frames), 'sim_elapsed_s': elapsed,
                               'pose_request_wall_s': timings,
                               'horizontal_camera_position_error_m': horizontal_error,
-                              'chase_distance_m':chase_distance,'receiver_aim_error_deg':aim_error},
+                              'chase_distance_m':chase_distance,'receiver_aim_error_deg':aim_error,
+                              'camera_epoch_ns':frame_epoch,'body_epoch_ns':body_epoch,
+                              'camera_body_epoch_error_ns':epoch_error},
                   'scene_alignment':alignment,
                   'scope': 'Actual Unreal/software Vulkan, CPU LiDAR terrain probes and Sionna mesh; '
                            'no CUDA, RF generation or full-mission qualification'}
