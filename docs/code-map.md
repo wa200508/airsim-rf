@@ -42,6 +42,7 @@ front-end approximation and material constants remain uncalibrated assumptions.
 | Camera boom and actual-frame labels | [dashboard_view.py](../src/airsim_rf/dashboard_view.py): `camera_frame()`, `relative_camera_pose()`, `camera_labels()`. Terrain visibility of a label is separate from a TX/RX radio link. |
 | Neutral receiver stream and lockstep | [sample_stream.py](../src/airsim_rf/sample_stream.py), [dashboard_sync.py](../src/airsim_rf/dashboard_sync.py): acquisition timestamps, channels and generic window acknowledgements, without algorithm outputs. |
 | Bulk I/Q recording and unchanged-skill replay | [sample_recording.py](../src/airsim_rf/sample_recording.py): `SampleRecordingWriter`, `iter_recorded_windows()`, `replay()`; NumPy and neutral transport only. See [capture/replay guide](iq-replay.md). |
+| Generate portable GNU Radio starter graphs | [gnuradio_export.py](../src/airsim_rf/gnuradio_export.py): stock complex File Sources, shared vector pacer and per-channel DSP outputs. See [GNU Radio development](gnuradio.md). |
 | Service lifecycle, scenario/skill wiring, replay and HTTP | [dashboard.py](../src/airsim_rf/dashboard.py); [standalone shell launcher](../scripts/run_dashboard.sh). |
 | Plotting and playback presentation | [app.js](../src/airsim_rf/dashboard_static/app.js), [index.html](../src/airsim_rf/dashboard_static/index.html), [style.css](../src/airsim_rf/dashboard_static/style.css). The browser does not run MUSIC. |
 

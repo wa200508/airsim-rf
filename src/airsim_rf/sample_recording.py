@@ -111,6 +111,9 @@ class SampleRecordingWriter:
         captures = [{'core:sample_start': row['sample_start'], 'core:frequency': self.manifest['carrier_hz']}
             for row in _rows(self.path, self.manifest)]
         for name in self.channels: _json(self.path / f'{name}.sigmf-meta', self._metadata(name, captures))
+        if self.manifest['windows']:
+            from .gnuradio_export import write_flowgraphs
+            write_flowgraphs(self.path, self.manifest)
         _json(self.path / 'manifest.json', self.manifest)
 
 
@@ -222,7 +225,8 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     commands = parser.add_subparsers(dest='command', required=True)
     check = commands.add_parser('inspect'); send = commands.add_parser('replay')
-    for command in (check, send):
+    export = commands.add_parser('gnuradio',help='Add stock-block GRC flowgraphs to an existing archive without copying I/Q')
+    for command in (check, send, export):
         command.add_argument('recording', type=Path)
         command.add_argument('--allow-partial', action='store_true')
     check.add_argument('--verify', action='store_true')
@@ -231,7 +235,11 @@ def main():
     send.add_argument('--start-window', type=int, default=0); send.add_argument('--stop-window', type=int)
     args = vars(parser.parse_args()); command = args.pop('command'); directory = args.pop('recording')
     try:
-        result = (inspect if command == 'inspect' else replay)(directory, **args)
+        if command=='gnuradio':
+            from .gnuradio_export import write_flowgraphs
+            manifest=inspect(directory,**args);write_flowgraphs(directory,manifest)
+            result={'status':'complete','files':[str(directory/'replay.grc'),str(directory/'view.grc')]}
+        else:result = (inspect if command == 'inspect' else replay)(directory, **args)
     except (OSError, ValueError, KeyError, TypeError, RuntimeError, EOFError) as error:
         parser.exit(2, str(error) + '\n')
     print(json.dumps(result, indent=2))

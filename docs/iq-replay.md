@@ -25,6 +25,8 @@ recordings/dashboard/replays/<run-id>/
     site0_e0.sigmf-data         exact little-endian complex float32 volts
     site0_e0.sigmf-meta         standard SigMF datatype/rate/capture offsets/carrier
     ...                        one data/metadata pair for every array element
+    view.grc                   GNU Radio Companion viewer with channel dropdown
+    replay.grc                 stock-block coherent DSP starter flowgraph
   frames/ camera/ results/     source telemetry, video and original skill outputs
 ```
 
@@ -125,6 +127,10 @@ automatically implement its framing and acknowledgements.
 
 ## Python and other SDR development options
 
+**For GNU Radio development, start with the generated `view.grc` or
+`replay.grc` beside the saved samples.** See [the GNU Radio guide](gnuradio.md)
+for opening, editing and native replay. No sample conversion is necessary.
+
 | Option | Good fit | Relationship to this project |
 |---|---|---|
 | Native TCP v2 replay | Integration tests of a complete existing RF skill | Implemented here; same ingress as live acquisition, including window acknowledgements |
@@ -191,8 +197,9 @@ data fails closed; it is never silently replaced with zeros.
 - [Ettus RFNoC Replay application note](https://kb.ettus.com/Using_the_RFNoC_Replay_Block_in_UHD_4):
   device-DRAM recording/playback and supported UHD/USRP requirements.
 
-Only this project's archive reader, TCP replay and unchanged MUSIC consumer
-are integration-tested here. Third-party tools are documented interoperability
-options; no GNU Radio, Digital RF, viewer or physical-USRP qualification is claimed.
+The archive reader, TCP replay, unchanged MUSIC consumer and generated
+stock-block GNU Radio graphs have integration tests. Digital RF, third-party
+viewers and physical USRP replay remain documented options, without integration
+qualification here.
 See [the qualification report](../results/reviews/iq-replay-20261023/REPORT.md)
 for exact-sample, real CPU-propagation and standalone-consumer evidence.

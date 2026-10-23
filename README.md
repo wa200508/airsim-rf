@@ -179,7 +179,10 @@ partial runs and previous missions. This records camera images, telemetry and
 RF diagnostics for GUI playback. New runs also save bulk receiver I/Q under
 `replays/<run-id>/iq/` by default (`mission.record_iq` in the scenario controls it).
 These exact samples can be replayed into an unchanged RF skill without AirSim,
-Sionna or a GPU. See [capture and I/Q replay](docs/iq-replay.md) for Python and
+Sionna or a GPU. For **GNU Radio**, open the generated `view.grc` or `replay.grc`
+in the saved `iq/` directory; the samples feed stock Complex File Sources
+directly. See [GNU Radio development](docs/gnuradio.md) and
+[capture and I/Q replay](docs/iq-replay.md) for Python and
 container commands, disk requirements and SDR development tools. Older runs
 have only the products saved at the time; their raw I/Q cannot be recovered.
 
