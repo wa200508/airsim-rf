@@ -22,10 +22,10 @@ are forbidden from importing `df_skill`; the architecture audit enforces both.
 Pinned source: [ed36dffc23e716e24d7bf3ed084c0358d1d12e18](https://github.com/wa200508/Radar-skill/tree/ed36dffc23e716e24d7bf3ed084c0358d1d12e18).
 
 ```text
-ghcr.io/wa200508/radar-skill:sha-ed36dffc23e716e24d7bf3ed084c0358d1d12e18
+ghcr.io/wa200508/airsim-rf:radar-skill-sha-ed36dffc23e716e24d7bf3ed084c0358d1d12e18
 ```
 
-The scenario selects that immutable image with `revision_policy: independent`.
+The scenario selects that immutable public image with `revision_policy: independent`.
 Simulator and RF images still must match. The radar source pin lives in
 `requirements-radar-skill.txt`; its receiver image/arguments/ports live in
 `scenarios/mmwave-radar/scenario.json`. `Dockerfile.dashboard --target radar-skill`
@@ -40,6 +40,22 @@ The standalone skill requires NumPy only, without AirSim, Sionna, CUDA or DF-Ski
 Existing copied radar scenarios adopting the external image must also change
 `revision_policy` from `matching` to `independent`; unrelated repositories
 cannot share Git commit identifiers. This does not relax simulator/RF matching.
+
+## Public image distribution
+
+The release workflow [radar-skill.yml](../.github/workflows/radar-skill.yml)
+builds the exact external Git commit using Radar-skill's own Dockerfile and
+publishes the result in the existing public `airsim-rf` container package.
+No AirSim source or second radar implementation is added to this build.
+The OCI revision is the **radar source commit**, independently of the simulator
+release commit. Offline qualification and a fresh anonymous Docker pull gate
+publication. The skill repository also maintains its own image publication;
+the dashboard uses this public release path so no registry login is required.
+
+When updating the radar version, update `requirements-radar-skill.txt`, the
+scenario image, Dockerfile alias, and this release workflow's source revision
+together. The unchanged numerical processing, interfaces and license are owned
+by Radar-skill regardless of the registry package hosting its image.
 
 ## Data and replay
 

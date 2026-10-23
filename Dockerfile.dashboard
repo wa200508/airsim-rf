@@ -2,7 +2,7 @@
 # Independent receiver application; shared simulator/RF runtime for other roles.
 ARG BASE_IMAGE=ghcr.io/wa200508/airsim-rf:latest
 ARG DF_SKILL_IMAGE=ghcr.io/wa200508/df-skill:sha-270bfacb6ac933f5c60599aab3edf39489978c45
-ARG RADAR_SKILL_IMAGE=ghcr.io/wa200508/radar-skill:sha-ed36dffc23e716e24d7bf3ed084c0358d1d12e18
+ARG RADAR_SKILL_IMAGE=ghcr.io/wa200508/airsim-rf:radar-skill-sha-ed36dffc23e716e24d7bf3ed084c0358d1d12e18
 FROM ${BASE_IMAGE} AS runtime
 USER root
 WORKDIR /opt/airsim-rf

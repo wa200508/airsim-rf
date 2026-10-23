@@ -7,4 +7,4 @@ if __name__=='__main__':
     pin=re.search(r'/([0-9a-f]{40})\.tar\.gz',(Path(__file__).resolve().parents[1]/'requirements-radar-skill.txt').read_text())
     if pin is None:raise SystemExit('Missing immutable Radar-Skill source pin')
     raise SystemExit(subprocess.call(['docker','run','--rm','--network','none','--entrypoint','python',
-        'ghcr.io/wa200508/radar-skill:sha-'+pin.group(1),'scripts/qualify_independence.py']))
+        'ghcr.io/wa200508/airsim-rf:radar-skill-sha-'+pin.group(1),'scripts/qualify_independence.py']))

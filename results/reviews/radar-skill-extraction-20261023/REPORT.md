@@ -33,3 +33,15 @@ and container are publicly accessible. They are direct dependencies of fresh
 checkout/container builds. Publishing a private image is not anonymous-pull
 qualification. Existing simulator/RF revision matching remains mandatory;
 only the independently released receiver uses `revision_policy: independent`.
+
+## Public release path
+
+The canonical Radar-skill package continued to reject anonymous manifests after
+the source repository became public. The release workflow now builds the same
+pinned external repository/Dockerfile directly and publishes
+`ghcr.io/wa200508/airsim-rf:radar-skill-sha-ed36dffc23e716e24d7bf3ed084c0358d1d12e18`
+through airsim-rf's existing public registry package. It performs offline
+independence/replay qualification before publication and repeats it after a
+fresh anonymous pull. Scenario and Docker alias use that artifact with the
+independent radar source revision. The receiver implementation stays solely
+in Radar-skill.

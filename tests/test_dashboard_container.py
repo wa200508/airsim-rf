@@ -300,6 +300,6 @@ def test_catalog_selection_reprepares_and_preserves_recordings(tmp_path,monkeypa
 
 def test_default_radar_skill_is_external_and_independently_versioned():
     config=dashboard._definition.load('mmwave-radar')
-    assert config['skill']['image'].startswith('ghcr.io/wa200508/radar-skill:sha-')
+    assert config['skill']['image'].startswith('ghcr.io/wa200508/airsim-rf:radar-skill-sha-')
     assert config['skill']['revision_policy']=='independent'
     assert config['skill']['ports']['control'] is None

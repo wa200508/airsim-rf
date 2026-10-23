@@ -152,8 +152,10 @@ The script pulls and verifies three images for the selected scenario:
 - `ghcr.io/wa200508/airsim-rf:dashboard-render` — ProjectAirSim and camera.
 - `ghcr.io/wa200508/airsim-rf:dashboard-gpu` — CUDA propagation and I/Q producer.
 - Direction finding: the pinned `ghcr.io/wa200508/df-skill` image from its own repository.
-- Radar: the pinned `ghcr.io/wa200508/radar-skill` image from its own repository.
-  `airsim-rf:dashboard-radar-skill` remains a compatibility image alias.
+- Radar: `ghcr.io/wa200508/airsim-rf:radar-skill-sha-<source revision>` — a public
+  image built directly from the independent [Radar-skill](https://github.com/wa200508/Radar-skill)
+  repository. See [source/image pins](docs/radar-skill.md). `dashboard-radar-skill`
+  remains a compatibility image alias.
 
 Only one receiver skill is launched for each mission; `dashboard-skill` remains a
 legacy alias for the external DF image.
