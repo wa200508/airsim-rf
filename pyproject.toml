@@ -23,13 +23,13 @@ airsim-rf-worker = "airsim_rf.distributed.worker:main"
 airsim-rf-coordinator = "airsim_rf.distributed.coordinator:main"
 
 [project.optional-dependencies]
-radar = ["radar-skill @ https://github.com/wa200508/Radar-skill/archive/bea025f28894b089d2d371479d1a8936f1dd0fb7.tar.gz"]
+radar = ["radar-skill @ https://github.com/wa200508/Radar-skill/archive/bb78fbd0c7b3506b36ae1ad82b9df78acedbe66c.tar.gz"]
 geometry = ["usd-core>=24.8,<27"]
 airsim = ["projectairsim>=1.1.0"]
 live = ["projectairsim>=1.1.0", "cupy-cuda12x==13.6.0"]
 test = ["pytest>=8.3"]
 interop = ["sigmf==1.13.0"]
-tracking = ["df-skill @ https://github.com/wa200508/DF-Skill/archive/270bfacb6ac933f5c60599aab3edf39489978c45.tar.gz", "filterpy==1.4.5"]
+tracking = ["df-skill @ https://github.com/wa200508/DF-Skill/archive/5e2420aa0c2bf49563db3f83fceda1e874fd2029.tar.gz", "filterpy==1.4.5"]
 
 [tool.setuptools.packages.find]
 where = ["src"]

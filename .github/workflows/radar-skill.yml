@@ -12,7 +12,7 @@ concurrency:
   group: public-radar-skill
   cancel-in-progress: true
 env:
-  RADAR_SOURCE_REVISION: bea025f28894b089d2d371479d1a8936f1dd0fb7
+  RADAR_SOURCE_REVISION: bb78fbd0c7b3506b36ae1ad82b9df78acedbe66c
   IMAGE: ghcr.io/wa200508/airsim-rf
 jobs:
   radar-skill:
