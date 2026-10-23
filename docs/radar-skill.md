@@ -49,8 +49,9 @@ publishes the result in the existing public `airsim-rf` container package.
 No AirSim source or second radar implementation is added to this build.
 The OCI revision is the **radar source commit**, independently of the simulator
 release commit. Offline qualification and a fresh anonymous Docker pull gate
-publication. The skill repository also maintains its own image publication;
-the dashboard uses this public release path so no registry login is required.
+publication. The skill repository tests its current checkout and smoke-tests
+the pinned public release; this release workflow owns public publication.
+The dashboard uses this path so no registry login is required.
 
 When updating the radar version, update `requirements-radar-skill.txt`, the
 scenario image, Dockerfile alias, and this release workflow's source revision
