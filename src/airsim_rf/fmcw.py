@@ -182,14 +182,15 @@ class FMCWRadar:
     CUDA. IF convention is TX * conjugate(RX), so positive range rate is receding.
     """
     def __init__(self,profile=Distance2GoLProfile(),*,rf_scene=None,seed=42,max_depth=0,
-                 max_range_m=float('inf'),clutter=None):
+                 max_range_m=float('inf'),clutter=None,samples_per_link=None):
         from sionna.rt import load_scene
         from .radar_scattering import TerrainBackscatter
         if max_depth!=0:raise ValueError('First-order radar does not support target-leg multipath; max_depth must be 0')
         if np.isnan(max_range_m) or max_range_m<=0:raise ValueError('Radar maximum range must be positive')
         self.profile=profile;self.scene=rf_scene if hasattr(rf_scene,'mi_scene') else load_scene(rf_scene)
         self.scene.frequency=profile.carrier_hz;self.max_range_m=max_range_m
-        self.clutter=TerrainBackscatter(self.scene,clutter) if clutter and clutter['enabled'] else None
+        if clutter and clutter['enabled'] and (isinstance(samples_per_link,bool) or not isinstance(samples_per_link,int) or samples_per_link<1):raise ValueError('Enabled surface scattering requires propagation samples_per_link')
+        self.clutter=TerrainBackscatter(self.scene,clutter,samples_per_link=samples_per_link) if clutter and clutter['enabled'] else None
         self.last_path_diagnostics={};self.last_clutter_diagnostics={};self.last_render_diagnostics={}
         self.rng=np.random.default_rng(seed);self.seed=seed;self._noise_sos=profile.filter_sos()
 

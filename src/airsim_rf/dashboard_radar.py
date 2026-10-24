@@ -28,7 +28,7 @@ def target_states(radar,kinematics):
 class RadarWindowReceiver:
     def __init__(self,scene,radio,arrays):
         self.radio=radio;self.arrays=arrays;c=radio['radar']
-        self.radar=FMCWRadar(IWR1843Profile(**c['profile']),rf_scene=scene,seed=c['seed'],max_range_m=c['max_range_m'],clutter=c['clutter'])
+        self.radar=FMCWRadar(IWR1843Profile(**c['profile']),rf_scene=scene,seed=c['seed'],max_range_m=c['max_range_m'],clutter=c['clutter'],samples_per_link=radio['propagation']['samples_per_link'])
         self.channel=arrays['sites'][0]['channels'][0]
         self.control=RadarTransceiverControl(self.radar.profile,arrays)
         self.last_path_diagnostics={};self.last_clutter_diagnostics={};self.truth={}

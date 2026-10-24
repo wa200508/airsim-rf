@@ -160,6 +160,7 @@ selects a receiver algorithm or interprets its live result fields.
 `src/airsim_rf/radar_scattering.py` owns fixed surface sampling, per-class sigma0,
 area normalization and shared-mesh visibility. `src/airsim_rf/fmcw.py` turns one
 visible scatterer into one coherent echo, with tiled IF synthesis, noise and ADC.
-Configure the budget, material classes, phase seed and range limit in
-`scenarios/mmwave-radar/radios.json`. See the [model and tests](radar-scattering.md).
+Configure the shared budget at `propagation.samples_per_link` in the selected
+scenario's `radios.json`; radar material classes, phase seed and range limit remain
+separate physical parameters. See the [model and tests](radar-scattering.md).
 No detector or RF-skill imports appear in this acquisition path.

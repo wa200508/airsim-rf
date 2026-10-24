@@ -171,6 +171,8 @@ def load(directory=None):
     bandwidth=radios['receiver_profile']['rf_bandwidth_hz']
     _number(bandwidth,'receiver RF bandwidth',.001)
     if bandwidth>=rate:raise ValueError('Receiver RF bandwidth must be below the sample rate')
+    _number(radios['propagation'].get('samples_per_link'),'propagation samples per link',1 if radar else 2,integer=True)
+    if radios['propagation']['samples_per_link']>1_000_000:raise ValueError('Propagation samples_per_link limit exceeded')
     if not radios['propagation'].get('continuous',False) or not radios['propagation'].get('path_diagnostics',False):
         raise ValueError('Dashboard requires continuous receiver state and path diagnostics')
     camera=config['camera']
@@ -289,10 +291,9 @@ def _validate_radar(radios,mission,names,mode):
     if 'max_depth_per_leg' in radar or radar.get('echo_model')!='first-order':raise ValueError('Radar requires echo_model: first-order; target-leg multipath is unsupported')
     _number(radar['max_range_m'],'radar maximum range',.001)
     clutter=radar['clutter']
-    if set(clutter)!={'enabled','sample_count','seed','materials'} or type(clutter['enabled']) is not bool:raise ValueError('Invalid terrain clutter configuration')
-    _number(clutter['sample_count'],'clutter sample count',1,integer=True)
+    if set(clutter)!={'enabled','seed','materials'} or type(clutter['enabled']) is not bool:raise ValueError('Invalid terrain clutter configuration')
     _number(clutter['seed'],'clutter seed',0,integer=True)
-    if clutter['sample_count']>1_000_000 or clutter['seed']>2**64-1:raise ValueError('Clutter sample/seed limit exceeded')
+    if clutter['seed']>2**64-1:raise ValueError('Clutter seed limit exceeded')
     if not isinstance(clutter['materials'],dict) or (clutter['enabled'] and not clutter['materials']):raise ValueError('Clutter materials must map names to backscatter rules')
     for name,rule in clutter['materials'].items():
         if not isinstance(name,str) or set(rule)!={'sigma0_db','incidence_exponent'}:raise ValueError('Clutter material needs sigma0_db and incidence_exponent')

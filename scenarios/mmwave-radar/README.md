@@ -111,7 +111,8 @@ illumination or return leg attached to a target. The older
 `max_depth_per_leg` setting is replaced by `echo_model: first-order`.
 
 [TerrainBackscatter](../../src/airsim_rf/radar_scattering.py) samples the actual
-shared Sionna mesh with **1,024 seeded, stratified, uniform-area points**. Those
+shared Sionna mesh with **1,024 seeded, stratified, uniform-area points**, controlled by the shared
+`propagation.samples_per_link` setting in `radios.json`. Those
 points and their unit-magnitude random complex scattering weights stay anchored
 to the same geometry between pulses. This is a surface quadrature budget,
 not a guarantee of 1,024 surviving echoes. All configured surface areas are
@@ -194,7 +195,8 @@ installation and never receives scene, flight plan, target RCS or target truth.
 | Terrain and dielectric assumptions? | `environment.json`, copied/exported into the run's shared geometry bundle |
 | Carrier, sweep, ramp, PRI, TX power, receive gate and gain? | `radar-mode.json`, applied by the external skill through its transceiver client |
 | Antenna, noise, IF filter, ADC transfer, RCS? | `radios.json` → `radar.profile` and `radar.targets` |
-| Terrain clutter budget, sigma0/classes, phase seed, range limit? | `radios.json` → `radar.clutter` and `radar.max_range_m` |
+| Radio-pair sampling budget for radar or ESM/comms? | `radios.json` → `propagation.samples_per_link` |
+| Radar sigma0/classes, phase seed, range limit? | `radios.json` → `radar.clutter` and `radar.max_range_m` |
 | Clock, duration, recording, camera and chosen skill? | `scenario.json` |
 | Visibility, terrain quadrature, phase, IF, noise and quantizer? | [radar_scattering.py](../../src/airsim_rf/radar_scattering.py) and [fmcw.py](../../src/airsim_rf/fmcw.py) |
 | Actual poses, window acquisition and gate packing? | [dashboard_radar.py](../../src/airsim_rf/dashboard_radar.py); orchestrated by [dashboard_producer.py](../../src/airsim_rf/dashboard_producer.py) |

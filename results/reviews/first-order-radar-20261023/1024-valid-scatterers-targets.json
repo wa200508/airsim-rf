@@ -12,18 +12,18 @@
     "drjit": "1.5.0"
   },
   "source_file_sha256": {
-    "fmcw.py": "4d80457a4f02a2f699abef32592e6b66e91979f47c18d00f603a5ce4f86d4d79",
-    "radar_scattering.py": "98fc5347f7e9881618b831254c308d5e5db999c70dbae03511967ecf87056f02",
-    "dashboard_radar.py": "6f7aa1ee5ee6b8b9fc48f40179e57d4e3fead2892e17899abc9df32ed299d02a"
+    "fmcw.py": "66cbe7b454d2ff0efd502f180ede81ed9cf134a9b19f5cc2c3e395f98c1ce978",
+    "radar_scattering.py": "140c07d9ad3c35d24b0b6d3278e291a5383161aa56030c69dcbef5bfb0a8b872",
+    "dashboard_radar.py": "424e3ee4496e0b38874c1f8e13983b2b7de9c20e1f07cefcb7af4ef96ba0c667"
   },
   "scenario_input_sha256": {
     "PROJECTAIRSIM-LICENSE.txt": "c2cfccb812fe482101a8f04597dfc5a9991a6b2748266c47ac91b6a5aae15383",
-    "README.md": "e4f6f3102313fa700c826a7121df6b4e68facf175dfb8c859a02dfbf258aa7bf",
+    "README.md": "468d1b553b7b8415ded0548c0e8aa1a1186d71ac6e14ff4ebdf63d241730a321",
     "environment.json": "46294d3ccd1bf3468c733d94fb776a1b483475972362bd248f6bb6caa6012921",
     "flight.json": "8680d763b8b418bbfc19609fb0be499d9f90fc3fe1bb65bc945c5e85bbfe71bf",
     "quadrotor.jsonc": "c9ff96a27b32b6d520fbe3273266ad98fcd9a59a39b8d4e96cbf2462284fee10",
     "radar-mode.json": "80a03e248b6425818afa97a08cdca336eb1f9e5c77579f3eed1253bfcad8b196",
-    "radios.json": "2d8c74c1c6eb2fe1366dc999253e6b9022207d0273ea13573aa049614a7226a1",
+    "radios.json": "b5a41175d8760c82a199678bc90b3e9f3cfd39442fa646741bbe2df5772d72bd",
     "scenario.json": "722ef64c55b0827a97261df1ffda7c3427b897fb9e35b69a32b813096b8285be"
   },
   "capture_duration_ms": 4.0,
@@ -58,36 +58,36 @@
     "short screening, no sustained-flight or GPU claim",
     "per-stage timers add diagnostic overhead"
   ],
-  "first_window_ms": 1885.8458579925355,
+  "first_window_ms": 2001.1111740022898,
   "summary": {
     "service_ms": {
-      "median": 1976.2769215012668,
-      "sd": 82.37675778678755,
-      "p95": 2118.6113909978303
+      "median": 1912.1998755144887,
+      "sd": 104.7526633477078,
+      "p95": 2097.545109348721
     },
     "visibility_ms": {
-      "median": 28.59710638585966,
-      "sd": 2.3463461089553252,
-      "p95": 31.39216596173355
+      "median": 26.552622599410824,
+      "sd": 1.992930607611339,
+      "p95": 29.882830749556888
     },
     "tone_ms": {
-      "median": 704.4111885334132,
-      "sd": 37.02414914608507,
-      "p95": 729.2674508644268
+      "median": 655.7274070655694,
+      "sd": 33.22293117026996,
+      "p95": 719.4045662181452
     },
     "other_ms": {
-      "median": 1261.3216323516099,
-      "sd": 54.415663466423844,
-      "p95": 1370.5652788907173
+      "median": 1228.5280679207062,
+      "sd": 75.7096907304211,
+      "p95": 1365.2931009521126
     }
   },
-  "wall_seconds_per_signal_second": 497.9661688747001,
+  "wall_seconds_per_signal_second": 481.07128277624724,
   "samples": [
     {
-      "service_ms": 1990.990149002755,
-      "visibility_ms": 32.36618102528155,
-      "tone_ms": 709.4929380109534,
-      "other_ms": 1249.1310299665201,
+      "service_ms": 1914.0874270233326,
+      "visibility_ms": 25.105668959440663,
+      "tone_ms": 657.6798421156127,
+      "other_ms": 1231.3019159482792,
       "retained_paths": {
         "target_echoes": 1024,
         "terrain_echoes": 0
@@ -101,10 +101,10 @@
       }
     },
     {
-      "service_ms": 1950.6970309885219,
-      "visibility_ms": 28.128310019383207,
-      "tone_ms": 658.7380912096705,
-      "other_ms": 1263.8306297594681,
+      "service_ms": 1855.5239270208403,
+      "visibility_ms": 27.494875073898584,
+      "tone_ms": 641.4546380692627,
+      "other_ms": 1186.574413877679,
       "retained_paths": {
         "target_echoes": 1024,
         "terrain_echoes": 0
@@ -118,10 +118,10 @@
       }
     },
     {
-      "service_ms": 2038.4924780228175,
-      "visibility_ms": 29.7266679990571,
-      "tone_ms": 732.9912719142158,
-      "other_ms": 1275.7745381095447,
+      "service_ms": 1918.552777991863,
+      "visibility_ms": 26.42937412019819,
+      "tone_ms": 653.3930219884496,
+      "other_ms": 1238.7303818832152,
       "retained_paths": {
         "target_echoes": 1024,
         "terrain_echoes": 0
@@ -135,10 +135,10 @@
       }
     },
     {
-      "service_ms": 1873.4705869865138,
-      "visibility_ms": 24.946646037278697,
-      "tone_ms": 634.0204149018973,
-      "other_ms": 1214.5035260473378,
+      "service_ms": 1910.3123240056448,
+      "visibility_ms": 26.48405311629176,
+      "tone_ms": 658.0740509962197,
+      "other_ms": 1225.7542198931333,
       "retained_paths": {
         "target_echoes": 1024,
         "terrain_echoes": 0
@@ -152,10 +152,10 @@
       }
     },
     {
-      "service_ms": 1961.5636939997785,
-      "visibility_ms": 28.188672848045826,
-      "tone_ms": 662.9904299625196,
-      "other_ms": 1270.384591189213,
+      "service_ms": 1853.4233279933687,
+      "visibility_ms": 25.80785084865056,
+      "tone_ms": 653.7749720155261,
+      "other_ms": 1173.840505129192,
       "retained_paths": {
         "target_echoes": 1024,
         "terrain_echoes": 0
@@ -169,10 +169,10 @@
       }
     },
     {
-      "service_ms": 1957.579262991203,
-      "visibility_ms": 27.33058200101368,
-      "tone_ms": 699.3294390558731,
-      "other_ms": 1230.9192419343162,
+      "service_ms": 1824.8834280238952,
+      "visibility_ms": 23.422838101396337,
+      "tone_ms": 617.2391059808433,
+      "other_ms": 1184.2214839416556,
       "retained_paths": {
         "target_echoes": 1024,
         "terrain_echoes": 0
@@ -186,10 +186,10 @@
       }
     },
     {
-      "service_ms": 2113.7463549966924,
-      "visibility_ms": 30.201703106286004,
-      "tone_ms": 710.996561916545,
-      "other_ms": 1372.5480899738614,
+      "service_ms": 2136.824266985059,
+      "visibility_ms": 30.188622942660004,
+      "tone_ms": 727.2443150577601,
+      "other_ms": 1379.3913289846387,
       "retained_paths": {
         "target_echoes": 1024,
         "terrain_echoes": 0
@@ -203,10 +203,10 @@
       }
     },
     {
-      "service_ms": 2122.5918749987613,
-      "visibility_ms": 29.733917850535363,
-      "tone_ms": 724.7161140257958,
-      "other_ms": 1368.1418431224301,
+      "service_ms": 1801.6384560032748,
+      "visibility_ms": 26.621192082529888,
+      "tone_ms": 635.6703270867001,
+      "other_ms": 1139.3469368340448,
       "retained_paths": {
         "target_echoes": 1024,
         "terrain_echoes": 0
@@ -220,10 +220,10 @@
       }
     },
     {
-      "service_ms": 2011.3009000197053,
-      "visibility_ms": 29.005539923673496,
-      "tone_ms": 723.4827251522802,
-      "other_ms": 1258.8126349437516,
+      "service_ms": 2049.537250015419,
+      "visibility_ms": 29.50908473576419,
+      "tone_ms": 671.9662319228519,
+      "other_ms": 1348.061933356803,
       "retained_paths": {
         "target_echoes": 1024,
         "terrain_echoes": 0
@@ -237,10 +237,10 @@
       }
     },
     {
-      "service_ms": 1898.2144229812548,
-      "visibility_ms": 24.727110925596207,
-      "tone_ms": 640.8604189928155,
-      "other_ms": 1232.626893062843,
+      "service_ms": 1978.0681259871926,
+      "visibility_ms": 27.79245810233988,
+      "tone_ms": 709.822650969727,
+      "other_ms": 1240.4530169151258,
       "retained_paths": {
         "target_echoes": 1024,
         "terrain_echoes": 0

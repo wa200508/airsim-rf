@@ -32,8 +32,8 @@ class TerrainBackscatter:
     Range/normal tests precede visibility. Geometry/count/seed changes start a
     new realization; motion alone never redraws samples or their phases.
     """
-    def __init__(self,scene,configuration):
-        self.scene=scene;self.configuration=configuration;self.fingerprint=None
+    def __init__(self,scene,configuration,*,samples_per_link):
+        self.scene=scene;self.configuration=configuration;self.samples_per_link=samples_per_link;self.fingerprint=None
         self.points=np.empty((0,3));self.normals=np.empty((0,3));self.rcs=np.empty(0)
         self.exponents=np.empty(0);self.weights=np.empty(0,complex);self.total_area_m2=0.
 
@@ -45,7 +45,7 @@ class TerrainBackscatter:
         if any(not isinstance(s,mi.Mesh) for s in selected_shapes):raise ValueError('Terrain clutter requires triangle meshes')
         buffers=[(s,s.vertex_positions_buffer(),s.faces_buffer()) for s in selected_shapes]
         rules=tuple((name,rule['sigma0_db'],rule['incidence_exponent']) for name,rule in sorted(c['materials'].items()))
-        fingerprint=(c['sample_count'],c['seed'],rules,tuple((s,v.index,f.index,objects[s.id()]) for s,v,f in buffers))
+        fingerprint=(self.samples_per_link,c['seed'],rules,tuple((s,v.index,f.index,objects[s.id()]) for s,v,f in buffers))
         if fingerprint==self.fingerprint:return
         triangles=[];materials=[]
         for shape,vertices,faces in buffers:
@@ -56,7 +56,7 @@ class TerrainBackscatter:
         triangles=np.asarray(triangles,float);cross=np.cross(triangles[:,1]-triangles[:,0],triangles[:,2]-triangles[:,0])
         area=np.linalg.norm(cross,axis=1)/2
         if np.any(area<=0) or not np.isfinite(area).all():raise ValueError('Terrain clutter requires finite positive triangle areas')
-        self.total_area_m2=float(area.sum());count=c['sample_count'];rng=np.random.default_rng(c['seed'])
+        self.total_area_m2=float(area.sum());count=self.samples_per_link;rng=np.random.default_rng(c['seed'])
         cumulative=np.cumsum(area)
         chosen=np.searchsorted(cumulative,(np.arange(count)+rng.random(count))*self.total_area_m2/count)
         bary=rng.random((count,2));root=np.sqrt(bary[:,0]);tri=triangles[chosen]

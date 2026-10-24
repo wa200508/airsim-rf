@@ -106,7 +106,7 @@ def test_configured_receiver_adapter_renders_real_iq_on_cpu(package,tmp_path):
     pytest.importorskip('commentjson');pytest.importorskip('sionna.rt')
     import sionna.rt as rt
     def edit(d):
-        d['propagation'].update(renderer='numpy',max_depth=0)
+        d['propagation'].update(renderer='numpy',max_depth=0,samples_per_link=64)
         d.update(carrier_hz=433e6,sample_rate_hz=1e6)
         d['receiver_profile'].pop('carrier_hz',None);d['receiver_profile'].pop('sample_rate_hz',None)
         d['receiver_profile']['rf_bandwidth_hz']=400000.
@@ -118,6 +118,7 @@ def test_configured_receiver_adapter_renders_real_iq_on_cpu(package,tmp_path):
     scene=rt.load_scene(str(tmp_path/'run/bundle/scene.xml'),merge_shapes=False)
     sources={tx['id']:WaveformSource(tmp_path/'run/scenario-input',tx['waveform'],radio['sample_rate_hz']) for tx in radio['transmitters']}
     receiver=create_receiver(scene,radio,arrays,sources,0,1024)
+    assert receiver.samples_per_link==64
     scene.transmitters['tx0'].position=[250,0,200]
     captured=receiver.capture(0,num_samples=1024)
     assert len(captured)==8

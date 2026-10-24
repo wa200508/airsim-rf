@@ -242,7 +242,7 @@ The radar's world model is explicit in `radios.json`:
   "echo_model":"first-order",
   "max_range_m":400,
   "clutter":{
-    "enabled":true,"sample_count":1024,"seed":314159,
+    "enabled":true,"seed":314159,
     "materials":{"earth":{"sigma0_db":-20,"incidence_exponent":1}}
   }
 }
@@ -252,8 +252,9 @@ These fields belong inside `radar`, alongside `targets` and `profile`.
 The compiler maps shared mesh object IDs to their configured material classes.
 Materials without a clutter rule remain occluders but do not generate diffuse
 backscatter. A clutter rule must name an environment material; enabled clutter
-must match at least one surface object. `sample_count` is 1..1,000,000 across the
-configured map, not per target or a valid-path count. Range is slant distance in
+must match at least one surface object. The shared `propagation.samples_per_link` setting supplies the sampling budget
+across the configured map for the monostatic radio pair, not separately per RCS
+target or as a valid-path count. Range is slant distance in
 metres, applied before tracing, and must be finite and positive. Samples and
 phases are fixed during a run. Change the seed/budget to study quadrature
 sensitivity; change `materials` to study explicit backscatter assumptions.
@@ -263,3 +264,29 @@ secondary target-leg paths are no longer supported. Existing recorded I/Q and
 playback need no conversion. Radio-to-radio ESM/comms propagation is unchanged.
 The [radar scattering model](radar-scattering.md) specifies normalization,
 phase, Doppler and the difference between dielectric and backscatter parameters.
+
+
+## Shared propagation sampling budget
+
+Every scenario defines its radio-pair sampling budget in one place:
+`radios.json` → `propagation.samples_per_link`. For example:
+
+```json
+{"propagation":{"samples_per_link":256}}
+```
+
+Merge that value into the existing `propagation` object; keep its other fields.
+Both ESM/comms acquisition and radar acquisition read this same property. No
+budget is defined under `radar.clutter`. In sampled one-way propagation it
+controls candidate attempts for each TX/RX link; in monostatic first-order radar
+it controls the fixed surface quadrature budget for the physical TX/RX pair.
+Occlusion, range, material response and gain determine surviving paths. An
+exhaustive specular solver has no stochastic sample work; changing this value
+never arbitrarily discards its valid specular reflections.
+
+The budget must be an integer up to 1,000,000 (minimum 1 for radar, 2 for one-way
+acquisition). Each self-contained scenario owns its value; changing scenarios
+may select a different budget. Stop and prepare a mission after editing; running
+missions retain frozen inputs. Lower values trade spatial sampling resolution
+for compute while area weighting preserves expected terrain scattered power.
+Seed, backscatter classes and range are separate physical/model settings.

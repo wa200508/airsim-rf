@@ -20,7 +20,7 @@ Multiple classes require corresponding shared-mesh material IDs; textures and
 LULC rasters are not automatically interpreted.
 
 Stratified area samples cover all configured surface objects. Each represents
-`total configured surface area / sample_count` square metres, making expected
+`total configured surface area / propagation.samples_per_link` square metres, making expected
 scattered power independent of the sample budget. A seeded, unit-magnitude
 random scattering phase is fixed at each sample. Geometry, seed or budget edits
 start a new realization; motion alone never redraws scatterers. Coherent
@@ -62,7 +62,8 @@ explicit model truncation; the physical IF filter rolls off rather than having
 an exact hard range cutoff. At zero Doppler its 4.5 MHz upper corner corresponds
 to roughly 432 m in this chirp mode.
 
-Edit `radar.clutter`, `radar.max_range_m` and `radar.targets` in the
+Edit the shared `propagation.samples_per_link` budget, plus `radar.clutter`,
+`radar.max_range_m` and `radar.targets` in the
 [scenario radios](../scenarios/mmwave-radar/radios.json).
 The [compiler](../src/airsim_rf/dashboard_scenario.py) resolves mesh classes and
 heights. [radar_scattering.py](../src/airsim_rf/radar_scattering.py) owns surface

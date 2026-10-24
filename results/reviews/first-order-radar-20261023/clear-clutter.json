@@ -12,18 +12,18 @@
     "drjit": "1.5.0"
   },
   "source_file_sha256": {
-    "fmcw.py": "4d80457a4f02a2f699abef32592e6b66e91979f47c18d00f603a5ce4f86d4d79",
-    "radar_scattering.py": "98fc5347f7e9881618b831254c308d5e5db999c70dbae03511967ecf87056f02",
-    "dashboard_radar.py": "6f7aa1ee5ee6b8b9fc48f40179e57d4e3fead2892e17899abc9df32ed299d02a"
+    "fmcw.py": "66cbe7b454d2ff0efd502f180ede81ed9cf134a9b19f5cc2c3e395f98c1ce978",
+    "radar_scattering.py": "140c07d9ad3c35d24b0b6d3278e291a5383161aa56030c69dcbef5bfb0a8b872",
+    "dashboard_radar.py": "424e3ee4496e0b38874c1f8e13983b2b7de9c20e1f07cefcb7af4ef96ba0c667"
   },
   "scenario_input_sha256": {
     "PROJECTAIRSIM-LICENSE.txt": "c2cfccb812fe482101a8f04597dfc5a9991a6b2748266c47ac91b6a5aae15383",
-    "README.md": "e4f6f3102313fa700c826a7121df6b4e68facf175dfb8c859a02dfbf258aa7bf",
+    "README.md": "468d1b553b7b8415ded0548c0e8aa1a1186d71ac6e14ff4ebdf63d241730a321",
     "environment.json": "46294d3ccd1bf3468c733d94fb776a1b483475972362bd248f6bb6caa6012921",
     "flight.json": "8680d763b8b418bbfc19609fb0be499d9f90fc3fe1bb65bc945c5e85bbfe71bf",
     "quadrotor.jsonc": "c9ff96a27b32b6d520fbe3273266ad98fcd9a59a39b8d4e96cbf2462284fee10",
     "radar-mode.json": "80a03e248b6425818afa97a08cdca336eb1f9e5c77579f3eed1253bfcad8b196",
-    "radios.json": "2d8c74c1c6eb2fe1366dc999253e6b9022207d0273ea13573aa049614a7226a1",
+    "radios.json": "b5a41175d8760c82a199678bc90b3e9f3cfd39442fa646741bbe2df5772d72bd",
     "scenario.json": "722ef64c55b0827a97261df1ffda7c3427b897fb9e35b69a32b813096b8285be"
   },
   "capture_duration_ms": 4.0,
@@ -58,36 +58,36 @@
     "short screening, no sustained-flight or GPU claim",
     "per-stage timers add diagnostic overhead"
   ],
-  "first_window_ms": 394.72186399507336,
+  "first_window_ms": 361.23601999133825,
   "summary": {
     "service_ms": {
-      "median": 337.14016900921706,
-      "sd": 5.834747329782595,
-      "p95": 345.15957485564286
+      "median": 340.8651184872724,
+      "sd": 9.497389063895454,
+      "p95": 357.11372919467976
     },
     "visibility_ms": {
-      "median": 14.384830967173912,
-      "sd": 0.3627298376718761,
-      "p95": 14.981986736529507
+      "median": 14.007751684403047,
+      "sd": 0.6879091228138408,
+      "p95": 15.179729102237614
     },
     "tone_ms": {
-      "median": 243.93334817432333,
-      "sd": 4.096323007209438,
-      "p95": 249.1421126469504
+      "median": 244.34905847010668,
+      "sd": 6.230623075823368,
+      "p95": 255.88425131281838
     },
     "other_ms": {
-      "median": 79.59264414967038,
-      "sd": 2.158189877868759,
-      "p95": 82.62412692711223
+      "median": 82.31417427305132,
+      "sd": 3.2699872513487707,
+      "p95": 86.77779182617087
     }
   },
-  "wall_seconds_per_signal_second": 84.36683622494456,
+  "wall_seconds_per_signal_second": 85.4912591741595,
   "samples": [
     {
-      "service_ms": 346.3165370048955,
-      "visibility_ms": 14.213198941433802,
-      "tone_ms": 250.96441016648896,
-      "other_ms": 81.13892789697275,
+      "service_ms": 340.3466689924244,
+      "visibility_ms": 14.241274097003043,
+      "tone_ms": 242.74235410848632,
+      "other_ms": 83.36304078693502,
       "retained_paths": {
         "target_echoes": 3,
         "terrain_echoes": 355
@@ -102,10 +102,10 @@
       }
     },
     {
-      "service_ms": 340.4180879879277,
-      "visibility_ms": 14.427979884203523,
-      "tone_ms": 244.36772818444297,
-      "other_ms": 81.62237991928123,
+      "service_ms": 362.2208529850468,
+      "visibility_ms": 15.71077504195273,
+      "tone_ms": 256.93839890300296,
+      "other_ms": 89.57167904009111,
       "retained_paths": {
         "target_echoes": 3,
         "terrain_echoes": 355
@@ -120,10 +120,10 @@
       }
     },
     {
-      "service_ms": 336.28485500230454,
-      "visibility_ms": 13.910574081819504,
-      "tone_ms": 244.4859987590462,
-      "other_ms": 77.88828216143884,
+      "service_ms": 336.5983039839193,
+      "visibility_ms": 13.288643007399514,
+      "tone_ms": 245.1099899772089,
+      "other_ms": 78.19967099931091,
       "retained_paths": {
         "target_echoes": 3,
         "terrain_echoes": 355
@@ -138,10 +138,10 @@
       }
     },
     {
-      "service_ms": 342.665689997375,
-      "visibility_ms": 15.187549113761634,
-      "tone_ms": 244.59535809000954,
-      "other_ms": 82.88278279360384,
+      "service_ms": 325.2447429986205,
+      "visibility_ms": 13.28425807878375,
+      "tone_ms": 234.45546210859902,
+      "other_ms": 77.50502281123772,
       "retained_paths": {
         "target_echoes": 3,
         "terrain_echoes": 355
@@ -156,10 +156,10 @@
       }
     },
     {
-      "service_ms": 343.7455100065563,
-      "visibility_ms": 14.52265790430829,
-      "tone_ms": 246.91486012306996,
-      "other_ms": 82.30799197917804,
+      "service_ms": 350.8716890064534,
+      "visibility_ms": 14.223313890397549,
+      "tone_ms": 254.59584870259278,
+      "other_ms": 82.05252641346306,
       "retained_paths": {
         "target_echoes": 3,
         "terrain_echoes": 355
@@ -174,10 +174,10 @@
       }
     },
     {
-      "service_ms": 337.9954830161296,
-      "visibility_ms": 14.730743831023574,
-      "tone_ms": 243.4989681642037,
-      "other_ms": 79.76577102090232,
+      "service_ms": 342.122030997416,
+      "visibility_ms": 13.909641944337636,
+      "tone_ms": 245.6137290573679,
+      "other_ms": 82.59865999571048,
       "retained_paths": {
         "target_echoes": 3,
         "terrain_echoes": 355
@@ -192,10 +192,10 @@
       }
     },
     {
-      "service_ms": 333.2822600204963,
-      "visibility_ms": 14.260353054851294,
-      "tone_ms": 239.6023896872066,
-      "other_ms": 79.41951727843843,
+      "service_ms": 339.5718190004118,
+      "visibility_ms": 13.973940222058445,
+      "tone_ms": 244.20509295305237,
+      "other_ms": 81.39278582530096,
       "retained_paths": {
         "target_echoes": 3,
         "terrain_echoes": 355
@@ -210,10 +210,10 @@
       }
     },
     {
-      "service_ms": 328.27884299331345,
-      "visibility_ms": 14.3416820501443,
-      "tone_ms": 236.54136297409423,
-      "other_ms": 77.39579796907492,
+      "service_ms": 341.54380901600234,
+      "visibility_ms": 14.530672953696921,
+      "tone_ms": 244.43731392966583,
+      "other_ms": 82.57582213263959,
       "retained_paths": {
         "target_echoes": 3,
         "terrain_echoes": 355
@@ -228,10 +228,10 @@
       }
     },
     {
-      "service_ms": 334.6537679899484,
-      "visibility_ms": 14.05100099509582,
-      "tone_ms": 242.85501803387888,
-      "other_ms": 77.7477489609737,
+      "service_ms": 339.74688200396486,
+      "visibility_ms": 14.041563146747649,
+      "tone_ms": 244.10835112212226,
+      "other_ms": 81.59696773509495,
       "retained_paths": {
         "target_echoes": 3,
         "terrain_echoes": 355
@@ -246,10 +246,10 @@
       }
     },
     {
-      "service_ms": 331.03241497883573,
-      "visibility_ms": 14.55341003020294,
-      "tone_ms": 239.37587474938482,
-      "other_ms": 77.10313019924797,
+      "service_ms": 341.38356798212044,
+      "visibility_ms": 13.84563694591634,
+      "tone_ms": 244.26080301054753,
+      "other_ms": 83.27712802565657,
       "retained_paths": {
         "target_echoes": 3,
         "terrain_echoes": 355

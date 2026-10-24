@@ -173,6 +173,7 @@ def test_actual_sionna_radar_iq_to_detector_and_lossless_archive(tmp_path,terrai
                          'angular':{'x':0.,'y':0.,'z':0.}}}
     receiver.update({'RadarDrone':kin([30,25,150],[-20,0,0])})
     assert len(receiver.targets)==3 and all(t.velocity_m_s==(0.,0.,0.) for t in receiver.targets)
+    if terrain_clutter:assert receiver.radar.clutter.samples_per_link==radio['propagation']['samples_per_link']
     capture=receiver.capture(0,num_samples=40000)['radar_rx0']
     assert set(receiver.radar.last_path_diagnostics)=={t.name for t in receiver.targets}
     assert receiver.truth['target_names']==[t.name for t in receiver.targets]
@@ -229,9 +230,23 @@ def test_invalid_fixed_targets_fail_before_service_launch(tmp_path,change):
     with pytest.raises(ValueError):load(tmp_path/'edited')
 
 
-@pytest.mark.parametrize('field,value',[('sample_count',0),('seed',-1),('enabled','yes'),('materials',{'unknown':{'sigma0_db':-20.,'incidence_exponent':1.}})])
+@pytest.mark.parametrize('field,value',[('seed',-1),('enabled','yes'),('materials',{'unknown':{'sigma0_db':-20.,'incidence_exponent':1.}})])
 def test_invalid_clutter_is_rejected_before_launch(tmp_path,field,value):
     snapshot('mmwave-radar',tmp_path/'edited')
     path=tmp_path/'edited/radios.json';radio=json.loads(path.read_text());radio['radar']['clutter'][field]=value
     path.write_text(json.dumps(radio))
     with pytest.raises(ValueError):load(tmp_path/'edited')
+
+
+@pytest.mark.parametrize('scenario',['drone-orbit','mmwave-radar'])
+def test_shared_propagation_budget_is_validated_and_compiled(tmp_path,scenario):
+    from copy import deepcopy
+    snapshot(scenario,tmp_path/'edited')
+    path=tmp_path/'edited/radios.json';radio=json.loads(path.read_text())
+    radio['propagation']['samples_per_link']=64
+    path.write_text(json.dumps(radio));prepare(tmp_path/'run',scenario_dir=tmp_path/'edited',duration_s=.004)
+    runtime=json.loads((tmp_path/'run/runtime.json').read_text())
+    assert runtime['radios']['propagation']['samples_per_link']==64
+    if scenario=='mmwave-radar':assert 'sample_count' not in runtime['radios']['radar']['clutter']
+    radio['propagation']['samples_per_link']=0;path.write_text(json.dumps(radio))
+    with pytest.raises(ValueError,match='propagation samples'):load(tmp_path/'edited')
