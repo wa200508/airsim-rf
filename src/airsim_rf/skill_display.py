@@ -71,3 +71,30 @@ def legacy_display(frame,scenario):
     for row in result.get('waterfall',[]):
         if not row.get('site_psd_db') and row.get('psd_db'):row['site_psd_db']=[row['psd_db']]
     return result
+
+
+def radar_replay_orientation(frame,scenario):
+    """Presentation-only migration of the known v1 radar archive layout.
+
+    Raw journals, original matrices and detections stay intact. Live display
+    selection remains entirely skill-owned; this adapter is only for replay.
+    """
+    description=frame.get('display',{})
+    if description.get('id')!='radar-rf-skill' or description.get('revision')!='1':return frame
+    panel=next((p for p in description.get('panels',[]) if p.get('id')=='range-doppler'),None)
+    if not panel or panel.get('x',{}).get('data')!={'path':'/radar/range_m'}:return frame
+    data=frame.get('radar',{});ranges=data.get('range_m');velocities=data.get('range_rate_m_s');matrix=data.get('power_db')
+    if not isinstance(ranges,list) or not isinstance(velocities,list) or not isinstance(matrix,list):return frame
+    if len(matrix)!=len(velocities) or not matrix or any(not isinstance(row,list) or len(row)!=len(ranges) for row in matrix):return frame
+    result=deepcopy(frame);description=result['display'];description['revision']='legacy-range-vertical-v1'
+    data=result['radar'];data['replay_power_db']=[list(row) for row in zip(*matrix)]
+    panel=next(p for p in description['panels'] if p.get('id')=='range-doppler')
+    panel['y']={'data':{'path':'/radar/range_m'},'label':'Range','unit':'m'}
+    carrier=frame.get('carrier_hz') or scenario.get('carrier_hz')
+    if isinstance(carrier,(int,float)) and carrier>0:
+        data['replay_doppler_khz']=[v*2*carrier/299792458./1000 for v in velocities]
+        panel['x']={'data':{'path':'/radar/replay_doppler_khz'},'label':'Doppler','unit':'kHz'}
+    else:panel['x']={'data':{'path':'/radar/range_rate_m_s'},'label':'Range rate','unit':'m/s'}
+    panel['values']={'path':'/radar/replay_power_db'}
+    panel['caption']=panel.get('caption','')+' · Archived display orientation adapted; original I/Q and detection unchanged.'
+    return result

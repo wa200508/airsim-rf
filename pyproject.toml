@@ -23,7 +23,7 @@ airsim-rf-worker = "airsim_rf.distributed.worker:main"
 airsim-rf-coordinator = "airsim_rf.distributed.coordinator:main"
 
 [project.optional-dependencies]
-radar = ["radar-skill @ https://github.com/wa200508/Radar-skill/archive/bb78fbd0c7b3506b36ae1ad82b9df78acedbe66c.tar.gz"]
+radar = ["radar-skill @ https://github.com/wa200508/Radar-skill/archive/9c9a57339784f87034e835f836076aaa8691f08a.tar.gz"]
 geometry = ["usd-core>=24.8,<27"]
 airsim = ["projectairsim>=1.1.0"]
 live = ["projectairsim>=1.1.0", "cupy-cuda12x==13.6.0"]

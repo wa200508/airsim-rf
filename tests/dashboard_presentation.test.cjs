@@ -34,7 +34,7 @@ function dashboard(){
  return {context,element,decodes,listeners,draws,drawCalls,requests};
 }
 
-const descriptor=name=>JSON.parse(fs.readFileSync(path.join(__dirname,'../src/airsim_rf/assets/legacy-display-'+name+'.json'),'utf8'));
+const descriptor=name=>JSON.parse(fs.readFileSync(path.join(__dirname,name==='radar'?'fixtures/radar-display-v2.json':'../src/airsim_rf/assets/legacy-display-'+name+'.json'),'utf8'));
 function frame(index){
  return {token:'test',processes:{},ready:false,busy:false,events:[],scenario:{},no_render:false,
   producer:{status:'running',presentation_session:'mission-a',origin_ns:0,sim_elapsed_s:index*.12,position_rf_m:[index,0,200],history:[]},
@@ -170,13 +170,13 @@ test('scenario selector names packaged inputs and disables switching during a mi
 
 test('radar view uses receiver result and labels range and range-rate axes',()=>{
  const ui=dashboard(),state=frame(0);state.camera.available=false;
- state.scenario.skill_kind='direction-finding';state.skill.display=descriptor('radar');state.skill.radar={range_m:[0,10],range_rate_m_s:[-20,20],power_db:[[-10,5],[2,30]],detection:{detected:true,range_m:10,range_rate_m_s:20}};
+ state.scenario.skill_kind='direction-finding';state.skill.display=descriptor('radar');state.skill.radar={range_m:[0,10],range_rate_m_s:[-20,20],doppler_khz:[-10,10],power_db:[[-10,5],[2,30]],detection:{detected:true,range_m:10,range_rate_m_s:20}};
  ui.context.render(state);
  assert.ok(ui.element('skill-display').children.some(n=>n.id==='skill-panel-range-doppler'));
  assert.ok(!ui.element('skill-display').children.some(n=>n.id==='skill-panel-spatial'));
- assert.match(ui.element('skill-detection').children[1].children[1].textContent,/10.0 m/);
+ assert.match(ui.element('skill-detection').children.find(row=>row.children[0].textContent==='Range').children[1].textContent,/10.0 m/);
  const labels=ui.drawCalls.filter(c=>c.id==='skill-range-doppler'&&c.method==='fillText').map(c=>c.args[0]);
- assert.ok(labels.includes('Range (m)')&&labels.includes('Range rate (m/s)'));
+ assert.ok(labels.includes('Range (m)')&&labels.includes('Doppler (kHz)'));
 });
 
 test('a third RF skill supplies metrics, scatter and a table without dashboard-specific code',async()=>{
@@ -216,4 +216,29 @@ test('display bindings use escaped JSON pointers and unsupported versions clear 
  state.skill.display={schema_version:99};ui.context.render(state);
  assert.equal(ui.element('skill-display').children.length,1);
  assert.match(ui.element('skill-display').children[0].textContent,/Unsupported/);
+});
+
+
+test('range-Doppler cells use Doppler horizontally and increasing range vertically',()=>{
+ const ui=dashboard(),state=frame(0);state.camera.available=false;state.skill.display=descriptor('radar');
+ state.skill.display.panels.find(p=>p.id==='range-doppler').x.range=[-1,1];state.skill.display.panels.find(p=>p.id==='range-doppler').y.range=[0,20];
+ state.skill.radar={range_m:[0,10,20],doppler_khz:[-1,1],power_db:[[-100,-100],[-100,-100],[-100,15]],detection:{detected:false}};
+ ui.context.render(state);
+ const cells=ui.drawCalls.filter(c=>c.id==='skill-range-doppler'&&c.method==='fillRect');assert.equal(cells.length,6);
+ assert.ok(cells.at(-1).args[0]>cells[0].args[0],'positive Doppler is right');
+ assert.ok(cells.at(-1).args[1]<cells[0].args[1],'larger range is higher');
+ const before=JSON.stringify(state.skill),requests=ui.requests.length,clock=ui.element('clock').textContent;
+ ui.element('skill-scale-range-doppler').value='1';ui.element('skill-scale-range-doppler').onchange();
+ assert.equal(JSON.stringify(state.skill),before);assert.equal(ui.requests.length,requests);assert.equal(ui.element('clock').textContent,clock);
+ const labels=ui.drawCalls.filter(c=>c.id==='skill-range-doppler'&&c.method==='fillText').map(c=>c.args[0]);
+ assert.ok(labels.some(s=>String(s).includes('-10 to 45')));
+});
+
+test('explicit matrix limits clip bins at their physical coordinates',()=>{
+ const ui=dashboard(),description=descriptor('radar');description.panels=description.panels.filter(p=>p.id==='range-doppler');
+ description.panels[0].x.range=[-2,2];description.panels[0].y.range=[0,40];
+ ui.context.RFSkillDisplay.render(ui.element('skill-display'),{display:description,radar:{range_m:[0,10,20],doppler_khz:[-1,1],power_db:[[1,2],[3,4],[5,6]]}});
+ const cells=ui.drawCalls.filter(c=>c.id==='skill-range-doppler'&&c.method==='fillRect');
+ assert.ok(cells.at(-1).args[1]>60,'20 m remains near middle of 0–40 m viewport');
+ assert.ok(ui.drawCalls.some(c=>c.id==='skill-range-doppler'&&c.method==='clip'));
 });

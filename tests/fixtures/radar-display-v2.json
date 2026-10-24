@@ -1,0 +1,208 @@
+{
+  "schema_version": 1,
+  "id": "radar-rf-skill",
+  "revision": "2",
+  "title": "Radar RF Skill",
+  "selectors": [
+    {
+      "id": "receiver",
+      "label": "Receiver I/Q stream",
+      "options": [
+        {
+          "value": "0",
+          "label": "radar \u00b7 element 0",
+          "available": {
+            "path": "/receiver_spectra/0/psd/frequency_khz"
+          }
+        }
+      ]
+    }
+  ],
+  "panels": [
+    {
+      "id": "psd",
+      "type": "line",
+      "title": "Radar receiver I/Q spectrum",
+      "x": {
+        "data": {
+          "path": "/receiver_spectra/{receiver}/psd/frequency_khz"
+        },
+        "label": "Beat-frequency offset",
+        "unit": "kHz"
+      },
+      "y": {
+        "label": "PSD",
+        "unit": "dB re 1 V\u00b2/Hz",
+        "range": [
+          -120,
+          -30
+        ]
+      },
+      "series": {
+        "path": "/receiver_spectra/{receiver}/psd/density_db_v2_hz"
+      },
+      "caption": "Dechirped, bias-subtracted ADC volts. Zero-filled gate gaps retain PRI timing."
+    },
+    {
+      "id": "waterfall",
+      "type": "waterfall",
+      "title": "Radar receiver I/Q waterfall",
+      "x": {
+        "data": {
+          "path": "/receiver_spectra/{receiver}/psd/frequency_khz"
+        },
+        "label": "Beat-frequency offset",
+        "unit": "kHz"
+      },
+      "y": {
+        "label": "Acquisition windows \u00b7 newest at top"
+      },
+      "rows": {
+        "path": "/waterfall",
+        "each": "/site_psd_db/{receiver}"
+      },
+      "color": {
+        "label": "PSD",
+        "unit": "dB re 1 V\u00b2/Hz",
+        "range": [
+          -120,
+          -45
+        ]
+      }
+    },
+    {
+      "id": "detection",
+      "type": "metrics",
+      "title": "Radar candidate",
+      "items": [
+        {
+          "label": "Median FFT-bin power",
+          "value": {
+            "path": "/radar/median_bin_power_dbv2"
+          },
+          "unit": "dB re 1 V\u00b2",
+          "precision": 1
+        },
+        {
+          "label": "Peak FFT-bin power",
+          "value": {
+            "path": "/radar/peak_bin_power_dbv2"
+          },
+          "unit": "dB re 1 V\u00b2",
+          "precision": 1
+        },
+        {
+          "label": "Detection",
+          "value": {
+            "path": "/radar/detection/detected"
+          },
+          "true_label": "DETECTED",
+          "false_label": "NO DETECTION"
+        },
+        {
+          "label": "Range",
+          "value": {
+            "path": "/radar/detection/range_m"
+          },
+          "unit": "m",
+          "precision": 1,
+          "valid_when": {
+            "path": "/radar/detection/detected"
+          }
+        },
+        {
+          "label": "Range rate",
+          "value": {
+            "path": "/radar/detection/range_rate_m_s"
+          },
+          "unit": "m/s",
+          "precision": 1,
+          "valid_when": {
+            "path": "/radar/detection/detected"
+          }
+        }
+      ],
+      "caption": "One strongest candidate; 18 dB contrast above median map power. This is not calibrated CFAR."
+    },
+    {
+      "id": "range-doppler",
+      "type": "heatmap",
+      "title": "Range\u2013Doppler map",
+      "x": {
+        "data": {
+          "path": "/radar/doppler_khz"
+        },
+        "label": "Doppler",
+        "unit": "kHz",
+        "range": [
+          -12.499999999999998,
+          12.499999999999998
+        ]
+      },
+      "y": {
+        "data": {
+          "path": "/radar/range_m"
+        },
+        "label": "Range",
+        "unit": "m",
+        "range": [
+          0,
+          479.6679328
+        ]
+      },
+      "values": {
+        "path": "/radar/power_db"
+      },
+      "color": {
+        "label": "Contrast above median",
+        "unit": "dB",
+        "range": [
+          -5,
+          15
+        ],
+        "presets": [
+          {
+            "label": "Noise detail (\u22125 to +15 dB)",
+            "range": [
+              -5,
+              15
+            ]
+          },
+          {
+            "label": "Strong echoes (\u221210 to +45 dB)",
+            "range": [
+              -10,
+              45
+            ]
+          },
+          {
+            "label": "Wide dynamic range (\u221230 to +45 dB)",
+            "range": [
+              -30,
+              45
+            ]
+          }
+        ]
+      },
+      "caption": "Range increases upward; full signed Doppler spectrum. Positive Doppler is receding. Color is contrast to the current map median, not calibrated SNR; scale changes never alter I/Q or detection. The map retains FMCW range/Doppler coupling."
+    }
+  ],
+  "histories": [
+    {
+      "key": "waterfall",
+      "limit": 60,
+      "row": {
+        "timestamp_ns": {
+          "path": "/timestamp_ns"
+        },
+        "psd_db": {
+          "path": "/psd/density_db_v2_hz"
+        },
+        "site_psd_db": {
+          "path": "/receiver_spectra",
+          "each": "/psd/density_db_v2_hz"
+        }
+      }
+    }
+  ]
+}

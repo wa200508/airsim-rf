@@ -153,6 +153,7 @@ class RecordingStore:
                 skill.update(history=[index['rows'][e]['history'] for e in history],
                     waterfall=[index['rows'][e]['waterfall'] for e in index['epochs'][max(0,end-60):end]])
                 skill=_display.legacy_display(skill,base['scenario'])
+            skill=_display.radar_replay_orientation(skill,base['scenario'])
             timeline.update(frame_time_s=times[at],frame_index=at)
             base.update(producer=producer,skill=skill,transport=skill,
                 synchronization={'status':'matched','rf_sim_time_ns':epoch,'latest_rf_sim_time_ns':pairs[-1][0],

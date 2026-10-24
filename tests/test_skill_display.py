@@ -66,5 +66,21 @@ def test_independent_skill_descriptions_follow_published_schema():
     from pathlib import Path
     schema=json.loads((Path(__file__).parents[1]/'docs/schemas/rf-skill-display-v1.schema.json').read_text())
     jsonschema.Draft202012Validator.check_schema(schema)
-    arrays={'sites':[{'id':'Site 0'},{'id':'Site 1'}]}
+    arrays={'sites':[{'id':'Site 0'},{'id':'Site 1'}],'sample_rate_hz':10e6,'acquisition':{'pri_s':40e-6,'bandwidth_hz':50e6,'chirp_duration_s':32e-6}}
     for module in (df,radar):jsonschema.validate(module.describe_display(arrays),schema)
+
+
+
+def test_archived_radar_orientation_migration_preserves_original_samples_and_matrix():
+    from pathlib import Path
+    from airsim_rf.skill_display import radar_replay_orientation
+    description=json.loads((Path(__file__).parents[1]/'src/airsim_rf/assets/legacy-display-radar.json').read_text())
+    frame={'carrier_hz':77e9,'display':description,'radar':{'range_m':[0,10,20],
+        'range_rate_m_s':[-1,1],'power_db':[[1,2,3],[4,5,6]],'detection':{'range_m':10}}}
+    original=deepcopy(frame);view=radar_replay_orientation(frame,{})
+    assert frame==original and view['radar']['power_db']==original['radar']['power_db']
+    assert view['radar']['replay_power_db']==[[1,4],[2,5],[3,6]]
+    assert view['radar']['detection']==original['radar']['detection']
+    panel=next(p for p in view['display']['panels'] if p['id']=='range-doppler')
+    assert panel['x']['label']=='Doppler' and panel['y']['label']=='Range'
+    assert radar_replay_orientation(view,{}) is view

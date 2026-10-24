@@ -69,10 +69,18 @@
   const ys=history?Array.from({length:rows.length},(_,i)=>i):binding(frame,panel.y?.data,vars)||[];
   const chart=axes(canvas,panel.x?.range||bounds(xs),panel.y?.range||bounds(ys),panel.x,panel.y),{ctx,w,h,m,pw,ph}=chart;
   if(!rows.length||!xs.length||!ys.length){noData(ctx,w,h);return;}
-  for(let row=0;row<rows.length;row++)for(let col=0;col<rows[row].length;col++){
+  // Paint bins at their numeric coordinates; explicit axis limits must not
+  // stretch or relabel a cropped matrix. The first row has the lowest y value.
+  const edges=values=>values.map((v,i)=>[i?(values[i-1]+v)/2:v-(values[1]-v||1)/2,
+                                           i+1<values.length?(v+values[i+1])/2:v+(v-values[i-1]||1)/2]);
+  const xe=edges(xs),ye=edges(ys);
+  ctx.save();ctx.beginPath();ctx.rect(m.l,m.t,pw,ph);ctx.clip();
+  for(let row=0;row<Math.min(rows.length,ys.length);row++)for(let col=0;col<Math.min(rows[row].length,xs.length);col++){
    const v=rows[row][col];if(!Number.isFinite(v))continue;ctx.fillStyle=heatColor(v,panel.color.range);
-   ctx.fillRect(m.l+col*pw/xs.length,m.t+(rows.length-row-1)*ph/rows.length,pw/xs.length+1,ph/rows.length+1);
+   const x0=chart.px(xe[col][0]),x1=chart.px(xe[col][1]),y0=chart.py(ye[row][0]),y1=chart.py(ye[row][1]);
+   ctx.fillRect(Math.min(x0,x1),Math.min(y0,y1),Math.abs(x1-x0)+.5,Math.abs(y1-y0)+.5);
   }
+  ctx.restore();
   // Explicit color legend: every RF skill supplies its quantity and units.
   ctx.textAlign='center';ctx.fillStyle='#a0b1bd';ctx.fillText(`${label(panel.color)} · ${panel.color.range[0]} to ${panel.color.range[1]}`,m.l+pw/2,11);
  }
@@ -86,6 +94,7 @@
    if(!['line','scatter','polar','heatmap','waterfall','metrics','table'].includes(panel.type))continue;
    if(['polar'].includes(panel.type)&&(!Array.isArray(panel.y?.range)||panel.y.range[1]<=panel.y.range[0]))throw Error('Polar display requires an increasing radial range');
    if(['waterfall','heatmap'].includes(panel.type)&&(!Array.isArray(panel.color?.range)||panel.color.range[1]<=panel.color.range[0]))throw Error('Matrix display requires an increasing color range');
+   if(panel.color?.presets&&(!Array.isArray(panel.color.presets)||panel.color.presets.length>8||panel.color.presets.some(p=>!p||typeof p.label!=='string'||!Array.isArray(p.range)||p.range.length!==2||!p.range.every(Number.isFinite)||p.range[1]<=p.range[0])))throw Error('Invalid display color presets');
   }
   return manifest;
  }
@@ -101,10 +110,15 @@
    const nodes=[heading];
    for(const panel of manifest.panels){const article=node('article',{className:'panel skill-widget'}),head=node('div',{className:'panel-head'});
     article.id='skill-panel-'+panel.id;head.appendChild(node('h3',{textContent:panel.title||panel.id}));article.appendChild(head);
-    const content=node(['metrics','table'].includes(panel.type)?'div':'canvas',{id:'skill-'+panel.id,className:panel.type==='polar'?'plot spatial-polar':panel.type==='metrics'?'skill-metrics':panel.type==='table'?'skill-table':'plot'});
+    const widget={definition:panel};
+    if(panel.color?.presets?.length){const picker=node('select',{id:'skill-scale-'+panel.id});picker.setAttribute('aria-label','Color scale for '+(panel.title||panel.id));
+     picker.replaceChildren(...panel.color.presets.map((preset,index)=>node('option',{value:String(index),textContent:preset.label})));
+     widget.colorRange=panel.color.presets[0].range;picker.value='0';picker.onchange=()=>{widget.colorRange=panel.color.presets[Number(picker.value)]?.range||panel.color.range;paint(state);};head.appendChild(picker);}
+
+    const content=node(['metrics','table'].includes(panel.type)?'div':'canvas',{id:'skill-'+panel.id,className:panel.type==='polar'?'plot spatial-polar':panel.type==='metrics'?'skill-metrics':panel.type==='table'?'skill-table':panel.type==='heatmap'?'plot matrix-plot':'plot'});
     content.setAttribute('aria-label',panel.title||panel.id);article.appendChild(content);
     if(panel.legend?.length){const legend=node('div',{className:'skill-legend'});panel.legend.forEach((text,index)=>{const entry=node('span',{textContent:String(text)});entry.style.color=colors[index%colors.length];legend.appendChild(entry);});article.appendChild(legend);}
-    const caption=node('p',{className:'note',id:'skill-caption-'+panel.id});article.appendChild(caption);nodes.push(article);state.panels.push({definition:panel,content,caption});
+    const caption=node('p',{className:'note',id:'skill-caption-'+panel.id});article.appendChild(caption);nodes.push(article);state.panels.push(Object.assign(widget,{content,caption}));
    }
    container.replaceChildren(...nodes);
   }
@@ -123,7 +137,7 @@
     if(panel.type==='line'||panel.type==='scatter')line(widget.content,panel,frame,vars);
     else if(panel.type==='polar'){polar(widget.content,panel,frame,vars);const angles=binding(frame,panel.x?.data,vars)||[];
      if(angles.length&&angles.at(-1)-angles[0]<Number(panel.x.period||360)-1)widget.caption.textContent+=` · Partial coverage: ${angles[0]}° to ${angles.at(-1)}° only`;}
-    else if(panel.type==='heatmap'||panel.type==='waterfall')matrix(widget.content,panel,frame,vars);
+    else if(panel.type==='heatmap'||panel.type==='waterfall')matrix(widget.content,widget.colorRange?{...panel,color:{...panel.color,range:widget.colorRange}}:panel,frame,vars);
     else if(panel.type==='metrics'){
      widget.content.replaceChildren(...(panel.items||[]).map(item=>{let value=binding(frame,item.value,vars),text=item.empty||'—';
       if(item.valid_when&&!binding(frame,item.valid_when,vars))value=null;
