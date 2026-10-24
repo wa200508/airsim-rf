@@ -62,7 +62,9 @@ jobs:
       - name: Check source/application architecture boundaries
         run: python3 scripts/check_architecture.py
       - name: Check maintained documentation links
-        run: python3 scripts/check_docs.py
+        run: |
+          python3 scripts/check_docs.py
+          python3 scripts/update_profiling_overview.py --check
       - name: Check synchronized dashboard presentation with delayed video
         run: node --test tests/dashboard_presentation.test.cjs
       - uses: docker/setup-buildx-action@v3

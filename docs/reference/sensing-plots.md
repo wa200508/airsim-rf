@@ -1,11 +1,15 @@
+[Documentation](../README.md) · [Scenarios](../../scenarios/README.md) · [Run dashboard](../dashboard.md)
+
 # RF sensing figures and interpretation
+
+> **Advanced / offline reference.** The two maintained dashboard demos start at the [scenario catalog](../../scenarios/README.md) and [dashboard guide](../dashboard.md). The examples on this page have their own inputs and qualification scope.
 
 ## Physical scenarios behind the figures
 
 These are **two separate offline experiments**, not a single radar/ESM mission.
 The diagrams below use the recorded simulation source data. They show RF Cartesian
 coordinates and synthetic terrain, not a screenshot of a live AirSim flight.
-[Diagram provenance and source hashes](figures/sensing_scenarios.json) are saved
+[Diagram provenance and source hashes](../figures/sensing_scenarios.json) are saved
 with the figures.
 
 The current mesh spans **0–30 m**, including zero-height patches. The ESM
@@ -13,9 +17,9 @@ radios climb where needed to maintain at least 5 m clearance; vertical velocity
 follows the local terrain slope. This is a scripted trajectory, not autopilot
 dynamics. Per-capture poses and clearances are recorded in the source report.
 
-![Terrain and scripted radio routes in three dimensions](figures/sensing_esm_scene_3d.png)
+![Terrain and scripted radio routes in three dimensions](../figures/sensing_esm_scene_3d.png)
 
-![Two moving CW beacons and two passive receivers](figures/sensing_esm_scenario.png)
+![Two moving CW beacons and two passive receivers](../figures/sensing_esm_scenario.png)
 
 **ESM / passive reception.** Open symbols mark the starting positions; filled
 symbols mark the final capture at 5.5 s. Arrows show the intervening motion.
@@ -33,14 +37,14 @@ in that waterfall. The weak-line plot instead compares twelve separate captures
 along those routes. The passive delay/frequency cuts compare the two receivers'
 recordings; the narrowband tones provide poor delay discrimination.
 
-[Mesh visibility checks](figures/sensing_visibility.json) show that the
+[Mesh visibility checks](../figures/sensing_visibility.json) show that the
 final capture's **Beacon A → Receiver 1 direct path is blocked by terrain**;
 the other three direct links are clear. The blocked beacon can still arrive
 through reflected or diffuse paths. This explains why its received band is
 much weaker at Receiver 1, despite A's higher transmit power. The plan-view
 diagram marks the blocked direct link with a red cross.
 
-![Downward-looking radar scanning two hills and a swale](figures/sensing_radar_scenario.png)
+![Downward-looking radar scanning two hills and a swale](../figures/sensing_radar_scenario.png)
 
 **Terrain radar.** A downward-looking TX/RX pair moves at 10 m/s at RF height
 40 m (at least 10 m above the tallest terrain), with a 2 m baseline in RF x. The elevation view uses the actual DEM
@@ -77,7 +81,7 @@ or conventional target range–Doppler maps.
 
 ## ESM waterfall from a contiguous received capture
 
-![Frequency-time PSD waterfalls for the two receivers](figures/sensing_esm_waterfall.png)
+![Frequency-time PSD waterfalls for the two receivers](../figures/sensing_esm_waterfall.png)
 
 **Figure 1.** Each panel uses one receiver's final contiguous 4,096-sample
 12-bit ADC I/Q block, starting at simulation epoch 5.5 s. It shows approximately
@@ -94,7 +98,7 @@ transform. The receiver remains a specification-based, uncalibrated model.
 
 ## Radar profiles and estimation error
 
-![Matched-filter delay profiles and bandwidth comparison](figures/sensing_radar_delay_profiles.png)
+![Matched-filter delay profiles and bandwidth comparison](../figures/sensing_radar_delay_profiles.png)
 
 **Figure 2.** Matched-filter profiles at the hill, swale and second hill, using
 the same traced channels with 200 MHz and 20 MHz rectangular LFM pulses.
@@ -103,7 +107,7 @@ Each site's two curves share a power reference. Nominal total-path-length
 resolution is `c/B`: about 1.50 m and 15.0 m. Dotted lines are independent
 midpoint-geometry references; they do not generate the I/Q.
 
-![Estimator scatter and empirical absolute error CDF](figures/sensing_radar_error.png)
+![Estimator scatter and empirical absolute error CDF](../figures/sensing_radar_error.png)
 
 **Figure 3.** I/Q-peak equivalent-height estimates versus the DEM midpoint
 reference, and the absolute-error CDF over 91 scan positions. RMSE is 0.9130 m.
@@ -119,7 +123,7 @@ would not fix that missing measurement.
 
 ## ESM spectra and weak-line measurements
 
-![Input-referred power spectral density](figures/sensing_esm_spectrum.png)
+![Input-referred power spectral density](../figures/sensing_esm_spectrum.png)
 
 **Figure 4.** Final-capture PSD: filtered analog I/Q, simulated 12-bit ADC output,
 and the numeric 8-bit control. Welch processing uses 1,024-sample Hann segments,
@@ -128,7 +132,7 @@ Hann equivalent noise bandwidth is 2.929688 kHz. PSD is in dBm/Hz at the declare
 50 Ω input. Markers indicate known beacon frequencies with clock offsets,
 excluding path Doppler. The 8-bit control is not a different physical SDR.
 
-![Weak-emitter spectral prominence across captures](figures/sensing_esm_line_prominence.png)
+![Weak-emitter spectral prominence across captures](../figures/sensing_esm_line_prominence.png)
 
 **Figure 5.** Weak beacon B's maximum PSD within ±5 kHz of its known frequency,
 divided by the median local PSD floor 15–60 kHz away. This is spectral prominence,
@@ -138,7 +142,7 @@ trials and threshold calibration would be needed for a defensible ROC.
 
 ## Passive-geolocation diagnostics as line plots
 
-![Delay and frequency cuts through interreceiver ambiguity](figures/sensing_passive_cuts.png)
+![Delay and frequency cuts through interreceiver ambiguity](../figures/sensing_passive_cuts.png)
 
 **Figure 6.** CAF delay cuts at peak frequency and frequency cuts at peak lag,
 for the two recorded receiver channels. Positive lag means receiver 2 arrives
@@ -154,7 +158,7 @@ interpolation; it is not an estimated synchronization procedure. The broad delay
 ridge does not establish a reliable TDOA estimate. These are interreceiver
 ambiguity diagnostics, not target range–Doppler responses.
 
-![Conditional TDOA and FDOA geometry](figures/sensing_passive_geometry.png)
+![Conditional TDOA and FDOA geometry](../figures/sensing_passive_geometry.png)
 
 **Figure 7.** Loci from recorded epoch-zero poses/velocities for beacon A:
 TDOA 187.43 ns and FDOA 10.57 Hz. Emitter height and velocity are held at truth,
@@ -182,8 +186,8 @@ python benchmarks/generate_sensing_figures.py
 python benchmarks/generate_sensing_scenarios.py
 ```
 
-[Processed numerical products](figures/sensing_products.npz) and
-[window definitions, source hashes and processing parameters](figures/sensing_products.json)
+[Processed numerical products](../figures/sensing_products.npz) and
+[window definitions, source hashes and processing parameters](../figures/sensing_products.json)
 are saved beside the figures. The plotting commands use the recorded source
 data and preserve the stated processing definitions. A genuine radar range–Doppler figure requires a new
 coherent acquisition with its pulse timing, phase model, CPI and Doppler ambiguity
@@ -207,18 +211,18 @@ beacon can still contribute reflected/diffuse power; this table is not PSD-bin
 power. Values are derived from the canonical reports by
 `scripts/update_sensing_summary.py`.
 
-![Received link powers and direct-path blockage over the capture epochs](figures/sensing_esm_link_power.png)
+![Received link powers and direct-path blockage over the capture epochs](../figures/sensing_esm_link_power.png)
 
 Crosses mark a terrain-blocked direct link; power includes other retained paths.
 The lines connect separate capture summaries and do not represent a continuously
 recorded waveform between epochs.
 
-![Radio altitude and terrain height at each capture](figures/sensing_esm_clearance.png)
+![Radio altitude and terrain height at each capture](../figures/sensing_esm_clearance.png)
 
 The clearance plots show recorded acquisition poses, with at least 5 m separation
 from the triangle terrain. They are a geometric trajectory prescription.
 
-![Terrain section beneath the final blocked link](figures/sensing_esm_blockage.png)
+![Terrain section beneath the final blocked link](../figures/sensing_esm_blockage.png)
 
 The section samples 1,001 points along the actual final Beacon A–Receiver 1
 segment. Red shading identifies terrain above that line. Actual mesh visibility

@@ -1,3 +1,5 @@
+[Documentation](README.md) · [Scenarios](../scenarios/README.md) · [Run dashboard](dashboard.md)
+
 # Editable scenario packages
 
 > The deployed receiver application is now the separately maintained
@@ -87,7 +89,7 @@ transmitters have independent waveform buffers and power settings.
 - `type: heightfield`: `x_m`, `y_m`, and `heights_m[y][x]`, explicit `materials`,
   the terrain's `material`, `scene_id`, `revision` and `geodetic_anchor`.
 - `type: geometry`: `file` references a neighbouring validated
-  [shared-geometry document](geometry-contract.md), plus `geodetic_anchor`. All
+  [shared-geometry document](reference/geometry-contract.md), plus `geodetic_anchor`. All
   its objects are exported to both Sionna and Unreal using their transforms.
   Use absolute receiver heights when there is no heightfield.
 
@@ -105,7 +107,7 @@ Each `flight.json` actor names its own vehicle file, initial `position_rf_m`,
 
 Add transmitter actors and bind them by ID in `radios.json`. In the one-way mode, dashboard
 receiver sites are fixed coherent arrays; moving-receiver capture exists in the
-separate [live API](live-workflow.md) and is not implicitly enabled by this schema.
+separate [live API](reference/live-workflow.md) and is not implicitly enabled by this schema.
 Vehicle configurations must support the native flight-control API used by this
 runtime. The first TX supplies the dashboard's direct-path diagnostic; received
 I/Q includes **all** configured transmitters. The external Direction Finding RF Skill
@@ -144,7 +146,7 @@ use them or its own declared command arguments. Your image supplies its own entr
 listed command is its argument vector. A null control port publishes no gRPC
 endpoint. `--skill-image` can override the configured image for one invocation.
 
-The consumer must implement the [neutral TCP v2 sample/window-commit contract](iq-stream.md),
+The consumer must implement the [neutral TCP v2 sample/window-commit contract](reference/iq-stream.md),
 return HTTP 200 on `/health` with `complete_windows >= 1` after processing the
 initial startup window, and atomically publish `/results/<timestamp_ns>.json`
 for synchronized replay. A minimal result contains its neutral `timestamp_ns`;

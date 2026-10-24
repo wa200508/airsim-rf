@@ -1,3 +1,5 @@
+[Documentation](README.md) · [Scenarios](../scenarios/README.md) · [Run dashboard](dashboard.md)
+
 # Where to find the code
 
 **Scenario choices are now data in one directory.** Start with
@@ -117,7 +119,7 @@ The archive also retains raw receiver I/Q when `mission.record_iq` is enabled;
 see [bulk capture and RF-skill replay](iq-replay.md). Source and
 application journals meet only in [dashboard_recording.py](../src/airsim_rf/dashboard_recording.py).
 See the [boundary guide](skill-boundary.md), [dashboard operations](dashboard.md),
-[interfaces](interfaces.md) and [scenario-package schema](scenarios.md).
+[interfaces](reference/interfaces.md) and [scenario-package schema](scenarios.md).
 
 Other offline radar/FMCW examples and renderer benchmarks remain separate
 workflows. Their point-target/LFM scenarios do not configure the live SDR

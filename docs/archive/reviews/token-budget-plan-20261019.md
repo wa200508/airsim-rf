@@ -1,8 +1,8 @@
 # Project-specific usage plan — 19 October 2026
 
 > Historical planning snapshot. Priorities 1 and 2 resumed and closed on 20 October;
-> see the [closure evidence](../../results/reviews/priority1-20261020/REPORT.md).
-> Priority 2 acceptance is [recorded separately](../../results/reviews/priority2-20261020/REPORT.md).
+> see the [closure evidence](../../../results/reviews/priority1-20261020/REPORT.md).
+> Priority 2 acceptance is [recorded separately](../../../results/reviews/priority2-20261020/REPORT.md).
 > Saved allowance readings and estimates below are dated, not current account state.
 
 Project execution remains paused. This is planning and read-only usage analysis.

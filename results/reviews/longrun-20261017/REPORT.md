@@ -1,5 +1,7 @@
 # Longer moving specular capture — 17 October 2026
 
+> Documentation note: reported measurements are preserved. Local artifacts absent from this repository are shown as file references rather than download links.
+
 **Passed for a controlled 4.8-second flight**, ten times the earlier 0.480-second
 captures. Two real ProjectAirSim Runtime drones move apart above flat ground;
 RF propagation includes the direct and ground-specular paths. Both flight
@@ -37,23 +39,23 @@ with capture duration; this change bounds I/Q analysis working arrays.
 Focused regression coverage compares streaming statistics with a materialized
 reference using unequal, overlapping windows, different ADC scales, a continuous
 IIR filter and the injected reset. Inspector checks include byte counts, SHA-256,
-code extrema and nonzero fraction. [Validation](validation.log): **21 passed,
+code extrema and nonzero fraction. Validation (`validation.log`; local artifact, not checked in): **21 passed,
 1 skipped** (optional SigMF package absent in this container). The streaming inspector's entire result exactly matches the
 original capture inspection for this 38.4 MB recording.
 
 The capture uses the existing `--duration-ms` extension, which extends both the
-flight command and finite source waveform. [Motion](specular/motion.json),
-[I/Q analysis](specular/diffuse-iq.json),
-[negative control](specular/diffuse-negative-control.json),
-[inspection](streaming-inspection.json),
-[manifest](specular/capture/manifest.json), exported channels, trajectories and
+flight command and finite source waveform. Motion (`specular/motion.json`; local artifact, not checked in),
+I/Q analysis (`specular/diffuse-iq.json`; local artifact, not checked in),
+negative control (`specular/diffuse-negative-control.json`; local artifact, not checked in),
+inspection (`streaming-inspection.json`; local artifact, not checked in),
+manifest (`specular/capture/manifest.json`; local artifact, not checked in), exported channels, trajectories and
 generated scene configurations are retained. Raw I/Q remains in ignored
 `recordings/longrun-specular-20261017`, identified by the inspection hash.
-[Source hashes](source-sha256.json) identify the qualification and analysis tools.
+Source hashes (`source-sha256.json`; local artifact, not checked in) identify the qualification and analysis tools.
 
 ## Reproduction and remaining priorities
 
-Start the Runtime as described in the [live guide](../../../docs/live-workflow.md).
+Start the Runtime as described in the [live guide](../../../docs/reference/live-workflow.md).
 Inside the existing P100 environment, with the checkout on `PYTHONPATH`:
 
 ```bash
@@ -66,7 +68,7 @@ python scripts/inspect_live_recording.py recordings/longrun-specular-new/capture
 ```
 
 The dedicated Runtime container was stopped after capture and its
-[server log](server.log) retained. GPU execution used `airsim-rf:p100-modern-gpu`
+server log (`server.log`; local artifact, not checked in) retained. GPU execution used `airsim-rf:p100-modern-gpu`
 with the explicit Pascal adapter. The recorded service ratio is 6.465 wall
 seconds per signal second; this shared-host correctness run is not a throughput
 comparison.

@@ -1,3 +1,5 @@
+[Documentation](../README.md) · [Scenarios](../../scenarios/README.md) · [Run dashboard](../dashboard.md)
+
 # Send I/Q to a separate processor
 
 The experimental TCP adapter forwards the same post-ADC complex volts as the
@@ -38,7 +40,7 @@ python scripts/check_iq_transport.py recordings/network-run recordings/consumer.
 
 For multiple receivers, add radio mappings to the scenario. They share elapsed
 simulation time: two streams of 0.120 seconds are still 0.120 simulated seconds,
-not 0.240. [Actual one-/two-receiver evidence](../results/reviews/iq-transport-20261015/REPORT.md).
+not 0.240. [Actual one-/two-receiver evidence](../../results/reviews/iq-transport-20261015/REPORT.md).
 
 ## Delivery and failure behavior
 

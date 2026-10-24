@@ -1,5 +1,7 @@
 # Priority 1 complete — 20 October 2026
 
+> Documentation note: reported measurements are preserved. Local artifacts absent from this repository are shown as file references rather than download links.
+
 **Passed: simulator and RF geometry match for static shared environments with
 moving radios in the pinned stack.** The readiness list's first priority is
 closed. No simulator rebuild was needed. Package consolidation remains priority 2;
@@ -10,7 +12,7 @@ no package was published, released or delivered.
 [Machine closure audit](closure.json) passes all 20 checks. It verifies that
 collision-probe and capture bundles have identical geometry content hashes,
 checks every recorded geometry epoch, and independently reads every captured
-sample with official SigMF 1.13.0. [Focused regressions](regressions.log):
+sample with official SigMF 1.13.0. Focused regressions (`regressions.log`; local artifact, not checked in):
 **50 passed, no skips**. These cover native USD instance proxies, centimetre units,
 reflected winding, baked shear/reflection, bundle integrity, false-success mesh
 loading, stale geometry and failure before sample generation.
@@ -19,29 +21,29 @@ loading, stale geometry and failure before sample generation.
 | --- | --- |
 | Shared scene geometry | OpenUSD triangles generate both Blocks GLB collision meshes and RF PLY/XML. The scene includes ground, an asymmetric sloping roof, rotated wall and obstruction screen. No packaged nonprimitive mesh assertion is needed. |
 | Coordinates, transforms, materials and revisions | Explicit stage units/frame, affine local-to-NED transforms, corrected winding, declared RF properties and content hashes survive into bundles and per-window provenance. Visual materials do not supply RF properties. |
-| Independent intersections | [Combined-scene probes](combined-mesh-probe/report.json): **426 Unreal CPU LiDAR returns**, all four object identities, compared with CPU triangle intersections and Mitsuba CUDA rays. Maximum CPU error **0.0458 mm**, GPU error **0.0562 mm**, gate **1 mm**. Roof and screen distinguish the mesh from a box surrogate. |
-| Moving turns, obstruction and first-order reflection in matching scenes | [Combined capture](combined/motion.json): both fast-physics radios turn and move, with nonzero aperture mounts. All 40 direct-visibility predictions match independent shared-triangle intersections; the direct path disappears and returns while the ground reflection remains in every window. |
-| Usable continuous I/Q | [Combined CPU reference](combined/diffuse-iq.json): **960,000 complex samples**, 0.480 s at 2 MS/s, 12 ms windows, contiguous samples and no clipping. Whole I/Q NRMSE **0.2701%**, boundary **0.2708%**, gate **1%**. Both individual path transitions pass. Official SigMF reads all samples and agrees with the project's volts reader. |
-| Object changes and caches | Old binding rejects a wall moved 1 m. A new complete revision and fresh RF scene match the moved wall to **0.000239 mm**; old-scene ray error is **500 mm**. Changing scenes rebuilds the plane cache (two builds); a fresh revision solver builds its own cache (one). See [revision checks](combined-mesh-probe/report.json). |
+| Independent intersections | Combined-scene probes (`combined-mesh-probe/report.json`; local artifact, not checked in): **426 Unreal CPU LiDAR returns**, all four object identities, compared with CPU triangle intersections and Mitsuba CUDA rays. Maximum CPU error **0.0458 mm**, GPU error **0.0562 mm**, gate **1 mm**. Roof and screen distinguish the mesh from a box surrogate. |
+| Moving turns, obstruction and first-order reflection in matching scenes | Combined capture (`combined/motion.json`; local artifact, not checked in): both fast-physics radios turn and move, with nonzero aperture mounts. All 40 direct-visibility predictions match independent shared-triangle intersections; the direct path disappears and returns while the ground reflection remains in every window. |
+| Usable continuous I/Q | Combined CPU reference (`combined/diffuse-iq.json`; local artifact, not checked in): **960,000 complex samples**, 0.480 s at 2 MS/s, 12 ms windows, contiguous samples and no clipping. Whole I/Q NRMSE **0.2701%**, boundary **0.2708%**, gate **1%**. Both individual path transitions pass. Official SigMF reads all samples and agrees with the project's volts reader. |
+| Object changes and caches | Old binding rejects a wall moved 1 m. A new complete revision and fresh RF scene match the moved wall to **0.000239 mm**; old-scene ray error is **500 mm**. Changing scenes rebuilds the plane cache (two builds); a fresh revision solver builds its own cache (one). See revision checks (`combined-mesh-probe/report.json`; local artifact, not checked in). |
 
 The combined direct path disappears at **0.168 s** and returns at **0.264 s**,
 relative to capture start. Individual transition I/Q errors are **0.2994%** and
-**0.4227%**. A [half-recording π phase-reset control](combined/diffuse-negative-control.json)
+**0.4227%**. A half-recording π phase-reset control (`combined/diffuse-negative-control.json`; local artifact, not checked in)
 is rejected with **154.7%** whole-recording error and **155.7%** boundary error.
 
 Two auxiliary captures provide separate controls:
 
 | Capture | Signal / samples | Whole / boundary I/Q NRMSE | Additional evidence |
 | --- | --- | --- | --- |
-| [Clear turning link](turning/motion.json) | 0.480 s / 960,000 | 0.2413% / 0.2421% | [Independent mount checks](turning/turning-mounts.json): headings change 0.252 / 0.181 rad; max mount-velocity error 0.000538 m/s; direct length error 0.00771 mm; Doppler error 0.000582 Hz. |
-| [Straight-flight obstruction](obstruction/motion.json) | 4.800 s / 9,600,000 | 0.1123% / 0.1129% | All 400 shared-triangle visibility checks pass; direct path disappears at 0.144 s and returns at 0.360 s; each transition passes below 0.254%. |
+| Clear turning link (`turning/motion.json`; local artifact, not checked in) | 0.480 s / 960,000 | 0.2413% / 0.2421% | Independent mount checks (`turning/turning-mounts.json`; local artifact, not checked in): headings change 0.252 / 0.181 rad; max mount-velocity error 0.000538 m/s; direct length error 0.00771 mm; Doppler error 0.000582 Hz. |
+| Straight-flight obstruction (`obstruction/motion.json`; local artifact, not checked in) | 4.800 s / 9,600,000 | 0.1123% / 0.1129% | All 400 shared-triangle visibility checks pass; direct path disappears at 0.144 s and returns at 0.360 s; each transition passes below 0.254%. |
 
 Each capture's `bundle`, `trajectory.json`, `channels.json`, `inspection.json`,
 `geometry-checks.json` and `capture/` retain source identity, kinematics, traced
 paths, recording metadata and raw I/Q. Larger I/Q files remain ignored locally;
 their SHA-256 identities are saved in `closure.json` and `inspection.json`.
 Collision observations and revised bundles are saved in the three probe folders.
-[Final source hashes](sources.json) and copies under `sources/` preserve the
+Final source hashes (`sources.json`; local artifact, not checked in) and copies under `sources/` preserve the
 implementation. Run-specific probe script hashes are recorded in each report.
 
 ## Implementation and supported change policy
@@ -71,7 +73,7 @@ remains immutable. No hot reload or cross-revision I/Q stitching is supported.
 Pose APIs cannot detect transient move-and-return motion, topology/material edits
 or unlisted objects. Those are operator-controlled restrictions, not capabilities
 established by the static guard. Continuous moving/deforming obstacles require a
-separate implementation. See the [workflow](../../../docs/openusd-workflow.md).
+separate implementation. See the [workflow](../../../docs/reference/openusd-workflow.md).
 
 ## Environment and reproduction
 
@@ -84,9 +86,9 @@ separate implementation. See the [workflow](../../../docs/openusd-workflow.md).
 - GPU checked before work: 263 MiB, 0% utilization. Unrelated `comfyui`,
   `gitlab-runner` and `immich_machine_learning` containers were left running.
 - Only task-owned `airsim-rf-priority1-20261020` was started and stopped.
-  [Server log](server.log). No GPU allocation was reserved after qualification.
+  Server log (`server.log`; local artifact, not checked in). No GPU allocation was reserved after qualification.
 
-Start a dedicated Blocks server using [the documented command](../../../docs/unreal-geometry.md).
+Start a dedicated Blocks server using [the documented command](../../../docs/reference/unreal-geometry.md).
 From the repository root, choose a new `OUT` and run commands in the qualified
 container environment (the shell function only supplies the existing runtime):
 

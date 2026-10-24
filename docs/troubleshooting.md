@@ -1,3 +1,5 @@
+[Documentation](README.md) · [Scenarios](../scenarios/README.md) · [Run dashboard](dashboard.md)
+
 # Diagnose setup and capture failures
 
 Start with `airsim-rf preflight --config <radios.json>` and the same `--updates`,

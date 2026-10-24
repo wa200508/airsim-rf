@@ -1,4 +1,9 @@
+[Documentation](README.md) · [Scenarios](../scenarios/README.md) · [Run dashboard](dashboard.md)
+
 # First-order radar target and terrain response
+
+This is the implementation reference. Start with **[clutter and its plots](clutter.md)**
+or the **[radar scenario](../scenarios/mmwave-radar/README.md)** for the overview.
 
 Radar acquisition uses one direct illumination/return interaction per scatterer:
 `TX → point target → RX` or `TX → terrain sample → RX`. The monostatic radio

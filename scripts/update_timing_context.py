@@ -65,7 +65,7 @@ def main():
             records.extend(measurements(path))
     changed = []
     catalog = ROOT / 'docs/measurements.md'
-    contents = '<a id="signal-time-results"></a>\n\n# Recorded wall time per simulated signal second\n\nHistorical configurations and failed qualification remain in this index. Follow each raw case for scope, hardware and qualification. [Definitions](timing.md).\n\n' + context(records, catalog.parent) + '\n'
+    contents = '[Documentation](README.md) · [Profiling](profiling.md)\n\n<a id="signal-time-results"></a>\n\n# Recorded wall time per simulated signal second\n\nHistorical configurations and failed qualification remain in this index. Follow each raw case for scope, hardware and qualification. [Definitions](timing.md).\n\n' + context(records, catalog.parent) + '\n'
     targets = {catalog: contents}
     for path, updated in targets.items():
         if not path.exists() or path.read_text() != updated:

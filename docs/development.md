@@ -1,3 +1,5 @@
+[Documentation](README.md) · [Scenarios](../scenarios/README.md) · [Run dashboard](dashboard.md)
+
 # Development and CI
 
 For a source reading order and precise edit locations in the dashboard/RF/MUSIC
@@ -23,10 +25,9 @@ environment, installs the lock plus the wheel, runs `pip check`, and executes th
 whole CPU suite against that installation. No GPU or simulator is used.
 The separate installed-wheel live check reuses the pinned P100 dependency stack;
 those versions must not be substituted for the ordinary CPU release-test lock.
-All artifacts/images from this consolidation remain local; no publication job
-was triggered.
+The linked dated report describes that local qualification, separately from today's automatic main-branch image publication.
 
-The optional [AoA/tracking example](aoa-emitter-tracking.md) uses the tracking
+The optional [AoA/tracking example](reference/aoa-emitter-tracking.md) uses the tracking
 extra and its separate lock. Its tests skip when those optional packages are
 absent. `tests/conftest.py` collects cyclic garbage between tests: the combined
 tracking/renderer suite otherwise exposed a native Dr.Jit 1.5.0 abort during GC
@@ -35,18 +36,17 @@ production runtime fix or an established upstream root cause. The
 [priority 3 report](../results/reviews/priority3-20261020/REPORT.md) retains the
 failed runs and the complete passing suite with the workaround.
 
-The failure at commit bf58884 was a reporting regression: historical records
-without sample rate or measured wall totals caused the basis report to crash.
-The report now shows unavailable normalized fields as `—`, retains the invalid
-accuracy label, and excludes instrumented records from throughput tables. When
-actual per-call totals exist, it uses their sum; median is never substituted for
-mean or total wall service.
-
 ```bash
 python3 scripts/check_docs.py
+python3 scripts/update_profiling_overview.py --check
 python3 scripts/update_timing_context.py --check
 .venv/bin/python -m pytest tests -q
 ```
+
+The [profiling entry point](profiling.md) and its stage tables are generated from
+selected raw JSON by `scripts/update_profiling_overview.py`. Use the
+[documentation index](README.md) to choose between scenario guides, model
+reference and dated evidence.
 
 The [measurement index](measurements.md) is generated once from published JSON.
 Do not copy its tables into every guide. Historical stage tables live only in
@@ -66,7 +66,7 @@ range–Doppler maps. FFT padding does not add physical resolution.
 Do not relabel geometry/height/along-track intensity or interreceiver TDOA/FDOA
 ambiguity surfaces as those displays. Use line profiles for other observables.
 Do not fill temporal gaps between short captures to imply a continuous waterfall.
-[Definitions and current figures](sensing-plots.md).
+[Definitions and current figures](reference/sensing-plots.md).
 
 ## Documentation and scientific product checks
 

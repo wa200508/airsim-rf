@@ -1,14 +1,18 @@
+[Documentation](../README.md) · [Scenarios](../../scenarios/README.md) · [Run dashboard](../dashboard.md)
+
 # Build a scenario and use its I/Q
 
+> **Advanced / offline reference.** The two maintained dashboard demos start at the [scenario catalog](../../scenarios/README.md) and [dashboard guide](../dashboard.md). The examples on this page have their own inputs and qualification scope.
+
 For the current complete installed-package path with matching shared geometry,
-start with the [shared-scene quickstart](quickstart.md). This page retains the
+start with the [shared-scene quickstart](../quickstart.md). This page retains the
 ground-only workflow and expands the waveform/processing interfaces.
 
 Start with one transmitter, one receiver and flat ground. First record a known
 150 kHz tone; then replace the waveform, scene or processing function one at a
 time. You can analyze a saved recording on a CPU without running AirSim or a GPU.
 The generator and commands below are intended to run from the repository root,
-in the [installed Python environment](setup.md).
+in the [installed Python environment](../setup.md).
 
 ## What makes up a scenario?
 
@@ -31,7 +35,7 @@ Keep geometry, origin, meters and scale aligned. Simulator poses use NED
 (north/east/down); RF coordinates use north/west/up: `(x, -y, -z)`.
 `mount_body_m` places a radio relative to its robot's body; rotation and angular
 velocity affect offset mounts. The simple starter has zero offsets. A
-[turning-flight qualification](../results/reviews/turning-mounts-20261015/REPORT.md)
+[turning-flight qualification](../../results/reviews/turning-mounts-20261015/REPORT.md)
 checks nonzero mounts on two yawing drones against independently reconstructed
 positions, velocities and recorded direct-path I/Q.
 
@@ -83,7 +87,7 @@ starter. Existing configurations without a propagation section retain the older
 
 `--propagation diffuse-surface` on the generator creates this experimental choice
 with 4,096 samples/link. That is a starting budget, **not a convergence guarantee**;
-[power sensitivity](../results/reviews/diffuse-surface-20261012/REPORT.md) can be
+[power sensitivity](../../results/reviews/diffuse-surface-20261012/REPORT.md) can be
 substantial. `samples_per_link` counts attempted diffuse samples, not guaranteed
 valid paths. It does not control the number of recorded I/Q samples.
 
@@ -174,8 +178,8 @@ python examples/process_sigmf.py recordings/my-first-run/rx0.sigmf-meta
 
 The example disables automatic integer normalization (`autoscale=False`), reads
 capture segments, and applies their volts-per-count values. This path is checked
-against the project reader using actual recordings. [Interoperability evidence](../results/reviews/sigmf-interop-20261015/REPORT.md).
-The [local extension specification](extensions/airsim_rf.sigmf-ext.md) defines
+against the project reader using actual recordings. [Interoperability evidence](../../results/reviews/sigmf-interop-20261015/REPORT.md).
+The [local extension specification](../extensions/airsim_rf.sigmf-ext.md) defines
 simulator timestamps, voltage scaling and clipping fields. Core SigMF validation
 checks structure; it does not certify physical calibration or completeness of an
 in-progress capture. Use immutable completed recordings.
@@ -215,16 +219,16 @@ explicit consumer completion.
 The neutral callback receives quantized/reconstructed volts only. The legacy
 `on_capture(name, capture)` exposes pre-ADC reference values and raw ADC codes
 for simulation instrumentation, not for RF skills. See the
-[boundary guide](skill-boundary.md).
+[boundary guide](../skill-boundary.md).
 A weak signal can have large relative quantization error without clipping: the
-[directional-flight check](../results/reviews/directional-turns-20261015/REPORT.md)
+[directional-flight check](../../results/reviews/directional-turns-20261015/REPORT.md)
 measured about 5% I/Q error at eight RMS ADC counts. Inspect signal level in
 counts as well as clipping; do not equate no clipping with adequate resolution.
 
 If your application already owns the simulator, RF receiver and flight control,
 use `airsim_rf.live.record(world, robots, receiver, ..., on_samples=process)`
 instead of `run`, which reloads a scene. The receiver must be continuous and all
-radios must be mapped. The [two-drone qualification](../results/reviews/moving-receiver-20261011/REPORT.md)
+radios must be mapped. The [two-drone qualification](../../results/reviews/moving-receiver-20261011/REPORT.md)
 provides a real Fast Physics/controller example; its harness also records actual
 kinematics and path exports for validation. Flight-control orchestration and RF
 capture must share a single owner of simulation stepping.
@@ -266,11 +270,11 @@ and the model's power convention are needed for power conversion.
   Validate again; the bandwidth must be below the sample rate. Current live radio
   clocks are nominal and all receiver streams share the configured rate.
 
-The [workflow evidence](../results/reviews/iq-workflow-20261014/REPORT.md) checks
+The [workflow evidence](../../results/reviews/iq-workflow-20261014/REPORT.md) checks
 all four modes through a real Runtime server, GPU capture, callback, file and CPU
 reader. It does not establish Unreal alignment, distributed SDR transport,
 calibrated hardware behavior or coherent diffuse I/Q under general moving scenes.
-A separate [moving-I/Q qualification](../results/reviews/moving-iq-20261014/REPORT.md)
+A separate [moving-I/Q qualification](../../results/reviews/moving-iq-20261014/REPORT.md)
 checks two controlled drones with fixed-surface scattering and a direct path
 that disappears behind an RF screen. These executable harnesses show how flight
 control and capture share ownership of simulation stepping.

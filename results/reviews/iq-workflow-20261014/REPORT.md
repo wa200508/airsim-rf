@@ -39,7 +39,7 @@ truncated-file rejection.
 
 ## Reproduce
 
-Start the Runtime container using [the live setup](../../../docs/live-workflow.md#complete-two-radio-first-run),
+Start the Runtime container using [the live setup](../../../docs/reference/live-workflow.md#complete-two-radio-first-run),
 then use the installed CUDA Python environment:
 
 ```bash

@@ -1,3 +1,5 @@
+[Documentation](README.md) · [Scenarios](../scenarios/README.md) · [Run dashboard](dashboard.md)
+
 # Capture once, develop RF skills without rerunning the simulation
 
 Dashboard runs save the **exact complex float32 voltages sent to the RF
@@ -122,7 +124,7 @@ No host networking or privileged mode is needed, including on rootless Docker.
 Copy results out before stopping the `--rm` container. Choose a new host
 results path for each experiment. For a custom consumer, use its image/arguments
 and set `--port` to its declared I/Q ingress port. This is the project's
-[TCP v2 contract](iq-stream.md); a generic GNU Radio TCP source/sink does not
+[TCP v2 contract](reference/iq-stream.md); a generic GNU Radio TCP source/sink does not
 automatically implement its framing and acknowledgements.
 
 ## Python and other SDR development options

@@ -18,7 +18,7 @@ All 89 pre-existing Markdown files were scanned for runtime claims. Timing-beari
 | [END_TO_END.md](../architecture.md#end-to-end) | Mixed scope or architecture/reference document; each workload/table retains its stated timed operation |
 | [ENVIRONMENTAL_RF_REFERENCES.md](../references.md#environmental-rf-references) | Mixed scope or architecture/reference document; each workload/table retains its stated timed operation |
 | [GPU_RUNTIME.md](planning.md#gpu-runtime) | Mixed scope or architecture/reference document; each workload/table retains its stated timed operation |
-| [GROUND_SCATTERING.md](../terrain.md#ground-scattering) | Mixed scope or architecture/reference document; each workload/table retains its stated timed operation |
+| [GROUND_SCATTERING.md](../reference/terrain.md#ground-scattering) | Mixed scope or architecture/reference document; each workload/table retains its stated timed operation |
 | [INDEPENDENT_TX_OPTIMIZATION.md](../rendering.md#independent-tx-optimization) | Mixed scope or architecture/reference document; each workload/table retains its stated timed operation |
 | [IQ_RENDERING_REFERENCES.md](../references.md#iq-rendering-references) | Mixed scope or architecture/reference document; each workload/table retains its stated timed operation |
 | [NETWORK_RUNTIME.md](planning.md#network-runtime) | Mixed scope or architecture/reference document; each workload/table retains its stated timed operation |
@@ -34,8 +34,8 @@ All 89 pre-existing Markdown files were scanned for runtime claims. Timing-beari
 | [RUNTIME_STATUS.md](runtime.md#runtime-status) | Mixed scope or architecture/reference document; each workload/table retains its stated timed operation |
 | [SDR_COMPLEXITY.md](planning.md#sdr-complexity) | Mixed scope or architecture/reference document; each workload/table retains its stated timed operation |
 | [SDR_RUNTIME.md](planning.md#sdr-runtime) | Mixed scope or architecture/reference document; each workload/table retains its stated timed operation |
-| [TERRAIN_SCENARIO.md](../terrain.md#terrain-scenario) | Mixed scope or architecture/reference document; each workload/table retains its stated timed operation |
-| [TERRAIN_SIGNATURE.md](../terrain.md#terrain-signature) | Mixed scope or architecture/reference document; each workload/table retains its stated timed operation |
+| [TERRAIN_SCENARIO.md](../reference/terrain.md#terrain-scenario) | Mixed scope or architecture/reference document; each workload/table retains its stated timed operation |
+| [TERRAIN_SIGNATURE.md](../reference/terrain.md#terrain-signature) | Mixed scope or architecture/reference document; each workload/table retains its stated timed operation |
 | [THIRD_PARTY_NOTICES.md](../../THIRD_PARTY_NOTICES.md) | No runtime claim requiring a timer label |
 | [research_results/batched_renderer_cpu/README.md](../../research_results/batched_renderer_cpu/README.md) | Renderer-call wall service or separately labeled projection/kernel-call experiment; excludes propagation and receiver processing |
 | [research_results/doppler_basis_cpu/README.md](../../research_results/doppler_basis_cpu/README.md) | Renderer-call wall service or separately labeled projection/kernel-call experiment; excludes propagation and receiver processing |

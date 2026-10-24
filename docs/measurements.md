@@ -1,3 +1,5 @@
+[Documentation](README.md) · [Profiling](profiling.md)
+
 <a id="signal-time-results"></a>
 
 # Recorded wall time per simulated signal second

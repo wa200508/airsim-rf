@@ -1,15 +1,12 @@
+[Documentation](README.md) · [Scenarios](../scenarios/README.md) · [Run dashboard](dashboard.md)
+
 # Simulation, receiver and RF skill boundaries
 
-> The deployed receiver application is now the separately maintained
-> [Direction Finding RF Skill](https://github.com/wa200508/DF-Skill), using MUSIC.
-> See [repository separation and pinned deployment](direction-finding-skill.md).
-
-The repository had boundary violations: the dashboard RF producer polled
-MUSIC-specific HTTP endpoints and fetched processing diagnostics to record each
-frame; the consumer imported offline recording/evaluation helpers. Those paths
-have been separated. A receiver application now sees the same acquisition
-contract regardless of where the samples originate. The simulator does not
-import, select or inspect the receiver algorithm.
+The current [direction-finding and radar skills](architecture.md#acquisition-and-skill-boundary)
+consume a hardware-style I/Q contract and own their algorithms and display
+results. The simulator owns physics and acquired samples. The observer alone
+joins source telemetry/camera with skill results. Neither skill receives private
+scene/path truth, and the source does not import or inspect an estimator.
 
 ## The intended structure
 
@@ -76,7 +73,7 @@ make unsynchronized hardware coherent.
 The dashboard sends TCP **v2** metadata with `timestamp_ns`; legacy v1's
 `sim_time_ns` is translated only at ingress. V2 rejects extra metadata fields,
 including truth. The old `IQStreamWriter` remains a v1 source adapter. See the
-[wire contract](iq-stream.md) for framing and validation.
+[wire contract](reference/iq-stream.md) for framing and validation.
 
 At the end of a window the source requests a generic `window_end` commit. The
 consumer returns `window_ack` only after its handlers return and complete-channel

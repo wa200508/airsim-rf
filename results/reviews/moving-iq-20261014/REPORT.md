@@ -61,7 +61,7 @@ not qualified by that count. Real GPU/server runs are separate evidence.
 
 ## Reproduce and evidence
 
-Start the [Runtime server](../../../docs/live-workflow.md#complete-two-radio-first-run).
+Start the [Runtime server](../../../docs/reference/live-workflow.md#complete-two-radio-first-run).
 In the CUDA environment, run:
 
 ```bash

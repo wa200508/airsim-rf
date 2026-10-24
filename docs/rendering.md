@@ -1,3 +1,5 @@
+[Documentation](README.md) · [Scenarios](../scenarios/README.md) · [Run dashboard](dashboard.md)
+
 # Rendering operators and qualification
 
 The current receiver offers direct reference rendering and Doppler-basis
@@ -107,7 +109,7 @@ on mesh surfaces and recomputes visibility/fields per pose. The
 much smaller local-motion phase residuals and the larger sampling budgets that
 uniform area sampling can require. Select `diffuse-surface` in the live
 configuration to use it through the SDR receiver and recorder; see the
-[scenario walkthrough](scenario-to-iq.md) and
+[scenario walkthrough](reference/scenario-to-iq.md) and
 [stationary integration checks](../results/reviews/iq-workflow-20261014/REPORT.md).
 A [two-drone coherent I/Q check](../results/reviews/moving-iq-20261014/REPORT.md)
 now passes against a CPU path sum with continuous filtering. Shared traced path

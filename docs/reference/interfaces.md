@@ -1,3 +1,5 @@
+[Documentation](../README.md) · [Scenarios](../../scenarios/README.md) · [Run dashboard](../dashboard.md)
+
 # Configuration and integration interfaces
 
 This is the local configuration/recording interface for RF/SDR developers.
@@ -19,7 +21,7 @@ when explicitly supplied. IDs and units are part of the interface:
 | `rf_scene` | RF XML with its referenced meshes. With a bundle, this must be that bundle's `scene.xml`. |
 | `geometry_bundle` | Optional immutable geometry directory with checked manifest/hashes, simulator bindings and RF object IDs. |
 | `geometry_placement` | `existing` (default) reads actors after scene load; `spawn` explicitly creates the bundle's actors in that dedicated world. Requires a bundle. |
-| `receiver_profile` | `PlutoSDRProfile` settings: carrier/sample rate/bandwidth in Hz, impedance in ohms, temperature in K, noise figure in dB, input ADC full scale in dBm and a boolean noise flag. See defaults and validation in [the source](../src/airsim_rf/sdr.py). |
+| `receiver_profile` | `PlutoSDRProfile` settings: carrier/sample rate/bandwidth in Hz, impedance in ohms, temperature in K, noise figure in dB, input ADC full scale in dBm and a boolean noise flag. See defaults and validation in [the source](../../src/airsim_rf/sdr.py). |
 | `antennas` | Independent `tx`/`rx` objects with `pattern` (`iso`, `dipole`, `hw_dipole`, `tr38901`) and `polarization` (`V` or `H`). One element/channel per radio; default `hw_dipole`/`V`. |
 | `propagation` | `mode` (`direct`, `specular`, `diffuse-angular`, `diffuse-surface`), `samples_per_link` (integer ≥2), `seed` (nonnegative integer). Attempted diffuse samples are not an I/Q sample count or convergence guarantee. |
 | `radios` | Nonempty mapping of radio IDs to settings below; at least one TX and one RX. IDs use letters, digits, `_` and `-`. |
@@ -71,7 +73,7 @@ handles and a continuous receiver; use it when your application owns flight and
 world preparation. Map every scene TX/RX ID to a robot handle. Pass the matching
 `geometry_binding` when using the lower-level API; omission makes no geometry
 equivalence claim. Complete shared-scene loading is implemented in
-[live.py](../src/airsim_rf/live.py).
+[live.py](../../src/airsim_rf/live.py).
 
 `on_samples(block)` runs synchronously after the window is saved. The simulator
 is paused; callback time is included in service timing. Keep state per receiver.
@@ -82,7 +84,7 @@ source truth. `iter_sample_blocks()` provides the same neutral recording view.
 
 The legacy `on_capture(receiver_id, capture)` exposes full simulation capture
 instrumentation, including pre-ADC data. It is retained for diagnostics, not for
-new RF skills. See the [boundary guide](skill-boundary.md).
+new RF skills. See the [boundary guide](../skill-boundary.md).
 
 ## Recording and process boundaries
 
@@ -92,14 +94,14 @@ new RF skills. See the [boundary guide](skill-boundary.md).
 | `<rx>.sigmf-meta` | SigMF datatype/rate/carrier/offset plus per-capture simulator time, volts-per-count and clipping. Apply each capture's scale; do not divide by 32768. |
 | `manifest.json` | Running/complete/failed state, per-window timestamps/counts/timing and input/backend/geometry provenance. Consume only immutable completed recordings. |
 | `iter_iq_blocks(directory, receiver, units="volts")` | Window-sized complex64 arrays, rate, timestamp, sample offset, carrier and clipping. `units="adc_codes"` returns raw integer-valued complex samples. Rejects inconsistent counts/times/metadata/range. |
-| Official SigMF | `sigmf.fromfile(..., autoscale=False)`, then apply `airsim_rf:volts_per_count`. Only NumPy and SigMF are needed in a separate analysis environment; [example](../examples/process_sigmf.py). |
+| Official SigMF | `sigmf.fromfile(..., autoscale=False)`, then apply `airsim_rf:volts_per_count`. Only NumPy and SigMF are needed in a separate analysis environment; [example](../../examples/process_sigmf.py). |
 | Separate process | The [experimental TCP adapter](iq-stream.md) adds framing and consumer completion. It is not a hardware SDR driver or distributed continuous-SDR plane. |
 
-See the [SigMF extension definition](extensions/airsim_rf.sigmf-ext.md) for exact
+See the [SigMF extension definition](../extensions/airsim_rf.sigmf-ext.md) for exact
 metadata names. Metadata checkpoints retain partial data on failure but are not
 atomic or a crash-recovery guarantee. Bounded long-run memory, durable checkpoints
 and consumer-fault recovery remain priority 4.
 
 AMS-GRA radar workers use a separate RPC/model interface. RF MEL, OMS/UCI/CAL and
-DIS decisions are documented in the [standards selection](reviews/ase-standards-selection-20261018.md);
+DIS decisions are documented in the [standards selection](../archive/reviews/ase-standards-selection-20261018.md);
 this package does not claim new standards certification or a continuous SDR bus.

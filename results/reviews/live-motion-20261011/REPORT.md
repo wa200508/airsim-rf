@@ -78,7 +78,7 @@ source/configuration hashes and the Runtime commit
 The [server log](server.log) includes exploratory and final runs. Raw I/Q stays
 in ignored `recordings/`; published inspections include SHA-256 hashes.
 
-Start the Runtime as described in the [live guide](../../../docs/live-workflow.md).
+Start the Runtime as described in the [live guide](../../../docs/reference/live-workflow.md).
 Run each command separately against that server (each loads a fresh scene):
 
 ```bash

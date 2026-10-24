@@ -11,7 +11,7 @@ The initial actual-rendered 90-second orbit passed all 16 acceptance checks:
 sample totals, 389 actual camera frames, 8.04 radians of left-hand travel, radius
 249.83–250.54 m, and 154 both-blocked/no-detection windows. RF exited normally.
 Pause held the actual clock and received-byte counters while all three processes
-remained alive. See [acceptance evidence](../../results/reviews/dashboard-20261021/acceptance.json).
+remained alive. See [acceptance evidence](../../../results/reviews/dashboard-20261021/acceptance.json).
 
 The user requested the terrain from the other RF examples. The primary scene now
 uses `demo_terrain()` with its same hills and drainage valley: horizontal scale

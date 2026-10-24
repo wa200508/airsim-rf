@@ -34,7 +34,7 @@ out. **223 tests passed, 157 skipped** with SigMF available.
 
 ## Reproduce
 
-Use the [two-terminal transport walkthrough](../../../docs/iq-stream.md). After
+Use the [two-terminal transport walkthrough](../../../docs/reference/iq-stream.md). After
 both processes finish:
 
 ```bash

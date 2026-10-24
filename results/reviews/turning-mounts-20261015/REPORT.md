@@ -51,7 +51,7 @@ threshold passes for both whole-recording and 128-sample boundary neighborhoods.
 
 ## Reproduce
 
-Start the [Runtime server](../../../docs/live-workflow.md#complete-two-radio-first-run),
+Start the [Runtime server](../../../docs/reference/live-workflow.md#complete-two-radio-first-run),
 then run in the CUDA environment:
 
 ```bash

@@ -1,5 +1,7 @@
 # OpenUSD shared-scene qualification — 19 October 2026
 
+> Documentation note: reported measurements are preserved. Local artifacts absent from this repository are shown as file references rather than download links.
+
 **Result: passed for the static shared-box integration scope. Priority 1 remains open.**
 The user explicitly authorized GPU use and qualification checks. No package was
 published or delivered. Only the task-owned Blocks server was started/restarted
@@ -7,13 +9,13 @@ and stopped; unrelated containers were not modified.
 
 ## Evidence
 
-- [Authoritative machine report](qualified/report.json)
-- [Raw Unreal observations](qualified/unreal.json)
-- [Export bundle manifest](qualified/bundle/manifest.json)
-- [GPU qualification log](qualification.log)
-- [CPU regression log](cpu-tests.log): **28 passed, 1 skipped**. The skipped test
+- Authoritative machine report (`qualified/report.json`; local artifact, not checked in)
+- Raw Unreal observations (`qualified/unreal.json`; local artifact, not checked in)
+- Export bundle manifest (`qualified/bundle/manifest.json`; local artifact, not checked in)
+- GPU qualification log (`qualification.log`; local artifact, not checked in)
+- CPU regression log (`cpu-tests.log`; local artifact, not checked in): **28 passed, 1 skipped**. The skipped test
   requires the optional `sigmf` Python package, absent in this image.
-- [Server log](server.log)
+- Server log (`server.log`; local artifact, not checked in)
 - [Qualification source](../../../scripts/qualify_usd_geometry.py)
 
 The scene contains a ground slab, building and rotated wall. OpenUSD local
@@ -51,7 +53,7 @@ of the start report and rejection before sample generation at either epoch.
   layer/profile and exported file hashes are retained in the bundle.
 
 Start a dedicated Blocks server using the procedure in
-[Unreal geometry integration](../../../docs/unreal-geometry.md). Ensure ports
+[Unreal geometry integration](../../../docs/reference/unreal-geometry.md). Ensure ports
 8989/8990 are available and do not interrupt another user's server. Then run,
 from the repository root, with a fresh output directory:
 

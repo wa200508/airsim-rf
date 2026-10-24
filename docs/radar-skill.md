@@ -1,3 +1,5 @@
+[Documentation](README.md) · [Scenarios](../scenarios/README.md) · [Run dashboard](dashboard.md)
+
 # Radar RF Skill is a separate project
 
 The active radar skill is maintained at **[wa200508/Radar-skill](https://github.com/wa200508/Radar-skill)**.

@@ -10,7 +10,7 @@ ROOT=Path(__file__).resolve().parents[1]
 
 
 def update(*, check=False):
-    data=ROOT/'docs/figures';page=ROOT/'docs/sensing-plots.md'
+    data=ROOT/'docs/figures';page=ROOT/'docs/reference/sensing-plots.md'
     radio=json.loads((data/'pluto_esm_report.json').read_text())
     products=json.loads((data/'sensing_products.json').read_text())
     terrain=json.loads((data/'terrain_signature_data.json').read_text())

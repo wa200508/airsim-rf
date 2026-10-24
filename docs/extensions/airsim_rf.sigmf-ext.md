@@ -24,4 +24,4 @@ codes, but their normalized output is not automatically volts. Simulation epochs
 must remain integers until subtracting a reference epoch.
 
 See the [SigMF extension rules](https://sigmf.org/) and
-[scenario-to-I/Q guide](../scenario-to-iq.md) for usage.
+[scenario-to-I/Q guide](../reference/scenario-to-iq.md) for usage.

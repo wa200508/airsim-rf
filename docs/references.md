@@ -1,3 +1,5 @@
+[Documentation](README.md) · [Scenarios](../scenarios/README.md) · [Run dashboard](dashboard.md)
+
 # References
 
 - [Iq Rendering References](#iq-rendering-references)
@@ -312,10 +314,10 @@ project. The sources do not establish our 100-TX/10-RX runtime or GPU sizing.
 
 The project has two relevant experiments:
 
-* The [network terrain scenario](terrain.md#terrain-scenario) uses 100 independent
+* The [network terrain scenario](reference/terrain.md#terrain-scenario) uses 100 independent
   transmitters and one receiver, first-order surface paths, a synthetic DEM,
   delay/Doppler diagnostics and a selected-link coherent LFM response.
-* The [focused terrain scan](terrain.md#terrain-signature) moves one independent TX/RX
+* The [focused terrain scan](reference/terrain.md#terrain-signature) moves one independent TX/RX
   pair, separated by 2 m, across the same DEM at 40 m datum altitude. Downward
   12-degree antennas and a 200 MHz LFM pulse reveal terrain relief in a
   pulse-compressed I/Q waterfall. This is a geometric demonstration, with noise
@@ -561,7 +563,7 @@ The technical report also includes independent random diffuse polarization phase
 in its mathematical treatment [11](#environment-ref11), Appendix A.8. That is not evidence that
 our configured material has persistent random ground phases. Our default
 diffuse operator and sampling behavior are documented in
-[GROUND_SCATTERING.md](terrain.md#ground-scattering).
+[GROUND_SCATTERING.md](reference/terrain.md#ground-scattering).
 
 Our first-order adapter replaces native candidate discovery with exhaustive
 specular candidates and **1,028 attempted diffuse samples per TX/RX link**.

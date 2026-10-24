@@ -49,7 +49,7 @@ not RF transmission by physical hardware.
 
 ## Reproduce
 
-Start the [Runtime server](../../../docs/live-workflow.md#complete-two-radio-first-run).
+Start the [Runtime server](../../../docs/reference/live-workflow.md#complete-two-radio-first-run).
 Run a baseline with `--turning-mounts --moving-receiver`, then:
 
 ```bash

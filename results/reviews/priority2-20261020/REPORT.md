@@ -1,41 +1,43 @@
 # Priority 2 complete — 20 October 2026
 
+> Documentation note: reported measurements are preserved. Local artifacts absent from this repository are shown as file references rather than download links.
+
 **Passed: a coherent local package for the qualified Python 3.12/Linux/Docker
 workflow. Nothing was published, released or delivered.** Priority 2 is crossed
 off the readiness list; priority 3 remains the next milestone.
 
 Start with the [shared-scene quickstart](../../../docs/quickstart.md). The
-[interface reference](../../../docs/interfaces.md),
+[interface reference](../../../docs/reference/interfaces.md),
 [troubleshooting guide](../../../docs/troubleshooting.md) and
 [capability matrix](../../../docs/capabilities.md) cover configuration, units,
 extension points, expected results and current limits.
 
 ## Acceptance evidence
 
-[Machine audit](acceptance.json): **17 checks passed**. It independently reads
+Machine audit (`acceptance.json`; local artifact, not checked in): **17 checks passed**. It independently reads
 the real live recording with official SigMF, checks geometry identity,
 plan/count agreement, spectrum, ADC clipping, wheel assets and licenses, and
 verifies the saved installation/container/test reports.
 
 | Priority-2 criterion | Implemented and checked |
 | --- | --- |
-| Reproducible setup | `bootstrap.py --geometry` installs source/dependency pins plus OpenUSD 26.8. The Dockerfile was built from a fresh Python base with OS libraries and fresh pinned upstream clones, producing local image `airsim-rf:priority2-local`. [Build log](container-build.log), [final source-layer rebuild](container-build-final.log), [image identity](container-image-id.json). |
-| Clean install | A new environment with no inherited Python packages installed the full lock, clean verified source copies and final wheel. `pip check` passed. Imports resolve to site-packages outside the checkout. [Fresh install log](clean-install-final.log), [nine acceptance checks](clean-install-final/report.json). |
+| Reproducible setup | `bootstrap.py --geometry` installs source/dependency pins plus OpenUSD 26.8. The Dockerfile was built from a fresh Python base with OS libraries and fresh pinned upstream clones, producing local image `airsim-rf:priority2-local`. Build log (`container-build.log`; local artifact, not checked in), final source-layer rebuild (`container-build-final.log`; local artifact, not checked in), image identity (`container-image-id.json`; local artifact, not checked in). |
+| Clean install | A new environment with no inherited Python packages installed the full lock, clean verified source copies and final wheel. `pip check` passed. Imports resolve to site-packages outside the checkout. Fresh install log (`clean-install-final.log`; local artifact, not checked in), nine acceptance checks (`clean-install-final/report.json`; local artifact, not checked in). |
 | Complete examples/assets | Packaged ground XML/PLY and nonprimitive shared USD/profile resources. `airsim-rf example` produces waveform, all simulator configs, matching geometry bundle, RF materials, bindings and instructions. Both examples pass, including a copied/relocated shared directory. |
 | Preflight/actionable errors | Validates mappings, referenced assets, strict settings, source length, tick overshoot, sample alignment, sample cap and output space. Optional GPU checking loads the configured RF mesh and exercises CUDA/OptiX/CuPy without server contact. The live runner checks the plan before GPU/world initialization. |
 | Interfaces/troubleshooting | README routes to one current workflow, configuration/API/units/format reference, waveform/geometry/motion replacement guidance, expected outputs and corrective actions. Legacy workflows and historical evidence remain identified and preserved. |
 | Capability/acceptance matrix | Current scope explicitly distinguishes static geometry revisions, DSP/ADC conventions, callbacks/TCP, tested versions and outstanding downstream/reliability/accuracy/performance work. Stale geometry and combined-turn/obstruction statements were reconciled. |
-| Real complete example | The installed wheel outside the checkout generated shared inputs, passed GPU preflight, spawned matching Blocks meshes, captured real I/Q, and passed installed inspect/process commands. [Live log](installed-live.log), [preflight](live-preflight.json), [inspection](live-inspection.json), [processing](live-processing.json). |
-| Ongoing package gate | Docker builds a local wheel. CI now installs it separately, changes out of the checkout and exercises complete examples plus CPU propagation/receiver/consumer interfaces offline. The exact gate passed in the freshly built image: [report](container-wheel/report.json), [log](container-wheel.log). |
+| Real complete example | The installed wheel outside the checkout generated shared inputs, passed GPU preflight, spawned matching Blocks meshes, captured real I/Q, and passed installed inspect/process commands. Live log (`installed-live.log`; local artifact, not checked in), preflight (`live-preflight.json`; local artifact, not checked in), inspection (`live-inspection.json`; local artifact, not checked in), processing (`live-processing.json`; local artifact, not checked in). |
+| Ongoing package gate | Docker builds a local wheel. CI now installs it separately, changes out of the checkout and exercises complete examples plus CPU propagation/receiver/consumer interfaces offline. The exact gate passed in the freshly built image: report (`container-wheel/report.json`; local artifact, not checked in), log (`container-wheel.log`; local artifact, not checked in). |
 
 ## Validation results
 
 - **Full standard CPU suite: 253 passed, 158 skipped**, no failures.
-  [Log](full-standard-cpu-tests.log). Skips require CUDA/hardware and are not
+  Log (`full-standard-cpu-tests.log`; local artifact, not checked in). Skips require CUDA/hardware and are not
   counted as CPU validation. This run used the final installed wheel in the fresh
   environment, without a source-path override.
 - **Requested short GPU retry: 3 passed, 132 deselected in 7.00 seconds**.
-  [Log](focused-gpu-tests.log). Selected cases cover Pascal counters, kernel
+  Log (`focused-gpu-tests.log`; local artifact, not checked in). Selected cases cover Pascal counters, kernel
   compilation and real private-input CUDA rendering against CPU references.
   The run was bounded to 120 seconds; this is not a full GPU-suite claim.
 - **Installed-wheel CUDA preflight passed**, loading Ground, Building and Wall,
@@ -55,7 +57,7 @@ verifies the saved installation/container/test reports.
 The first broad CPU run in the older P100 image produced five
 `JitBackend.Metal` compatibility failures, 248 passes and 158 skips. That image
 is the Pascal exception stack, rather than the standard CPU release-test lock.
-Its [failed log](full-cpu-tests.log) is retained. The complete suite was rerun
+Its failed log (`full-cpu-tests.log`; local artifact, not checked in) is retained. The complete suite was rerun
 against the correct pinned CPU environment and passed; no numerical thresholds
 or tests were removed. The earlier clean-install report remains for provenance;
 `clean-install-final` identifies the final wheel.
@@ -124,7 +126,7 @@ OS/GPU/upstream-version matrix is implied.
 GPU occupancy was initially 3,535 MiB/100%, so CPU work continued without
 interruption. At 263 MiB/0%, installed-wheel preflight/capture ran. The user's
 later short window passed the focused compatibility tests. Only task-owned
-`airsim-rf-priority2-20261020` was started and stopped. [Server log](server.log).
+`airsim-rf-priority2-20261020` was started and stopped. Server log (`server.log`; local artifact, not checked in).
 Unrelated services remain running. No GPU work or task simulator is left active.
 
 The package/image remain local and changes uncommitted. No upload, release,

@@ -1,5 +1,7 @@
 # Longer turns and direct-path occlusion — 17 October 2026
 
+> Documentation note: reported measurements are preserved. Local artifacts absent from this repository are shown as file references rather than download links.
+
 The real Runtime/P100 workflow now passes a **9.6-second turning capture** and
 a separate **4.8-second straight-flight screen capture**. The turn records
 19.2 million complex samples across 800 windows; the screen records 9.6 million
@@ -25,7 +27,7 @@ failure: the straight-flight lateral-motion condition required `abs(v_y)>0.1`
 in every window. RX's measured lateral velocity ranges from −2.806 to +2.793 m/s
 and legitimately crosses zero; twelve windows fell below that threshold.
 The independent mount geometry and Doppler checks passed on this same capture.
-The [original failure](initial-full-turn/motion.json) and client log are retained.
+The original failure (`initial-full-turn/motion.json`; local artifact, not checked in) and client log are retained.
 
 Turning runs now apply the same 0.1 m/s threshold to RMS lateral speed over the
 sampled windows. Straight-flight runs retain the original every-window check.
@@ -52,19 +54,19 @@ not identified as a separate transition by this check.
 
 ## Evidence and reproduction
 
-The [final turn](turn-9.6s/), [shorter turn](turn-4.8s/) and [screen](screen-4.8s/)
+The final turn (`turn-9.6s/`; local artifact, not checked in), shorter turn (`turn-4.8s/`; local artifact, not checked in) and screen (`screen-4.8s/`; local artifact, not checked in)
 directories retain motion, channel, trajectory, inspection and analysis JSON,
 manifests, SigMF metadata, generated configurations and client logs. Raw I/Q is
 retained in ignored `recordings/longrun-*-20261017` directories and identified
-by the inspections' SHA-256 hashes. [Source before](source-before.json) and
-[source after](source-after.json) identify qualification changes.
+by the inspections' SHA-256 hashes. Source before (`source-before.json`; local artifact, not checked in) and
+source after (`source-after.json`; local artifact, not checked in) identify qualification changes.
 
-[Focused regressions](validation.log): **33 passed, 1 skipped**; the skip is the
+Focused regressions (`validation.log`; local artifact, not checked in): **33 passed, 1 skipped**; the skip is the
 optional SigMF package absent from this container. The dedicated Runtime server
-was stopped after recording; its [log](server.log) is retained. These are
+was stopped after recording; its log (`server.log`; local artifact, not checked in) is retained. These are
 shared-host correctness captures, not comparative throughput measurements.
 
-Start the Runtime using the [live guide](../../../docs/live-workflow.md). In the
+Start the Runtime using the [live guide](../../../docs/reference/live-workflow.md). In the
 P100 environment with this checkout on `PYTHONPATH`:
 
 ```bash

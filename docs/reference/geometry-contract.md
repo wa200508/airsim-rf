@@ -1,18 +1,20 @@
+[Documentation](../README.md) · [Scenarios](../../scenarios/README.md) · [Run dashboard](../dashboard.md)
+
 # Extensible geometry bridge
 
-The [ASE/Open Arsenal selection](reviews/ase-standards-selection-20261018.md)
+The [ASE/Open Arsenal selection](../archive/reviews/ase-standards-selection-20261018.md)
 sets the external integration boundaries: AMS GRA RF MEL, OMS/UCI through CAL,
 and DIS truth. OpenUSD is a supplementary asset format, not the mission bus or
 an established ASE requirement. Include explicit entity/aperture identity and
 NED/ECEF/RF frame mappings as this provisional contract evolves.
 
-The [open-standards review](reviews/geometry-standards-20261018.md) recommends
+The [open-standards review](../archive/reviews/geometry-standards-20261018.md) recommends
 OpenUSD as the external scene foundation, with a documented RF profile and
 version-specific adapters. The JSON format below remains a provisional internal
 snapshot. The [OpenUSD workflow](openusd-workflow.md) now has an importer,
 RF profile, placement/readback APIs and optional live guard implemented in source.
 The common-source nonprimitive path is now
-[qualified](../results/reviews/priority1-20261020/REPORT.md), including matching
+[qualified](../../results/reviews/priority1-20261020/REPORT.md), including matching
 collision surfaces, moving/turning radios, obstruction, first-order reflections,
 I/Q and revision boundaries. Static environments are supported; arbitrary-world
 extraction and continuous obstacle updates remain separate adapters/capabilities.
@@ -24,7 +26,7 @@ to its adapter and qualification evidence, rather than changes to every consumer
 
 ## First implementation: offline schema v1
 
-The [example document](../examples/config/shared-geometry.json) describes the
+The [example document](../../examples/config/shared-geometry.json) describes the
 cube used in the earlier controlled alignment experiment. It is a common data
 description, not evidence that an AirSim adapter has loaded it.
 
@@ -80,7 +82,7 @@ not matching world geometry or physical RF accuracy.
 
 The [OpenUSD workflow](openusd-workflow.md) documents preparation, packaged-asset
 and generated-GLB placement, recording, and the required revision/reload boundary.
-The [closure report](../results/reviews/priority1-20261020/REPORT.md) retains the
+The [closure report](../../results/reviews/priority1-20261020/REPORT.md) retains the
 independent collision/ray checks and moving-radio I/Q evidence. The source route
 supports nonprimitive shared triangles without requiring a general Unreal editor
 exporter. Actor pose readback still cannot inspect arbitrary collision meshes or

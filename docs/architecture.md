@@ -1,125 +1,131 @@
-# Architecture and integration contracts
+[Documentation](README.md) · [Scenarios](../scenarios/README.md) · [Run dashboard](dashboard.md)
 
-ProjectAirSim kinematics feed an RF scene. Sionna supplies complex paths; private
-transmitter waveforms are rendered into complex voltages, combined per receiver,
-filtered, corrupted by the chosen noise model, quantized, and recorded. The
-[current gallery](sensing-plots.md) explains the simulated physical scenarios.
+# RF architecture and code ownership
 
-| Component | Implemented behavior | Qualification boundary |
-| --- | --- | --- |
-| AirSim adapter | Paused-world poses, mount mapping, elapsed-time capture | Offline contract, real static Runtime smoke, and controlled moving-flight direct/specular paths and boundary I/Q tested against the piecewise model; independent TX/RX motion is checked; diffuse paths and occlusion transitions remain unqualified |
-| Propagation | Direct/specular/first-order diffuse paths with an explicit per-link sampling budget | Synthetic material/terrain, not calibrated land backscatter |
-| Sample rendering | Direct reference and Doppler-basis CPU/CUDA operators | Agreement with declared finite interpolation and delay/Doppler bounds |
-| Receiver | Filter, noise, clock terms, ideal ADC and input-referred scale | No analog compression, measured ENOB, or calibrated hardware response |
-| Live recording | Continuous timestamped int16 I/Q and per-window metadata | Controlled simulation stepping; no real-time streaming guarantee |
-| Distributed radar worker | Radar pulse API and AMS-GRA adapter | Separate from continuous SDR capture |
+![Shared scene, RF source, receiver I/Q, independent skills and observer](figures/rf-architecture.svg)
 
-<a id="radar"></a>
+The maintained applications are [direction finding](../scenarios/drone-orbit/README.md)
+and [FMCW radar](../scenarios/mmwave-radar/README.md). Each mission launches a
+simulator container, an RF-source container and one independently packaged skill;
+the dashboard and supervision run on the host.
 
-## Radar models
+## Scenario and source
 
-`examples/lfm_radar.py` demonstrates point-target pulsed LFM. Sionna computes the
-one-way path and the model constructs a reciprocal return with scalar RCS.
-It is a point-target approximation, not a general multiple-bounce radar solver.
-`examples/distance2gol_radar.py` demonstrates an FMCW point-target receiver.
-The terrain-scan experiment is separate: one moving bistatic TX/RX pair,
-matched-filtered I/Q and a DEM midpoint-height reference. See
-[terrain assumptions](terrain.md) and [observables](sensing-plots.md).
+A [scenario package](scenarios.md) owns the terrain/materials, vehicle, flight,
+waveform/mode, radios/antennas, hardware profile and skill wiring. Preparation
+exports the **same triangle mesh** to Unreal and Sionna, resolves AGL positions,
+plans terrain-clearance paths, and freezes the inputs. Native flight readback
+supplies actual RF antenna position, velocity and attitude. Display color does
+not set dielectric properties. [Code map](code-map.md).
 
-## Attach it to ProjectAirSim
+| Responsibility | Main code / data |
+| --- | --- |
+| Scenario validation and shared-scene compilation | [scenario_definition.py](../src/airsim_rf/scenario_definition.py), [dashboard_scenario.py](../src/airsim_rf/dashboard_scenario.py), [scenario inputs](../scenarios/README.md) |
+| One owner of native physics stepping / kinematic snapshots | [dashboard_producer.py](../src/airsim_rf/dashboard_producer.py) |
+| Coordinate/mount mapping, RF north/west/up ↔ AirSim NED | [bridge.py](../src/airsim_rf/bridge.py) |
+| Shared geometry interchange / scene matching | [Geometry contract](reference/geometry-contract.md), [Unreal import](reference/unreal-geometry.md) |
 
-RF Cartesian coordinates use z upward. AirSim NED positions and body-frame mounts
-are mapped by `(x, -y, -z)`; rotations and linear/angular velocities are transformed
-by the bridge. The RF geometry and simulator must share origin, units and scale.
-A simulator building is not an RF obstruction unless its geometry is also in the
-RF scene. Scripted terrain-following demonstration poses do not prove flight-control
-or collision-avoidance behavior.
-
-The live recorder pauses/steps the world and leaves it paused. It snapshots the
-start pose, advances simulation, and creates the corresponding elapsed-duration
-window. Narrowband path Doppler evolves inside that frozen-geometry window. The
-next update snapshots a new channel. Choose cadence according to motion and
-propagation dynamics. See [the complete live recipe](live-workflow.md).
-
-<a id="end-to-end"></a>
-
-## Pipeline timing
-
-[Performance](performance.md) defines the measured trajectory-source workload.
-It includes private source preparation, pose mapping, propagation/export,
-rendering/transfers, receiver DSP and loopback delivery/readback. It excludes
-live physics/RPC and initialization. Live-recording service has different timer
-boundaries; do not substitute its costs or claim the benchmark measures a whole
-flight. Always relate wall time to [signal duration](timing.md).
-
-Benchmark scenes are versioned independently of presentation terrain. The
-original low-relief timing mesh is `terrain_benchmark_v1`; the current sensing
-scene uses 0–30 m relief. Physical inputs must match before comparing optimizations.
+The terrain-aware path is a native controller command, not a pose clamp in the
+RF solver. Actual tracking can differ from planned clearance. New geometry needs
+a fresh scene/bundle; geometry hashes and direct-ray checks guard alignment.
 
 <a id="cots-sdr-lab"></a>
 
-## Simulated SDR receiver and emitter contract
+## One-way ESM and communications
 
-Each transmitter owns a private finite complex sample stream, a power scale and
-frequency bounds. Arbitrary sampled I/Q is supported within the declared model.
-Files are not looped or automatically normalized; outside their support the live
-file source is zero. At unit mean sample power, configured watts represent mean
-emitted power. History/lookahead and boundary behavior are explicit.
+Each TX owns private complex samples, power, carrier and frequency bounds.
+The source computes directed radio-to-radio channels with complex gains,
+fractional delays and Dopplers. Antenna TX/RX patterns, polarization, dielectric
+properties and geometry determine those paths. The DF demo enables direct and
+supported first-order specular paths; other experiments use different solvers.
 
-Each receiver combines every retained path and applies its configured filtering,
-noise and ideal signed ADC. A Pluto-class profile means selected bandwidth,
-rate and quantizer settings; it is not measured hardware calibration. The
-numeric eight-bit control changes quantizer resolution under the chosen gain,
-not the complete model of another commercial SDR. [Sensing diagnostics](sensing-plots.md)
-show where that control returns only zero codes.
+Waveform rendering applies the channel to the private TX buffers and sums
+coherent voltages at each receiver. The deployed one-way renderer uses the
+Doppler-basis / FFT operator within declared delay, Doppler and interpolation
+bounds; reference CPU/direct operators are also available. Filtering, independent
+receiver noise and ADC conversion produce the acquired samples. The current basis
+workflow requires equal nominal sample clocks. [Rendering details](rendering.md),
+[SDR front end](../src/airsim_rf/sdr.py), [clutter/multipath](clutter.md).
 
-The general receiver supports clock errors; the current basis live workflow
-requires nominal equal sample clocks. The passive plot's known-clock correction
-is postprocessing assisted by simulated truth, not an implemented blind clock
-calibration algorithm. Paths retain their complex phase and coefficients; delay
-and Doppler alone do not determine a coherent voltage.
+<a id="radar"></a>
+
+## Active radar
+
+The RF adapter simulates a transmitter and dechirped receiver. The radar skill
+knows its own waveform/mode and commands TX/RX configuration/state through a
+hardware-neutral control API. The source returns receiver samples, without
+feeding target locations or expected detections to the skill.
+
+Each visible point target or terrain patch contributes one first-order echo.
+Point RCS and empirical surface sigma0 × area set strength; mesh visibility,
+both antenna gains, round-trip delay, carrier phase and Doppler set the coherent
+response. There is no outbound/return path cross-product or target-leg multipath.
+Visibility is refreshed per chirp using locally extrapolated platform motion;
+native kinematics are refreshed per source window. This is narrowband Doppler,
+not wideband time scaling. [Physical model](radar-scattering.md).
+
+[FMCW synthesis](../src/airsim_rf/fmcw.py) runs on host NumPy even when visibility
+uses CUDA. The [window adapter](../src/airsim_rf/dashboard_radar.py) retains receive
+gates at their PRI positions. This differs from continuous DF/ESM I/Q, and
+from legacy pulsed-LFM examples. [Detailed radar reference](reference/radar-scenario.md).
+
+## Acquisition and skill boundary
+
+Only post-ADC complex volts and hardware metadata cross the
+[receiver contract](skill-boundary.md): channel IDs, timestamps, sample offsets,
+rate/carrier and array/gate calibration. The skill sees a receiver interface;
+it imports neither the simulator nor scene/path truth. Active radar control is
+valid knowledge of its own radio, rather than private simulation truth.
+
+| Skill | Implementation | Outputs |
+| --- | --- | --- |
+| Direction finding | [DF-Skill](https://github.com/wa200508/DF-Skill) | MUSIC arrival candidates, spectra, waterfall and array diagnostics |
+| Radar | [Radar-skill](https://github.com/wa200508/Radar-skill) | Range–Doppler map and thresholded candidate; active TX/RX commands |
+
+The source waits on a generic complete-window acknowledgement, not a MUSIC or
+radar result. Skill-owned [display descriptions](skill-display.md) expose plots,
+metrics and units; the host renderer does not select an algorithm by scenario.
+A physical adapter could implement the same contract; vendor hardware drivers
+are not supplied or qualified here.
+
+## Recording and observer
+
+Post-ADC [cf32/SigMF recording](iq-replay.md) can feed the same unmodified skill
+without rerunning physics or propagation. Radar replay sends no TX commands.
+Source telemetry/camera and skill results are independent journals. Only the
+observer joins them by timestamp for synchronized display, replay and held-out
+evaluation. Truth cannot flow back into a deployed skill through that join.
+[Dashboard guide](dashboard.md), [GNU Radio development](gnuradio.md).
+
+<a id="end-to-end"></a>
+
+## Timing
+
+The **[profiling page](profiling.md)** is the timing entry point. Per-sample
+RF rate, per-window acquisition time, per-chirp channel refresh, service wall
+time and display latency are different quantities. Historical renderer or RF-only
+numbers do not measure the current native simulator/skill/camera loop.
 
 <a id="distributed"></a>
-
-## User signal-processing interfaces
-
-`airsim_rf.live.run(..., on_samples=callback)` supplies each neutral `SampleBlock`
-to a synchronous Python callback after saving it. The simulator remains paused
-while user processing runs. `airsim_rf.recording.iter_sample_blocks` streams complete
-recordings into CPU NumPy arrays with sample rate, sample offset, integer
-acquisition timestamp and calibrated complex volts. These interfaces share the same
-post-ADC samples; neither alone is a network transport or physical SDR driver. The
-[experimental TCP adapter](iq-stream.md) sends these same voltage blocks to a
-separate consumer with backpressure and explicit completion acknowledgement.
-See the [scenario-to-I/Q walkthrough](scenario-to-iq.md) for runnable examples.
-
-The [simulation/skill boundary](skill-boundary.md) describes the import walls,
-independent skill image, generic window commit and observer-only record joins.
-The old `on_capture` is simulation instrumentation and is not a skill interface.
-
-## Distributed interfaces
-
-`airsim-rf-worker` and `airsim-rf-coordinator` provide the radar worker API.
-`examples/distributed_hello.py` exercises two workers offline. Receiver durations
-are concurrent; aggregate sample traffic must be labeled explicitly rather than
-summing durations into simulated elapsed time.
-
 <a id="ams-gra-compatibility"></a>
 
-## AMS-GRA integration
+## AMS-GRA and distributed interfaces
 
-The radar worker and tested protocol adapters are distinct from the continuous
-SDR recorder. `.sigmf-data`/`.sigmf-meta` files are recording artifacts, not a
-native AMS-GRA stream or a physical SDR driver. The
-[dated integration notes](archive/architecture-notes.md#ams-gra-compatibility)
-retain protocol and deployment details and their qualification limits.
+`airsim-rf-worker` / `airsim-rf-coordinator` and the
+[two-worker example](../examples/distributed_hello.py) provide a separate radar
+worker integration. The dashboard's acknowledged TCP v2 stream preserves coherent
+channel metadata; it is distinct from stock bare SC16 UDP and is not native
+MEL/VITA conformance. A native coherent-array bridge and physical drivers require
+additional integration. [Contracts and limits](skill-boundary.md),
+[dated integration details](archive/architecture-notes.md#ams-gra-compatibility).
 
 <a id="distance2gol"></a>
 
-## Further detail
+## Additional examples and references
 
-Use [rendering](rendering.md) for the sampled operator and numerical bounds,
-[setup](setup.md) for supported environments, and [references](references.md)
-for implementation precedents. The [archived architecture notes](archive/architecture-notes.md)
-retain point-target equations, hardware-study references and earlier hybrid
-experiments. Those historical commands are not the first-run workflow.
+The [Infineon Distance2GoL example](../examples/distance2gol_radar.py),
+[pulsed LFM](../examples/lfm_radar.py), [offline sensing gallery](reference/sensing-plots.md)
+and [manual live recorder](reference/live-workflow.md) have different configurations and
+qualification scopes. They are not extra dashboard scenarios.
+[External sources](references.md), [capability matrix](capabilities.md),
+[historical architecture studies](archive/architecture-notes.md).

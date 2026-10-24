@@ -6,7 +6,7 @@ Use [the maintained guide](../architecture.md) first.
 
 # Architecture
 
-The current sensor-observable figures are in the [RF sensing analysis](../sensing-plots.md), including radar delay profiles, ESM spectral diagnostics and passive-geolocation ambiguity plots. The gallery is the canonical figure set; historical illustrations are not part of the current reproduction workflow.
+The current sensor-observable figures are in the [RF sensing analysis](../reference/sensing-plots.md), including radar delay profiles, ESM spectral diagnostics and passive-geolocation ambiguity plots. The gallery is the canonical figure set; historical illustrations are not part of the current reproduction workflow.
 
 - [Radar](#radar)
 - [End To End](#end-to-end)
@@ -543,7 +543,7 @@ These link powers precede receiver noise (approximately −103.98 dBm per listen
 Terrain blocks Beacon A's direct path to listener A; reflected/diffuse reception
 remains possible. Neither 12-bit capture clips. These are model outputs, not
 measured Pluto hardware or calibrated rough-ground backscatter. See the
-[power and visibility history](../sensing-plots.md#power-clearance-and-terrain-blockage).
+[power and visibility history](../reference/sensing-plots.md#power-clearance-and-terrain-blockage).
 
 The oscillator choices put the nominally sampled tones near:
 
@@ -643,7 +643,7 @@ Start with questions the model can answer under stated assumptions:
 3. **How sensitive is the result to the environment?** Compare `--propagation
    los`, `specular` and `diffuse` with the same hardware settings. Current diffuse
    samples are not persistent ground scatterers; revisit the
-   [coherence and calibration limitations](../terrain.md#ground-scattering) before using
+   [coherence and calibration limitations](../reference/terrain.md#ground-scattering) before using
    clutter amplitude, slow-time spectra or route fading as purchase evidence.
 4. **What must be measured on one borrowed or purchased unit?** Use a calibrated
    injected tone/attenuator to map ADC counts to RF input power versus gain and

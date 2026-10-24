@@ -1,6 +1,6 @@
 # Geometry implementation handoff — 18 October 2026
 
-> Historical implementation snapshot. See the [19 October qualification and handoff](../../results/reviews/usd-geometry-20261019/REPORT.md) for current execution permission, evidence and remaining work.
+> Historical implementation snapshot. See the [19 October qualification and handoff](../../../results/reviews/usd-geometry-20261019/REPORT.md) for current execution permission, evidence and remaining work.
 
 User direction: implement as much of priority 1 as possible without testing.
 OpenUSD is approved as the scene interchange foundation. GPU/process access
@@ -26,7 +26,7 @@ delivery/publication is not.
 - CLI entry points and optional OpenUSD dependency declaration in `pyproject.toml`.
 - `scripts/qualify_unreal_geometry.py`: replaced independent cube definitions
   with a shared normalized source for simulator placement and RF export.
-- [User workflow](../openusd-workflow.md), scope, failure behavior and closure
+- [User workflow](../../reference/openusd-workflow.md), scope, failure behavior and closure
   criteria, linked from geometry/live docs and the readiness handoff.
 
 ## What was actually done

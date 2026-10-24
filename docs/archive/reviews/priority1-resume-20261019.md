@@ -1,12 +1,12 @@
 # Priority 1 pause and resume — 19 October 2026
 
 > Historical handoff. The user resumed on 20 October and priority 1 is now
-> [complete for static shared environments](../../results/reviews/priority1-20261020/REPORT.md).
+> [complete for static shared environments](../../../results/reviews/priority1-20261020/REPORT.md).
 > The pause and next-action text below records the earlier state.
 
 **Paused at the user’s request.** Resume when the user returns; no weekend job
 or reminder has been scheduled. Priority 1 is still open. Latest completed
-qualification is [the shared-box report](../../results/reviews/usd-geometry-20261019/REPORT.md).
+qualification is [the shared-box report](../../../results/reviews/usd-geometry-20261019/REPORT.md).
 
 ## Latest request and estimate
 

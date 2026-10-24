@@ -1,14 +1,18 @@
+[Documentation](../README.md) · [Scenarios](../../scenarios/README.md) · [Run dashboard](../dashboard.md)
+
 # MUSIC angle of arrival and emitter tracking
+
+> **Advanced / offline reference.** The two maintained dashboard demos start at the [scenario catalog](../../scenarios/README.md) and [dashboard guide](../dashboard.md). The examples on this page have their own inputs and qualification scope.
 
 This page describes the offline tracking example. For the live drone-orbit
 dashboard's different layout and its MUSIC call chain, see the
-[code map](code-map.md#find-the-actual-music-algorithm).
+[code map](../code-map.md#find-the-actual-music-algorithm).
 
 Receiver-only MUSIC and tracking live in `processing/music.py` and
 `processing/tracking.py`; `track_windows()` accepts neutral acquisition blocks.
 The old `aoa_tracking.consume()` translates completed recordings only; held-out
 truth scoring lives separately in `evaluation/tracking.py`. See the
-[simulation/skill boundary](skill-boundary.md).
+[simulation/skill boundary](../skill-boundary.md).
 
 This ready-made Python example follows the direction-finding theme of the
 [SDR University Challenge resource list](https://www.mathworks.com/academia/student-competitions/sdr-university-challenge.html).
@@ -31,7 +35,7 @@ and are not the algorithm implemented here.
 ## Run the complete example
 
 Use the qualified Python 3.12/Linux environment and system prerequisites in
-[setup](setup.md). From the checkout:
+[setup](../setup.md). From the checkout:
 
 ```bash
 python3.12 scripts/bootstrap.py --geometry
@@ -55,7 +59,7 @@ airsim-rf-cuda -m airsim_rf.cli track-demo --backend cuda \
 ```
 
 Add `--pascal-compat` only for the qualified pinned P100 stack described in
-[setup](setup.md#p100-profiling). Install the optional tracking dependencies in
+[setup](../setup.md#p100-profiling). Install the optional tracking dependencies in
 that environment too. `--windows 32` gives a shorter smoke run. The checkout
 wrapper `python examples/aoa_emitter_tracking.py --output ...` is equivalent to
 `track-demo`. The installed command and bundled geometry also work outside the
@@ -65,7 +69,7 @@ This moving-emitter example uses a **supplied kinematic RF trajectory**.
 It does not run live simulator physics. The generated `inputs/radios.json`
 and simulator configurations are complete for a stationary live run at the
 initial pose; the live recorder does not automatically execute `scenario.json`.
-See the [shared-scene quickstart](quickstart.md) for actual simulator recording.
+See the [shared-scene quickstart](../quickstart.md) for actual simulator recording.
 
 ## What runs
 
@@ -178,7 +182,7 @@ uses an assumed 0.5° bearing deviation, not a calibrated uncertainty guarantee.
 
 ## Acceptance and limits
 
-The [priority 3 evidence](../results/reviews/priority3-20261020/REPORT.md) records
+The [priority 3 evidence](../../results/reviews/priority3-20261020/REPORT.md) records
 these measured results on the qualified P100 pipeline, followed by an installed
 wheel consumer replay on CPU with only capture and receiver metadata mounted:
 

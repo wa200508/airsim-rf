@@ -1,3 +1,5 @@
+[Documentation](README.md) · [Scenarios](../scenarios/README.md) · [Run dashboard](dashboard.md)
+
 <a id="timing-conventions"></a>
 
 # Timing and measurement conventions
@@ -15,7 +17,10 @@ A time must name its **operation, clock, workload, backend, statistic and sample
 
 The exact harness/JSON defines boundaries when it differs from this table. A report must state that difference. “End-to-end” means the listed RF stages, never an implicit live simulator, long flight or distributed deployment.
 
-For the latest 100-TX × 10-RX P100 measurement, **371.859 ms is the unprofiled median synchronized wall service time for one RF fleet update**, generating about 8.333 ms of signal per receiver. Thirty measured updates cover 0.250 signal seconds per receiver and consume 11.1696 wall seconds: **44.678 wall seconds per signal second**. Ten receiver jobs execute serially, but their signal durations are concurrent and count once. These are warmed trajectory-source RF updates, not a live AirSim flight. [Current scope, stack and qualification](performance.md). The earlier 553.685 ms median used the same GPU dependency stack and is a matched workload control. The 843.630 ms result used LLVM propagation and different dependencies; that comparison cannot isolate an optimization gain.
+For the selected CPU/GPU timing series, stage tables and real-time context, use
+the **[profiling page](profiling.md)**. The recorded workload and timer boundary
+remain authoritative; a historical fleet or renderer test does not qualify a
+current dashboard mission.
 
 Report wall times in **ms per named operation**. State TX/RX, output samples/rate, attempts versus actual valid paths, precision, declared delay/Doppler support and tolerance, hardware, dependency versions, worker limits and source revision. A configured update frequency or RF sample rate does not prove wall-clock throughput. Synthetic 1,028 valid paths/link are a different workload from 1,028 diffuse attempts/link producing variable scene returns.
 

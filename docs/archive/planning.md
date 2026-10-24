@@ -141,7 +141,7 @@ Updated 2026-10-03. This supersedes the depth-three planning baseline in
 for comparison. Sionna/Mitsuba/Dr.Jit versions remain 2.2.0/3.9.1/1.5.0.
 
 The small-scene specular path counts below do not establish distributed
-ground-return coverage. [GROUND_SCATTERING.md](../terrain.md#ground-scattering) documents
+ground-return coverage. [GROUND_SCATTERING.md](../reference/terrain.md#ground-scattering) documents
 the added TX/RX-aware diffuse sampling mode, its per-link budget, separate
 runtime measurements and remaining roughness/temporal-coherence limitations.
 
@@ -307,7 +307,7 @@ schedule and GPU measurements are the next feasibility gate.
 specular paths in a tiny scene. It has no distributed diffuse ground return and
 does not establish clutter coverage. Both antenna patterns weight its fields;
 it does not importance-sample either pattern. The new
-[TX/RX-aware ground-scattering mode](../terrain.md#ground-scattering) covers distributed
+[TX/RX-aware ground-scattering mode](../reference/terrain.md#ground-scattering) covers distributed
 first-order scattering with an explicit per-link sampling budget and separate
 timings. These specular timings must not be used as its runtime estimate.
 
@@ -895,7 +895,7 @@ the pinned Sionna/Mitsuba/Dr.Jit stack are prerequisites, not a throughput guara
 
 ### Measure the actual target
 
-The [DEM terrain scenario](../terrain.md#terrain-scenario) has 800 specular planes. Its
+The [DEM terrain scenario](../reference/terrain.md#terrain-scenario) has 800 specular planes. Its
 per-worker query-count upper bound is 365,700 per pulse rather than the flat
 fixture's 205,900. Use `--scene terrain` to measure that geometry;
 `benchmark_scattering.py` now derives its budgets from the actual plane count.

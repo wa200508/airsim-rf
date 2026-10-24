@@ -114,7 +114,7 @@ benchmarks or a cadence speedup claim**.
 
 ## Reproduce and inspect
 
-Start the pinned Runtime using the [live guide](../../../docs/live-workflow.md).
+Start the pinned Runtime using the [live guide](../../../docs/reference/live-workflow.md).
 Use the container command from the preceding moving-flight report, adding
 `--window-ms 6`, `12`, `24` or `48` and a new output directory for each run.
 Add `--reflection` for the two-path cases; add `--velocity -3` for recession.

@@ -734,7 +734,7 @@ there is no fallback. [Current generation provenance and checksums](../../result
 
 The hardware and backend are execution choices, not properties of the RF
 observables. The same source-data analysis and plotting can run in the standard
-Python environment; see the [sensing figure guide](../sensing-plots.md).
+Python environment; see the [sensing figure guide](../reference/sensing-plots.md).
 
 These are sampled snapshot demonstrations, not continuous flight or throughput
 measurements. The 32 waterfall epochs span 3.1 s but generate only 384 µs of I/Q

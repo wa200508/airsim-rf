@@ -1,3 +1,5 @@
+[Documentation](README.md) · [Scenarios](../scenarios/README.md) · [Run dashboard](dashboard.md)
+
 # RF Skill Display v1
 
 An RF skill owns its display semantics. Implement `describe_display(receiver_config)`

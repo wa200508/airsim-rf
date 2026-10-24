@@ -27,7 +27,7 @@ optional SigMF package available. The lock now installs SigMF and its declared
 XML dependency so CI exercises the external reader test. No vendor source is
 copied into the repository.
 
-Reproduce with the [walkthrough](../../../docs/scenario-to-iq.md), then:
+Reproduce with the [walkthrough](../../../docs/reference/scenario-to-iq.md), then:
 
 ```bash
 python scripts/qualify_sigmf.py recordings/my-first-run --output recordings/sigmf-check.json

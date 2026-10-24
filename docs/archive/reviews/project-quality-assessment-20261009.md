@@ -202,9 +202,9 @@ python -B benchmarks/generate_sensing_scenarios.py --data-dir docs/figures --out
 
 Machine-readable evidence:
 
-- [Numerical and physical-scenario audit](../../results/reviews/project-quality-20261009/data_audit.json)
-- [Markdown structure/link audit](../../results/reviews/project-quality-20261009/links.json)
-- [Fresh postprocessing comparison](../../results/reviews/project-quality-20261009/regeneration_comparison.json)
+- [Numerical and physical-scenario audit](../../../results/reviews/project-quality-20261009/data_audit.json)
+- [Markdown structure/link audit](../../../results/reviews/project-quality-20261009/links.json)
+- [Fresh postprocessing comparison](../../../results/reviews/project-quality-20261009/regeneration_comparison.json)
 
 ## Recommended implementation order
 

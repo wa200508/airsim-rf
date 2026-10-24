@@ -1,9 +1,11 @@
+[Documentation](../README.md) · [Scenarios](../../scenarios/README.md) · [Run dashboard](../dashboard.md)
+
 # Unreal geometry integration
 
 The [OpenUSD workflow](openusd-workflow.md) provides a common-source route for
 nonprimitive geometry: import explicit USD triangles once, spawn generated GLB
 meshes in Blocks, and export matching PLY/XML for RF. The
-[20 October qualification](../results/reviews/priority1-20261020/REPORT.md)
+[20 October qualification](../../results/reviews/priority1-20261020/REPORT.md)
 passes independent collision/RF rays and combined moving turns, obstruction,
 first-order reflections and recorded I/Q. Static revision/reload boundaries are
 qualified; continuous moving-obstacle synchronization remains unsupported.
@@ -14,13 +16,13 @@ earlier implementation; repeat qualification before relying on the new path.
 
 The normal Runtime starter is sufficient for API/physics integration, but it
 cannot establish that an Unreal world matches the RF mesh. A real headless
-Blocks package now passes a [controlled cube alignment check](../results/reviews/unreal-geometry-20261016/REPORT.md).
+Blocks package now passes a [controlled cube alignment check](../../results/reviews/unreal-geometry-20261016/REPORT.md).
 This establishes primitive coordinates, scale and visibility through CPU LiDAR
 and GPU RF intersections; general mesh export remains open.
 
 ## Run the controlled check
 
-Prepare the tested [CPU and GPU images](setup.md), then fetch the checksum-pinned
+Prepare the tested [CPU and GPU images](../setup.md), then fetch the checksum-pinned
 upstream package (about 584 MB compressed):
 
 ```bash

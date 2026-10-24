@@ -1,7 +1,9 @@
+[Documentation](../README.md) · [Scenarios](../../scenarios/README.md) · [Run dashboard](../dashboard.md)
+
 # OpenUSD shared-scene workflow
 
 **Priority 1 complete for static shared environments with moving radios, 20 October 2026.**
-The [closure report](../results/reviews/priority1-20261020/REPORT.md) qualifies
+The [closure report](../../results/reviews/priority1-20261020/REPORT.md) qualifies
 nonprimitive USD triangles sent to Blocks as generated GLB collision meshes,
 independent CPU/GPU intersections, turning radios, obstruction and first-order
 reflections together, recorded I/Q, and explicit geometry revision boundaries.
@@ -19,12 +21,12 @@ standard; AMS GRA RF MEL, OMS/UCI and DIS remain separate integration boundaries
 - `airsim_rf.geometry`: validated normalized snapshot and PLY/XML export bundle.
 - `airsim_rf.geometry_sync`: offline placement planning, explicit spawning,
   paused actor readback and a static-scene capture guard.
-- [Original shared-box scene](../examples/geometry/shared-world.usda) and
-  [RF profile](../examples/geometry/shared-world.rf.json): ground slab, building
+- [Original shared-box scene](../../examples/geometry/shared-world.usda) and
+  [RF profile](../../examples/geometry/shared-world.rf.json): ground slab, building
   and rotated wall. All three use explicit triangles and a centered box asset.
-- [Nonprimitive shared scene](../examples/geometry/shared-mesh-world.usda) and
-  [profile](../examples/geometry/shared-mesh-world.rf.json), with a sloping roof
-  and rotated wall. The [combined turning scene](../examples/geometry/shared-mesh-turn-screen.usda)
+- [Nonprimitive shared scene](../../examples/geometry/shared-mesh-world.usda) and
+  [profile](../../examples/geometry/shared-mesh-world.rf.json), with a sloping roof
+  and rotated wall. The [combined turning scene](../../examples/geometry/shared-mesh-turn-screen.usda)
   adds an elevated narrow obstruction; its matching `.rf.json` profile selects
   every surface. The separate `shared-mesh-screen` scene covers straight flight.
 - Live recorder opt-in through `geometry_bundle`, with per-window geometry
@@ -232,7 +234,7 @@ fresh solver's own cache. Updating only actor poses or only RF files is invalid.
 
 ## Qualification and reproduction
 
-The [20 October closure report](../results/reviews/priority1-20261020/REPORT.md)
+The [20 October closure report](../../results/reviews/priority1-20261020/REPORT.md)
 contains acceptance evidence and exact commands for independent collision probes,
 combined turning/reflection/obstruction recording, CPU I/Q consumption, negative
 controls, and focused regressions. Native USD instances, unit conversion,

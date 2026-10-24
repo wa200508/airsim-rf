@@ -1,5 +1,7 @@
 # Priority 3 acceptance — 20 October 2026
 
+> Documentation note: reported measurements are preserved. Local artifacts absent from this repository are shown as file references rather than download links.
+
 Priority 3 is complete for the user's chosen **Python MUSIC angle-of-arrival and
 emitter-tracking example**, with links to official SDR University Challenge
 resources. This replaces the proposed generic comms-demodulation example with a
@@ -17,7 +19,7 @@ external **doa_py 0.5.0 MUSIC**, two-bearing geometric fusion and an external
 emitter positions, velocities, symbols, source samples, traced gains or delays.
 The waveform is generated independently; truth scoring is a separate function.
 
-The ready-made [guide](../../../docs/aoa-emitter-tracking.md) includes installation,
+The ready-made [guide](../../../docs/reference/aoa-emitter-tracking.md) includes installation,
 CPU/CUDA commands, outputs, calibration/coordinate conventions, algorithm and
 waveform replacement guidance, and official links:
 
@@ -86,7 +88,7 @@ phase-source tests check MUSIC angles and reversed signs, noise-only rejection,
 ambiguous spacing, forward/parallel/backward intersections, nontrivial complex
 channel calibration and cross-channel metadata synchronization.
 
-The [machine audit](closure.json) passes all checks. Official SigMF 1.13.0
+The machine audit (`closure.json`; local artifact, not checked in) passes all checks. Official SigMF 1.13.0
 validates all eight files and reads every actual ADC sample, agreeing with the
 project voltage reader. All channels have expected counts/bytes and zero
 reported clipping. Geometry identity matches every window; waveform and wheel
@@ -164,10 +166,10 @@ The default example now also generates `iq-frequency.png` and
 `music-processing.png` (with SVG exports), before the secondary tracking figure.
 The `music-plots` CLI can process an existing recording without propagation.
 
-[Frequency plots](music-visuals/iq-frequency.png) show the four site-0 complex
+Frequency plots (`music-visuals/iq-frequency.png`; local artifact, not checked in) show the four site-0 complex
 channel PSDs and the continuous element-0 frequency waterfall. PSD is two-sided,
 in input-referred V²/Hz, using a 4096-sample Hann window, 2048-sample hop and no
-FFT padding. [MUSIC processing](music-visuals/music-processing.png) shows actual
+FFT padding. MUSIC processing (`music-visuals/music-processing.png`; local artifact, not checked in) shows actual
 external MUSIC pseudospectra for both sites at three acquisition epochs,
 covariance eigenvalues and measured spatial phase versus the MUSIC angle fit.
 All six displayed peaks exactly match the ordinary consumer. Only saved ADC I/Q

@@ -84,7 +84,7 @@ Worldview visualize truth and perceived state. Its architecture page contains
 unresolved notes about tick rates and RF metadata, so these are not treated as
 verified wire-format requirements.
 
-Fetched and read the following at the existing [source pins](../../sources.json):
+Fetched and read the following at the existing [source pins](../../../sources.json):
 
 - Squall `interfaces/squall-rf-mel-impl/src/SquallDataMEL.cc` at
   `b3d4aa780de954e39bf2c6dbd7b0121f699822b4`: callback decodes bare little-endian

@@ -1,0 +1,118 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1100" viewBox="0 0 1600 1100" role="img" aria-labelledby="title desc">
+<title id="title">AirSim RF: scenario, propagation, I/Q and independent RF skills</title>
+<desc id="desc">A shared terrain mesh connects native AirSim motion to one-way Sionna channels and first-order radar scattering. Waveforms and coherent path responses feed receiver filtering, tunable noise and ADC. Only I/Q and hardware metadata reach independent direction-finding or radar skills. Radar commands its own TX/RX configuration. Bulk I/Q supports replay. Source camera and telemetry and independent skill results meet only in the host dashboard.</desc>
+<defs>
+<marker id="source" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto"><path d="M0,0 L9,4.5 L0,9 Z" fill="#0f766e"/></marker>
+<marker id="iq" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto"><path d="M0,0 L9,4.5 L0,9 Z" fill="#2563eb"/></marker>
+<marker id="control" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto"><path d="M0,0 L9,4.5 L0,9 Z" fill="#b45309"/></marker>
+<marker id="observe" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto"><path d="M0,0 L9,4.5 L0,9 Z" fill="#7c3aed"/></marker>
+</defs><rect width="1600" height="1100" fill="#f8fafc"/>
+<rect x="345" y="112" width="755" height="735" rx="18" fill="#effcf8" stroke="#b7d9d0" stroke-width="2"/>
+<path d="M1110 118V845" stroke="#64748b" stroke-width="2" stroke-dasharray="8 7"/>
+<style>text{font-family:Arial,Helvetica,sans-serif;fill:#0f172a} .title{font-size:29px;font-weight:700}.head{font-size:21px;font-weight:700}.body{font-size:19px}.small{font-size:17px}.lane{font-size:20px;font-weight:700;fill:#334155}</style>
+<text x="40" y="44" class="title" text-anchor="start">AirSim RF · from a shared scene to complex receiver samples</text>
+<text x="40" y="87" class="lane" text-anchor="start">SCENARIO INPUTS</text>
+<text x="365" y="87" class="lane" text-anchor="start">SIMULATION / RF SOURCE CONTAINERS</text>
+<text x="1295" y="87" class="lane" text-anchor="start">INDEPENDENT RF SKILL</text>
+<rect x="40" y="140" width="280" height="185" rx="12" fill="#f1f5f9" stroke="#cbd5e1" stroke-width="2"/>
+<text x="56" y="169" class="head" text-anchor="start">Editable scenario</text>
+<text x="56" y="197" class="body" text-anchor="start">DEM + material classes</text>
+<text x="56" y="222" class="body" text-anchor="start">Vehicles, paths, radio mounts</text>
+<text x="56" y="247" class="body" text-anchor="start">Waveform + TX power</text>
+<text x="56" y="272" class="body" text-anchor="start">RX profile + skill/mode</text>
+<rect x="365" y="140" width="325" height="125" rx="12" fill="#ffffff" stroke="#cbd5e1" stroke-width="2"/>
+<text x="381" y="169" class="head" text-anchor="start">ProjectAirSim</text>
+<text x="381" y="197" class="body" text-anchor="start">Native physics / flight</text>
+<text x="381" y="222" class="body" text-anchor="start">Actual position, velocity, attitude</text>
+<text x="381" y="247" class="body" text-anchor="start">Camera + source telemetry</text>
+<rect x="735" y="140" width="340" height="125" rx="12" fill="#ffffff" stroke="#cbd5e1" stroke-width="2"/>
+<text x="751" y="169" class="head" text-anchor="start">Shared RF scene + antennas</text>
+<text x="751" y="197" class="body" text-anchor="start">Same triangles as Unreal</text>
+<text x="751" y="222" class="body" text-anchor="start">Dielectric εr / conductivity</text>
+<text x="751" y="247" class="body" text-anchor="start">TX + RX patterns / polarization</text>
+<rect x="365" y="310" width="325" height="145" rx="12" fill="#ffffff" stroke="#cbd5e1" stroke-width="2"/>
+<text x="381" y="339" class="head" text-anchor="start">One-way transmitted signal</text>
+<text x="381" y="367" class="body" text-anchor="start">Private samples per transmitter</text>
+<text x="381" y="392" class="body" text-anchor="start">QPSK / arbitrary complex I/Q</text>
+<text x="381" y="417" class="body" text-anchor="start">Carrier, power, clocks / phase</text>
+<rect x="735" y="310" width="340" height="145" rx="12" fill="#ffffff" stroke="#cbd5e1" stroke-width="2"/>
+<text x="751" y="339" class="head" text-anchor="start">ESM / communications</text>
+<text x="751" y="367" class="body" text-anchor="start">Sionna complex gain, delay, Doppler</text>
+<text x="751" y="392" class="body" text-anchor="start">Direct + first-order reflections</text>
+<text x="751" y="417" class="body" text-anchor="start">Doppler-basis / FFT I/Q rendering</text>
+<rect x="735" y="490" width="340" height="145" rx="12" fill="#ffffff" stroke="#cbd5e1" stroke-width="2"/>
+<text x="751" y="519" class="head" text-anchor="start">Monostatic FMCW radar</text>
+<text x="751" y="547" class="body" text-anchor="start">Direct target RCS + terrain σ0 × area</text>
+<text x="751" y="572" class="body" text-anchor="start">Mesh visibility, TX/RX beam gain</text>
+<text x="751" y="597" class="body" text-anchor="start">Round-trip delay + coherent phase</text>
+<text x="751" y="622" class="body" text-anchor="start">Per-chirp dechirped IF synthesis</text>
+<rect x="735" y="685" width="340" height="145" rx="12" fill="#ffffff" stroke="#cbd5e1" stroke-width="2"/>
+<text x="751" y="714" class="head" text-anchor="start">Receiver front end</text>
+<text x="751" y="742" class="body" text-anchor="start">Coherent path / transmitter sum</text>
+<text x="751" y="767" class="body" text-anchor="start">RX filter + tunable noise + ADC</text>
+<text x="751" y="792" class="body" text-anchor="start">Radar: preserve PRI / ADC gates</text>
+<text x="751" y="817" class="body" text-anchor="start">Complex volts, sample times, fs / fc</text>
+<rect x="365" y="685" width="325" height="145" rx="12" fill="#ffffff" stroke="#cbd5e1" stroke-width="2"/>
+<text x="381" y="714" class="head" text-anchor="start">Bulk receiver I/Q archive</text>
+<text x="381" y="742" class="body" text-anchor="start">Post-ADC cf32 + SigMF metadata</text>
+<text x="381" y="767" class="body" text-anchor="start">GNU Radio / Python development</text>
+<text x="381" y="792" class="body" text-anchor="start">Replay without rerunning flight</text>
+<rect x="1130" y="640" width="155" height="190" rx="12" fill="#eff6ff" stroke="#2563eb" stroke-width="2"/>
+<text x="1146" y="669" class="head" text-anchor="start">I/Q boundary</text>
+<text x="1146" y="697" class="body" text-anchor="start">Samples +</text>
+<text x="1146" y="722" class="body" text-anchor="start">timestamps,</text>
+<text x="1146" y="747" class="body" text-anchor="start">rates, array /</text>
+<text x="1146" y="772" class="body" text-anchor="start">gate calibration</text>
+<text x="1146" y="811" class="small" text-anchor="start" style="fill:#1d4ed8">No scene truth</text>
+<rect x="1310" y="310" width="250" height="145" rx="12" fill="#eff6ff" stroke="#93c5fd" stroke-width="2"/>
+<text x="1326" y="339" class="head" text-anchor="start">DF-Skill</text>
+<text x="1326" y="367" class="body" text-anchor="start">Received I/Q only</text>
+<text x="1326" y="392" class="body" text-anchor="start">MUSIC direction finding</text>
+<text x="1326" y="417" class="body" text-anchor="start">Spectrum / waterfall</text>
+<text x="1326" y="442" class="body" text-anchor="start">Array diagnostics</text>
+<rect x="1310" y="490" width="250" height="145" rx="12" fill="#eff6ff" stroke="#93c5fd" stroke-width="2"/>
+<text x="1326" y="519" class="head" text-anchor="start">Radar-skill</text>
+<text x="1326" y="547" class="body" text-anchor="start">Knows its own waveform</text>
+<text x="1326" y="572" class="body" text-anchor="start">Commands TX + RX</text>
+<text x="1326" y="597" class="body" text-anchor="start">64-chirp range–Doppler</text>
+<text x="1326" y="622" class="body" text-anchor="start">Candidate + RF displays</text>
+<rect x="365" y="930" width="1195" height="120" rx="12" fill="#faf5ff" stroke="#c4b5fd" stroke-width="2"/>
+<text x="381" y="959" class="head" text-anchor="start">Host dashboard + saved playback</text>
+<text x="381" y="987" class="body" text-anchor="start">Source camera / telemetry journal + independent skill result journal, aligned by simulation timestamp</text>
+<text x="381" y="1012" class="body" text-anchor="start">The skill describes its plots and metrics. The source never reads MUSIC, detections or target estimates.</text>
+<path d="M320 196 H365" fill="none" stroke="#0f766e" stroke-width="3" marker-end="url(#source)"/>
+<path d="M320 275 H335 V365 H365" fill="none" stroke="#0f766e" stroke-width="3" marker-end="url(#source)"/>
+<path d="M180 140 V117 H905 V140" fill="none" stroke="#0f766e" stroke-width="3" marker-end="url(#source)"/>
+<text x="650" y="108" class="small" text-anchor="middle" style="fill:#0f766e">same environment mesh</text>
+<path d="M690 205 H735" fill="none" stroke="#0f766e" stroke-width="3" marker-end="url(#source)"/>
+<text x="713" y="189" class="small" text-anchor="middle" style="fill:#0f766e">poses</text>
+<path d="M905 265 V310" fill="none" stroke="#0f766e" stroke-width="3" marker-end="url(#source)"/>
+<path d="M735 245 H715 V550 H735" fill="none" stroke="#0f766e" stroke-width="3" marker-end="url(#source)"/>
+<path d="M690 385 H735" fill="none" stroke="#0f766e" stroke-width="3" marker-end="url(#source)"/>
+<path d="M1075 405 H1093 V715 H1075" fill="none" stroke="#0f766e" stroke-width="3" marker-end="url(#source)"/>
+<path d="M905 635 V685" fill="none" stroke="#0f766e" stroke-width="3" marker-end="url(#source)"/>
+<path d="M1075 770 H1130" fill="none" stroke="#2563eb" stroke-width="3" marker-end="url(#iq)"/>
+<path d="M735 780 H690" fill="none" stroke="#2563eb" stroke-width="3" marker-end="url(#iq)"/>
+<path d="M1207 640 V385 H1310" fill="none" stroke="#2563eb" stroke-width="3" marker-end="url(#iq)"/>
+<path d="M1232 640 V600 H1310" fill="none" stroke="#2563eb" stroke-width="3" marker-end="url(#iq)"/>
+<path d="M1310 525 H1075" fill="none" stroke="#b45309" stroke-width="3" stroke-dasharray="9 6" marker-end="url(#control)"/>
+<text x="1195" y="510" class="small" text-anchor="middle" style="fill:#b45309">TX/RX config + state</text>
+<path d="M525 830 V875 H1207 V830" fill="none" stroke="#2563eb" stroke-width="3" marker-end="url(#iq)"/>
+<text x="865" y="898" class="small" text-anchor="middle" style="fill:#2563eb">saved I/Q replay · no transmit commands</text>
+<path d="M365 240 H337 V975 H365" fill="none" stroke="#7c3aed" stroke-width="3" marker-end="url(#observe)"/>
+<text x="50" y="584" class="small" text-anchor="start" style="fill:#7c3aed">Source truth / camera</text>
+<text x="50" y="610" class="small" text-anchor="start" style="fill:#7c3aed">go only to the observer.</text>
+<path d="M1560 385 H1582 V975 H1560" fill="none" stroke="#7c3aed" stroke-width="3" marker-end="url(#observe)"/>
+<path d="M1560 610 H1582" fill="none" stroke="#7c3aed" stroke-width="3" marker-end="url(#observe)"/>
+<text x="50" y="405" class="head" text-anchor="start">MODEL / HARDWARE LIMITS</text>
+<text x="50" y="438" class="small" text-anchor="start">Narrowband Doppler evolves</text>
+<text x="50" y="462" class="small" text-anchor="start">over signal time.</text>
+<text x="50" y="486" class="small" text-anchor="start">Materials and σ0 are explicit</text>
+<text x="50" y="510" class="small" text-anchor="start">uncalibrated assumptions.</text>
+<text x="50" y="534" class="small" text-anchor="start">Radar IF runs on the host;</text>
+<text x="50" y="558" class="small" text-anchor="start">visibility can use CPU / CUDA.</text>
+<text x="50" y="1067" class="small" text-anchor="start">Teal: source flow</text>
+<text x="350" y="1067" class="small" style="fill:#2563eb">Blue: receiver I/Q</text>
+<text x="680" y="1067" class="small" style="fill:#b45309">Orange dashed: TX/RX control</text>
+<text x="1130" y="1067" class="small" style="fill:#7c3aed">Purple: observer data</text>
+</svg>

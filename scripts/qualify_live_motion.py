@@ -1,7 +1,7 @@
 """Bounded real Runtime flight + direct/specular/diffuse SDR qualification.
 
 Requires the pinned Runtime source and a running server. Writes raw recordings
-under output; never commands a physical vehicle. See docs/live-workflow.md.
+under output; never commands a physical vehicle. See docs/reference/live-workflow.md.
 """
 import argparse
 import asyncio

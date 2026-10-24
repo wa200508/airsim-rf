@@ -1,59 +1,72 @@
-# Editable drone-orbit scenario
+# Direction finding: drone over two receiving arrays
 
-Copy **this whole directory**, edit the files, then point the same published
-containers at the copy:
+[Documentation](../../docs/README.md) · [Radar scenario](../mmwave-radar/README.md) · [Dashboard help](../../docs/dashboard.md)
 
-```bash
-cp -r scenarios/drone-orbit ~/my-rf-scenario
-python3 scripts/launch_dashboard.py --scenario ~/my-rf-scenario --check-scenario
-bash scripts/run_dashboard.sh --scenario ~/my-rf-scenario --open
-```
-
-No image rebuild is needed. For a standalone launcher, export its packaged example:
+A QPSK transmitter flies a circle above hills and a valley. Two fixed coherent
+arrays receive direct and terrain-reflected signals; the independent
+[DF-Skill](https://github.com/wa200508/DF-Skill) applies MUSIC to the received I/Q.
 
 ```bash
-bash run_dashboard.sh --export-scenario ~/my-rf-scenario
-bash run_dashboard.sh --scenario ~/my-rf-scenario --open
+bash scripts/run_dashboard.sh --scenario drone-orbit --open
 ```
 
-| File | Edit here |
+Open http://localhost:8765 and select **Launch mission** after readiness passes.
+The same inputs run in the published containers; no scenario-specific rebuild
+is required.
+
+## What to look for
+
+- **Receiver I/Q stream:** select either array's spectrum and waterfall.
+- **MUSIC Spatial Search:** a full circular azimuth search with relative-power,
+  eigenvalue and inter-element phase diagnostics. A ULA has front/back and
+  elevation ambiguity; a peak is an arrival candidate, not guaranteed emitter truth.
+- **Terrain masking:** reflections may remain when direct sight is blocked;
+  a channel with no modeled path contains receiver noise/ADC output.
+- **Camera and playback:** the native camera, actual drone track and RF results
+  are paired by timestamp. Saved runs replay without rerunning simulation.
+
+## Scenario settings
+
+| Item | Default |
 | --- | --- |
-| `scenario.json` | References to neighbours; mission clocks/duration, camera, visual appearance, skill image/arguments/ports and compatibility policy. |
-| `environment.json` | Explicit DEM coordinates/heights and material constants. RF and Unreal use these same triangles. You may instead reference a neighbouring shared-geometry JSON with `type: geometry`. |
-| `flight.json` | Actors, vehicle files, RF-coordinate starting positions/yaw and circle/waypoints/hold flight plans. Add actors here and bind transmitters to them in radios. |
-| `quadrotor.jsonc` | Full vehicle/controller/sensor definition. Camera capture interval, resolution and FOV are set by `scenario.json`; the remaining physical configuration stays here. |
-| `radios.json` | Carrier/rate, transmitter bindings/mounts/powers/waveform files, antenna patterns, fixed receiver arrays/calibration, front-end profile and propagation/renderer settings. |
-| `waveform.json` | QPSK generation parameters. Alternatively `{"type":"samples","file":"your_iq.npy"}` loads any finite 1-D real/complex source samples at the declared sample rate. Include mission coverage plus 32 lookahead samples. Files are never silently looped. |
+| Transmitter | One private QPSK source, 915 MHz carrier, 0.1 W |
+| Receivers | Two stationary four-element vertical-polarized ULAs, 8 m AGL |
+| Acquisition | 2 MS/s continuous post-ADC I/Q; 120 ms windows |
+| Flight | 250 m-radius left orbit, 25 m/s; 20 m minimum planned terrain clearance |
+| Terrain | Shared 800 m-wide illustrative DEM; RF-up elevation 100–190 m |
+| Propagation | Direct and supported first-order specular paths; diffuse scattering, diffraction and transmission disabled |
+| Front end | PlutoSDR-class filter/noise/12-bit ADC approximation |
+| Demo noise | −25 dB noise-power offset; set 0 for the original modeled receiver noise |
 
-All asset paths are relative to this directory and must remain inside it. Input
-RF coordinates are north/west/up in metres; yaw is positive toward west.
-Receiver heights use `altitude_reference: agl` above the heightfield or `absolute`
-for RF-up coordinates. Array yaw rotates both element positions and element
-patterns. The bundled MUSIC skill requires two coherent ULAs; choose a compatible
-custom consumer for other layouts. Per-device source buffers remain independent.
+The nominal 120 m RF-up height is a lower floor, not a flight plane through the
+hills. The compiler anticipates terrain with a 20% ascent/descent grade bound;
+actual native motion drives RF. The terrain, antennas and receiver response
+are uncalibrated models. The skill receives receiver calibration and samples,
+without the transmitter position, paths or terrain truth.
 
-The vehicle data derives from ProjectAirSim's pinned
-`robot_quadrotor_fastphysics_sensors.jsonc` at commit
-`cfb865f29f255b15ef28ec8fdcfaa01a6b66497f`, with this example's controller/camera
-settings. The neighbouring upstream license applies to that data. The heightfield
-is the project's original illustrative hills/valley frozen as editable data;
-it is not a measured DEM. Dielectrics are uncalibrated assumptions.
+## Edit this package
 
-See [scenario packages](../../docs/scenarios.md) for the schema, custom skills,
-run snapshots and supported runtime capabilities.
+| File | Change |
+| --- | --- |
+| [flight.json](flight.json) | Orbit, speed, clearance and climb grade |
+| [radios.json](radios.json) | TX power, antennas, array laydown, receiver profile, noise and propagation |
+| [waveform.json](waveform.json) | QPSK parameters or a private finite `.npy` sample source |
+| [environment.json](environment.json) | DEM and dielectric properties shared by both engines |
+| [scenario.json](scenario.json) | Duration, recording, camera and independent skill image/wiring |
+| [quadrotor.jsonc](quadrotor.jsonc) | Vehicle dynamics, controller and sensors |
 
+Copy the whole directory to make a variation:
 
-## Low flight and demonstration noise
+```bash
+cp -r scenarios/drone-orbit ~/my-df-scenario
+python3 scripts/launch_dashboard.py --scenario ~/my-df-scenario --check-scenario
+bash scripts/run_dashboard.sh --scenario ~/my-df-scenario --open
+```
 
-The 250 m orbit now follows the shared terrain with 20 m minimum planned
-clearance, a 20% ascent/descent grade bound and a nominal absolute floor of
-120 m RF-up. Edit `flight.json` → `flight.terrain_clearance_m` and
-`flight.max_vertical_grade`. The native controller follows the compiled 3-D
-route; it does not fly the nominal 120 m plane through the terrain.
+[Flight/noise knobs](../../docs/demo-tuning.md) · [Scenario schema](../../docs/scenarios.md)
+· [Find the code](../../docs/code-map.md) · [Clutter/multipath](../../docs/clutter.md)
+· [Profiling](../../docs/profiling.md) · [I/Q replay](../../docs/iq-replay.md)
 
-Edit `radios.json` → `receiver_profile.noise_power_offset_db`. The demo starts
-at −25 dB noise power relative to the modeled receiver; **0 restores the original
-noise model**. Thermal noise remains enabled, and the ADC stays active.
-This is a visibility adjustment, not measured PlutoSDR noise performance.
-See [all tuning controls](../../docs/demo-tuning.md) and the
-[source/ADC verification](../../results/reviews/low-terrain-demo-20261024/REPORT.md).
+Vehicle/controller data derives from pinned ProjectAirSim configuration;
+[the neighboring upstream license](PROJECTAIRSIM-LICENSE.txt) applies to that
+asset. The DEM is an original illustrative grid, not a surveyed environment.

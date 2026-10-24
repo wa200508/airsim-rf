@@ -1,4 +1,8 @@
+[Documentation](README.md) · [Scenarios](../scenarios/README.md) · [Run dashboard](dashboard.md)
+
 # Setup and supported environments
+
+> **Advanced / offline reference.** The two maintained dashboard demos start at the [scenario catalog](../scenarios/README.md) and [dashboard guide](dashboard.md). The examples on this page have their own inputs and qualification scope.
 
 Use Python **3.12** for the tested lock. The package declares a wider Python
 range, but that declaration is not a tested environment matrix. The simulator
@@ -45,7 +49,7 @@ is needed for the offline point-target example.
 `requirements-geometry.txt`; omit it for the ground-only/radar path. The
 installed commands include `airsim-rf example`, `preflight`, `inspect` and
 `process`, plus `airsim-rf-live` and `airsim-rf-cuda`. See
-[their interfaces](interfaces.md). Build a local wheel with
+[their interfaces](reference/interfaces.md). Build a local wheel with
 `python -m pip wheel --no-deps --wheel-dir /tmp/airsim-rf-local .`; this does
 not publish it. Bundled scene assets use package resources and do not depend on
 the current directory being this checkout.
@@ -55,7 +59,7 @@ the current directory being this checkout.
 For an analysis-only environment, install `numpy` and `sigmf==1.13.0` and run
 `examples/process_sigmf.py` on a completed receiver metadata file. The full
 project dependency stack is unnecessary for that example. See the
-[scenario-to-I/Q guide](scenario-to-iq.md) for units, timestamps and raw-code
+[scenario-to-I/Q guide](reference/scenario-to-iq.md) for units, timestamps and raw-code
 scaling. The project test lock includes SigMF to check interoperability.
 
 ## Live CUDA dependencies
@@ -72,7 +76,7 @@ libraries. For the tested CUDA 12.2 library set:
 The CUDA library file's name records its original P100 qualification; installing
 those libraries alone does not make current Mitsuba/Dr.Jit support Pascal. Use
 the explicit P100 image below for that device. Run the
-[two-radio live walkthrough](live-workflow.md) before scaling.
+[two-radio live walkthrough](reference/live-workflow.md) before scaling.
 
 <a id="container"></a>
 
@@ -161,4 +165,4 @@ The script uses the available P100 to simulate the documented sensing scenarios,
 then generates the current gallery, mesh-visibility checks and source manifests.
 The simulation source data and plot interpretation are hardware-neutral; device
 information stays in provenance. For postprocessing existing recordings without
-new simulation, run the two commands in [the sensing guide](sensing-plots.md).
+new simulation, run the two commands in [the sensing guide](reference/sensing-plots.md).

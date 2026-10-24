@@ -1,4 +1,8 @@
+[Documentation](../README.md) · [Scenarios](../../scenarios/README.md) · [Run dashboard](../dashboard.md)
+
 # Terrain
+
+> **Advanced / offline reference.** The two maintained dashboard demos start at the [scenario catalog](../../scenarios/README.md) and [dashboard guide](../dashboard.md). The examples on this page have their own inputs and qualification scope.
 
 The current sensor-observable figures are in the [RF sensing analysis](sensing-plots.md), including radar delay profiles, ESM spectral diagnostics and passive-geolocation ambiguity plots. Earlier illustrations below are retained as linked scenario background.
 
@@ -12,10 +16,10 @@ The current sensor-observable figures are in the [RF sensing analysis](sensing-p
 
 
 
-**Runtime context (2026-10-05):** This guide measures channel generation and scene-dependent surviving paths. Sampling attempts are not guaranteed valid paths, and channel timing excludes continuous sample rendering. See [current runtime and wall-clock costs](archive/runtime.md#runtime-status) for comparable measurements, hardware, exclusions and ten-minute estimates.
+**Runtime context (2026-10-05):** This guide measures channel generation and scene-dependent surviving paths. Sampling attempts are not guaranteed valid paths, and channel timing excludes continuous sample rendering. See [current runtime and wall-clock costs](../archive/runtime.md#runtime-status) for comparable measurements, hardware, exclusions and ten-minute estimates.
 
 For primary-source comparisons with MathWorks, Ansys, Remcom, NVIDIA and
-RadarSimPy, see [published environmental RF precedents](references.md#environmental-rf-references).
+RadarSimPy, see [published environmental RF precedents](../references.md#environmental-rf-references).
 The report covers terrain reflectivity, phase consistency, coherent I/Q
 validation and the environmental paths excluded by the first-order limit.
 
@@ -161,7 +165,7 @@ less than one. New path-count/scene variations can incur fresh compilation.
 All measured epochs missed 5 ms; GPU deadlines and VRAM remain unmeasured.
 Host sampling itself remains work to optimize before a GPU real-time claim.
 
-[GPU deployment metrics](archive/planning.md#gpu-runtime) separate measured CPU costs from
+[GPU deployment metrics](../archive/planning.md#gpu-runtime) separate measured CPU costs from
 conditional GPU ray-stage estimates for one GPU per receiver. The new report
 measures host NumPy sampling independently and records per-GPU query counts,
 channel export capacity, pulse/physics budgets and unmeasured GPU/VRAM status.
@@ -212,7 +216,7 @@ per link is a starting budget, not a fidelity guarantee.
 
 The current synthetic RF terrain spans **0–30 m**, over a 200 × 200 m area.
 It uses a 21 × 21 grid at 10 m spacing, exported as 441 vertices and 800
-triangles. The reproducible [DEM formula](../src/airsim_rf/terrain.py) retains
+triangles. The reproducible [DEM formula](../../src/airsim_rf/terrain.py) retains
 the two broad hills and drainage swale, clips below-zero elevation to zero,
 and scales the maximum to 30 m. Zero-height patches are real parts of the mesh.
 This is a synthetic scene, not surveyed terrain.
@@ -234,12 +238,12 @@ at a fixed datum, lifting both flat-ground and terrain controls equally.
 Its horizontal routes and antenna motion retain the shared timing fixture's
 rules. These higher-altitude demonstration poses differ from historical
 throughput fixtures; the regenerated figure data is not a new throughput
-benchmark. See [aggregate source data](figures/scenario_data.json).
+benchmark. See [aggregate source data](../figures/scenario_data.json).
 
 The two-beacon/two-receiver ESM example uses scripted terrain clearance:
 `z = max(nominal datum height, DEM(x,y) + 5 m)`. Horizontal routes remain the
 same; local facet slope sets vertical velocity for endpoint Doppler. The
-[radio report](figures/pluto_esm_report.json) records actual poses, velocities
+[radio report](../figures/pluto_esm_report.json) records actual poses, velocities
 and clearance at every capture. This is geometric trajectory prescription,
 not simulated autopilot dynamics or a live AirSim flight. AirSim's visual
 world must separately use matching geometry for a live experiment.
@@ -304,18 +308,18 @@ range–Doppler map is claimed.
 
 ### Reproduction and raw data
 
-Run the [figure regeneration workflow](setup.md#regenerate-documentation-figures-on-the-p100):
+Run the [figure regeneration workflow](../setup.md#regenerate-documentation-figures-on-the-p100):
 
 ```bash
 bash scripts/regenerate_p100_figures.sh
 ```
 
 It first rebuilds the DEM mesh, then generates the source data, observables
-and scenario illustrations. [Complex radar I/Q](figures/terrain_scan_iq.npz),
-[radar metadata and comparisons](figures/terrain_signature_data.json),
-[SDR I/Q](figures/pluto_esm_iq.npz), and
-[processing definitions and source hashes](figures/sensing_products.json)
+and scenario illustrations. [Complex radar I/Q](../figures/terrain_scan_iq.npz),
+[radar metadata and comparisons](../figures/terrain_signature_data.json),
+[SDR I/Q](../figures/pluto_esm_iq.npz), and
+[processing definitions and source hashes](../figures/sensing_products.json)
 are stored beside the figures. Figure-generation execution time is not a
 continuous simulation throughput measurement; see the
-[historical runtime report](archive/runtime.md#runtime-status) for its original
+[historical runtime report](../archive/runtime.md#runtime-status) for its original
 measurement scopes and scene assumptions.

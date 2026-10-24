@@ -45,7 +45,7 @@ engine build was needed. The RF intersection/visibility checks use the explicit
 P100-compatible Sionna stack. This upstream packaged server differs from the
 pinned source-built standalone Runtime used for earlier flight tests.
 
-See [Unreal setup and limits](../../../docs/unreal-geometry.md) for commands.
+See [Unreal setup and limits](../../../docs/reference/unreal-geometry.md) for commands.
 The [qualification script](../../../scripts/qualify_unreal_geometry.py) records
 actual object pose/scale and LiDAR messages, then builds the independent RF cube.
 No mesh is exported from the running Unreal process.

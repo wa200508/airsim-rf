@@ -33,7 +33,7 @@ the +150 kHz source. All complex samples contain a nonzero component.
 - [Successful client log](client.log)
 - [First-run schema failure](first-failure.log)
 
-Reproduce with the [complete live recipe](../../../../docs/live-workflow.md).
+Reproduce with the [complete live recipe](../../../../docs/reference/live-workflow.md).
 Raw I/Q remains in the ignored `recordings/quality-live-server-v2-20261009`
 directory; its hash is published in the inspection. The server was stopped after
 qualification. Moving-vehicle physics, long-run recording, calibrated radio

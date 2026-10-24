@@ -4,29 +4,29 @@ This is a repository-based assessment, not a new benchmark or hardware sizing
 result. It incorporates the current uncommitted qualification work.
 
 **20 October 2026: priority 1 is complete for static shared environments with
-moving radios.** The [closure evidence](../../results/reviews/priority1-20261020/REPORT.md)
+moving radios.** The [closure evidence](../../../results/reviews/priority1-20261020/REPORT.md)
 qualifies nonprimitive shared geometry, independent collision/RF intersections,
 turns, obstruction and first-order reflections together, recorded I/Q and a
 revision/reload policy. The package remains local; do not publish or deliver it.
 
 **20 October 2026: priority 2 is complete for the qualified local Linux package.**
-The [acceptance report](../../results/reviews/priority2-20261020/REPORT.md)
+The [acceptance report](../../../results/reviews/priority2-20261020/REPORT.md)
 records a fresh dependency install, local wheel/assets/commands, a clean Docker
 build, complete CPU suite, installed-wheel live capture and current user guides.
 Nothing was published or delivered.
 
 **20 October 2026: priority 3 is complete for the user-selected Python AoA /
-emitter-tracking example.** The [acceptance report](../../results/reviews/priority3-20261020/REPORT.md)
+emitter-tracking example.** The [acceptance report](../../../results/reviews/priority3-20261020/REPORT.md)
 records independently modulated QPSK through eight propagated ADC channels,
 external MUSIC and FilterPy, fixed held-out bearing/track metrics, isolated
-installed-wheel CPU replay and replacement guidance. The [ready-made guide](../aoa-emitter-tracking.md)
+installed-wheel CPU replay and replacement guidance. The [ready-made guide](../../reference/aoa-emitter-tracking.md)
 links the official SDR University Challenge/MUSIC/tracking examples. Motion here
 is a supplied RF trajectory, not live physics; the retained specular stress
 fails the same bearing gate. No general multipath/hardware-accuracy claim.
 
 ## Destination
 
-The [recorded user target](../archive/planning.md#affordable-realtime-rf) is
+The [recorded user target](../planning.md#affordable-realtime-rf) is
 approximately $5,000 total compute, 100 independent transmitters, 10 receivers,
 continuous ESM/comms I/Q at 2 MS/s per radio, moving platforms, first-order
 environmental multipath, and 120 Hz scene/channel updates. Preserve valid paths,
@@ -40,18 +40,18 @@ integration evidence. It has not demonstrated this deployment target.
 ## What is established
 
 - Sampled-waveform rendering, propagation, receiver DSP and recording exist.
-  The [full pipeline benchmark](../performance.md) includes 100 × 10 operation
+  The [full pipeline benchmark](../../performance.md) includes 100 × 10 operation
   on a P100, with private transmitter data. It uses supplied trajectories;
   live simulator physics/RPC are excluded.
 - The P100 is accessible through the qualified Docker environment. Host-only
   GPU detection has been misleading in this environment.
-- [Shared-geometry captures](../../results/reviews/priority1-20261020/REPORT.md)
+- [Shared-geometry captures](../../../results/reviews/priority1-20261020/REPORT.md)
   now qualify nonprimitive matching collision/RF meshes and combined turning,
   obstruction and first-order reflection at 2 MS/s with 12 ms updates. Earlier
-  [longer Runtime captures](../../results/reviews/longrun-turns-20261017/REPORT.md)
+  [longer Runtime captures](../../../results/reviews/longrun-turns-20261017/REPORT.md)
   retain 9.6-second direct-turn and separate 4.8-second screen evidence. None is
   a 120 Hz fleet demonstration or a calibrated general-world result.
-- [Local package acceptance](../../results/reviews/priority2-20261020/REPORT.md)
+- [Local package acceptance](../../../results/reviews/priority2-20261020/REPORT.md)
   includes a fresh dependency install and Docker build, installed-wheel CLI/assets,
   253 CPU passes (158 hardware skips), three focused GPU passes, an actual
   installed-wheel recording and independent official SigMF consumption. No
@@ -64,9 +64,9 @@ capability and usability come first; performance is the lowest priority.
 
 | Priority | Work | Estimated remaining effort | Completion criteria |
 | --- | --- | --- | --- |
-| 1 — ✓ complete | Match simulator and RF geometry | Closed 20 October; [evidence](../../results/reviews/priority1-20261020/REPORT.md) | Shared scene geometry, explicit coordinates/transforms/materials and revision tracking; independent intersection checks; moving turns, obstruction and first-order reflections in matching scenes. Define how object changes update RF geometry. |
-| 2 — ✓ complete | Consolidate into a usable package — do not deliver | Closed 20 October; [evidence](../../results/reviews/priority2-20261020/REPORT.md) | Coherent local package with reproducible setup, preflight guidance, complete example assets and configurations, documented interfaces, actionable errors, troubleshooting, expected outputs and a current capability/acceptance matrix. Preserve pending changes and evidence; reconcile stale documentation. Do not publish, release or deliver. |
-| 3 — ✓ complete | Demonstrate useful downstream results | Closed 20 October; [evidence](../../results/reviews/priority3-20261020/REPORT.md) | User-selected Python AoA and emitter tracking: independent modulated QPSK through an actual external MUSIC/FilterPy consumer, fixed bearing/position/velocity and coverage metrics, negative controls, isolated installed-wheel replay and waveform/algorithm replacement guidance. Qualified calibrated single-emitter 2D LOS case; coherent multipath stress fails. No distributed continuous SDR-plane claim. |
+| 1 — ✓ complete | Match simulator and RF geometry | Closed 20 October; [evidence](../../../results/reviews/priority1-20261020/REPORT.md) | Shared scene geometry, explicit coordinates/transforms/materials and revision tracking; independent intersection checks; moving turns, obstruction and first-order reflections in matching scenes. Define how object changes update RF geometry. |
+| 2 — ✓ complete | Consolidate into a usable package — do not deliver | Closed 20 October; [evidence](../../../results/reviews/priority2-20261020/REPORT.md) | Coherent local package with reproducible setup, preflight guidance, complete example assets and configurations, documented interfaces, actionable errors, troubleshooting, expected outputs and a current capability/acceptance matrix. Preserve pending changes and evidence; reconcile stale documentation. Do not publish, release or deliver. |
+| 3 — ✓ complete | Demonstrate useful downstream results | Closed 20 October; [evidence](../../../results/reviews/priority3-20261020/REPORT.md) | User-selected Python AoA and emitter tracking: independent modulated QPSK through an actual external MUSIC/FilterPy consumer, fixed bearing/position/velocity and coverage metrics, negative controls, isolated installed-wheel replay and waveform/algorithm replacement guidance. Qualified calibrated single-emitter 2D LOS case; coherent multipath stress fails. No distributed continuous SDR-plane claim. |
 | 4 | Make sustained operation dependable | 16–32 active hours, plus long-run execution time | Bounded source access and hashing, efficient metadata persistence, atomic checkpoints and explicit recovery/backpressure behavior. Progress through proposed one-minute and ten-minute captures, including consumer stalls and interruptions; preserve private transmitter storage semantics. |
 | 5 | Establish independent physical accuracy | 24–60 active hours for independent numerical validation; hardware validation separately estimated at 2–6+ elapsed weeks | Independent amplitude, delay, Doppler, antenna and cadence checks with error budgets; diffuse convergence and temporal validity where needed. Hardware calibration before claims of measured-radio equivalence. |
 | 6 | Performance | 16–40 active hours for profiling and an initial optimization/feasibility pass; full target completion not yet estimable | Once broad capability and usability are in order, profile the full pipeline and measure hardware/partitioning options against the original target without relaxing fidelity or private-input requirements. |
@@ -152,7 +152,7 @@ the implementation; their strong error numbers do not independently validate
 RF amplitudes or the environment.
 
 Longer operation has concrete implementation limits. In
-[live.py](../../src/airsim_rf/live.py), validation and runtime load whole waveform
+[live.py](../../../src/airsim_rf/live.py), validation and runtime load whole waveform
 arrays, hashing reads whole files, and each recording checkpoint rewrites
 growing metadata. The recent analyzers bound their I/Q working arrays, but
 metadata and parts of the qualification helper still grow with duration.
@@ -164,14 +164,14 @@ capacity study.
 ## Next-agent handoff
 
 - **Priorities 1–3 complete in their recorded scopes.** Start priority 4 when directed.
-  See the [current quickstart](../quickstart.md), [capability matrix](../capabilities.md)
-  and [local package acceptance](../../results/reviews/priority2-20261020/REPORT.md).
+  See the [current quickstart](../../quickstart.md), [capability matrix](../../capabilities.md)
+  and [local package acceptance](../../../results/reviews/priority2-20261020/REPORT.md).
   The local CPU image is `airsim-rf:priority2-local`; the task-owned simulator is
   stopped, unrelated services remain running, and nothing has been published.
 
 - **Priority 1 completed on 20 October.** See the
-  [closure report](../../results/reviews/priority1-20261020/REPORT.md) and
-  [current workflow](../openusd-workflow.md). The previous pause/resume note is historical.
+  [closure report](../../../results/reviews/priority1-20261020/REPORT.md) and
+  [current workflow](../../reference/openusd-workflow.md). The previous pause/resume note is historical.
 - The qualified source route is OpenUSD shared triangles → generated GLB for
   Blocks collision and PLY/XML for RF, with full hashes and explicit RF materials.
   Combined turns, obstruction and ground reflection pass through the complete
@@ -202,11 +202,11 @@ capacity study.
 
 ## Supporting references
 
-- [Architecture and model boundaries](../architecture.md)
-- [Scenario-to-I/Q workflow](../scenario-to-iq.md)
-- [Unreal geometry qualification](../unreal-geometry.md)
-- [Streaming protocol and failure semantics](../iq-stream.md)
-- [Rendering accuracy and diffuse-model limitations](../rendering.md)
-- [Setup and qualified environments](../setup.md)
-- [Development and CI](../development.md)
-- [Recent performance experiment](../../results/profiling/p100-basis-persistent-20261004/REPORT.md)
+- [Architecture and model boundaries](../../architecture.md)
+- [Scenario-to-I/Q workflow](../../reference/scenario-to-iq.md)
+- [Unreal geometry qualification](../../reference/unreal-geometry.md)
+- [Streaming protocol and failure semantics](../../reference/iq-stream.md)
+- [Rendering accuracy and diffuse-model limitations](../../rendering.md)
+- [Setup and qualified environments](../../setup.md)
+- [Development and CI](../../development.md)
+- [Recent performance experiment](../../../results/profiling/p100-basis-persistent-20261004/REPORT.md)
