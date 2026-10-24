@@ -1,0 +1,32 @@
+{
+  "status": "passed",
+  "scope": "first chirp, highest budget; independent direct segment checks on exact experimental mesh",
+  "cases": [
+    {
+      "geometry": "flat-broadside",
+      "budget": 524288,
+      "front_face_in_range": 524288,
+      "antenna_eligible": 331345,
+      "mesh_blocked": 0,
+      "retained": 331345
+    },
+    {
+      "geometry": "flat-forward",
+      "budget": 524288,
+      "front_face_in_range": 524288,
+      "antenna_eligible": 324682,
+      "mesh_blocked": 0,
+      "retained": 324682
+    },
+    {
+      "geometry": "ridge-shadow",
+      "budget": 524288,
+      "front_face_in_range": 382552,
+      "antenna_eligible": 333784,
+      "mesh_blocked": 120408,
+      "retained": 213376,
+      "far_flat_eligible": 120408,
+      "far_flat_visible": 0
+    }
+  ]
+}

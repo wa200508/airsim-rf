@@ -39,6 +39,12 @@ map and detections. The dashboard renders these timestamped descriptions without
 selecting an algorithm by scenario. New skills can supply plots, metrics and tables
 using the [RF Skill Display contract](docs/skill-display.md), including recorded playback.
 
+The radar map uses **Doppler horizontally and range vertically, increasing upward**.
+See the **[clutter visibility and sampling audit](results/reviews/clutter-sampling-sweep-20261023/REPORT.md)**
+for isolated flat-ground/ridge geometries, every power-of-two sample budget from
+1,024 through 524,288, clutter-only range–Doppler maps, saved complex I/Q and the
+separate noise-limited maintained-scene comparison.
+
 The MUSIC numerical implementation comes from `doa_py`; it is not vendored
 here. The dashboard supports the QPSK direction-finding and 77 GHz FMCW radar scenarios; other LFM/FMCW radar and
 offline tracking examples have separate configurations.

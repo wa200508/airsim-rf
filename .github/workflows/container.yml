@@ -87,6 +87,12 @@ jobs:
             --output /work/package-check
       - name: Smoke test radar I/Q generation
         run: docker run --rm --network none airsim-rf:test python /opt/airsim-rf/examples/distance2gol_radar.py
+      - name: Reproduce isolated clutter-only I/Q and range-Doppler maps offline
+        run: |
+          docker run --rm --network none airsim-rf:test python /opt/airsim-rf/benchmarks/sweep_clutter_sampling.py \
+            --output /work/clutter-sweep --exponents 10 --geometries ridge-shadow
+          docker run --rm --network none airsim-rf:test python /opt/airsim-rf/benchmarks/verify_clutter_sweep.py \
+            --input /opt/airsim-rf/results/reviews/clutter-sampling-sweep-20261023 --output /work/clutter-verification
       - name: Exercise two distributed RF workers offline
         run: docker run --rm --network none airsim-rf:test python /opt/airsim-rf/examples/distributed_hello.py
       - name: Smoke test COTS SDR network I/Q offline

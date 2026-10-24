@@ -20,10 +20,10 @@ are forbidden from importing `df_skill`; the architecture audit enforces both.
 
 ## Pins and deployment
 
-Pinned source: [bb78fbd0c7b3506b36ae1ad82b9df78acedbe66c](https://github.com/wa200508/Radar-skill/tree/bb78fbd0c7b3506b36ae1ad82b9df78acedbe66c).
+Pinned source: [9c9a57339784f87034e835f836076aaa8691f08a](https://github.com/wa200508/Radar-skill/tree/9c9a57339784f87034e835f836076aaa8691f08a).
 
 ```text
-ghcr.io/wa200508/airsim-rf:radar-skill-sha-bb78fbd0c7b3506b36ae1ad82b9df78acedbe66c
+ghcr.io/wa200508/airsim-rf:radar-skill-sha-9c9a57339784f87034e835f836076aaa8691f08a
 ```
 
 The scenario selects that immutable public image with `revision_policy: independent`.
@@ -123,3 +123,21 @@ The simulator's [first-order radar model](radar-scattering.md) now combines
 visible direct target echoes and area-normalized terrain clutter with an explicit
 range cutoff. These settings and scene truth remain in the simulator; neither
 this skill's control protocol nor its I/Q/FFT processing consumes them.
+
+
+### Range–Doppler coordinates and color scales
+
+The skill emits `power_db[range_index][doppler_index]`, `range_m` and signed
+`doppler_khz`. Range increases upward; Doppler increases to the right. In the
+maintained mode the full FFT axes span approximately 0–480 m and ±12.5 kHz.
+Positive Doppler means receding motion. Apparent range retains FMCW coupling;
+the candidate's range estimate separately corrects its Doppler contribution.
+The color quantity is contrast relative to the current map median, not calibrated
+SNR. Noise-detail, strong-echo and wide-dynamic-range presets change the view
+only; samples and the 18 dB detector threshold stay unchanged. Finite weak-bin
+values are preserved instead of clipping the result matrix at −20 dB.
+Known earlier radar recordings receive an observer-only orientation projection;
+their original matrices, archived I/Q and detections remain untouched. Values
+already clipped when an old recording was created cannot be recovered by replay.
+See the [clutter audit](../results/reviews/clutter-sampling-sweep-20261023/REPORT.md)
+for absolute-power maps and paired noise/ADC comparisons.

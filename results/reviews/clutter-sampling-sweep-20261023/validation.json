@@ -1,0 +1,196 @@
+{
+  "status": "passed",
+  "cases_checked": 30,
+  "checks": [
+    "complete power-of-two sweep for three geometries",
+    "finite I/Q and maps",
+    "64 chirps with preserved 40 us PRI gates",
+    "range-major 128x64 matrices",
+    "increasing physical axes",
+    "zero ADC clipping",
+    "RCS per area invariant across budgets",
+    "both map types reproduce independent FFT from saved I/Q throughout display span plus 20 dB"
+  ],
+  "power_by_Doppler_sign": [
+    {
+      "geometry": "flat-broadside",
+      "proposed_samples": 1024,
+      "negative_Doppler_power_fraction": 0.4643108414096661,
+      "positive_Doppler_power_fraction": 0.5071861436431261
+    },
+    {
+      "geometry": "flat-broadside",
+      "proposed_samples": 8192,
+      "negative_Doppler_power_fraction": 0.37804523845950877,
+      "positive_Doppler_power_fraction": 0.583027438138748
+    },
+    {
+      "geometry": "flat-broadside",
+      "proposed_samples": 2048,
+      "negative_Doppler_power_fraction": 0.4376683826151836,
+      "positive_Doppler_power_fraction": 0.5162278739373356
+    },
+    {
+      "geometry": "flat-broadside",
+      "proposed_samples": 4096,
+      "negative_Doppler_power_fraction": 0.5206932077161969,
+      "positive_Doppler_power_fraction": 0.4493719993763435
+    },
+    {
+      "geometry": "flat-broadside",
+      "proposed_samples": 16384,
+      "negative_Doppler_power_fraction": 0.4871991355189485,
+      "positive_Doppler_power_fraction": 0.40796473278494333
+    },
+    {
+      "geometry": "flat-broadside",
+      "proposed_samples": 32768,
+      "negative_Doppler_power_fraction": 0.5303225162833213,
+      "positive_Doppler_power_fraction": 0.41298379395497764
+    },
+    {
+      "geometry": "flat-broadside",
+      "proposed_samples": 65536,
+      "negative_Doppler_power_fraction": 0.4995561095211631,
+      "positive_Doppler_power_fraction": 0.4628839910833677
+    },
+    {
+      "geometry": "flat-broadside",
+      "proposed_samples": 131072,
+      "negative_Doppler_power_fraction": 0.43725505690635935,
+      "positive_Doppler_power_fraction": 0.4922593938857403
+    },
+    {
+      "geometry": "flat-broadside",
+      "proposed_samples": 262144,
+      "negative_Doppler_power_fraction": 0.48688674499639184,
+      "positive_Doppler_power_fraction": 0.46469313896222375
+    },
+    {
+      "geometry": "flat-broadside",
+      "proposed_samples": 524288,
+      "negative_Doppler_power_fraction": 0.507994220969056,
+      "positive_Doppler_power_fraction": 0.4445151627432462
+    },
+    {
+      "geometry": "flat-forward",
+      "proposed_samples": 1024,
+      "negative_Doppler_power_fraction": 0.9999997786571814,
+      "positive_Doppler_power_fraction": 1.4227116518371862e-07
+    },
+    {
+      "geometry": "flat-forward",
+      "proposed_samples": 2048,
+      "negative_Doppler_power_fraction": 0.9999998528587184,
+      "positive_Doppler_power_fraction": 8.266559908780098e-08
+    },
+    {
+      "geometry": "flat-forward",
+      "proposed_samples": 4096,
+      "negative_Doppler_power_fraction": 0.9999997924247941,
+      "positive_Doppler_power_fraction": 1.1796546322470908e-07
+    },
+    {
+      "geometry": "flat-forward",
+      "proposed_samples": 8192,
+      "negative_Doppler_power_fraction": 0.9999997377225731,
+      "positive_Doppler_power_fraction": 1.4735037229278282e-07
+    },
+    {
+      "geometry": "flat-forward",
+      "proposed_samples": 16384,
+      "negative_Doppler_power_fraction": 0.999999833007415,
+      "positive_Doppler_power_fraction": 9.417120485602132e-08
+    },
+    {
+      "geometry": "flat-forward",
+      "proposed_samples": 32768,
+      "negative_Doppler_power_fraction": 0.9999998315710158,
+      "positive_Doppler_power_fraction": 1.0075049195133932e-07
+    },
+    {
+      "geometry": "flat-forward",
+      "proposed_samples": 65536,
+      "negative_Doppler_power_fraction": 0.9999998482109739,
+      "positive_Doppler_power_fraction": 9.445901164852943e-08
+    },
+    {
+      "geometry": "flat-forward",
+      "proposed_samples": 131072,
+      "negative_Doppler_power_fraction": 0.9999997845463104,
+      "positive_Doppler_power_fraction": 1.1127017852426646e-07
+    },
+    {
+      "geometry": "flat-forward",
+      "proposed_samples": 262144,
+      "negative_Doppler_power_fraction": 0.9999998596088779,
+      "positive_Doppler_power_fraction": 6.97981528271942e-08
+    },
+    {
+      "geometry": "flat-forward",
+      "proposed_samples": 524288,
+      "negative_Doppler_power_fraction": 0.9999997680085226,
+      "positive_Doppler_power_fraction": 1.3873606768192993e-07
+    },
+    {
+      "geometry": "ridge-shadow",
+      "proposed_samples": 1024,
+      "negative_Doppler_power_fraction": 0.9999998856677729,
+      "positive_Doppler_power_fraction": 1.1266695012614793e-07
+    },
+    {
+      "geometry": "ridge-shadow",
+      "proposed_samples": 2048,
+      "negative_Doppler_power_fraction": 0.9999999193638862,
+      "positive_Doppler_power_fraction": 7.751825618440508e-08
+    },
+    {
+      "geometry": "ridge-shadow",
+      "proposed_samples": 4096,
+      "negative_Doppler_power_fraction": 0.9999999150377368,
+      "positive_Doppler_power_fraction": 8.179768136749518e-08
+    },
+    {
+      "geometry": "ridge-shadow",
+      "proposed_samples": 8192,
+      "negative_Doppler_power_fraction": 0.9999995853036362,
+      "positive_Doppler_power_fraction": 4.128228484439013e-07
+    },
+    {
+      "geometry": "ridge-shadow",
+      "proposed_samples": 16384,
+      "negative_Doppler_power_fraction": 0.9999997180786191,
+      "positive_Doppler_power_fraction": 2.8012337471767784e-07
+    },
+    {
+      "geometry": "ridge-shadow",
+      "proposed_samples": 32768,
+      "negative_Doppler_power_fraction": 0.9999998905390455,
+      "positive_Doppler_power_fraction": 1.0769862738026266e-07
+    },
+    {
+      "geometry": "ridge-shadow",
+      "proposed_samples": 65536,
+      "negative_Doppler_power_fraction": 0.9999997403680743,
+      "positive_Doppler_power_fraction": 2.5658442431861133e-07
+    },
+    {
+      "geometry": "ridge-shadow",
+      "proposed_samples": 131072,
+      "negative_Doppler_power_fraction": 0.9999997449920621,
+      "positive_Doppler_power_fraction": 2.5305777337583036e-07
+    },
+    {
+      "geometry": "ridge-shadow",
+      "proposed_samples": 262144,
+      "negative_Doppler_power_fraction": 0.9999993543588462,
+      "positive_Doppler_power_fraction": 6.423107090242616e-07
+    },
+    {
+      "geometry": "ridge-shadow",
+      "proposed_samples": 524288,
+      "negative_Doppler_power_fraction": 0.9999999076630571,
+      "positive_Doppler_power_fraction": 8.981066829070701e-08
+    }
+  ]
+}

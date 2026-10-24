@@ -1,0 +1,386 @@
+{
+  "scope": "matched receiver-noise A/B audit; pre-ADC reference is explicitly separated from actual ADC output",
+  "parameters_unchanged": [
+    "waveform",
+    "TX power",
+    "antenna",
+    "sigma0",
+    "noise figure",
+    "ADC",
+    "sampling budget",
+    "range cap"
+  ],
+  "backend": "LLVM CPU",
+  "poses": [
+    {
+      "viewpoint": "start",
+      "position_rf_m": [
+        -200,
+        0,
+        210
+      ],
+      "velocity_rf_m_s": [
+        20,
+        0,
+        0
+      ],
+      "cases": {
+        "full": {
+          "retained_echoes_first_chirp": {
+            "target_echoes": 3,
+            "terrain_echoes": 364
+          },
+          "clipped_fraction": 0.0,
+          "mean_IF_power_v2": 8.702638297108933e-05
+        },
+        "clutter-noise": {
+          "retained_echoes_first_chirp": {
+            "target_echoes": 0,
+            "terrain_echoes": 364
+          },
+          "clipped_fraction": 0.0,
+          "mean_IF_power_v2": 3.6197910958435386e-05
+        },
+        "noise": {
+          "retained_echoes_first_chirp": {
+            "target_echoes": 0,
+            "terrain_echoes": 0
+          },
+          "clipped_fraction": 0.0,
+          "mean_IF_power_v2": 3.61940692528151e-05
+        },
+        "targets-noise": {
+          "retained_echoes_first_chirp": {
+            "target_echoes": 3,
+            "terrain_echoes": 0
+          },
+          "clipped_fraction": 0.0,
+          "mean_IF_power_v2": 8.705210348125547e-05
+        },
+        "clutter-reference": {
+          "retained_echoes_first_chirp": {
+            "target_echoes": 0,
+            "terrain_echoes": 364
+          },
+          "clipped_fraction": 0.0,
+          "mean_IF_power_v2": 6.0413460900576865e-09
+        }
+      },
+      "analog_superposition_max_error_v": 1.7038328525842417e-09,
+      "strongest_analog_clutter_bin_vs_median_ADC_noise_db": -10.281767911944073,
+      "integrated_clutter_to_noise_db": -37.77503967285156,
+      "clutter_peak_range_m": 108.674766025,
+      "clutter_peak_doppler_khz": -7.812499999999999,
+      "range_axis_extent_m": [
+        0.0,
+        475.920527075
+      ],
+      "doppler_axis_extent_khz": [
+        -12.499999999999998,
+        12.109374999999998
+      ]
+    },
+    {
+      "viewpoint": "east",
+      "position_rf_m": [
+        200,
+        0,
+        210
+      ],
+      "velocity_rf_m_s": [
+        20,
+        0,
+        0
+      ],
+      "cases": {
+        "full": {
+          "retained_echoes_first_chirp": {
+            "target_echoes": 3,
+            "terrain_echoes": 355
+          },
+          "clipped_fraction": 0.0,
+          "mean_IF_power_v2": 9.44922212511301e-05
+        },
+        "clutter-noise": {
+          "retained_echoes_first_chirp": {
+            "target_echoes": 0,
+            "terrain_echoes": 355
+          },
+          "clipped_fraction": 0.0,
+          "mean_IF_power_v2": 3.620708594098687e-05
+        },
+        "noise": {
+          "retained_echoes_first_chirp": {
+            "target_echoes": 0,
+            "terrain_echoes": 0
+          },
+          "clipped_fraction": 0.0,
+          "mean_IF_power_v2": 3.61940692528151e-05
+        },
+        "targets-noise": {
+          "retained_echoes_first_chirp": {
+            "target_echoes": 3,
+            "terrain_echoes": 0
+          },
+          "clipped_fraction": 0.0,
+          "mean_IF_power_v2": 9.441355359740555e-05
+        },
+        "clutter-reference": {
+          "retained_echoes_first_chirp": {
+            "target_echoes": 0,
+            "terrain_echoes": 355
+          },
+          "clipped_fraction": 0.0,
+          "mean_IF_power_v2": 6.46623954381198e-09
+        }
+      },
+      "analog_superposition_max_error_v": 1.7716956790536642e-09,
+      "strongest_analog_clutter_bin_vs_median_ADC_noise_db": -7.299056632609023,
+      "integrated_clutter_to_noise_db": -37.4798583984375,
+      "clutter_peak_range_m": 134.9066061,
+      "clutter_peak_doppler_khz": 8.203124999999998,
+      "range_axis_extent_m": [
+        0.0,
+        475.920527075
+      ],
+      "doppler_axis_extent_khz": [
+        -12.499999999999998,
+        12.109374999999998
+      ]
+    },
+    {
+      "viewpoint": "masked",
+      "position_rf_m": [
+        -240,
+        -150,
+        210
+      ],
+      "velocity_rf_m_s": [
+        20,
+        0,
+        0
+      ],
+      "cases": {
+        "full": {
+          "retained_echoes_first_chirp": {
+            "target_echoes": 0,
+            "terrain_echoes": 296
+          },
+          "clipped_fraction": 0.0,
+          "mean_IF_power_v2": 3.619052586145699e-05
+        },
+        "clutter-noise": {
+          "retained_echoes_first_chirp": {
+            "target_echoes": 0,
+            "terrain_echoes": 296
+          },
+          "clipped_fraction": 0.0,
+          "mean_IF_power_v2": 3.619052586145699e-05
+        },
+        "noise": {
+          "retained_echoes_first_chirp": {
+            "target_echoes": 0,
+            "terrain_echoes": 0
+          },
+          "clipped_fraction": 0.0,
+          "mean_IF_power_v2": 3.61940692528151e-05
+        },
+        "targets-noise": {
+          "retained_echoes_first_chirp": {
+            "target_echoes": 0,
+            "terrain_echoes": 0
+          },
+          "clipped_fraction": 0.0,
+          "mean_IF_power_v2": 3.61940692528151e-05
+        },
+        "clutter-reference": {
+          "retained_echoes_first_chirp": {
+            "target_echoes": 0,
+            "terrain_echoes": 296
+          },
+          "clipped_fraction": 0.0,
+          "mean_IF_power_v2": 1.4435141970636778e-08
+        }
+      },
+      "analog_superposition_max_error_v": 1.6915466805045298e-09,
+      "strongest_analog_clutter_bin_vs_median_ADC_noise_db": -0.009872180553401222,
+      "integrated_clutter_to_noise_db": -33.992164611816406,
+      "clutter_peak_range_m": 78.695520225,
+      "clutter_peak_doppler_khz": -6.249999999999999,
+      "range_axis_extent_m": [
+        0.0,
+        475.920527075
+      ],
+      "doppler_axis_extent_khz": [
+        -12.499999999999998,
+        12.109374999999998
+      ]
+    }
+  ],
+  "scenario_input_sha256": {
+    "PROJECTAIRSIM-LICENSE.txt": "c2cfccb812fe482101a8f04597dfc5a9991a6b2748266c47ac91b6a5aae15383",
+    "README.md": "468d1b553b7b8415ded0548c0e8aa1a1186d71ac6e14ff4ebdf63d241730a321",
+    "environment.json": "46294d3ccd1bf3468c733d94fb776a1b483475972362bd248f6bb6caa6012921",
+    "flight.json": "8680d763b8b418bbfc19609fb0be499d9f90fc3fe1bb65bc945c5e85bbfe71bf",
+    "quadrotor.jsonc": "c9ff96a27b32b6d520fbe3273266ad98fcd9a59a39b8d4e96cbf2462284fee10",
+    "radar-mode.json": "80a03e248b6425818afa97a08cdca336eb1f9e5c77579f3eed1253bfcad8b196",
+    "radios.json": "b5a41175d8760c82a199678bc90b3e9f3cfd39442fa646741bbe2df5772d72bd",
+    "scenario.json": "722ef64c55b0827a97261df1ffda7c3427b897fb9e35b69a32b813096b8285be"
+  },
+  "radio": {
+    "mode": "fmcw-radar",
+    "sample_rate_hz": 10000000.0,
+    "carrier_hz": 77000000000.0,
+    "transmitters": [],
+    "sites": [
+      {
+        "id": "radar",
+        "center_rf_m": [
+          -200,
+          0,
+          210
+        ],
+        "altitude_reference": "absolute",
+        "yaw_rad": 0,
+        "element_offsets_m": [
+          0.0
+        ],
+        "channels": [
+          "radar_rx0"
+        ],
+        "calibration_complex": [
+          [
+            1.0,
+            0.0
+          ]
+        ]
+      }
+    ],
+    "radar": {
+      "platform_actor": "RadarDrone",
+      "mount_body_m": [
+        0,
+        0,
+        0
+      ],
+      "pointing": "track-target",
+      "targets": [
+        {
+          "id": "GroundContainer",
+          "position_rf_m": [
+            0,
+            25,
+            104.76968528723096
+          ],
+          "altitude_reference": "absolute",
+          "rcs_m2": 1000000.0,
+          "visual": {
+            "size_m": [
+              6,
+              2.5,
+              2.6
+            ],
+            "color_rgb": [
+              0.9,
+              0.55,
+              0.15
+            ]
+          }
+        },
+        {
+          "id": "GroundShelter",
+          "position_rf_m": [
+            65,
+            55,
+            107.93654764230608
+          ],
+          "altitude_reference": "absolute",
+          "rcs_m2": 500000.0,
+          "visual": {
+            "size_m": [
+              4,
+              4,
+              3.6
+            ],
+            "color_rgb": [
+              0.3,
+              0.8,
+              0.75
+            ]
+          }
+        },
+        {
+          "id": "GroundReflector",
+          "position_rf_m": [
+            -75,
+            15,
+            106.6862809388146
+          ],
+          "altitude_reference": "absolute",
+          "rcs_m2": 250000.0,
+          "visual": {
+            "size_m": [
+              1.5,
+              1.5,
+              2
+            ],
+            "color_rgb": [
+              0.75,
+              0.6,
+              0.95
+            ]
+          }
+        }
+      ],
+      "profile": {
+        "tx_feed_loss_db": 0.0,
+        "antenna_gain_dbi": 7.0,
+        "azimuth_beamwidth_deg": 56.0,
+        "elevation_beamwidth_deg": 28.0,
+        "if_low_hz": 30000.0,
+        "if_high_hz": 4500000.0,
+        "adc_bits": 12,
+        "adc_full_scale_v": 1.0,
+        "adc_bias_v": 0.5,
+        "noise_figure_db": 15.0,
+        "noise_enabled": true
+      },
+      "seed": 42,
+      "echo_model": "first-order",
+      "max_range_m": 400.0,
+      "clutter": {
+        "enabled": true,
+        "seed": 314159,
+        "materials": {
+          "earth": {
+            "sigma0_db": -20.0,
+            "incidence_exponent": 1.0
+          }
+        },
+        "shape_materials": {
+          "obj_Terrain": "earth"
+        }
+      }
+    },
+    "receiver_profile": {
+      "rf_bandwidth_hz": 9000000.0
+    },
+    "propagation": {
+      "continuous": true,
+      "path_diagnostics": true,
+      "path_solver": "first-order direct target and terrain backscatter",
+      "max_depth": 1,
+      "samples_per_link": 1024
+    }
+  },
+  "source_sha256": {
+    "radar_processing": "1ceb81ea643c69e508756802a072d6677f3c2658480f8bc20e9597751bfe5f95",
+    "fmcw": "66cbe7b454d2ff0efd502f180ede81ed9cf134a9b19f5cc2c3e395f98c1ce978",
+    "surface": "140c07d9ad3c35d24b0b6d3278e291a5383161aa56030c69dcbef5bfb0a8b872"
+  },
+  "software": {
+    "sionna_rt": "2.2.0",
+    "mitsuba": "3.9.1",
+    "numpy": "2.5.3"
+  }
+}

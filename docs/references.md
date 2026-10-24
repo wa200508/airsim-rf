@@ -844,3 +844,23 @@ from the dielectric specular/diffuse radio-link experiments reviewed above.
 The earlier review's calibration and convergence limitations remain relevant:
 this addition does not establish calibrated land-cover statistics, a measured
 board antenna, multiple scattering, or GPU real-time performance.
+
+
+### Range–Doppler clutter comparisons
+
+The [isolated clutter sampling audit](../results/reviews/clutter-sampling-sweep-20261023/REPORT.md)
+compares the implemented model with these primary workflows:
+
+- MathWorks, [Introduction to Radar Scenario Clutter Simulation](https://www.mathworks.com/help/radar/ug/introduction-to-radar-scenario-clutter-simulation.html):
+  moving-platform clutter I/Q, surface sampling, terrain shadowing and range-up,
+  Doppler-horizontal display. Its example uses a 60 dB map display span.
+- MathWorks, [Predict Surface Clutter Power in Range-Doppler Space](https://www.mathworks.com/help/radar/ug/predict-surface-clutter-power-in-range-doppler-space.html):
+  terrain power support changes with range, radar velocity and antenna squint;
+  stationary ground need not appear at zero Doppler for a moving radar.
+- MathWorks, [Bistatic Clutter Part 3: Simulating Site-Specific Bistatic Land Clutter](https://www.mathworks.com/help/radar/ug/bistatic-clutter-part-3-simulating-site-specific-bistatic-land-clutter.html):
+  terrain-patch RCS/area and random-phase clutter; distinguishes convenient
+  noise-free clutter maps from noisy I/Q where weaker returns disappear.
+
+These are workflow/physics comparisons, not numerical validation of this project's
+77 GHz sigma0, Gaussian antenna or illustrative receiver calibration. The audit
+uses our own generated figures and documents actual waveform/ADC assumptions.

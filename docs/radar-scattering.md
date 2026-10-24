@@ -90,3 +90,18 @@ tables in one place, is in the [runtime report](../results/reviews/first-order-r
 It includes both configured terrain sampling and a separate 1,024-valid-echo
 stress, with explicit exclusions and no GPU/realtime claim. Reproduce using
 `benchmarks/benchmark_first_order_radar.py`.
+
+
+## Inspect the clutter independently
+
+The [clutter visibility and sampling audit](../results/reviews/clutter-sampling-sweep-20261023/REPORT.md)
+isolates side-looking flat ground, forward-looking flat ground and a ridge with
+actual mesh shadowing. Every power-of-two proposal budget from 1,024 to 524,288
+uses the production echo source, 64 moving-platform chirps and the independent
+radar skill FFT. Plots share one absolute voltage-power scale. Noise-free ADC
+maps and separately labeled pre-ADC references accompany saved complex I/Q.
+This is a sampling/fidelity experiment, not a calibrated terrain or GPU benchmark.
+Changing the sample budget changes the random-phase realization; individual
+speckles need not converge pixel by pixel. Area-normalized expected surface
+power remains constant. The same report separates this effect from receiver
+noise hiding clutter in the maintained dashboard scenario.
