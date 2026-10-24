@@ -5,6 +5,7 @@ on a skill algorithm. Run after the complete default sampling sweep.
 """
 from pathlib import Path
 import json
+import tempfile
 import numpy as np
 import argparse
 parser=argparse.ArgumentParser(description='Verify all 30 saved clutter I/Q maps and the highest-budget mesh shadow.')
