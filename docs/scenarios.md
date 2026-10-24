@@ -232,3 +232,34 @@ references to flight actors. Each target must use exactly one of these forms.
 The antenna tracks the first configured target; other targets receive the same
 configured antenna pattern at their actual relative bearings. The skill receives
 only I/Q and acquisition settings, without target positions or RCS.
+
+## Radar first-order clutter and range
+
+The radar's world model is explicit in `radios.json`:
+
+```json
+{
+  "echo_model":"first-order",
+  "max_range_m":400,
+  "clutter":{
+    "enabled":true,"sample_count":1024,"seed":314159,
+    "materials":{"earth":{"sigma0_db":-20,"incidence_exponent":1}}
+  }
+}
+```
+
+These fields belong inside `radar`, alongside `targets` and `profile`.
+The compiler maps shared mesh object IDs to their configured material classes.
+Materials without a clutter rule remain occluders but do not generate diffuse
+backscatter. A clutter rule must name an environment material; enabled clutter
+must match at least one surface object. `sample_count` is 1..1,000,000 across the
+configured map, not per target or a valid-path count. Range is slant distance in
+metres, applied before tracing, and must be finite and positive. Samples and
+phases are fixed during a run. Change the seed/budget to study quadrature
+sensitivity; change `materials` to study explicit backscatter assumptions.
+
+Remove the old `max_depth_per_leg` key when migrating an edited radar package;
+secondary target-leg paths are no longer supported. Existing recorded I/Q and
+playback need no conversion. Radio-to-radio ESM/comms propagation is unchanged.
+The [radar scattering model](radar-scattering.md) specifies normalization,
+phase, Doppler and the difference between dielectric and backscatter parameters.

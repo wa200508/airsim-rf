@@ -52,7 +52,7 @@ def link_geometry(document,arrays,position_rf,path_diagnostics,*,transmitter_id=
     for name,hit,distance in zip(channels,hits,distances):
         blocked=hit is not None and hit['distance_m']<distance-.001
         paths=path_diagnostics[name][transmitter_id]
-        if bool(paths['direct_paths'])==blocked:
+        if not paths.get('range_gated',False) and paths.get('illuminated',True) and bool(paths['direct_paths'])==blocked:
             raise RuntimeError('Sionna direct path disagrees with shared terrain visibility: '+name)
         details[name]={**paths,'direct_visible':not blocked,
             'blocker_rf_m':(np.asarray(hit['position_ned_m'])*[1,-1,-1]).tolist() if blocked else None}
@@ -60,7 +60,7 @@ def link_geometry(document,arrays,position_rf,path_diagnostics,*,transmitter_id=
     for site in arrays['sites']:
         values=[details[name] for name in site['channels']]
         sites.append({'id':site['id'],'center_rf_m':site['center_rf_m'],
-            'direct_elements':sum(v['direct_paths']>0 for v in values),
+            'direct_elements':sum(v['direct_visible'] for v in values),
             'elements':len(values),'reflected_paths_per_element':[v['reflected_paths'] for v in values],
             'blocker_rf_m':next((v['blocker_rf_m'] for v in values if v['blocker_rf_m'] is not None),None)})
     return {'direct_visible':[s['direct_elements']>0 for s in sites],

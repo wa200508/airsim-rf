@@ -9,7 +9,7 @@ from pathlib import Path
 
 ROOT=Path(__file__).resolve().parents[1]
 SOURCE={'receiver','sdr','radar','fmcw','rendering','batched_rendering','sampled_waveform',
-    'single_bounce','scattering','bridge','sdr_bridge','terrain','geometry','geometry_sync','glb_geometry',
+    'single_bounce','scattering','radar_scattering','bridge','sdr_bridge','terrain','geometry','geometry_sync','glb_geometry',
     'usd_geometry','scenario','scenario_definition','live','dashboard_producer','dashboard_scenario','dashboard_geometry',
     'dashboard_view','dashboard_radar','radar_control','dashboard_sync','source_recording','p100_compat','cuda_launch','preflight','example'}
 EXTERNAL_SOURCE={'sionna','mitsuba','drjit','projectairsim'}

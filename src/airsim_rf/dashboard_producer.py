@@ -213,7 +213,7 @@ async def run(args):
                 **link_geometry(document,arrays,tx_positions[primary_tx],receiver.last_path_diagnostics,transmitter_id=primary_tx),
                 'retained_paths_per_channel':[sum(c.retained_paths.values()) for c in captures.values()],
                 'max_clipped_component_fraction':max(c.clipped_component_fraction for c in captures.values())}
-            if radar_mode:row.update(radar_truth=receiver.truth,line_target_position_rf_m=tx_positions[primary_tx].tolist(),
+            if radar_mode:row.update(radar_truth=receiver.truth,radar_clutter=receiver.last_clutter_diagnostics,line_target_position_rf_m=tx_positions[primary_tx].tolist(),
                 transceiver=receiver.control.snapshot())
             if history and history[-1]['sim_time_ns']==epoch:history[-1]=row
             else:history.append(row)

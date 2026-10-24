@@ -1,0 +1,257 @@
+{
+  "scope": "first_order_radar_rf_window",
+  "measurement_mode": "instrumented_cpu_screening",
+  "case_kind": "1024 retained echoes, free-space visibility stress",
+  "hardware": {
+    "cpu": "AMD EPYC 9V74 80-Core Processor",
+    "cpu_quota": "200000 100000",
+    "drjit_threads": 2,
+    "platform": "Linux-6.18.55-x86_64-with-glibc2.41",
+    "sionna_rt": "2.2.0",
+    "mitsuba": "3.9.1",
+    "drjit": "1.5.0"
+  },
+  "source_file_sha256": {
+    "fmcw.py": "4d80457a4f02a2f699abef32592e6b66e91979f47c18d00f603a5ce4f86d4d79",
+    "radar_scattering.py": "98fc5347f7e9881618b831254c308d5e5db999c70dbae03511967ecf87056f02",
+    "dashboard_radar.py": "6f7aa1ee5ee6b8b9fc48f40179e57d4e3fead2892e17899abc9df32ed299d02a"
+  },
+  "scenario_input_sha256": {
+    "PROJECTAIRSIM-LICENSE.txt": "c2cfccb812fe482101a8f04597dfc5a9991a6b2748266c47ac91b6a5aae15383",
+    "README.md": "e4f6f3102313fa700c826a7121df6b4e68facf175dfb8c859a02dfbf258aa7bf",
+    "environment.json": "46294d3ccd1bf3468c733d94fb776a1b483475972362bd248f6bb6caa6012921",
+    "flight.json": "8680d763b8b418bbfc19609fb0be499d9f90fc3fe1bb65bc945c5e85bbfe71bf",
+    "quadrotor.jsonc": "c9ff96a27b32b6d520fbe3273266ad98fcd9a59a39b8d4e96cbf2462284fee10",
+    "radar-mode.json": "80a03e248b6425818afa97a08cdca336eb1f9e5c77579f3eed1253bfcad8b196",
+    "radios.json": "2d8c74c1c6eb2fe1366dc999253e6b9022207d0273ea13573aa049614a7226a1",
+    "scenario.json": "722ef64c55b0827a97261df1ffda7c3427b897fb9e35b69a32b813096b8285be"
+  },
+  "capture_duration_ms": 4.0,
+  "samples_per_window": 40000,
+  "chirps_per_window": 100,
+  "adc_samples_per_chirp": 256,
+  "arguments": {
+    "iterations": 10,
+    "warmup": 1,
+    "output": "results/reviews/first-order-radar-20261023",
+    "clutter_enabled": false,
+    "viewpoint": "1024-valid-scatterers"
+  },
+  "timing_includes": [
+    "constant-velocity intra-window poses",
+    "direct visibility on shared mesh",
+    "coherent tiled IF synthesis",
+    "receiver noise and ADC",
+    "acquisition gate packing"
+  ],
+  "timing_excludes": [
+    "AirSim RPC/physics",
+    "camera",
+    "network transport",
+    "recording",
+    "external skill/DSP",
+    "startup and warmup"
+  ],
+  "limitations": [
+    "CPU only",
+    "repeated fixed window origins with intra-window platform motion",
+    "short screening, no sustained-flight or GPU claim",
+    "per-stage timers add diagnostic overhead"
+  ],
+  "first_window_ms": 1885.8458579925355,
+  "summary": {
+    "service_ms": {
+      "median": 1976.2769215012668,
+      "sd": 82.37675778678755,
+      "p95": 2118.6113909978303
+    },
+    "visibility_ms": {
+      "median": 28.59710638585966,
+      "sd": 2.3463461089553252,
+      "p95": 31.39216596173355
+    },
+    "tone_ms": {
+      "median": 704.4111885334132,
+      "sd": 37.02414914608507,
+      "p95": 729.2674508644268
+    },
+    "other_ms": {
+      "median": 1261.3216323516099,
+      "sd": 54.415663466423844,
+      "p95": 1370.5652788907173
+    }
+  },
+  "wall_seconds_per_signal_second": 497.9661688747001,
+  "samples": [
+    {
+      "service_ms": 1990.990149002755,
+      "visibility_ms": 32.36618102528155,
+      "tone_ms": 709.4929380109534,
+      "other_ms": 1249.1310299665201,
+      "retained_paths": {
+        "target_echoes": 1024,
+        "terrain_echoes": 0
+      },
+      "clutter": {
+        "sample_count": 0,
+        "in_range": 0,
+        "front_facing": 0,
+        "visible": 0,
+        "contributing": 0
+      }
+    },
+    {
+      "service_ms": 1950.6970309885219,
+      "visibility_ms": 28.128310019383207,
+      "tone_ms": 658.7380912096705,
+      "other_ms": 1263.8306297594681,
+      "retained_paths": {
+        "target_echoes": 1024,
+        "terrain_echoes": 0
+      },
+      "clutter": {
+        "sample_count": 0,
+        "in_range": 0,
+        "front_facing": 0,
+        "visible": 0,
+        "contributing": 0
+      }
+    },
+    {
+      "service_ms": 2038.4924780228175,
+      "visibility_ms": 29.7266679990571,
+      "tone_ms": 732.9912719142158,
+      "other_ms": 1275.7745381095447,
+      "retained_paths": {
+        "target_echoes": 1024,
+        "terrain_echoes": 0
+      },
+      "clutter": {
+        "sample_count": 0,
+        "in_range": 0,
+        "front_facing": 0,
+        "visible": 0,
+        "contributing": 0
+      }
+    },
+    {
+      "service_ms": 1873.4705869865138,
+      "visibility_ms": 24.946646037278697,
+      "tone_ms": 634.0204149018973,
+      "other_ms": 1214.5035260473378,
+      "retained_paths": {
+        "target_echoes": 1024,
+        "terrain_echoes": 0
+      },
+      "clutter": {
+        "sample_count": 0,
+        "in_range": 0,
+        "front_facing": 0,
+        "visible": 0,
+        "contributing": 0
+      }
+    },
+    {
+      "service_ms": 1961.5636939997785,
+      "visibility_ms": 28.188672848045826,
+      "tone_ms": 662.9904299625196,
+      "other_ms": 1270.384591189213,
+      "retained_paths": {
+        "target_echoes": 1024,
+        "terrain_echoes": 0
+      },
+      "clutter": {
+        "sample_count": 0,
+        "in_range": 0,
+        "front_facing": 0,
+        "visible": 0,
+        "contributing": 0
+      }
+    },
+    {
+      "service_ms": 1957.579262991203,
+      "visibility_ms": 27.33058200101368,
+      "tone_ms": 699.3294390558731,
+      "other_ms": 1230.9192419343162,
+      "retained_paths": {
+        "target_echoes": 1024,
+        "terrain_echoes": 0
+      },
+      "clutter": {
+        "sample_count": 0,
+        "in_range": 0,
+        "front_facing": 0,
+        "visible": 0,
+        "contributing": 0
+      }
+    },
+    {
+      "service_ms": 2113.7463549966924,
+      "visibility_ms": 30.201703106286004,
+      "tone_ms": 710.996561916545,
+      "other_ms": 1372.5480899738614,
+      "retained_paths": {
+        "target_echoes": 1024,
+        "terrain_echoes": 0
+      },
+      "clutter": {
+        "sample_count": 0,
+        "in_range": 0,
+        "front_facing": 0,
+        "visible": 0,
+        "contributing": 0
+      }
+    },
+    {
+      "service_ms": 2122.5918749987613,
+      "visibility_ms": 29.733917850535363,
+      "tone_ms": 724.7161140257958,
+      "other_ms": 1368.1418431224301,
+      "retained_paths": {
+        "target_echoes": 1024,
+        "terrain_echoes": 0
+      },
+      "clutter": {
+        "sample_count": 0,
+        "in_range": 0,
+        "front_facing": 0,
+        "visible": 0,
+        "contributing": 0
+      }
+    },
+    {
+      "service_ms": 2011.3009000197053,
+      "visibility_ms": 29.005539923673496,
+      "tone_ms": 723.4827251522802,
+      "other_ms": 1258.8126349437516,
+      "retained_paths": {
+        "target_echoes": 1024,
+        "terrain_echoes": 0
+      },
+      "clutter": {
+        "sample_count": 0,
+        "in_range": 0,
+        "front_facing": 0,
+        "visible": 0,
+        "contributing": 0
+      }
+    },
+    {
+      "service_ms": 1898.2144229812548,
+      "visibility_ms": 24.727110925596207,
+      "tone_ms": 640.8604189928155,
+      "other_ms": 1232.626893062843,
+      "retained_paths": {
+        "target_echoes": 1024,
+        "terrain_echoes": 0
+      },
+      "clutter": {
+        "sample_count": 0,
+        "in_range": 0,
+        "front_facing": 0,
+        "visible": 0,
+        "contributing": 0
+      }
+    }
+  ]
+}

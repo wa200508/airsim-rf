@@ -1,5 +1,11 @@
 # Measured GPU performance and optimization limits
 
+For the current dashboard's first-order radar, see the separate
+[CPU RF-window stage report](../results/reviews/first-order-radar-20261023/REPORT.md).
+The P100 fleet numbers below describe the one-way ESM/comms pipeline and do not
+predict this radar renderer's throughput or full dashboard latency.
+
+
 The current qualification uses Sionna RT 2.2.0 with an **explicit P100-compatible
 Mitsuba 3.8.0 / Dr.Jit 1.3.1 stack**, CuPy 13.6 and CUDA 12.2. This differs from
 both the production dependency pins and the earlier legacy-Sionna experiments.

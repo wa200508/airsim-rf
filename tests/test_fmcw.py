@@ -117,7 +117,8 @@ def test_batched_target_mapping_matches_sum_of_individual_echoes(radar):
     batch = radar.capture([hidden, near, zero, far], position_m=[0, 0, 2])
     np.testing.assert_allclose(batch.if_volts, individual, atol=1e-8)
     assert batch.target_names == ("behind", "near", "zero", "far")
-    assert len(radar.probes) == 2
+    assert radar.last_render_diagnostics['echo_terms']==2
+    assert not radar.scene.receivers  # RCS points are never radios.
     empty = radar.capture([hidden, zero], position_m=[0, 0, 2])
     assert not np.any(empty.if_volts)
-    assert len(radar.probes) == 0
+    assert radar.last_render_diagnostics['echo_terms']==0

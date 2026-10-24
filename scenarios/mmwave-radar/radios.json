@@ -116,8 +116,20 @@
       "noise_figure_db": 15.0,
       "noise_enabled": true
     },
-    "max_depth_per_leg": 1,
-    "seed": 42
+    "seed": 42,
+    "echo_model": "first-order",
+    "max_range_m": 400.0,
+    "clutter": {
+      "enabled": true,
+      "sample_count": 1024,
+      "seed": 314159,
+      "materials": {
+        "earth": {
+          "sigma0_db": -20.0,
+          "incidence_exponent": 1.0
+        }
+      }
+    }
   },
   "receiver_profile": {
     "rf_bandwidth_hz": 9000000.0
@@ -125,7 +137,7 @@
   "propagation": {
     "continuous": true,
     "path_diagnostics": true,
-    "path_solver": "single-bounce per radar leg",
+    "path_solver": "first-order direct target and terrain backscatter",
     "max_depth": 1
   }
 }

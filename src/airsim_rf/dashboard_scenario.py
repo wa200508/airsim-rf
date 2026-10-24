@@ -145,6 +145,10 @@ def prepare(output,runtime_source=None,scenario_dir=None,duration_s=None,check_i
             raise
     atomic_json(output/'placement.json',placement_plan(geometry,bindings))
     radio=config['radios'];sites=deepcopy(radio['sites'])
+    if radio.get('mode')=='fmcw-radar':
+        clutter=radio['radar']['clutter']
+        clutter['shape_materials']={'obj_'+obj['id']:obj['material'] for obj in geometry['objects'] if obj['material'] in clutter['materials']}
+        if clutter['enabled'] and not clutter['shape_materials']:raise ValueError('Enabled clutter requires configured surface objects')
     for site in sites:
         reference=site.pop('altitude_reference')
         if reference=='agl':

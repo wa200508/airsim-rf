@@ -60,7 +60,7 @@ def test_actual_echo_depends_on_commanded_tx_power_and_disappears_with_tx_off():
     powers=[]
     for enabled,power in ((False,12.),(True,6.),(True,12.)):
         radio=load('mmwave-radar')['radios'];radio['radar']['profile']['noise_enabled']=False
-        radio['radar']['max_depth_per_leg']=0
+        radio['radar']['clutter']['enabled']=False
         receiver=RadarWindowReceiver(rt.load_scene(),radio,config)
         receiver.position=np.zeros(3);receiver.velocity=np.zeros(3);receiver.orientation=np.zeros(3)
         receiver.targets=[PointTarget('target',(50.,0.,0.),100.)]

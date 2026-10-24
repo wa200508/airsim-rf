@@ -127,6 +127,9 @@ def load(directory=None):
     if (not radar and not radios['transmitters']) or not radios['sites']:raise ValueError('Transmitters and receiver sites required')
     if radar:
         _validate_radar(radios,mission,names,config['skill']['mode_config'])
+        clutter=radios['radar']['clutter']
+        materials=env['materials'] if env['type']=='heightfield' else json.loads(asset(root,env['file']).read_text())['materials']
+        if set(clutter['materials'])-set(materials):raise ValueError('Clutter rules reference unknown environment materials')
         for target in radios['radar']['targets']:
             if target.get('altitude_reference')=='agl':
                 if env['type']!='heightfield':raise ValueError('AGL targets need a heightfield')
@@ -283,4 +286,15 @@ def _validate_radar(radios,mission,names,mode):
     for samples in (p['pri_s']*rate,p['adc_start_s']*rate,mission['rf_update_ns']/(p['pri_s']*1e9)):
         if abs(samples-round(samples))>1e-6:raise ValueError('Radar PRI/gate and update must align to sample/chirp boundaries')
     if mission['rf_update_ns']/(p['pri_s']*1e9)<64:raise ValueError('Radar window needs at least 64 chirps')
-    if radar['max_depth_per_leg'] not in (0,1):raise ValueError('Radar depth per leg must be 0 or 1')
+    if 'max_depth_per_leg' in radar or radar.get('echo_model')!='first-order':raise ValueError('Radar requires echo_model: first-order; target-leg multipath is unsupported')
+    _number(radar['max_range_m'],'radar maximum range',.001)
+    clutter=radar['clutter']
+    if set(clutter)!={'enabled','sample_count','seed','materials'} or type(clutter['enabled']) is not bool:raise ValueError('Invalid terrain clutter configuration')
+    _number(clutter['sample_count'],'clutter sample count',1,integer=True)
+    _number(clutter['seed'],'clutter seed',0,integer=True)
+    if clutter['sample_count']>1_000_000 or clutter['seed']>2**64-1:raise ValueError('Clutter sample/seed limit exceeded')
+    if not isinstance(clutter['materials'],dict) or (clutter['enabled'] and not clutter['materials']):raise ValueError('Clutter materials must map names to backscatter rules')
+    for name,rule in clutter['materials'].items():
+        if not isinstance(name,str) or set(rule)!={'sigma0_db','incidence_exponent'}:raise ValueError('Clutter material needs sigma0_db and incidence_exponent')
+        _number(rule['sigma0_db'],'clutter sigma0');_number(rule['incidence_exponent'],'clutter incidence exponent',0)
+        if not -200<=rule['sigma0_db']<=100:raise ValueError('Clutter sigma0 outside representable modeling range')

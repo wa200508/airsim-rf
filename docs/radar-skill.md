@@ -8,7 +8,7 @@ It neither imports nor receives the simulator's target, RCS, flight or terrain.
 
 | Repository | Owns |
 |---|---|
-| airsim-rf | Scenarios, native flight, shared geometry, reciprocal radar point-target channel, FMCW/IF/noise/ADC acquisition, exact sample recording, dashboard observer |
+| airsim-rf | Scenarios, native flight, shared geometry, first-order target/terrain scattering channel, FMCW/IF/noise/ADC acquisition, exact sample recording, dashboard observer |
 | Radar-skill | Waveform and TX/RX control, range/Doppler FFT and candidate detector, active application, TCP/HTTP/result interfaces, neutral recording/replay adapters, tests and CPU container |
 
 The actual detector lives in [processing.py](https://github.com/wa200508/Radar-skill/blob/main/src/radar_skill/processing.py);
@@ -118,3 +118,8 @@ carries it for synchronized live display and playback. See the
 renderer is `src/airsim_rf/dashboard_static/skill-display.js`; the observer replay
 projection is `src/airsim_rf/skill_display.py`. Neither source nor simulator
 selects a receiver algorithm or interprets its live result fields.
+
+The simulator's [first-order radar model](radar-scattering.md) now combines
+visible direct target echoes and area-normalized terrain clutter with an explicit
+range cutoff. These settings and scene truth remain in the simulator; neither
+this skill's control protocol nor its I/Q/FFT processing consumes them.

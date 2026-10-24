@@ -2,6 +2,7 @@
 from dataclasses import asdict, dataclass, replace
 import json
 from pathlib import Path
+from functools import cached_property
 
 import numpy as np
 from scipy.signal import butter, freqs_zpk, sosfilt
@@ -90,19 +91,20 @@ class Distance2GoLProfile:
         return butter(2, [self.if_low_hz, self.if_high_hz], btype="bandpass",
                       fs=self.sample_rate_hz, output="sos")
 
+    @cached_property
+    def _analog_filter(self):
+        return butter(2,2*np.pi*np.array([self.if_low_hz,self.if_high_hz]),btype="bandpass",analog=True,output="zpk")
+
     def filter_response(self, frequency_hz):
-        z, poles, gain = butter(2, 2*np.pi*np.array([self.if_low_hz, self.if_high_hz]),
-                               btype="bandpass", analog=True, output="zpk")
+        z,poles,gain=self._analog_filter
         return freqs_zpk(z, poles, gain, worN=2*np.pi*np.atleast_1d(frequency_hz))[1]
 
     def antenna_power_gain(self, direction_world, orientation_rad=(0, 0, 0)):
-        direction = Rotation.from_euler("ZYX", orientation_rad).inv().apply(direction_world)
-        if direction[0] <= 0:
-            return 0.0
-        az = np.degrees(np.arctan2(direction[1], direction[0]))
-        el = np.degrees(np.arctan2(direction[2], np.hypot(direction[0], direction[1])))
-        power = np.exp(-4*np.log(2)*((az/self.azimuth_beamwidth_deg)**2+(el/self.elevation_beamwidth_deg)**2))
-        return 10**(self.antenna_gain_dbi/10) * power
+        direction=Rotation.from_euler("ZYX",orientation_rad).inv().apply(np.asarray(direction_world))
+        az=np.degrees(np.arctan2(direction[...,1],direction[...,0]))
+        el=np.degrees(np.arctan2(direction[...,2],np.hypot(direction[...,0],direction[...,1])))
+        power=np.exp(-4*np.log(2)*((az/self.azimuth_beamwidth_deg)**2+(el/self.elevation_beamwidth_deg)**2))
+        return np.where(direction[...,0]>0,10**(self.antenna_gain_dbi/10)*power,0.)
 
 
 @dataclass(frozen=True)
@@ -173,114 +175,80 @@ class FMCWCapture:
 
 
 class FMCWRadar:
-    """One ramp per capture, Sionna LoS/specular paths, scalar reciprocal RCS.
+    """One first-order echo per visible scatterer; no target-leg multipath.
 
-    IF convention is TX * conjugate(RX): f_beat = slope*tau - Doppler.
-    Mixing is calculated directly at IF; a 200 MHz waveform is not sampled at
-    the 100 kS/s ADC rate. Filter response assumes steady-state ramp tones.
+    Point-target RCS and optional area-normalized terrain sigma0 supply echo
+    strength. Sionna's shared Mitsuba mesh supplies direct visibility on CPU or
+    CUDA. IF convention is TX * conjugate(RX), so positive range rate is receding.
     """
+    def __init__(self,profile=Distance2GoLProfile(),*,rf_scene=None,seed=42,max_depth=0,
+                 max_range_m=float('inf'),clutter=None):
+        from sionna.rt import load_scene
+        from .radar_scattering import TerrainBackscatter
+        if max_depth!=0:raise ValueError('First-order radar does not support target-leg multipath; max_depth must be 0')
+        if np.isnan(max_range_m) or max_range_m<=0:raise ValueError('Radar maximum range must be positive')
+        self.profile=profile;self.scene=rf_scene if hasattr(rf_scene,'mi_scene') else load_scene(rf_scene)
+        self.scene.frequency=profile.carrier_hz;self.max_range_m=max_range_m
+        self.clutter=TerrainBackscatter(self.scene,clutter) if clutter and clutter['enabled'] else None
+        self.last_path_diagnostics={};self.last_clutter_diagnostics={};self.last_render_diagnostics={}
+        self.rng=np.random.default_rng(seed);self.seed=seed;self._noise_sos=profile.filter_sos()
 
-    def __init__(self, profile: Distance2GoLProfile = Distance2GoLProfile(), *, rf_scene=None, seed=42, max_depth=0):
-        from sionna.rt import PlanarArray, PathSolver, Receiver, Transmitter, load_scene
-        self.profile = profile
-        self.scene = rf_scene if hasattr(rf_scene,"mi_scene") else load_scene(rf_scene)
-        self.scene.frequency = profile.carrier_hz
-        self.scene.tx_array = PlanarArray(num_rows=1, num_cols=1, pattern="iso", polarization="V")
-        self.scene.rx_array = PlanarArray(num_rows=1, num_cols=1, pattern="iso", polarization="V")
-        self.tx = Transmitter("fmcw_platform", position=[0, 0, 0])
-        self.scene.add(self.tx)
-        self.probes = []
-        self.receiver_type = Receiver
-        if max_depth not in (0,1):raise ValueError('FMCW supports zero or one reflection per leg')
-        self.max_depth=max_depth
-        if max_depth:
-            from .single_bounce import SingleBouncePathSolver
-            self.solver=SingleBouncePathSolver()
-        else:self.solver = PathSolver(deterministic=True)
-        self.last_path_diagnostics={}
-        self.rng = np.random.default_rng(seed)
-        self.seed = seed
-        self._noise_sos = profile.filter_sos()
+    def _render_echoes(self,distance,doppler,rcs,gain,weights):
+        """Linear in echo count; bounded tiles avoid an echoes-by-samples buffer."""
+        p=self.profile;t=p.adc_start_s+np.arange(p.num_samples)/p.sample_rate_hz
+        voltage=np.zeros(p.num_samples,complex);delay=2*distance/C;beat=p.slope_hz_s*delay-doppler
+        scale=np.sqrt(p.reference_impedance_ohm*p.tx_power_w)*(C/p.carrier_hz)/((4*np.pi)**1.5)
+        amplitude=scale*gain*np.sqrt(rcs)/distance**2*np.conj(weights)
+        amplitude*=p.filter_response(beat)*10**((p.if_gain_db+p.mixer_voltage_gain_db)/20)
+        phase=2*np.pi*np.remainder(p.carrier_hz*delay,1)-np.pi*p.slope_hz_s*delay**2-np.pi*p.bandwidth_hz*delay
+        for start in range(0,len(distance),128):
+            end=start+128
+            tone=np.exp(1j*(phase[start:end,None]+2*np.pi*beat[start:end,None]*t))
+            voltage+=np.sum(amplitude[start:end,None]*tone*(t>=delay[start:end,None]),axis=0)
+        return voltage
 
-    def capture(self, targets, *, position_m, velocity_m_s=(0, 0, 0), orientation_rad=(0, 0, 0), sim_time_ns=0):
-        p = self.profile
-        position = np.asarray(position_m, dtype=float)
-        velocity = np.asarray(velocity_m_s, dtype=float)
-        orientation = np.asarray(orientation_rad, dtype=float)
-        for vector in (position, velocity, orientation):
-            if vector.shape != (3,) or not np.all(np.isfinite(vector)):
-                raise ValueError("Platform pose/velocity must be finite 3-vectors")
-        targets = tuple(targets)
-        self.tx.position, self.tx.velocity, self.tx.orientation = position.tolist(), velocity.tolist(), orientation.tolist()
-        t = p.adc_start_s + np.arange(p.num_samples)/p.sample_rate_hz
-        wavelength = C/p.carrier_hz
-        voltage = np.zeros(p.num_samples, dtype=np.complex128)
-        ranges, dopplers, beats, delays = [], [], [], []
-        conversion = 10**((p.if_gain_db+p.mixer_voltage_gain_db)/20)
-        active = []
-        self.last_path_diagnostics={target.name:{"direct_paths":0,"reflected_paths":0} for target in targets}
-        for target in targets:
-            delta = np.asarray(target.position_m)-position
-            distance = np.linalg.norm(delta)
-            if distance <= 0:
-                raise ValueError("Point target must not coincide with radar")
-            direction = delta/distance
-            doppler = -2*np.dot(np.asarray(target.velocity_m_s)-velocity, direction)/wavelength
-            delay = 2*distance/C
-            beat = p.slope_hz_s*delay-doppler
-            ranges.append(distance); dopplers.append(doppler); beats.append(beat); delays.append(delay)
-            gain = p.antenna_power_gain(direction, orientation)
-            if target.rcs_m2 == 0 or gain == 0:
-                continue
-            active.append((target, delay, beat, gain))
-        # One solver launch for all targets. Reuse receiver objects as long as
-        # the target count is unchanged; NumPy outputs synchronize evaluation.
-        while len(self.probes) > len(active):
-            self.scene.remove(self.probes.pop().name)
-        while len(self.probes) < len(active):
-            probe = self.receiver_type(f"fmcw_target_probe_{len(self.probes)}", position=[1, 0, 0])
-            self.scene.add(probe)
-            self.probes.append(probe)
-        for probe, (target, _, _, _) in zip(self.probes, active):
-            probe.position = np.asarray(target.position_m, dtype=float).tolist()
-            probe.velocity = np.asarray(target.velocity_m_s, dtype=float).tolist()
-        if active:
-            paths = self.solver(self.scene, max_depth=self.max_depth, seed=self.seed)
-            a, tau = paths.cir(num_time_steps=1, normalize_delays=False, out_type="numpy")
-            if a.shape[:4] != (len(active), 1, 1, 1):
-                raise ValueError("FMCW model requires one transmitter and one receive antenna per target")
-            for rx_index, (target, delay, beat, gain) in enumerate(active):
-                link_tau = tau[rx_index, 0] if tau.ndim == 3 else tau[rx_index, 0, 0, 0]
-                valid = np.flatnonzero(np.isfinite(link_tau) & (link_tau >= 0))
-                # Reciprocal scalar point scattering: pair every outbound/return
-                # path, including mixed direct/reflected paths. Max depth is PER
-                # LEG, so reflected/reflected echoes contain two terrain bounces.
-                from sionna.rt.constants import InteractionType
-                interactions=paths.interactions.numpy()
-                direct=np.all(interactions.reshape((interactions.shape[0],*tau.shape))==int(InteractionType.NONE),axis=0)
-                direct_count=int(direct.reshape(len(active),-1)[rx_index,valid].sum())
-                self.last_path_diagnostics[target.name]={'direct_paths':direct_count,'reflected_paths':int(valid.size)-direct_count}
-                fd=paths.doppler.numpy().reshape(len(active),-1)[rx_index]
-                for outbound in valid:
-                    for inbound in valid:
-                        delay=float(link_tau[outbound]+link_tau[inbound])
-                        path_doppler=float(fd[outbound]+fd[inbound])
-                        beat=p.slope_hz_s*delay-path_doppler
-                        echo=(complex(a[rx_index,0,0,0,outbound,0])*complex(a[rx_index,0,0,0,inbound,0])
-                              *np.sqrt(4*np.pi*target.rcs_m2)/wavelength*gain)
-                        phase=2*np.pi*beat*t-np.pi*p.slope_hz_s*delay**2-np.pi*p.bandwidth_hz*delay
-                        voltage+=(np.sqrt(p.reference_impedance_ohm*p.tx_power_w)*np.conj(echo)
-                                  *np.exp(1j*phase)*p.filter_response(beat)[0]*conversion*(t>=delay))
+    def capture(self,targets,*,position_m,velocity_m_s=(0,0,0),orientation_rad=(0,0,0),sim_time_ns=0,transmit_enabled=True):
+        from .radar_scattering import segment_visibility
+        p=self.profile;position=np.asarray(position_m,float);velocity=np.asarray(velocity_m_s,float);orientation=np.asarray(orientation_rad,float)
+        for vector in (position,velocity,orientation):
+            if vector.shape!=(3,) or not np.isfinite(vector).all():raise ValueError('Platform pose/velocity must be finite 3-vectors')
+        targets=tuple(targets);points=np.array([t.position_m for t in targets],float).reshape(-1,3)
+        delta=points-position;distance=np.linalg.norm(delta,axis=1)
+        if np.any(distance<=0):raise ValueError('Point target must not coincide with radar')
+        direction=delta/distance[:,None]
+        speeds=np.array([t.velocity_m_s for t in targets],float).reshape(-1,3)-velocity
+        doppler=-2*np.sum(speeds*direction,axis=1)*p.carrier_hz/C
+        delay=2*distance/C;beat=p.slope_hz_s*delay-doppler
+        gain=p.antenna_power_gain(direction,orientation) if len(targets) else np.empty(0)
+        rcs=np.array([t.rcs_m2 for t in targets]);gated=distance>self.max_range_m
+        eligible=(rcs>0)&(gain>0)&~gated&transmit_enabled;chosen=np.flatnonzero(eligible)
+        echo_points=points[chosen];echo_rcs=rcs[chosen];echo_gain=gain[chosen]
+        echo_doppler=doppler[chosen];weights=np.ones(len(chosen),complex)
+        self.last_path_diagnostics={t.name:{'direct_paths':0,'reflected_paths':0,'range_gated':bool(gated[i]),
+            'illuminated':bool(transmit_enabled and rcs[i]>0 and gain[i]>0)} for i,t in enumerate(targets)}
+        self.last_clutter_diagnostics={'sample_count':0,'in_range':0,'front_facing':0,'visible':0,'contributing':0}
+        if self.clutter and transmit_enabled:
+            cp,cr,cw=self.clutter.candidates(position,self.max_range_m)
+            cd=cp-position;length=np.linalg.norm(cd,axis=1);cg=p.antenna_power_gain(cd/length[:,None],orientation) if len(cp) else np.empty(0)
+            keep=(cg>0)&(cr>0);cp=cp[keep];cr=cr[keep];cw=cw[keep];cg=cg[keep]
+            fd=2*np.sum(velocity*(cp-position)/np.linalg.norm(cp-position,axis=1)[:,None],axis=1)*p.carrier_hz/C
+            echo_points=np.concatenate((echo_points,cp));echo_rcs=np.r_[echo_rcs,cr];echo_gain=np.r_[echo_gain,cg]
+            echo_doppler=np.r_[echo_doppler,fd];weights=np.r_[weights,cw]
+            self.last_clutter_diagnostics=dict(self.clutter.diagnostics)
+        visible=segment_visibility(self.scene,position,echo_points)
+        for index,original in enumerate(chosen):self.last_path_diagnostics[targets[original].name]['direct_paths']=int(visible[index])
+        self.last_clutter_diagnostics.update(visible=int(visible[len(chosen):].sum()),contributing=int(visible[len(chosen):].sum()))
+        distance_echo=np.linalg.norm(echo_points[visible]-position,axis=1)
+        voltage=self._render_echoes(distance_echo,echo_doppler[visible],echo_rcs[visible],echo_gain[visible],weights[visible])
+        self.last_render_diagnostics={'echo_terms':int(visible.sum()),'target_echoes':int(visible[:len(chosen)].sum()),
+                                     'clutter_echoes':int(visible[len(chosen):].sum()),'echo_model':'first-order'}
         if p.noise_enabled:
-            variance = p.reference_impedance_ohm*BOLTZMANN*p.temperature_k*p.sample_rate_hz*10**(p.noise_figure_db/10)
-            # Warm up the IF filter using prior random samples to avoid start-up bias.
-            noise = np.sqrt(variance/2)*(self.rng.standard_normal(p.num_samples+1024)
-                                       + 1j*self.rng.standard_normal(p.num_samples+1024))
-            voltage += sosfilt(self._noise_sos, noise)[-p.num_samples:]*conversion
-        codes, adc_iq, clipped = quantize_iq(voltage, p)
-        return FMCWCapture(voltage.astype(np.complex64), codes, adc_iq, int(sim_time_ns), p,
-                           tuple(t.name for t in targets), np.asarray(ranges), np.asarray(dopplers),
-                           np.asarray(beats), np.asarray(delays), clipped)
+            variance=p.reference_impedance_ohm*BOLTZMANN*p.temperature_k*p.sample_rate_hz*10**(p.noise_figure_db/10)
+            noise=np.sqrt(variance/2)*(self.rng.standard_normal(p.num_samples+1024)+1j*self.rng.standard_normal(p.num_samples+1024))
+            voltage+=sosfilt(self._noise_sos,noise)[-p.num_samples:]*10**((p.if_gain_db+p.mixer_voltage_gain_db)/20)
+        codes,adc_iq,clipped=quantize_iq(voltage,p)
+        return FMCWCapture(voltage.astype(np.complex64),codes,adc_iq,int(sim_time_ns),p,
+                           tuple(t.name for t in targets),distance,doppler,beat,delay,clipped)
 
     def capture_frame(self, targets, *, position_m, velocity_m_s=(0, 0, 0), orientation_rad=(0, 0, 0),
                       sim_time_ns=0, num_chirps=16):

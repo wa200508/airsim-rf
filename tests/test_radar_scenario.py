@@ -130,7 +130,7 @@ def test_sionna_target_echo_and_mesh_occlusion_agree(tmp_path):
     scene=rt.load_scene(str(tmp_path/'run/bundle/scene.xml'),merge_shapes=False)
     c,g,d=route_geometry();fixed=json.loads((tmp_path/'run/runtime.json').read_text())['radios']['radar']['targets'][0]
     target=PointTarget('target',tuple(fixed['position_rf_m']),.01)
-    radar=FMCWRadar(replace(IWR1843Profile(),noise_enabled=False),rf_scene=scene,max_depth=1)
+    radar=FMCWRadar(replace(IWR1843Profile(),noise_enabled=False),rf_scene=scene)
     powers=[]
     for pos in ([200,0,210],[-240,-150,210]):
         delta=np.asarray(target.position_m)-pos
@@ -138,10 +138,12 @@ def test_sionna_target_echo_and_mesh_occlusion_agree(tmp_path):
         capture=radar.capture([target],position_m=pos,orientation_rad=orientation)
         powers.append(float(np.mean(abs(capture.if_volts)**2)))
         assert radar.last_path_diagnostics['target']['direct_paths']==(1 if pos[0]>0 else 0)
+        assert radar.last_path_diagnostics['target']['reflected_paths']==0
     assert powers[0]>0
 
 
-def test_actual_sionna_radar_iq_to_detector_and_lossless_archive(tmp_path):
+@pytest.mark.parametrize('terrain_clutter',[False,True])
+def test_actual_sionna_radar_iq_to_detector_and_lossless_archive(tmp_path,terrain_clutter):
     """Real source acquisition -> exact recorded cf32 -> unchanged receiver DSP."""
     pytest.importorskip('sionna.rt')
     import sionna.rt as rt
@@ -154,8 +156,9 @@ def test_actual_sionna_radar_iq_to_detector_and_lossless_archive(tmp_path):
     radio_path=tmp_path/'nondefault/radios.json';hardware=json.loads(radio_path.read_text())
     hardware['carrier_hz']=78e9;radio_path.write_text(json.dumps(hardware))
     path,config=receiver_config(tmp_path,tmp_path/'nondefault');radio=json.loads((tmp_path/'run/runtime.json').read_text())['radios']
-    radio['radar']['max_depth_per_leg']=0;radio['radar']['profile']['noise_enabled']=False
-    receiver=RadarWindowReceiver(rt.load_scene(),radio,config)
+    radio['radar']['clutter']['enabled']=terrain_clutter;radio['radar']['profile']['noise_enabled']=False
+    scene=rt.load_scene(str(tmp_path/'run/bundle/scene.xml'),merge_shapes=False) if terrain_clutter else rt.load_scene()
+    receiver=RadarWindowReceiver(scene,radio,config)
     from airsim_rf.radar_control import serve_transceiver
     mode=load(tmp_path/'nondefault')['skill']['mode_config']
     skill=RadarSkill(path,results_dir=tmp_path/'actual-results')
@@ -173,6 +176,8 @@ def test_actual_sionna_radar_iq_to_detector_and_lossless_archive(tmp_path):
     capture=receiver.capture(0,num_samples=40000)['radar_rx0']
     assert set(receiver.radar.last_path_diagnostics)=={t.name for t in receiver.targets}
     assert receiver.truth['target_names']==[t.name for t in receiver.targets]
+    assert all(v['reflected_paths']==0 for v in receiver.radar.last_path_diagnostics.values())
+    assert bool(capture.retained_paths['terrain_echoes'])==terrain_clutter
     assert receiver.radar.profile.bandwidth_hz==35e6
     assert receiver.radar.scene.frequency==78e9
     assert receiver.control.snapshot()['applied_configuration_id']==skill.snapshot()['transceiver']['configuration_id']
@@ -220,5 +225,13 @@ def test_invalid_fixed_targets_fail_before_service_launch(tmp_path,change):
     elif change=='mixed':targets[0]['actor']='RadarDrone'
     elif change=='outside-dem':targets[0]['position_rf_m'][0]=10000
     else:targets[0]['position_rf_m'][2]=-1
+    path.write_text(json.dumps(radio))
+    with pytest.raises(ValueError):load(tmp_path/'edited')
+
+
+@pytest.mark.parametrize('field,value',[('sample_count',0),('seed',-1),('enabled','yes'),('materials',{'unknown':{'sigma0_db':-20.,'incidence_exponent':1.}})])
+def test_invalid_clutter_is_rejected_before_launch(tmp_path,field,value):
+    snapshot('mmwave-radar',tmp_path/'edited')
+    path=tmp_path/'edited/radios.json';radio=json.loads(path.read_text());radio['radar']['clutter'][field]=value
     path.write_text(json.dumps(radio))
     with pytest.raises(ValueError):load(tmp_path/'edited')

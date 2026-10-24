@@ -154,3 +154,12 @@ carries it for synchronized live display and playback. See the
 renderer is `src/airsim_rf/dashboard_static/skill-display.js`; the observer replay
 projection is `src/airsim_rf/skill_display.py`. Neither source nor simulator
 selects a receiver algorithm or interprets its live result fields.
+
+## Radar target and terrain scattering
+
+`src/airsim_rf/radar_scattering.py` owns fixed surface sampling, per-class sigma0,
+area normalization and shared-mesh visibility. `src/airsim_rf/fmcw.py` turns one
+visible scatterer into one coherent echo, with tiled IF synthesis, noise and ADC.
+Configure the budget, material classes, phase seed and range limit in
+`scenarios/mmwave-radar/radios.json`. See the [model and tests](radar-scattering.md).
+No detector or RF-skill imports appear in this acquisition path.

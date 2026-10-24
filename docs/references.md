@@ -833,3 +833,14 @@ IET Conference Proceedings 2022(17), pp. 125–129; publication cited by [1].
 Bibliographic/search record and talk landing page located; full paper and
 recording access restricted. Included as a validation lead, not as an independently
 reviewed experimental result.
+
+
+## Current first-order radar terrain implementation
+
+The [dashboard radar model](radar-scattering.md) now adds persistent seeded,
+area-normalized terrain backscatter to direct point-target returns. This is an
+explicit empirical sigma0 model using shared-mesh visibility; it is separate
+from the dielectric specular/diffuse radio-link experiments reviewed above.
+The earlier review's calibration and convergence limitations remain relevant:
+this addition does not establish calibrated land-cover statistics, a measured
+board antenna, multiple scattering, or GPU real-time performance.

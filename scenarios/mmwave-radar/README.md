@@ -103,25 +103,53 @@ Recorded-I/Q development uses explicit `--replay` and never commands a transmitt
 
 ## Exactly what is simulated
 
-[FMCWRadar](../../src/airsim_rf/fmcw.py) traces Sionna paths from radar to each
-passive target once per chirp. The reciprocal scalar point-scatter model pairs
-outbound/return paths, preserving complex carrier phase, round-trip delay,
-Doppler and RCS scaling consistent with the monostatic radar equation.
-`max_depth_per_leg: 1` permits LOS and one specular terrain reflection on each
-leg: a reflected/reflected echo therefore has **two total terrain interactions**.
-This differs from a one-bounce limit on the complete round trip.
+[FMCWRadar](../../src/airsim_rf/fmcw.py) uses **first-order scattering**:
+one direct echo from each visible point target plus one return from each visible
+terrain sample. Targets are RCS scatterers, not virtual receiver/transmitter
+endpoints. There is no outbound/return path cross-product and no terrain-reflected
+illumination or return leg attached to a target. The older
+`max_depth_per_leg` setting is replaced by `echo_model: first-order`.
 
-Sionna uses the shared DEM's dielectric material settings for specular paths.
-Blocked direct paths are removed, rather than merely attenuated. Reflected
-illumination/return paths may still contribute. This model does **not** include
-terrain backscatter clutter, diffuse scattering, diffraction, target mesh
-scattering, micro-Doppler, atmosphere/rain or mutual radar interference.
-The colored box meshes are static presentation markers; their surfaces are not
-added as RF obstacles or extra scattering surfaces. Echoes originate at their
-configured centers with scalar RCS. The shared terrain remains the RF occluder
-and specular reflector. The scalar RCS and common target-directed Gaussian antenna gain are approximations;
-a fully polarimetric target scattering matrix and per-path measured board
-antenna patterns are not implemented.
+[TerrainBackscatter](../../src/airsim_rf/radar_scattering.py) samples the actual
+shared Sionna mesh with **1,024 seeded, stratified, uniform-area points**. Those
+points and their unit-magnitude random complex scattering weights stay anchored
+to the same geometry between pulses. This is a surface quadrature budget,
+not a guarantee of 1,024 surviving echoes. All configured surface areas are
+sampled; no antenna hotspot-only sampling is used. Actual two-way beam gain,
+local surface normal, range and geometric visibility determine contributions.
+
+The default earth class has an illustrative **sigma0 = −20 dB** (0.01 m² RCS
+per m² of actual surface at normal incidence), with a cosine-to-the-first-power
+incidence response. Effective patch RCS is `sigma0 × represented area × cos(angle)`.
+Increasing sample count reduces each patch's represented area rather than
+increasing expected total scattered power. Finite coherent sums exhibit speckle;
+changing the sample budget or seed starts a new realization. Numerical
+convergence and calibrated land-cover statistics are not established.
+
+`max_range_m: 400` rejects both targets and terrain samples beyond 400 m slant
+range **before visibility tracing**. This is an explicit model cutoff, not a
+hard cutoff of the analog IF filter. The 4.5 MHz IF corner corresponds to about
+432 m at zero Doppler in this mode. In-range target and terrain visibility uses
+the shared Sionna/Mitsuba mesh on the active CPU or CUDA backend; a small,
+distance-scaled floating-point tolerance prevents a surface sample from
+occluding itself. Blocked targets have no direct or secondary target echo.
+Visible terrain can still return clutter when a target is blocked.
+
+Dielectric parameters remain the configured propagation materials for ordinary
+radio-to-radio links. Radar terrain sigma0 is a separate, explicit empirical
+backscatter rule; it is not inferred from permittivity or a visual texture.
+Additional cover classes can be encoded as shared mesh objects with distinct
+material IDs and corresponding `clutter.materials` rules. No automatic LULC
+raster ingestion or calibrated material-to-sigma0 conversion is supplied.
+The colored target boxes remain presentation markers with scalar point RCS;
+they do not become RF occluders or mesh scattering models. Diffraction,
+secondary/multiple scattering, polarimetric target matrices, micro-Doppler,
+atmosphere/rain and mutual radar interference are omitted. This is an intentional
+fidelity choice; target-assisted multipath is not universally negligible.
+
+ESM/comms still calculate their configured radio-to-radio multipath. This
+radar policy does not change the one-way SDR renderer or its propagation solver.
+See [first-order radar model and verification](../../docs/radar-scattering.md).
 
 The renderer computes dechirped IF directly: it does not sample a 77 GHz carrier
 at 10 MS/s. Its convention is TX × conjugate(RX); positive slow-time frequency
@@ -138,8 +166,9 @@ PRI. The other samples are zero-filled **ADC gate gaps**, not continuous receive
 measurements. Receiver configuration records the gate and PRI, so playback does
 not compress time or lose slow-time phase. DF/ESM scenario streams remain continuous.
 **Runtime:** the 4 ms window is a simulated acquisition interval, not a measured
-wall-clock deadline. Each window currently makes 100 channel solves, each batching the three targets, and renders
-IF/noise/ADC in NumPy before transport/recording. No new GPU throughput or
+wall-clock deadline. Each window checks first-order visibility once per chirp and batches all
+visible target/clutter tones in bounded NumPy tiles before noise, ADC and
+transport/recording. IF filter coefficients are cached per hardware profile. No new GPU throughput or
 120 Hz real-time claim has been measured for this example.
 
 At 10 MS/s, one cf32 channel needs 80 MB/s and about **9.6 GB for 120 s**, plus
@@ -165,8 +194,9 @@ installation and never receives scene, flight plan, target RCS or target truth.
 | Terrain and dielectric assumptions? | `environment.json`, copied/exported into the run's shared geometry bundle |
 | Carrier, sweep, ramp, PRI, TX power, receive gate and gain? | `radar-mode.json`, applied by the external skill through its transceiver client |
 | Antenna, noise, IF filter, ADC transfer, RCS? | `radios.json` → `radar.profile` and `radar.targets` |
+| Terrain clutter budget, sigma0/classes, phase seed, range limit? | `radios.json` → `radar.clutter` and `radar.max_range_m` |
 | Clock, duration, recording, camera and chosen skill? | `scenario.json` |
-| Path pairing, phase, IF, noise and quantizer? | [fmcw.py](../../src/airsim_rf/fmcw.py) |
+| Visibility, terrain quadrature, phase, IF, noise and quantizer? | [radar_scattering.py](../../src/airsim_rf/radar_scattering.py) and [fmcw.py](../../src/airsim_rf/fmcw.py) |
 | Actual poses, window acquisition and gate packing? | [dashboard_radar.py](../../src/airsim_rf/dashboard_radar.py); orchestrated by [dashboard_producer.py](../../src/airsim_rf/dashboard_producer.py) |
 | Detection and range/Doppler FFT? | [Radar-skill processing](https://github.com/wa200508/Radar-skill/blob/main/src/radar_skill/processing.py) and [receiver app](https://github.com/wa200508/Radar-skill/blob/main/src/radar_skill/app.py); local `skills/radar.py` is a compatibility import |
 
