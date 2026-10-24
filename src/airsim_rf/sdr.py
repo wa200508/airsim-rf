@@ -25,6 +25,7 @@ class PlutoSDRProfile:
     temperature_k: float = 290.0
     impedance_ohm: float = 50.0
     noise_enabled: bool = True
+    noise_power_offset_db: float = 0.0  # Demonstration control: 0 retains modeled kTB*F power.
 
     def __post_init__(self):
         for name, low, high in (("carrier_hz", 325e6, 3.8e9),
@@ -42,6 +43,8 @@ class PlutoSDRProfile:
             raise ValueError("input_full_scale_dbm must be finite")
         if not np.isfinite(self.impedance_ohm) or self.impedance_ohm <= 0:
             raise ValueError("impedance_ohm must be positive")
+        if not np.isfinite(self.noise_power_offset_db) or not -120<=self.noise_power_offset_db<=60:
+            raise ValueError('noise_power_offset_db must be finite and in [-120, 60] dB')
         if not isinstance(self.noise_enabled, bool):
             raise ValueError("noise_enabled must be a boolean")
 
@@ -397,10 +400,10 @@ class SDRNetworkReceiver:
             receiver_started = perf_counter()
             with profile_range("rf.receiver.noise_filter_adc"):
                 noise_bandwidth = actual_rate * self.noise_bandwidth_fraction
-                noise_power = BOLTZMANN * self.profile.temperature_k * noise_bandwidth * 10**(self.profile.noise_figure_db/10)
+                noise_power = BOLTZMANN * self.profile.temperature_k * noise_bandwidth * 10**((self.profile.noise_figure_db+self.profile.noise_power_offset_db)/10)
                 if self.profile.noise_enabled:
                     rng = self.rngs[rx_name]
-                    variance = self.profile.impedance_ohm * BOLTZMANN * self.profile.temperature_k * actual_rate * 10**(self.profile.noise_figure_db/10)
+                    variance = self.profile.impedance_ohm * BOLTZMANN * self.profile.temperature_k * actual_rate * 10**((self.profile.noise_figure_db+self.profile.noise_power_offset_db)/10)
                     total += np.sqrt(variance/2)*(rng.standard_normal(total.size)+1j*rng.standard_normal(total.size))
                 else:
                     noise_power = 0.

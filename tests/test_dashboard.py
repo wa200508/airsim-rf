@@ -171,7 +171,10 @@ def test_prepared_scene_reuses_demo_terrain_and_explicit_camera_gimbal(tmp_path)
     np.testing.assert_array_equal(document['objects'][0]['faces'],faces)
     robot=json.loads((tmp_path/'sim_config/orbit.jsonc').read_text())
     assert not any(robot['sensors'][0]['gimbal'].values())
-    assert ALTITUDE>expected.heights_m.max()
+    runtime=json.loads((tmp_path/'runtime.json').read_text())
+    route=np.asarray(runtime['compiled_routes_rf_m']['OrbitDrone'])
+    assert np.min(route[:,2]-expected.elevation_at(route[:,0],route[:,1]))>=20-1e-8
+    assert np.median(route[:,2])<180
 
 
 def test_preparation_reuses_run_directory_and_recovers_partial_bundle(tmp_path):

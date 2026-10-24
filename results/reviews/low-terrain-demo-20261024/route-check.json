@@ -1,0 +1,21 @@
+{
+  "scope": "planned routes, uniformly sampled every 1 m along 3-D path; native dynamics not simulated here",
+  "cases": {
+    "drone-orbit": {
+      "minimum_clearance_m": 19.999999999999957,
+      "median_clearance_m": 21.32220665888184,
+      "max_clearance_m": 65.20173288987674,
+      "minimum_RF_up_m": 138.08772433381932,
+      "median_RF_up_m": 164.88035359136418,
+      "maximum_RF_up_m": 199.16439739572067
+    },
+    "mmwave-radar": {
+      "minimum_clearance_m": 19.999999999999943,
+      "median_clearance_m": 20.31917695111494,
+      "max_clearance_m": 57.14020298220012,
+      "minimum_RF_up_m": 126.27338678728864,
+      "median_RF_up_m": 161.66092293509445,
+      "maximum_RF_up_m": 201.66268489172353
+    }
+  }
+}

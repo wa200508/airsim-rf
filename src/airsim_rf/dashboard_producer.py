@@ -168,8 +168,14 @@ async def run(args):
         flight_client.socket_services.recv_timeout=3_600_000
         for actor in actors:
             platform=Drone(flight_client,world,actor['id']);flight=actor['flight']
-            path=flight_path(actor,args.duration)
+            path=config.get('compiled_routes_rf_m',{}).get(actor['id'])
+            if path is None:path=flight_path(actor,args.duration)
             if path:
+                # Prepared closed loops remain usable with a longer CLI mission.
+                points=np.asarray(path,float);length=np.linalg.norm(np.diff(points,axis=0),axis=1).sum()
+                if length>0 and np.allclose(points[0],points[-1],atol=1e-7) and args.duration*flight['speed_m_s']>length:
+                    repeats=int(np.ceil(args.duration*flight['speed_m_s']/length))+1
+                    path=np.vstack([points[:-1]]*repeats+[points[-1:]]).tolist()
                 task=await platform.move_on_path_async(path=(np.asarray(path)*[1,-1,-1]).tolist(),
                     velocity=flight['speed_m_s'],timeout_sec=args.duration+10,yaw_control_mode=1,
                     yaw_is_rate=False,yaw=0,lookahead=flight['lookahead_m'],adaptive_lookahead=flight['adaptive_lookahead'])

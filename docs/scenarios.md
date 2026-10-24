@@ -46,6 +46,15 @@ already prepared mission retains its frozen inputs.
 video and skill results. Set it to `false` for a run without bulk capture; see
 [I/Q capture, replay and disk requirements](iq-replay.md).
 
+## Terrain-aware flight and demo noise
+
+The packaged examples use terrain-aware planned paths with 20 m minimum
+clearance and a 20% vertical grade bound. Both expose a receiver noise-power
+offset; the default −25 dB is a visualization setting. Set it to 0 dB for the
+original receiver model. See [the exact fields, semantics and edit locations](demo-tuning.md).
+Source preparation compiles absolute routes once; actual native simulator
+readback continues to drive RF. These settings do not enter receiver metadata.
+
 ## Package layout and ownership
 
 ```text

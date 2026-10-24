@@ -105,6 +105,11 @@ def load(directory=None):
         if kind!='hold':
             _number(flight['speed_m_s'],'flight speed',.001);_number(flight['lookahead_m'],'flight lookahead',.001)
             _number(flight['adaptive_lookahead'],'adaptive lookahead',0)
+        if 'terrain_clearance_m' in flight or 'max_vertical_grade' in flight:
+            if config['environment']['type']!='heightfield' or kind=='hold':raise ValueError('Terrain-clearance flight requires a moving route and heightfield')
+            _number(flight.get('terrain_clearance_m'),'terrain clearance',.1)
+            _number(flight.get('max_vertical_grade'),'maximum vertical grade',.001)
+            if flight['max_vertical_grade']>1:raise ValueError('Maximum vertical grade must be <=1')
         if kind=='circle':
             _vector(flight['center_rf_m'],3,'orbit center');_number(flight['radius_m'],'orbit radius',.001)
             _number(flight['waypoint_step_deg'],'waypoint spacing',.01)
@@ -168,6 +173,8 @@ def load(directory=None):
     if len(set(tx_names+channels))!=len(tx_names+channels) or len(set(site_names))!=len(site_names):raise ValueError('Duplicate radio/channel/site IDs')
     if radios['receiver_profile'].get('sample_rate_hz',rate)!=rate or radios['receiver_profile'].get('carrier_hz',carrier)!=carrier:
         raise ValueError('Receiver profile rate/carrier disagree with radio configuration')
+    _number(radios['receiver_profile'].get('noise_power_offset_db',0.),'noise power offset')
+    if not -120<=radios['receiver_profile'].get('noise_power_offset_db',0.)<=60:raise ValueError('Noise power offset must be in [-120,60] dB')
     bandwidth=radios['receiver_profile']['rf_bandwidth_hz']
     _number(bandwidth,'receiver RF bandwidth',.001)
     if bandwidth>=rate:raise ValueError('Receiver RF bandwidth must be below the sample rate')
@@ -284,6 +291,8 @@ def _validate_radar(radios,mission,names,mode):
     _number(p['adc_bits'],'ADC bits',2,integer=True)
     if p['adc_bits']>16 or not 0<=p['adc_bias_v']<=p['adc_full_scale_v']:raise ValueError('Invalid radar ADC transfer')
     if not isinstance(p['noise_enabled'],bool):raise ValueError('Radar noise_enabled must be boolean')
+    _number(p.get('noise_power_offset_db',0.),'noise power offset')
+    if not -120<=p.get('noise_power_offset_db',0.)<=60:raise ValueError('Noise power offset must be in [-120,60] dB')
     if p['adc_start_s']+p['num_samples']/rate>p['chirp_duration_s'] or p['pri_s']<p['chirp_duration_s']:raise ValueError('Radar ADC gate must fit ramp and ramp must fit PRI')
     for samples in (p['pri_s']*rate,p['adc_start_s']*rate,mission['rf_update_ns']/(p['pri_s']*1e9)):
         if abs(samples-round(samples))>1e-6:raise ValueError('Radar PRI/gate and update must align to sample/chirp boundaries')

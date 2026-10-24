@@ -11,16 +11,16 @@ bash scripts/run_dashboard.sh --scenario mmwave-radar --open
 ```
 
 The dashboard shows received dechirped ADC I/Q, its spectrum/waterfall, a
-range/range-rate map and a thresholded radar candidate. It records the exact
+Doppler-horizontal / range-up map and a thresholded radar candidate. It records the exact
 samples in the existing GNU Radio/SigMF format for offline skill development.
 
 ## Flight and terrain
 
 All coordinates are north/west/up metres, in this package's local RF frame.
 
-- RadarDrone: 20 m/s clockwise stadium racetrack centered at `(0, -80, 210)`;
-  400 m straights and 80 m turn radius. It starts at `(-200, 0, 210)`, heads east,
-  and repeats. One lap is about 65.1 s; the default 120 s covers several straight
+- RadarDrone: 20 m/s clockwise stadium racetrack with horizontal center `(0, -80)`;
+  400 m straights and 80 m turn radius. It starts at horizontal `(-200, 0)`, heads east,
+  and repeats. The horizontal lap length corresponds to about 65.1 s before climbs/controller effects; the default 120 s covers several straight
   passes and most of two laps. Nominal turn acceleration is 5 m/s² (~0.51 g).
 - Three fixed ground targets near the old receiver laydown. Their scattering
   centers are anchored to the exact shared DEM; the AGL values place each center
@@ -32,14 +32,14 @@ All coordinates are north/west/up metres, in this package's local RF frame.
   | GroundShelter | `(65, 55)` | 1.8 | 4 × 4 × 3.6, teal | 500,000 |
   | GroundReflector | `(-75, 15)` | 1.0 | 1.5 × 1.5 × 2, violet | 250,000 |
 
-- Planned route qualification: radar clearance stays above 28 m; the western
+- Planned route qualification: terrain-following clearance is at least 20 m; the western
   part of the southern leg/turn is occluded by the shared hill. The same triangle
   mesh supplies an independent visibility check against Sionna's direct paths.
 - Stationary targets still produce Doppler because the radar is moving.
   Relative range rates change sign between approaching and receding passes,
   and their magnitudes stay below the radar's 20 m/s speed. Native flight tracking
   can change the achieved values. Terrain masks part of every target's planned
-  line of sight; targets can retain reflected echoes when the direct path is blocked.
+  line of sight; terrain clutter can remain when a target direct path is blocked.
 
 Only RadarDrone uses a native ProjectAirSim flight controller and kinematic
 readback. Target world positions and velocities are fixed: zero target velocity
@@ -213,3 +213,21 @@ images still must match each other. See [radar skill separation](../../docs/rada
 2. Texas Instruments, [IWR1843 product specifications and datasheet](https://www.ti.com/product/IWR1843).
 3. Texas Instruments Radar Toolbox, [IWR1843BOOST antenna radiation patterns](https://dev.ti.com/tirex/content/radar_toolbox_2_30_00_12/hardware_docs/antenna_radiation_patterns/iwr1843boost.html).
 4. Texas Instruments, [DCA1000EVM real-time data capture adapter](https://www.ti.com/tool/DCA1000EVM).
+
+
+## Low flight and demonstration noise
+
+`flight.json` now selects 20 m minimum planned terrain clearance with
+`terrain_clearance_m: 20.0` and `max_vertical_grade: 0.2`. The nominal center/start
+height of 120 m RF-up is a lower floor. Preparation creates a 3-D route above
+the exact DEM, anticipating hills and limiting climb/descent grade. Native
+kinematics drive the RF windows as before; this is not an idealized pose clamp.
+
+`radios.json` → `radar.profile.noise_power_offset_db` is the noise control.
+The selected demo value **−25 dB** reveals terrain clutter in noisy, quantized
+ADC I/Q at the checked route snapshots. **0 restores the original receiver
+noise model**. Temperature/noise figure, TX/IF gains, antenna, target RCS and
+backscatter rules remain their existing values; the noise offset is an explicit
+visualization adjustment rather than a measured board specification.
+See [controls and model semantics](../../docs/demo-tuning.md) and the
+[matched-noise ADC checks](../../results/reviews/low-terrain-demo-20261024/REPORT.md).

@@ -1,0 +1,557 @@
+{
+  "scope": "planned low-altitude route snapshots, actual source ADC I/Q and external FFT, CPU; no AirSim dynamics/camera or GPU timing claim",
+  "cases": [
+    {
+      "viewpoint": "start",
+      "position_rf_m": [
+        -200.0,
+        0.0,
+        143.42471843649176
+      ],
+      "velocity_rf_m_s": [
+        19.611613513818398,
+        0.0,
+        -3.9223227027637018
+      ],
+      "noise_power_offset_db": 0.0,
+      "strongest_clutter_plus_noise_bin_vs_noise_median_db": 13.044079018334315,
+      "noise_only_median_bin_dbv2": -83.06222383337604,
+      "clutter_echoes": 263,
+      "full_scene_clipped_fraction": 0.0
+    },
+    {
+      "viewpoint": "start",
+      "position_rf_m": [
+        -200.0,
+        0.0,
+        143.42471843649176
+      ],
+      "velocity_rf_m_s": [
+        19.611613513818398,
+        0.0,
+        -3.9223227027637018
+      ],
+      "noise_power_offset_db": -15.0,
+      "strongest_clutter_plus_noise_bin_vs_noise_median_db": 17.970906085603957,
+      "noise_only_median_bin_dbv2": -97.96671022451898,
+      "clutter_echoes": 263,
+      "full_scene_clipped_fraction": 0.0
+    },
+    {
+      "viewpoint": "start",
+      "position_rf_m": [
+        -200.0,
+        0.0,
+        143.42471843649176
+      ],
+      "velocity_rf_m_s": [
+        19.611613513818398,
+        0.0,
+        -3.9223227027637018
+      ],
+      "noise_power_offset_db": -25.0,
+      "strongest_clutter_plus_noise_bin_vs_noise_median_db": 28.115612857969992,
+      "noise_only_median_bin_dbv2": -107.79087042137279,
+      "clutter_echoes": 263,
+      "full_scene_clipped_fraction": 0.0
+    },
+    {
+      "viewpoint": "east-pass",
+      "position_rf_m": [
+        149.36708860759495,
+        0.0,
+        160.5693805810949
+      ],
+      "velocity_rf_m_s": [
+        19.711551778392753,
+        0.0,
+        3.384483193597135
+      ],
+      "noise_power_offset_db": 0.0,
+      "strongest_clutter_plus_noise_bin_vs_noise_median_db": 13.095794777134927,
+      "noise_only_median_bin_dbv2": -83.06222383337604,
+      "clutter_echoes": 285,
+      "full_scene_clipped_fraction": 0.0
+    },
+    {
+      "viewpoint": "east-pass",
+      "position_rf_m": [
+        149.36708860759495,
+        0.0,
+        160.5693805810949
+      ],
+      "velocity_rf_m_s": [
+        19.711551778392753,
+        0.0,
+        3.384483193597135
+      ],
+      "noise_power_offset_db": -15.0,
+      "strongest_clutter_plus_noise_bin_vs_noise_median_db": 16.40647951759358,
+      "noise_only_median_bin_dbv2": -97.96671022451898,
+      "clutter_echoes": 285,
+      "full_scene_clipped_fraction": 0.0
+    },
+    {
+      "viewpoint": "east-pass",
+      "position_rf_m": [
+        149.36708860759495,
+        0.0,
+        160.5693805810949
+      ],
+      "velocity_rf_m_s": [
+        19.711551778392753,
+        0.0,
+        3.384483193597135
+      ],
+      "noise_power_offset_db": -25.0,
+      "strongest_clutter_plus_noise_bin_vs_noise_median_db": 26.250532322271297,
+      "noise_only_median_bin_dbv2": -107.79087042137279,
+      "clutter_echoes": 285,
+      "full_scene_clipped_fraction": 0.0
+    },
+    {
+      "viewpoint": "west-turn",
+      "position_rf_m": [
+        -240.0,
+        -149.2820323027551,
+        185.3078357290887
+      ],
+      "velocity_rf_m_s": [
+        -16.72164936967106,
+        10.247039912734033,
+        -3.9223227027636383
+      ],
+      "noise_power_offset_db": 0.0,
+      "strongest_clutter_plus_noise_bin_vs_noise_median_db": 13.115471832518836,
+      "noise_only_median_bin_dbv2": -83.06222383337604,
+      "clutter_echoes": 187,
+      "full_scene_clipped_fraction": 0.0
+    },
+    {
+      "viewpoint": "west-turn",
+      "position_rf_m": [
+        -240.0,
+        -149.2820323027551,
+        185.3078357290887
+      ],
+      "velocity_rf_m_s": [
+        -16.72164936967106,
+        10.247039912734033,
+        -3.9223227027636383
+      ],
+      "noise_power_offset_db": -15.0,
+      "strongest_clutter_plus_noise_bin_vs_noise_median_db": 24.767897263375275,
+      "noise_only_median_bin_dbv2": -97.96671022451898,
+      "clutter_echoes": 187,
+      "full_scene_clipped_fraction": 0.0
+    },
+    {
+      "viewpoint": "west-turn",
+      "position_rf_m": [
+        -240.0,
+        -149.2820323027551,
+        185.3078357290887
+      ],
+      "velocity_rf_m_s": [
+        -16.72164936967106,
+        10.247039912734033,
+        -3.9223227027636383
+      ],
+      "noise_power_offset_db": -25.0,
+      "strongest_clutter_plus_noise_bin_vs_noise_median_db": 34.50740485655719,
+      "noise_only_median_bin_dbv2": -107.79087042137279,
+      "clutter_echoes": 187,
+      "full_scene_clipped_fraction": 0.0
+    },
+    {
+      "viewpoint": "return",
+      "position_rf_m": [
+        0.0,
+        -160.0,
+        172.04335884613627
+      ],
+      "velocity_rf_m_s": [
+        -19.611613513818423,
+        0.0,
+        3.9223227027635965
+      ],
+      "noise_power_offset_db": 0.0,
+      "strongest_clutter_plus_noise_bin_vs_noise_median_db": 13.071728971071693,
+      "noise_only_median_bin_dbv2": -83.06222383337604,
+      "clutter_echoes": 258,
+      "full_scene_clipped_fraction": 0.0
+    },
+    {
+      "viewpoint": "return",
+      "position_rf_m": [
+        0.0,
+        -160.0,
+        172.04335884613627
+      ],
+      "velocity_rf_m_s": [
+        -19.611613513818423,
+        0.0,
+        3.9223227027635965
+      ],
+      "noise_power_offset_db": -15.0,
+      "strongest_clutter_plus_noise_bin_vs_noise_median_db": 14.527349557225506,
+      "noise_only_median_bin_dbv2": -97.96671022451898,
+      "clutter_echoes": 258,
+      "full_scene_clipped_fraction": 0.0
+    },
+    {
+      "viewpoint": "return",
+      "position_rf_m": [
+        0.0,
+        -160.0,
+        172.04335884613627
+      ],
+      "velocity_rf_m_s": [
+        -19.611613513818423,
+        0.0,
+        3.9223227027635965
+      ],
+      "noise_power_offset_db": -25.0,
+      "strongest_clutter_plus_noise_bin_vs_noise_median_db": 25.006114806309867,
+      "noise_only_median_bin_dbv2": -107.79087042137279,
+      "clutter_echoes": 258,
+      "full_scene_clipped_fraction": 0.0
+    }
+  ],
+  "input_sha256": {
+    "PROJECTAIRSIM-LICENSE.txt": "c2cfccb812fe482101a8f04597dfc5a9991a6b2748266c47ac91b6a5aae15383",
+    "README.md": "35a50175f9a028ee22ee80ed023b74f4f25719a251d2e900b0a47259c4b22f91",
+    "environment.json": "46294d3ccd1bf3468c733d94fb776a1b483475972362bd248f6bb6caa6012921",
+    "flight.json": "4d4bd38bba1c24274a899b3cd068cbca8a1e7033c5ee83b9d70a505820ba5744",
+    "quadrotor.jsonc": "c9ff96a27b32b6d520fbe3273266ad98fcd9a59a39b8d4e96cbf2462284fee10",
+    "radar-mode.json": "80a03e248b6425818afa97a08cdca336eb1f9e5c77579f3eed1253bfcad8b196",
+    "radios.json": "f173c9e4ad0036f364d4fda1e673933e52e41df79c63471a2d1ca2c211dee6a6",
+    "scenario.json": "e7270830f1fe0fa1e989641303d2ceeb549b3ff855dd1612cbbf3fa255c07fee"
+  },
+  "profile": {
+    "tx_feed_loss_db": 0.0,
+    "antenna_gain_dbi": 7.0,
+    "azimuth_beamwidth_deg": 56.0,
+    "elevation_beamwidth_deg": 28.0,
+    "if_low_hz": 30000.0,
+    "if_high_hz": 4500000.0,
+    "adc_bits": 12,
+    "adc_full_scale_v": 1.0,
+    "adc_bias_v": 0.5,
+    "noise_figure_db": 15.0,
+    "noise_enabled": true,
+    "noise_power_offset_db": -25.0
+  },
+  "direction_finding_cases": [
+    {
+      "viewpoint": "east",
+      "position_rf_m": [
+        250.0,
+        0.0,
+        168.0377525677557
+      ],
+      "noise_power_offset_db": -25.0,
+      "channels": 8,
+      "samples_per_channel": 8192,
+      "path_diagnostics": {
+        "site0_e0": {
+          "tx0": {
+            "direct_paths": 1,
+            "reflected_paths": 2
+          }
+        },
+        "site0_e1": {
+          "tx0": {
+            "direct_paths": 1,
+            "reflected_paths": 2
+          }
+        },
+        "site0_e2": {
+          "tx0": {
+            "direct_paths": 1,
+            "reflected_paths": 2
+          }
+        },
+        "site0_e3": {
+          "tx0": {
+            "direct_paths": 1,
+            "reflected_paths": 2
+          }
+        },
+        "site1_e0": {
+          "tx0": {
+            "direct_paths": 1,
+            "reflected_paths": 0
+          }
+        },
+        "site1_e1": {
+          "tx0": {
+            "direct_paths": 1,
+            "reflected_paths": 0
+          }
+        },
+        "site1_e2": {
+          "tx0": {
+            "direct_paths": 1,
+            "reflected_paths": 0
+          }
+        },
+        "site1_e3": {
+          "tx0": {
+            "direct_paths": 1,
+            "reflected_paths": 0
+          }
+        }
+      },
+      "max_ADC_clipped_fraction": 0.0,
+      "thermal_noise_power_w_by_channel": {
+        "site0_e0": 1.2661773313642514e-16,
+        "site0_e1": 1.2661773313642514e-16,
+        "site0_e2": 1.2661773313642514e-16,
+        "site0_e3": 1.2661773313642514e-16,
+        "site1_e0": 1.2661773313642514e-16,
+        "site1_e1": 1.2661773313642514e-16,
+        "site1_e2": 1.2661773313642514e-16,
+        "site1_e3": 1.2661773313642514e-16
+      }
+    },
+    {
+      "viewpoint": "north",
+      "position_rf_m": [
+        1.5987211554602254e-14,
+        250.0,
+        159.1500680690884
+      ],
+      "noise_power_offset_db": -25.0,
+      "channels": 8,
+      "samples_per_channel": 8192,
+      "path_diagnostics": {
+        "site0_e0": {
+          "tx0": {
+            "direct_paths": 1,
+            "reflected_paths": 4
+          }
+        },
+        "site0_e1": {
+          "tx0": {
+            "direct_paths": 1,
+            "reflected_paths": 4
+          }
+        },
+        "site0_e2": {
+          "tx0": {
+            "direct_paths": 1,
+            "reflected_paths": 4
+          }
+        },
+        "site0_e3": {
+          "tx0": {
+            "direct_paths": 1,
+            "reflected_paths": 4
+          }
+        },
+        "site1_e0": {
+          "tx0": {
+            "direct_paths": 1,
+            "reflected_paths": 0
+          }
+        },
+        "site1_e1": {
+          "tx0": {
+            "direct_paths": 1,
+            "reflected_paths": 0
+          }
+        },
+        "site1_e2": {
+          "tx0": {
+            "direct_paths": 1,
+            "reflected_paths": 0
+          }
+        },
+        "site1_e3": {
+          "tx0": {
+            "direct_paths": 1,
+            "reflected_paths": 0
+          }
+        }
+      },
+      "max_ADC_clipped_fraction": 0.0,
+      "thermal_noise_power_w_by_channel": {
+        "site0_e0": 1.2661773313642514e-16,
+        "site0_e1": 1.2661773313642514e-16,
+        "site0_e2": 1.2661773313642514e-16,
+        "site0_e3": 1.2661773313642514e-16,
+        "site1_e0": 1.2661773313642514e-16,
+        "site1_e1": 1.2661773313642514e-16,
+        "site1_e2": 1.2661773313642514e-16,
+        "site1_e3": 1.2661773313642514e-16
+      }
+    },
+    {
+      "viewpoint": "west",
+      "position_rf_m": [
+        -250.0,
+        3.019806626980426e-14,
+        163.4193109199013
+      ],
+      "noise_power_offset_db": -25.0,
+      "channels": 8,
+      "samples_per_channel": 8192,
+      "path_diagnostics": {
+        "site0_e0": {
+          "tx0": {
+            "direct_paths": 1,
+            "reflected_paths": 0
+          }
+        },
+        "site0_e1": {
+          "tx0": {
+            "direct_paths": 1,
+            "reflected_paths": 0
+          }
+        },
+        "site0_e2": {
+          "tx0": {
+            "direct_paths": 1,
+            "reflected_paths": 0
+          }
+        },
+        "site0_e3": {
+          "tx0": {
+            "direct_paths": 1,
+            "reflected_paths": 0
+          }
+        },
+        "site1_e0": {
+          "tx0": {
+            "direct_paths": 1,
+            "reflected_paths": 3
+          }
+        },
+        "site1_e1": {
+          "tx0": {
+            "direct_paths": 1,
+            "reflected_paths": 3
+          }
+        },
+        "site1_e2": {
+          "tx0": {
+            "direct_paths": 1,
+            "reflected_paths": 3
+          }
+        },
+        "site1_e3": {
+          "tx0": {
+            "direct_paths": 1,
+            "reflected_paths": 3
+          }
+        }
+      },
+      "max_ADC_clipped_fraction": 0.0,
+      "thermal_noise_power_w_by_channel": {
+        "site0_e0": 1.2661773313642514e-16,
+        "site0_e1": 1.2661773313642514e-16,
+        "site0_e2": 1.2661773313642514e-16,
+        "site0_e3": 1.2661773313642514e-16,
+        "site1_e0": 1.2661773313642514e-16,
+        "site1_e1": 1.2661773313642514e-16,
+        "site1_e2": 1.2661773313642514e-16,
+        "site1_e3": 1.2661773313642514e-16
+      }
+    },
+    {
+      "viewpoint": "south",
+      "position_rf_m": [
+        -4.618527782440651e-14,
+        -250.0,
+        155.0966039933517
+      ],
+      "noise_power_offset_db": -25.0,
+      "channels": 8,
+      "samples_per_channel": 8192,
+      "path_diagnostics": {
+        "site0_e0": {
+          "tx0": {
+            "direct_paths": 0,
+            "reflected_paths": 0
+          }
+        },
+        "site0_e1": {
+          "tx0": {
+            "direct_paths": 0,
+            "reflected_paths": 0
+          }
+        },
+        "site0_e2": {
+          "tx0": {
+            "direct_paths": 1,
+            "reflected_paths": 0
+          }
+        },
+        "site0_e3": {
+          "tx0": {
+            "direct_paths": 0,
+            "reflected_paths": 0
+          }
+        },
+        "site1_e0": {
+          "tx0": {
+            "direct_paths": 0,
+            "reflected_paths": 0
+          }
+        },
+        "site1_e1": {
+          "tx0": {
+            "direct_paths": 0,
+            "reflected_paths": 0
+          }
+        },
+        "site1_e2": {
+          "tx0": {
+            "direct_paths": 0,
+            "reflected_paths": 0
+          }
+        },
+        "site1_e3": {
+          "tx0": {
+            "direct_paths": 0,
+            "reflected_paths": 0
+          }
+        }
+      },
+      "max_ADC_clipped_fraction": 0.0,
+      "thermal_noise_power_w_by_channel": {
+        "site0_e0": 1.2661773313642514e-16,
+        "site0_e1": 1.2661773313642514e-16,
+        "site0_e2": 1.2661773313642514e-16,
+        "site0_e3": 1.2661773313642514e-16,
+        "site1_e0": 1.2661773313642514e-16,
+        "site1_e1": 1.2661773313642514e-16,
+        "site1_e2": 1.2661773313642514e-16,
+        "site1_e3": 1.2661773313642514e-16
+      }
+    }
+  ],
+  "direction_finding_input_sha256": {
+    "PROJECTAIRSIM-LICENSE.txt": "c2cfccb812fe482101a8f04597dfc5a9991a6b2748266c47ac91b6a5aae15383",
+    "README.md": "b110c6973c0dfbd6ac9ba865cc1f624e2f1c883ba847a72b2fb88d593c54b11b",
+    "environment.json": "46294d3ccd1bf3468c733d94fb776a1b483475972362bd248f6bb6caa6012921",
+    "flight.json": "f44c9240717c85c950c01338ddbe5e7f34126382d885e942c1746f7bd31160ba",
+    "quadrotor.jsonc": "c9ff96a27b32b6d520fbe3273266ad98fcd9a59a39b8d4e96cbf2462284fee10",
+    "radios.json": "0ac60bad15fc47cae05d9e1d26a07646d17718db19406ae7918ce6d81157eb90",
+    "scenario.json": "31458a5e9bab6b634bd2123fc44804f21a1998ddbb91c676bace9581494a5ced",
+    "waveform.json": "9c1566d5fa59f0a48e47026a1ddd9cec7c98930199b669d5d4f2b8e9f2cb8f22"
+  },
+  "source_sha256": {
+    "airsim_rf.fmcw": "59ef4a7d2c0c5ed6de4efeaacf91d3857a90564721d64e86fa183859d26f1bf6",
+    "airsim_rf.sdr": "3b905ad5f6f6cf04b6f1660a3db2a57a755a15c210210a2e8f85e55b7cb369cc",
+    "airsim_rf.dashboard_scenario": "5f081b8bb1e9621247048ecbfb903e4732957bc5e8a1541878dde3ff4a1cd94c",
+    "airsim_rf.terrain": "90bc0fb15b9811b62515213b223c5600639ecadb9f0fd101e4eecf35d079e5ad",
+    "radar_skill.processing": "1ceb81ea643c69e508756802a072d6677f3c2658480f8bc20e9597751bfe5f95"
+  },
+  "software": {
+    "sionna_rt": "2.2.0",
+    "numpy": "2.5.4",
+    "mitsuba": "3.9.1"
+  }
+}

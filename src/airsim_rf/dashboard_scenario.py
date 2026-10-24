@@ -34,7 +34,7 @@ def orbit_pose(seconds,radius=None,speed=None):
     return np.array([radius*np.cos(angle),radius*np.sin(angle),flight['center_rf_m'][2]]),np.array([-speed*np.sin(angle),speed*np.cos(angle),0.])
 
 
-def flight_path(actor,duration_s):
+def _declared_flight_path(actor,duration_s):
     """Compile declared RF-coordinate circle/waypoints; no simulated pose feedback."""
     flight=actor['flight']
     if flight['type']=='hold':return []
@@ -62,6 +62,50 @@ def flight_path(actor,duration_s):
     sign=1 if flight['direction']=='left' else -1
     angle=np.arctan2(start[1],start[0])+sign*np.linspace(0,cycles*2*np.pi,cycles*int(np.ceil(360/flight['waypoint_step_deg']))+1)
     return (center+np.column_stack((flight['radius_m']*np.cos(angle),flight['radius_m']*np.sin(angle),np.zeros(len(angle))))).tolist()
+
+
+def flight_path(actor,duration_s,*,terrain=None):
+    """Compile the authored route, optionally above the exact shared DEM.
+
+    Waypoints include every crossed grid edge and cell diagonal, so the DEM is
+    planar between points. A periodic slope-limited altitude envelope anticipates
+    hills; this is a planned native flight path, never a replacement for readback.
+    """
+    points=np.asarray(_declared_flight_path(actor,duration_s),float)
+    flight=actor['flight']
+    if not len(points) or 'terrain_clearance_m' not in flight:return points.tolist()
+    if terrain is None:raise ValueError('Terrain-clearance flight requires a heightfield during preparation')
+    refined=[points[0]]
+    for start,end in zip(points[:-1],points[1:]):
+        delta=end-start;cuts=[0.,1.]
+        for dim,axis in enumerate((terrain.x_m,terrain.y_m)):
+            if abs(delta[dim])>1e-12:
+                t=(axis-start[dim])/delta[dim];cuts.extend(t[(t>0)&(t<1)])
+        edges=np.unique(cuts)
+        for a,b in zip(edges[:-1],edges[1:]):
+            mid=start+delta*(a+b)/2
+            ix=np.clip(np.searchsorted(terrain.x_m,mid[0],side='right')-1,0,len(terrain.x_m)-2)
+            iy=np.clip(np.searchsorted(terrain.y_m,mid[1],side='right')-1,0,len(terrain.y_m)-2)
+            scale=np.array([terrain.x_m[ix+1]-terrain.x_m[ix],terrain.y_m[iy+1]-terrain.y_m[iy]])
+            origin=np.array([terrain.x_m[ix],terrain.y_m[iy]])
+            uv=(start[:2]-origin)/scale;duv=delta[:2]/scale;slope=duv[0]-duv[1]
+            if abs(slope)>1e-12:
+                crossing=-(uv[0]-uv[1])/slope
+                if a<crossing<b:cuts.append(crossing)
+        for t in np.unique(cuts)[1:]:
+            point=start+delta*t
+            if np.linalg.norm(point-refined[-1])>1e-8:refined.append(point)
+    points=np.asarray(refined);floor=terrain.elevation_at(points[:,0],points[:,1])+flight['terrain_clearance_m']
+    height=np.maximum(points[:,2],floor);distance=np.linalg.norm(np.diff(points[:,:2],axis=0),axis=1)
+    closed=np.allclose(points[0,:2],points[-1,:2],atol=1e-7)
+    if closed:
+        count=len(height)-1;height=np.tile(height[:-1],3);distance=np.tile(distance,3)[:-1]
+    grade=flight['max_vertical_grade']
+    for i in range(1,len(height)):height[i]=max(height[i],height[i-1]-grade*distance[i-1])
+    for i in range(len(height)-2,-1,-1):height[i]=max(height[i],height[i+1]-grade*distance[i])
+    if closed:height=np.r_[height[count:2*count],height[count]]
+    points[:,2]=height
+    return points.tolist()
 
 
 class WaveformSource:
@@ -130,6 +174,11 @@ def prepare(output,runtime_source=None,scenario_dir=None,duration_s=None,check_i
             'vertices_local':(vertices*[1,-1,-1]).tolist(),'faces':faces.tolist(),'local_to_ned_m':np.eye(4).tolist()}]}
     elif env['type']=='geometry':geometry=validate_geometry(json.loads(asset(frozen,env['file']).read_text()))
     else:raise ValueError('Environment type must be heightfield or geometry')
+    routes=[flight_path(actor,config['mission']['duration_s'],terrain=terrain) for actor in config['flight']['actors']]
+    # Preserve authored input in scenario-input; native spawn, settling and flight
+    # all use the same compiled absolute route. RF still consumes actual poses.
+    for actor,path in zip(config['flight']['actors'],routes):
+        if path and 'terrain_clearance_m' in actor['flight']:actor['position_rf_m']=path[0]
     bindings={'version':1,'geodetic_anchor':env['geodetic_anchor'],
         'objects':{obj['id']:{'simulator':{'object_name':obj['id'],'asset_path':'generated:glb','local_to_actor_m':np.eye(4).tolist(),
         'asset_provenance':'Same scenario triangles in Unreal and RF'}} for obj in geometry['objects']}}
@@ -144,7 +193,13 @@ def prepare(output,runtime_source=None,scenario_dir=None,duration_s=None,check_i
             if replaced:previous.rename(target)
             raise
     atomic_json(output/'placement.json',placement_plan(geometry,bindings))
-    radio=config['radios'];sites=deepcopy(radio['sites'])
+    radio=config['radios']
+    if radio.get('mode')=='fmcw-radar':
+        actor=next(a for a in config['flight']['actors'] if a['id']==radio['radar']['platform_actor'])
+        yaw=np.deg2rad(actor['yaw_deg']);rotation=np.array([[np.cos(yaw),-np.sin(yaw),0],[np.sin(yaw),np.cos(yaw),0],[0,0,1]])
+        mount=np.asarray(radio['radar']['mount_body_m'])*[1,-1,-1]
+        radio['sites'][0]['center_rf_m']=(np.asarray(actor['position_rf_m'])+rotation@mount).tolist()
+    sites=deepcopy(radio['sites'])
     if radio.get('mode')=='fmcw-radar':
         clutter=radio['radar']['clutter']
         clutter['shape_materials']={'obj_'+obj['id']:obj['material'] for obj in geometry['objects'] if obj['material'] in clutter['materials']}
@@ -195,14 +250,19 @@ def prepare(output,runtime_source=None,scenario_dir=None,duration_s=None,check_i
         'clock':{'type':'steppable','step-ns':step,'real-time-update-rate':step,'pause-on-start':True},
         'home-geo-point':{'latitude':anchor['latitude'],'longitude':anchor['longitude'],'altitude':anchor['altitude_m']}})
     runtime={k:v for k,v in config.items() if k!='_directory'}
+    runtime['compiled_routes_rf_m']={actor['id']:path for actor,path in zip(config['flight']['actors'],routes)}
     runtime['input_sha256']=fingerprints(frozen);atomic_json(output/'runtime.json',runtime)
-    first=config['flight']['actors'][0];flight=first['flight'];routes=[flight_path(actor,config['mission']['duration_s']) for actor in config['flight']['actors']]
+    first=config['flight']['actors'][0];flight=first['flight']
     summary={'id':config['id'],'title':config['title'],'input_sha256':runtime['input_sha256'],'advance_ns':config['mission']['rf_update_ns'],
         'flight_type':flight['type'],'straight_length_m':flight.get('straight_length_m',0),'turn_radius_m':flight.get('turn_radius_m',0),'radius_m':flight.get('radius_m',0),'speed_m_s':flight.get('speed_m_s',0),'turn':flight.get('direction',flight['type']),
         'altitude_rf_m':first['position_rf_m'][2],'sites':sites,'routes_rf_m':routes,
         'sample_rate_hz':radio['sample_rate_hz'],'carrier_hz':radio['carrier_hz'],'transmitters':len(radio['transmitters']),
         'camera':camera,'source':'Scenario package; actual ProjectAirSim pose readback drives RF',
         'propagation':radio['propagation'],'skill_kind':config['skill']['kind'],'skill_name':config['skill'].get('name',config['skill']['kind'])}
+    summary['terrain_clearance_m']=flight.get('terrain_clearance_m')
+    summary['max_vertical_grade']=flight.get('max_vertical_grade')
+    profile=radio['radar']['profile'] if radio.get('mode')=='fmcw-radar' else radio['receiver_profile']
+    summary['receiver_noise']={'enabled':profile.get('noise_enabled',True),'noise_power_offset_db':profile.get('noise_power_offset_db',0.)}
     if radio.get('mode')=='fmcw-radar':summary['radar_targets']=deepcopy(radio['radar']['targets'])
     if terrain is not None:
         summary.update(terrain_width_m=float(max(np.ptp(terrain.x_m),np.ptp(terrain.y_m))),terrain_relief_m=float(np.ptp(terrain.heights_m)),

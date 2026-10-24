@@ -19,8 +19,9 @@ The input package is independent of the containers and RF skill implementation.
 | Which chase camera and visual terrain color? | `scenario.json.camera` and `.appearance`: actor/sensor, distance, receiver-facing boom, image settings, labels, base color and emission. These do not set RF dielectric properties. |
 
 The packaged example remains one QPSK transmitter on a 250 m left orbit at
-25 m/s and RF-up altitude 200 m, two four-element 915 MHz ULAs, 2 MS/s, 120 ms
-RF windows and an illustrative 800 m hills/valley heightfield. Those are example
+25 m/s with 20 m minimum planned terrain clearance, two four-element 915 MHz ULAs, 2 MS/s, 120 ms
+RF windows and an illustrative 800 m hills/valley heightfield. See [low-flight and noise controls](demo-tuning.md); the demo uses a −25 dB
+noise-power offset that can be reset to 0 for the original receiver model. Those are example
 input values, not assumptions embedded in the generic source loop. Its Pluto
 front-end approximation and material constants remain uncalibrated assumptions.
 

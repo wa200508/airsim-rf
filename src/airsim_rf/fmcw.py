@@ -39,6 +39,7 @@ class Distance2GoLProfile:
     noise_figure_db: float = 12.0
     temperature_k: float = 290.0
     noise_enabled: bool = True
+    noise_power_offset_db: float = 0.0  # Demonstration control: 0 retains modeled kTB*F power.
 
     def __post_init__(self):
         positive = ("carrier_hz", "bandwidth_hz", "chirp_duration_s", "sample_rate_hz", "pri_s",
@@ -63,6 +64,8 @@ class Distance2GoLProfile:
             raise ValueError("IF passband must be below the ADC Nyquist frequency")
         if not 0 <= self.adc_bias_v <= self.adc_full_scale_v:
             raise ValueError("ADC bias must be within full scale")
+        if not np.isfinite(self.noise_power_offset_db) or not -120<=self.noise_power_offset_db<=60:
+            raise ValueError('noise_power_offset_db must be finite and in [-120, 60] dB')
         if self.temperature_k < 0 or self.noise_figure_db < 0:
             raise ValueError("Temperature and noise figure must be nonnegative")
 
@@ -244,7 +247,7 @@ class FMCWRadar:
         self.last_render_diagnostics={'echo_terms':int(visible.sum()),'target_echoes':int(visible[:len(chosen)].sum()),
                                      'clutter_echoes':int(visible[len(chosen):].sum()),'echo_model':'first-order'}
         if p.noise_enabled:
-            variance=p.reference_impedance_ohm*BOLTZMANN*p.temperature_k*p.sample_rate_hz*10**(p.noise_figure_db/10)
+            variance=p.reference_impedance_ohm*BOLTZMANN*p.temperature_k*p.sample_rate_hz*10**((p.noise_figure_db+p.noise_power_offset_db)/10)
             noise=np.sqrt(variance/2)*(self.rng.standard_normal(p.num_samples+1024)+1j*self.rng.standard_normal(p.num_samples+1024))
             voltage+=sosfilt(self._noise_sos,noise)[-p.num_samples:]*10**((p.if_gain_db+p.mixer_voltage_gain_db)/20)
         codes,adc_iq,clipped=quantize_iq(voltage,p)

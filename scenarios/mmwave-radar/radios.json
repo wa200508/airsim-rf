@@ -114,7 +114,8 @@
       "adc_full_scale_v": 1.0,
       "adc_bias_v": 0.5,
       "noise_figure_db": 15.0,
-      "noise_enabled": true
+      "noise_enabled": true,
+      "noise_power_offset_db": -25.0
     },
     "seed": 42,
     "echo_model": "first-order",

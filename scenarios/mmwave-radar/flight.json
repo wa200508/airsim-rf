@@ -6,7 +6,7 @@
       "position_rf_m": [
         -200,
         0,
-        210
+        120
       ],
       "yaw_deg": 0,
       "settle_s": 2.001,
@@ -15,7 +15,7 @@
         "center_rf_m": [
           0,
           -80,
-          210
+          120
         ],
         "straight_length_m": 400,
         "turn_radius_m": 80,
@@ -23,7 +23,9 @@
         "waypoint_step_deg": 3,
         "lookahead_m": 8,
         "adaptive_lookahead": 0,
-        "direction": "right"
+        "direction": "right",
+        "terrain_clearance_m": 20.0,
+        "max_vertical_grade": 0.2
       }
     }
   ]

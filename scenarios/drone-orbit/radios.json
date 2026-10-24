@@ -111,7 +111,8 @@
     "input_full_scale_dbm": -30.0,
     "temperature_k": 290.0,
     "impedance_ohm": 50.0,
-    "noise_enabled": true
+    "noise_enabled": true,
+    "noise_power_offset_db": -25.0
   },
   "propagation": {
     "renderer": "basis-cuda",

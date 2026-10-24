@@ -77,6 +77,8 @@ function render(state){lastStatus=state;renderControls(state);const s=state.skil
  $('mission-label').textContent=scenario.id||'RECORDED SCENARIO';
  $('signal-label').textContent=`${carrier?(carrier/1e6).toFixed(3)+' MHz':'Carrier pending'} · ${fs?(fs/1e6).toFixed(3)+' MS/s':'Rate pending'}`;
  $('flight-summary').textContent=scenario.flight_type==='racetrack'?`${scenario.straight_length_m} m straights / ${scenario.turn_radius_m} m turns / ${scenario.speed_m_s} m/s`:scenario.radius_m?`${scenario.radius_m} m orbit / ${scenario.altitude_rf_m} m RF-up`:'Scenario flight plan';
+ if(scenario.terrain_clearance_m)$('flight-summary').textContent=(scenario.flight_type==='racetrack'?`${scenario.straight_length_m} m straights / ${scenario.turn_radius_m} m turns`:scenario.radius_m?`${scenario.radius_m} m orbit`:'Terrain-following route')+` / ≥${scenario.terrain_clearance_m} m AGL / ${scenario.speed_m_s} m/s`;
+ const noise=scenario.receiver_noise;$('noise-summary').textContent=noise?(noise.enabled?`${noise.noise_power_offset_db} dB versus receiver noise model`+(noise.noise_power_offset_db!==0?' · demo adjustment':''):'Thermal noise off'):'Not recorded';
  $('propagation-summary').textContent=typeof scenario.propagation==='object'?`${scenario.propagation.path_solver} / depth ${scenario.propagation.max_depth}`:(scenario.propagation||'Recorded propagation');
  document.querySelector('[data-process="skill"]').querySelector('h3').textContent=s.display?.title||scenario.skill_name||'RF Skill';
  RFSkillDisplay.render($('skill-display'),s);

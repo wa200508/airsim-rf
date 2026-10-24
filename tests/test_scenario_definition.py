@@ -67,10 +67,11 @@ def test_same_compiler_uses_edited_inputs_instead_of_dashboard_constants(package
     assert json.loads((run/'bundle/geometry.json').read_text())['materials']['earth']['relative_permittivity']==3.2
     assert (run/'scenario-input/quadrotor.jsonc').is_file()
     assert not any(key in arrays for key in ('flight','environment','transmitters','waveform','skill'))
-    path=np.asarray(flight_path(runtime['flight']['actors'][0],.24))
-    np.testing.assert_allclose(np.linalg.norm(path[:,:2],axis=1),175)
+    path=np.asarray(runtime['compiled_routes_rf_m'][runtime['flight']['actors'][0]['id']])
+    radius=np.linalg.norm(path[:,:2],axis=1)
+    assert radius.min()>=175*np.cos(np.deg2rad(1.5))-1e-8 and radius.max()<=175+1e-8
     scene=json.loads((run/'sim_config/scene.jsonc').read_text())
-    assert scene['actors'][0]['origin']['xyz']=='175 0 -210'
+    np.testing.assert_allclose(list(map(float,scene['actors'][0]['origin']['xyz'].split())),[175,0,-210])
 
 
 def test_waypoints_hold_and_multiple_movers_are_data(package,tmp_path):

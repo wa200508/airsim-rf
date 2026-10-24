@@ -32,8 +32,8 @@ def test_racetrack_clears_terrain_and_ground_targets_have_masked_and_clear_passe
     from airsim_rf.geometry_sync import nearest_intersections
     c,g,d=route_geometry();a=c['flight']['actors'][0]
     assert [actor['id'] for actor in c['flight']['actors']]==['RadarDrone']
-    points=np.asarray(flight_path(a,1));np.testing.assert_allclose(points[0],points[-1])
-    assert np.min(points[:,2]-g.elevation_at(points[:,0],points[:,1]))>20
+    points=np.asarray(flight_path(a,1,terrain=g));np.testing.assert_allclose(points[0],points[-1])
+    assert np.min(points[:,2]-g.elevation_at(points[:,0],points[:,1]))>=20-1e-9
     lengths=np.r_[0,np.cumsum(np.linalg.norm(np.diff(points,axis=0),axis=1))]
     t=np.arange(0,lengths[-1]/a['flight']['speed_m_s'],.02)
     positions=np.array([np.interp(t*a['flight']['speed_m_s'],lengths,points[:,i]) for i in range(3)]).T

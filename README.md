@@ -83,6 +83,12 @@ launcher can export its example with `--export-scenario ~/my-rf-scenario`.
 See the **[scenario package guide](docs/scenarios.md)** for arbitrary sampled
 waveforms, multiple TX actors, circle/racetrack/waypoint/hold flight and custom skills.
 
+Both packaged drones now use terrain-aware flight with **20 m minimum planned
+clearance**. The main demos use **−25 dB receiver-noise power offset** to expose
+terrain returns. Set `noise_power_offset_db` to **0** for the original receiver
+noise model. See [flight/noise controls and exact edit locations](docs/demo-tuning.md)
+and the [actual ADC tuning check](results/reviews/low-terrain-demo-20261024/REPORT.md).
+
 ## Launch the dashboard
 
 On **Linux x86-64**, install Docker Engine, a compatible NVIDIA driver,

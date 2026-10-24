@@ -120,7 +120,7 @@ jobs:
           docker run --rm --network none --entrypoint python airsim-rf:dashboard-gpu-test \
             scripts/qualify_dashboard_container.py
           docker run --rm --network none --entrypoint python airsim-rf:dashboard-gpu-test \
-            -m pytest tests/test_dashboard.py tests/test_dashboard_container.py tests/test_radar_scattering.py tests/test_radar_scenario.py -q -p no:cacheprovider
+            -m pytest tests/test_dashboard.py tests/test_dashboard_container.py tests/test_radar_scattering.py tests/test_radar_scenario.py tests/test_demo_terrain_noise.py -q -p no:cacheprovider
       - name: Verify shared terrain, independent LiDAR and paused camera updates
         run: |
           docker run --rm --network none --shm-size 1g --entrypoint python airsim-rf:dashboard-gpu-test \
