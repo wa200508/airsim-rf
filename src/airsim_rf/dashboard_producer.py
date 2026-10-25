@@ -34,7 +34,7 @@ async def run(args):
     from .dashboard_view import (queue_chase_camera_pose,relative_camera_pose,camera_labels,
         radio_marker_glb,ground_target_placements)
     from .dashboard_geometry import isolate_blocks_scene,require_rf_mesh_match,link_geometry
-    from .dashboard_sync import commit_window,advance_after_commit
+    from .dashboard_sync import commit_window,advance_after_commit,configure_flight_client,check_flight_tasks
     from .source_recording import RecordingWriter
     from .geometry import read_bundle
     from .geometry_sync import AirSimGeometryBinding,spawn_placements
@@ -56,7 +56,7 @@ async def run(args):
     client=ProjectAirSimClient(address=args.address);client.connect()
     state={'status':'starting','sim_elapsed_s':0,'windows':0,'camera_frames':0,'backend':'CUDA / Sionna RT','propagation':radio['propagation'],
            'flight_controller':'scenario flight plans, native ProjectAirSim controller',
-           'flight_command_wall_timeout_s':3600}
+           'flight_command_wall_timeout_s':None,'flight_command_timeout_clock':'simulation'}
     atomic_json(output/'producer.json',state)
     writer=None;sock=None;motions=[];flight_client=None;radio_server=None
     camera_counter=[0];last_camera=[0.];history=[]
@@ -116,6 +116,7 @@ async def run(args):
         except Exception as error:
             state['camera_error']=str(error)
             state['recording_error']=str(error)
+    stage='initialization'
     try:
         if mission.get('record_iq',True):
             iq_recording=SampleRecordingWriter(recording.path/'iq',arrays)
@@ -162,10 +163,11 @@ async def run(args):
         if settle_ns:world.continue_until_sim_time(int(world.get_sim_time())+settle_ns,wait_until_complete=True)
         await asyncio.sleep(.1)
         origin=int(world.get_sim_time())
-        # Flight command deadlines include intentional wall-time pauses. Only
-        # this source process owns physics stepping, across all declared actors.
+        # Flight completion is measured in simulation time. Preparation, operator
+        # pauses and RF computation must not expire the native motion request.
+        # Ordinary world/readback RPCs retain their finite transport timeouts.
         flight_client=ProjectAirSimClient(address=args.address);flight_client.connect_services()
-        flight_client.socket_services.recv_timeout=3_600_000
+        configure_flight_client(flight_client)
         for actor in actors:
             platform=Drone(flight_client,world,actor['id']);flight=actor['flight']
             path=config.get('compiled_routes_rf_m',{}).get(actor['id'])
@@ -254,9 +256,12 @@ async def run(args):
             # plane before advertising READY. Reuse this initial window at T+0.
             epoch=int(world.get_sim_time())
             initial,(position,velocity,orientation)=update_platforms(epoch)
+            stage='initial RF rendering'
             prepared_captures=receiver.capture(epoch,num_samples=count)
             row=record_frame(epoch,position,prepared_captures)
+            stage='initial I/Q recording and transfer'
             send_captures(prepared_captures)
+            stage='initial receiver acknowledgement'
             if not (await commit_window(writer,stop_requested))[0]:
                 recording.status('stopped');return
             row.update(windows=1,velocity_rf_m_s=velocity.tolist(),camera_frames=camera_counter[0],
@@ -269,8 +274,10 @@ async def run(args):
             state.update(row);state.update(status='ready',history=list(history),camera_frames=camera_counter[0],gpu_preflight='passed',mission_started=False)
             atomic_json(output/'producer.json',state)
             await save_source_frame();recording.status('ready')
+            stage='waiting for Launch mission'
             while True:
                 command=json.loads((output/'command.json').read_text())
+                check_flight_tasks(motions)
                 if command.get('stop'):
                     state.update(status='stopped');atomic_json(output/'producer.json',state);recording.status('stopped');return
                 if command.get('start'):break
@@ -278,7 +285,9 @@ async def run(args):
         started=time.monotonic()
         recording.status('running')
         for index in range(max(1,int(np.ceil(args.duration*1e9/ADVANCE_NS)))):
+            stage='flight command / operator pause'
             while True:
+                check_flight_tasks(motions)
                 command=json.loads((output/'command.json').read_text()) if (output/'command.json').exists() else {}
                 if command.get('stop'):break
                 if not command.get('paused'):break
@@ -288,8 +297,7 @@ async def run(args):
             if command.get('stop'):break
             if recording.manifest['status']=='paused':recording.status('running')
             if state.get('recording_error'):raise RuntimeError('Camera recording failed: '+state['recording_error'])
-            for platform,motion in motions:
-                if motion.done():motion.result()
+            check_flight_tasks(motions)
             epoch=int(world.get_sim_time());kinematics,(position,velocity,orientation)=update_platforms(epoch)
             if not args.no_render:queue_view(position,kinematics)
             if index==0 and prepared_captures is not None:
@@ -300,7 +308,9 @@ async def run(args):
                         if stop_requested():break
                         await asyncio.sleep(.05)
                     if stop_requested():break
+                stage='RF rendering'
                 captures=receiver.capture(epoch,num_samples=count)
+                stage='I/Q recording and transfer'
                 send_captures(captures)
             row=record_frame(epoch,position,captures)
             elapsed=(epoch-origin)*1e-9
@@ -317,6 +327,7 @@ async def run(args):
             row.update({key:state[key] for key in ('windows','velocity_rf_m_s','retained_paths',
                 'wall_elapsed_s','simulation_speed','camera_frames','camera_age_s','raw_payload_bytes')})
             atomic_json(output/'producer.json',state)
+            stage='receiver acknowledgement / physics advance'
             if index==0 and prepared_captures is not None:
                 # Initial acquisition was already committed before READY.
                 await save_source_frame()
@@ -324,6 +335,7 @@ async def run(args):
             elif not await advance_after_commit(world,writer,epoch,ADVANCE_NS,stop_requested,
                 on_committed=save_source_frame):break
             await asyncio.sleep(0)
+        stage='final receiver acknowledgement'
         totals={} if writer.closed else writer.finish();writer=None
         state['acknowledged_sample_totals']=totals
         # Preserve source telemetry even if stop interrupted the stream commit.
@@ -339,14 +351,15 @@ async def run(args):
                 await asyncio.sleep(.05)
         state.update(status='stopped' if stop_requested() else 'complete',camera_frames=camera_counter[0]);atomic_json(output/'producer.json',state)
         recording.status(state['status'])
-        for platform,motion in motions:platform.cancel_last_task()
+        for platform,motion in motions:drones[platform.name].cancel_last_task()
         world.continue_until_sim_time(int(world.get_sim_time())+mission['physics_step_ns'],wait_until_complete=True)
         for platform,motion in motions:
             try:await asyncio.wait_for(asyncio.shield(motion),timeout=2)
             except asyncio.TimeoutError:pass
     except BaseException as error:
-        recording.status('failed',error=str(error))
-        state.update(status='failed',error=str(error));atomic_json(output/'producer.json',state);raise
+        detail=f'{type(error).__name__}: {str(error) or "no error text"} during {stage}'
+        recording.status('failed',error=detail)
+        state.update(status='failed',error=detail,failure_stage=stage);atomic_json(output/'producer.json',state);raise
     finally:
         if radio_server is not None:
             receiver.control.set_state({'transmit':False,'receive':False})

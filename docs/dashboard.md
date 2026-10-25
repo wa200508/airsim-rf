@@ -102,6 +102,27 @@ Runs live under `replays/<run-id>/`. Bulk post-ADC samples are in `iq/` when
 stream the saved samples into another skill: [I/Q replay](iq-replay.md),
 [GNU Radio](gnuradio.md). Review [disk requirements](iq-replay.md) before long runs.
 
+## Slow runs and timeouts
+
+RF computation can take much longer than simulated flight time. Native flight
+commands now await simulation-time completion: there is no one-hour wall-clock
+mission deadline, including time spent ready or paused. The RF skills also
+allow an established acquisition stream to idle between frames without expiring.
+This does not change the waveform, channel update interval or sample count.
+
+Ordinary AirSim health/readback RPCs, incomplete I/Q transfers and receiver
+processing acknowledgements still have finite timeouts. A genuine failure is
+reported with its exception type and producer stage rather than silently
+continuing with missing samples. **Stop**, then **Prepare services**, starts a
+fresh mission; failed missions cannot resume their live connections.
+
+If an older run stopped with a timeout, retain its run directory. The on-host
+`producer.json`, `sim.log`, `rf.log`, `skill.log` and `replays/<run-id>/manifest.json` identify the failing
+service and stage. Already recorded I/Q remains in `replays/<run-id>/iq/`.
+After the source stops, its verified published prefix can be inspected/replayed
+with `--allow-partial`; see [interrupted captures](iq-replay.md#integrity-and-interrupted-runs).
+Do not delete the archive to restart the dashboard.
+
 ## Scene and signal interpretation
 
 The chase camera stays about 5 m from the drone and aims toward receivers or
