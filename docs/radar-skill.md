@@ -135,8 +135,11 @@ maintained mode the full FFT axes span approximately 0–480 m and ±12.5 kHz.
 Positive Doppler means receding motion. Apparent range retains FMCW coupling;
 the candidate's range estimate separately corrects its Doppler contribution.
 The color quantity is contrast relative to the current map median, not calibrated
-SNR. Noise-detail, strong-echo and wide-dynamic-range presets change the view
-only; samples and the 18 dB detector threshold stay unchanged. Finite weak-bin
+SNR. The narrow, medium and wide color-scale presets change only color limits;
+all three show the same FFT of the combined received I/Q. None isolates noise,
+clutter or target echoes, and samples and the 18 dB detector threshold stay
+unchanged. Older recordings may retain the names "Noise detail" and "Strong
+echoes"; these also meant color limits, never separated signal components. Finite weak-bin
 values are preserved instead of clipping the result matrix at −20 dB.
 Known earlier radar recordings receive an observer-only orientation projection;
 their original matrices, archived I/Q and detections remain untouched. Values

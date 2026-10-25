@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "id": "radar-rf-skill",
-  "revision": "2",
+  "revision": "3",
   "title": "Radar RF Skill",
   "selectors": [
     {
@@ -162,21 +162,21 @@
         ],
         "presets": [
           {
-            "label": "Noise detail (\u22125 to +15 dB)",
+            "label": "Narrow color scale (\u22125 to +15 dB)",
             "range": [
               -5,
               15
             ]
           },
           {
-            "label": "Strong echoes (\u221210 to +45 dB)",
+            "label": "Medium color scale (\u221210 to +45 dB)",
             "range": [
               -10,
               45
             ]
           },
           {
-            "label": "Wide dynamic range (\u221230 to +45 dB)",
+            "label": "Wide color scale (\u221230 to +45 dB)",
             "range": [
               -30,
               45
@@ -184,7 +184,7 @@
           }
         ]
       },
-      "caption": "Range increases upward; full signed Doppler spectrum. Positive Doppler is receding. Color is contrast to the current map median, not calibrated SNR; scale changes never alter I/Q or detection. The map retains FMCW range/Doppler coupling."
+      "caption": "Every color scale shows the same received I/Q; none isolates or removes noise, clutter or target echoes. Range increases upward; full signed Doppler spectrum. Positive Doppler is receding. Color is contrast to the current map median, not calibrated SNR; scale changes never alter I/Q or detection. The map retains FMCW range/Doppler coupling."
     }
   ],
   "histories": [

@@ -4,6 +4,22 @@
 
 Dashboard runs save the **exact complex float32 voltages sent to the RF
 skill**, after propagation and receiver noise, gain, filtering and ADC modeling.
+
+For the default radar demo, the saved stream contains **target scattering +
+terrain clutter + receiver noise**, combined before ADC modeling. Noise is
+currently enabled with `radios.radar.profile.noise_power_offset_db: -25`; it is
+reduced for visibility, not omitted. Set the offset to `0` for the modeled
+thermal-noise baseline. Disabling noise or clutter in a scenario changes future
+captures, not data already saved.
+
+The range–Doppler dropdown changes **color limits only**. Its narrow, medium
+and wide scales all display the same combined receiver data; it does not select
+noise-only, clutter-only or target-only recordings. Older displays call the
+first two presets "Noise detail" and "Strong echoes" with the same behavior.
+The standard `iq/` capture does not save separate component streams. Isolated
+clutter/noise comparisons in the benchmark reports are separate controlled
+experiments, not selectable layers of a normal mission archive.
+
 The archive preserves every sample, inter-channel phase, amplitude, acquisition
 timestamp, sample rate, carrier, clipping fraction and coherent window boundary.
 Doppler and multipath evolution are already present in those samples. Replay

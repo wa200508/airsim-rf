@@ -19,7 +19,9 @@ Open http://localhost:8765 and select **Launch mission** after readiness passes.
   targets have Doppler because the radar moves. Displayed range retains FMCW
   coupling; the strongest candidate's range is separately corrected.
 - **Terrain masking and clutter:** a blocked target has no modeled echo. Visible
-  foreground terrain can still return clutter. Try the color-scale presets.
+  foreground terrain can still return clutter. The saved receiver I/Q includes
+  target echoes, terrain clutter and noise. The narrow/medium/wide dropdown
+  changes only color limits; every option shows that same combined signal.
 - **Receiver spectrum/waterfall:** dechirped ADC volts, with timing preserved
   across chirps. Gaps outside receive gates are zero-filled, not measurements.
 - **Candidate:** a simple 18 dB median-map contrast threshold, not calibrated CFAR.
