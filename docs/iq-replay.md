@@ -28,6 +28,13 @@ does not reconstruct a channel or substitute a new waveform.
 This is separate from dashboard **video/diagnostic playback**. Old dashboard
 recordings did not retain bulk samples; their waterfall cannot recover the I/Q.
 
+For a GNU Radio "insert signal processing here" workspace, use the independent
+[RF Skill Harness](https://github.com/wa200508/RF-Skill-Harness). It consumes the
+complete `iq/` folder, preserves coherent channel samples and acquisition tags,
+and supplies the captured receiver metadata to your processing hook. Its RF
+acquisition timeline is constructed automatically for receive windows and
+configured radar TX/ADC timing. No simulation or previous RF skill is required.
+
 ## Where the data goes
 
 Bulk capture is enabled by default. Set `mission.record_iq: false` in your

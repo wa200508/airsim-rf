@@ -20,6 +20,23 @@ sample rate and carrier. They reference the existing sample files and do not
 duplicate bulk data. Copying the entire `iq/` directory is enough; neither the
 project's Python package nor its containers are needed to run the graphs.
 
+## RF skill development harness with acquisition tags
+
+The standalone [RF Skill Harness](https://github.com/wa200508/RF-Skill-Harness)
+provides an editable `process_window(iq, metadata, context)` hook, GNU Radio
+Companion graphs and a CPU container. Its tagged coherent source preserves exact
+acquisition timestamps, channel alignment, receiver geometry/calibration and
+radar gate settings. It reads the same `iq/` folder without simulation imports.
+
+The harness also constructs an interactive RF acquisition timeline automatically
+from metadata: recorded receive windows for ESM, plus configured TX chirps and
+RX/ADC gates for radar. Configured events are labeled separately from recorded
+ones; no missing emitter or per-window TX-enable state is invented.
+
+Use that harness for developing a new GNU Radio RF skill. The stock File Source
+graphs described below remain a lightweight option; they do not synthesize the
+harness's acquisition tags or timeline themselves.
+
 ## Open a capture
 
 Install GNU Radio 3.10 with GNU Radio Companion. On Debian/Ubuntu:

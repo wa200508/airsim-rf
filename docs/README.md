@@ -49,3 +49,6 @@ The [reference folder](reference/README.md) also provides a compact index.
 and reviews. Dated reports under `results/`, `research_results/` and `docs/archive/reviews/`
 retain their original measurements; they are not current demo defaults or a new
 real-time qualification. Use the profiling page to put their timing in context.
+
+For a standalone GNU Radio RF skill workspace and metadata-derived acquisition
+schedule, see [RF Skill Harness](https://github.com/wa200508/RF-Skill-Harness).
