@@ -11,7 +11,7 @@ concurrency:
   group: public-rf-skill-harness
   cancel-in-progress: true
 env:
-  HARNESS_SOURCE_REVISION: 2a464f40fd7f949a8526d1631f94f3b54585cb30
+  HARNESS_SOURCE_REVISION: 3c3bbc2b8b9591453416f6cc9067c4b81ac9387f
   IMAGE: ghcr.io/wa200508/airsim-rf
 jobs:
   harness:
@@ -32,7 +32,7 @@ jobs:
           build-args: SOURCE_REVISION=${{ env.HARNESS_SOURCE_REVISION }}
           cache-from: type=gha,scope=public-rf-skill-harness
           cache-to: type=gha,scope=public-rf-skill-harness,mode=max
-      - name: Qualify native GNU Radio, RF timelines and source independence offline
+      - name: Qualify GNU Radio, notebooks, plots and source independence offline
         run: |
           docker run --rm --network none -e QT_QPA_PLATFORM=offscreen --entrypoint timeout \
             airsim-rf:rf-skill-harness-release-test 180 \
