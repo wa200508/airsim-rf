@@ -11,7 +11,7 @@ concurrency:
   group: public-rf-skill-harness
   cancel-in-progress: true
 env:
-  HARNESS_SOURCE_REVISION: 3c3bbc2b8b9591453416f6cc9067c4b81ac9387f
+  HARNESS_SOURCE_REVISION: c5d3e452fcc4758fd6b243df0bda743c873bc734
   IMAGE: ghcr.io/wa200508/airsim-rf
 jobs:
   harness:
