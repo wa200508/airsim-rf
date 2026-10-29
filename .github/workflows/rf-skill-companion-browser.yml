@@ -11,7 +11,7 @@ concurrency:
   group: public-rf-skill-companion-browser
   cancel-in-progress: true
 env:
-  HARNESS_SOURCE_REVISION: 21760a3f84c82a62e87f42c67351cbda01d0b17d
+  HARNESS_SOURCE_REVISION: 42a654ec06c328700497a833abb438abb5f0f40d
   IMAGE: ghcr.io/wa200508/airsim-rf
 jobs:
   browser:
