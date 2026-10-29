@@ -1,0 +1,74 @@
+name: Publish public GNU Radio World workbench
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/rf-skill-gnuradio-world.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: public-rf-skill-gnuradio-world
+  cancel-in-progress: true
+env:
+  HARNESS_SOURCE_REVISION: 655b7d4fcbab75e48d2239b40e61fa676a3f9d25
+  IMAGE: ghcr.io/wa200508/airsim-rf
+jobs:
+  browser:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          repository: wa200508/RF-Skill-Harness
+          ref: ${{ env.HARNESS_SOURCE_REVISION }}
+          path: harness
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: docker/setup-buildx-action@v3
+      - name: Build only the pinned independent GNU Radio World repository
+        uses: docker/build-push-action@v6
+        with:
+          context: harness
+          file: harness/Dockerfile.world
+          load: true
+          tags: rf-gnuradio-world:release-test
+          build-args: SOURCE_REVISION=${{ env.HARNESS_SOURCE_REVISION }}
+          cache-from: type=gha,scope=public-gnuradio-world
+          cache-to: type=gha,mode=max,scope=public-gnuradio-world
+      - name: Install the browser test client
+        run: |
+          python -m pip install numpy playwright
+          python -m playwright install --with-deps chromium
+      - name: Qualify WebAssembly DSP, Python edits, RX/TX plots, capture switching and native export
+        run: |
+          python harness/scripts/qualify_world.py \
+            --image rf-gnuradio-world:release-test --output "$RUNNER_TEMP/browser-qualification"
+          actual=$(docker image inspect --format '{{ index .Config.Labels "org.opencontainers.image.revision" }}' rf-gnuradio-world:release-test)
+          test "$actual" = "$HARNESS_SOURCE_REVISION"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: public-gnuradio-world-qualification
+          path: ${{ runner.temp }}/browser-qualification
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Publish the qualified image in the existing public package
+        run: |
+          immutable="$IMAGE:rf-skill-gnuradio-world-sha-$HARNESS_SOURCE_REVISION"
+          docker tag rf-gnuradio-world:release-test "$immutable"
+          docker push "$immutable"
+          docker tag rf-gnuradio-world:release-test "$IMAGE:rf-skill-gnuradio-world"
+          docker push "$IMAGE:rf-skill-gnuradio-world"
+      - name: Verify anonymous pull
+        run: |
+          anonymous_config=$(mktemp -d)
+          trap 'rm -rf "$anonymous_config"' EXIT
+          docker --config "$anonymous_config" pull "$IMAGE:rf-skill-gnuradio-world-sha-$HARNESS_SOURCE_REVISION"
