@@ -11,7 +11,7 @@ concurrency:
   group: public-rf-skill-gnuradio-world
   cancel-in-progress: true
 env:
-  HARNESS_SOURCE_REVISION: 655b7d4fcbab75e48d2239b40e61fa676a3f9d25
+  HARNESS_SOURCE_REVISION: e721dc929759bc93ed331093043fbe5ef59ab8c4
   IMAGE: ghcr.io/wa200508/airsim-rf
 jobs:
   browser:
