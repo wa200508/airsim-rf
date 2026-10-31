@@ -286,3 +286,5 @@ startup and distributed SDR transport remain unmeasured; all 30 updates miss the
 
 Historical reports and raw measurements remain under `results/` and
 `research_results/`. They retain th
+
+FMCW acquisition: [delayed echoes across pulse boundaries](docs/radar-late-echoes.md).
