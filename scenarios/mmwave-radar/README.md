@@ -58,6 +58,14 @@ RCS. The model has first-order target/terrain returns and no target-leg
 multipath, diffraction or secondary scattering. Noise reduction, receiver gain,
 material and antenna assumptions are not measured board calibration.
 
+Acquisition retains earlier chirps' target and terrain echoes across receive
+windows, including after TX is turned off. Old transmissions expire after their
+last possible arrival. At this scene's 400 m cutoff the maximum round-trip delay
+is about 2.67 microseconds, shorter than the 8 microsecond gap between ramps;
+multi-PRI late echoes need a deliberately longer-delay test. The
+[implementation and regression checks](../../docs/radar-scattering.md#transmission-history-and-echoes-across-chirps)
+include pulse 1 arriving during pulse 5 and lossless recording of those returns.
+
 ## Edit this package
 
 | File | Change |

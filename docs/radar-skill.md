@@ -76,8 +76,10 @@ starts with both off; no source acquisition occurs before these commands.
 
 The adapter in [radar_control.py](../src/airsim_rf/radar_control.py) is independent
 of the skill implementation. It validates against modeled IWR1843/stream limits
-and applies settings atomically at the next window. TX-off/RX-on produces no
-radar target echoes while retaining noise/ADC behavior; RX-off pauses acquisition.
+and applies settings atomically at the next window. TX-off/RX-on stops new
+illumination while retaining earlier target/terrain echoes until their last
+arrival, plus noise/ADC behavior; RX-off pauses acquisition. See
+[transmission history](radar-scattering.md#transmission-history-and-echoes-across-chirps).
 Status distinguishes accepted commands from the applied configuration/timestamp.
 [The external client](https://github.com/wa200508/Radar-skill/blob/main/src/radar_skill/transceiver.py)
 uses the same [contract](https://github.com/wa200508/Radar-skill/blob/main/docs/transceiver-control.md)

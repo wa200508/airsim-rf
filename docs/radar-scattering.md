@@ -57,6 +57,45 @@ linear in scatterer count times output samples, with bounded temporary storage;
 there is no quadratic path pairing. NumPy IF synthesis runs on the host even
 when visibility uses CUDA. This is not a new measured GPU throughput claim.
 
+## Transmission history and echoes across chirps
+
+An emitted chirp is not discarded at a receive-window or PRI boundary. Acquisition
+retains its emission timestamp, immutable waveform/power settings and visible
+first-order target/terrain paths. At each later ADC gate it evaluates the old
+chirp at `receive time - emission time - round-trip delay`, mixes it against the
+current local chirp reference, and adds it to the other arriving complex voltages.
+The old path's Doppler phase advances from its emission epoch. The actual delay
+is never reduced modulo the PRI; ambiguous range emerges from dechirping against
+a later ramp. Fractional delays use the analytic chirp phase rather than rounding
+arrival times to ADC samples. Each ramp has half-open, finite transmit support.
+
+TX off stops new transmissions. Target and clutter returns already in flight
+continue to arrive while RX stays on. Each retained path is released after its
+transmitted ramp end plus round-trip delay has passed; a transmission record is
+removed once none of its paths remain. Storage therefore follows the propagation
+delay horizon and emission cadence, not total mission duration. These are compact
+chirp/path descriptors, not full-bandwidth sampled RF or copies of delayed samples.
+Source diagnostics expose `pending_transmissions` and `pending_echoes` alongside
+the echo terms rendered in the current ADC gate.
+
+Paths, visibility, antenna gains and delay are frozen at emission for that ramp;
+phase then evolves using narrowband Doppler. This does not solve retarded-time
+visibility for rapidly changing geometry. The existing analog IF filter remains
+a steady-state tone response with gated support, without pulse-edge ringing.
+The stream uses a fixed carrier and ramp shape; changing those with echoes still
+pending requires a new stream session. Independent direct uses of `FMCWRadar`
+must call `reset_history()` before rewinding its strictly increasing capture
+timestamps. The distributed worker clears history when a new run is claimed.
+
+The default 400 m cutoff gives at most about **2.67 microseconds** of round-trip
+delay, below the 40 microsecond PRI and 8 microsecond idle gap. It does not create
+a four-PRI late echo in the maintained short-range scene. The regression stress
+uses an intentionally distant scatterer to verify pulse 1 arriving in window 5,
+old/new echo addition, TX-off arrivals, phase at large epochs, individual expiry,
+and bounded history. Production dashboard acquisition and lossless I/Q recording
+are exercised in [test_fmcw_history.py](../tests/test_fmcw_history.py); a separate
+shared-mesh test checks delayed terrain returns.
+
 ## Defaults and ownership
 
 The maintained scenario uses 1,024 terrain samples, a 400 m slant-range cutoff,
@@ -74,8 +113,9 @@ The [compiler](../src/airsim_rf/dashboard_scenario.py) resolves mesh classes and
 heights. [radar_scattering.py](../src/airsim_rf/radar_scattering.py) owns surface
 quadrature and visibility; [fmcw.py](../src/airsim_rf/fmcw.py) owns echo rendering;
 [dashboard_radar.py](../src/airsim_rf/dashboard_radar.py) applies hardware-neutral
-TX/RX commands and packs acquisition gates. TX off suppresses both targets and
-terrain while configured receiver noise remains. Sample recording, the external
+TX/RX commands and packs acquisition gates. TX off stops new target and terrain
+illumination; earlier returns survive until expiry and receiver noise remains.
+Sample recording, the external
 radar skill, and the generic dashboard display contract remain independent of
 scene truth. Per-window producer metadata records terrain sampling/visibility
 counts; receiver metadata contains no target or clutter definitions.
@@ -83,7 +123,7 @@ counts; receiver metadata contains no target or clutter definitions.
 Tests cover radar-equation power, area normalization across sample budgets,
 incidence weighting, stationary realization reuse, coherent slow-time evolution,
 shared-mesh target/terrain blockage, range rejection before tracing, TX-off
-suppression, 1,024 independent echoes with linear term count, and actual
+with in-flight echo retention, 1,024 independent echoes with linear term count, and actual
 acquisition → lossless I/Q archive → unchanged external radar processing.
 
 For published terrain-clutter workflows and the limits of their comparison,

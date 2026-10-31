@@ -55,6 +55,7 @@ def test_one_patch_matches_physical_point_echo_and_preserves_slow_time_phase(tmp
     unix=radar.capture([],position_m=[0,0,20],orientation_rad=[0,np.pi/2,0],velocity_m_s=[.2,0,0],sim_time_ns=1790976000000000000)
     np.testing.assert_array_equal(unix.if_volts,actual[0].if_volts)
     assert np.any(actual[1].if_volts!=actual[0].if_volts)
+    radar.reset_history()  # No earlier transmission exists in this independent TX-off check.
     off=radar.capture([patch],position_m=[0,0,20],orientation_rad=[0,np.pi/2,0],transmit_enabled=False)
     assert not np.any(off.if_volts) and radar.last_render_diagnostics['echo_terms']==0
 
@@ -97,3 +98,20 @@ def test_incidence_response_uses_surface_normal_and_rcs_per_actual_area(tmp_path
     c=TerrainBackscatter(scene(tmp_path),config,samples_per_link=32);points,rcs,_=c.candidates([0,0,20],100.)
     cosine=20/np.linalg.norm(points-[0,0,20],axis=1)
     np.testing.assert_allclose(rcs,40/32*cosine)
+
+
+def test_terrain_returns_from_old_transmission_survive_tx_off(tmp_path):
+    profile=replace(IWR1843Profile(),noise_enabled=False)
+    # Artificially distant ground makes a four-PRI delay without changing the
+    # production surface sampler or visibility code.
+    altitude=(4*profile.pri_s+.5e-6)*299792458./2
+    radar=FMCWRadar(profile,rf_scene=scene(tmp_path),clutter=configuration(32),samples_per_link=32)
+    options={'position_m':[0,0,altitude],'orientation_rad':[0,np.pi/2,0]}
+    first=radar.capture([],**options)
+    assert not np.any(first.if_volts) and radar.last_render_diagnostics['pending_echoes']==32
+    late=radar.capture([],**options,sim_time_ns=round(4*profile.pri_s*1e9),transmit_enabled=False)
+    assert np.any(late.if_volts)
+    assert radar.last_render_diagnostics['clutter_echoes']==32
+    assert radar.last_render_diagnostics['target_echoes']==0
+    expired=radar.capture([],**options,sim_time_ns=round(5*profile.pri_s*1e9),transmit_enabled=False)
+    assert not np.any(expired.if_volts) and radar.last_render_diagnostics['pending_echoes']==0

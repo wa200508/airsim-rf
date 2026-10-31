@@ -74,10 +74,12 @@ class ReceiverWorker:
                 if self.run_id not in (None, run_id):
                     raise Conflict("Receiver is owned by another simulation run; release it or restart the worker")
                 if release:
+                    self.executor.submit(self.radar.reset_history).result()
                     self.run_id, self.sequence, self.sim_time_ns = None, -1, None
                     self.cache.clear()
                 elif self.run_id is None:
                     self.executor.submit(setattr, self.radar, "rng", np.random.default_rng(self.seed)).result()
+                    self.executor.submit(self.radar.reset_history).result()
                     self.run_id = run_id
             return {"run_id": self.run_id, "receiver_id": self.receiver_id}
         finally:

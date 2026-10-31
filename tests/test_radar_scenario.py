@@ -133,6 +133,7 @@ def test_sionna_target_echo_and_mesh_occlusion_agree(tmp_path):
     radar=FMCWRadar(replace(IWR1843Profile(),noise_enabled=False),rf_scene=scene)
     powers=[]
     for pos in ([200,0,210],[-240,-150,210]):
+        radar.reset_history()  # Independent viewpoints, not successive transmissions.
         delta=np.asarray(target.position_m)-pos
         orientation=[np.arctan2(delta[1],delta[0]),-np.arctan2(delta[2],np.linalg.norm(delta[:2])),0]
         capture=radar.capture([target],position_m=pos,orientation_rad=orientation)
