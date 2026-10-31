@@ -2,6 +2,7 @@
 from dataclasses import asdict, dataclass, replace
 import json
 from pathlib import Path
+from numbers import Integral
 
 import numpy as np
 from scipy.signal import butter, freqs_zpk, sosfilt
@@ -156,6 +157,20 @@ def range_fft(iq, profile: Distance2GoLProfile, *, zero_padding=4):
     return frequencies*C/(2*profile.slope_hz_s), spectrum
 
 
+@dataclass(frozen=True)
+class _EchoTransmission:
+    """An emitted ramp and compact channel; carrier phase is in voltage_gain."""
+    start_ns: int
+    profile: Distance2GoLProfile
+    delays: np.ndarray
+    dopplers: np.ndarray
+    voltage_gain: np.ndarray
+
+    def select(self, mask):
+        return replace(self, delays=self.delays[mask], dopplers=self.dopplers[mask],
+                       voltage_gain=self.voltage_gain[mask])
+
+
 class FMCWRadar:
     """One ramp per capture, Sionna LoS/blocked paths, scalar reciprocal RCS.
 
@@ -179,9 +194,70 @@ class FMCWRadar:
         self.rng = np.random.default_rng(seed)
         self.seed = seed
         self._noise_sos = profile.filter_sos()
+        self.reset_history()
 
-    def capture(self, targets, *, position_m, velocity_m_s=(0, 0, 0), orientation_rad=(0, 0, 0), sim_time_ns=0):
+    def reset_history(self):
+        """Begin an independent timeline; pending echoes and old clock are cleared."""
+        self._transmissions=[]
+        self._last_capture_ns=None
+        self.last_render_diagnostics={}
+
+    def _expire_transmissions(self, timestamp_ns, offset_s):
+        retained=[]
+        for tx in self._transmissions:
+            elapsed=(timestamp_ns-tx.start_ns)*1e-9+offset_s
+            keep=elapsed < tx.profile.chirp_duration_s+tx.delays
+            if np.any(keep):retained.append(tx if np.all(keep) else tx.select(keep))
+        self._transmissions=retained
+
+    def _render_transmissions(self, timestamp_ns, terms):
+        p=self.profile
+        signature=lambda profile:(profile.carrier_hz,profile.bandwidth_hz,profile.chirp_duration_s)
+        if any(signature(tx.profile)!=signature(p) and np.any(
+                (timestamp_ns-tx.start_ns)*1e-9+p.adc_start_s < tx.profile.chirp_duration_s+tx.delays)
+                for tx in self._transmissions):
+            raise ValueError('Changing the ramp/carrier while echoes are pending requires a new stream session')
+        self._expire_transmissions(timestamp_ns,p.adc_start_s)
+        if terms:
+            delays,dopplers,gains=zip(*terms)
+            self._transmissions.append(_EchoTransmission(timestamp_ns,p,np.array(delays),
+                np.array(dopplers),np.array(gains,dtype=complex)))
+        n=np.arange(p.num_samples);fast=p.adc_start_s+n/p.sample_rate_hz
+        output=np.zeros(p.num_samples,complex);count=0
+        conversion=10**((p.if_gain_db+p.mixer_voltage_gain_db)/20)
+        for transmission in self._transmissions:
+            elapsed=(timestamp_ns-transmission.start_ns)*1e-9
+            arrived=transmission.delays<=elapsed+fast[-1]
+            if not np.any(arrived):continue
+            tx=transmission if np.all(arrived) else transmission.select(arrived)
+            relative_delay=tx.delays-elapsed
+            beat=p.slope_hz_s*relative_delay-tx.dopplers
+            amplitude=tx.voltage_gain*p.filter_response(beat)*conversion
+            phase=(-np.pi*p.slope_hz_s*relative_delay**2-np.pi*p.bandwidth_hz*relative_delay
+                   -2*np.pi*np.remainder(tx.dopplers*elapsed,1))
+            for start in range(0,len(tx.delays),128):
+                end=start+128
+                first=np.ceil((relative_delay[start:end]-p.adc_start_s)*p.sample_rate_hz-1e-9)
+                last=np.ceil((relative_delay[start:end]+tx.profile.chirp_duration_s-p.adc_start_s)*p.sample_rate_hz-1e-9)
+                gate=(n>=first[:,None])&(n<last[:,None])
+                tone=np.exp(1j*(phase[start:end,None]+2*np.pi*beat[start:end,None]*fast))
+                output+=np.sum(amplitude[start:end,None]*tone*gate,axis=0)
+            count+=len(tx.delays)
+        self._expire_transmissions(timestamp_ns,p.adc_start_s+p.num_samples/p.sample_rate_hz)
+        self.last_render_diagnostics={'echo_terms':count,'target_echoes':count,'clutter_echoes':0,
+            'pending_transmissions':len(self._transmissions),
+            'pending_echoes':sum(len(tx.delays) for tx in self._transmissions)}
+        return output
+
+    def capture(self, targets, *, position_m, velocity_m_s=(0, 0, 0), orientation_rad=(0, 0, 0), sim_time_ns=0, transmit_enabled=True):
         p = self.profile
+        if isinstance(sim_time_ns,bool) or not isinstance(sim_time_ns,Integral):
+            raise ValueError('Capture timestamp must be integer nanoseconds')
+        sim_time_ns=int(sim_time_ns)
+        if self._last_capture_ns is not None and sim_time_ns<=self._last_capture_ns:
+            raise ValueError('Capture timestamps must strictly increase; call reset_history() for an independent run')
+        if not isinstance(transmit_enabled,bool):raise ValueError('transmit_enabled must be a boolean')
+        terms=[]
         position = np.asarray(position_m, dtype=float)
         velocity = np.asarray(velocity_m_s, dtype=float)
         orientation = np.asarray(orientation_rad, dtype=float)
@@ -190,9 +266,7 @@ class FMCWRadar:
                 raise ValueError("Platform pose/velocity must be finite 3-vectors")
         targets = tuple(targets)
         self.tx.position, self.tx.velocity, self.tx.orientation = position.tolist(), velocity.tolist(), orientation.tolist()
-        t = p.adc_start_s + np.arange(p.num_samples)/p.sample_rate_hz
         wavelength = C/p.carrier_hz
-        voltage = np.zeros(p.num_samples, dtype=np.complex128)
         ranges, dopplers, beats, delays = [], [], [], []
         conversion = 10**((p.if_gain_db+p.mixer_voltage_gain_db)/20)
         active = []
@@ -207,7 +281,7 @@ class FMCWRadar:
             beat = p.slope_hz_s*delay-doppler
             ranges.append(distance); dopplers.append(doppler); beats.append(beat); delays.append(delay)
             gain = p.antenna_power_gain(direction, orientation)
-            if target.rcs_m2 == 0 or gain == 0:
+            if not transmit_enabled or target.rcs_m2 == 0 or gain == 0:
                 continue
             active.append((target, delay, beat, gain))
         # One solver launch for all targets. Reuse receiver objects as long as
@@ -236,10 +310,8 @@ class FMCWRadar:
                 index = valid[0]
                 # Sionna's carrier phase is included in this reciprocal echo.
                 echo = complex(a[rx_index, 0, 0, 0, index, 0])**2 * np.sqrt(4*np.pi*target.rcs_m2)/wavelength * gain
-                phase = 2*np.pi*beat*t - np.pi*p.slope_hz_s*delay**2 - np.pi*p.bandwidth_hz*delay
-                response = p.filter_response(beat)[0]
-                voltage += (np.sqrt(p.reference_impedance_ohm*p.tx_power_w)*np.conj(echo)
-                            * np.exp(1j*phase) * response * conversion * (t >= delay))
+                terms.append((delay,p.slope_hz_s*delay-beat,np.sqrt(p.reference_impedance_ohm*p.tx_power_w)*np.conj(echo)))
+        voltage=self._render_transmissions(sim_time_ns,terms)
         if p.noise_enabled:
             variance = p.reference_impedance_ohm*BOLTZMANN*p.temperature_k*p.sample_rate_hz*10**(p.noise_figure_db/10)
             # Warm up the IF filter using prior random samples to avoid start-up bias.
@@ -247,6 +319,7 @@ class FMCWRadar:
                                        + 1j*self.rng.standard_normal(p.num_samples+1024))
             voltage += sosfilt(self._noise_sos, noise)[-p.num_samples:]*conversion
         codes, adc_iq, clipped = quantize_iq(voltage, p)
+        self._last_capture_ns=sim_time_ns
         return FMCWCapture(voltage.astype(np.complex64), codes, adc_iq, int(sim_time_ns), p,
                            tuple(t.name for t in targets), np.asarray(ranges), np.asarray(dopplers),
                            np.asarray(beats), np.asarray(delays), clipped)
