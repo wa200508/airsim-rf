@@ -192,3 +192,20 @@ def test_worker_response_cannot_change_requested_epoch(receiver):
     with pytest.raises(ValueError, match="sim_time_ns"):
         CaptureResult.decode(payload, request(run, epoch=123456790))
     client.session(run, release=True)
+
+
+def test_new_worker_session_drops_in_flight_echoes_and_restarts_its_clock(receiver):
+    worker,client,_=receiver
+    run=str(uuid.uuid4());client.session(run)
+    late=request(run,epoch=100000000).to_dict()
+    late['targets'][0]['position_m']=[3000000.,0.,0.]
+    client.request('/v1/capture',late)
+    assert worker.radar.last_render_diagnostics['pending_echoes']==1
+    client.session(run,release=True)
+    assert not worker.radar._transmissions
+    next_run=str(uuid.uuid4());client.session(next_run)
+    first=request(next_run).to_dict();first['targets']=[]
+    payload=client.request('/v1/capture',first)
+    assert worker.radar.last_render_diagnostics['pending_echoes']==0
+    assert not np.any(CaptureResult.decode(payload,CaptureRequest.from_dict(first)).arrays['if_volts'])
+    client.session(next_run,release=True)

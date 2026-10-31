@@ -8,7 +8,7 @@ from airsim_rf.fmcw import Distance2GoLProfile, FMCWRadar, quantize_iq, range_ff
 from airsim_rf.radar import C, PointTarget
 
 
-@pytest.fixture(scope="module")
+@pytest.fixture
 def radar():
     return FMCWRadar(replace(Distance2GoLProfile(), noise_enabled=False))
 
@@ -63,6 +63,7 @@ def test_directional_beam_and_two_way_gain(radar):
     assert half_power/peak == pytest.approx(0.5)
     assert p.antenna_power_gain([-1, 0, 0]) == 0
     on = radar.capture([PointTarget("on", (10, 0, 2), 0.1)], position_m=[0, 0, 2])
+    radar.reset_history()
     off = radar.capture([PointTarget("off", (10*np.cos(theta), 10*np.sin(theta), 2), 0.1)], position_m=[0, 0, 2])
     assert np.mean(abs(off.if_volts)**2)/np.mean(abs(on.if_volts)**2) == pytest.approx(0.25, rel=1e-5)
 
@@ -112,12 +113,15 @@ def test_batched_target_mapping_matches_sum_of_individual_echoes(radar):
     far = PointTarget("far", (14, 0, 2), 0.4)
     hidden = PointTarget("behind", (-10, 0, 2), 0.1)
     zero = PointTarget("zero", (12, 0, 2), 0)
-    individual = (radar.capture([near], position_m=[0, 0, 2]).if_volts
-                  + radar.capture([far], position_m=[0, 0, 2]).if_volts)
+    individual = radar.capture([near], position_m=[0, 0, 2]).if_volts
+    radar.reset_history()
+    individual = individual + radar.capture([far], position_m=[0, 0, 2]).if_volts
+    radar.reset_history()
     batch = radar.capture([hidden, near, zero, far], position_m=[0, 0, 2])
     np.testing.assert_allclose(batch.if_volts, individual, atol=1e-8)
     assert batch.target_names == ("behind", "near", "zero", "far")
     assert len(radar.probes) == 2
+    radar.reset_history()
     empty = radar.capture([hidden, zero], position_m=[0, 0, 2])
     assert not np.any(empty.if_volts)
     assert len(radar.probes) == 0
